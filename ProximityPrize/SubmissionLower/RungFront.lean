@@ -10,12 +10,12 @@ noncomputable section
 open Polynomial FrobeniusLocator ProximityPrize.Benchmark
 open K1_8 (seedInclusion seedInclusion_injective extendSeed_injective
   lift_locator_dvd coprime_after_factor)
-open private certificate_output_zero from ProximityPrize.SubmissionLower.Fast068
-private theorem eval_liftX (f : K[X]) (x : K) : (liftX f).eval (C x) = C (f.eval x) :=
+open K1_8 (certificate_output_zero)
+theorem eval_liftX (f : (Polynomial K)) (x : K) : (liftX f).eval (C x) = C (f.eval x) :=
   K1_8.eval_liftX f x
-private def constantsInFrac : K →+* Frac :=
+def constantsInFrac : K →+* Frac :=
   K1_8.seedInclusion.comp Polynomial.C
-private theorem extend_liftX (G : K[X]) :
+theorem extend_liftX (G : (Polynomial K)) :
     extendSeed (liftX G) = G.map constantsInFrac :=
   Polynomial.map_map Polynomial.C seedInclusion G
 end
@@ -28,13 +28,13 @@ namespace P1
 noncomputable section
 open Polynomial Matrix FrobeniusLocator ProximityPrize.Benchmark
 open scoped BigOperators
-open private type_one_bad_count_of_syndromes from ProximityPrize.SubmissionLower.PortBase
-open private constantRankCount nativeMoments independent_nativeMoments from ProximityPrize.SubmissionLower.PortBase
+open P0 (type_one_bad_count_of_syndromes)
+open P0 (constantRankCount nativeMoments independent_nativeMoments)
 open K1_1
-private theorem excludes_full_rank {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
+theorem excludes_full_rank {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
     (q : ℕ) [ExpChar F q] (x : ι → F) (hx : Function.Injective x)
     (hfixed : ∀ i, x i ^ q = x i) (u v : ι → F) (γ : F) (k l t : ℕ)
-    (hsize : k + l + t ≤ Fintype.card ι) (P : F[X]) (hp : P.degree < k)
+    (hsize : k + l + t ≤ Fintype.card ι) (P : (Polynomial F)) (hp : P.degree < k)
     (S : Finset ι) (hs : S.card ≤ t) (hagree : ∀ i ∉ S, u i + γ * v i = P.eval (x i)) :
     ((stacked q x u v l t).map (evalRingHom γ)).rank ≠ t + 1 := by
   classical
@@ -59,10 +59,9 @@ set_option maxRecDepth 12000
 set_option maxHeartbeats 1000000
 namespace P1
 open Polynomial Matrix FrobeniusLocator ProximityPrize.Benchmark
-open private certificate_shifts_annihilate_generic from ProximityPrize.SubmissionLower.Fast050
-open private lift_common_divisor specialize_factor eval_atSlope root_outside_of_dvd_locator
-  common_node_count from ProximityPrize.SubmissionLower.Fast051
-private theorem count_bound {c n n' H b : ℕ}
+open K1_6 (certificate_shifts_annihilate_generic)
+open K1_6 (lift_common_divisor specialize_factor eval_atSlope root_outside_of_dvd_locator common_node_count)
+theorem count_bound {c n n' H b : ℕ}
     (hn : n = n') (hc : c ≤ n * H) (hb : n' * H = b) : c ≤ b :=
   hb ▸ hn ▸ hc
 end P1

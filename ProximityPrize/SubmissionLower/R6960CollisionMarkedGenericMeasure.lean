@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericFrames
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedMeasuredSum
+set_option synthInstance.maxHeartbeats 200000
 
 set_option Elab.async false
 set_option maxRecDepth 18000
@@ -26,8 +27,8 @@ unit is used in both comparisons. -/
 theorem generic_measure_eq_native (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
     [IsReduced (Crossing E x z)] [FiniteDimensional L (Crossing E x z)]
     (p:ℕ) [CharP L p] (small:finrank L (Crossing E x z)<p) {n:ℕ}
-    (bf:Basis (Fin n) L[X] (chartImage E j (atCoord j x z) false))
-    (bi:Basis (Fin n) L[X] (chartImage E j (atCoord j x z) true))
+    (bf:Basis (Fin n) (Polynomial L) (chartImage E j (atCoord j x z) false))
+    (bi:Basis (Fin n) (Polynomial L) (chartImage E j (atCoord j x z) true))
     (s:ℕ) (measure:(transition E j (atCoord j x z) (by cases j <;> assumption) bf bi).det.degree=
       ((-(s:ℤ):ℤ):WithBot ℤ)) :
     let : Algebra (Laurent (GenericCoefficients L)) E := genericLineAlgebra j
@@ -46,7 +47,7 @@ theorem generic_measure_eq_native (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
   let K := GenericCoefficients L
   let A := Bivariate.swap δf
   let B := Bivariate.swap δi
-  let spec := algebraMap L[X] K
+  let spec := algebraMap (Polynomial L) K
   have an : A≠0 := (map_ne_zero_iff Bivariate.swap.toRingHom Bivariate.swap.injective).mpr nf
   have nonzero : A.map spec≠0 :=
     (map_ne_zero_iff (Polynomial.mapRingHom spec)

@@ -19,7 +19,7 @@ are supplied by the verified 69.60 pipeline. -/
 def NonlinearPrice : Prop :=
   ∀ {u deleted} {M:Model u deleted} {Γ} (F:Family M Γ) (T:Finset K), T⊆Γ →
     Word 179827 wordDegree M.word F.scalar T →
-    ∀ f:Curve L[X],Irreducible f → 3≤f.degreeOf ordinate → f.degreeOf ordinate<48 →
+    ∀ f:Curve (Polynomial L),Irreducible f → 3≤f.degreeOf ordinate → f.degreeOf ordinate<48 →
       0<f.degreeOf parameter → height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
       ¬GeometricallyLinear (view f) →
       (∀ γ∈T,MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →

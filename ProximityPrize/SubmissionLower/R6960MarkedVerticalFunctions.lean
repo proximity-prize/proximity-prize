@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960MarkedVerticalCharts
 import ProximityPrize.SubmissionLower.R6960MarkedNativeNorm
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -14,7 +15,7 @@ variable {k E J:Type} [Field k] [Field E] [Algebra (RatFunc k) E] [Algebra k E] 
 local notation "Ord" => chartOrder (k:=k) (E:=E)
 local notation "jF" => algebraMap (RatFunc k) E
 
-def decodeLinear (bf:Basis J k[X] (Ord false)) : (J→Laurent k)→ₗ[k]E where
+def decodeLinear (bf:Basis J (Polynomial k) (Ord false)) : (J→Laurent k)→ₗ[k]E where
   toFun:=decode bf
   map_add' x y:=congrArg Subtype.val ((localBasis false bf).equivFun.symm.map_add x y)
   map_smul' a v:=by
@@ -27,7 +28,7 @@ def decodeLinear (bf:Basis J k[X] (Ord false)) : (J→Laurent k)→ₗ[k]E where
 
 /-- The actual rational section space in the root field represented by
 the Laurent transition at twist a. -/
-theorem decode_range (bf:Basis J k[X] (Ord false)) (bi:Basis J k[X] (Ord true))
+theorem decode_range (bf:Basis J (Polynomial k) (Ord false)) (bi:Basis J (Polynomial k) (Ord true))
     (a:ℤ) (v:E) :
     (∃u:H0 (twist a (normalizedTransition bf bi)),decode bf u.val=v) ↔
       v∈Ord false ∧ (jF RatFunc.X)^(-a)*v∈Ord true := by
@@ -40,7 +41,7 @@ theorem decode_range (bf:Basis J k[X] (Ord false)) (bi:Basis J k[X] (Ord true))
       from (localBasis false bf).equivFun.symm_apply_apply _];rfl
     exact ⟨⟨u,(decode_finite bf u).mpr (value.symm ▸ hf),(decode_infinity bf bi a u).mpr (value.symm ▸ hi)⟩,value⟩
 
-theorem span_le_global (bf:Basis J k[X] (Ord false)) (bi:Basis J k[X] (Ord true))
+theorem span_le_global (bf:Basis J (Polynomial k) (Ord false)) (bi:Basis J (Polynomial k) (Ord true))
     (a:ℤ) {I:Type} (v:I→E) (h:∀i,v i∈Ord false ∧ (jF RatFunc.X)^(-a)*v i∈Ord true) :
     finrank k (span k (Set.range v))≤finrank k (H0 (twist a (normalizedTransition bf bi))) := by
   let G:=twist a (normalizedTransition bf bi)

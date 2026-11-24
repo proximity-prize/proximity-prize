@@ -54,11 +54,8 @@ open Front6960 MvPolynomial
 open P2_4 (Bank Puncture nodeCut)
 open K1_11 (scalarWeightTotal)
 open K1_11_3 (SimpleRoot derivativeChart exists_simple_derivative_at_root)
-open private exceptions specializeY yView_degree specializeY_eval specializeY_iterate
-  specializeY_derivative from ProximityPrize.SubmissionLower.Fast070
-open private centerPoint atCenter atCenter_degree K1_11_3.numerator numerator_degree K1_11_3.denominator
-  eval_atCenter pderiv_atCenter numerator_eval_degree denominator_degree reconstruct
-  natDegree_le_of_degree_lt_succ derivativeChart_degree from ProximityPrize.SubmissionLower.Fast072
+open K1_11_3 (exceptions specializeY yView_degree specializeY_eval specializeY_iterate specializeY_derivative)
+open K1_11_3 (centerPoint atCenter atCenter_degree numerator numerator_degree denominator eval_atCenter pderiv_atCenter numerator_eval_degree denominator_degree reconstruct natDegree_le_of_degree_lt_succ derivativeChart_degree)
 theorem assign {u : Words} {deleted : Finset I} {Γ : Finset K}
     {F : Marks u deleted Γ} {b : Bank} (A : Annihilator F b) :
     ∃ (exceptional : Finset K) (charts : Fin 5 → Finset K),
@@ -182,8 +179,8 @@ open P2_4 (Bank Puncture nodeCut)
 open K1_11 (scalarWeightTotal)
 open scoped BigOperators
 open K1_11 (indexedSupport mem_indexedSupport indexedSupport_card nodes_injective)
-open private ncard_inter_filter surface_count_with_terminal from ProximityPrize.SubmissionLower.Fast070
-open private seed_eq_of_mismatch from ProximityPrize.SubmissionLower.Fast065
+open K1_11 (ncard_inter_filter surface_count_with_terminal)
+open K1_11 (seed_eq_of_mismatch)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted}
   {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
 theorem mark_degree {u : Words} {γ : K} (M : BadMark u γ) :

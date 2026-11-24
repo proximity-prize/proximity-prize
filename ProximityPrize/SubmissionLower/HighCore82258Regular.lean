@@ -21,8 +21,8 @@ noncomputable section
 open Polynomial Finset ProximityPrize.Benchmark
 open HighCore82258 (K I node agreement)
 open HighCore82258 (FixedWord)
-open private occupancy from ProximityPrize.SubmissionLower.Fast055
-open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
+open K1_14_6 (occupancy)
+open P0_10 (incidence_arithmetic)
 end
 end HighCore82258_5
 end

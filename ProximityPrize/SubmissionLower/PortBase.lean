@@ -31,7 +31,7 @@ def relation_of_two_active {u : Words} (hu : FrontRemainder u) (T : TwoActive u)
   rw [Sol1.C64.native_field_card]
   exact (Nat.mul_le_mul_right p (show 2 * T.height + 2 ≤ 2 * heightCap + 2 by omega)).trans_lt
     (by decide)
-private theorem type_one_bad_count_of_syndromes {F ι : Type}
+theorem type_one_bad_count_of_syndromes {F ι : Type}
     [Field F] [Fintype ι] [DecidableEq ι] (x u v : ι → F) (hx : Function.Injective x)
     (k a p : ℕ) (hk : k ≤ Fintype.card ι) (hp : 1 < p)
     (htype : Principal.TypeOneSyndromes x u v k p)
@@ -70,8 +70,8 @@ private theorem coefficientKernel_annihilates (p : ℕ) (x u v : ι → F) (L t 
         simp only [map_mul]
         ring
       _ = 0 := by simp only [h2, h3, map_zero, mul_zero, add_zero]
-private theorem constantRankCount {E : Type} [Field E]
-    (φ : F[X] →+* E) (hφ : Function.Injective φ) (p : ℕ) [ExpChar F p] (hp : 1 ≤ p)
+theorem constantRankCount {E : Type} [Field E]
+    (φ : (Polynomial F) →+* E) (hφ : Function.Injective φ) (p : ℕ) [ExpChar F p] (hp : 1 ≤ p)
     (x : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i ^ p = x i)
     (u v : ι → F) (k A L t : ℕ) (hkA : k < A) (hL : k + L = A)
     (ht : A + t = Fintype.card ι)
@@ -99,9 +99,9 @@ private theorem constantRankCount {E : Type} [Field E]
     _ B.minor_ne hminor (Principal.constantCertificateOfRowBasis φ hφ p x u v L t r B W hWdim hW)
     Γ hΓ
 open K1_1
-private def nativeMoments (u : Words) : Fin 2 → ℕ → Frac :=
-  fun b j => algebraMap K[X] Frac (Principal.parameterSyndromes p node (u 0) (u 1) b j)
-private theorem independent_nativeMoments (u : Words)
+def nativeMoments (u : Words) : Fin 2 → ℕ → Frac :=
+  fun b j => algebraMap (Polynomial K) Frac (Principal.parameterSyndromes p node (u 0) (u 1) b j)
+theorem independent_nativeMoments (u : Words)
     (h : ¬ TypeAtMostOne u) : IndependentMoments (nativeMoments u) k := by
   classical
   unfold IndependentMoments
@@ -110,7 +110,7 @@ private theorem independent_nativeMoments (u : Words)
   unfold TypeAtMostOne Principal.TypeOneSyndromes
   rw [IRSProfile.card_index]
   intro i j
-  apply IsFractionRing.injective K[X] Frac
+  apply IsFractionRing.injective (Polynomial K) Frac
   simpa [nativeMoments, Principal.parameterSyndromes, map_mul] using hall i j
 end
 end P0

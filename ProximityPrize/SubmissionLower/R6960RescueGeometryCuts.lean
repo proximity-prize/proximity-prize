@@ -19,8 +19,8 @@ open K1_14_3 (Surface Parent)
 open P0_10R.Bridge (surfaceOf parent_of_dual)
 open RescueSource (bank reserve)
 open scoped Classical
-open private envelope_caps from ProximityPrize.SubmissionLower.HighCore82258PrefixProcess
-open private seed_value_eq from ProximityPrize.SubmissionLower.Fast052
+open HighCore82258_3 (envelope_caps)
+open K1_14_2_2_7 (seed_value_eq)
 
 /-- The common depth-4500 terminal is tested at the full 69.60 cutoff. -/
 def terminalShape : Shape := ⟨4500,6286,1329,748778⟩
@@ -111,7 +111,7 @@ theorem Run.marked_cutter {u deleted} {M : Model u deleted} {Γ} {F : Family M �
     apply zero_of_contact (r:=0)
     exact contact_at_mark F Crt noPole residues inside (by simp only [Nat.mul_zero,Nat.add_zero]; decide +kernel) γ hγ
 
-private theorem mark_on_cut {J : Ideal Ambient} {P : Jet} {z : K} {S : K[X]}
+private theorem mark_on_cut {J : Ideal Ambient} {P : Jet} {z : K} {S : (Polynomial K)}
     (on : OnJet J z S) (zero : jetAt P z S=0) :
     ∃ Q∈cutComponents J P,OnJet Q z S := by
   let e := jetMarkHom z S
@@ -122,7 +122,7 @@ private theorem mark_on_cut {J : Ideal Ambient} {P : Jet} {z : K} {S : K[X]}
   obtain ⟨Q,minimal,mark⟩ := Ideal.exists_minimalPrimes_le incl
   exact ⟨Q,Ideal.mem_minimalPrimesFinset.mpr minimal,mark⟩
 
-private theorem proper_cut {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
+theorem proper_cut {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (s : Shape) {J : Ideal Ambient} {P : Jet} (sl : s.J≤s.B) (act : Active J)
     (cap : RowCaps P s) (proper : toJet P∉J) (zero : ∀ γ∈Γ,jetAt P (M.label γ) (F.scalar γ)=0) :
     ∃ C : CutCover,(∀ fee,C.cost fee≤dot (weight s fee) (sectionDegree J)) ∧

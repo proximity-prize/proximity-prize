@@ -13,7 +13,7 @@ open Low48BentCycle (Family rawFamily capFamily capSum ambient_cap integral mixe
 open K1_13_6_2_4_1 (positiveDiagonal)
 open MvPolynomial
 open scoped BigOperators
-open private slots ambient_list from ProximityPrize.SubmissionLower.Low48BentCyclePrice
+open Low48BentCycle (slots ambient_list)
 
 
 

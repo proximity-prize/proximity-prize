@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.R6960MarkedVerticalFunctions
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -22,7 +23,7 @@ local notation "Ord" => chartOrder (k:=Scalar) (E:=E)
 private theorem chart_constant_integral (b:Bool) (c:Scalar) :
     aE (RatFunc.C c)∈Ord b := by
   -- The affine abscissa algebra is chosen explicitly for either orientation.
-  let j:Scalar[X]→+*E:= (algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom
+  let j:(Polynomial Scalar)→+*E:= (algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom
   have co : j (Polynomial.C c)=aE (RatFunc.C c) := by
     have cc:chartEmbedding b (Polynomial.C c)=LaurentPolynomial.C c := by
       cases b <;> simp [chartEmbedding,infinityEmbedding_apply,Polynomial.toLaurent_C,invert_C]
@@ -33,14 +34,14 @@ private theorem chart_constant_integral (b:Bool) (c:Scalar) :
 
 private theorem chart_generators (b:Bool) (p:baseChart (b,false)) :
     aE (p:ChartField)∈Ord b := by
-  letI : Algebra Scalar[X] E:=((algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom).toAlgebra
+  letI : Algebra (Polynomial Scalar) E:=((algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom).toAlgebra
   let A:Subring ChartField:=(Ord b).toSubring.comap (algebraMap ChartField E)
   have le:baseChart (b,false)≤A := by
     apply Subring.closure_le.mpr
     rintro _ (⟨r,rfl⟩ | eq | eq)
     · exact chart_constant_integral (E:=E) b (inner r)
     · change _=chartCoordinate b RatFunc.X at eq;subst_vars
-      let j:Scalar[X]→+*E:= (algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom
+      let j:(Polynomial Scalar)→+*E:= (algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom
       letI := j.toAlgebra
       have x : j Polynomial.X=aE (chartCoordinate b RatFunc.X) := by
         change aE (rationalLaurent (chartEmbedding b Polynomial.X))=_
@@ -49,14 +50,14 @@ private theorem chart_generators (b:Bool) (p:baseChart (b,false)) :
         · exact (RingHom.congr_fun Horner.rationalLaurent_finite _).trans RatFunc.algebraMap_X
         · exact (RingHom.congr_fun Horner.rationalLaurent_infinity _).trans (aeval_X _)
       change aE (chartCoordinate b RatFunc.X)∈Ord b
-      rw [←x];exact isIntegral_algebraMap (A:=E) (x:=(Polynomial.X:Scalar[X]))
+      rw [←x];exact isIntegral_algebraMap (A:=E) (x:=(Polynomial.X:(Polynomial Scalar)))
     · change _=chartCoordinate false scalarCoordinate at eq;subst_vars
       exact chart_constant_integral (E:=E) b _
   exact le p.property
 
 private theorem enlarge_chart (b:Bool) {v:E} (reg:IsIntegral (baseChart (b,false)) v) :
     v∈Ord b := by
-  let j:Scalar[X]→+*E:=(algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom
+  let j:(Polynomial Scalar)→+*E:=(algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom
   letI := j.toAlgebra
   let R:=Ord b
   let l:(baseChart (b,false))→+*R:=((algebraMap (baseChart (b,false)) E).codRestrict R.toSubring (chart_generators b))
@@ -65,7 +66,7 @@ private theorem enlarge_chart (b:Bool) {v:E} (reg:IsIntegral (baseChart (b,false
   exact isIntegral_trans _ overR
 
 private theorem seed_denom (T:Finset L) (b:Bool) :
-    chartDenom E T (b,false)=aE (RatFunc.C ((algebraMap L[X] Scalar) (∏z∈T,(Polynomial.X-Polynomial.C z)))) := by
+    chartDenom E T (b,false)=aE (RatFunc.C ((algebraMap (Polynomial L) Scalar) (∏z∈T,(Polynomial.X-Polynomial.C z)))) := by
   classical
   rw [chartDenom,map_prod,map_prod,map_prod]
   apply Finset.prod_congr rfl;intro z _
@@ -77,11 +78,11 @@ private theorem seed_denom (T:Finset L) (b:Bool) :
 theorem generic_membership (i:ℕ) (T:Finset L) (v:E) (regular:controlled E i T v) :
     v∈Ord false ∧ (aE RatFunc.X)^(-(i:ℤ))*v∈Ord true := by
   classical
-  let d:=(algebraMap L[X] Scalar) (∏z∈T,(Polynomial.X-Polynomial.C z))
-  have dn:d≠0 := (map_ne_zero_iff _ (IsFractionRing.injective L[X] Scalar)).mpr
+  let d:=(algebraMap (Polynomial L) Scalar) (∏z∈T,(Polynomial.X-Polynomial.C z))
+  have dn:d≠0 := (map_ne_zero_iff _ (IsFractionRing.injective (Polynomial L) Scalar)).mpr
     (Finset.prod_ne_zero_iff.mpr (fun z _=>X_sub_C_ne_zero z))
   have both (b:Bool) : (fr (b,false):E)⁻¹^i*v∈Ord b := by
-    letI : Algebra Scalar[X] E:=((algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom).toAlgebra
+    letI : Algebra (Polynomial Scalar) E:=((algebraMap (Laurent Scalar) E).comp (chartEmbedding b).toRingHom).toAlgebra
     have h:=regular (b,false)
     change IsIntegral _ ((fr (b,false):E)⁻¹^i*(chartDenom E T (b,false)*v)) at h
     rw [seed_denom,mul_left_comm] at h
@@ -94,7 +95,7 @@ theorem generic_membership (i:ℕ) (T:Finset L) (v:E) (regular:controlled E i T 
   · rw [zpow_neg,zpow_natCast,←inv_pow];exact both true
 
 theorem actual_vertical_rank [FiniteDimensional ChartField E] [Fintype J] [DecidableEq J]
-    (bf:Basis J Scalar[X] (Ord false)) (bi:Basis J Scalar[X] (Ord true))
+    (bf:Basis J (Polynomial Scalar) (Ord false)) (bi:Basis J (Polynomial Scalar) (Ord true))
     (s:ℕ) (positive:0<s) (deg:(normalizedTransition bf bi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ))
     (U:Finset L) (m:ℕ) (v:Fin m→E) (regular:∀j,controlled E (s-1) U (v j)) :
     finrank Scalar (span Scalar (Set.range v))+s≤Fintype.card J*s := by

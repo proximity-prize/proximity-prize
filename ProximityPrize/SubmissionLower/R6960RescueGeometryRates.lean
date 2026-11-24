@@ -13,8 +13,7 @@ open K1_14 (Seeds graphEval)
 open K1_14_2 (Ambient OnJet SeedField RootSeedSection)
 open K1_14_2_2 (CutCover CurveGeometry)
 open K1_14_2_3 (SeedSlice seedImage rootImage constantCoefficients DefinedOverConstants seedLength yLength)
-open private on_root on_seed moving_graph_count seed_graph_count equal_image_degree
-  union_card_le from ProximityPrize.SubmissionLower.Fast062
+open K1_14_2_3 (on_root on_seed moving_graph_count seed_graph_count equal_image_degree union_card_le)
 open scoped Classical BigOperators
 
 structure RateOK (a h : ℚ) : Prop where

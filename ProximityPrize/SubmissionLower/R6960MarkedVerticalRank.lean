@@ -17,7 +17,7 @@ private theorem neg_twist (i:ℤ) (G:Matrix J J (Laurent k)) : negativeTwist (tw
   rw [negativeTwist,twist,smul_smul,←T_add]
   rw [show -1+i=i-1 by omega];rfl
 
-private theorem upper_map (A:Matrix J J k[X]) {v:J→Laurent k} (hv:v∈upperLattice k J 0) :
+private theorem upper_map (A:Matrix J J (Polynomial k)) {v:J→Laurent k} (hv:v∈upperLattice k J 0) :
     (A.map (infinityEmbedding (k:=k)))*ᵥv ∈ upperLattice k J 0 := by
   rw [←range_shiftVector] at hv ⊢
   obtain ⟨p,rfl⟩:=hv
@@ -27,7 +27,7 @@ private theorem upper_map (A:Matrix J J k[X]) {v:J→Laurent k} (hv:v∈upperLat
 private theorem inclusion (G:Matrix J J (Laurent k)) :
     transitionLattice (negativeTwist G)≤transitionLattice G := by
   rintro _ ⟨v,hv,rfl⟩
-  let A:Matrix J J k[X]:=(Polynomial.X : k[X]) • (1:Matrix J J k[X])
+  let A:Matrix J J (Polynomial k):=(Polynomial.X : (Polynomial k)) • (1:Matrix J J (Polynomial k))
   have mat : A.map (infinityEmbedding (k:=k))=T (R:=k) (-1) • (1:Matrix J J (Laurent k)) := by
     ext i j; by_cases eq:i=j <;> simp [A,Matrix.map_apply,Matrix.one_apply,eq,infinityEmbedding_apply,invert_T,smul_eq_mul]
   have trans : negativeTwist G=G*(A.map (infinityEmbedding (k:=k))) := by rw [mat,mul_smul_comm,mul_one]; rfl

@@ -7,17 +7,17 @@ set_option backward.isDefEq.respectTransparency.types false
 namespace Lower6960.MarkedEvaluation
 open Polynomial Module Matrix LinearMap
 open scoped Polynomial Matrix BigOperators
-open private P1_7_1_1_2.exists_full_minor from ProximityPrize.SubmissionLower.UpperBranch1
+open P1_7_1_1_2 (exists_full_minor)
 variable {k K F E I J:Type} [Field k] [Infinite k] [Field K] [Algebra k K]
-  [Field F] [Algebra K[X] F] [IsFractionRing K[X] F] [Algebra K F] [IsScalarTower K K[X] F]
+  [Field F] [Algebra (Polynomial K) F] [IsFractionRing (Polynomial K) F] [Algebra K F] [IsScalarTower K (Polynomial K) F]
   [Field E] [Algebra F E] [Algebra K E] [IsScalarTower K F E]
   [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
 
-def translateField (F:Type) [Field F] [Algebra K[X] F] [IsFractionRing K[X] F] (a:K) : F≃+* F :=
+def translateField (F:Type) [Field F] [Algebra (Polynomial K) F] [IsFractionRing (Polynomial K) F] (a:K) : F≃+* F :=
   IsFractionRing.ringEquivOfRingEquiv (K:=F) (L:=F) (taylorEquiv a).toRingEquiv
 
-theorem translate_polynomial (a:K) (p:K[X]) :
-    translateField F a (algebraMap K[X] F p)=algebraMap K[X] F (taylor a p) :=
+theorem translate_polynomial (a:K) (p:(Polynomial K)) :
+    translateField F a (algebraMap (Polynomial K) F p)=algebraMap (Polynomial K) F (taylor a p) :=
   IsFractionRing.ringEquivOfRingEquiv_algebraMap _ _
 
 /-- Independent scalar sections of a finite abscissa field have a nonsingular
@@ -28,27 +28,27 @@ theorem section_coordinates (b:Basis I F E) (v:J→E) (li:LinearIndependent K v)
       (Matrix.of (fun i j:J=>translateField F (algebraMap k K (shifts (pick i).1))
         (b.repr (v j) (pick i).2))).det≠0 := by
   classical
-  let inc:=algebraMap K[X] F
-  obtain ⟨d,h⟩:=IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors K[X])
+  let inc:=algebraMap (Polynomial K) F
+  obtain ⟨d,h⟩:=IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors (Polynomial K))
     (fun z:I×J=>b.repr (v z.2) z.1)
   choose q eq using h
-  let P:Matrix I J K[X]:=fun i j=>q (i,j)
-  have poly (i j):inc (P i j)=inc (d:K[X])*b.repr (v j) i := by
+  let P:Matrix I J (Polynomial K):=fun i j=>q (i,j)
+  have poly (i j):inc (P i j)=inc (d:(Polynomial K))*b.repr (v j) i := by
     simpa only [Algebra.smul_def] using eq (i,j)
-  have dn:inc (d:K[X])≠0 := (map_ne_zero_iff _ (IsFractionRing.injective _ _)).mpr (mem_nonZeroDivisors_iff_ne_zero.mp d.property)
-  let lift:(I→K[X]) →ₗ[K] (I→F) := LinearMap.pi (fun i=>(IsScalarTower.toAlgHom K K[X] F).toLinearMap.comp (LinearMap.proj i))
-  let invert:(I→F) →ₗ[F] E := (inc (d:K[X]))⁻¹ • b.equivFun.symm.toLinearMap
+  have dn:inc (d:(Polynomial K))≠0 := (map_ne_zero_iff _ (IsFractionRing.injective _ _)).mpr (mem_nonZeroDivisors_iff_ne_zero.mp d.property)
+  let lift:(I→(Polynomial K)) →ₗ[K] (I→F) := LinearMap.pi (fun i=>(IsScalarTower.toAlgHom K (Polynomial K) F).toLinearMap.comp (LinearMap.proj i))
+  let invert:(I→F) →ₗ[F] E := (inc (d:(Polynomial K)))⁻¹ • b.equivFun.symm.toLinearMap
   let recover:= (invert.restrictScalars K).comp lift
-  have coord (j) : lift (P.col j)=inc (d:K[X]) • b.equivFun (v j) := funext (fun i=>poly i j)
+  have coord (j) : lift (P.col j)=inc (d:(Polynomial K)) • b.equivFun (v j) := funext (fun i=>poly i j)
   have vector : recover ∘ P.col =v := by
     funext j
-    change (inc (d:K[X]))⁻¹ • b.equivFun.symm (lift (P.col j))=v j
+    change (inc (d:(Polynomial K)))⁻¹ • b.equivFun.symm (lift (P.col j))=v j
     rw [coord,map_smul,LinearEquiv.symm_apply_apply,inv_smul_smul₀ dn]
   obtain ⟨N,sh,rows,nonzero⟩:=translated_minor (k:=k) P (LinearIndependent.of_comp recover (vector ▸ li))
   refine ⟨N,sh,rows,?_⟩
-  let scale (i:J):=translateField F (algebraMap k K (sh (rows i).1)) (inc (d:K[X]))
+  let scale (i:J):=translateField F (algebraMap k K (sh (rows i).1)) (inc (d:(Polynomial K)))
   let V:Matrix J J F:=fun i j=>translateField F (algebraMap k K (sh (rows i).1)) (b.repr (v j) (rows i).2)
-  let M:Matrix J J K[X]:=fun i j=>taylor (algebraMap k K (sh (rows i).1)) (P (rows i).2 j)
+  let M:Matrix J J (Polynomial K):=fun i j=>taylor (algebraMap k K (sh (rows i).1)) (P (rows i).2 j)
   have values : inc.mapMatrix M=Matrix.of (fun i j=>scale i*V i j) := by
     ext i j
     change inc (taylor _ _)=_
@@ -57,7 +57,7 @@ theorem section_coordinates (b:Basis I F E) (v:J→E) (li:LinearIndependent K v)
   have zero:=congrArg Matrix.det values
   rw [←RingHom.map_det,Matrix.det_mul_column] at zero
   change V.det=0 at vanish
-  exact nonzero ((map_eq_zero_iff _ (IsFractionRing.injective K[X] F)).mp
+  exact nonzero ((map_eq_zero_iff _ (IsFractionRing.injective (Polynomial K) F)).mp
     (zero.trans (by rw [vanish,mul_zero])))
 
 /-- Replacing each translated power-basis coordinate block by evaluations on all

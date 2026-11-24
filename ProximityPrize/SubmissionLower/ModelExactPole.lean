@@ -11,13 +11,13 @@ open scoped Polynomial
 
 /-- A common shift by a multiple of the pole preserves all labeled residues. -/
 theorem exists_shifted {cap u del Γ A n} (M : P1.ModelAt cap u del) (F : P1.FamilyAt A M Γ)
-    (T : K[X]) (multiple : M.E ∣ T) (positive : 1 ≤ n) (small : n ≤ 2600)
+    (T : (Polynomial K)) (multiple : M.E ∣ T) (positive : 1 ≤ n) (small : n ≤ 2600)
     (available : n ≤ M.E.natDegree) (degree : ∀ γ ∈ Γ, (F.scalar γ - T).natDegree ≤ 131071 + n) :
     ∃ P : K1_13.PoleData Γ (fun γ => F.scalar γ - T), P.H.natDegree = n := by
   have hmax : n ≤ (extend M.E).natDegree := by simpa only [extend, natDegree_map] using available
   obtain ⟨H, hm, hd, hdiv⟩ := K1_13.trim_divisor _ (M.E_monic.map embed) _ hmax
   let z := fun γ => embed (M.label γ)
-  have unit {P : K[X]} (hp : IsCoprime P M.E) : IsCoprime (extend P) H :=
+  have unit {P : (Polynomial K)} (hp : IsCoprime P M.E) : IsCoprime (extend P) H :=
     (hp.map (Polynomial.mapRingHom embed)).of_isCoprime_of_dvd_right hdiv
   have amp (γ : K) : extend (M.amplitude γ) = extend M.A₀ + C (z γ) * extend M.A₁ := by
     simp [P1.ModelAt.amplitude, z]
@@ -71,7 +71,7 @@ theorem exists_pole {cap u D Γ A} (M : P1.ModelAt cap u D) (F : P1.FamilyAt A M
     · simp [zero]
     · change ((F.scalar γ).natDegree : ℤ) ≤ 131071 + M.overhead at h
       omega
-  let HasPole (s : K → K[X]) : Prop :=
+  let HasPole (s : K → (Polynomial K)) : Prop :=
     ∃ P : K1_13.PoleData Γ s, P.H.natDegree = M.overhead.toNat
   have eq : (fun γ => F.scalar γ - 0) = F.scalar := funext fun γ => sub_zero _
   apply (congrArg HasPole eq).mp

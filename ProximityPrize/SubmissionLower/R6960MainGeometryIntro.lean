@@ -22,8 +22,8 @@ open P1_7_4_1 (SectionGeometry IntroFactors factorDegree factorMass factorMass_m
 open RescueGeometry (Model Family OnMark label_injective zero_of_contact)
 open FreeSource (reserve)
 open MainPrefixSource (copies)
-open private irreducible_cut terminal_piece from ProximityPrize.SubmissionLower.UpperBranch4
-open private seed_projection from ProximityPrize.SubmissionLower.PortHighFinish
+open P1_7_4_1 (irreducible_cut terminal_piece)
+open P0_10R_1 (seed_projection)
 open scoped Classical BigOperators
 
 private theorem intro_components

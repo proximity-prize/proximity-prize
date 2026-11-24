@@ -7,11 +7,11 @@ namespace Front6960Direction
 noncomputable section
 open Polynomial Front6960
 structure Direction (u : Words) (deleted : Finset I) where
-  den : K[X]
-  U : K[X]
-  V : K[X]
-  A : Fin 2 → K[X]
-  out : Fin 2 → Fin 2 → K[X]
+  den : (Polynomial K)
+  U : (Polynomial K)
+  V : (Polynomial K)
+  A : Fin 2 → (Polynomial K)
+  out : Fin 2 → Fin 2 → (Polynomial K)
   den_nodes : ∀ i, den.eval (node i) ≠ 0
   U_ne : U ≠ 0
   V_ne : V ≠ 0
@@ -38,8 +38,8 @@ structure Regular (F : Direction u deleted) (γ : K) : Prop where
 def excluded (F : Direction u deleted) (Γ : Finset K) : Finset K := by
   classical exact Γ.filter (fun γ => ¬ Regular F γ)
 structure CrossLift (F : Direction u deleted) where
-  G : K[X]
-  L : K[X]
+  G : (Polynomial K)
+  L : (Polynomial K)
   monic : G.Monic
   left : G ∣ F.U
   right : G.map twist ∣ F.V
@@ -47,10 +47,10 @@ structure CrossLift (F : Direction u deleted) where
   nodes : ∀ i ∉ deleted, L.eval (node i) = G.eval (node i) *
     ((F.A 0).eval (node i) * u 1 i - (F.A 1).eval (node i) * u 0 i)
 structure Offset (F : Direction u deleted) {η : K} (anchor : BadMark u η) where
-  pencil : K[X]
+  pencil : (Polynomial K)
   pencil_degree : pencil.degree < k
-  E : K[X]
-  Q : K[X]
+  E : (Polynomial K)
+  Q : (Polynomial K)
   E_monic : E.Monic
   left : E ∣ F.U
   right : E.map twist ∣ F.V
@@ -85,7 +85,7 @@ private theorem coprime_amplitudes (F : Direction u deleted) {γ δ : K} (hne : 
   rw [hd, isCoprime_mul_unit_left_right hunit]
   exact F.primitive.add_mul_right_left _
 private theorem card_of_failed_coprime (F : Direction u deleted) (S : Finset K)
-    (Q : K → K[X]) {P : K[X]} (hP : P ≠ 0)
+    (Q : K → (Polynomial K)) {P : (Polynomial K)} (hP : P ≠ 0)
     (hbad : ∀ γ ∈ S, ¬ IsCoprime (F.amp γ) (Q γ))
     (hdiv : ∀ γ ∈ S, GCDMonoid.gcd (F.amp γ) (Q γ) ∣ P) :
     S.card ≤ P.natDegree := by
@@ -112,7 +112,7 @@ private theorem card_of_failed_coprime (F : Direction u deleted) (S : Finset K)
     _ ≤ ∑ γ ∈ S, (g γ).natDegree := Finset.sum_le_sum hpos
     _ = (∏ γ ∈ S, g γ).natDegree := (natDegree_prod S g hne).symm
     _ ≤ P.natDegree := natDegree_le_of_dvd hprod hP
-private def eliminant (F : Direction u deleted) (q : ℕ) (σ : K →+* K) : K[X] :=
+private def eliminant (F : Direction u deleted) (q : ℕ) (σ : K →+* K) : (Polynomial K) :=
   ((F.A 0).map σ) * F.A 1 ^ q - (F.A 0 ^ q) * ((F.A 1).map σ)
 private theorem gcd_dvd_eliminant (F : Direction u deleted) (q : ℕ) [ExpChar K q]
     (σ : K →+* K) (hσ : ∀ γ, σ γ = γ ^ q) (hq : q ≠ 0) (γ : K) :
@@ -130,7 +130,7 @@ private theorem gcd_dvd_eliminant (F : Direction u deleted) (q : ℕ) [ExpChar K
   exact dvd_sub ((gcd_dvd_right _ _).mul_right _)
     ((hd.trans (dvd_pow_self _ hq)).mul_right _)
 private theorem degree_zero_of_power_dvd_map {q : ℕ} (hq : 2 ≤ q) {σ : K →+* K}
-    {P : K[X]} (hdiv : P ^ q ∣ P.map σ) : P.natDegree = 0 := by
+    {P : (Polynomial K)} (hdiv : P ^ q ∣ P.map σ) : P.natDegree = 0 := by
   by_cases hP : P = 0
   · simp [hP]
   have h := natDegree_le_of_dvd hdiv (Polynomial.map_ne_zero hP)
@@ -168,7 +168,7 @@ private theorem same_label {a b γ δ : K} (hpair : a ≠ 0 ∨ b ≠ 0)
   linear_combination hγ - hδ
 private theorem top_pair (F : Direction u deleted) :
     (F.A 0).coeff F.s ≠ 0 ∨ (F.A 1).coeff F.s ≠ 0 := by
-  have at_top (P : K[X]) (hp : P ≠ 0) (hd : P.natDegree = F.s) :
+  have at_top (P : (Polynomial K)) (hp : P ≠ 0) (hd : P.natDegree = F.s) :
       P.coeff F.s ≠ 0 := by
     rw [← hd, coeff_natDegree]
     exact leadingCoeff_ne_zero.mpr hp
@@ -265,8 +265,8 @@ namespace Front6960Direction
 noncomputable section
 open Polynomial Front6960
 open K1_12 (eq_on_puncture natDegree_lt_of_degree_lt_pos eval_unit_of_dvd)
-open private cancel_pair from ProximityPrize.SubmissionLower.Fast068
-theorem eval_twist (P : K[X]) (i : I) :
+open K1_12 (cancel_pair)
+theorem eval_twist (P : (Polynomial K)) (i : I) :
     (P.map twist).eval (node i) = twist (P.eval (node i)) :=
   K1_12.eval_twist P i
 theorem cross_lift {u deleted} (F : Direction u deleted) : Nonempty (CrossLift F) := by
@@ -291,7 +291,7 @@ theorem cross_lift {u deleted} (F : Direction u deleted) : Nonempty (CrossLift F
   have ha' (j : Fin 2) : (A' j).natDegree ≤ F.s := natDegree_map_le.trans (ha j)
   have hout (i j : Fin 2) : (F.out i j).natDegree < d :=
     natDegree_lt_of_degree_lt_pos hpos (F.out_degree i j)
-  have hprod {a : K[X]} (ha : a.natDegree ≤ F.s) (i j : Fin 2) :
+  have hprod {a : (Polynomial K)} (ha : a.natDegree ≤ F.s) (i j : Fin 2) :
       (a * F.out i j).natDegree < d + F.s :=
     natDegree_mul_le.trans_lt (by have := hout i j; omega)
   obtain ⟨leftLift,hY,hYn⟩ := cancel_pair deleted (fun i => F.U.eval (node i)*w i) A' P d F.s
@@ -305,7 +305,7 @@ theorem cross_lift {u deleted} (F : Direction u deleted) : Nonempty (CrossLift F
     (by intro i hi j
         simp only [P', A', w, eval_sub, eval_mul, F.nodes i hi, eval_twist, map_sub, map_mul]
         ring)
-  let f : RatFunc K := algebraMap K[X] (RatFunc K) leftLift / algebraMap K[X] (RatFunc K) F.U
+  let f : RatFunc K := algebraMap (Polynomial K) (RatFunc K) leftLift / algebraMap (Polynomial K) (RatFunc K) F.U
   have heq : f.num * F.U = leftLift * f.denom := (RatFunc.num_mul_eq_mul_denom_iff F.U_ne).mpr rfl
   have hn (i : I) (hi : i ∉ deleted) : f.num.eval (node i) = f.denom.eval (node i) * w i := by
     have h := congrArg (eval (node i)) heq
@@ -357,7 +357,7 @@ namespace Front6960Direction
 noncomputable section
 open Polynomial Front6960 FrobeniusLocator ProximityPrize.Benchmark
 open K1_12 (eval_unit_of_dvd invariant_multiple)
-open private coprime_factor_of_label from ProximityPrize.SubmissionLower.Fast068
+open K1_12 (coprime_factor_of_label)
 variable {u : Words} {deleted : Finset I} {F : Direction u deleted} {η γ : K}
   {anchor : BadMark u η}
 private def translated (O : Offset F anchor) (m : BadMark u γ) :=
@@ -383,7 +383,7 @@ theorem numerator_degree (O : Offset F anchor) (m : BadMark u γ) :
     O.E.natDegree k le_rfl (translated_degree O m))
   rw [C_mul']
   exact Principal.degree_smul_lt _ (hQ.trans_le (by exact_mod_cast Nat.le_add_left _ _))
-theorem hits (O : Offset F anchor) (W : K[X]) (hW : F.den = O.E * W)
+theorem hits (O : Offset F anchor) (W : (Polynomial K)) (hW : F.den = O.E * W)
     (m : BadMark u γ) (avoid : Disjoint m.support deleted) (i : I) (hi : i ∈ m.support) :
     W.eval (node i) * (numerator O m).eval (node i) = (F.amp γ).eval (node i) * O.raw i := by
   have hd := Finset.disjoint_left.mp avoid hi
@@ -402,9 +402,9 @@ theorem hits (O : Offset F anchor) (W : K[X]) (hW : F.den = O.E * W)
   apply mul_left_cancel₀ he
   rw [← mul_assoc, ← hw]
   linear_combination O.E.eval (node i) * hf + (γ - η) * hs'
-theorem fixed_numerator (O : Offset F anchor) (W : K[X]) (hW : F.den = O.E * W)
+theorem fixed_numerator (O : Offset F anchor) (W : (Polynomial K)) (hW : F.den = O.E * W)
     (m : BadMark u γ) (avoid : Disjoint m.support deleted) (reg : Regular F γ) :
-    ∃ N : K[X], numerator O m = F.amp γ * N ∧ (W*N).map twist = W*N := by
+    ∃ N : (Polynomial K), numerator O m = F.amp γ * N ∧ (W*N).map twist = W*N := by
   classical
   obtain ⟨l, hl⟩ := O.left
   obtain ⟨r, hr⟩ := O.right
@@ -590,7 +590,7 @@ theorem offset_of_anchor {u deleted} (F : Direction u deleted) (H : CrossLift F)
     have h1 := @natDegree_mul_le _ _ H.G (F.A 1)
     have h2 := @natDegree_mul_le _ _ (H.G * F.A 1) m.decoder
     omega
-  let f : RatFunc K := algebraMap K[X] (RatFunc K) J / algebraMap K[X] (RatFunc K) H.G
+  let f : RatFunc K := algebraMap (Polynomial K) (RatFunc K) J / algebraMap (Polynomial K) (RatFunc K) H.G
   have hfrac : f.num * H.G = J * f.denom := (RatFunc.num_mul_eq_mul_denom_iff H.monic.ne_zero).mpr rfl
   have hE : f.denom ∣ H.G := RatFunc.denom_div_dvd _ _
   let Q := f.num %ₘ f.denom
@@ -633,7 +633,7 @@ theorem offset_of_anchor {u deleted} (F : Direction u deleted) (H : CrossLift F)
     Q := Q
     E_monic := f.monic_denom
     left := hE.trans H.left
-    right := (map_dvd (Polynomial.mapRingHom twist) hE).trans H.right
+    right := (Polynomial.map_dvd twist hE).trans H.right
     proper := degree_modByMonic_lt _ f.monic_denom
     reduced := ?_
     raw := raw

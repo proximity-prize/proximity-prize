@@ -11,9 +11,9 @@ variable {K : Type} [Field K] [DecidableEq K]
 
 /-- The cofactor, scaled to equal one at the word, is the projector onto its
 sheet. It is zero on the complementary factor and is nonconstant. -/
-theorem sheet {F : K[X]} (degree : 2≤F.natDegree) (y : K) (root : F.eval y=0)
+theorem sheet {F : (Polynomial K)} (degree : 2≤F.natDegree) (y : K) (root : F.eval y=0)
     (simple : F.derivative.eval y≠0) :
-    ∃ H Q : K[X],F=(Polynomial.X-C y)*Q ∧ H.eval y=1 ∧ Q∣H ∧
+    ∃ H Q : (Polynomial K),F=(Polynomial.X-C y)*Q ∧ H.eval y=1 ∧ Q∣H ∧
       let e:=AdjoinRoot.mk F H
       e^2=e ∧ e≠0 ∧ e≠1 := by
   have fn : F≠0 := by intro eq; simp [eq] at degree
@@ -55,14 +55,14 @@ theorem sheet {F : K[X]} (degree : 2≤F.natDegree) (y : K) (root : F.eval y=0)
 
 /-- Specialization to a marked scalar preserves the full ordinate degree
 and produces a genuine sheet except at the roots of one bounded polynomial. -/
-theorem good_marks (F : Polynomial K[X]) (p : ℕ) [CharP (FractionRing K[X]) p]
+theorem good_marks (F : Polynomial (Polynomial K)) (p : ℕ) [CharP (FractionRing (Polynomial K)) p]
     (ir : Irreducible F) (large : 2≤F.natDegree) (tame : F.natDegree<p)
     (v : ℕ) (seed : ∀j,(F.coeff j).natDegree≤v)
     (T : Finset K) (word : K→K) (root : ∀z∈T,(F.map (evalRingHom z)).eval (word z)=0) :
     ∃ bad ⊆ T, bad.card≤(2*F.natDegree-1)*v ∧
       ∀ z∈T, z∉bad → let f:=F.map (evalRingHom z)
         f.natDegree=F.natDegree ∧ f.Separable ∧
-        ∃ H Q : K[X], f=(Polynomial.X-C (word z))*Q ∧ H.eval (word z)=1 ∧ Q∣H ∧
+        ∃ H Q : (Polynomial K), f=(Polynomial.X-C (word z))*Q ∧ H.eval (word z)=1 ∧ Q∣H ∧
           let e:=AdjoinRoot.mk f H
           e^2=e ∧ e≠0 ∧ e≠1 := by
   classical
@@ -71,7 +71,7 @@ theorem good_marks (F : Polynomial K[X]) (p : ℕ) [CharP (FractionRing K[X]) p]
     (BranchCollisions.tame_separable p ir.squarefree tame)
   have deg := natDegree_resultant_le_of_coeff_natDegree_le F F.derivative F.natDegree
     (F.natDegree-1) v v seed (fun j=>by
-      rw [coeff_derivative,mul_comm,show ((j:K[X])+1)=C ((j:K)+1) by simp]
+      rw [coeff_derivative,mul_comm,show ((j:(Polynomial K))+1)=C ((j:K)+1) by simp]
       exact (natDegree_C_mul_le _ _).trans (seed _))
   let bad:=T.filter fun z=>R.eval z=0
   have incl : bad⊆R.roots.toFinset := fun z hz => Multiset.mem_toFinset.mpr
@@ -82,7 +82,7 @@ theorem good_marks (F : Polynomial K[X]) (p : ℕ) [CharP (FractionRing K[X]) p]
   · intro z hz keep
     have unit : (evalRingHom z) R≠0 := fun h=>keep (mem_filter.mpr ⟨hz,h⟩)
     have full := natDegree_map_eq_of_resultant_derivative_padded_ne_zero (evalRingHom z) F
-      le_rfl (by omega) unit
+      le_rfl unit
     have sep := separable_map_of_resultant_derivative_padded_ne_zero (evalRingHom z) F
       le_rfl (by omega) unit
     exact ⟨full,sep,sheet (full ▸ large) (word z) (root z hz)

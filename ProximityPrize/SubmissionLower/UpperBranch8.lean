@@ -8,8 +8,8 @@ namespace P1_7_8
 noncomputable section
 open Polynomial Finset ProximityPrize.Benchmark
 open P1 (K I node agreement)
-open private occupancy from ProximityPrize.SubmissionLower.Fast055
-open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
+open K1_14_6 (occupancy)
+open P0_10 (incidence_arithmetic)
 end
 end P1_7_8
 end
@@ -32,7 +32,7 @@ structure Input where
   labels : Finset K
   family : AnchoredFamily model labels
   shift_out : model.shift ∉ labels
-  block : L[X]
+  block : (Polynomial L)
   chart : AdjacentChart model family block
   marks : Finset K
   marks_sub : marks ⊆ labels
@@ -56,21 +56,21 @@ structure Input where
 abbrev Input.w (J : Input) : ℕ := J.model.overhead.toNat
 abbrev Input.ell (J : Input) : ℕ := quotientOrder J.w
 abbrev Input.e (J : Input) : ℕ := J.f.natDegree
-def Input.secondBlock (J : Input) : L[X] := J.block.map (frobenius L p)
-def Input.blockProduct (J : Input) : L[X] := J.block * J.secondBlock
+def Input.secondBlock (J : Input) : (Polynomial L) := J.block.map (frobenius L p)
+def Input.blockProduct (J : Input) : (Polynomial L) := J.block * J.secondBlock
 abbrev SeedConstants := MvPolynomial (Fin 2) L
-def residueData (_J : Input) (i : Fin 2) (g : K[X]) : SeedConstants[X] :=
+def residueData (_J : Input) (i : Fin 2) (g : (Polynomial K)) : (Polynomial SeedConstants) :=
   ((liftPoly g).map (if i = 0 then RingHom.id L else frobenius L p)).map MvPolynomial.C
-def blockAt (J : Input) (i : Fin 2) : L[X] :=
+def blockAt (J : Input) (i : Fin 2) : (Polynomial L) :=
   if i = 0 then J.block else J.secondBlock
-def residueDenominator (J : Input) (i : Fin 2) : SeedConstants[X] :=
+def residueDenominator (J : Input) (i : Fin 2) : (Polynomial SeedConstants) :=
   residueData J i (J.model.factor * J.model.A₀) +
     C (MvPolynomial.X i) * residueData J i (J.model.factor * J.model.A₁)
 def evalSeedConstants (z : K) : SeedConstants →+* L :=
   MvPolynomial.eval ![algebraMap K L z, (algebraMap K L z)^p]
 structure ResidueLift (J : Input) where
   denominator : SeedConstants
-  numerator : SeedConstants[X]
+  numerator : (Polynomial SeedConstants)
   denominator_ne : denominator ≠ 0
   denominator_degree : denominator.totalDegree ≤ 2 * J.w
   numerator_degree : ∀ j, (numerator.coeff j).totalDegree ≤ 2 * J.w
@@ -80,16 +80,16 @@ structure ResidueLift (J : Input) where
       C (MvPolynomial.X i * denominator) * residueData J i J.model.Q
   unit_at_marks : ∀ γ ∈ J.labels, evalSeedConstants (J.model.label γ) denominator ≠ 0
 def constantAbscissa : L →+* FX :=
-  (algebraMap L[X] FX).comp Polynomial.C
+  (algebraMap (Polynomial L) FX).comp Polynomial.C
 def liftSeeds : SeedConstants →+* Seeds := MvPolynomial.map constantAbscissa
 def seedBiform : SeedConstants →+* Biform :=
   (MvPolynomial.rename (R := FX) (some : Fin 2 → Option (Fin 2))).toRingHom.comp liftSeeds
-def center : FX := algebraMap L[X] FX Polynomial.X
-def liftTaylor (P : SeedConstants[X]) (i : ℕ) : Biform :=
+def center : FX := algebraMap (Polynomial L) FX Polynomial.X
+def liftTaylor (P : (Polynomial SeedConstants)) (i : ℕ) : Biform :=
   (Polynomial.taylor (MvPolynomial.C center) (P.map seedBiform)).coeff i
 def inverseBlockCoeff (J : Input) (i : ℕ) : FX :=
   (i.factorial : FX)⁻¹ *
-    (Dx^[i]) ((algebraMap L[X] FX J.blockProduct)⁻¹)
+    (Dx^[i]) ((algebraMap (Polynomial L) FX J.blockProduct)⁻¹)
 def ordinateTaylorNum (f : Equation) (r : ℕ) : ℕ → Biform
   | 0 => separant (flatten f) ^ (2*r-1) * MvPolynomial.X none
   | i + 1 => MvPolynomial.C (((i+1).factorial : FX)⁻¹) *
@@ -103,7 +103,7 @@ def quotientDenominator (J : Input) (B : ResidueLift J) (r : ℕ) : Biform :=
 def cutoff (J : Input) (B : ResidueLift J) : Equation :=
   MvPolynomial.optionEquivLeft FX (Fin 2) (quotientNumerator J B (J.ell+1))
 abbrev SeedField := FractionRing Seeds
-def generic (q : Equation) : SeedField[X] := q.map (algebraMap Seeds SeedField)
+def generic (q : Equation) : (Polynomial SeedField) := q.map (algebraMap Seeds SeedField)
 def rootOn (J : Input) (q : Equation) (γ : K) : Prop :=
   atMark q (J.model.label γ) (J.family.scalar γ) = 0
 structure Factors (J : Input) (B : ResidueLift J) where
@@ -156,7 +156,7 @@ def genericPoint (y : SeedClosure) : Biform →+* SeedClosure :=
   (eval₂RingHom intoSeedClosure y).comp (MvPolynomial.optionEquivLeft FX (Fin 2)).toRingHom
 def liftConstantSeeds : SeedConstants →+* SeedClosure :=
   intoSeedClosure.comp liftSeeds
-def reconstructed (J : Input) (B : ResidueLift J) (y : SeedClosure) : SeedClosure[X] :=
+def reconstructed (J : Input) (B : ResidueLift J) (y : SeedClosure) : (Polynomial SeedClosure) :=
   let ζ := intoSeedClosure (MvPolynomial.C center)
   let ev := genericPoint y
   C ((liftConstantSeeds B.denominator)⁻¹) * B.numerator.map liftConstantSeeds +
@@ -202,7 +202,7 @@ open K1_14 (FX Equation Seeds atX graphEval seedEmbedding)
 open K1_14_6_1 (Dx partialX flatten)
 open Polynomial (eval₂RingHom)
 abbrev JetRing := Polynomial Equation
-instance jetCommRing : CommRing JetRing := @Polynomial.commRing Equation inferInstance
+instance jetCommRing : CommRing JetRing := @AddMonoidAlgebra.commRing Equation ℕ inferInstance _
 abbrev Degree := ℕ × ℕ × ℕ
 def nefDegree (h t s : ℕ) : Degree := (h + 2*t, t, s)
 abbrev CoxVar := Fin 2 ⊕ (Fin 2 ⊕ Fin 3)

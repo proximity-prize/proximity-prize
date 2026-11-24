@@ -207,7 +207,7 @@ private theorem monomial_preimage {S : Set Exponent} {n : ℕ} {m : Exponent} (h
       refine ⟨a * MvPolynomial.X ⟨c, hc⟩, (totalDegree_mul _ _).trans ?_, ?_⟩
       · simpa only [totalDegree_X] using Nat.add_le_add_right ha 1
       · rw [map_mul, hφ, monomialMap_X, monomial_mul_monomial, one_mul]
-private theorem affine_image (S : Set Exponent) (h0 : 0 ∈ S) (n : ℕ) :
+theorem affine_image (S : Set Exponent) (h0 : 0 ∈ S) (n : ℕ) :
     (restrictTotalDegree S GeoField n).map (monomialMap GeoField S).toLinearMap =
       restrictSupport GeoField (n • S) := by
   apply le_antisymm
@@ -217,7 +217,7 @@ private theorem affine_image (S : Set Exponent) (h0 : 0 ∈ S) (n : ℕ) :
     rintro _ ⟨m, hm, rfl⟩
     obtain ⟨a, ha, hφ⟩ := monomial_preimage hm
     exact ⟨a, (mem_restrictTotalDegree S n a).mpr ha, hφ⟩
-private theorem quotient_image_finrank {A : Type*} [CommRing A] [Algebra GeoField A]
+theorem quotient_image_finrank {A : Type*} [CommRing A] [Algebra GeoField A]
     (V : Submodule GeoField A) (I : Ideal A) (P : Ideal GeoJets5) (φ : A →ₐ[GeoField] GeoJets5)
     (hle : I ≤ P.comap φ) (hker : ∀ a ∈ V, φ a ∈ P → a ∈ I) :
     Module.finrank GeoField (V.map (Ideal.Quotient.mkₐ GeoField I).toLinearMap) =

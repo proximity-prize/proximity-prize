@@ -15,7 +15,7 @@ namespace RetainedShortening
 open K1 Polynomial
 open scoped Polynomial
 
-structure Word (A d : ℕ) (w : I → K) (s : K → K[X]) (T : Finset K) : Prop where
+structure Word (A d : ℕ) (w : I → K) (s : K → (Polynomial K)) (T : Finset K) : Prop where
   distinct : Set.InjOn s (T : Set K)
   degree : ∀ z ∈ T, (s z).natDegree ≤ d
   hits : ∀ z ∈ T, ∃ B : Finset I, A ≤ B.card ∧ ∀ i ∈ B, (s z).eval (node i) = w i
@@ -105,7 +105,7 @@ theorem minority_count {A d w s T} (W : Word A d w s T) {L k : ℕ}
       simp_rw [show ∀ z, (∑ y∈T, ∑ i : I, (if H z i then 1 else 0)*
           (if H y i then 0 else 1 : ℕ)) = _ from fun z => sum_comm]
       rw [sum_comm]
-      simp [sum_mul_sum]
+      simp only [Finset.sum_mul_sum]
     _ ≤ ∑ _i : I, C := sum_le_sum fun i _ => hu i
     _ = _ := by simp
   rcases scale with scale | ⟨rfl,scale⟩
@@ -311,12 +311,12 @@ open scoped Polynomial BigOperators
 open ProximityPrize.SubmissionLower.MatrixRootMultiplicity
 
 /-- The space of scalar multiples of a polynomial in a truncated degree box. -/
-private def mulBox {L : Type} [Field L] (h : L[X]) (k n : ℕ)
+def mulBox {L : Type} [Field L] (h : (Polynomial L)) (k n : ℕ)
     (fit : h≠0 → h.natDegree+k≤n) : degreeLT L k →ₗ[L] degreeLT L n where
-  toFun u := ⟨h*(u:L[X]),by
+  toFun u := ⟨h*(u:(Polynomial L)),by
     by_cases zero : h=0
     · simp [zero]
-    by_cases uz : (u:L[X])=0
+    by_cases uz : (u:(Polynomial L))=0
     · simp [uz]
     have hu := (natDegree_lt_iff_degree_lt uz).mpr (mem_degreeLT.mp u.2)
     apply mem_degreeLT.mpr
@@ -327,7 +327,7 @@ private def mulBox {L : Type} [Field L] (h : L[X]) (k n : ℕ)
 
 /-- A square factor leaves at most e degrees outside it. A simultaneous
 degree drop at specialization counts toward the same corank. -/
-theorem cofactor_corank {L : Type} [Field L] [DecidableEq L] (h t : L[X]) {r e : ℕ}
+theorem cofactor_corank {L : Type} [Field L] [DecidableEq L] (h t : (Polynomial L)) {r e : ℕ}
     (hr : 0<r) (dt : t.natDegree≤e) (fit : (h^2*t).natDegree≤r) :
     (r-e+1)/2 ≤ r+(r-1)-(sylvester (h^2*t) (h^2*t).derivative r (r-1)).rank := by
   classical
@@ -335,7 +335,7 @@ theorem cofactor_corank {L : Type} [Field L] [DecidableEq L] (h t : L[X]) {r e :
   let g:=f.derivative
   by_cases zero : f=0
   · change _≤r+(r-1)-(sylvester f f.derivative r (r-1)).rank
-    have hz : sylvester (0:L[X]) 0 r (r-1)=0 := by
+    have hz : sylvester (0:(Polynomial L)) 0 r (r-1)=0 := by
       ext i j; cases j using Fin.addCases <;> simp [sylvester]
     rw [zero,derivative_zero,hz,Matrix.rank_zero]; omega
   have hn : h≠0 := fun h => zero (by simp [f,h])
@@ -370,13 +370,13 @@ theorem cofactor_corank {L : Type} [Field L] [DecidableEq L] (h t : L[X]) {r e :
   have inKer (u : degreeLT L k) : lift u∈LinearMap.ker S := by
     apply LinearMap.mem_ker.mpr
     apply Subtype.ext
-    change f*((-a)*(u:L[X]))+g*(D*(u:L[X]))=0
+    change f*((-a)*(u:(Polynomial L)))+g*(D*(u:(Polynomial L)))=0
     rw [da]; dsimp [f,D]; ring
   let Kmap:=lift.codRestrict (LinearMap.ker S) inKer
   have inject : Function.Injective Kmap := by
     intro x y hxy
     apply Subtype.ext
-    exact mul_left_cancel₀ dn (congrArg (fun v : LinearMap.ker S => (v.val.1 : L[X])) hxy)
+    exact mul_left_cancel₀ dn (congrArg (fun v : LinearMap.ker S => (v.val.1 : (Polynomial L))) hxy)
   have : FiniteDimensional L (degreeLT L r) := Module.Finite.of_basis (degreeLT.basis L r)
   have : FiniteDimensional L (degreeLT L (r-1)) := Module.Finite.of_basis (degreeLT.basis L (r-1))
   have hk := LinearMap.finrank_le_finrank_of_injective (f:=Kmap) inject
@@ -392,7 +392,7 @@ theorem cofactor_corank {L : Type} [Field L] [DecidableEq L] (h t : L[X]) {r e :
   change _ ≤ r+(r-1)-(sylvester f g r (r-1)).rank
   rw [eq]; dsimp [k,s] at hk; omega
 
-theorem square_corank {L : Type} [Field L] [DecidableEq L] (h : L[X]) {r : ℕ}
+theorem square_corank {L : Type} [Field L] [DecidableEq L] (h : (Polynomial L)) {r : ℕ}
     (hr : 0<r) (fit : (h^2).natDegree≤r) :
     (r+1)/2 ≤ r+(r-1)-(sylvester (h^2) (h^2).derivative r (r-1)).rank := by
   simpa using cofactor_corank (e:=0) h 1 hr (by simp) (by simpa using fit)
@@ -400,10 +400,10 @@ theorem square_corank {L : Type} [Field L] [DecidableEq L] (h : L[X]) {r : ℕ}
 /-- A family of degree r in the abscissa has at most 4v square fibres,
 where v is its coefficient degree in the parameter. -/
 theorem square_fibres {L : Type} [Field L] [DecidableEq L]
-    (Q : Polynomial L[X]) {r v : ℕ} (hr : 0<r) (d : Q.natDegree≤r)
+    (Q : Polynomial (Polynomial L)) {r v : ℕ} (hr : 0<r) (d : Q.natDegree≤r)
     (seed : ∀ i,(Q.coeff i).natDegree≤v)
     (sep : Q.resultant Q.derivative r (r-1)≠0) (T : Finset L)
-    (square : ∀ z∈T, ∃ h:L[X], Q.map (evalRingHom z)=h^2) :
+    (square : ∀ z∈T, ∃ h:(Polynomial L), Q.map (evalRingHom z)=h^2) :
     T.card≤4*v := by
   have each (z) (hz : z∈T) : (r+1)/2 ≤ r+(r-1)-
       (sylvester (Q.map (evalRingHom z)) (Q.derivative.map (evalRingHom z)) r (r-1)).rank := by
@@ -417,7 +417,7 @@ theorem square_fibres {L : Type} [Field L] [DecidableEq L]
   have upper := sum_sylvester_coranks_le_resultant_natDegree Q Q.derivative r (r-1) T sep
   have fee := Polynomial.natDegree_resultant_le_of_coeff_natDegree_le Q Q.derivative r (r-1) v v seed (fun i => by
     rw [coeff_derivative, mul_comm]
-    rw [show ((i:L[X])+1)=C ((i:L)+1) by simp]
+    rw [show ((i:(Polynomial L))+1)=C ((i:L)+1) by simp]
     exact (natDegree_C_mul_le ..).trans (seed _))
   have hh : T.card*((r+1)/2) ≤ r*v+(r-1)*v := (bound.trans upper).trans (fee.trans_eq (Nat.add_comm ..))
   have ceil : r≤2*((r+1)/2) := by omega
@@ -435,12 +435,12 @@ open K1 K1_14 Polynomial Finset RetainedShortening CurvatureVotes
 open scoped BigOperators Polynomial Classical
 variable {F : Type} [Field F]
 
-abbrev Bi (F : Type) [Field F] := Polynomial F[X]
+abbrev Bi (F : Type) [Field F] := Polynomial (Polynomial F)
 
 
 def height (Q : Bi F) : ℕ := (Bivariate.swap Q).natDegree
 
-theorem coeff_swap {R : Type} [CommRing R] (Q : Polynomial R[X]) (i j : ℕ) :
+theorem coeff_swap {R : Type} [CommRing R] (Q : Polynomial (Polynomial R)) (i j : ℕ) :
     ((Bivariate.swap Q).coeff i).coeff j=(Q.coeff j).coeff i := by
   induction Q using Polynomial.induction_on' with
   | add f g hf hg => simp [hf,hg]
@@ -462,13 +462,13 @@ private theorem factor_height {A B : Bi F} (hn : A*B≠0) :
   rw [map_mul,natDegree_mul ((map_ne_zero_iff _ Bivariate.swap.injective).mpr hA)
     ((map_ne_zero_iff _ Bivariate.swap.injective).mpr hB)]
 
-private theorem square_div {L : Type} [Field L] {x y : L[X]} (h : x^2 ∣ y^2) : x ∣ y :=
+private theorem square_div {L : Type} [Field L] {x y : (Polynomial L)} (h : x^2 ∣ y^2) : x ∣ y :=
   (IsIntegrallyClosed.pow_dvd_pow_iff (by decide : (2:ℕ)≠0)).mp h
 
 /-- A nonzero scalar-square factor in a polynomial fibre can be cancelled. -/
 private theorem cancel_sq {L : Type} [Field L] [IsAlgClosed L]
-    (c : L) (h w q : L[X]) (hc : c≠0) (hh : h≠0)
-    (eq : C c*h^2*q=w^2) : ∃ s:L[X], q=s^2 := by
+    (c : L) (h w q : (Polynomial L)) (hc : c≠0) (hh : h≠0)
+    (eq : C c*h^2*q=w^2) : ∃ s:(Polynomial L), q=s^2 := by
   obtain ⟨r,rc⟩ := IsAlgClosed.exists_pow_nat_eq (k:=L) c (n:=2) (by decide)
   have rn : r≠0 := by intro hz; simp [hz] at rc; exact hc rc.symm
   let D := C r*h
@@ -480,15 +480,15 @@ private theorem cancel_sq {L : Type} [Field L] [IsAlgClosed L]
   have divides : D∣w := square_div dv
   obtain ⟨v,hv⟩ := divides
   refine ⟨v,?_⟩
-  have eq2 : D^2*q=D^2*v^2 := he.trans ((congrArg (fun x:L[X] => x^2) hv).trans (mul_pow D v 2))
+  have eq2 : D^2*q=D^2*v^2 := he.trans ((congrArg (fun x:(Polynomial L) => x^2) hv).trans (mul_pow D v 2))
   exact mul_left_cancel₀ (pow_ne_zero _ dn) eq2
 
 /-- Strip a parameter-only factor and the entire polynomial square part before
 charging the discriminant. Both vertical base loci and degree drops are included. -/
 theorem squareclass_count {L : Type} [Field L] [IsAlgClosed L] [DecidableEq L]
-    (D H R : Bi L) (c : L[X]) (hn : D≠0) (fac : D=C c*H^2*R)
+    (D H R : Bi L) (c : (Polynomial L)) (hn : D≠0) (fac : D=C c*H^2*R)
     (hr : 0<R.natDegree) (sep : R.resultant R.derivative R.natDegree (R.natDegree-1)≠0)
-    (T : Finset L) (marks : ∀ z∈T,∃ w:L[X],D.map (evalRingHom z)=w^2) :
+    (T : Finset L) (marks : ∀ z∈T,∃ w:(Polynomial L),D.map (evalRingHom z)=w^2) :
     T.card≤4*height D := by
   classical
   have prod : C c*H^2*R≠0 := fac ▸ hn
@@ -514,7 +514,7 @@ theorem squareclass_count {L : Type} [Field L] [IsAlgClosed L] [DecidableEq L]
     have cg : c.eval z≠0 ∧ H.leadingCoeff.eval z≠0 := by simpa [B] using be
     have hh : H.map (evalRingHom z)≠0 := by
       intro h
-      have h' := congrArg (fun q:L[X] => q.coeff H.natDegree) h
+      have h' := congrArg (fun q:(Polynomial L) => q.coeff H.natDegree) h
       exact cg.2 (by simpa only [coeff_map,coeff_zero,coeff_natDegree,coe_evalRingHom] using h')
     obtain ⟨w,ew⟩ := marks z hmem
     rw [fac,Polynomial.map_mul,Polynomial.map_mul,Polynomial.map_pow,map_C] at ew
@@ -528,8 +528,8 @@ theorem squareclass_count {L : Type} [Field L] [IsAlgClosed L] [DecidableEq L]
   change (T \ E).card+E.card=T.card at hcard
   omega
 
-private theorem root_count {ι : Type*} {S : Finset ι} {z : ι→F} (inj : Set.InjOn z (S:Set ι))
-    (q : F[X]) (nz : q≠0) (van : ∀ i∈S,q.eval (z i)=0) : S.card ≤ q.natDegree := by
+theorem root_count {ι : Type*} {S : Finset ι} {z : ι→F} (inj : Set.InjOn z (S:Set ι))
+    (q : (Polynomial F)) (nz : q≠0) (van : ∀ i∈S,q.eval (z i)=0) : S.card ≤ q.natDegree := by
   classical
   have sub : S.image z⊆q.roots.toFinset := by
     intro x hx
@@ -543,14 +543,14 @@ private theorem root_count {ι : Type*} {S : Finset ι} {z : ι→F} (inj : Set.
 polynomial whenever every nonvertical prime factor has nonzero X derivative. -/
 theorem separable_kernel {L : Type} [Field L] (Q : Bi L) (sf : Squarefree Q)
     (tame : ∀ q : Bi L, Irreducible q → q∣Q → 0<q.natDegree → q.derivative≠0) :
-    (Q.map (algebraMap L[X] (FractionRing L[X]))).Separable := by
+    (Q.map (algebraMap (Polynomial L) (FractionRing (Polynomial L)))).Separable := by
   classical
-  let ι:=algebraMap L[X] (FractionRing L[X])
+  let ι:=algebraMap (Polynomial L) (FractionRing (Polynomial L))
   have inj : Function.Injective ι := IsFractionRing.injective _ _
   induction Q using WfDvdMonoid.induction_on_irreducible with
   | zero => exact False.elim (sf.ne_zero rfl)
   | unit u hu =>
-    simpa using (separable_one (R:=FractionRing L[X])).unit_mul (hu.map (mapRingHom ι))
+    simpa using (separable_one (R:=FractionRing (Polynomial L))).unit_mul (hu.map (mapRingHom ι))
   | mul a q ha hq ih =>
     have facts := squarefree_mul_iff.mp sf
     have other := ih facts.2.2 (fun f irr dv => tame f irr (dv.trans (dvd_mul_left ..)))
@@ -561,7 +561,7 @@ theorem separable_kernel {L : Type} [Field L] (Q : Bi L) (sf : Squarefree Q)
       rw [cc,map_C]
       exact other.unit_mul (isUnit_C.mpr ((map_ne_zero_iff _ inj).mpr cpos).isUnit)
     · have hp := hq.isPrimitive h0
-      have ir := (hp.irreducible_iff_irreducible_map_fraction_map (K:=FractionRing L[X])).mp hq
+      have ir := (hp.irreducible_iff_irreducible_map_fraction_map (K:=FractionRing (Polynomial L))).mp hq
       have deriv := tame q hq (dvd_mul_right ..) (Nat.pos_of_ne_zero h0)
       have sep : (q.map ι).Separable := (separable_iff_derivative_ne_zero ir).mpr (by
         rw [derivative_map]; exact (Polynomial.map_ne_zero_iff inj).mpr deriv)
@@ -586,7 +586,7 @@ theorem kernel_test {L : Type} [Field L] (disc : Bi L) :
   by_cases tame : ∀ q:Bi L, Irreducible q → q∣R → 0<q.natDegree → q.derivative≠0
   · left
     refine ⟨Nat.pos_of_ne_zero h0,?_⟩
-    let ι:=algebraMap L[X] (FractionRing L[X])
+    let ι:=algebraMap (Polynomial L) (FractionRing (Polynomial L))
     have inj : Function.Injective ι:=IsFractionRing.injective _ _
     have sep:=separable_kernel R sf tame
     have hres:=Polynomial.resultant_derivative_ne_zero_of_separable _ sep
@@ -608,7 +608,7 @@ theorem xView_inj : Function.Injective xView := Bivariate.swap.injective
 theorem zView_inj : Function.Injective zView :=
   Bivariate.swap.injective.comp (Polynomial.map_injective _ Bivariate.swap.injective)
 
-private theorem inner_degree {R : Type} [CommRing R] (Q : Polynomial R[X]) (i : ℕ) :
+private theorem inner_degree {R : Type} [CommRing R] (Q : Polynomial (Polynomial R)) (i : ℕ) :
     (Q.coeff i).natDegree ≤ (Bivariate.swap Q).natDegree := by
   apply natDegree_le_iff_coeff_eq_zero.mpr
   intro j hj
@@ -621,7 +621,7 @@ theorem coeff_caps (Q : Ordinate) (i : ℕ) :
   rw [coeff_map] at h
   exact h
 
-def ordEval (z : K1_14.L) (y : K1_14.L[X]) : Ordinate →+* K1_14.L[X] :=
+def ordEval (z : K1_14.L) (y : (Polynomial K1_14.L)) : Ordinate →+* (Polynomial K1_14.L) :=
   eval₂RingHom (mapRingHom (evalRingHom z)) y
 
 private theorem native_quad (f : Ordinate) (hf : f.natDegree=2) :
@@ -664,14 +664,14 @@ private theorem no_square (f : Ordinate) (irr : Irreducible f) (hf : f.natDegree
     have := natDegree_le_of_dvd d ne
     omega
 
-private theorem node_ne (f : Ordinate) (irr : Irreducible f) (pos : 0<f.natDegree) (x : L) :
+theorem node_ne (f : Ordinate) (irr : Irreducible f) (pos : 0<f.natDegree) (x : L) :
     f.map (evalRingHom (C x))≠0 := by
   intro zero
   let q : Bi L:=Polynomial.X-C (C x)
   have d : C q∣f := (C_dvd_iff_dvd_coeff ..).mpr (fun i => by
     change Polynomial.X-C (C x)∣f.coeff i
     apply (dvd_iff_isRoot (p:=f.coeff i)).mpr
-    have hz:=congrArg (fun g:Polynomial L[X] => g.coeff i) zero
+    have hz:=congrArg (fun g:Polynomial (Polynomial L) => g.coeff i) zero
     change (f.coeff i).eval (C x)=0
     simpa only [coeff_map,coe_evalRingHom,coeff_zero] using hz)
   obtain ⟨g,eqn⟩:=d
@@ -684,7 +684,7 @@ private theorem node_ne (f : Ordinate) (irr : Irreducible f) (pos : 0<f.natDegre
   rw [←eqn,natDegree_C,natDegree_eq_zero_of_isUnit gu] at h
   omega
 
-private theorem node_height (q : Bi L) (x : L) : (q.eval (C x)).natDegree≤height q := by
+theorem node_height (q : Bi L) (x : L) : (q.eval (C x)).natDegree≤height q := by
   rw [eval_eq_sum,sum_def]
   apply (natDegree_sum_le ..).trans
   apply Finset.sup_le
@@ -693,7 +693,7 @@ private theorem node_height (q : Bi L) (x : L) : (q.eval (C x)).natDegree≤heig
   rw [← C_pow]
   exact (natDegree_mul_C_le ..).trans (coeff_height q i)
 
-private theorem node_eval (q : Bi L) (x z : L) :
+theorem node_eval (q : Bi L) (x z : L) :
     (q.eval (C x)).eval z=(q.map (evalRingHom z)).eval x := by
   have e:=eval₂_hom (p:=q) (evalRingHom z) (C x)
   simpa only [coe_evalRingHom,eval_C,eval_map] using e.symm
@@ -704,12 +704,12 @@ with a generic received root has a double received root. -/
 theorem irreducible_constant_node {A d w s T} (W : Word A d w s T)
     (φ : K →+* L) (z : K→L) (inj : Set.InjOn z (T:Set K)) {k : ℕ}
     (hd : d<A) (scale : VoteScale A d k) (f : Ordinate) (irr : Irreducible f)
-    (hf : f.natDegree=2) (two : (2:Bi L)≠0) (c : L[X]) (h : Bi L)
+    (hf : f.natDegree=2) (two : (2:Bi L)≠0) (c : (Polynomial L)) (h : Bi L)
     (disc : f.coeff 1^2-4*f.coeff 2*f.coeff 0=C c*h^2)
     (marks : ∀ γ∈T,ordEval (z γ) ((s γ).map φ) f=0) :
     T.card≤k*(zView f).natDegree+1 := by
   classical
-  have ns : ¬∃ t:L[X],c=t^2 := by
+  have ns : ¬∃ t:(Polynomial L),c=t^2 := by
     rintro ⟨t,ht⟩
     apply no_square f irr hf two (C t*h)
     rw [disc,ht,map_pow,mul_pow]
@@ -879,7 +879,7 @@ theorem irreducible_linear_node {A d w s T} (W : Word A d w s T)
 variable {E : Type*} [Field E]
 
 theorem derivative_ne_zero_of_natDegree_pos_lt_char
-    (p : ℕ) [CharP E p] (f : E[X])
+    (p : ℕ) [CharP E p] (f : (Polynomial E))
     (hpos : 0 < f.natDegree) (hlt : f.natDegree < p) : f.derivative ≠ 0 := by
   intro hzero
   have hf : f ≠ 0 := by
@@ -887,7 +887,7 @@ theorem derivative_ne_zero_of_natDegree_pos_lt_char
     simp [heq] at hpos
   have hn : f.natDegree - 1 + 1 = f.natDegree := by omega
   have hcoeff : f.coeff f.natDegree * (f.natDegree : E) = 0 := by
-    have heq := congrArg (fun q : E[X] ↦ q.coeff (f.natDegree - 1)) hzero
+    have heq := congrArg (fun q : (Polynomial E) ↦ q.coeff (f.natDegree - 1)) hzero
     simpa only [coeff_derivative, coeff_zero, ← Nat.cast_add_one, hn] using heq
   have hlead : f.coeff f.natDegree ≠ 0 := by
     simpa only [coeff_natDegree] using leadingCoeff_ne_zero.mpr hf
@@ -899,7 +899,7 @@ theorem derivative_ne_zero_of_natDegree_pos_lt_char
   exact (mul_ne_zero hlead hcast) hcoeff
 
 
-private theorem degree_two_count {A d w s T} (W : Word A d w s T)
+theorem degree_two_count {A d w s T} (W : Word A d w s T)
     (φ : K →+* K1_14.L) (z : K→K1_14.L) (inj : Set.InjOn z (T:Set K)) {k : ℕ}
     (hd : d<A) (scale : VoteScale A d k)
     (F : Ordinate) (irr : Irreducible F) (deg : F.natDegree=2) (tame : 2*(xView F).natDegree<p)
@@ -923,10 +923,10 @@ private theorem degree_two_count {A d w s T} (W : Word A d w s T)
       have h':=natDegree_mul_le (p:=(4:Bi K1_14.L)) (q:=F.coeff 2)
       rw [natDegree_ofNat] at h'
       have := (coeff_caps F 2).1; have := (coeff_caps F 0).1; omega
-  let ι:=algebraMap K1_14.L[X] (FractionRing K1_14.L[X])
-  let : CharP (FractionRing K1_14.L[X]) p := charP_of_injective_ringHom
+  let ι:=algebraMap (Polynomial K1_14.L) (FractionRing (Polynomial K1_14.L))
+  let : CharP (FractionRing (Polynomial K1_14.L)) p := charP_of_injective_ringHom
     ((ι.comp Polynomial.C).comp φ).injective p
-  have eq:= natDegree_map_eq_of_injective (IsFractionRing.injective K1_14.L[X] (FractionRing K1_14.L[X])) q
+  have eq:= natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial K1_14.L) (FractionRing (Polynomial K1_14.L))) q
   exact derivative_ne_zero_of_natDegree_pos_lt_char p (q.map ι)
     (eq ▸ pos) (eq ▸ (small.trans bound).trans_lt tame) (by rw [derivative_map,dzero,Polynomial.map_zero])
 
@@ -951,7 +951,7 @@ private theorem low_factor {A d w s T} (W : Word A d w s T)
       have m:=marks γ hγ
       rw [eq_C_of_natDegree_eq_zero zero] at m
       simp only [ordEval,coe_eval₂RingHom,eval₂_C,coe_mapRingHom] at m
-      have hc:=congrArg (fun b : K1_14.L[X] => b.coeff (F.coeff 0).natDegree) m
+      have hc:=congrArg (fun b : (Polynomial K1_14.L) => b.coeff (F.coeff 0).natDegree) m
       simpa only [coeff_map,coe_evalRingHom,coeff_natDegree,coeff_zero,P,IsRoot] using hc
     have h:=(card_le_card sub).trans ((Multiset.toFinset_card_le ..).trans (card_roots' P))
     rw [card_image_of_injOn inj] at h

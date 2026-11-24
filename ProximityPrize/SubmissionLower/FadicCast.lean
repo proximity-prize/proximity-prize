@@ -17,8 +17,7 @@ namespace FadicGate
 open K1_13_2 (cappedCount cumulative denominator)
 open scoped BigOperators
 open Finset
-open private K1_13_2_2_3.cappedColumns K1_13_2_2_3.mem_cappedColumns K1_13_2_2_3.capped_card
-  from ProximityPrize.SubmissionLower.Fast068
+open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 
 /-! ### Raw forms are the plain forms -/

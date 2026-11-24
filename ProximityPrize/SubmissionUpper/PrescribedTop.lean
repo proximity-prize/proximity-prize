@@ -535,7 +535,7 @@ theorem epsilon_lt_carrier_fraction :
     have hN : 0 < Fintype.card Carrier := lt_trans (by positivity) carrier_large
     omega
   have h := nnreal_fraction_lt _ _ _ (by positivity) hdenNat carrier_density_nat
-  rw [Nat.cast_pow] at h
+  rw [show (2 : ℝ≥0) ^ (128 : ℕ) = ((2 ^ 128 : ℕ) : ℝ≥0) by norm_num]
   exact h
 
 /-- For every radius in the certified band, the quantitative collision image

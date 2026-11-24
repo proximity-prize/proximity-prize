@@ -36,7 +36,7 @@ private def heightTerms (a : ℕ) : List ℚ :=
     let g := i+1
     max 0 (1-(a : ℚ)*(g : ℚ)/((p+1 : ℕ) : ℚ))*curveUnit g)
 
-private def heightBound (a : ℕ) : ℚ := (heightTerms a).foldr max 0
+def heightBound (a : ℕ) : ℚ := (heightTerms a).foldr max 0
 
 private theorem le_max_fold {q : ℚ} {terms : List ℚ} (mem : q∈terms) :
     q ≤ terms.foldr max 0 := by
@@ -48,7 +48,7 @@ private theorem le_max_fold {q : ℚ} {terms : List ℚ} (mem : q∈terms) :
     · exact eq.symm ▸ le_max_left _ _
     · exact (ih h).trans (le_max_right _ _)
 
-private theorem height_spec (a g : ℕ) (pos : 0<g) (small : g≤80) :
+theorem height_spec (a g : ℕ) (pos : 0<g) (small : g≤80) :
     max 0 (1-(a : ℚ)*g/((p+1 : ℕ) : ℚ))*curveUnit g≤heightBound a := by
   apply le_max_fold
   unfold heightTerms

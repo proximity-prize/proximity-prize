@@ -16,7 +16,7 @@ open P1_7_1 (columnCount groupedPoleMoment poleRows)
 open P1_7_1_1 (Column Offset Pivot bounded_pole_minors firstJet input
   outputLength pascal_spans poleMatrix polynomialTest polynomialTests_to_poleMatrix rowIndex rowIndex_sum)
 open scoped BigOperators Matrix Polynomial
-open private polynomialTest_apply side_degrees from ProximityPrize.SubmissionLower.UpperBranch1
+open P1_7_1_1 (polynomialTest_apply side_degrees)
 
 def RectSupport {F : Type} [CommSemiring F] (U : Fin 2 → ℕ) (P : TrueSource F) : Prop :=
   ∀ j i a e, sourceCoeff P j i a e ≠ 0 → ∀ z, e z ≤ U z
@@ -72,7 +72,7 @@ private theorem taylor_coordinate {F : Type} [Field F] (α : F) (P : TrueSource 
     (by simpa only [MvPolynomial.degreeOf_C, zero_add] using hc (k + t))
 
 theorem polynomialTest_rect {F : Type} [Field F] {s : Shape} {t : Offset s}
-    (α : F) (side : Fin 2) (v : Column s t → F[X]) {U : Fin 2 → ℕ} {d : ℕ}
+    (α : F) (side : Fin 2) (v : Column s t → (Polynomial F)) {U : Fin 2 → ℕ} {d : ℕ}
     (hd : ∀ u, (v u).natDegree ≤ d) {P : TrueSource F} (hP : RectSupport U P) :
     rectWindow U d side (polynomialTest α side v P) := by
   intro z
@@ -92,7 +92,7 @@ theorem polynomialTest_rect {F : Type} [Field F] {s : Shape} {t : Offset s}
 
 def LocalTests : Prop :=
   ∀ (F : Type) [Field F] [CharP F K1.p] (s : Shape),
-    s.B < K1.p → ∀ (U : Fin 2 → ℕ) (H : F[X]) (lift : (SeedFrac F)[X])
+    s.B < K1.p → ∀ (U : Fin 2 → ℕ) (H : (Polynomial F)) (lift : (Polynomial (SeedFrac F)))
       (α : F) (side : Fin 2) (a b c : F),
       H.eval α = 0 → H.derivative.eval α ≠ 0 → b ≠ 0 →
       lift.eval (algebraMap F (SeedFrac F) α) = residue side a b c →

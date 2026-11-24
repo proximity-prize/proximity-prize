@@ -11,7 +11,7 @@ open MonicChart (ChartField)
 open MonicFourChartDescent ChartSections MonicChartLaurent RetainedRestrictionTorus ChartOverlapTests
 open RetainedTwistedRestriction RetainedSurfaceClass Module Submodule LinearMap Polynomial
 open scoped Polynomial Lower6960.RetainedSurfaceClass
-open private Lower6960.RetainedRestrictionTorus.frame_integral from ProximityPrize.SubmissionLower.R6960RetainedPairedResidues
+open Lower6960.RetainedRestrictionTorus (frame_integral)
 variable {E:Type} [Field E] [Algebra ChartField E] {J:Type} [Fintype J]
 local notation "ι" => algebraMap ChartField E
 

@@ -16,7 +16,7 @@ open scoped BigOperators
 
 def integral (a : Cap) : ℤ := bentIntegral a.1.b a.1.j a.1.t a.2
 
-private def slots : List (Fin 5) := [0, 1, 2, 3, 4]
+def slots : List (Fin 5) := [0, 1, 2, 3, 4]
 
 private theorem sublists_slots :
     (↑(slots.sublists.map List.toFinset) : Multiset (Finset (Fin 5))) =
@@ -43,7 +43,7 @@ private theorem fold_charge {α : Type*} (f : α → ℤ) (l : List α) (a : ℤ
 
 
 set_option maxHeartbeats 1000000 in
-private theorem ambient_list (B : Fin 5 → Cap) :
+theorem ambient_list (B : Fin 5 → Cap) :
     ambientMix (slots.map B) =
       (∑ J ∈ (Finset.univ : Finset (Fin 5)).powerset, (-1 : ℤ) ^ (5 - J.card) *
         integral (Low48BentLattice.Sum J B)).toNat := by

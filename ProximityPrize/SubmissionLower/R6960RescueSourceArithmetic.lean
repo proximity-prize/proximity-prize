@@ -10,7 +10,7 @@ open K1_14 (Shape slots)
 open P1_7_6 (Quad intervalProduct intervalProduct_eq)
 open P1_7_1_3 (evaluate evaluate_eq)
 open HelperSource (column column_eq phaseLayer compressedPhase)
-open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
+open K1_14_2_1 (twice_sum_linear)
 
 /-- A triangular slice of an affine width, scaled by 120. -/
 def triangularWidth (C D L H U : ℕ) : ℤ :=

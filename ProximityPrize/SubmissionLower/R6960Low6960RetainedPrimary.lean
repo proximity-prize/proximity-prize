@@ -18,13 +18,13 @@ private theorem bank_contact : AllContact PrimaryTaper.JetsBounded := by
   obtain ⟨H,hH,hh⟩ := hits
   exact Low6960OrderProof_1.order_of_contact w P hT hp.2.1 hp.2.2.2 hs hH hh
 
-def Bank.of_messages {w : I → K} {Γ : Finset K} {s : K → K[X]} (hm : Messages w Γ s) :
+def Bank.of_messages {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} (hm : Messages w Γ s) :
     Bank Γ s := physicalBank hm PrimaryTaper.JetsBounded tapered_active bank_contact
 
-theorem Bank.of_messages_row {w : I → K} {Γ : Finset K} {s : K → K[X]} (hm : Messages w Γ s) :
+theorem Bank.of_messages_row {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} (hm : Messages w Γ s) :
     (Bank.of_messages hm).row = Low6960OrderProof.BankRow w := rfl
 
-theorem Bank.of_messages_ranked_of_rank {w : I → K} {Γ : Finset K} {s : K → K[X]}
+theorem Bank.of_messages_ranked_of_rank {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)}
     (hm : Messages w Γ s) (hr : Low6960Order.PrimaryRank w) :
     (Bank.of_messages hm).Ranked := by
   apply physicalBank_ranked hm PrimaryTaper.JetsBounded tapered_active bank_contact
@@ -36,7 +36,7 @@ theorem Bank.of_messages_ranked_of_rank {w : I → K} {Γ : Finset K} {s : K →
   · exact fun x hx => Low6960Order.symbol_families w x hr hx
   · exact fun x e he hi => PrimaryTaper.symbol_rank x e he hi
 
-theorem Bank.of_messages_ranked {w : I → K} {Γ : Finset K} {s : K → K[X]} (hm : Messages w Γ s) :
+theorem Bank.of_messages_ranked {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} (hm : Messages w Γ s) :
     (Bank.of_messages hm).Ranked :=
   Bank.of_messages_ranked_of_rank hm (Low6960Order.primary_rank w)
 

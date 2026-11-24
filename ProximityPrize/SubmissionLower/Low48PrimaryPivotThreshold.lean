@@ -8,7 +8,7 @@ set_option maxHeartbeats 1200000
 namespace Low48PrimaryPivot
 open K1_13_2_3 KoalaLinearWindow KoalaPiecewiseTriangle Finset
 open scoped BigOperators
-open private contactExpr contactExpr_eq from ProximityPrize.SubmissionLower.Low48PrimaryPivotAggregate
+open Low48PrimaryPivot (contactExpr contactExpr_eq)
 
 /-- For a fixed derivative index, the retained contact region is a triangle
 cut by four integer half-spaces in the last two exponents. -/

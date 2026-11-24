@@ -18,9 +18,8 @@ open TaperColumns
 open TaperBudget (cap)
 open scoped BigOperators
 
-open private weight_eq_sum map_independent_family pointContact high_monomial_vanishes
-  from ProximityPrize.SubmissionLower.PortLowBase
-open private sumCount sumIndex sumDifferentiated sumGrade sumOld from ProximityPrize.SubmissionLower.PrimaryTaperColumns
+open P0_9_2 (weight_eq_sum map_independent_family pointContact high_monomial_vanishes)
+open TaperColumns (sumCount sumIndex sumDifferentiated sumGrade sumOld)
 
 def primaryBox : Shape := ⟨4012, 1650, 550⟩
 
@@ -92,7 +91,7 @@ theorem contact_of_word_kernel {A D : ℕ} (w : I → K) (Q : Source A D) (hQ : 
   have hd := pointContact (embed (node i)) (embed (w i)) Q.1 S hS hi
   with_reducible exact hd
 
-private theorem local_range_finite (x y : Geom) :
+theorem local_range_finite (x y : Geom) :
     Module.Finite Geom (LinearMap.range ((localConstraintAt 3000 x y).domRestrict
       (TaperNormalize.space cap))) := by
   have hsub :

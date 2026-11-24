@@ -9,8 +9,8 @@ open Polynomial Module Matrix Finset
 open scoped Polynomial Matrix BigOperators
 
 variable {k I J : Type} [Field k] [Fintype I] [DecidableEq I] [Fintype J]
-local notation "F" => FractionRing k[X]
-local notation "ι" => algebraMap k[X] F
+local notation "F" => FractionRing (Polynomial k)
+local notation "ι" => algebraMap (Polynomial k) F
 
 /-- A k-independent family of meromorphic functions, in coordinates in its
 generic scalar span. The polynomial right inverse constructs the primitive basis
@@ -18,7 +18,7 @@ from the original functions, preserving the possible simple finite poles.
 The selected minor has degree at least the excess of column count over row rank. -/
 theorem primitive_minor (M:Matrix I J F) (full:∃ pick:I↪J,(M.submatrix id pick).det≠0)
     (independent:LinearIndependent k M.col) :
-    ∃ (Q:Matrix I J k[X]) (T:Matrix J I k[X]) (B:Matrix I I F) (pick:I↪J),
+    ∃ (Q:Matrix I J (Polynomial k)) (T:Matrix J I (Polynomial k)) (B:Matrix I I F) (pick:I↪J),
       Q*T=1 ∧ M=B*Q.map ι ∧ B=M*T.map ι ∧ (Q.submatrix id pick).det≠0 ∧
       Fintype.card J≤Fintype.card I+(Q.submatrix id pick).det.natDegree := by
   classical
@@ -32,7 +32,7 @@ theorem primitive_minor (M:Matrix I J F) (full:∃ pick:I↪J,(M.submatrix id pi
     apply mem_degreeLT.mpr
     exact (degree_le_natDegree.trans_lt (by exact_mod_cast Nat.lt_succ_of_le (degrees i j)))⟩
   let coeff (i:I) : V i→ₗ[k]F :=
-    (IsScalarTower.toAlgHom k k[X] F).toLinearMap.comp (degreeLT k (d i+1)).subtype
+    (IsScalarTower.toAlgHom k (Polynomial k) F).toLinearMap.comp (degreeLT k (d i+1)).subtype
   let values : (∀i,V i)→ₗ[k](I→F):=LinearMap.pi (fun i=>(coeff i).comp (LinearMap.proj i))
   let forward:=((Matrix.toLin' B).restrictScalars k).comp values
   have eq : forward ∘ col=M.col := by

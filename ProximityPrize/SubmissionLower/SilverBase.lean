@@ -42,7 +42,7 @@ structure TwoActive (u : Words) where
   degreeSum : a + b + c = 2 * k + 2
   nullitySum : nullity u + a + b = 2 * (t + 1)
   level : Strata.HasLevelHilbertFunction
-    (fun s j => algebraMap K[X] Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
+    (fun s j => algebraMap (Polynomial K) Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
     k a b c
 def TwoActive.height {u : Words} (T : TwoActive u) := (k + 1) - T.c
 abbrev Relation {u : Words} (T : TwoActive u) :=
@@ -74,10 +74,10 @@ structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
 structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) where
   rank_eq : columnRank D.U D.V = 3
-  α : Fin 2 → K[X]
-  β : Fin 2 → K[X]
-  a : K[X]
-  b : K[X]
+  α : Fin 2 → (Polynomial K)
+  β : Fin 2 → (Polynomial K)
+  a : (Polynomial K)
+  b : (Polynomial K)
   a_ne : a ≠ 0
   b_ne : b ≠ 0
   α_primitive : IsCoprime (α 0) (α 1)
@@ -333,11 +333,8 @@ namespace P2_4
 noncomputable section
 open P2 MvPolynomial
 open K1_11_3 (SimpleRoot derivativeChart exists_simple_derivative_at_root)
-open private exceptions specializeY yView_degree specializeY_eval specializeY_iterate
-  specializeY_derivative from ProximityPrize.SubmissionLower.Fast070
-open private centerPoint atCenter atCenter_degree K1_11_3.numerator numerator_degree K1_11_3.denominator
-  eval_atCenter pderiv_atCenter numerator_eval_degree denominator_degree reconstruct
-  natDegree_le_of_degree_lt_succ derivativeChart_degree from ProximityPrize.SubmissionLower.Fast072
+open K1_11_3 (exceptions specializeY yView_degree specializeY_eval specializeY_iterate specializeY_derivative)
+open K1_11_3 (centerPoint atCenter atCenter_degree numerator numerator_degree denominator eval_atCenter pderiv_atCenter numerator_eval_degree denominator_degree reconstruct natDegree_le_of_degree_lt_succ derivativeChart_degree)
 theorem assign {u : Words} {deleted : Finset I} {Γ : Finset K}
     {F : Marks u deleted Γ} {b : Bank} (A : Annihilator F b) :
     ∃ (exceptional : Finset K) (charts : Fin 5 → Finset K),
@@ -457,17 +454,9 @@ set_option maxHeartbeats 900000
 namespace P2_4
 open P2 Finset
 open K1_11 (V J)
-open private countRow gradeRow count grade contactRow V_affine rational_fee from ProximityPrize.SubmissionLower.PortFrontA
-open private
-  dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8
-  dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4
-  dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15
-  dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8
-  dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3
-  dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7
-  dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6
-  dims_4_3_5 jets_3_3_5 from ProximityPrize.SubmissionLower.FrontBranch4
-private theorem dims_5_10_11 : count 5 10 11 = 2002 ∧ grade 5 10 11 = 6174 := by
+open P0_7 (countRow gradeRow count grade contactRow V_affine rational_fee)
+open P1_4 (dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8 dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4 dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15 dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8 dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3 dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7 dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6 dims_4_3_5 jets_3_3_5)
+theorem dims_5_10_11 : count 5 10 11 = 2002 ∧ grade 5 10 11 = 6174 := by
   constructor
   · have r0 : countRow 5 10 11 0 = 627 := by decide
     have r1 : countRow 5 10 11 1 = 500 := by decide
@@ -484,14 +473,14 @@ private theorem dims_5_10_11 : count 5 10 11 = 2002 ∧ grade 5 10 11 = 6174 := 
     have r4 : gradeRow 5 10 11 4 = 721 := by decide
     have r5 : gradeRow 5 10 11 5 = 360 := by decide
     simp only [sum_range_succ, sum_range_zero, r0, r1, r2, r3, r4, r5, zero_add]
-private theorem jets_4_10_11 : J 4 10 11 = 2301 := by
+theorem jets_4_10_11 : J 4 10 11 = 2301 := by
   change (∑ i ∈ range 4, contactRow 4 10 11 i) = 2301
   have r0 : contactRow 4 10 11 0 = 1210 := by decide
   have r1 : contactRow 4 10 11 1 = 680 := by decide
   have r2 : contactRow 4 10 11 2 = 315 := by decide
   have r3 : contactRow 4 10 11 3 = 96 := by decide
   simp only [sum_range_succ, sum_range_zero, r0, r1, r2, r3, zero_add]
-private theorem dims_4_8_9 : count 4 8 9 = 985 ∧ grade 4 8 9 = 2419 := by
+theorem dims_4_8_9 : count 4 8 9 = 985 ∧ grade 4 8 9 = 2419 := by
   constructor
   · have r0 : countRow 4 8 9 0 = 360 := by decide
     have r1 : countRow 4 8 9 1 = 272 := by decide
@@ -506,13 +495,13 @@ private theorem dims_4_8_9 : count 4 8 9 = 985 ∧ grade 4 8 9 = 2419 := by
     have r3 : gradeRow 4 8 9 3 = 396 := by decide
     have r4 : gradeRow 4 8 9 4 = 200 := by decide
     simp only [sum_range_succ, sum_range_zero, r0, r1, r2, r3, r4, zero_add]
-private theorem jets_3_8_9 : J 3 8 9 = 806 := by
+theorem jets_3_8_9 : J 3 8 9 = 806 := by
   change (∑ i ∈ range 3, contactRow 3 8 9 i) = 806
   have r0 : contactRow 3 8 9 0 = 504 := by decide
   have r1 : contactRow 3 8 9 1 = 232 := by decide
   have r2 : contactRow 3 8 9 2 = 70 := by decide
   simp only [sum_range_succ, sum_range_zero, r0, r1, r2, zero_add]
-private theorem dims_4_5_3 : count 4 5 3 = 175 ∧ grade 4 5 3 = 364 := by
+theorem dims_4_5_3 : count 4 5 3 = 175 ∧ grade 4 5 3 = 364 := by
   constructor
   · have r0 : countRow 4 5 3 0 = 60 := by decide
     have r1 : countRow 4 5 3 1 = 50 := by decide
@@ -527,7 +516,7 @@ private theorem dims_4_5_3 : count 4 5 3 = 175 ∧ grade 4 5 3 = 364 := by
     have r3 : gradeRow 4 5 3 3 = 72 := by decide
     have r4 : gradeRow 4 5 3 4 = 32 := by decide
     simp only [sum_range_succ, sum_range_zero, r0, r1, r2, r3, r4, zero_add]
-private theorem jets_3_5_3 : J 3 5 3 = 191 := by
+theorem jets_3_5_3 : J 3 5 3 = 191 := by
   change (∑ i ∈ range 3, contactRow 3 5 3 i) = 191
   have r0 : contactRow 3 5 3 0 = 120 := by decide
   have r1 : contactRow 3 5 3 1 = 55 := by decide
@@ -549,7 +538,7 @@ open K1_11 (V J filtered filteredMul filteredMul_injective mem_filteredMul_range
   contactShift contactLift contactWeight contactShift_parameter_weights
   truncated_mul_mem_jet contact_product_not_high_order
   jetSpace_support_bound)
-open private exists_kernel_outside from ProximityPrize.SubmissionLower.Fast065
+open K1_11 (exists_kernel_outside)
 abbrev Multipliers (F : Type*) [Field F] (b : Bank) := JetSpace F 2 (b.s - b.dS) (b.t - b.dT)
 variable {F : Type*} [Field F]
 structure ContactData (N : ℕ) (L : MvPolynomial (Fin 5) F) (b : Bank) where
@@ -581,7 +570,7 @@ private theorem shifted_ne (i : Fin N) : D.shifted i L ≠ 0 := by
   simp [hz] at hh
 private theorem bank_s (b : Bank) : b.s - b.dS + b.dS = b.s := by cases b <;> rfl
 private theorem bank_t (b : Bank) : b.t - b.dT + b.dT = b.t := by cases b <;> rfl
-private def localMultiply (i : Fin N) : Multipliers F b →ₗ[F] JetSpace F 3 b.s b.t where
+def localMultiply (i : Fin N) : Multipliers F b →ₗ[F] JetSpace F 3 b.s b.t where
   toFun Q := ⟨weightedTruncation contactWeight 4 (D.shifted i L * Q.val), by
     simpa only [bank_s, bank_t] using
       truncated_mul_mem_jet 2 (b.s-b.dS) (b.t-b.dT) b.dS b.dT (D.shifted i L)
@@ -600,9 +589,9 @@ private theorem localMultiply_injective (i : Fin N) :
   have hQn : Q.val ≠ 0 := fun hz => hn (Subtype.ext hz)
   exact contact_product_not_high_order contactWeight 4 (D.shifted i L) Q.val
     (D.order_one i) (shifted_ne D i) hQn (jetSpace_support_bound _ _ _ Q) hhigh
-private abbrev LocalSpace (i : Fin N) :=
+abbrev LocalSpace (i : Fin N) :=
   (JetSpace F 3 b.s b.t) ⧸ LinearMap.range (localMultiply D i)
-private theorem local_finrank (i : Fin N) :
+theorem local_finrank (i : Fin N) :
     Module.finrank F (LocalSpace D i) = J 4 b.s b.t - J 3 (b.s-b.dS) (b.t-b.dT) := by
   have hq := Submodule.finrank_quotient_add_finrank (LinearMap.range (localMultiply D i))
   rw [LinearMap.finrank_range_of_inj (localMultiply_injective D i), jetSpace_finrank,
@@ -628,13 +617,13 @@ open K1_11 (V J contactLift contactWeight contactShift
   mem_indexedSupport scalarWeightY scalarWeightYS scalarWeightT scalarEliminant
   scalarEliminant_ne_zero polynomialView_source_coefficients clearedEval_weight_bound
   polynomialView scalarEliminant_annihilates)
-open private scalar_total_weight_le from ProximityPrize.SubmissionLower.Fast071
+open K1_11 (scalar_total_weight_le)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted} {b : Bank} {H : ℕ}
     (D : ContactInput u P b H)
 def ContactInput.shifted (_D : ContactInput u P b H) (i : Fin P.N) (Q : MvPolynomial (Fin 5) K) :=
   contactShift (P.nodes i) (u 0 (P.index i)) (u 1 (P.index i))
     (u 0 (P.index i) ^ p) (u 1 (P.index i) ^ p) Q
-private def asContactData : ContactData P.N D.L b where
+def asContactData : ContactData P.N D.L b where
   x := P.nodes
   first := fun i => u 0 (P.index i)
   firstSlope := fun i => u 1 (P.index i)
@@ -644,7 +633,7 @@ private def asContactData : ContactData P.N D.L b where
   degreeS := le_of_eq (D.degrees 2)
   degreeT := le_of_eq (D.degrees 3)
   order_one := D.order_one
-private theorem contact_order_one_mem {σ : Type*} (v : σ → ℕ) (L : MvPolynomial σ K)
+theorem contact_order_one_mem {σ : Type*} (v : σ → ℕ) (L : MvPolynomial σ K)
     (hL : (contactLift v L).natTrailingDegree = 1) : L ∈ restrictWeightedOrder v 1 := by
   apply (contactLift_X_pow_dvd_iff v 1 L).mp
   apply Polynomial.X_pow_dvd_iff.mpr
@@ -665,7 +654,7 @@ theorem correctOn_mark {u : Words} {deleted : Finset I} (P : Puncture deleted)
     u 0 (P.index i) ^ p + γ ^ p * u 1 (P.index i) ^ p
   rw [Strata.eval_coefficient_map twist M.decoder _ (Native.native_domain_fixed (P.index i)), h]
   simp only [map_add, map_mul, P0.twist, frobenius_def]
-private theorem bank_cancel (b : Bank) : 1 + (b.dT - 1) = b.dT := by cases b <;> rfl
+theorem bank_cancel (b : Bank) : 1 + (b.dT - 1) = b.dT := by cases b <;> rfl
 end
 end P2_4
 end
@@ -678,8 +667,8 @@ noncomputable section
 open P2 MvPolynomial
 open scoped BigOperators
 open K1_11 (indexedSupport mem_indexedSupport indexedSupport_card nodes_injective)
-open private ncard_inter_filter surface_count_with_terminal from ProximityPrize.SubmissionLower.Fast070
-open private seed_eq_of_mismatch from ProximityPrize.SubmissionLower.Fast065
+open K1_11 (ncard_inter_filter surface_count_with_terminal)
+open K1_11 (seed_eq_of_mismatch)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted}
   {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
 private theorem pencil_bad_count (hsub : Λ ⊆ Γ) (P₀ P₁ : Polynomial K)
@@ -1557,14 +1546,14 @@ open Finset
 open P2 (agreement)
 open P2_7 (Bank Stage )
 open K1_14 (Shape shapeSum triangle)
-open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
-private def row (x y z : ℤ) (q n : ℕ) : ℤ :=
+open K1_14_2_1 (twice_sum_linear)
+def row (x y z : ℤ) (q n : ℕ) : ℤ :=
   (n : ℤ) * (x + y*q + z*((n : ℤ)-1))
-private def rising (x y z : ℤ) (n : ℕ) : ℤ :=
+def rising (x y z : ℤ) (n : ℕ) : ℤ :=
   (n : ℤ)*((n : ℤ)+1)*(3*x+2*(y+z)*((n : ℤ)-1))
-private def level (x y z : ℤ) (J n : ℕ) : ℤ :=
+def level (x y z : ℤ) (J n : ℕ) : ℤ :=
   3*(n : ℤ)*((J : ℤ)+1)*(2*(x+(y+z)*J)+y*((n : ℤ)-1))
-private def tailSum (f : ℕ → ℤ) (k : ℕ) : ℕ → ℤ
+def tailSum (f : ℕ → ℤ) (k : ℕ) : ℕ → ℤ
   | 0 => 0
   | n+1 => tailSum f k n + f (k+n)
 end P2_7_2_2

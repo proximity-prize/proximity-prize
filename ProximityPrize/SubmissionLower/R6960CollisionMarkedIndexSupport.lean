@@ -20,26 +20,26 @@ variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
 local instance supportedFibreRing (z:k) : CommRing (Fiber E z) :=
   @Ideal.Quotient.commRing (↥(Order k E)) ((Order k E).toCommRing) (sliceIdeal E z)
 
-abbrev FibreGeneric (z:k) := (FractionRing k[X]) ⊗[k[X]] Fiber E z
+abbrev FibreGeneric (z:k) := (FractionRing (Polynomial k)) ⊗[(Polynomial k)] Fiber E z
 
 /-- The true determinant index of the original fibre order can have roots
 only where the reduced surface branch has root multiplicity at least two.
 The square divisibility and the return map to the original order use the
 same comparison basis. -/
-theorem fibre_index_supported (p : ℕ) [CharP k p] [CharP (FractionRing k[X]) p]
+theorem fibre_index_supported (p : ℕ) [CharP k p] [CharP (FractionRing (Polynomial k)) p]
     (small : finrank (FractionRing (Plane k)) E<p)
     (z:k) [IsReduced (FibreGeneric (E:=E) z)]
     (δ:Plane k) (nz:δ≠0)
     (principal : normalizationDiscriminant (A:=Plane k) (E:=E) (FractionRing (Plane k))=Ideal.span {δ})
     [DecidableEq k] :
     (branchProduct (Bivariate.swap δ)).map (evalRingHom z)≠0 ∧
-    ∃ d:k[X], d≠0 ∧ d^2∣δ.eval (C z) ∧
+    ∃ d:(Polynomial k), d≠0 ∧ d^2∣δ.eval (C z) ∧
       (∀ x∈d.roots, 2≤((branchProduct (Bivariate.swap δ)).map (evalRingHom z)).rootMultiplicity x) ∧
-      ∀ v:FibreGeneric (E:=E) z, IsIntegral k[X] v →
-        ∃ u:Fiber E z,(1 ⊗ₜ[k[X]] u : FibreGeneric (E:=E) z)=algebraMap k[X] (FibreGeneric (E:=E) z) d*v := by
+      ∀ v:FibreGeneric (E:=E) z, IsIntegral (Polynomial k) v →
+        ∃ u:Fiber E z,(1 ⊗ₜ[(Polynomial k)] u : FibreGeneric (E:=E) z)=algebraMap (Polynomial k) (FibreGeneric (E:=E) z) d*v := by
   classical
   let A := Plane k
-  let R := k[X]
+  let R := (Polynomial k)
   let K := FractionRing R
   let F := FractionRing A
   let V := FibreGeneric (E:=E) z
@@ -108,7 +108,7 @@ theorem fibre_index_supported (p : ℕ) [CharP k p] [CharP (FractionRing k[X]) p
   have nzδz : j δ≠0 := fun h=>actual_trace_nonzero (zero_dvd_iff.mp (h ▸ δ_div_trace))
   have good : (branchProduct (Bivariate.swap δ)).map (evalRingHom z)≠0 := by
     let δs := Bivariate.swap δ
-    let jz : Plane k→+*k[X] := Polynomial.mapRingHom (evalRingHom z)
+    let jz : Plane k→+*(Polynomial k) := Polynomial.mapRingHom (evalRingHom z)
     have nzs : δs≠0 := (map_ne_zero_iff Bivariate.swap.toRingHom Bivariate.swap.injective).mpr nz
     have compare := (branch_weighted_product δs nzs).map jz
     intro zero

@@ -25,9 +25,9 @@ def BadSlope (x : ι → F) (u v : ι → F) (k A : ℕ) (γ : F) : Prop :=
   ∃ S : Finset ι, A ≤ S.card ∧
     ExtendsOn x (fun i => u i + γ * v i) k S ∧
     ¬ (ExtendsOn x u k S ∧ ExtendsOn x v k S)
-theorem degree_smul_lt (a : F) {P : F[X]} {k : ℕ} (hP : P.degree < k) :
+theorem degree_smul_lt (a : F) {P : (Polynomial F)} {k : ℕ} (hP : P.degree < k) :
     (a • P).degree < k := (Polynomial.degree_smul_le a P).trans_lt hP
-theorem degree_sub_lt {P Q : F[X]} {k : ℕ}
+theorem degree_sub_lt {P Q : (Polynomial F)} {k : ℕ}
     (hP : P.degree < k) (hQ : Q.degree < k) : (P-Q).degree < k :=
   (Polynomial.degree_sub_le P Q).trans_lt (max_lt hP hQ)
 theorem bad_slope_relation (x : ι → F) (u v : ι → F) (k A : ℕ)
@@ -39,8 +39,8 @@ theorem bad_slope_relation (x : ι → F) (u v : ι → F) (k A : ℕ)
   obtain ⟨P, hP, hPv⟩ := hrel
   obtain ⟨S, hAS, ⟨Q, hQ, hQv⟩, hnonjoint⟩ := hbad
   have hd : b-a*γ ≠ 0 := sub_ne_zero.mpr (Ne.symm hne)
-  let V : F[X] := (b-a*γ)⁻¹ • (P-a • Q)
-  let U : F[X] := Q-γ • V
+  let V : (Polynomial F) := (b-a*γ)⁻¹ • (P-a • Q)
+  let U : (Polynomial F) := Q-γ • V
   have hV : V.degree < k := degree_smul_lt _ (degree_sub_lt hP (degree_smul_lt a hQ))
   have hU : U.degree < k := degree_sub_lt hQ (degree_smul_lt γ hV)
   have hVv : ∀ i ∈ S, V.eval (x i) = v i := by
@@ -92,10 +92,10 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-theorem eval_coefficient_map (σ : F →+* F) (P : F[X]) (a : F)
+theorem eval_coefficient_map (σ : F →+* F) (P : (Polynomial F)) (a : F)
     (ha : σ a = a) : (P.map σ).eval a = σ (P.eval a) := by
   simpa only [ha] using (Polynomial.eval_map_apply σ a (p := P))
-theorem degree_mul_lt_add (U P : F[X]) (h k : ℕ)
+theorem degree_mul_lt_add (U P : (Polynomial F)) (h k : ℕ)
     (hU : U.natDegree ≤ h) (hP : P.degree < k) :
     (U*P).degree < k+h := by
   by_cases hp : P=0
@@ -105,15 +105,15 @@ theorem degree_mul_lt_add (U P : F[X]) (h k : ℕ)
     natDegree_mul_le.trans_lt (by omega)
   exact degree_le_natDegree.trans_lt (by exact_mod_cast hb)
 structure TwistedRelation (σ : F →+* F) (x w : ι → F)
-    (k h : ℕ) (U V R : F[X]) : Prop where
+    (k h : ℕ) (U V R : (Polynomial F)) : Prop where
   degree_U : U.natDegree ≤ h
   degree_V : V.natDegree ≤ h
   degree_R : R.degree < k+h
   nodes : ∀ i, U.eval (x i)*w i + V.eval (x i)*σ (w i) = R.eval (x i)
 theorem decoder_polynomial_identity (σ : F →+* F)
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
-    (k h : ℕ) (U V R : F[X]) (rel : TwistedRelation σ x w k h U V R)
-    (S : Finset ι) (hS : k+h ≤ S.card) (P : F[X]) (hP : P.degree < k)
+    (k h : ℕ) (U V R : (Polynomial F)) (rel : TwistedRelation σ x w k h U V R)
+    (S : Finset ι) (hS : k+h ≤ S.card) (P : (Polynomial F)) (hP : P.degree < k)
     (hagree : ∀ i ∈ S, P.eval (x i)=w i) :
     U*P+V*(P.map σ)=R := by
   classical
@@ -144,8 +144,8 @@ theorem decoder_polynomial_identity (σ : F →+* F)
   exact sub_eq_zero.mp hzero
 theorem decoder_error_identity (σ : F →+* F)
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
-    (k h : ℕ) (U V R : F[X]) (rel : TwistedRelation σ x w k h U V R)
-    (S : Finset ι) (hS : k+h ≤ S.card) (P : F[X]) (hP : P.degree < k)
+    (k h : ℕ) (U V R : (Polynomial F)) (rel : TwistedRelation σ x w k h U V R)
+    (S : Finset ι) (hS : k+h ≤ S.card) (P : (Polynomial F)) (hP : P.degree < k)
     (hagree : ∀ i ∈ S, P.eval (x i)=w i) (i : ι) :
     U.eval (x i)*(w i-P.eval (x i)) +
       V.eval (x i)*σ (w i-P.eval (x i))=0 := by
@@ -157,9 +157,9 @@ theorem decoder_error_identity (σ : F →+* F)
   linear_combination hr - he
 theorem frobenius_error_identity (p : ℕ) [ExpChar F p]
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
-    (k h : ℕ) (U V R : F[X])
+    (k h : ℕ) (U V R : (Polynomial F))
     (rel : TwistedRelation (frobenius F p) x w k h U V R)
-    (S : Finset ι) (hS : k+h ≤ S.card) (P : F[X]) (hP : P.degree < k)
+    (S : Finset ι) (hS : k+h ≤ S.card) (P : (Polynomial F)) (hP : P.degree < k)
     (hagree : ∀ i ∈ S, P.eval (x i)=w i) (i : ι) :
     U.eval (x i)*(w i-P.eval (x i)) +
       V.eval (x i)*(w i-P.eval (x i))^p=0 :=
@@ -175,10 +175,10 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F : Type} [Field F]
-theorem coprime_bounded_decomposition_right (u v P : F[X]) (d L : ℕ)
+theorem coprime_bounded_decomposition_right (u v P : (Polynomial F)) (d L : ℕ)
     (hu : u.natDegree≤d) (hv : v≠0) (hvd : v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) (hP : P.degree < (L+d : ℕ)) :
-    ∃ A B : F[X], A.degree<L ∧ B.degree<L ∧ P=u*A+v*B := by
+    ∃ A B : (Polynomial F), A.degree<L ∧ B.degree<L ∧ P=u*A+v*B := by
   obtain ⟨s,t,hst⟩ := hcop
   let A := (s*P)%v
   let B := t*P+u*((s*P)/v)
@@ -202,10 +202,10 @@ theorem coprime_bounded_decomposition_right (u v P : F[X]) (d L : ℕ)
     rw [natDegree_mul hv hb,hvd] at hbn
     exact degree_le_natDegree.trans_lt (by exact_mod_cast (show B.natDegree<L by omega))
   exact ⟨A,B,hA,hB,heq⟩
-theorem coprime_bounded_decomposition (u v P : F[X]) (d L : ℕ)
+theorem coprime_bounded_decomposition (u v P : (Polynomial F)) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) (hP : P.degree<(L+d : ℕ)) :
-    ∃ A B : F[X], A.degree<L ∧ B.degree<L ∧ P=u*A+v*B := by
+    ∃ A B : (Polynomial F), A.degree<L ∧ B.degree<L ∧ P=u*A+v*B := by
   by_cases hvd : v.natDegree=d
   · exact coprime_bounded_decomposition_right u v P d L
       (by omega) hv hvd hcop hdL hP
@@ -213,11 +213,11 @@ theorem coprime_bounded_decomposition (u v P : F[X]) (d L : ℕ)
     obtain ⟨B,A,hB,hA,heq⟩ := coprime_bounded_decomposition_right v u P d L
       (by omega) hu hud hcop.symm hdL hP
     exact ⟨A,B,hA,hB,by rw [heq,add_comm]⟩
-theorem coprime_span_iff (u v P : F[X]) (d L : ℕ)
+theorem coprime_span_iff (u v P : (Polynomial F)) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) :
     P.degree<(L+d : ℕ) ↔
-      ∃ A B : F[X], A.degree<L ∧ B.degree<L ∧ P=u*A+v*B := by
+      ∃ A B : (Polynomial F), A.degree<L ∧ B.degree<L ∧ P=u*A+v*B := by
   constructor
   · exact coprime_bounded_decomposition u v P d L hu hv hd hcop hdL
   · rintro ⟨A,B,hA,hB,rfl⟩
@@ -235,7 +235,7 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F : Type} [Field F] [DecidableEq F]
-theorem gcd_reduction_degrees (u v : F[X]) (hu : u≠0) (hv : v≠0) :
+theorem gcd_reduction_degrees (u v : (Polynomial F)) (hu : u≠0) (hv : v≠0) :
     (GCDMonoid.gcd u v).natDegree≤max u.natDegree v.natDegree ∧
     max (u / GCDMonoid.gcd u v).natDegree (v / GCDMonoid.gcd u v).natDegree =
       max u.natDegree v.natDegree-(GCDMonoid.gcd u v).natDegree := by
@@ -255,10 +255,10 @@ theorem gcd_reduction_degrees (u v : F[X]) (hu : u≠0) (hv : v≠0) :
   have hvD : v.natDegree=J.natDegree+(v/J).natDegree := hdb
   rw [huD,hvD,Nat.add_max_add_left]
   constructor <;> omega
-theorem gcd_span_iff (u v P : F[X]) (L : ℕ) (hu : u≠0) (hv : v≠0)
+theorem gcd_span_iff (u v P : (Polynomial F)) (L : ℕ) (hu : u≠0) (hv : v≠0)
     (hL : max u.natDegree v.natDegree-(GCDMonoid.gcd u v).natDegree≤L) :
-    (∃ A B : F[X], A.degree<L ∧ B.degree<L ∧ P=u*A+v*B) ↔
-      ∃ W : F[X], W.degree < (L+(max u.natDegree v.natDegree-
+    (∃ A B : (Polynomial F), A.degree<L ∧ B.degree<L ∧ P=u*A+v*B) ↔
+      ∃ W : (Polynomial F), W.degree < (L+(max u.natDegree v.natDegree-
         (GCDMonoid.gcd u v).natDegree) : ℕ) ∧ P=GCDMonoid.gcd u v*W := by
   let J := GCDMonoid.gcd u v
   let d := max u.natDegree v.natDegree
@@ -308,7 +308,7 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι]
 def boundedEvaluation (x : ι → F) (N : ℕ) : Polynomial.degreeLT F N →ₗ[F] (ι → F) where
-  toFun P i := (P : F[X]).eval (x i)
+  toFun P i := (P : (Polynomial F)).eval (x i)
   map_add' P Q := by ext i; exact eval_add
   map_smul' c P := by ext i; simp
 theorem boundedEvaluation_injective (x : ι → F) (hx : Function.Injective x) (N : ℕ)
@@ -318,12 +318,12 @@ theorem boundedEvaluation_injective (x : ι → F) (hx : Function.Injective x) (
   apply Subtype.ext
   apply sub_eq_zero.mp
   by_contra hne
-  have hdeg : ((P : F[X])-(Q : F[X])).degree<N :=
+  have hdeg : ((P : (Polynomial F))-(Q : (Polynomial F))).degree<N :=
     (degree_sub_le _ _).trans_lt
       (max_lt (Polynomial.mem_degreeLT.mp P.property) (Polynomial.mem_degreeLT.mp Q.property))
-  have hn : ((P : F[X])-(Q : F[X])).natDegree<N :=
+  have hn : ((P : (Polynomial F))-(Q : (Polynomial F))).natDegree<N :=
     (natDegree_lt_iff_degree_lt hne).mpr hdeg
-  have hz : ∀ i, ((P : F[X])-(Q : F[X])).eval (x i)=0 := by
+  have hz : ∀ i, ((P : (Polynomial F))-(Q : (Polynomial F))).eval (x i)=0 := by
     intro i
     rw [eval_sub,sub_eq_zero]
     exact congrFun hPQ i
@@ -359,12 +359,12 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F : Type} [Field F] [DecidableEq F]
-theorem triple_span_iff (σ : F →+* F) (u v P : F[X]) (d L : ℕ)
+theorem triple_span_iff (σ : F →+* F) (u v P : (Polynomial F)) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) :
-    (∃ A B C : F[X], A.degree<L ∧ B.degree<L ∧ C.degree<L ∧
+    (∃ A B C : (Polynomial F), A.degree<L ∧ B.degree<L ∧ C.degree<L ∧
       P=(v*v.map σ)*A+(u*v.map σ)*B+(u*u.map σ)*C) ↔
-      ∃ W : F[X], W.degree < (L+2*d-(GCDMonoid.gcd u (v.map σ)).natDegree : ℕ) ∧
+      ∃ W : (Polynomial F), W.degree < (L+2*d-(GCDMonoid.gcd u (v.map σ)).natDegree : ℕ) ∧
         P=GCDMonoid.gcd u (v.map σ)*W := by
   have huσ : u.map σ≠0 := by simpa using hu
   have hvσ : v.map σ≠0 := by simpa using hv
@@ -409,7 +409,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι β : Type} [Field F] [Fintype ι] [Fintype β]
-def coefficientPolynomial {L : ℕ} (a : Fin L → F) : F[X] :=
+def coefficientPolynomial {L : ℕ} (a : Fin L → F) : (Polynomial F) :=
   ∑ j, Polynomial.monomial j.val (a j)
 theorem coefficientPolynomial_degree {L : ℕ} (a : Fin L → F) :
     (coefficientPolynomial a).degree<L := by
@@ -422,24 +422,24 @@ theorem coefficientPolynomial_eval {L : ℕ} (a : Fin L → F) (x : F) :
     (coefficientPolynomial a).eval x=∑ j, a j*x^j.val := by
   simp only [coefficientPolynomial,eval_finsetSum,eval_monomial]
 theorem eval_degreeLT_sum (L : ℕ) (P : Polynomial.degreeLT F L) (x : F) :
-    (P : F[X]).eval x=∑ j : Fin L, (P : F[X]).coeff j.val*x^j.val := by
-  by_cases hp : (P : F[X])=0
+    (P : (Polynomial F)).eval x=∑ j : Fin L, (P : (Polynomial F)).coeff j.val*x^j.val := by
+  by_cases hp : (P : (Polynomial F))=0
   · simp [hp]
-  rw [Fin.sum_univ_eq_sum_range (fun j => (P : F[X]).coeff j*x^j) L]
+  rw [Fin.sum_univ_eq_sum_range (fun j => (P : (Polynomial F)).coeff j*x^j) L]
   exact Polynomial.eval_eq_sum_range'
     ((natDegree_lt_iff_degree_lt hp).mpr (Polynomial.mem_degreeLT.mp P.property)) x
-def polynomialCombination (g : β → F[X]) (L : ℕ) :
-    (β → Polynomial.degreeLT F L) →ₗ[F] F[X] where
-  toFun Q := ∑ b, g b*(Q b : F[X])
+def polynomialCombination (g : β → (Polynomial F)) (L : ℕ) :
+    (β → Polynomial.degreeLT F L) →ₗ[F] (Polynomial F) where
+  toFun Q := ∑ b, g b*(Q b : (Polynomial F))
   map_add' Q R := by simp only [Pi.add_apply,Submodule.coe_add,mul_add,Finset.sum_add_distrib]
   map_smul' c Q := by simp only [Pi.smul_apply,Submodule.coe_smul,mul_smul_comm,Finset.smul_sum,RingHom.id_apply]
-def allEvaluation (x : ι → F) : F[X] →ₗ[F] (ι → F) where
+def allEvaluation (x : ι → F) : (Polynomial F) →ₗ[F] (ι → F) where
   toFun P i := P.eval (x i)
   map_add' P Q := by ext i; exact eval_add
   map_smul' c P := by ext i; simp
-def numeratorMatrix (x : ι → F) (g : β → F[X]) (L : ℕ) :
+def numeratorMatrix (x : ι → F) (g : β → (Polynomial F)) (L : ℕ) :
     Matrix (β × Fin L) ι F := fun b i => (g b.1).eval (x i)*x i^b.2.val
-theorem numerator_range (x : ι → F) (g : β → F[X]) (L : ℕ) :
+theorem numerator_range (x : ι → F) (g : β → (Polynomial F)) (L : ℕ) :
     LinearMap.range (numeratorMatrix x g L).transpose.mulVecLin =
       (LinearMap.range (polynomialCombination g L)).map (allEvaluation x) := by
   classical
@@ -460,7 +460,7 @@ theorem numerator_range (x : ι → F) (g : β → F[X]) (L : ℕ) :
     intro j _
     ring
   · rintro _ ⟨Q,rfl⟩
-    refine ⟨fun b => (Q b.1 : F[X]).coeff b.2.val,?_⟩
+    refine ⟨fun b => (Q b.1 : (Polynomial F)).coeff b.2.val,?_⟩
     funext i
     simp only [LinearMap.comp_apply,allEvaluation,LinearMap.coe_mk,AddHom.coe_mk,
       polynomialCombination,eval_finsetSum,eval_mul,Matrix.mulVecLin_apply,
@@ -471,7 +471,7 @@ theorem numerator_range (x : ι → F) (g : β → F[X]) (L : ℕ) :
     apply Finset.sum_congr rfl
     intro j _
     ring
-theorem numerator_rank (x : ι → F) (g : β → F[X]) (L : ℕ) :
+theorem numerator_rank (x : ι → F) (g : β → (Polynomial F)) (L : ℕ) :
     (numeratorMatrix x g L).rank = Module.finrank F
       ((LinearMap.range (polynomialCombination g L)).map (allEvaluation x)) := by
   rw [← numerator_range]
@@ -487,7 +487,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι]
-def polynomialMul (J : F[X]) : F[X] →ₗ[F] F[X] where
+def polynomialMul (J : (Polynomial F)) : (Polynomial F) →ₗ[F] (Polynomial F) where
   toFun P := J*P
   map_add' P Q := mul_add _ _ _
   map_smul' c P := mul_smul_comm _ _ _
@@ -499,7 +499,7 @@ def coordinateScale (c : ι → F) (hc : ∀ i, c i≠0) : (ι → F) ≃ₗ[F] 
   map_add' v w := by funext i; exact mul_add _ _ _
   map_smul' a v := by funext i; simp only [Pi.smul_apply,smul_eq_mul,RingHom.id_apply]; ring
 theorem multiple_evaluation_rank (x : ι → F) (hx : Function.Injective x)
-    (J : F[X]) (hJ : ∀ i, J.eval (x i)≠0) (N : ℕ) :
+    (J : (Polynomial F)) (hJ : ∀ i, J.eval (x i)≠0) (N : ℕ) :
     Module.finrank F (((Polynomial.degreeLT F N).map (polynomialMul J)).map (allEvaluation x)) =
       min (Fintype.card ι) N := by
   let e := coordinateScale (fun i => J.eval (x i)) hJ
@@ -518,9 +518,9 @@ theorem multiple_evaluation_rank (x : ι → F) (hx : Function.Injective x)
     ext P i
     exact eval_mul
   rw [heq,LinearEquiv.finrank_map_eq,boundedEvaluation_rank x hx N]
-def tripleNumerators (σ : F →+* F) (u v : F[X]) : Fin 3 → F[X] :=
+def tripleNumerators (σ : F →+* F) (u v : (Polynomial F)) : Fin 3 → (Polynomial F) :=
   ![v*v.map σ,u*v.map σ,u*u.map σ]
-theorem triple_polynomial_range (σ : F →+* F) (u v : F[X]) (d L : ℕ)
+theorem triple_polynomial_range (σ : F →+* F) (u v : (Polynomial F)) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) :
     LinearMap.range (polynomialCombination (tripleNumerators σ u v) L)=
@@ -528,7 +528,7 @@ theorem triple_polynomial_range (σ : F →+* F) (u v : F[X]) (d L : ℕ)
         (polynomialMul (GCDMonoid.gcd u (v.map σ))) := by
   apply le_antisymm
   · rintro _ ⟨Q,rfl⟩
-    have he : ∃ A B C : F[X], A.degree<L ∧ B.degree<L ∧ C.degree<L ∧
+    have he : ∃ A B C : (Polynomial F), A.degree<L ∧ B.degree<L ∧ C.degree<L ∧
         polynomialCombination (tripleNumerators σ u v) L Q=
           (v*v.map σ)*A+(u*v.map σ)*B+(u*u.map σ)*C := by
       refine ⟨Q 0,Q 1,Q 2,Polynomial.mem_degreeLT.mp (Q 0).property,
@@ -544,11 +544,11 @@ theorem triple_polynomial_range (σ : F →+* F) (u v : F[X]) (d L : ℕ)
     let Q : Fin 3 → Polynomial.degreeLT F L :=
       ![⟨A,Polynomial.mem_degreeLT.mpr hA⟩,⟨B,Polynomial.mem_degreeLT.mpr hB⟩,⟨C,Polynomial.mem_degreeLT.mpr hC⟩]
     refine ⟨Q,?_⟩
-    change (∑ b : Fin 3, tripleNumerators σ u v b*(Q b : F[X]))=_
+    change (∑ b : Fin 3, tripleNumerators σ u v b*(Q b : (Polynomial F)))=_
     simp only [Fin.sum_univ_three,tripleNumerators,Q,Matrix.cons_val_zero,Matrix.cons_val_one,Matrix.cons_val_two,Matrix.head_cons,Matrix.tail_cons]
     exact hP.symm
 theorem triple_numerator_rank (σ : F →+* F) (x : ι → F) (hx : Function.Injective x)
-    (u v : F[X]) (d L : ℕ) (hu : u≠0) (hv : v≠0)
+    (u v : (Polynomial F)) (d L : ℕ) (hu : u≠0) (hv : v≠0)
     (hd : max u.natDegree v.natDegree=d) (hcop : IsCoprime u v) (hdL : d≤L)
     (hJ : ∀ i, (GCDMonoid.gcd u (v.map σ)).eval (x i)≠0) :
     (numeratorMatrix x (tripleNumerators σ u v) L).rank =
@@ -565,8 +565,8 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι]
-def pairNumerators (u v : F[X]) : Fin 2 → F[X] := ![v,u]
-theorem pair_polynomial_range (u v : F[X]) (d L : ℕ)
+def pairNumerators (u v : (Polynomial F)) : Fin 2 → (Polynomial F) := ![v,u]
+theorem pair_polynomial_range (u v : (Polynomial F)) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) :
     LinearMap.range (polynomialCombination (pairNumerators u v) L)=Polynomial.degreeLT F (L+d) := by
@@ -574,7 +574,7 @@ theorem pair_polynomial_range (u v : F[X]) (d L : ℕ)
   · rintro _ ⟨Q,rfl⟩
     apply Polynomial.mem_degreeLT.mpr
     have hQ := (coprime_span_iff u v
-      (v*(Q 0 : F[X])+u*(Q 1 : F[X])) d L hu hv hd hcop hdL).mpr
+      (v*(Q 0 : (Polynomial F))+u*(Q 1 : (Polynomial F))) d L hu hv hd hcop hdL).mpr
       ⟨Q 1,Q 0,Polynomial.mem_degreeLT.mp (Q 1).property,
         Polynomial.mem_degreeLT.mp (Q 0).property,add_comm _ _⟩
     simpa [polynomialCombination,pairNumerators,Fin.sum_univ_two] using hQ
@@ -584,7 +584,7 @@ theorem pair_polynomial_range (u v : F[X]) (d L : ℕ)
     let Q : Fin 2 → Polynomial.degreeLT F L :=
       ![⟨B,Polynomial.mem_degreeLT.mpr hB⟩,⟨A,Polynomial.mem_degreeLT.mpr hA⟩]
     refine ⟨Q,?_⟩
-    change (∑ b : Fin 2, pairNumerators u v b*(Q b : F[X]))=P
+    change (∑ b : Fin 2, pairNumerators u v b*(Q b : (Polynomial F)))=P
     simpa [Fin.sum_univ_two,pairNumerators,Q,add_comm] using hP.symm
 theorem degreeLT_evaluation_range (x : ι → F) (N : ℕ) :
     (Polynomial.degreeLT F N).map (allEvaluation x)=LinearMap.range (boundedEvaluation x N) := by
@@ -595,7 +595,7 @@ theorem degreeLT_evaluation_range (x : ι → F) (N : ℕ) :
   · rintro ⟨P,rfl⟩
     exact ⟨P,P.property,rfl⟩
 theorem pair_numerator_rank (x : ι → F) (hx : Function.Injective x)
-    (u v : F[X]) (d L : ℕ) (hu : u≠0) (hv : v≠0)
+    (u v : (Polynomial F)) (d L : ℕ) (hu : u≠0) (hv : v≠0)
     (hd : max u.natDegree v.natDegree=d) (hcop : IsCoprime u v) (hdL : d≤L) :
     (numeratorMatrix x (pairNumerators u v) L).rank=min (Fintype.card ι) (L+d) := by
   rw [numerator_rank,pair_polynomial_range u v d L hu hv hd hcop hdL,degreeLT_evaluation_range]
@@ -648,13 +648,13 @@ theorem error_ratios (σ : F →+* F) (u v e : F) (hv : v≠0)
   calc
     σ (σ e)=σ (-(u/v)*e) := congrArg σ hs
     _ = _ := by rw [map_mul,map_neg,map_div₀,hs]; field_simp
-theorem eval_ne_zero_of_dvd {A B : F[X]} (hAB : A∣B) (x : F) (hB : B.eval x≠0) :
+theorem eval_ne_zero_of_dvd {A B : (Polynomial F)} (hAB : A∣B) (x : F) (hB : B.eval x≠0) :
     A.eval x≠0 := by
   obtain ⟨Q,hQ⟩ := hAB
   rw [hQ,eval_mul] at hB
   exact (mul_ne_zero_iff.mp hB).1
 theorem error_two_rank_no_common (σ : F →+* F) (x e : ι → F)
-    (hx : Function.Injective x) (u v : F[X]) (d L : ℕ)
+    (hx : Function.Injective x) (u v : (Polynomial F)) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) (he : ∀ i, e i≠0)
     (hvx : ∀ i, v.eval (x i)≠0)
@@ -678,7 +678,7 @@ theorem error_two_rank_no_common (σ : F →+* F) (x e : ι → F)
   exact pair_numerator_rank x hx u v d L hu hv hd hcop hdL
 theorem error_three_rank_no_common (σ : F →+* F) (x e : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
-    (u v : F[X]) (d L : ℕ)
+    (u v : (Polynomial F)) (d L : ℕ)
     (hu : u≠0) (hv : v≠0) (hd : max u.natDegree v.natDegree=d)
     (hcop : IsCoprime u v) (hdL : d≤L) (he : ∀ i, e i≠0)
     (hux : ∀ i, u.eval (x i)≠0) (hvx : ∀ i, v.eval (x i)≠0)
@@ -786,7 +786,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι]
-theorem root_nodes_card_le (x : ι → F) (hx : Function.Injective x) (P : F[X]) (hP : P≠0)
+theorem root_nodes_card_le (x : ι → F) (hx : Function.Injective x) (P : (Polynomial F)) (hP : P≠0)
     (S : Finset ι) (hS : ∀ i∈S, P.eval (x i)=0) : S.card≤P.natDegree := by
   have h : (S.image x).card≤P.natDegree := Polynomial.card_le_degree_of_subset_roots
     (fun a ha => (Polynomial.mem_roots hP).mpr (by
@@ -794,7 +794,7 @@ theorem root_nodes_card_le (x : ι → F) (hx : Function.Injective x) (P : F[X])
       exact hS i hi))
   simpa only [Finset.card_image_of_injective S hx] using h
 theorem saturated_coefficients_nonzero (σ : F →+* F) (x e : ι → F)
-    (hx : Function.Injective x) (U V : F[X]) (h L : ℕ)
+    (hx : Function.Injective x) (U V : (Polynomial F)) (h L : ℕ)
     (hU : U.natDegree≤h) (hV : V.natDegree≤h) (hpair : U≠0 ∨ V≠0)
     (hsmall : h<L) (he : ∀ i, e i≠0)
     (hrel : ∀ i, U.eval (x i)*e i+V.eval (x i)*σ (e i)=0)
@@ -822,7 +822,7 @@ theorem saturated_coefficients_nonzero (σ : F →+* F) (x e : ι → F)
     have hc := root_nodes_card_le x hx U hu Finset.univ hz
     rw [Finset.card_univ] at hc
     omega
-theorem coprime_relation_units (σ : F →+* F) (u v : F[X]) (a e : F)
+theorem coprime_relation_units (σ : F →+* F) (u v : (Polynomial F)) (a e : F)
     (hcop : IsCoprime u v) (he : e≠0)
     (hrel : u.eval a*e+v.eval a*σ e=0) : u.eval a≠0 ∧ v.eval a≠0 := by
   have hne := (hcop.map (Polynomial.evalRingHom a)).ne_zero_or_ne_zero
@@ -846,7 +846,7 @@ theorem error_rowspace_le (σ : F →+* F) (x e : ι → F) (L : ℕ) :
   fin_cases b <;> simp [errorTwoMatrix,errorThreeMatrix,Matrix.row]
 theorem normal_error_three_rank (σ : F →+* F) (x e : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ i, σ (x i)=x i)
-    (U V : F[X]) (h L : ℕ) (hU : U.natDegree≤h) (hV : V.natDegree≤h)
+    (U V : (Polynomial F)) (h L : ℕ) (hU : U.natDegree≤h) (hV : V.natDegree≤h)
     (hpair : U≠0 ∨ V≠0) (hsmall : h<L) (he : ∀ i, e i≠0)
     (hrel : ∀ i, U.eval (x i)*e i+V.eval (x i)*σ (e i)=0)
     (hrank : (errorTwoMatrix σ x e L).rank=L+h) :
@@ -953,7 +953,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-theorem syndrome_polynomial_multiple (x w : ι → F) (U : F[X]) (H j : ℕ)
+theorem syndrome_polynomial_multiple (x w : ι → F) (U : (Polynomial F)) (H j : ℕ)
     (hU : U.natDegree≤H) :
     syndrome x (fun i => U.eval (x i)*w i) j =
       ∑ l : Fin (H+1), U.coeff l.val*syndrome x w (l.val+j) := by
@@ -971,7 +971,7 @@ theorem relation_of_kernel (σ : F →+* F) (x w : ι → F)
     (hH : H≤m) (a : Fin 2 × Fin (H+1) → F)
     (ha : (relationMatrix (fun b j => syndrome x
       (if b=0 then w else fun i => σ (w i)) j) m H).mulVec a=0) :
-    ∃ R : F[X], TwistedRelation σ x w k H
+    ∃ R : (Polynomial F), TwistedRelation σ x w k H
       (Principal.assemble (fun i => a (0,i)))
       (Principal.assemble (fun i => a (1,i))) R := by
   let U := Principal.assemble (fun i => a (0,i))
@@ -1007,7 +1007,7 @@ theorem assembled_pair_ne_zero (H : ℕ) (a : Fin 2 × Fin (H+1) → F) (ha : a�
   push Not at h
   have hcoeff (b : Fin 2) (hb : Principal.assemble (fun i => a (b,i))=0)
       (i : Fin (H+1)) : a (b,i)=0 := by
-    have he := congrArg (fun P : F[X] => P.coeff i.val) hb
+    have he := congrArg (fun P : (Polynomial F) => P.coeff i.val) hb
     simpa only [Principal.assemble_coeff,coeff_zero] using he
   apply ha
   funext z
@@ -1028,9 +1028,9 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
 def parameterRelation (p : ℕ) (x u v : ι → F) (m H : ℕ) :
-    Matrix (Fin (m-H)) (Fin 2 × Fin (H+1)) F[X] :=
+    Matrix (Fin (m-H)) (Fin 2 × Fin (H+1)) (Polynomial F) :=
   fun j b => Principal.parameterSyndromes p x u v b.1 (b.2.val+j.val)
-theorem parameterRelation_map (φ : F[X] →+* GenericLayer.GenericField F)
+theorem parameterRelation_map (φ : (Polynomial F) →+* GenericLayer.GenericField F)
     (p : ℕ) (x u v : ι → F) (m H : ℕ) :
     (parameterRelation p x u v m H).map φ =
       relationMatrix (fun b j => φ (Principal.parameterSyndromes p x u v b j)) m H := rfl
@@ -1049,7 +1049,7 @@ theorem parameterSyndromes_eval (p : ℕ) [ExpChar F p]
 theorem primitive_relation_section (p : ℕ) [ExpChar F p] (hp : 1≤p)
     (x u v : ι → F) (m H : ℕ)
     (hnull : GenericLayer.genericNullity (parameterRelation p x u v m H)=1) :
-    ∃ Q : Fin 2 × Fin (H+1) → F[X], PrimitiveVector.IsPrimitive Q ∧
+    ∃ Q : Fin 2 × Fin (H+1) → (Polynomial F), PrimitiveVector.IsPrimitive Q ∧
       (parameterRelation p x u v m H).mulVec Q=0 ∧
       (∀ b, (Q b).natDegree≤(2*H+1)*p) ∧
       ∀ γ : F, (fun b => (Q b).eval γ)≠0 := by
@@ -1059,7 +1059,7 @@ theorem primitive_relation_section (p : ℕ) [ExpChar F p] (hp : 1≤p)
     rw [hnull,Fintype.card_prod,Fintype.card_fin,Fintype.card_fin] at h
     omega
   obtain ⟨B⟩ := NormalFiber.exists_rowBasis
-    (algebraMap F[X] (GenericLayer.GenericField F)) N (2*H+1) hr
+    (algebraMap (Polynomial F) (GenericLayer.GenericField F)) N (2*H+1) hr
   have hdeg : ∀ j b, (N j b).natDegree≤p := by
     intro j b
     have hh := stacked_entry_natDegree p x u v (m-H) H (b.1,j) b.2
@@ -1067,7 +1067,7 @@ theorem primitive_relation_section (p : ℕ) [ExpChar F p] (hp : 1≤p)
       simpa only [N,parameterRelation,Principal.parameterSyndromes,stacked,hankel,Nat.add_comm] using hh
     exact hh'.trans (by split_ifs <;> omega)
   obtain ⟨Q,hprim,hQ,hdegQ,_⟩ := GenericCofactor.exists_primitive_line B
-    (IsFractionRing.injective F[X] (GenericLayer.GenericField F))
+    (IsFractionRing.injective (Polynomial F) (GenericLayer.GenericField F))
     (by simp only [Fintype.card_prod,Fintype.card_fin]; omega) (fun _ => p) hdeg
   refine ⟨Q,hprim,hQ,?_,?_⟩
   · intro b
@@ -1078,10 +1078,10 @@ theorem twisted_relation_at_every_slope (p : ℕ) [ExpChar F p] (hp : 1≤p)
     (x u v : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
     (k m H : ℕ) (hkm : k+m=Fintype.card ι) (hH : H≤m)
     (hnull : GenericLayer.genericNullity (parameterRelation p x u v m H)=1) :
-    ∃ Q : Fin 2 × Fin (H+1) → F[X], PrimitiveVector.IsPrimitive Q ∧
+    ∃ Q : Fin 2 × Fin (H+1) → (Polynomial F), PrimitiveVector.IsPrimitive Q ∧
       (parameterRelation p x u v m H).mulVec Q=0 ∧
       (∀ b, (Q b).natDegree≤(2*H+1)*p) ∧
-      ∀ γ : F, ∃ R : F[X],
+      ∀ γ : F, ∃ R : (Polynomial F),
         (Principal.assemble (fun i => (Q (0,i)).eval γ)≠0 ∨
           Principal.assemble (fun i => (Q (1,i)).eval γ)≠0) ∧
         TwistedRelation (frobenius F p) x (fun i => u i+γ*v i) k H
@@ -1122,19 +1122,19 @@ theorem weight_ne_zero (x : ι → F) (hx : Function.Injective x) (i : ι) : wei
 theorem weight_map (σ : F →+* F) (x : ι → F) (hfixed : ∀ i, σ (x i)=x i) (i : ι) :
     σ (weight x i)=weight x i := by
   simp only [weight,map_inv₀,map_prod,map_sub,hfixed]
-theorem syndrome_eval_zero (x : ι → F) (hx : Function.Injective x) (P : F[X])
+theorem syndrome_eval_zero (x : ι → F) (hx : Function.Injective x) (P : (Polynomial F))
     (k j : ℕ) (hP : P.degree<k) (hj : k+j<Fintype.card ι) :
     syndrome x (fun i => P.eval (x i)) j=0 := by
   by_cases hp : P=0
   · simp [syndrome,hp]
   have hpn := (natDegree_lt_iff_degree_lt hp).mpr hP
-  have hdeg : (P*(Polynomial.X : F[X])^j).degree<(Fintype.card ι-1 : ℕ) := by
+  have hdeg : (P*(Polynomial.X : (Polynomial F))^j).degree<(Fintype.card ι-1 : ℕ) := by
     apply degree_le_natDegree.trans_lt
-    have hd := natDegree_mul_le (p := P) (q := ((Polynomial.X : F[X])^j))
+    have hd := natDegree_mul_le (p := P) (q := ((Polynomial.X : (Polynomial F))^j))
     simp only [natDegree_X_pow] at hd
-    exact_mod_cast (show (P*(Polynomial.X : F[X])^j).natDegree<Fintype.card ι-1 by omega)
-  simpa only [syndrome,eval_mul,eval_pow,eval_X,mul_assoc] using weighted_eval_sum_zero x hx (P*(Polynomial.X : F[X])^j) hdeg
-theorem syndrome_sub_decoder (x w : ι → F) (hx : Function.Injective x) (P : F[X])
+    exact_mod_cast (show (P*(Polynomial.X : (Polynomial F))^j).natDegree<Fintype.card ι-1 by omega)
+  simpa only [syndrome,eval_mul,eval_pow,eval_X,mul_assoc] using weighted_eval_sum_zero x hx (P*(Polynomial.X : (Polynomial F))^j) hdeg
+theorem syndrome_sub_decoder (x w : ι → F) (hx : Function.Injective x) (P : (Polynomial F))
     (k j : ℕ) (hP : P.degree<k) (hj : k+j<Fintype.card ι) :
     syndrome x w j=syndrome x (fun i => w i-P.eval (x i)) j := by
   have hz := syndrome_eval_zero x hx P k j hP hj
@@ -1150,11 +1150,11 @@ theorem nodeVandermonde_surjective (x : ι → F) (hx : Function.Injective x)
     (t : ℕ) (hcard : Fintype.card ι≤t+1) : Function.Surjective (nodeVandermonde x t).mulVecLin := by
   intro w
   obtain ⟨P,hPw⟩ := boundedEvaluation_surjective x hx (t+1) hcard w
-  refine ⟨fun j => (P : F[X]).coeff j.val,?_⟩
+  refine ⟨fun j => (P : (Polynomial F)).coeff j.val,?_⟩
   funext i
-  change (∑ j : Fin (t+1), x i^j.val*(P : F[X]).coeff j.val)=w i
-  rw [show (∑ j : Fin (t+1), x i^j.val*(P : F[X]).coeff j.val)=
-      ∑ j : Fin (t+1), (P : F[X]).coeff j.val*x i^j.val by apply Finset.sum_congr rfl; intro j _; ring]
+  change (∑ j : Fin (t+1), x i^j.val*(P : (Polynomial F)).coeff j.val)=w i
+  rw [show (∑ j : Fin (t+1), x i^j.val*(P : (Polynomial F)).coeff j.val)=
+      ∑ j : Fin (t+1), (P : (Polynomial F)).coeff j.val*x i^j.val by apply Finset.sum_congr rfl; intro j _; ring]
   rw [sum_coeff_eval _ t (Principal.degreeLT_natDegree_le P)]
   exact congrFun hPw i
 theorem rank_mul_of_surjective {row mid col : Type} [Fintype row] [Fintype mid] [Fintype col]
@@ -1164,7 +1164,7 @@ theorem rank_mul_of_surjective {row mid col : Type} [Fintype row] [Fintype mid] 
     LinearMap.range_comp_of_range_eq_top _ (LinearMap.range_eq_top.mpr hB)]
 theorem conjugateHankel_factorization (σ : β → F →+* F)
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
-    (P : F[X]) (k L t : ℕ) (hP : P.degree<k) (hsize : k+L+t≤Fintype.card ι)
+    (P : (Polynomial F)) (k L t : ℕ) (hP : P.degree<k) (hsize : k+L+t≤Fintype.card ι)
     (S : Finset ι) (hagree : ∀ i, i∉S → w i=P.eval (x i)) :
     conjugateHankel σ x w L t=
       Matrix.of (fun b (i : S) => weight x i.val*σ b.1 (w i.val-P.eval (x i.val))*x i.val^b.2.val)*
@@ -1189,7 +1189,7 @@ theorem conjugateHankel_factorization (σ : β → F →+* F)
   ring
 theorem conjugateHankel_error_rank (σ : β → F →+* F)
     (x w : ι → F) (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
-    (P : F[X]) (k L t : ℕ) (hP : P.degree<k) (hsize : k+L+t≤Fintype.card ι)
+    (P : (Polynomial F)) (k L t : ℕ) (hP : P.degree<k) (hsize : k+L+t≤Fintype.card ι)
     (S : Finset ι) (hS : S.card≤t+1) (hagree : ∀ i, i∉S → w i=P.eval (x i)) :
     (conjugateHankel σ x w L t).rank=
       (conjugateErrors σ (fun i : S => x i.val) (fun i : S => w i.val-P.eval (x i.val)) L).rank := by
@@ -1217,15 +1217,15 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F]
-def recurrenceSpace (s : β → ℕ → F) (m t : ℕ) : Submodule F F[X] :=
+def recurrenceSpace (s : β → ℕ → F) (m t : ℕ) : Submodule F (Polynomial F) :=
   Polynomial.degreeLT F (t+1) ⊓ ⨅ b, ⨅ j : Fin (m-t),
     LinearMap.ker (Principal.recurrenceEval (s b) j.val)
-theorem mem_recurrenceSpace (s : β → ℕ → F) (m t : ℕ) (P : F[X]) :
+theorem mem_recurrenceSpace (s : β → ℕ → F) (m t : ℕ) (P : (Polynomial F)) :
     P∈recurrenceSpace s m t ↔ P.degree<(t+1 : ℕ) ∧
       ∀ b j, j<m-t → Principal.recurrenceEval (s b) j P=0 := by
   simp only [recurrenceSpace,Submodule.mem_inf,Polynomial.mem_degreeLT,Submodule.mem_iInf,
     LinearMap.mem_ker,Fin.forall_iff]
-theorem recurrence_product_zero (s : ℕ → F) (f Q : F[X]) (j N : ℕ)
+theorem recurrence_product_zero (s : ℕ → F) (f Q : (Polynomial F)) (j N : ℕ)
     (hQ : Q.degree<N) (hrec : ∀ l<N, Principal.recurrenceEval s (j+l) f=0) :
     Principal.recurrenceEval s j (f*Q)=0 := by
   by_cases hq : Q=0
@@ -1234,17 +1234,17 @@ theorem recurrence_product_zero (s : ℕ → F) (f Q : F[X]) (j N : ℕ)
   conv_lhs => rw [Q.as_sum_range' N hn,Finset.mul_sum,map_sum]
   apply Finset.sum_eq_zero
   intro l hl
-  have hpoly : f*Polynomial.monomial l (Q.coeff l)=Q.coeff l • (f*(Polynomial.X : F[X])^l) := by
+  have hpoly : f*Polynomial.monomial l (Q.coeff l)=Q.coeff l • (f*(Polynomial.X : (Polynomial F))^l) := by
     rw [← Polynomial.C_mul_X_pow_eq_monomial,Polynomial.smul_eq_C_mul]
     ring
   rw [hpoly,map_smul,Principal.recurrenceEval_shift,hrec l (Finset.mem_range.mp hl),smul_zero]
-def NonprincipalSpace (K : Submodule F F[X]) (t : ℕ) : Prop :=
-  ¬ ∃ G : F[X], G≠0 ∧ G.natDegree≤t ∧
+def NonprincipalSpace (K : Submodule F (Polynomial F)) (t : ℕ) : Prop :=
+  ¬ ∃ G : (Polynomial F), G≠0 ∧ G.natDegree≤t ∧
     K=(Polynomial.degreeLT F (t-G.natDegree+1)).map (polynomialMul G)
 theorem nonprincipal_two_generator_gcd_bound (s : β → ℕ → F) (m t : ℕ)
-    (htm : t≤m) (f g : F[X]) (hf : f≠0) (hg : g≠0)
+    (htm : t≤m) (f g : (Polynomial F)) (hf : f≠0) (hg : g≠0)
     (hfd : f.natDegree=t) (hgd : g.natDegree≤t)
-    (hspan : recurrenceSpace s m t=Submodule.span F ({f,g} : Set F[X]))
+    (hspan : recurrenceSpace s m t=Submodule.span F ({f,g} : Set (Polynomial F)))
     (hnon : NonprincipalSpace (recurrenceSpace s m t) t) :
     (GCDMonoid.gcd f g).natDegree+m+1≤2*t := by
   let G := GCDMonoid.gcd f g
@@ -1262,17 +1262,17 @@ theorem nonprincipal_two_generator_gcd_bound (s : β → ℕ → F) (m t : ℕ)
   have hlen : t-d≤m-t := by omega
   have hGsmall : ∀ b j, j<m-d → Principal.recurrenceEval (s b) j G=0 := by
     intro b j hj
-    have hrep : ∃ A B : F[X], A.degree<m-t ∧ B.degree<m-t ∧
-        G*(Polynomial.X : F[X])^j=f*A+g*B := by
+    have hrep : ∃ A B : (Polynomial F), A.degree<m-t ∧ B.degree<m-t ∧
+        G*(Polynomial.X : (Polynomial F))^j=f*A+g*B := by
       apply (gcd_span_iff f g _ (m-t) hf hg (by simpa only [hfd,max_eq_left hgd] using hlen)).mpr
-      refine ⟨(Polynomial.X : F[X])^j,?_,rfl⟩
+      refine ⟨(Polynomial.X : (Polynomial F))^j,?_,rfl⟩
       have he : (m-t)+(max f.natDegree g.natDegree-G.natDegree)=m-d := by rw [hfd,max_eq_left hgd]; omega
       rw [he]
       exact (degree_X_pow_le j).trans_lt (by exact_mod_cast hj)
     obtain ⟨A,B,hA,hB,heq⟩ := hrep
     have hzA := recurrence_product_zero (s b) f A 0 (m-t) hA (by simpa using hfm.2 b)
     have hzB := recurrence_product_zero (s b) g B 0 (m-t) hB (by simpa using hgm.2 b)
-    have hz : Principal.recurrenceEval (s b) 0 (G*(Polynomial.X : F[X])^j)=0 := by
+    have hz : Principal.recurrenceEval (s b) 0 (G*(Polynomial.X : (Polynomial F))^j)=0 := by
       rw [heq,map_add,hzA,hzB,add_zero]
     simpa only [Principal.recurrenceEval_shift,zero_add] using hz
   apply hnon
@@ -1320,7 +1320,7 @@ open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
 def recurrenceMatrixAll (s : β → ℕ → F) (m t : ℕ) :
     Matrix (β × Fin (m-t)) (Fin (t+1)) F := fun b j => s b.1 (j.val+b.2.val)
-theorem recurrenceSpace_matrix (s : β → ℕ → F) (m t : ℕ) (P : F[X]) :
+theorem recurrenceSpace_matrix (s : β → ℕ → F) (m t : ℕ) (P : (Polynomial F)) :
     P∈recurrenceSpace s m t ↔ P.natDegree≤t ∧
       (recurrenceMatrixAll s m t).mulVec (fun j => P.coeff j.val)=0 := by
   rw [mem_recurrenceSpace]
@@ -1361,9 +1361,9 @@ theorem recurrenceSpace_finrank (s : β → ℕ → F) (m t : ℕ) :
     Module.finrank F (recurrenceSpace s m t)=
       Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin) :=
   (kernelPolynomialEquiv s m t).finrank_eq.symm
-theorem dimension_two_basis (K : Submodule F F[X])
-    (hK : Module.finrank F K=2) (f : F[X]) (hfK : f∈K) (hf : f≠0) :
-    ∃ g : F[X], g∈K ∧ g≠0 ∧ K=Submodule.span F ({f,g} : Set F[X]) := by
+theorem dimension_two_basis (K : Submodule F (Polynomial F))
+    (hK : Module.finrank F K=2) (f : (Polynomial F)) (hfK : f∈K) (hf : f≠0) :
+    ∃ g : (Polynomial F), g∈K ∧ g≠0 ∧ K=Submodule.span F ({f,g} : Set (Polynomial F)) := by
   letI : FiniteDimensional F K := FiniteDimensional.of_finrank_pos (by omega)
   let fK : K := ⟨f,hfK⟩
   have hfK0 : fK≠0 := by intro hz; exact hf (congrArg Subtype.val hz)
@@ -1387,16 +1387,16 @@ theorem dimension_two_basis (K : Submodule F F[X])
   · have hm := congrArg (Submodule.map K.subtype) htop
     rw [Submodule.map_sup,Submodule.map_span,Submodule.map_span,Submodule.map_top,
       Submodule.range_subtype] at hm
-    have hsetf : K.subtype '' ({fK} : Set K)=({f} : Set F[X]) := by ext P; simp [fK]
-    have hsetg : K.subtype '' ({gK} : Set K)=({gK.val} : Set F[X]) := by ext P; simp
+    have hsetf : K.subtype '' ({fK} : Set K)=({f} : Set (Polynomial F)) := by ext P; simp [fK]
+    have hsetg : K.subtype '' ({gK} : Set K)=({gK.val} : Set (Polynomial F)) := by ext P; simp
     rw [hsetf,hsetg,← Submodule.span_union] at hm
     simpa only [Set.singleton_union] using hm.symm
 theorem dimension_two_gcd_bound (s : β → ℕ → F) (m t : ℕ) (htm : t≤m)
     (hnull : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin)=2)
     (hnon : NonprincipalSpace (recurrenceSpace s m t) t)
-    (f : F[X]) (hf : f∈recurrenceSpace s m t) (hf0 : f≠0) (hfd : f.natDegree=t) :
-    ∃ g : F[X], g∈recurrenceSpace s m t ∧ g≠0 ∧
-      recurrenceSpace s m t=Submodule.span F ({f,g} : Set F[X]) ∧
+    (f : (Polynomial F)) (hf : f∈recurrenceSpace s m t) (hf0 : f≠0) (hfd : f.natDegree=t) :
+    ∃ g : (Polynomial F), g∈recurrenceSpace s m t ∧ g≠0 ∧
+      recurrenceSpace s m t=Submodule.span F ({f,g} : Set (Polynomial F)) ∧
       (GCDMonoid.gcd f g).natDegree+m+1≤2*t := by
   obtain ⟨g,hg,hg0,hspan⟩ := dimension_two_basis (recurrenceSpace s m t)
     ((recurrenceSpace_finrank s m t).trans hnull) f hf hf0
@@ -1479,9 +1479,9 @@ theorem conjugateErrors_two (σ : F →+* F) (x e : ι → F) (L : ℕ) :
   ext ⟨b,j⟩ i
   fin_cases b <;> simp [conjugateErrors,twoConjugations,errorTwoMatrix]
 def frobeniusStacked (p blocks : ℕ) (x u v : ι → F) (L t : ℕ) :
-    Matrix (Fin blocks × Fin L) (Fin (t+1)) F[X] := fun b j =>
+    Matrix (Fin blocks × Fin L) (Fin (t+1)) (Polynomial F) := fun b j =>
   C (syndrome x u (b.2.val+j.val)^(p^b.1.val))+
-    (Polynomial.X : F[X])^(p^b.1.val)*C (syndrome x v (b.2.val+j.val)^(p^b.1.val))
+    (Polynomial.X : (Polynomial F))^(p^b.1.val)*C (syndrome x v (b.2.val+j.val)^(p^b.1.val))
 theorem stacked_eq_frobeniusStacked (p : ℕ) [ExpChar F p] (x u v : ι → F) (L t : ℕ) :
     stacked p x u v L t=frobeniusStacked p 2 x u v L t := by
   ext ⟨b,i⟩ j
@@ -1513,37 +1513,37 @@ open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
 def contractSequence (s : β → ℕ → F) (a : F) : β → ℕ → F :=
   fun b j => s b (j+1)-a*s b j
-def evalFunctional (a : F) : F[X] →ₗ[F] F where
+def evalFunctional (a : F) : (Polynomial F) →ₗ[F] F where
   toFun P := P.eval a
   map_add' P Q := eval_add
   map_smul' c P := by simp
-theorem recurrenceEval_contract (s : ℕ → F) (a : F) (j : ℕ) (Q : F[X]) :
+theorem recurrenceEval_contract (s : ℕ → F) (a : F) (j : ℕ) (Q : (Polynomial F)) :
     Principal.recurrenceEval (fun i => s (i+1)-a*s i) j Q=
       Principal.recurrenceEval s (j+1) Q-a*Principal.recurrenceEval s j Q := by
   induction Q using Polynomial.induction_on' with
   | add Q R hQ hR => simp only [map_add,hQ,hR]; ring
   | monomial i c => simp only [Principal.recurrenceEval_monomial]; ring
-theorem recurrenceEval_X_sub_C (s : ℕ → F) (a : F) (j : ℕ) (Q : F[X]) :
-    Principal.recurrenceEval s j (((Polynomial.X : F[X])-C a)*Q)=
+theorem recurrenceEval_X_sub_C (s : ℕ → F) (a : F) (j : ℕ) (Q : (Polynomial F)) :
+    Principal.recurrenceEval s j (((Polynomial.X : (Polynomial F))-C a)*Q)=
       Principal.recurrenceEval (fun i => s (i+1)-a*s i) j Q := by
   rw [recurrenceEval_contract]
-  have heq : ((Polynomial.X : F[X])-C a)*Q=Q*(Polynomial.X : F[X])^1-a • Q := by
+  have heq : ((Polynomial.X : (Polynomial F))-C a)*Q=Q*(Polynomial.X : (Polynomial F))^1-a • Q := by
     simp only [pow_one,Polynomial.smul_eq_C_mul]
     ring
   rw [heq,map_sub,map_smul,Principal.recurrenceEval_shift]
   simp only [smul_eq_mul,RingHom.id_apply]
 theorem contracted_recurrence_membership (s : β → ℕ → F) (a : F) (m t : ℕ)
-    (ht : 1≤t) (htm : t≤m) (Q : F[X]) :
+    (ht : 1≤t) (htm : t≤m) (Q : (Polynomial F)) :
     Q∈recurrenceSpace (contractSequence s a) (m-1) (t-1) ↔
-      ((Polynomial.X : F[X])-C a)*Q∈recurrenceSpace s m t := by
+      ((Polynomial.X : (Polynomial F))-C a)*Q∈recurrenceSpace s m t := by
   rw [mem_recurrenceSpace,mem_recurrenceSpace]
   have hlen : (m-1)-(t-1)=m-t := by omega
   have hbound : (t-1)+1=t := by omega
   rw [hlen,hbound]
-  have hdegree : Q.degree<t ↔ ((((Polynomial.X : F[X])-C a)*Q).degree<(t+1 : ℕ)) := by
+  have hdegree : Q.degree<t ↔ ((((Polynomial.X : (Polynomial F))-C a)*Q).degree<(t+1 : ℕ)) := by
     by_cases hq : Q=0
     · simp [hq]
-    have hp : (Polynomial.X : F[X])-C a≠0 := (Polynomial.monic_X_sub_C a).ne_zero
+    have hp : (Polynomial.X : (Polynomial F))-C a≠0 := (Polynomial.monic_X_sub_C a).ne_zero
     rw [← natDegree_lt_iff_degree_lt hq,← natDegree_lt_iff_degree_lt (mul_ne_zero hp hq),
       natDegree_mul hp hq,Polynomial.natDegree_X_sub_C]
     omega
@@ -1562,10 +1562,10 @@ theorem contracted_recurrence_membership (s : β → ℕ → F) (a : F) (m t : �
     exact hrec b j hj
 def puncturedKernelEquiv (s : β → ℕ → F) (a : F) (m t : ℕ) (ht : 1≤t) (htm : t≤m) :
     recurrenceSpace (contractSequence s a) (m-1) (t-1) ≃ₗ[F]
-      (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) := by
+      (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F (Polynomial F)) := by
   let f : recurrenceSpace (contractSequence s a) (m-1) (t-1) →ₗ[F]
-      (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) :=
-    { toFun := fun Q => ⟨((Polynomial.X : F[X])-C a)*Q.val,
+      (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F (Polynomial F)) :=
+    { toFun := fun Q => ⟨((Polynomial.X : (Polynomial F))-C a)*Q.val,
         ⟨(contracted_recurrence_membership s a m t ht htm Q.val).mp Q.property,by simp [evalFunctional]⟩⟩
       map_add' := by intro Q R; apply Subtype.ext; simp only [Submodule.coe_add,mul_add]
       map_smul' := by intro c Q; apply Subtype.ext; simp only [Submodule.coe_smul,mul_smul_comm,RingHom.id_apply] }
@@ -1594,12 +1594,12 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 local instance strataDecidable (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι β : Type} [Field F] [DecidableEq F] [Fintype ι] [DecidableEq ι] [Fintype β]
-theorem gcd_eval_zero_iff (f g : F[X]) (a : F) :
+theorem gcd_eval_zero_iff (f g : (Polynomial F)) (a : F) :
     (GCDMonoid.gcd f g).eval a=0 ↔ f.eval a=0 ∧ g.eval a=0 := by
   change (GCDMonoid.gcd f g).IsRoot a ↔ f.IsRoot a ∧ g.IsRoot a
   simp only [← Polynomial.dvd_iff_isRoot,_root_.dvd_gcd_iff]
 theorem locator_common_roots_card_le (x : ι → F) (hx : Function.Injective x)
-    (S : Finset ι) (g : F[X]) :
+    (S : Finset ι) (g : (Polynomial F)) :
     (S.filter (fun i => g.eval (x i)=0)).card≤(GCDMonoid.gcd (locator x S) g).natDegree := by
   classical
   have hdiv : GCDMonoid.gcd (locator x S) g∣locator x S := gcd_dvd_left _ _
@@ -1610,7 +1610,7 @@ theorem locator_common_roots_card_le (x : ι → F) (hx : Function.Injective x)
     ⟨locator_eval_zero x S i (Finset.mem_filter.mp hi).1,(Finset.mem_filter.mp hi).2⟩
 theorem active_root_nullity_one (s : β → ℕ → F) (m t : ℕ)
     (hnull : Module.finrank F (LinearMap.ker (recurrenceMatrixAll s m t).mulVecLin)=2)
-    (g : F[X]) (hg : g∈recurrenceSpace s m t) (a : F) (hga : g.eval a≠0) :
+    (g : (Polynomial F)) (hg : g∈recurrenceSpace s m t) (a : F) (hga : g.eval a≠0) :
     Module.finrank F (LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t)
       (fun j => a^j.val)).mulVecLin)=1 := by
   have hm := (recurrenceSpace_matrix s m t g).mp hg
@@ -1672,7 +1672,7 @@ theorem matrix_injective_of_full_column_rank {row col : Type} [Fintype row] [Fin
   have hk : Module.finrank F (LinearMap.ker M.mulVecLin)=0 := by omega
   exact LinearMap.ker_eq_bot.mp (Submodule.finrank_eq_zero.mp hk)
 theorem locator_dvd_of_eval_zero (x : ι → F) (hx : Function.Injective x)
-    (S : Finset ι) (P : F[X]) (hz : ∀ i∈S, P.eval (x i)=0) : locator x S∣P := by
+    (S : Finset ι) (P : (Polynomial F)) (hz : ∀ i∈S, P.eval (x i)=0) : locator x S∣P := by
   classical
   by_cases hP : P=0
   · simp [hP]
@@ -1683,9 +1683,9 @@ theorem locator_dvd_of_eval_zero (x : ι → F) (hx : Function.Injective x)
     obtain ⟨i,hi,rfl⟩ := Multiset.mem_map.mp ha
     exact (Polynomial.mem_roots hP).mpr (hz i hi)
   exact (Principal.locator_splits x S).dvd_of_roots_le_roots (locator_monic x S).ne_zero hroots
-theorem bounded_locator_quotient (x : ι → F) (S : Finset ι) (P : F[X]) (t : ℕ)
+theorem bounded_locator_quotient (x : ι → F) (S : Finset ι) (P : (Polynomial F)) (t : ℕ)
     (hS : S.card≤t) (hP : P.natDegree≤t) (hdiv : locator x S∣P) :
-    ∃ Q : F[X], Q.degree<(t-S.card+1 : ℕ) ∧ P=locator x S*Q := by
+    ∃ Q : (Polynomial F), Q.degree<(t-S.card+1 : ℕ) ∧ P=locator x S*Q := by
   obtain ⟨Q,hQ⟩ := hdiv
   refine ⟨Q,?_,hQ⟩
   by_cases hq : Q=0
@@ -1709,7 +1709,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F β : Type} [Field F] [DecidableEq F] [Fintype β]
-theorem functional_coefficients_eval (t : ℕ) (P : F[X]) (hP : P.natDegree≤t) (a : F) :
+theorem functional_coefficients_eval (t : ℕ) (P : (Polynomial F)) (hP : P.natDegree≤t) (a : F) :
     AppendConstants.functional (fun j : Fin (t+1) => a^j.val) (fun j => P.coeff j.val)=P.eval a := by
   change (∑ j : Fin (t+1), a^j.val*P.coeff j.val)=P.eval a
   rw [← sum_coeff_eval P t hP a]
@@ -1717,10 +1717,10 @@ theorem functional_coefficients_eval (t : ℕ) (P : F[X]) (hP : P.natDegree≤t)
   intro j _
   ring
 def appendedPolynomialEquiv (s : β → ℕ → F) (m t : ℕ) (a : F) :
-    (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) ≃ₗ[F]
+    (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F (Polynomial F)) ≃ₗ[F]
       LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t)
         (fun j => a^j.val)).mulVecLin := by
-  let f : (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F F[X]) →ₗ[F]
+  let f : (recurrenceSpace s m t ⊓ LinearMap.ker (evalFunctional a) : Submodule F (Polynomial F)) →ₗ[F]
       LinearMap.ker (AppendConstants.appendOne (recurrenceMatrixAll s m t) (fun j => a^j.val)).mulVecLin :=
     { toFun := fun P => ⟨fun j => P.val.coeff j.val,by
         change (AppendConstants.appendOne (recurrenceMatrixAll s m t) (fun j => a^j.val)).mulVec
@@ -1877,12 +1877,12 @@ theorem locator_coefficient_fixed (σ : F →+* F) (x : ι → F)
     (hfixed : ∀ i, σ (x i)=x i) (E : Finset ι) (j : ℕ) :
     σ ((locator x E).coeff j)=(locator x E).coeff j := by
   have hm : (locator x E).map σ=locator x E := by simp [locator,Polynomial.map_prod,hfixed]
-  have hc := congrArg (fun Q : F[X] => Q.coeff j) hm
+  have hc := congrArg (fun Q : (Polynomial F) => Q.coeff j) hm
   simpa only [Polynomial.coeff_map] using hc
 theorem conjugate_locator_annihilates (σ : β → F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (k L t : ℕ) (hsize : k+L+t≤Fintype.card ι)
-    (P : F[X]) (hP : P.degree<k) (E : Finset ι) (hE : E.card≤t)
+    (P : (Polynomial F)) (hP : P.degree<k) (E : Finset ι) (hE : E.card≤t)
     (hagree : ∀ i, i∉E → w i=P.eval (x i)) :
     (conjugateHankel σ x w L t).mulVec
       (fun j : Fin (t+1) => (locator x E).coeff j.val)=0 := by
@@ -1903,7 +1903,7 @@ theorem conjugate_locator_annihilates (σ : β → F →+* F) (x w : ι → F)
 theorem locator_in_conjugate_space (σ : β → F →+* F) (x w : ι → F)
     (hx : Function.Injective x) (hfixed : ∀ b i, σ b (x i)=x i)
     (k m t : ℕ) (hsize : k+m≤Fintype.card ι) (htm : t≤m)
-    (P : F[X]) (hP : P.degree<k) (E : Finset ι) (hE : E.card≤t)
+    (P : (Polynomial F)) (hP : P.degree<k) (E : Finset ι) (hE : E.card≤t)
     (hagree : ∀ i, i∉E → w i=P.eval (x i)) :
     locator x E∈recurrenceSpace (fun b j => σ b (syndrome x w j)) m t := by
   apply (recurrenceSpace_matrix _ m t _).mpr
@@ -1948,7 +1948,7 @@ theorem nonprincipal_two_kernel_count (σ : β → F →+* F) (x u v : ι → F)
     intro γ
     exact Principal.bad_slope_exact x hx u v k A hkA γ.val (hbad γ.val γ.property)
   choose W hWcard hWdec hWbad using hwitness
-  have hPexists : ∀ γ : G, ∃ P : F[X], P.degree<k ∧
+  have hPexists : ∀ γ : G, ∃ P : (Polynomial F), P.degree<k ∧
       ∀ i∈W γ, P.eval (x i)=u i+γ.val*v i := hWdec
   choose P hPdeg hPval using hPexists
   let E : G → Finset ι := fun γ => Finset.univ\W γ
@@ -2001,16 +2001,16 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
-def interpolationFamily (x : ι → F) (w : ι → F[X]) : Polynomial (Polynomial F) :=
-  ∑ i, Polynomial.C (w i)*(Lagrange.basis Finset.univ x i).map (Polynomial.C : F →+* F[X])
-theorem interpolationFamily_map_eval (x : ι → F) (w : ι → F[X]) (γ : F) :
+def interpolationFamily (x : ι → F) (w : ι → (Polynomial F)) : Polynomial (Polynomial F) :=
+  ∑ i, Polynomial.C (w i)*(Lagrange.basis Finset.univ x i).map (Polynomial.C : F →+* (Polynomial F))
+theorem interpolationFamily_map_eval (x : ι → F) (w : ι → (Polynomial F)) (γ : F) :
     (interpolationFamily x w).map (Polynomial.evalRingHom γ)=
       Lagrange.interpolate Finset.univ x (fun i => (w i).eval γ) := by
-  have hcomp : (Polynomial.evalRingHom γ).comp (Polynomial.C : F →+* F[X])=RingHom.id F := by ext c; simp
+  have hcomp : (Polynomial.evalRingHom γ).comp (Polynomial.C : F →+* (Polynomial F))=RingHom.id F := by ext c; simp
   simp only [interpolationFamily,Polynomial.map_sum,Polynomial.map_mul,Polynomial.map_C,
     Polynomial.map_map,hcomp,Polynomial.map_id,Lagrange.interpolate_apply,Polynomial.coe_evalRingHom]
 theorem interpolationFamily_node (x : ι → F) (hx : Function.Injective x)
-    (w : ι → F[X]) (a : ι) :
+    (w : ι → (Polynomial F)) (a : ι) :
     (interpolationFamily x w).eval (Polynomial.C (x a))=w a := by
   classical
   simp only [interpolationFamily,eval_finsetSum,eval_mul,eval_C,Polynomial.eval_map_apply]
@@ -2021,7 +2021,7 @@ theorem interpolationFamily_node (x : ι → F) (hx : Function.Injective x)
     rw [Lagrange.eval_basis_of_ne hba (Finset.mem_univ a)]
     simp
   · simp
-theorem interpolationFamily_coefficient_degree (x : ι → F) (w : ι → F[X]) (B : ℕ)
+theorem interpolationFamily_coefficient_degree (x : ι → F) (w : ι → (Polynomial F)) (B : ℕ)
     (hw : ∀ i, (w i).natDegree≤B) (j : ℕ) :
     ((interpolationFamily x w).coeff j).natDegree≤B := by
   simp only [interpolationFamily,Polynomial.finsetSum_coeff,Polynomial.coeff_C_mul,Polynomial.coeff_map]
@@ -2029,9 +2029,9 @@ theorem interpolationFamily_coefficient_degree (x : ι → F) (w : ι → F[X]) 
   intro i _
   exact Polynomial.natDegree_mul_le.trans (by simpa only [Polynomial.natDegree_C,add_zero] using hw i)
 theorem interpolationFamily_degree_lt [Fintype F] (x : ι → F) (hx : Function.Injective x)
-    (w : ι → F[X]) (D B : ℕ) (hD : D≤Fintype.card ι)
+    (w : ι → (Polynomial F)) (D B : ℕ) (hD : D≤Fintype.card ι)
     (hw : ∀ i, (w i).natDegree≤B) (hB : B<Fintype.card F)
-    (houtput : ∀ γ : F, ∃ R : F[X], R.degree<D ∧ ∀ i, R.eval (x i)=(w i).eval γ) :
+    (houtput : ∀ γ : F, ∃ R : (Polynomial F), R.degree<D ∧ ∀ i, R.eval (x i)=(w i).eval γ) :
     (interpolationFamily x w).degree<D := by
   classical
   apply (Polynomial.degree_lt_iff_coeff_zero _ D).mpr
@@ -2047,7 +2047,7 @@ theorem interpolationFamily_degree_lt [Fintype F] (x : ι → F) (hx : Function.
         (Lagrange.degree_interpolate_lt _ hx.injOn)
       intro i hi
       rw [Lagrange.eval_interpolate_at_node _ hx.injOn hi,hRv i]
-    have hc := congrArg (fun Q : F[X] => Q.coeff j) heq
+    have hc := congrArg (fun Q : (Polynomial F) => Q.coeff j) heq
     rw [Polynomial.coeff_map] at hc
     have hrzero : R.coeff j=0 := Polynomial.coeff_eq_zero_of_degree_lt
       (hR.trans_le (by exact_mod_cast hj))
@@ -2068,11 +2068,11 @@ theorem generic_relation_line_of_level (p : ℕ) (x u v : ι → F)
     (m a b c : ℕ) (hc : c≤m) (hsum : a+b+c=2*m+2)
     (ha : a≤b) (hb : b<c) (hc2 : 1<c)
     (hHF : HasLevelHilbertFunction
-      (fun b j => algebraMap F[X] (GenericLayer.GenericField F)
+      (fun b j => algebraMap (Polynomial F) (GenericLayer.GenericField F)
         (Principal.parameterSyndromes p x u v b j)) m a b c) :
     GenericLayer.genericNullity (parameterRelation p x u v m (m+1-c))=1 := by
   change Module.finrank (GenericLayer.GenericField F) (LinearMap.ker
-    ((parameterRelation p x u v m (m+1-c)).map (algebraMap F[X] (GenericLayer.GenericField F))).mulVecLin)=1
+    ((parameterRelation p x u v m (m+1-c)).map (algebraMap (Polynomial F) (GenericLayer.GenericField F))).mulVecLin)=1
   rw [parameterRelation_map]
   exact minimal_relation_line _ m a b c hc hsum ha hb hc2 hHF
 theorem relation_degree_nullity_balance (m L t r a b c : ℕ)
@@ -2089,7 +2089,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype F] [Fintype ι] [DecidableEq ι]
-theorem assemble_nodePolynomial (H : ℕ) (q : Fin (H+1) → F[X]) (a : F) :
+theorem assemble_nodePolynomial (H : ℕ) (q : Fin (H+1) → (Polynomial F)) (a : F) :
     (Principal.assemble q).eval (Polynomial.C a)=Principal.nodePolynomial q a := by
   simp only [Principal.assemble,eval_finsetSum,eval_monomial,Principal.nodePolynomial]
   apply Finset.sum_congr rfl
@@ -2099,28 +2099,28 @@ theorem assemble_nodePolynomial (H : ℕ) (q : Fin (H+1) → F[X]) (a : F) :
 theorem polynomial_twisted_output_of_section (p : ℕ) [ExpChar F p] (hp : 1≤p)
     (x u v : ι → F) (hx : Function.Injective x) (k H δ : ℕ)
     (hsize : k+H≤Fintype.card ι) (hcard : δ+p<Fintype.card F)
-    (Q : Fin 2 × Fin (H+1) → F[X]) (hQdeg : ∀ b, (Q b).natDegree≤δ)
-    (hsection : ∀ γ : F, ∃ R : F[X], TwistedRelation (frobenius F p) x (fun i => u i+γ*v i) k H
+    (Q : Fin 2 × Fin (H+1) → (Polynomial F)) (hQdeg : ∀ b, (Q b).natDegree≤δ)
+    (hsection : ∀ γ : F, ∃ R : (Polynomial F), TwistedRelation (frobenius F p) x (fun i => u i+γ*v i) k H
       (Principal.assemble (fun j => (Q (0,j)).eval γ))
       (Principal.assemble (fun j => (Q (1,j)).eval γ)) R) :
     ∃ R : Polynomial (Polynomial F), R.degree<(k+H : ℕ) ∧ ∀ i,
       (Principal.assemble (fun j => Q (0,j))).eval (Polynomial.C (x i))*
-        (Polynomial.C (u i)+(Polynomial.X : F[X])*Polynomial.C (v i))+
+        (Polynomial.C (u i)+(Polynomial.X : (Polynomial F))*Polynomial.C (v i))+
       (Principal.assemble (fun j => Q (1,j))).eval (Polynomial.C (x i))*
-        (Polynomial.C (u i^p)+(Polynomial.X : F[X])^p*Polynomial.C (v i^p))=
+        (Polynomial.C (u i^p)+(Polynomial.X : (Polynomial F))^p*Polynomial.C (v i^p))=
       R.eval (Polynomial.C (x i)) := by
-  let word : ι → F[X] := fun i =>
-    Principal.nodePolynomial (fun j => Q (0,j)) (x i)*(C (u i)+(Polynomial.X : F[X])*C (v i))+
-    Principal.nodePolynomial (fun j => Q (1,j)) (x i)*(C (u i^p)+(Polynomial.X : F[X])^p*C (v i^p))
+  let word : ι → (Polynomial F) := fun i =>
+    Principal.nodePolynomial (fun j => Q (0,j)) (x i)*(C (u i)+(Polynomial.X : (Polynomial F))*C (v i))+
+    Principal.nodePolynomial (fun j => Q (1,j)) (x i)*(C (u i^p)+(Polynomial.X : (Polynomial F))^p*C (v i^p))
   have hword : ∀ i, (word i).natDegree≤δ+p := by
     intro i
-    have h0 : (C (u i)+(Polynomial.X : F[X])*C (v i)).natDegree≤1 := by compute_degree
-    have h1 : (C (u i^p)+(Polynomial.X : F[X])^p*C (v i^p)).natDegree≤p := by compute_degree
+    have h0 : (C (u i)+(Polynomial.X : (Polynomial F))*C (v i)).natDegree≤1 := by compute_degree
+    have h1 : (C (u i^p)+(Polynomial.X : (Polynomial F))^p*C (v i^p)).natDegree≤p := by compute_degree
     have hU := Principal.nodePolynomial_natDegree_le (fun j => Q (0,j)) (fun j => hQdeg (0,j)) (x i)
     have hV := Principal.nodePolynomial_natDegree_le (fun j => Q (1,j)) (fun j => hQdeg (1,j)) (x i)
     exact (Polynomial.natDegree_add_le _ _).trans (max_le
       (Polynomial.natDegree_mul_le.trans (by omega)) (Polynomial.natDegree_mul_le.trans (by omega)))
-  have houtput : ∀ γ : F, ∃ R : F[X], R.degree<(k+H : ℕ) ∧ ∀ i, R.eval (x i)=(word i).eval γ := by
+  have houtput : ∀ γ : F, ∃ R : (Polynomial F), R.degree<(k+H : ℕ) ∧ ∀ i, R.eval (x i)=(word i).eval γ := by
     intro γ
     obtain ⟨R,hR⟩ := hsection γ
     refine ⟨R,hR.degree_R,?_⟩
@@ -2145,14 +2145,14 @@ theorem lemmaT_polynomial_family (p : ℕ) [ExpChar F p] (hp : 1≤p)
     (k m H : ℕ) (hkm : k+m=Fintype.card ι) (hH : H≤m)
     (hcard : (2*H+2)*p<Fintype.card F)
     (hnull : GenericLayer.genericNullity (parameterRelation p x u v m H)=1) :
-    ∃ (Q : Fin 2 × Fin (H+1) → F[X]) (R : Polynomial (Polynomial F)),
+    ∃ (Q : Fin 2 × Fin (H+1) → (Polynomial F)) (R : Polynomial (Polynomial F)),
       PrimitiveVector.IsPrimitive Q ∧ (parameterRelation p x u v m H).mulVec Q=0 ∧
       (∀ b, (Q b).natDegree≤(2*H+1)*p) ∧ R.degree<(k+H : ℕ) ∧
       ∀ i,
         (Principal.assemble (fun j => Q (0,j))).eval (Polynomial.C (x i))*
-          (Polynomial.C (u i)+(Polynomial.X : F[X])*Polynomial.C (v i))+
+          (Polynomial.C (u i)+(Polynomial.X : (Polynomial F))*Polynomial.C (v i))+
         (Principal.assemble (fun j => Q (1,j))).eval (Polynomial.C (x i))*
-          (Polynomial.C (u i^p)+(Polynomial.X : F[X])^p*Polynomial.C (v i^p))=
+          (Polynomial.C (u i^p)+(Polynomial.X : (Polynomial F))^p*Polynomial.C (v i^p))=
         R.eval (Polynomial.C (x i)) := by
   obtain ⟨Q,hprim,hQ,hdeg,hsection⟩ := twisted_relation_at_every_slope p hp x u v hx hfixed k m H hkm hH hnull
   have hcard' : (2*H+1)*p+p<Fintype.card F := by nlinarith [hcard]
@@ -2183,13 +2183,13 @@ open scoped BigOperators
 local instance decidablePrincipalKernel (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
 structure MovingPrincipalCertificate (p : ℕ) (x u v : ι → F) (L t : ℕ)
-    (Δ : F[X]) where
+    (Δ : (Polynomial F)) where
   fixedRoots : Finset ι
   movingDegree : ℕ
   quotientDegree : ℕ
   moving_pos : 0 < movingDegree
   degree_sum : fixedRoots.card + movingDegree + quotientDegree = t
-  coefficients : Fin (movingDegree+1) → F[X]
+  coefficients : Fin (movingDegree+1) → (Polynomial F)
   coefficient_degree : ∀ j, (coefficients j).natDegree ≤ p*movingDegree
   primitive_specialization : ∀ γ, specialize coefficients γ ≠ 0
   no_additional_fixed_root : ∀ i, i ∉ fixedRoots → nodePolynomial coefficients (x i) ≠ 0
@@ -2204,7 +2204,7 @@ theorem principal_bad_count (p : ℕ) [ExpChar F p]
     (x : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
     (u v : ι → F) (k A L t δ : ℕ) (hkA : k < A)
     (hL : k+L=A) (ht : A+t=Fintype.card ι)
-    (Δ : F[X]) (hΔ : Δ ≠ 0) (hΔdeg : Δ.natDegree ≤ δ)
+    (Δ : (Polynomial F)) (hΔ : Δ ≠ 0) (hΔdeg : Δ.natDegree ≤ δ)
     (cert : MovingPrincipalCertificate p x u v L t Δ)
     (Γ : Finset F) (hΓ : ∀ γ ∈ Γ, BadSlope x u v k A γ) :
     Γ.card ≤ δ+p*(Fintype.card ι-cert.fixedRoots.card) := by
@@ -2291,7 +2291,7 @@ theorem constant_vector_separates (p : ℕ) (x u v : ι → F) (L t : ℕ)
   rw [Finset.sum_add_distrib, hu i, zero_add] at h
   exact h
 structure ConstantKernelCertificate (p : ℕ) (x u v : ι → F) (L t : ℕ)
-    (Δ : F[X]) where
+    (Δ : (Polynomial F)) where
   space : Submodule F (Fin (t+1) → F)
   generic_annihilates : ∀ c ∈ space,
     (stacked p x u v L t).mulVec (fun j => C (c j)) = 0
@@ -2301,7 +2301,7 @@ theorem constant_kernel_no_normal_bad (p : ℕ) [ExpChar F p]
     (x : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i ^ p = x i)
     (u v : ι → F) (k A L t : ℕ) (hkA : k < A)
     (hL : k+L=A) (ht : A+t=Fintype.card ι)
-    (Δ : F[X]) (hcert : ConstantKernelCertificate p x u v L t Δ)
+    (Δ : (Polynomial F)) (hcert : ConstantKernelCertificate p x u v L t Δ)
     (γ : F) (hγ : Δ.eval γ ≠ 0) : ¬ BadSlope x u v k A γ := by
   intro hbad
   obtain ⟨T,hT,⟨P,hP,hPv⟩,hnonjoint⟩ := bad_slope_exact x hx u v k A hkA γ hbad
@@ -2334,7 +2334,7 @@ theorem constant_kernel_count (p : ℕ) [ExpChar F p]
     (x : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i ^ p = x i)
     (u v : ι → F) (k A L t δ : ℕ) (hkA : k < A)
     (hL : k+L=A) (ht : A+t=Fintype.card ι)
-    (Δ : F[X]) (hΔ : Δ ≠ 0) (hΔdeg : Δ.natDegree ≤ δ)
+    (Δ : (Polynomial F)) (hΔ : Δ ≠ 0) (hΔdeg : Δ.natDegree ≤ δ)
     (hcert : ConstantKernelCertificate p x u v L t Δ)
     (Γ : Finset F) (hΓ : ∀ γ ∈ Γ, BadSlope x u v k A γ) : Γ.card ≤ δ := by
   apply le_trans (b := Δ.natDegree)
@@ -2357,8 +2357,8 @@ open scoped BigOperators
 variable {F J : Type*} [Field F]
 theorem type_one_proportional (a b : J → F) (p : ℕ) (hp : 1 < p)
     (hminor : ∀ i j,
-      ((C (a i) + (Polynomial.X : F[X]) * C (b i)) : F[X]) * (C (a j ^ p) + (Polynomial.X : F[X]) ^ p * C (b j ^ p)) =
-      (C (a j) + (Polynomial.X : F[X]) * C (b j)) * (C (a i ^ p) + (Polynomial.X : F[X]) ^ p * C (b i ^ p))) :
+      ((C (a i) + (Polynomial.X : (Polynomial F)) * C (b i)) : (Polynomial F)) * (C (a j ^ p) + (Polynomial.X : (Polynomial F)) ^ p * C (b j ^ p)) =
+      (C (a j) + (Polynomial.X : (Polynomial F)) * C (b j)) * (C (a i ^ p) + (Polynomial.X : (Polynomial F)) ^ p * C (b i ^ p))) :
     a = 0 ∨ ∃ c : F, ∀ i, b i = c * a i := by
   classical
   by_cases ha : a = 0
@@ -2372,12 +2372,12 @@ theorem type_one_proportional (a b : J → F) (p : ℕ) (hp : 1 < p)
   obtain ⟨j, hj⟩ := han
   have hjp : a j ^ p ≠ 0 := pow_ne_zero _ hj
   refine ⟨b j / a j, fun i => ?_⟩
-  have h0 := congrArg (fun q : F[X] => q.coeff 0) (hminor i j)
-  have h1 := congrArg (fun q : F[X] => q.coeff 1) (hminor i j)
+  have h0 := congrArg (fun q : (Polynomial F) => q.coeff 0) (hminor i j)
+  have h1 := congrArg (fun q : (Polynomial F) => q.coeff 1) (hminor i j)
   have hpoly (i j : J) :
-      ((C (a i) + (Polynomial.X : F[X]) * C (b i)) : F[X]) * (C (a j ^ p) + (Polynomial.X : F[X]) ^ p * C (b j ^ p)) =
-      C (a i * a j ^ p) + C (b i * a j ^ p) * (Polynomial.X : F[X]) +
-      C (a i * b j ^ p) * (Polynomial.X : F[X]) ^ p + C (b i * b j ^ p) * (Polynomial.X : F[X]) ^ (p+1) := by
+      ((C (a i) + (Polynomial.X : (Polynomial F)) * C (b i)) : (Polynomial F)) * (C (a j ^ p) + (Polynomial.X : (Polynomial F)) ^ p * C (b j ^ p)) =
+      C (a i * a j ^ p) + C (b i * a j ^ p) * (Polynomial.X : (Polynomial F)) +
+      C (a i * b j ^ p) * (Polynomial.X : (Polynomial F)) ^ p + C (b i * b j ^ p) * (Polynomial.X : (Polynomial F)) ^ (p+1) := by
     simp only [map_mul]
     ring
   rw [hpoly, hpoly] at h0 h1
@@ -2400,17 +2400,17 @@ open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
 def TypeOneSyndromes (x u v : ι → F) (k p : ℕ) : Prop :=
   ∀ i j : Fin (Fintype.card ι-k),
-    ((C (syndrome x u i.val) + (Polynomial.X : F[X])*C (syndrome x v i.val)) *
-      (C (syndrome x u j.val ^ p) + (Polynomial.X : F[X])^p*C (syndrome x v j.val ^ p))) =
-    ((C (syndrome x u j.val) + (Polynomial.X : F[X])*C (syndrome x v j.val)) *
-      (C (syndrome x u i.val ^ p) + (Polynomial.X : F[X])^p*C (syndrome x v i.val ^ p)))
+    ((C (syndrome x u i.val) + (Polynomial.X : (Polynomial F))*C (syndrome x v i.val)) *
+      (C (syndrome x u j.val ^ p) + (Polynomial.X : (Polynomial F))^p*C (syndrome x v j.val ^ p))) =
+    ((C (syndrome x u j.val) + (Polynomial.X : (Polynomial F))*C (syndrome x v j.val)) *
+      (C (syndrome x u i.val ^ p) + (Polynomial.X : (Polynomial F))^p*C (syndrome x v i.val ^ p)))
 theorem type_one_bad_count (x : ι → F) (hx : Function.Injective x)
     (u v : ι → F) (k A p : ℕ) (hk : k ≤ Fintype.card ι) (hp : 1 < p)
     (hminor : ∀ i j : Fin (Fintype.card ι-k),
-      ((C (syndrome x u i.val) + (Polynomial.X : F[X])*C (syndrome x v i.val)) *
-        (C (syndrome x u j.val ^ p) + (Polynomial.X : F[X])^p*C (syndrome x v j.val ^ p))) =
-      ((C (syndrome x u j.val) + (Polynomial.X : F[X])*C (syndrome x v j.val)) *
-        (C (syndrome x u i.val ^ p) + (Polynomial.X : F[X])^p*C (syndrome x v i.val ^ p))))
+      ((C (syndrome x u i.val) + (Polynomial.X : (Polynomial F))*C (syndrome x v i.val)) *
+        (C (syndrome x u j.val ^ p) + (Polynomial.X : (Polynomial F))^p*C (syndrome x v j.val ^ p))) =
+      ((C (syndrome x u j.val) + (Polynomial.X : (Polynomial F))*C (syndrome x v j.val)) *
+        (C (syndrome x u i.val ^ p) + (Polynomial.X : (Polynomial F))^p*C (syndrome x v i.val ^ p))))
     (Γ : Finset F) (hΓ : ∀ γ ∈ Γ, BadSlope x u v k A γ) : Γ.card ≤ 1 := by
   have hprop := type_one_proportional
     (fun i : Fin (Fintype.card ι-k) => syndrome x u i.val)
@@ -2489,7 +2489,7 @@ noncomputable section
 open Polynomial Matrix
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
 structure PolynomialRelationCertificate (p : ℕ) (x u v : ι → F) (k H : ℕ) where
-  coefficients : Fin 2 × Fin (H+1) → F[X]
+  coefficients : Fin 2 × Fin (H+1) → (Polynomial F)
   output : Polynomial (Polynomial F)
   primitive : PrimitiveVector.IsPrimitive coefficients
   coefficient_height : ∀ b, (coefficients b).natDegree≤(2*H+1)*p
@@ -2497,9 +2497,9 @@ structure PolynomialRelationCertificate (p : ℕ) (x u v : ι → F) (k H : ℕ)
   output_degree : output.degree<(k+H : ℕ)
   nodes : ∀ i,
     (Principal.assemble (fun j => coefficients (0,j))).eval (Polynomial.C (x i))*
-      (Polynomial.C (u i)+(Polynomial.X : F[X])*Polynomial.C (v i))+
+      (Polynomial.C (u i)+(Polynomial.X : (Polynomial F))*Polynomial.C (v i))+
     (Principal.assemble (fun j => coefficients (1,j))).eval (Polynomial.C (x i))*
-      (Polynomial.C (u i^p)+(Polynomial.X : F[X])^p*Polynomial.C (v i^p))=
+      (Polynomial.C (u i^p)+(Polynomial.X : (Polynomial F))^p*Polynomial.C (v i^p))=
     output.eval (Polynomial.C (x i))
 def polynomialRelationCertificate_of_nullity_one [Fintype F]
     (p : ℕ) [ExpChar F p] (hp : 1≤p) (x u v : ι → F)
@@ -2529,13 +2529,13 @@ theorem powers_rank (x : ι → F) (hx : Function.Injective x) (b : ℕ) :
   let e := Polynomial.degreeLTEquiv F b
   have he : (powers x b).mulVecLin.comp e.toLinearMap = Strata.boundedEvaluation x b := by
     ext P i
-    change (∑ j : Fin b, x i ^ j.val * e P j) = (P : F[X]).eval (x i)
+    change (∑ j : Fin b, x i ^ j.val * e P j) = (P : (Polynomial F)).eval (x i)
     rw [Polynomial.eval_eq_sum_degreeLTEquiv P.property]
     exact Finset.sum_congr rfl (fun _ _ => mul_comm _ _)
   rw [← Strata.boundedEvaluation_rank x hx b, ← he,
     LinearMap.range_comp_of_range_eq_top _ (LinearMap.range_eq_top.mpr e.surjective)]
   rfl
-theorem error_moment (x w : ι → F) (hx : Function.Injective x) (P : F[X])
+theorem error_moment (x w : ι → F) (hx : Function.Injective x) (P : (Polynomial F))
     (k j : ℕ) (hP : P.degree < k) (hj : k + j < Fintype.card ι)
     (E : Finset ι) (hout : ∀ i, i ∉ E → w i = P.eval (x i)) :
     syndrome x w j = ∑ i ∈ E, (weight x i * (w i - P.eval (x i))) * x i ^ j := by
@@ -2545,7 +2545,7 @@ theorem error_moment (x w : ι → F) (hx : Function.Injective x) (P : F[X])
   apply Finset.sum_subset (Finset.subset_univ E)
   intro i _ hi
   simp [hout i hi]
-theorem moment_factor (x w : ι → F) (hx : Function.Injective x) (P : F[X])
+theorem moment_factor (x w : ι → F) (hx : Function.Injective x) (P : (Polynomial F))
     (k l b : ℕ) (hP : P.degree < k) (hsize : k + l + b ≤ Fintype.card ι + 1)
     (E : Finset ι) (hout : ∀ i, i ∉ E → w i = P.eval (x i)) :
     (Matrix.of (fun (i : Fin l) (j : Fin b) => syndrome x w (i.val + j.val))) =
@@ -2571,7 +2571,7 @@ theorem evaluated_hankel (x u v : ι → F) (γ : F) (l t : ℕ) :
     eval_add, eval_mul, eval_C, eval_X, one_mul] using
       (Principal.syndrome_linear x u v 1 γ (i.val + j.val)).symm
 theorem evaluated_hankel_rank (x u v : ι → F) (hx : Function.Injective x) (γ : F)
-    (P : F[X]) (k l t : ℕ) (hP : P.degree < k) (hsize : k + l + t ≤ Fintype.card ι)
+    (P : (Polynomial F)) (k l t : ℕ) (hP : P.degree < k) (hsize : k + l + t ≤ Fintype.card ι)
     (E : Finset ι) (hE : E.card ≤ t + 1)
     (hout : ∀ i, i ∉ E → u i + γ * v i = P.eval (x i))
     (hin : ∀ i ∈ E, u i + γ * v i ≠ P.eval (x i)) :
@@ -2588,7 +2588,7 @@ theorem evaluated_hankel_rank (x u v : ι → F) (hx : Function.Injective x) (γ
   rw [Matrix.det_diagonal]
   exact Finset.prod_ne_zero_iff.mpr (fun i _ =>
     mul_ne_zero (Strata.weight_ne_zero x hx _) (sub_ne_zero.mpr (hin i.val i.property)))
-theorem moment_det_ne_zero (x w : ι → F) (hx : Function.Injective x) (P : F[X])
+theorem moment_det_ne_zero (x w : ι → F) (hx : Function.Injective x) (P : (Polynomial F))
     (k d : ℕ) (hP : P.degree < k) (hsize : k + d + d ≤ Fintype.card ι + 1)
     (E : Finset ι) (hE : E.card = d)
     (hout : ∀ i, i ∉ E → w i = P.eval (x i))
@@ -2617,7 +2617,7 @@ theorem moment_det_ne_zero (x w : ι → F) (hx : Function.Injective x) (P : F[X
   exact mul_ne_zero (mul_ne_zero hV (Finset.prod_ne_zero_iff.mpr fun i _ =>
     mul_ne_zero (Strata.weight_ne_zero x hx _) (sub_ne_zero.mpr (hin _ (e i).property)))) hV
 theorem cofactor_at_nodes (x u v : ι → F) (hx : Function.Injective x) (γ : F)
-    (P : F[X]) (k d : ℕ) (hP : P.degree < k) (hsize : k + d + d ≤ Fintype.card ι)
+    (P : (Polynomial F)) (k d : ℕ) (hP : P.degree < k) (hsize : k + d + d ≤ Fintype.card ι)
     (E : Finset ι) (hE : E.card = d)
     (hout : ∀ i, i ∉ E → u i + γ * v i = P.eval (x i))
     (hin : ∀ i ∈ E, u i + γ * v i ≠ P.eval (x i)) :
@@ -2695,7 +2695,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι K : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-theorem principal_normal_nullity (φ : F[X] →+* K) (hφ : Function.Injective φ)
+theorem principal_normal_nullity (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
     (p : ℕ) (x u v : ι → F) (L t a q : ℕ) (haq : a+q=t)
     (B : NormalFiber.RowBasis φ (stacked p x u v L t) a)
     (γ : F) (hγ : (NormalFiber.pivot B).det.eval γ ≠ 0) :
@@ -2707,7 +2707,7 @@ theorem principal_normal_nullity (φ : F[X] →+* K) (hφ : Function.Injective �
   change ((stacked p x u v L t).map (Polynomial.evalRingHom γ)).rank + _ = _ at hn
   rw [hrank, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hn
   omega
-def constantCertificateOfRowBasis (φ : F[X] →+* K) (hφ : Function.Injective φ)
+def constantCertificateOfRowBasis (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
     (p : ℕ) (x u v : ι → F) (L t r : ℕ)
     (B : NormalFiber.RowBasis φ (stacked p x u v L t) r)
     (W : Submodule F (Fin (t+1) → F))
@@ -2728,11 +2728,11 @@ def constantCertificateOfRowBasis (φ : F[X] →+* K) (hφ : Function.Injective 
       (stacked p x u v L t) r B W (by simpa using hWdim) heval γ hγ
     rw [← heq]
     exact hc
-def movingCertificateOfRowBasis (φ : F[X] →+* K) (hφ : Function.Injective φ)
+def movingCertificateOfRowBasis (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
     (p : ℕ) (x u v : ι → F) (L t : ℕ) (H : Finset ι) (d q : ℕ)
     (hd : 0 < d) (hsize : H.card+d+q=t)
     (B : NormalFiber.RowBasis φ (stacked p x u v L t) (H.card+d))
-    (coeffs : Fin (d+1) → F[X])
+    (coeffs : Fin (d+1) → (Polynomial F))
     (hdeg : ∀ j, (coeffs j).natDegree ≤ p*d)
     (hprimitive : ∀ γ, specialize coeffs γ ≠ 0)
     (hfixed : ∀ i, i ∉ H → nodePolynomial coeffs (x i) ≠ 0)
@@ -2762,12 +2762,12 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F K ι : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-theorem extract_moving_certificate_for_basis (φ : F[X] →+* K) (hφ : Function.Injective φ)
+theorem extract_moving_certificate_for_basis (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (hp : 1 ≤ p) (x u v : ι → F)
     (m d q : ℕ) (H : Finset ι) (hd : 0 < d) (hL : H.card+d+q < m)
     (P : PrincipalAt (fun b j => φ (parameterSyndromes p x u v b j)) m (H.card+d) q)
-    (f : K[X]) (hfd : f.natDegree ≤ d)
-    (hfactor : P.generator=(locator x H).map (φ.comp (Polynomial.C : F →+* F[X]))*f)
+    (f : (Polynomial K)) (hfd : f.natDegree ≤ d)
+    (hfactor : P.generator=(locator x H).map (φ.comp (Polynomial.C : F →+* (Polynomial F)))*f)
     (hnode : ∀ i, i ∉ H → f.eval (φ (C (x i))) ≠ 0)
     (B : NormalFiber.RowBasis φ (stacked p x u v (m-(H.card+d+q)) (H.card+d+q)) (H.card+d)) :
     Nonempty (MovingPrincipalCertificate p x u v (m-(H.card+d+q)) (H.card+d+q)
@@ -2776,12 +2776,12 @@ theorem extract_moving_certificate_for_basis (φ : F[X] →+* K) (hφ : Function
   let a := H.card+d
   let M := stacked p x u v (m-(a+q)) (a+q)
   let N := stacked p x u v (m-a) a
-  let Hp := (locator x H).map (Polynomial.C : F →+* F[X])
+  let Hp := (locator x H).map (Polynomial.C : F →+* (Polynomial F))
   let Hk := Hp.map φ
   let R := restrictByFamily a d N Hp
   have hHp : Hp.natDegree ≤ H.card := Polynomial.natDegree_map_le.trans (by rw [locator_natDegree])
   have hHk : Hk.natDegree ≤ H.card := Polynomial.natDegree_map_le.trans hHp
-  have hHk0 : Hk ≠ 0 := ((locator_monic x H).map (Polynomial.C : F →+* F[X])).map φ |>.ne_zero
+  have hHk0 : Hk ≠ 0 := ((locator_monic x H).map (Polynomial.C : F →+* (Polynomial F))).map φ |>.ne_zero
   have hfac : P.generator=Hk*f := by simpa only [Hk,Hp,Polynomial.map_map] using hfactor
   have hf0 : f ≠ 0 := by intro hf; apply P.nonzero; rw [hfac,hf,mul_zero]
   have hsmallLine := P.small_kernel_line hL
@@ -2846,7 +2846,7 @@ theorem extract_moving_certificate_for_basis (φ : F[X] →+* K) (hφ : Function
     intro hz
     have hzero : assemble (fun j => φ (coeffs j))=0 := by simpa [hz] using hgpoly
     obtain ⟨j,hj⟩ := heval 0
-    have hj0 := congrArg (fun Q : K[X] => Q.coeff j.val) hzero
+    have hj0 := congrArg (fun Q : (Polynomial K) => Q.coeff j.val) hzero
     have hcz : coeffs j=0 := hφ (by simpa only [assemble_coeff,coeff_zero,map_zero] using hj0)
     simp [hcz] at hj
   have hnofixed : ∀ i, i ∉ H → nodePolynomial coeffs (x i) ≠ 0 := by
@@ -2887,7 +2887,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F K ι : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-theorem principal_rowBasis (φ : F[X] →+* K) (p : ℕ) (x u v : ι → F)
+theorem principal_rowBasis (φ : (Polynomial F) →+* K) (p : ℕ) (x u v : ι → F)
     (m a q : ℕ)
     (P : PrincipalAt (fun b j => φ (parameterSyndromes p x u v b j)) m a q) :
     Nonempty (NormalFiber.RowBasis φ (stacked p x u v (m-(a+q)) (a+q)) a) := by
@@ -2901,17 +2901,17 @@ theorem principal_rowBasis (φ : F[X] →+* K) (p : ℕ) (x u v : ι → F)
     change Module.finrank K (LinearMap.ker (M.map φ).mulVecLin)=q+1 at hnull
     omega
   exact NormalFiber.exists_rowBasis φ M a hrank
-theorem extract_constant_certificate_for_basis (φ : F[X] →+* K) (hφ : Function.Injective φ)
+theorem extract_constant_certificate_for_basis (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
     (p : ℕ) (x u v : ι → F) (m a q : ℕ) (H : Finset ι) (hHa : H.card=a)
     (P : PrincipalAt (fun b j => φ (parameterSyndromes p x u v b j)) m a q)
     (c : K) (hc : c ≠ 0)
-    (hgen : P.generator=c • ((locator x H).map (φ.comp (Polynomial.C : F →+* F[X]))))
+    (hgen : P.generator=c • ((locator x H).map (φ.comp (Polynomial.C : F →+* (Polynomial F)))))
     (B : NormalFiber.RowBasis φ (stacked p x u v (m-(a+q)) (a+q)) a) :
     Nonempty (ConstantKernelCertificate p x u v (m-(a+q)) (a+q)
       (NormalFiber.pivot B).det) := by
   classical
   let M := stacked p x u v (m-(a+q)) (a+q)
-  let ρ := φ.comp (Polynomial.C : F →+* F[X])
+  let ρ := φ.comp (Polynomial.C : F →+* (Polynomial F))
   let HK := (locator x H).map ρ
   let W := LinearMap.range (multipleCoefficients (locator x H) q (a+q))
   have hHdeg : (locator x H).natDegree ≤ a := by rw [locator_natDegree,hHa]
@@ -2925,7 +2925,7 @@ theorem extract_constant_certificate_for_basis (φ : F[X] →+* K) (hφ : Functi
     omega
   have hW : ∀ w ∈ W, M.mulVec (fun j => C (w j))=0 := by
     rintro _ ⟨Q,rfl⟩
-    let QK := (Q : F[X]).map ρ
+    let QK := (Q : (Polynomial F)).map ρ
     have hQK : QK.natDegree ≤ q := Polynomial.natDegree_map_le.trans (degreeLT_natDegree_le Q)
     have hproduct : P.generator*(c⁻¹ • QK)=HK*QK := by
       rw [hgen]
@@ -2939,12 +2939,12 @@ theorem extract_constant_certificate_for_basis (φ : F[X] →+* K) (hφ : Functi
       exact ⟨c⁻¹ • QK,(Polynomial.natDegree_smul_le _ _).trans hQK,hproduct.symm⟩
     have hgeneric := ((recurrence_kernel_iff_matrix _ m (a+q) _).mp hrec).2
     rw [recurrenceMatrix_parameter] at hgeneric
-    let E := (locator x H*(Q:F[X])).map (Polynomial.C : F →+* F[X])
+    let E := (locator x H*(Q:(Polynomial F))).map (Polynomial.C : F →+* (Polynomial F))
     have hEmap : E.map φ=HK*QK := by simp only [E,HK,QK,Polynomial.map_map,Polynomial.map_mul,ρ]
     have hgenericE : (M.map φ).mulVec
         (fun j : Fin (a+q+1) => (E.map φ).coeff j.val)=0 := by rw [hEmap]; exact hgeneric
     have hpoly := family_kernel_of_map φ hφ M E (fun j : Fin (a+q+1) => j.val) hgenericE
-    change M.mulVec (fun j : Fin (a+q+1) => C ((locator x H*(Q:F[X])).coeff j.val))=0
+    change M.mulVec (fun j : Fin (a+q+1) => C ((locator x H*(Q:(Polynomial F))).coeff j.val))=0
     simpa only [E,Polynomial.coeff_map] using hpoly
   exact ⟨constantCertificateOfRowBasis φ hφ p x u v (m-(a+q)) (a+q) a B W hWdim hW⟩
 end
@@ -2957,9 +2957,9 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F K ι : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
 theorem generic_fixed_root_factor (ρ : F →+* K) (x : ι → F)
-    (hx : Function.Injective x) (g : K[X]) (hg : g ≠ 0) (a : ℕ)
+    (hx : Function.Injective x) (g : (Polynomial K)) (hg : g ≠ 0) (a : ℕ)
     (hga : g.natDegree ≤ a) :
-    ∃ (H : Finset ι) (d : ℕ) (f : K[X]), H.card+d=a ∧ f.natDegree ≤ d ∧
+    ∃ (H : Finset ι) (d : ℕ) (f : (Polynomial K)), H.card+d=a ∧ f.natDegree ≤ d ∧
       g=(locator x H).map ρ*f ∧ (∀ i, i ∉ H → f.eval (ρ (x i)) ≠ 0) := by
   classical
   let xK := fun i => ρ (x i)
@@ -2999,7 +2999,7 @@ noncomputable section
 open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F K ι : Type} [Field F] [Field K] [Fintype ι] [DecidableEq ι]
-theorem generic_principal_bad_count_for_basis (φ : F[X] →+* K) (hφ : Function.Injective φ)
+theorem generic_principal_bad_count_for_basis (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (hp : 1 ≤ p) (x : ι → F) (hx : Function.Injective x)
     (hfixed : ∀ i, x i^p=x i) (u v : ι → F) (k m a q : ℕ)
     (hkm : k+m=Fintype.card ι) (hL : a+q < m)
@@ -3009,7 +3009,7 @@ theorem generic_principal_bad_count_for_basis (φ : F[X] →+* K) (hφ : Functio
     Γ.card ≤ (∑ i, if (B.rows i).1=0 then 1 else p)+p*Fintype.card ι := by
   classical
   obtain ⟨H,d,f,ha,hfd,hfactor,hnode⟩ := generic_fixed_root_factor
-    (φ.comp (Polynomial.C : F →+* F[X])) x hx P.generator P.nonzero a P.degree_bound
+    (φ.comp (Polynomial.C : F →+* (Polynomial F))) x hx P.generator P.nonzero a P.degree_bound
   subst a
   by_cases hd : d=0
   · subst d
@@ -3020,7 +3020,7 @@ theorem generic_principal_bad_count_for_basis (φ : F[X] →+* K) (hφ : Functio
       apply P.nonzero
       rw [hfactor,hfC,hz,C_0,mul_zero]
     have hgen : P.generator=f.coeff 0 •
-        ((locator x H).map (φ.comp (Polynomial.C : F →+* F[X]))) := by
+        ((locator x H).map (φ.comp (Polynomial.C : F →+* (Polynomial F)))) := by
       rw [hfactor,hfC,Polynomial.smul_eq_C_mul]
       simp only [coeff_C_zero]
       ring
@@ -3038,7 +3038,7 @@ theorem generic_principal_bad_count_for_basis (φ : F[X] →+* K) (hφ : Functio
       (NormalFiber.pivot B).det B.minor_ne
       (NormalFiber.minor_degree_le φ _ _ B _ (stacked_entry_natDegree p x u v _ _)) cert Γ hΓ
     exact hh.trans (Nat.add_le_add_left (Nat.mul_le_mul_left p (Nat.sub_le _ _)) _)
-theorem generic_principal_bad_count (φ : F[X] →+* K) (hφ : Function.Injective φ)
+theorem generic_principal_bad_count (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (hp : 1 ≤ p) (x : ι → F) (hx : Function.Injective x)
     (hfixed : ∀ i, x i^p=x i) (u v : ι → F) (k m a q : ℕ)
     (hkm : k+m=Fintype.card ι) (hL : a+q < m)
@@ -3048,7 +3048,7 @@ theorem generic_principal_bad_count (φ : F[X] →+* K) (hφ : Function.Injectiv
       Γ.card ≤ (∑ i, if (B.rows i).1=0 then 1 else p)+p*Fintype.card ι := by
   obtain ⟨B⟩ := principal_rowBasis φ p x u v m a q P
   exact ⟨B,generic_principal_bad_count_for_basis φ hφ p hp x hx hfixed u v k m a q hkm hL P B Γ hΓ⟩
-theorem generic_principal_bad_count_coarse (φ : F[X] →+* K) (hφ : Function.Injective φ)
+theorem generic_principal_bad_count_coarse (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
     (p : ℕ) [ExpChar F p] (hp : 1 ≤ p) (x : ι → F) (hx : Function.Injective x)
     (hfixed : ∀ i, x i^p=x i) (u v : ι → F) (k m a q : ℕ)
     (hkm : k+m=Fintype.card ι) (hL : a+q < m)
@@ -3106,7 +3106,7 @@ theorem certificate_specializes (p : ℕ) [ExpChar F p] (x u v : ι → F) (k H 
 theorem certificate_error_identity (p : ℕ) [ExpChar F p]
     (x u v : ι → F) (hx : Function.Injective x) (hfixed : ∀ i, x i^p=x i)
     (k H : ℕ) (Crt : PolynomialRelationCertificate p x u v k H) (γ : F)
-    (S : Finset ι) (hS : k+H≤S.card) (P : F[X]) (hP : P.degree<k)
+    (S : Finset ι) (hS : k+H≤S.card) (P : (Polynomial F)) (hP : P.degree<k)
     (hagree : ∀ i∈S, P.eval (x i)=u i+γ*v i) (i : ι) :
     ((Principal.assemble (fun j => Crt.coefficients (0,j))).map (Polynomial.evalRingHom γ)).eval (x i)*
       (u i+γ*v i-P.eval (x i))+
@@ -3149,7 +3149,7 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
 theorem split_divisor_locator_factor (x : ι → F) (hx : Function.Injective x)
-    (E : Finset ι) (g : F[X]) (hg : g≠0) (hdiv : g∣locator x E) :
+    (E : Finset ι) (g : (Polynomial F)) (hg : g≠0) (hdiv : g∣locator x E) :
     ∃ B : Finset ι, B⊆E ∧ B.card=g.natDegree ∧ ∃ c : F, c≠0 ∧ g=c • locator x B := by
   classical
   let B := Finset.univ.filter (fun i => g.eval (x i)=0)
@@ -3194,7 +3194,7 @@ theorem split_divisor_locator_factor (x : ι → F) (hx : Function.Injective x)
   refine ⟨B,hBE,hBcard,Q.coeff 0,hc,?_⟩
   calc
     g=locator x B*Q := hQ
-    _ = locator x B*C (Q.coeff 0) := congrArg (fun R : F[X] => locator x B*R) hQC
+    _ = locator x B*C (Q.coeff 0) := congrArg (fun R : (Polynomial F) => locator x B*R) hQC
     _ = Q.coeff 0 • locator x B := by rw [Polynomial.smul_eq_C_mul]; ring
 end
 end FrobeniusLocator.Strata

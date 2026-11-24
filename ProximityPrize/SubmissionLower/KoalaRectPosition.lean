@@ -8,8 +8,7 @@ open Finset
 open K1_14 (Shape shapeSum)
 open K1_14_4 (gradeWidth)
 open scoped BigOperators
-open private sum_slot_drops sum_interval power_threshold shapeSum_swap
-  from ProximityPrize.SubmissionLower.Fast072
+open K1_14_4 (sum_slot_drops sum_interval power_threshold shapeSum_swap)
 
 def rectPower (A h : ℕ) (s : Shape) (W : ℕ) : ℕ := 1 + (s.m*A-1-W)/(2*h)
 

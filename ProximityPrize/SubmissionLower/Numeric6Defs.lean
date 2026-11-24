@@ -75,9 +75,9 @@ section
 namespace CJ6.Packed
 open Polynomial
 open scoped Polynomial
-theorem digit_eval (F : ℕ[X]) (B n : ℕ) (h : F.eval 1 < B) :
+theorem digit_eval (F : (Polynomial ℕ)) (B n : ℕ) (h : F.eval 1 < B) :
     F.eval B / B^n % B = F.coeff n := by
-  have decomp (P : ℕ[X]) (x : ℕ) : P.eval x = P.coeff 0 + x * P.divX.eval x := by
+  have decomp (P : (Polynomial ℕ)) (x : ℕ) : P.eval x = P.coeff 0 + x * P.divX.eval x := by
     simpa [add_comm] using (congrArg (eval x) (X_mul_divX_add P)).symm
   induction n generalizing F with
   | zero =>
@@ -110,7 +110,7 @@ private theorem signWeight_cast (c w : ℕ) :
 def shift (left : Bool) (q b : ℕ) : ℕ := if left then q-b else b
 def slice (left : Bool) (outA inA : ℕ) : ℕ × ℕ :=
   if left then (outA,inA) else (inA,outA)
-noncomputable def piece (left : Bool) (outA inA pos w : ℕ) : ℕ[X] :=
+noncomputable def piece (left : Bool) (outA inA pos w : ℕ) : (Polynomial ℕ) :=
   let (a,h) := slice left outA inA
   C (CJ1.fastChoose a h * w) * (1+(Polynomial.X : Polynomial ℕ))^(a-h) * (Polynomial.X : Polynomial ℕ)^pos
 def factor (left : Bool) (x outA inA : ℕ) : ℕ :=

@@ -63,11 +63,11 @@ omit [Algebra.IsSeparable ChartField E] in
 /-- An index clearing in the original fibre ring becomes literally the
 same marked multiple in the common generic algebra. -/
 private theorem chartClear (b:Bool) (z:L) (nz:z≠0)
-    (d:L[X]) (η:AxisGeneric (E:=E) z) (idem:η^2=η)
+    (d:(Polynomial L)) (η:AxisGeneric (E:=E) z) (idem:η^2=η)
     (clear : let : Algebra (Plane L) E := axisPlaneAlgebra b
-      ∀ x:FibreGeneric (E:=E) z,IsIntegral L[X] x →
-        ∃ u:Fiber E z,(1 ⊗ₜ[L[X]] u : FibreGeneric (E:=E) z)=
-          algebraMap L[X] (FibreGeneric (E:=E) z) d*x) :
+      ∀ x:FibreGeneric (E:=E) z,IsIntegral (Polynomial L) x →
+        ∃ u:Fiber E z,(1 ⊗ₜ[(Polynomial L)] u : FibreGeneric (E:=E) z)=
+          algebraMap (Polynomial L) (FibreGeneric (E:=E) z) d*x) :
     ∃ v∈chartImage E true z b,
       axisToGeneric (E:=E) z v=axisToGeneric (E:=E) z (polyMap E true z b d)*η := by
   let : Algebra (Plane L) E := axisPlaneAlgebra b
@@ -77,7 +77,7 @@ private theorem chartClear (b:Bool) (z:L) (nz:z≠0)
   let x : V := g.symm η
   have idemx : x^2=x :=
     (map_pow g.symm η 2).symm.trans (congrArg g.symm idem)
-  obtain ⟨u,hu⟩ := clear x (idempotent_integral (A:=L[X]) x idemx)
+  obtain ⟨u,hu⟩ := clear x (idempotent_integral (A:=(Polynomial L)) x idemx)
   let φ := axisFibreData (E:=E) b z nz
   refine ⟨φ.val u,(φ.property.2.2 _).mp ⟨u,rfl⟩,?_⟩
   have m := congrArg g hu
@@ -88,12 +88,12 @@ private theorem chartClear (b:Bool) (z:L) (nz:z≠0)
 
 /-- The actual finite-side determinant retains its square divisibility
 and collision support while clearing the projector on the native axis. -/
-theorem actual_axis_finite_index (p:ℕ) [CharP L p] [CharP (FractionRing L[X]) p]
+theorem actual_axis_finite_index (p:ℕ) [CharP L p] [CharP (FractionRing (Polynomial L)) p]
     (small:finrank ChartField E<p) (z:L) (nz:z≠0) [IsReduced (AxisGeneric (E:=E) z)]
     (δ:Plane L) (nonzero:δ≠0) (principal:axisDiscriminant (E:=E) false=Ideal.span {δ})
     [DecidableEq L] :
     (branchProduct (Bivariate.swap δ)).map (evalRingHom z)≠0 ∧
-    ∃ d:L[X], d≠0 ∧ d^2∣δ.eval (C z) ∧
+    ∃ d:(Polynomial L), d≠0 ∧ d^2∣δ.eval (C z) ∧
       (∀ x∈d.roots,2≤((branchProduct (Bivariate.swap δ)).map (evalRingHom z)).rootMultiplicity x) ∧
       ∀ η:AxisGeneric (E:=E) z, η^2=η →
         ∃ v∈chartImage E true z false,
@@ -113,11 +113,11 @@ theorem actual_axis_finite_index (p:ℕ) [CharP L p] [CharP (FractionRing L[X]) 
 
 /-- The actual reciprocal determinant clears the same idempotent and
 is a unit at the boundary whenever the single seed polynomial survives. -/
-theorem actual_axis_infinity_index (p:ℕ) [CharP L p] [CharP (FractionRing L[X]) p]
+theorem actual_axis_infinity_index (p:ℕ) [CharP L p] [CharP (FractionRing (Polynomial L)) p]
     (small:finrank ChartField E<p) (z:L) (nz:z≠0) [IsReduced (AxisGeneric (E:=E) z)]
     (δ:Plane L) (nonzero:δ≠0) (principal:axisDiscriminant (E:=E) true=Ideal.span {δ})
     [DecidableEq L] (good:(Bivariate.swap δ).trailingCoeff.eval z≠0) :
-    ∃ d:L[X],d.eval 0≠0 ∧
+    ∃ d:(Polynomial L),d.eval 0≠0 ∧
       ∀ η:AxisGeneric (E:=E) z,η^2=η →
         ∃ v∈chartImage E true z true,
           axisToGeneric (E:=E) z v=axisToGeneric (E:=E) z (polyMap E true z true d)*η := by

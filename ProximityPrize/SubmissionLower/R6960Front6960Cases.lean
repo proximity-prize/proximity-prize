@@ -1,38 +1,39 @@
 import ProximityPrize.SubmissionLower.R6960Front6960Params
+set_option maxRecDepth 200000
 
 set_option Elab.async false
 
 section
 set_option backward.isDefEq.respectTransparency false
-set_option maxRecDepth 12000
+set_option maxRecDepth 200000
 set_option maxHeartbeats 1600000
 namespace Front6960
 noncomputable section
 open Polynomial FrobeniusLocator ProximityPrize.Benchmark
 open K1_8 (seedInclusion seedInclusion_injective extendSeed_injective
   lift_locator_dvd coprime_after_factor)
-open private certificate_output_zero from ProximityPrize.SubmissionLower.Fast068
-open private eval_liftX constantsInFrac extend_liftX from ProximityPrize.SubmissionLower.RungFront
+open K1_8 (certificate_output_zero)
+open P1 (eval_liftX constantsInFrac extend_liftX)
 private theorem mem_fixed_iff {u : Words} {T : TwoActive u} (R : Relation T) (i : I) :
     i ∈ fixedNodes R ↔ (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0 := by
   classical
   simp [fixedNodes]
 private theorem fixed_case_maximal {u : Words} {T : TwoActive u} (R : Relation T)
     (hi : ¬ InvalidLeft R) (hf : FixedLeftGCD R) :
-    ∀ H : Frac[X], H ∣ extendSeed (leftU R) → H ∣ extendSeed (leftV R) →
+    ∀ H : (Polynomial Frac), H ∣ extendSeed (leftU R) → H ∣ extendSeed (leftV R) →
       H ∣ extendSeed (liftX (locator node (fixedNodes R))) := by
   classical
   obtain ⟨g, hg, hgu, hgv, hgmax⟩ := hf
   change g.map constantsInFrac ≠ 0 at hg
   change g.map constantsInFrac ∣ _ at hgu hgv
-  change ∀ H : Frac[X], H ∣ extendSeed (leftU R) → H ∣ extendSeed (leftV R) →
+  change ∀ H : (Polynomial Frac), H ∣ extendSeed (leftU R) → H ∣ extendSeed (leftV R) →
     H ∣ g.map constantsInFrac at hgmax
   have hg0 : g ≠ 0 := by
     intro hz
     exact hg (by rw [hz, Polynomial.map_zero])
   let g₀ := g * C g.leadingCoeff⁻¹
   have hm : g₀.Monic := monic_mul_leadingCoeff_inv hg0
-  have hnorm (P : Frac[X]) (hd : g.map constantsInFrac ∣ P) :
+  have hnorm (P : (Polynomial Frac)) (hd : g.map constantsInFrac ∣ P) :
       g₀.map constantsInFrac ∣ P := by
     apply ((Polynomial.map_dvd_map' constantsInFrac).mpr ?_).trans hd
     exact (dvd_mul_leadingCoeff_inv hg0).mp dvd_rfl
@@ -82,10 +83,10 @@ theorem fixed_gcd {u : Words} {T : TwoActive u} (R : Relation T)
   have hA0 : A ≠ 0 :=
     fun h => hu (extendSeed_injective (h.trans (Polynomial.map_zero _).symm))
   have hΔA : extendSeed Δ ∣ A := by
-    exact _root_.map_dvd (Polynomial.mapRingHom seedInclusion)
+    exact Polynomial.map_dvd seedInclusion
       (lift_locator_dvd S (leftU R) (fun i h => ((mem_fixed_iff R i).mp h).1))
   have hΔB : extendSeed Δ ∣ B := by
-    exact _root_.map_dvd (Polynomial.mapRingHom seedInclusion)
+    exact Polynomial.map_dvd seedInclusion
       (lift_locator_dvd S (leftV R) (fun i h => ((mem_fixed_iff R i).mp h).2))
   refine ⟨hΔ0, hΔA, hΔB, ?_⟩
   by_cases hf : FixedLeftGCD R
@@ -178,7 +179,7 @@ end
 end Front6960
 end
 section
-set_option maxRecDepth 12000
+set_option maxRecDepth 200000
 set_option linter.constructorNameAsVariable false
 set_option backward.isDefEq.respectTransparency false
 namespace Front6960
@@ -202,7 +203,7 @@ end
 end Front6960
 end
 section
-set_option maxRecDepth 12000
+set_option maxRecDepth 200000
 set_option backward.isDefEq.respectTransparency false
 namespace Front6960
 noncomputable section
@@ -210,7 +211,7 @@ open Polynomial Matrix FrobeniusLocator ProximityPrize.Benchmark
 open scoped BigOperators
 theorem firstRank_le (u : Words) : firstRank u ≤ L := by
   simpa only [firstRank, GenericLayer.genericRank, Fintype.card_fin] using
-    Matrix.rank_le_card_height ((ordinary u).map (algebraMap K[X] Frac))
+    Matrix.rank_le_card_height ((ordinary u).map (algebraMap (Polynomial K) Frac))
 theorem actual_stackRank (u : Words) : stackRank u = t + 1 - nullity u := by
   have h := GenericLayer.rank_add_nullity (twoBlock u)
   simp only [Fintype.card_fin] at h
@@ -255,7 +256,7 @@ theorem rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K) :
     change 82318 - nullity u - 48755 ≤ 33561
     omega
   exact h.trans ((Nat.add_le_add_left (Nat.mul_le_mul_left p hs) L).trans_eq rank_fee_exact)
-open private type_one_bad_count_of_syndromes from ProximityPrize.SubmissionLower.PortBase
+open P0 (type_one_bad_count_of_syndromes)
 theorem type_one_count (u : Words) (htype : TypeAtMostOne u)
     (Γ : Finset K) (hΓ : BadFamily u Γ) : Γ.card ≤ 1 := by
   have hk : k ≤ Fintype.card I := by rw [IRSProfile.card_index]; decide
@@ -272,14 +273,14 @@ theorem principal_count (u : Words) (Γ : Finset K) (hprincipal : HomogeneousPri
     (hΓ : BadFamily u Γ) : Γ.card ≤ 733945268617613 := by
   obtain ⟨a, g, hg, hga, ha, hkernel⟩ := hprincipal
   have hsum : a + (t - a) = t := by omega
-  let φ := algebraMap K[X] Frac
+  let φ := algebraMap (Polynomial K) Frac
   have hcertificate : Principal.PrincipalAt
       (fun b j => φ (Principal.parameterSyndromes p node (u 0) (u 1) b j)) k a (t - a) := by
     refine { generator := g, nonzero := hg, degree_bound := hga, kernel_eq := ?_ }
     intro f
     rw [hsum, Principal.recurrence_kernel_iff_matrix, Principal.recurrenceMatrix_parameter]
     change (f.natDegree ≤ t ∧ ((twoBlock u).map φ).mulVec (fun i => f.coeff i.val) = 0) ↔
-      ∃ Q : Frac[X], Q.natDegree ≤ t - a ∧ f = g * Q
+      ∃ Q : (Polynomial Frac), Q.natDegree ≤ t - a ∧ f = g * Q
     constructor
     · rintro ⟨hf, hker⟩
       exact (hkernel f hf).mp hker
@@ -288,7 +289,7 @@ theorem principal_count (u : Words) (Γ : Finset K) (hprincipal : HomogeneousPri
         natDegree_mul_le.trans ((Nat.add_le_add hga hQ).trans_eq hsum)
       exact ⟨hdegree, (hkernel _ hdegree).mpr ⟨Q, hQ, rfl⟩⟩
   have h := Principal.generic_principal_bad_count_coarse φ
-    (IsFractionRing.injective K[X] Frac) p (by decide) node node.injective
+    (IsFractionRing.injective (Polynomial K) Frac) p (by decide) node node.injective
     Native.native_domain_fixed (u 0) (u 1) k k a (t - a)
     (by rw [IRSProfile.card_index]; decide)
     (hsum.trans_lt (show t < k by decide)) hcertificate Γ (fun γ hγ => by
@@ -296,13 +297,13 @@ theorem principal_count (u : Words) (Γ : Finset K) (hprincipal : HomogeneousPri
       exact bad_slope u γ (hΓ γ hγ))
   rw [IRSProfile.card_index] at h
   exact h.trans ((Nat.mul_le_mul_left p (Nat.add_le_add_left ha blockLength)).trans (by decide))
-open private constantRankCount nativeMoments independent_nativeMoments from ProximityPrize.SubmissionLower.PortBase
+open P0 (constantRankCount nativeMoments independent_nativeMoments)
 theorem constant_count (u : Words) (Γ : Finset K) (hu : ConstantKernel u)
     (hΓ : BadFamily u Γ) : Γ.card ≤ 175395492151694 := by
-  let φ := algebraMap K[X] Frac
+  let φ := algebraMap (Polynomial K) Frac
   have hrank : ((twoBlock u).map φ).rank = stackRank u := rfl
   have hconstant : (coefficientBlocks p node (u 0) (u 1) L t).rank = stackRank u := hu.symm
-  have hcount := constantRankCount φ (IsFractionRing.injective K[X] Frac)
+  have hcount := constantRankCount φ (IsFractionRing.injective (Polynomial K) Frac)
     p (by decide) node node.injective Native.native_domain_fixed
     (u 0) (u 1) k agreement L t (by decide) (by decide)
     (by rw [IRSProfile.card_index]; decide) (stackRank u) hrank hconstant
@@ -314,8 +315,8 @@ theorem constant_count (u : Words) (Γ : Finset K) (hu : ConstantKernel u)
 open K1_1
 private theorem locator_matrix (u : Words) :
     Principal.recurrenceMatrix (nativeMoments u) k t =
-      (twoBlock u).map (algebraMap K[X] Frac) :=
-  Principal.recurrenceMatrix_parameter (algebraMap K[X] Frac)
+      (twoBlock u).map (algebraMap (Polynomial K) Frac) :=
+  Principal.recurrenceMatrix_parameter (algebraMap (Polynomial K) Frac)
     p node (u 0) (u 1) k t
 private theorem locator_nullity (u : Words) :
     sliceDim (nativeMoments u) k (t + 1) = nullity u := by
@@ -353,7 +354,7 @@ theorem two_active_nullity {u : Words} (T : TwoActive u) : 2 ≤ nullity u := by
   have := T.active
   have := T.nullitySum
   omega
-open private excludes_full_rank from ProximityPrize.SubmissionLower.RungFront
+open P1 (excludes_full_rank)
 private theorem bad_excludes_full_rank (u : Words) (γ : K) (M : BadMark u γ) :
     ((twoBlock u).map (evalRingHom γ)).rank ≠ t + 1 := by
   classical
@@ -396,13 +397,12 @@ namespace Front6960
 noncomputable section
 open Polynomial FrobeniusLocator ProximityPrize.Benchmark
 open K1_8 (seedInclusion seedInclusion_injective extendSeed_injective extendSeedHom AmplitudeDirection)
-open private transfer_at from ProximityPrize.SubmissionLower.Fast068
-open private threeU_height threeV_height common_multiplier multiplier_degree_zero
-  seed_scalar_coeff descend_scalar proportional_amplitudes rescale_threeU from ProximityPrize.SubmissionLower.Fast068
+open K1_8 (transfer_at)
+open K1_8 (threeU_height threeV_height common_multiplier multiplier_degree_zero seed_scalar_coeff descend_scalar proportional_amplitudes rescale_threeU)
 open P0_4 (threeU_eq relationOn_eq columnRank_eq)
-open private sameDirection_eq threeV_eq from ProximityPrize.SubmissionLower.PortFrontA
+open P0_4 (sameDirection_eq threeV_eq)
 private theorem reduced_scaled_relation {u : Words} {T : TwoActive u} {R : Relation T}
-    (D : Reduction u T R) (e : K[X]) :
+    (D : Reduction u T R) (e : (Polynomial K)) :
     relationOn u (fixedNodes R) (C e * D.U) (C e * D.V) (C e * D.output) := by
   let G := liftX (locator node (fixedNodes R))
   have hG : ∀ i ∉ fixedNodes R, G.eval (C (node i)) ≠ 0 := by
@@ -414,10 +414,11 @@ private theorem reduced_scaled_relation {u : Words} {T : TwoActive u} {R : Relat
   rw [relationOn_eq]
   exact @transfer_at u K1.p k T.height R (fixedNodes R) G D.U D.V D.output
     hG D.U_factor D.V_factor D.output_factor e
+set_option maxRecDepth 4000000 in
 private theorem seed_multiplier {u : Words} {T : TwoActive u} {R : Relation T}
     (D : Reduction u T R) (P Q : Bivar) (hcross : sameDirection D.U D.V P Q)
     (hp : P.natDegree ≤ D.height) (hq : Q.natDegree ≤ D.height) :
-    ∃ e : K[X], P = C e * D.U ∧ Q = C e * D.V := by
+    ∃ e : (Polynomial K), P = C e * D.U ∧ Q = C e * D.V := by
   have hext (F : Bivar) : (extendSeedHom F).natDegree = F.natDegree :=
     natDegree_map_eq_of_injective seedInclusion_injective F
   have hne (F : Bivar) (hF : F ≠ 0) : extendSeedHom F ≠ 0 :=
@@ -438,18 +439,19 @@ private theorem seed_multiplier {u : Words} {T : TwoActive u} {R : Relation T}
     rw [D.U_factor]
     change extendSeedHom (G * P) = C s * extendSeedHom (G * D.U)
     rw [map_mul, map_mul, heP]
-    ac_rfl
+    ring
   have hLeftV : extendSeedHom (G * Q) = C s * extendSeedHom (leftV R) := by
     rw [D.V_factor]
     change extendSeedHom (G * Q) = C s * extendSeedHom (G * D.V)
     rw [map_mul, map_mul, heQ]
-    ac_rfl
+    ring
   let F : Fin 2 → Bivar := ![G * P, G * Q]
-  let A : Fin 2 × Fin (T.height + 1) → K[X] :=
+  let A : Fin 2 × Fin (T.height + 1) → (Polynomial K) :=
     fun j => (F j.1).coeff j.2.val
   have hA : ∀ j, seedInclusion (A j) = s * seedInclusion (R.coefficients j) := by
     rintro ⟨i, j⟩
-    fin_cases i
+    -- `fin_cases` leaves `⟨0, _⟩ : Fin 2` literals whose defeq check with `0` recurses on 4.36.
+    obtain rfl | rfl : i = 0 ∨ i = 1 := by omega
     · have hc := seed_scalar_coeff j.val hLeftU
       rw [leftU, Principal.assemble_coeff] at hc
       exact hc
@@ -538,9 +540,8 @@ set_option maxRecDepth 12000
 set_option maxHeartbeats 1000000
 namespace Front6960
 open Polynomial Matrix FrobeniusLocator ProximityPrize.Benchmark
-open private certificate_shifts_annihilate_generic from ProximityPrize.SubmissionLower.Fast050
-open private lift_common_divisor specialize_factor eval_atSlope root_outside_of_dvd_locator
-  common_node_count from ProximityPrize.SubmissionLower.Fast051
+open K1_6 (certificate_shifts_annihilate_generic)
+open K1_6 (lift_common_divisor specialize_factor eval_atSlope root_outside_of_dvd_locator common_node_count)
 private theorem certificate_shifts_annihilate {u : Words} {T : TwoActive u} (R : Relation T)
     (s : ℕ) (hL : T.height + s = L) :
     (K1_6.shifts (fun b => Principal.assemble (fun j => R.coefficients (b, j))) L s).transpose *
@@ -549,7 +550,7 @@ private theorem certificate_shifts_annihilate {u : Words} {T : TwoActive u} (R :
     rw [IRSProfile.card_index]
     decide
   exact certificate_shifts_annihilate_generic p node (u 0) (u 1) IRSProfile.domain.injective
-    Native.native_domain_fixed (algebraMap K[X] Frac) (IsFractionRing.injective K[X] Frac)
+    Native.native_domain_fixed (algebraMap (Polynomial K) Frac) (IsFractionRing.injective (Polynomial K) Frac)
     k T.height 48754 t s hL hsize R _ (fun _ => rfl)
 private theorem moving_has_new_node {u : Words} {T : TwoActive u} (R : Relation T)
     (hMoving : MovingGCD R) {γ : K} {M : BadMark u γ} (hSat : SaturatedAt R M) :
@@ -585,7 +586,7 @@ private theorem moving_has_new_node {u : Words} {T : TwoActive u} (R : Relation 
   obtain ⟨i, hiFixed, hi⟩ := root_outside_of_dvd_locator (F := K) (ι := I)
     node IRSProfile.domain.injective errors (fixedNodes R) (atSlope D γ) hDvd hCard
   exact ⟨i, hiFixed, by rw [hAU, eval_mul, hi, zero_mul], by rw [hBV, eval_mul, hi, zero_mul]⟩
-open private count_bound from ProximityPrize.SubmissionLower.RungFront
+open P1 (count_bound)
 private theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation T)
     (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6837079912)
     (hMoving : MovingGCD R) (hSat : NormalSaturation R) (Γ : Finset K)

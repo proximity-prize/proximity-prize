@@ -59,15 +59,15 @@ open Final50Order (Messages ProperCut TrueWeightLE physicalDegree primaryBox
 open K1_13 (Geom embed extend Row shape InBox OrderAt indexDegree)
 open K1_13_3 (symbolAt symbolIndex cofactor_rank)
 open scoped BigOperators
-open private exists_fresh specialization_bounds sum_by_layer from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_3 (exists_fresh specialization_bounds sum_by_layer)
 def c1 : Prop :=
   ∀ (w : I → K) (T : ℕ) (P : Row 4), T ≤ primaryCutoff → BankRow w T P →
-    ∀ S : Geom[X], S.natDegree ≤ physicalDegree →
+    ∀ S : (Polynomial Geom), S.natDegree ≤ physicalDegree →
       (∃ H : Finset I, agreement ≤ H.card ∧
         ∀ i ∈ H, S.eval (embed (node i)) = embed (w i)) →
       OrderAt P S (requiredOrder T)
 def c2 : Prop :=
-  ∀ (f P : Row 4) (Γ : Finset K) (s : K → K[X]) (d a : ℕ),
+  ∀ (f P : Row 4) (Γ : Finset K) (s : K → (Polynomial K)) (d a : ℕ),
     Irreducible f → 0 < (shape f).t → (shape f).t < K1.p →
     InBox (shape P) primaryBox → TrueWeightLE P primaryCutoff →
     Final50Price.ActiveFits P 5164 →
@@ -82,7 +82,7 @@ def c3 : Prop :=
         (∀ i, BankRow w T (e i)) ∧
         LinearIndependent Geom (fun i => symbolAt x (e i))
 private theorem exists_availability (hc : c1) (hd : c2)
-    {w : I → K} {Γ : Finset K} {s : K → K[X]} (hm : Messages w Γ s)
+    {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} (hm : Messages w Γ s)
     {f : Row 4} (hirr : Irreducible f) (hpos : 0 < (shape f).t) (htop : (shape f).t < K1.p) :
     ∃ l : ℕ, (∀ T ≤ primaryCutoff, ∀ P, BankRow w T P → f ^ (requiredOrder T - l) ∣ P) ∧
       (0 < l → ProperCut f Γ s l) := by
@@ -196,11 +196,11 @@ open Final50OrderProof (BankRow requiredOrder)
 open K1_13 (Geom embed Row jet Contact)
 open K1_13_3_1 (line)
 open scoped BigOperators
-open private eval_line line_contacts_zero from ProximityPrize.SubmissionLower.Fast074
-open private order_of_locator_lines from ProximityPrize.SubmissionLower.Fast074
-private def Bounded (Q : Polynomial Geom[X]) (b : ℕ) : Prop :=
+open K1_13_3_1 (eval_line line_contacts_zero)
+open K1_13_3_1 (order_of_locator_lines)
+private def Bounded (Q : Polynomial (Polynomial Geom)) (b : ℕ) : Prop :=
   ∀ j, (Q.coeff j).natDegree ≤ b + layerWidth * j
-private theorem bounded_mul {F G : Polynomial Geom[X]} {a b : ℕ}
+private theorem bounded_mul {F G : Polynomial (Polynomial Geom)} {a b : ℕ}
     (hF : Bounded F a) (hG : Bounded G b) : Bounded (F * G) (a + b) := by
   intro j
   rw [Polynomial.coeff_mul]
@@ -210,35 +210,35 @@ private theorem bounded_mul {F G : Polynomial Geom[X]} {a b : ℕ}
   refine natDegree_mul_le.trans ((Nat.add_le_add (hF ij.1) (hG ij.2)).trans ?_)
   rw [← hsum, Nat.mul_add]
   omega
-private theorem bounded_C (f : Geom[X]) {a : ℕ} (hf : f.natDegree ≤ a) :
+private theorem bounded_C (f : (Polynomial Geom)) {a : ℕ} (hf : f.natDegree ≤ a) :
     Bounded (Polynomial.C f) a := by
   intro j
   by_cases h : j = 0
   · simpa [h] using hf
   · simp [Polynomial.coeff_C, h]
 private theorem bounded_prod {ι : Type*} (A : Finset ι)
-    (f : ι → Polynomial Geom[X]) (b : ι → ℕ) (hf : ∀ i ∈ A, Bounded (f i) (b i)) :
+    (f : ι → Polynomial (Polynomial Geom)) (b : ι → ℕ) (hf : ∀ i ∈ A, Bounded (f i) (b i)) :
     Bounded (∏ i ∈ A, f i) (∑ i ∈ A, b i) := by
   classical
   induction A using Finset.induction_on with
-  | empty => simpa using bounded_C (1 : Geom[X]) (a := 0) (by simp)
+  | empty => simpa using bounded_C (1 : (Polynomial Geom)) (a := 0) (by simp)
   | insert i A hi ih =>
     rw [Finset.prod_insert hi, Finset.sum_insert hi]
     exact bounded_mul (hf i (Finset.mem_insert_self _ _))
       (ih fun k hk => hf k (Finset.mem_insert_of_mem hk))
-private theorem bounded_pow {f : Polynomial Geom[X]} {b : ℕ} (hf : Bounded f b) (n : ℕ) :
+private theorem bounded_pow {f : Polynomial (Polynomial Geom)} {b : ℕ} (hf : Bounded f b) (n : ℕ) :
     Bounded (f ^ n) (b * n) := by
   induction n with
-  | zero => simpa using bounded_C (1 : Geom[X]) (a := 0) (by simp)
+  | zero => simpa using bounded_C (1 : (Polynomial Geom)) (a := 0) (by simp)
   | succ n ih =>
     rw [pow_succ, Nat.mul_succ]
     exact bounded_mul ih hf
-private theorem line_degree (P : Row 4) (S U : Geom[X]) (T : ℕ)
+private theorem line_degree (P : Row 4) (S U : (Polynomial Geom)) (T : ℕ)
     (hP : TrueWeightLE P T) (hS : S.natDegree ≤ physicalDegree)
     (hU : U.natDegree ≤ agreement + 3) (j : ℕ) :
     ((line P S U).coeff j).natDegree ≤ T + layerWidth * j := by
   let b (i : Fin 4) : ℕ := physicalDegree - i.val
-  let F (i : Fin 4) : Polynomial Geom[X] :=
+  let F (i : Fin 4) : Polynomial (Polynomial Geom) :=
     Polynomial.C (jet S i) + Polynomial.C (jet U i) * Polynomial.X
   have hF (i : Fin 4) : Bounded (F i) (b i) := by
     intro k
@@ -266,11 +266,11 @@ private theorem line_degree (P : Row 4) (S U : Geom[X]) (T : ℕ)
     (bounded_prod m.support (fun i => F i ^ m i) (fun i => b i * m i)
       (fun i _ => bounded_pow (hF i) (m i))) j
   exact hterm.trans (Nat.add_le_add_right (hP m hm) _)
-private theorem line_coeff_zero (w : I → K) (T : ℕ) (P : Row 4) (S : Geom[X])
+private theorem line_coeff_zero (w : I → K) (T : ℕ) (P : Row 4) (S : (Polynomial Geom))
     (hw : TrueWeightLE P T) (hc : Contact w P) (hS : S.natDegree ≤ physicalDegree)
     (A : Finset I) (hA : A.card = agreement)
     (hhit : ∀ i ∈ A, S.eval (embed (node i)) = embed (w i))
-    (V : Geom[X]) (hV : V.natDegree ≤ 3) (j : ℕ)
+    (V : (Polynomial Geom)) (hV : V.natDegree ≤ 3) (j : ℕ)
     (hj : T + layerWidth * j ≤ primaryCutoff) :
     (line P S (locator (fun i => embed (node i)) A * V)).coeff j = 0 := by
   classical
@@ -295,7 +295,7 @@ private theorem line_coeff_zero (w : I → K) (T : ℕ) (P : Row 4) (S : Geom[X]
     exact hb.trans_lt (Nat.sub_lt (Nat.mul_pos (by decide) (by decide)) (by decide))
   exact line_contacts_zero Q A x hx 3000 hcontact j hdegree
 theorem order_of_contact (w : I → K) (P : Row 4) {T : ℕ} (hT : T ≤ primaryCutoff)
-    (hw : TrueWeightLE P T) (hc : Contact w P) {S : Geom[X]} (hS : S.natDegree ≤ physicalDegree)
+    (hw : TrueWeightLE P T) (hc : Contact w P) {S : (Polynomial Geom)} (hS : S.natDegree ≤ physicalDegree)
     {H : Finset I} (hH : agreement ≤ H.card)
     (hits : ∀ i ∈ H, S.eval (embed (node i)) = embed (w i)) :
     K1_13.OrderAt P S (requiredOrder T) := by
@@ -326,8 +326,7 @@ noncomputable section
 open Polynomial
 open Final50Order (TrueWeightLE physicalDegree primaryBox primaryCutoff)
 open K1_13 (Geom embed extend Row Shape shape InBox indexDegree)
-open private translateTop topHasse topHasse_coeff source_support sum_add_top total_add_top
-  apply_add_top erase_top_add topHasse_order topHasse_zero exact_hasse_not_dvd from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_3_2 (translateTop topHasse topHasse_coeff source_support sum_add_top total_add_top apply_add_top erase_top_add topHasse_order topHasse_zero exact_hasse_not_dvd)
 private theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
     (hb : InBox (shape P) box) (hw : TrueWeightLE P T) :
     InBox (shape (topHasse a P)) box ∧ TrueWeightLE (topHasse a P) T := by
@@ -356,7 +355,7 @@ private theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
     rw [sum_add_top (fun i => physicalDegree - i.val)] at hp
     rw [topHasse_coeff]
     have hc := Polynomial.natDegree_mul_le
-      (p := (↑((m 3 + a).choose a) : Geom[X])) (q := P.coeff (m + Finsupp.single 3 a))
+      (p := (↑((m 3 + a).choose a) : (Polynomial Geom))) (q := P.coeff (m + Finsupp.single 3 a))
     rw [Polynomial.natDegree_natCast, zero_add] at hc
     exact (Nat.add_le_add_right hc _).trans ((Nat.add_le_add_left (Nat.le_add_right _ _) _).trans hp)
 private theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
@@ -381,7 +380,7 @@ private theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
       rw [add_assoc, ← Finsupp.single_add, Nat.sub_add_cancel hupos, erase_top_add]
     have hm : m 3 + 1 = u 3 := by
       rw [← apply_add_top, hsum]
-    have hc : (↑(u 3) : Geom[X]) ≠ 0 := by
+    have hc : (↑(u 3) : (Polynomial Geom)) ≠ 0 := by
       have : CharP Geom K1.p :=
         charP_of_injective_ringHom (RingHom.injective embed) K1.p
       intro hz
@@ -427,8 +426,7 @@ open Final50Order (TrueWeightLE physicalDegree primaryCutoff)
 open Final50OrderProof (BankRow)
 open K1_13 (Geom embed Row InBox shape indexDegree Contact atJet)
 open K1_13_3 (Symbol symbolAt)
-open private jetEval jetEval_apply dvd_smul_poly coefficientArray symbolLinear linearFactor
-  linearFactor_ne linearFactor_degree divide_specialization support_linear_mul from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_3 (jetEval jetEval_apply dvd_smul_poly coefficientArray symbolLinear linearFactor linearFactor_ne linearFactor_degree divide_specialization support_linear_mul)
 open scoped BigOperators
 set_option maxRecDepth 1024
 set_option maxHeartbeats 650000
@@ -594,8 +592,13 @@ private theorem kernel_finrank (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ e
       ((LinearMap.mulLeft Geom (MvPolynomial.C (linearFactor x))).comp (bank w T).subtype)
       (fun P => (mul_cutoff_iff w x hx T P.val).mpr P.property)) (fun P => by
         rw [LinearMap.mem_ker]
+        simp only [bankEval, LinearMap.comp_apply, Submodule.subtype_apply,
+          LinearMap.codRestrict_apply, LinearMap.mulLeft_apply]
         change symbolAt x (MvPolynomial.C (linearFactor x) * P.val) = 0
-        simp [symbolAt, linearFactor])
+        have h0 : symbolAt x (MvPolynomial.C (linearFactor x)) = 0 := by
+          simp only [symbolAt, linearFactor, MvPolynomial.map_C, Polynomial.coe_evalRingHom,
+            Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C, sub_self, map_zero]
+        rw [RingHom.map_mul, h0, zero_mul])
   have hL : Function.Bijective L := by
     have hnz : (MvPolynomial.C (linearFactor x) : Row 4) ≠ 0 := by
       simpa only [ne_eq, MvPolynomial.C_eq_zero] using linearFactor_ne x

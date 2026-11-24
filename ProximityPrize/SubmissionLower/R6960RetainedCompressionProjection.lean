@@ -15,11 +15,11 @@ open CurvatureSquares (Ordinate zView ordEval)
 open KoalaRect (axisDegree axisDegree_le_iff)
 open scoped Polynomial nonZeroDivisors
 
-abbrev RationalOrdinate := Polynomial FX[X]
+abbrev RationalOrdinate := Polynomial (Polynomial FX)
 
-abbrev incl := algebraMap L[X] FX
+abbrev incl := algebraMap (Polynomial L) FX
 
-private def graph : Seeds →+* FX[X] := (K1_14.frobeniusGraph (F := FX) p).toRingHom
+private def graph : Seeds →+* (Polynomial FX) := (K1_14.frobeniusGraph (F := FX) p).toRingHom
 
 /-- The graph map is applied to the original rational coefficients. -/
 def project (f : Equation) : RationalOrdinate := f.map graph
@@ -27,7 +27,7 @@ def project (f : Equation) : RationalOrdinate := f.map graph
 def intoFraction (P : Ordinate) : RationalOrdinate :=
   P.map ((mapRingHom incl).comp Bivariate.swap.toRingHom)
 
-private theorem incl_inj : Function.Injective incl := IsFractionRing.injective L[X] FX
+private theorem incl_inj : Function.Injective incl := IsFractionRing.injective (Polynomial L) FX
 
 private theorem coeff_into (P : Ordinate) (i j : ℕ) :
     ((intoFraction P).coeff i).coeff j = incl ((Bivariate.swap (P.coeff i)).coeff j) := by
@@ -65,34 +65,34 @@ theorem specialize_project (f : Equation) (z : K) :
 /-- Clear denominators in the abscissa without increasing either the ordinate
 or scalar degree. The identity holds over the original fraction field. -/
 theorem clear_abscissa (G : RationalOrdinate) :
-    ∃ (d : L[X]) (P : Ordinate), d≠0 ∧ intoFraction P=C (C (incl d))*G := by
+    ∃ (d : (Polynomial L)) (P : Ordinate), d≠0 ∧ intoFraction P=C (C (incl d))*G := by
   classical
   let S := G.support.sigma (fun i => (G.coeff i).support)
   let coeffs (x : Σ _ : ℕ, ℕ) : FX := (G.coeff x.1).coeff x.2
-  let den := IsLocalization.commonDenom (nonZeroDivisors L[X]) S coeffs
-  let ints := IsLocalization.integerMultiple (nonZeroDivisors L[X]) S coeffs
-  let value (i j : ℕ) : L[X] := if h : (⟨i,j⟩ : Σ _ : ℕ, ℕ) ∈ S then ints ⟨⟨i,j⟩,h⟩ else 0
+  let den := IsLocalization.commonDenom (nonZeroDivisors (Polynomial L)) S coeffs
+  let ints := IsLocalization.integerMultiple (nonZeroDivisors (Polynomial L)) S coeffs
+  let value (i j : ℕ) : (Polynomial L) := if h : (⟨i,j⟩ : Σ _ : ℕ, ℕ) ∈ S then ints ⟨⟨i,j⟩,h⟩ else 0
   let raw : Ordinate :=
     ∑ i∈G.support, monomial i (∑ j∈(G.coeff i).support, monomial j (value i j))
   let P := raw.map Bivariate.swap.toRingHom
   have degree (i j : ℕ) : (raw.coeff i).coeff j = value i j := by
     by_cases hi : i∈G.support
     · by_cases hj : j∈(G.coeff i).support
-      · simp [raw, Polynomial.finsetSum_coeff, coeff_monomial, Finset.sum_ite_eq',
+      · simp [raw, Polynomial.finsetSum_coeff, coeff_monomial, Finsupp.single_apply, Finset.sum_ite_eq',
           hi, hj]
       · have hnot : (⟨i,j⟩ : Σ _ : ℕ, ℕ) ∉ S := fun m => hj (Finset.mem_sigma.mp m).2
-        simp [raw, Polynomial.finsetSum_coeff, coeff_monomial, Finset.sum_ite_eq',
+        simp [raw, Polynomial.finsetSum_coeff, coeff_monomial, Finsupp.single_apply, Finset.sum_ite_eq',
           hi, hj, value, hnot]
     · have hnot : (⟨i,j⟩ : Σ _ : ℕ, ℕ) ∉ S := fun m => hi (Finset.mem_sigma.mp m).1
-      simp [raw, Polynomial.finsetSum_coeff, coeff_monomial, Finset.sum_ite_eq',
+      simp [raw, Polynomial.finsetSum_coeff, coeff_monomial, Finsupp.single_apply, Finset.sum_ite_eq',
         hi, value, hnot]
   refine ⟨den,P,nonZeroDivisors.coe_ne_zero den,?_⟩
   ext i j
   rw [coeff_into,show P.coeff i=Bivariate.swap (raw.coeff i) from coeff_map ..,
     Bivariate.swap_swap_apply, degree, coeff_C_mul, coeff_C_mul]
   by_cases h : (⟨i,j⟩ : Σ _ : ℕ, ℕ) ∈ S
-  · have prop := IsLocalization.map_integerMultiple (nonZeroDivisors L[X]) S coeffs ⟨⟨i,j⟩,h⟩
-    change incl (ints ⟨⟨i,j⟩,h⟩)=(den : L[X]) • (G.coeff i).coeff j at prop
+  · have prop := IsLocalization.map_integerMultiple (nonZeroDivisors (Polynomial L)) S coeffs ⟨⟨i,j⟩,h⟩
+    change incl (ints ⟨⟨i,j⟩,h⟩)=(den : (Polynomial L)) • (G.coeff i).coeff j at prop
     rw [Algebra.smul_def] at prop
     simpa only [value, dite_eq_left h] using prop
   · have zero : (G.coeff i).coeff j=0 := by
@@ -106,7 +106,7 @@ abscissa polynomial kept as its coefficient ring. -/
 def specialize (P : Ordinate) (z : L) : Polynomial (Polynomial L) :=
   P.map (mapRingHom (evalRingHom z))
 
-theorem eval_swap {F : Type*} [Field F] (Q : Polynomial F[X]) (z : F) :
+theorem eval_swap {F : Type*} [Field F] (Q : Polynomial (Polynomial F)) (z : F) :
     (Bivariate.swap Q).eval (C z) = Q.map (evalRingHom z) := by
   induction Q using Polynomial.induction_on' with
   | add P Q hP hQ => simp only [map_add, eval_add, hP, hQ, Polynomial.map_add]
@@ -122,7 +122,7 @@ theorem specialize_into (P : Ordinate) (z : L) :
   change (Bivariate.swap (P.coeff i)).eval₂ incl (incl (C z)) =
     incl ((P.coeff i).map (evalRingHom z))
   have mapped := Polynomial.hom_eval₂ (p := Bivariate.swap (P.coeff i))
-    (f := RingHom.id L[X]) (g := incl) (C z)
+    (f := RingHom.id (Polynomial L)) (g := incl) (C z)
   rw [RingHom.comp_id] at mapped
   rw [← mapped]
   exact congrArg incl (eval_swap (P.coeff i) z)
@@ -137,7 +137,7 @@ private theorem z_coeff (P : Ordinate) (i j : ℕ) :
 /-- An integral projected polynomial carries the terminal equation's exact
 ordinate degree and the shared scalar-degree cap. -/
 theorem integral_project (f : Equation) (nz : f≠0) (small : axisDegree f 0<p) :
-    ∃ (d : L[X]) (P : Ordinate), d≠0 ∧ P≠0 ∧ P.natDegree=f.natDegree ∧
+    ∃ (d : (Polynomial L)) (P : Ordinate), d≠0 ∧ P≠0 ∧ P.natDegree=f.natDegree ∧
       (zView P).natDegree≤axisDegree f 0+p*axisDegree f 1 ∧
       ∀ z : K, (specialize P (algebraMap K L z)).map incl = C (incl d)*f.map (graphEval z) := by
   obtain ⟨d,P,hd,eq⟩ := clear_abscissa (project f)

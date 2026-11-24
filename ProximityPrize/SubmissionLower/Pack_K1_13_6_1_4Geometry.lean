@@ -11,15 +11,15 @@ namespace K1_13_6
 noncomputable section
 open Polynomial K1 K1_13
 open scoped BigOperators
-abbrev GenericField := FractionRing Geom[X]
+abbrev GenericField := FractionRing (Polynomial Geom)
 abbrev GeoField := AlgebraicClosure GenericField
 abbrev GeoJets := MvPolynomial (Fin 4) GeoField
-def genericCoeffs : Geom[X] →+* GeoField :=
-  (algebraMap GenericField GeoField).comp (algebraMap Geom[X] GenericField)
+def genericCoeffs : (Polynomial Geom) →+* GeoField :=
+  (algebraMap GenericField GeoField).comp (algebraMap (Polynomial Geom) GenericField)
 def toGeneric (P : Row 4) : GeoJets := MvPolynomial.map genericCoeffs P
-def evalGeneric (S : Geom[X]) : GeoJets →+* GeoField :=
+def evalGeneric (S : (Polynomial Geom)) : GeoJets →+* GeoField :=
   MvPolynomial.eval (fun i => genericCoeffs (jet S i))
-def markIdeal (S : Geom[X]) : Ideal GeoJets := RingHom.ker (evalGeneric S)
+def markIdeal (S : (Polynomial Geom)) : Ideal GeoJets := RingHom.ker (evalGeneric S)
 def intersectionIdeal (f Q : Row 4) : Ideal GeoJets :=
   Ideal.span {toGeneric f, toGeneric Q}
 def divisorIdeal (surface : Ideal GeoJets) (E : Row 4) : Ideal GeoJets :=
@@ -49,7 +49,7 @@ def Invariant (g : Row 4) (surface : Ideal GeoJets) : Prop :=
 def CanonicalChart (f : Row 4) (surface : Ideal GeoJets) (r : ℕ) : Prop :=
   r < (shape f).t ∧ (∀ j ≤ r, toGeneric ((separant^[j]) f) ∈ surface) ∧
     toGeneric (separant ((separant^[r]) f)) ∉ surface
-structure HighChart (f Q : Row 4) (l : ℕ) (S : Geom[X])
+structure HighChart (f Q : Row 4) (l : ℕ) (S : (Polynomial Geom))
     (surface : Ideal GeoJets) (r : ℕ) : Prop where
   base : (intersectionIdeal f Q).IsMinimalPrime surface
   high : (l : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) surface base.isPrime
@@ -57,9 +57,9 @@ structure HighChart (f Q : Row 4) (l : ℕ) (S : Geom[X])
   chart : CanonicalChart f surface r
   regular : atJet (separant ((separant^[r]) f)) S ≠ 0
   invariant : Invariant ((separant^[r]) f) surface
-def HighMark (f Q : Row 4) (l : ℕ) (S : Geom[X]) : Prop :=
+def HighMark (f Q : Row 4) (l : ℕ) (S : (Polynomial Geom)) : Prop :=
   ∃ surface r, HighChart f Q l S surface r
-def CurveSections (Γ : Finset K) (s : K → K[X]) (d : ℕ) : Prop := by
+def CurveSections (Γ : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop := by
   classical
   exact ∀ x a : K, (∃ γ ∈ Γ, (s γ).eval x ≠ a) →
     (Γ.filter fun γ => (s γ).eval x = a).card ≤ d
@@ -71,14 +71,14 @@ structure Pieces (Γ : Finset K) where
 def Pieces.union {Γ : Finset K} (C : Pieces Γ) : Finset K := by
   classical exact Finset.univ.biUnion C.piece
 def Pieces.total {Γ : Finset K} (C : Pieces Γ) : ℕ := ∑ i, C.degree i
-def Pieces.curves {Γ : Finset K} (C : Pieces Γ) (s : K → K[X]) : Prop :=
+def Pieces.curves {Γ : Finset K} (C : Pieces Γ) (s : K → (Polynomial K)) : Prop :=
   ∀ i, CurveSections (C.piece i) s (C.degree i)
-def SurfaceSections (Γ : Finset K) (s : K → K[X]) (d : ℕ) : Prop := by
+def SurfaceSections (Γ : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop := by
   classical
   exact ∀ x a : K, (∃ γ ∈ Γ, (s γ).eval x ≠ a) →
     let H := Γ.filter fun γ => (s γ).eval x = a
     ∃ C : Pieces H, H ⊆ C.union ∧ C.curves s ∧ (∀ i, 0 < C.degree i) ∧ C.total ≤ d
-def Pieces.surfaces {Γ : Finset K} (C : Pieces Γ) (s : K → K[X]) : Prop :=
+def Pieces.surfaces {Γ : Finset K} (C : Pieces Γ) (s : K → (Polynomial K)) : Prop :=
   ∀ i, SurfaceSections (C.piece i) s (C.degree i)
 end
 end K1_13_6
@@ -96,7 +96,7 @@ open scoped BigOperators
   split_ifs with hm
   · rfl
   · rw [MvPolynomial.notMem_support_iff.mp hm, map_zero]
-private theorem coefficientDerivative_C (p : Geom[X]) :
+private theorem coefficientDerivative_C (p : (Polynomial Geom)) :
     coefficientDerivative (MvPolynomial.C p) = MvPolynomial.C (derivative p) := by
   classical
   apply MvPolynomial.ext
@@ -113,7 +113,7 @@ private theorem coefficientDerivative_mul_X (P : Row 4) (j : Fin 4) :
   ext m
   rw [coeff_coefficientDerivative, MvPolynomial.coeff_mul_X', MvPolynomial.coeff_mul_X']
   split_ifs <;> simp
-private theorem eval_chain (P : Row 4) (a : Fin 4 → Geom[X]) :
+private theorem eval_chain (P : Row 4) (a : Fin 4 → (Polynomial Geom)) :
     derivative (MvPolynomial.eval a P) = MvPolynomial.eval a (coefficientDerivative P) +
       ∑ i, derivative (a i) * MvPolynomial.eval a (MvPolynomial.pderiv i P) := by
   classical
@@ -138,11 +138,11 @@ private theorem eval_chain (P : Row 4) (a : Fin 4 → Geom[X]) :
       simp [MvPolynomial.pderiv_X, Pi.single_apply, mul_ite]
     rw [left, right]
     ring
-private theorem derivative_hasse (S : Geom[X]) (k : ℕ) :
+private theorem derivative_hasse (S : (Polynomial Geom)) (k : ℕ) :
     derivative (hasseDeriv k S) = C ((k+1 : ℕ) : Geom) * hasseDeriv (k+1) S := by
   have h := LinearMap.congr_fun (hasseDeriv_comp (R := Geom) 1 k) S
   simpa [hasseDeriv_one', Nat.choose_one_right, nsmul_eq_mul, C_eq_natCast, Nat.add_comm, add_mul] using h
-private theorem eval_partialFlow (P : Row 4) (S : Geom[X]) :
+private theorem eval_partialFlow (P : Row 4) (S : (Polynomial Geom)) :
     derivative (atJet P S) = atJet (partialFlow P) S +
       derivative (jet S (3 : Fin 4)) * atJet (separant P) S := by
   unfold atJet partialFlow separant
@@ -152,7 +152,7 @@ private theorem eval_partialFlow (P : Row 4) (S : Geom[X]) :
   refine Finset.sum_congr rfl fun i _ => ?_
   simp only [jet, derivative_hasse, map_mul, MvPolynomial.eval_C, MvPolynomial.eval_X,
     Fin.val_castSucc, Fin.val_succ]
-theorem eval_flowNumerator (g P : Row 4) (S : Geom[X]) (hg : atJet g S = 0) :
+theorem eval_flowNumerator (g P : Row 4) (S : (Polynomial Geom)) (hg : atJet g S = 0) :
     atJet (flowNumerator g P) S = atJet (separant g) S * derivative (atJet P S) := by
   have hz : atJet (partialFlow g) S +
       derivative (jet S (3 : Fin 4)) * atJet (separant g) S = 0 := by
@@ -164,8 +164,8 @@ theorem eval_flowNumerator (g P : Row 4) (S : Geom[X]) (hg : atJet g S = 0) :
   change atJet (separant g) S * atJet (partialFlow P) S -
       atJet (partialFlow g) S * atJet (separant P) S = _
   linear_combination -atJet (separant P) S * hz
-private theorem cleared_product_rule (a : ℕ) (U V : Geom[X]) :
-    U * (U * derivative (U^a * V)) - (a : Geom[X]) * (U * derivative U) * (U^a * V) =
+private theorem cleared_product_rule (a : ℕ) (U V : (Polynomial Geom)) :
+    U * (U * derivative (U^a * V)) - (a : (Polynomial Geom)) * (U * derivative U) * (U^a * V) =
       U^(a+2) * derivative V := by
   cases a with
   | zero => simp [pow_two, mul_assoc]
@@ -175,19 +175,19 @@ private theorem cleared_product_rule (a : ℕ) (U V : Geom[X]) :
     simp only [C_eq_natCast]
     push_cast
     ring
-theorem eval_jetNumerator (g : Row 4) (S : Geom[X]) (hg : atJet g S = 0) (n : ℕ) :
+theorem eval_jetNumerator (g : Row 4) (S : (Polynomial Geom)) (hg : atJet g S = 0) (n : ℕ) :
     atJet (jetNumerator g n) S =
       atJet (separant g) S ^ (2*n) * ((derivative (R := Geom))^[n]) S := by
   induction n with
   | zero =>
     simp [jetNumerator, atJet, jet]
   | succ n ih =>
-    let e := MvPolynomial.eval (jet S : Fin 4 → Geom[X])
+    let e := MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))
     change e (clearedStep g (2*n) (jetNumerator g n)) = _
     unfold clearedStep
     rw [map_sub, map_mul, map_mul, map_mul, map_natCast]
     change atJet (separant g) S * atJet (flowNumerator g (jetNumerator g n)) S -
-      (↑(2*n) : Geom[X]) * atJet (flowNumerator g (separant g)) S *
+      (↑(2*n) : (Polynomial Geom)) * atJet (flowNumerator g (separant g)) S *
         atJet (jetNumerator g n) S = _
     rw [eval_flowNumerator _ _ _ hg, eval_flowNumerator _ _ _ hg, ih,
       cleared_product_rule,
@@ -211,7 +211,7 @@ structure TaylorChart where
     numerator (i.castLE (by decide : 4 ≤ taylorLength)) = MvPolynomial.X i * denom
 def TaylorChart.Fits (C : TaylorChart) (h : Shape) : Prop :=
   GeoFits C.denom h ∧ ∀ i, GeoFits (C.numerator i) h
-def TaylorChart.Recovers (C : TaylorChart) (S : Geom[X]) : Prop :=
+def TaylorChart.Recovers (C : TaylorChart) (S : (Polynomial Geom)) : Prop :=
   evalGeneric S C.denom ≠ 0 ∧
     ∀ i, evalGeneric S (C.numerator i) =
       evalGeneric S C.denom * genericCoeffs (hasseDeriv i.val S)
@@ -233,7 +233,7 @@ noncomputable section
 open Polynomial K1 K1_13 K1_13_6
 open scoped BigOperators
 abbrev anchorBox (f : Row 4) : Shape := (shape f).chamber
-def HasMark (Γ : Finset K) (s : K → K[X]) (surface : Ideal GeoJets) : Prop :=
+def HasMark (Γ : Finset K) (s : K → (Polynomial K)) (surface : Ideal GeoJets) : Prop :=
   ∃ γ ∈ Γ, surface ≤ markIdeal (extend (s γ))
 def tangentCut (g P : Row 4) (a : ℕ) : Row 4 :=
   (flowNumerator g)^[a] P
@@ -272,7 +272,7 @@ open Polynomial MvPolynomial K1_13 K1_13_6
 open RingTheory.Sequence
 open scoped Pointwise
 theorem genericCoeffs_injective : Function.Injective genericCoeffs :=
-  (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
+  (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective (Polynomial Geom) GenericField)
 theorem toGeneric_injective : Function.Injective toGeneric :=
   MvPolynomial.map_injective _ genericCoeffs_injective
 private theorem mem_smul_top_iff_dvd {R : Type*} [CommRing R] (f x : R) :
@@ -290,11 +290,11 @@ theorem proper_generic (f g : Row 4) (hf : Irreducible f) (hg : ¬ f ∣ g) :
     intro x hx
     exact (mem_smul_top_iff_dvd f x).mpr
       ((hp.dvd_mul.mp ((mem_smul_top_iff_dvd f (g * x)).mp hx)).resolve_left hg)
-  let _ : Algebra Geom[X] GeoField := genericCoeffs.toAlgebra
-  let _ : Module.IsTorsionFree Geom[X] GeoField :=
+  let _ : Algebra (Polynomial Geom) GeoField := genericCoeffs.toAlgebra
+  let _ : Module.IsTorsionFree (Polynomial Geom) GeoField :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr genericCoeffs_injective
   have hflat : Module.Flat (Row 4) GeoJets :=
-    Module.Flat.of_linearEquiv (Algebra.IsPushout.equiv Geom[X] (Row 4) GeoField GeoJets).symm.toLinearEquiv
+    Module.Flat.of_linearEquiv (Algebra.IsPushout.equiv (Polynomial Geom) (Row 4) GeoField GeoJets).symm.toLinearEquiv
   have h := hreg.of_flat (S := GeoJets)
   change IsWeaklyRegular GeoJets [toGeneric f, toGeneric g] at h
   rw [isWeaklyRegular_cons_iff, isWeaklyRegular_singleton_iff] at h
@@ -376,7 +376,7 @@ private theorem krullDim_of_finite_hom {k R : Type*} [Field k] [CommRing R] [IsD
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hg
   let finite : Module.Finite (MvPolynomial (Fin d) k) R := hgfin
   exact @krullDim_of_polynomial_normalization k R _ _ _ d algebra faithful finite
-private theorem dim_eq_Hilbert {k σ : Type*} [Field k] [Finite σ]
+theorem dim_eq_Hilbert {k σ : Type*} [Field k] [Finite σ]
     (I : Ideal (MvPolynomial σ k)) [I.IsPrime] :
     ringKrullDim (MvPolynomial σ k ⧸ I) =
       ((affineHilbertPolynomial I).natDegree : WithBot ℕ∞) := by

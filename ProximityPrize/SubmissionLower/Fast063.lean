@@ -542,7 +542,7 @@ theorem fourfold_telescoping (H : ℕ → Degree → ℝ) (C : ℝ) (q : ℕ)
   have hbox (r : ℕ) (hr : r ≤ 4) : ∀ e : Degree, (∀ j, q ≤ e j) →
       degreeDifferences n (H r) (tail.drop r) e = C * (n : ℝ)^(4 - r) := by
     refine Nat.decreasingInduction' (m := r) (n := 4)
-      (P := fun l => ∀ e : Degree, (∀ j, q ≤ e j) →
+      (motive := fun l => ∀ e : Degree, (∀ j, q ≤ e j) →
         degreeDifferences n (H l) (tail.drop l) e = C * (n : ℝ)^(4 - l)) ?_ hr ?_
     · intro l hl _ ih e he
       let i : Fin 4 := ⟨l, hl⟩
@@ -582,7 +582,7 @@ noncomputable section
 open Polynomial K1_13 K1_13_6
 abbrev RationalJets := MvPolynomial (Fin 4) GenericField
 def toRational : Row 4 →+* RationalJets :=
-  MvPolynomial.map (algebraMap Geom[X] GenericField)
+  MvPolynomial.map (algebraMap (Polynomial Geom) GenericField)
 abbrev contractedPrime (surface : Ideal GeoJets) : Ideal RationalJets :=
   surface.comap (MvPolynomial.map (algebraMap GenericField GeoField))
 def contractedLength (g P : Row 4) (surface : Ideal GeoJets) (hp : surface.IsPrime) : ℕ∞ := by
@@ -867,7 +867,7 @@ theorem tangent_proper {g P : Row 4} {surface : Ideal GeoJets} (hp : surface.IsP
   have hlower : ∀ k < v, ρ ((D^[k]) P) = 0 := by
     intro k
     induction k using Nat.strong_induction_on with
-    | h k ih =>
+    | ind k ih =>
       intro hk
       have h := iterate_mul_residue D ρ hD k d P (fun j hj => ih j hj (hj.trans hk))
       rw [iter_eq, hpow.1 k hk u] at h
@@ -1432,7 +1432,7 @@ namespace K1_13_6_1_5
 noncomputable section
 open Polynomial K1 K1_13 K1_13_6 K1_13_6_1 K1_13_7_1
 open scoped BigOperators
-def markPoint (S : Geom[X]) : GeoPoint := fun i => genericCoeffs (jet S i)
+def markPoint (S : (Polynomial Geom)) : GeoPoint := fun i => genericCoeffs (jet S i)
 theorem markPoint_injective : Function.Injective markPoint := by
   intro S T h
   have hzero := congrFun h (0 : Fin 4)
@@ -1700,7 +1700,7 @@ theorem coefficients_eq_zero
   classical
   have h (n : ℕ) : ∀ m : σ →₀ ℕ, m.degree = n → Q.coeff m = 0 ∧ ∀ i, (r i).coeff m = 0 := by
     induction n using Nat.strong_induction_on with
-    | h n ih =>
+    | ind n ih =>
       intro m hm
       have hprod : (H * Q).coeff m = constantCoeff H * Q.coeff m := by
         rw [coeff_mul, Finset.sum_eq_single (0, m)]
@@ -3143,7 +3143,7 @@ theorem deformation_reduce
   classical
   let := (lattice_finite (P i)).fintype
   ext e
-  simp only [deformation, reduce, map_sum, map_monomial, coeff_map, coeff_sum, coeff_monomial,
+  simp only [deformation, reduce, map_sum, map_monomial, coeff_map, coeff_sum, coeff_monomial, Finsupp.single_apply,
     coeffLine, Polynomial.coe_evalRingHom, Polynomial.eval_add, Polynomial.eval_C,
     Polynomial.eval_mul, Polynomial.eval_X, zero_mul, add_zero, center]
   by_cases he : e ∈ lattice (P i)
@@ -3280,9 +3280,9 @@ theorem map_hassePartial {n : ℕ} {A B : Type*} [CommSemiring A] [CommSemiring 
   have hc := congrArg (fun F : MvPolynomial (Fin n) (MvPolynomial (Fin n) B) => F.coeff a)
     (RingHom.congr_fun h P)
   simpa only [RingHom.comp_apply, MvPolynomial.coeff_map, taylor_coeff] using hc
-theorem atJet_hassePartial {n : ℕ} (a : Fin n →₀ ℕ) (P : Row n) (S : Geom[X]) :
+theorem atJet_hassePartial {n : ℕ} (a : Fin n →₀ ℕ) (P : Row n) (S : (Polynomial Geom)) :
     atJet (hassePartial a P) S = (shiftJet P S).coeff a := by
-  let e : Row n →+* Geom[X] := MvPolynomial.eval (jet S)
+  let e : Row n →+* (Polynomial Geom) := MvPolynomial.eval (jet S)
   let shift : Row n →+* Row n :=
     MvPolynomial.eval₂Hom MvPolynomial.C (fun i => MvPolynomial.X i + MvPolynomial.C (jet S i))
   have h : (MvPolynomial.map e).comp taylorHom = shift := by
@@ -3329,7 +3329,7 @@ theorem hasse_inBox (a : Fin 4 →₀ ℕ) {P : Row 4} {B : Shape}
     intro m hm
     obtain ⟨v, hv, rfl⟩ := source_support hm
     exact (Nat.sub_le _ _).trans ((MvPolynomial.le_degreeOf_of_mem_support 3 hv).trans hP.2.2)
-theorem hasse_atJet_eq_zero {n : ℕ} {a : Fin n →₀ ℕ} {P : Row n} {S : Geom[X]} {l : ℕ}
+theorem hasse_atJet_eq_zero {n : ℕ} {a : Fin n →₀ ℕ} {P : Row n} {S : (Polynomial Geom)} {l : ℕ}
     (ha : multiOrder a < l) (h : OrderAt P S l) : atJet (hassePartial a P) S = 0 := by
   rw [atJet_hassePartial]
   by_contra hn
@@ -4062,18 +4062,18 @@ set_option maxRecDepth 12000
 set_option backward.isDefEq.respectTransparency false
 private abbrev Local := LocalPolynomial Geom 3
 private abbrev T : Local := MvPolynomial.X (localT 3)
-private def liftVar (j : Fin 4) : LocalVariable 3 := ![localE 3, localY 0, localY 1, localY 2] j
-private def liftPower (j : Fin 4) : ℕ := if j = 0 then 1 else j.val
-private def liftImage (j : Fin 4) : Local := T ^ liftPower j * MvPolynomial.X (liftVar j)
-private def liftJets : Form →ₐ[Geom] Local := bind₁ liftImage
-private theorem liftJets_X (j : Fin 4) : liftJets (MvPolynomial.X j) = liftImage j := bind₁_X_right _ _
-private theorem lift_value :
+def liftVar (j : Fin 4) : LocalVariable 3 := ![localE 3, localY 0, localY 1, localY 2] j
+def liftPower (j : Fin 4) : ℕ := if j = 0 then 1 else j.val
+def liftImage (j : Fin 4) : Local := T ^ liftPower j * MvPolynomial.X (liftVar j)
+def liftJets : Form →ₐ[Geom] Local := bind₁ liftImage
+theorem liftJets_X (j : Fin 4) : liftJets (MvPolynomial.X j) = liftImage j := bind₁_X_right _ _
+theorem lift_value :
     liftJets valueForm = unscaledLocalSubstitution 3 0 0 (MvPolynomial.X (some 0)) := by
   rw [unscaledLocalSubstitution_Y_zero]
   simp only [valueForm, map_add, map_sub, liftJets_X, localCorrection, Fin.sum_univ_three]
   simp [liftImage, liftPower, liftVar]
   ring
-private theorem lift_order (j : Fin 4) :
+theorem lift_order (j : Fin 4) :
     liftImage j ∈ restrictWeightedOrder (localContactWeight 3) (1 + targetOrder j) := by
   have h : liftPower j * 1 + localContactWeight 3 (liftVar j) = 1 + targetOrder j := by
     fin_cases j <;> decide
@@ -4082,11 +4082,11 @@ private theorem lift_order (j : Fin 4) :
     (pow_mem_restrictWeightedOrder (X_mem_restrictWeightedOrder _ _ (localContactWeight_T 3).ge)
       (liftPower j))
     (X_mem_restrictWeightedOrder _ _ le_rfl)
-private theorem value_hom :
+theorem value_hom :
     valueForm.IsWeightedHomogeneous (fun _ => (1 : ℕ)) 1 := by
   let h := isWeightedHomogeneous_X Geom (fun _ : Fin 4 => (1 : ℕ))
   exact (((h 0).add (h 1)).sub (h 2)).add (h 3)
-private theorem lift_value_order :
+theorem lift_value_order :
     liftJets valueForm ∈ restrictWeightedOrder (localContactWeight 3) 1 := by
   have h (j : Fin 4) :
       liftImage j ∈ restrictWeightedOrder (localContactWeight 3) 1 :=
@@ -4097,7 +4097,7 @@ private def postprocess (s : ℕ) (g : ℤ) : Form →ₗ[Geom] Local :=
   (projectLowContact 138).comp
     ((LinearMap.mulLeft Geom (T ^ (g + 48).toNat *
       (liftJets valueForm) ^ (s - residualDegree s))).comp liftJets.toLinearMap)
-private theorem project_monomial (cut : ℕ) (e : LocalVariable 3 →₀ ℕ) (a : Geom) :
+theorem project_monomial (cut : ℕ) (e : LocalVariable 3 →₀ ℕ) (a : Geom) :
     projectLowContact cut (monomial e a) =
       if localContactOrder 3 e < cut then monomial e a else 0 := by
   classical
@@ -4114,10 +4114,10 @@ private theorem project_monomial (cut : ℕ) (e : LocalVariable 3 →₀ ℕ) (a
     · subst v
       simp [coeff_projectLowContact, hc]
     · simp [coeff_projectLowContact, coeff_monomial, h]
-private theorem jet_index_formula (m : Fin 4 →₀ ℕ) :
+theorem jet_index_formula (m : Fin 4 →₀ ℕ) :
     m.weight jetIndex = m 1 + 2 * m 2 + 3 * m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, jetIndex, Nat.mul_comm]
-private theorem source_monomial_expr (u : JetVariable 3 →₀ ℕ) (a : Geom) :
+theorem source_monomial_expr (u : JetVariable 3 →₀ ℕ) (a : Geom) :
     monomial u a = MvPolynomial.C a * MvPolynomial.X none ^ u none *
       MvPolynomial.X (some 0) ^ u (some 0) * MvPolynomial.X (some 1) ^ u (some 1) *
       MvPolynomial.X (some 2) ^ u (some 2) * MvPolynomial.X (some 3) ^ u (some 3) := by
@@ -4125,15 +4125,15 @@ private theorem source_monomial_expr (u : JetVariable 3 →₀ ℕ) (a : Geom) :
   change _ * (_ * ∏ i : Fin 4, MvPolynomial.X (some i) ^ u (some i)) = _
   rw [Fin.prod_univ_four]
   ring
-private theorem form_monomial_expr (m : Fin 4 →₀ ℕ) (a : Geom) :
+theorem form_monomial_expr (m : Fin 4 →₀ ℕ) (a : Geom) :
     monomial m a = MvPolynomial.C a * MvPolynomial.X 0 ^ m 0 * MvPolynomial.X 1 ^ m 1 *
       MvPolynomial.X 2 ^ m 2 * MvPolynomial.X 3 ^ m 3 := by
   rw [monomial_eq, Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fin.prod_univ_four]
   ring
-private def merge {ι : Type} [Fintype ι] {V : ι → Submodule Geom Form}
+def merge {ι : Type} [Fintype ι] {V : ι → Submodule Geom Form}
     (post : ι → Form →ₗ[Geom] Local) : (∀ i, V i) →ₗ[Geom] Local :=
   ∑ i, (post i).comp ((V i).subtype.comp (LinearMap.proj i))
-private theorem merge_single {ι : Type} [Fintype ι] [DecidableEq ι]
+theorem merge_single {ι : Type} [Fintype ι] [DecidableEq ι]
     {V : ι → Submodule Geom Form} (post : ι → Form →ₗ[Geom] Local) (i : ι) (v : V i) :
     merge post (Pi.single i v) = post i v := by
   rw [merge, LinearMap.sum_apply, Finset.sum_eq_single i]
@@ -4150,7 +4150,7 @@ section
 namespace K1_14_5
 open K1_14 Finset
 open scoped BigOperators
-private theorem shape_sum_flip {M : Type} [AddCommMonoid M]
+theorem shape_sum_flip {M : Type} [AddCommMonoid M]
     (s : Shape) (f : ℕ → ℕ → M) :
     (∑ q ∈ range (s.B+1), ∑ j ∈ range (min q s.J+1), f q j) =
       ∑ j ∈ range (s.J+1), ∑ q ∈ Ico j (s.B+1), f q j := by

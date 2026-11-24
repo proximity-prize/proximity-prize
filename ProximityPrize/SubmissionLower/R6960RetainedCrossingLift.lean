@@ -10,7 +10,7 @@ open MonicChart (ChartField)
 open ChartSections (Chart)
 open MonicFourChartDescent MonicChartProbes ChartOverlapTests Polynomial
 open scoped Polynomial
-open private Lower6960.RetainedRestrictionTorus.linear from ProximityPrize.SubmissionLower.R6960RetainedRestrictionTorus
+open Lower6960.RetainedRestrictionTorus (linear)
 
 private def cx (s : Chart) : baseChart s := planeEquiv s Polynomial.X
 private def cz (s : Chart) : baseChart s := planeEquiv s (C Polynomial.X)

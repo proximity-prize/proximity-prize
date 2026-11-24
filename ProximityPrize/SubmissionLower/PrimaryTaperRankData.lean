@@ -7,7 +7,7 @@ set_option maxHeartbeats 0
 namespace LambdaTaperFast
 open TaperBudget (natOld rankNat natCell cap valuePower sumChunk rowSum sumRange)
 open K1_13_2_3_7 (countParts natKernel)
-open private removed from ProximityPrize.SubmissionLower.PrimaryTaperBudget
+open TaperBudget (removed)
 
 private def target (d j h r : ℕ) (low atH : ℕ × ℕ) : ℕ :=
   if r = 0 then 0 else
@@ -492,7 +492,7 @@ private theorem join (lo n m next full : ℕ) (a b result : ℕ)
   rw [← hLen, sumChunk_add row, ha, hStart, hb]
   exact hValue
 
-private theorem sum_checked : sumChunk row 0 499 = 396610034658 := by
+theorem sum_checked : sumChunk row 0 499 = 396610034658 := by
   have tail496 : sumChunk row 496 3 = 3036818172 :=
     rows496
   have tail488 : sumChunk row 488 11 = 11271377975 :=

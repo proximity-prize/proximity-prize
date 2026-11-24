@@ -15,7 +15,7 @@ open K1_14_1 K1_14_1_7 K1_14_1_7_3
 open P1 (K I)
 open P1_7_1 (groupedPoleMoment poleRows)
 open scoped BigOperators Polynomial
-open private poleTest_of_local from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1_7 (poleTest_of_local)
 
 def poleDebit (h : ℕ) (s : Shape) (U : Fin 2 → ℕ) : ℕ :=
   2*h * poleRows s * ((U 0 + 1) * (U 1 + 1)) +
@@ -56,8 +56,8 @@ private abbrev ScalarRows {h : ℕ} (s : Shape) (U : Fin 2 → ℕ)
     (side : Fin (2*h) → Fin 2) (d : Fin (2*h) → Fin (poleRows s) → ℕ) :=
   Σ t : Fin (2*h), Σ r : Fin (poleRows s), Slots U (d t r) (side t)
 
-private theorem scalar_rows_card_le {h : ℕ} {F : Type} [Field F] {H : F[X]}
-    {lift : (SeedFrac F)[X]} (G : SimplePoles h H lift) (hG : Balanced G) (s : Shape)
+private theorem scalar_rows_card_le {h : ℕ} {F : Type} [Field F] {H : (Polynomial F)}
+    {lift : (Polynomial (SeedFrac F))} (G : SimplePoles h H lift) (hG : Balanced G) (s : Shape)
     (U : Fin 2 → ℕ) (d : Fin (2*h) → Fin (poleRows s) → ℕ)
     (hd : ∀ t, (∑ r, d t r) ≤ groupedPoleMoment s.B s.J) :
     Fintype.card (ScalarRows s U G.side d) ≤ poleDebit h s U := by
@@ -88,7 +88,7 @@ private theorem scalar_rows_card_le {h : ℕ} {F : Type} [Field F] {H : F[X]}
       ring
 
 private theorem simple_rank_le {F ι : Type} [Field F] [CharP F K1.p] [Fintype ι] {h : ℕ}
-    {H : F[X]} {lift : (SeedFrac F)[X]} (G : SimplePoles h H lift) (hG : Balanced G)
+    {H : (Polynomial F)} {lift : (Polynomial (SeedFrac F))} (G : SimplePoles h H lift) (hG : Balanced G)
     (s : Shape) (hs : s.B < K1.p) (U : Fin 2 → ℕ) (P : ι → TrueSource F)
     (hP : ∀ k, Shaped s (P k)) (hrect : ∀ k, RectSupport U (P k))
     {n : ℕ} (M : Matrix (Fin n) ι F)

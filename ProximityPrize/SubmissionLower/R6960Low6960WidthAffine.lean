@@ -6,7 +6,7 @@ namespace Low6960WidthAffine
 open K1_13 (Shape)
 open Low6960Prices (BentCap addBent bentIntegral ambientMix tiltedSurface tiltedFits
   bentGraph bentLift taylorLength)
-open private signedFive signed_five_nonneg from ProximityPrize.SubmissionLower.Final50SurfaceLinearFive
+open Final50SharedPrice (signedFive signed_five_nonneg)
 
 private abbrev Slot := BentCap × ℕ
 private def atWidth (x : ℕ) (s : Slot) : BentCap :=

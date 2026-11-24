@@ -39,7 +39,7 @@ def seedEnd (s : Shape) (v : RectArgs) (d R : ℕ) : ℕ :=
   P1_7_6.seedEnd {s with U := v.U 1} (v.order 1) d
     (P1_7_6.seedEnd {s with U := v.U 0} (v.order 0) d R)
 
-open private lt_seedEnd from ProximityPrize.SubmissionLower.UpperBranch6 in
+open P1_7_6 (lt_seedEnd) in
 theorem lt_rectEnd (s : Shape) (v : RectArgs) (d R a : ℕ) :
     a < seedEnd s v d R ↔ a < R ∧ v.Fits (a+d) := by
   unfold seedEnd RectArgs.Fits
@@ -113,7 +113,7 @@ open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape shapeSum slots)
 open HighCore82258 (Bank)
-open private rise_of_convex from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (rise_of_convex)
 theorem width_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
     (↑(s.m * agreement + j - q * (131071-h) - 2*h*t : ℕ) : ℤ) =
       max 0 (width s h q j t) := by
@@ -200,7 +200,7 @@ open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape shapeSum slots triangle)
-open private sum_range_guard diagonal from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (sum_range_guard diagonal)
 def phase (s : Shape) (h E : ℕ) (v : RectArgs) (d : ℕ) : ℤ :=
   ∑ t ∈ range (s.J + orderEnd s E v), ∑ a ∈ Ico (t-s.J) (min t (orderEnd s E v-1)+1),
     (v.slots (a+d) : ℤ) *
@@ -314,7 +314,7 @@ open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape)
 export P1_7_6 (lt_linearEnd)
-open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
+open K1_14_2_1 (twice_sum_linear)
 private theorem width_eq_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
     width s h q j t = (↑(s.m*agreement+j : ℕ) : ℤ) -
       (↑(2*h*t+(131071-h)*q : ℕ) : ℤ) := by
@@ -411,7 +411,7 @@ open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape slots triangle)
 open P1_7_6 (intervalProduct_eq)
-open private yStart_eq sum_clipped from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (yStart_eq sum_clipped)
 private theorem widthOrigin_eq (s : Shape) (h t a q : ℕ) (hh : h ≤ 131071) (ha : a ≤ t) :
     width s h q (t-a) t = widthOrigin s h t - a - ((131071-h : ℕ) : ℤ)*q := by
   simp only [width, widthOrigin, Nat.cast_sub hh, Nat.cast_sub ha, Nat.cast_ofNat]
@@ -637,7 +637,7 @@ open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape)
 open P0_10_5 (Row scan)
-open private scan_sum from ProximityPrize.SubmissionLower.PortHighBase
+open P0_10_5 (scan_sum)
 def boundary (s : Shape) (h n i : ℕ) : ℕ :=
   if i = 0 then 0
   else linearEnd ((131071-h)*(s.B+1-i)) (2*h) (s.m*agreement) n

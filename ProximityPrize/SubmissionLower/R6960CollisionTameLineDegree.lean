@@ -17,10 +17,10 @@ variable {k E ι : Type*} [Field k] [Field E] [Algebra (Laurent k) E]
 
 /-- Multiplication matrices in the local polynomial frame transport to
 multiplication matrices in the common Laurent frame. -/
-theorem trace_matrix_on_torus (s : Bool) (b : Basis ι k[X] (chartOrder (k:=k) (E:=E) s)) :
-    (Algebra.traceMatrix k[X] b).map (chartEmbedding s (k:=k))=
+theorem trace_matrix_on_torus (s : Bool) (b : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) s)) :
+    (Algebra.traceMatrix (Polynomial k) b).map (chartEmbedding s (k:=k))=
       Algebra.traceMatrix (Laurent k) (localBasis s b) := by
-  have tr (x : chartOrder (k:=k) (E:=E) s) : chartEmbedding s (Algebra.trace k[X] _ x)=
+  have tr (x : chartOrder (k:=k) (E:=E) s) : chartEmbedding s (Algebra.trace (Polynomial k) _ x)=
       Algebra.trace (Laurent k) _ (chartOrderMap s x) := by
     rw [Algebra.trace_eq_matrix_trace b,Algebra.trace_eq_matrix_trace (localBasis s b)]
     unfold Matrix.trace
@@ -37,8 +37,8 @@ theorem trace_matrix_on_torus (s : Bool) (b : Basis ι k[X] (chartOrder (k:=k) (
   exact tr (b i*b j)
 
 private theorem transition_expansion
-    (bf : Basis ι k[X] (chartOrder (k:=k) (E:=E) false))
-    (bi : Basis ι k[X] (chartOrder (k:=k) (E:=E) true)) (i : ι) :
+    (bf : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) false))
+    (bi : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) true)) (i : ι) :
     (∑ j,normalizedTransition bf bi j i • localBasis false bf j)=localBasis true bi i := by
   let fin := localBasis false bf
   let inf := localBasis true bi
@@ -59,13 +59,13 @@ private theorem transition_expansion
 /-- The actual normalized trace determinants transform by the square of
 its Laurent transition determinant. -/
 theorem normalized_trace_transition
-    (bf : Basis ι k[X] (chartOrder (k:=k) (E:=E) false))
-    (bi : Basis ι k[X] (chartOrder (k:=k) (E:=E) true)) :
-    invert ((Algebra.traceMatrix k[X] bi).det.toLaurent)=
-      (normalizedTransition bf bi).det^2*(Algebra.traceMatrix k[X] bf).det.toLaurent := by
+    (bf : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) false))
+    (bi : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) true)) :
+    invert ((Algebra.traceMatrix (Polynomial k) bi).det.toLaurent)=
+      (normalizedTransition bf bi).det^2*(Algebra.traceMatrix (Polynomial k) bf).det.toLaurent := by
   let G := normalizedTransition bf bi
-  let X := Algebra.traceMatrix k[X] bf
-  let Z := Algebra.traceMatrix k[X] bi
+  let X := Algebra.traceMatrix (Polynomial k) bf
+  let Z := Algebra.traceMatrix (Polynomial k) bi
   let M := (Algebra.traceMatrix (Laurent k) (localBasis false bf))
   let N := (Algebra.traceMatrix (Laurent k) (localBasis true bi))
   have change : N=G.transpose*M*G := by
@@ -91,14 +91,14 @@ theorem normalized_trace_transition
 basis, has degree at most twice the determinant deficit of the actual
 transition. The missing degree is allowed at infinity. -/
 theorem normalized_line_discriminant_degree
-    (bf : Basis ι k[X] (chartOrder (k:=k) (E:=E) false))
-    (bi : Basis ι k[X] (chartOrder (k:=k) (E:=E) true))
-    (nonzero : (Algebra.traceMatrix k[X] bf).det≠0) :
+    (bf : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) false))
+    (bi : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) true))
+    (nonzero : (Algebra.traceMatrix (Polynomial k) bf).det≠0) :
     ∃ d : ℤ,(normalizedTransition bf bi).det.degree=(d:WithBot ℤ) ∧
-      ((Algebra.traceMatrix k[X] bf).det.natDegree:ℤ)≤-2*d := by
+      ((Algebra.traceMatrix (Polynomial k) bf).det.natDegree:ℤ)≤-2*d := by
   let G := normalizedTransition bf bi
-  let X := Algebra.traceMatrix k[X] bf
-  let Z := Algebra.traceMatrix k[X] bi
+  let X := Algebra.traceMatrix (Polynomial k) bf
+  let Z := Algebra.traceMatrix (Polynomial k) bi
   obtain ⟨c,d,cn,dc⟩ := unit_monomial G.det ((Matrix.isUnit_iff_isUnit_det G).mp (normalizedTransition_unit bf bi))
   have h := normalized_trace_transition bf bi
   change infinityEmbedding Z.det=G.det^2*X.det.toLaurent at h

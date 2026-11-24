@@ -18,19 +18,19 @@ abbrev Laurent (k : Type*) [Field k] := LaurentPolynomial k
 variable {k ι : Type*} [Field k]
 
 /-- The affine frame at infinity sends the polynomial variable to `t⁻¹`. -/
-def infinityEmbedding : k[X] →ₐ[k] Laurent k := invert.toAlgHom.comp Polynomial.toLaurentAlg
+def infinityEmbedding : (Polynomial k) →ₐ[k] Laurent k := invert.toAlgHom.comp Polynomial.toLaurentAlg
 
-@[simp] theorem infinityEmbedding_apply (f : k[X]) :
+@[simp] theorem infinityEmbedding_apply (f : (Polynomial k)) :
     infinityEmbedding f=invert f.toLaurent := rfl
 
 theorem infinityEmbedding_injective : Function.Injective (infinityEmbedding (k:=k)) :=
   (invert (R:=k)).injective.comp Polynomial.toLaurent_injective
 
 /-- Multiply the infinity chart by `t^N`, allowing all powers through `N`. -/
-def shiftPolynomial (N : ℕ) : k[X] →ₗ[k] Laurent k :=
+def shiftPolynomial (N : ℕ) : (Polynomial k) →ₗ[k] Laurent k :=
   (LinearMap.mul k (Laurent k) (T (N:ℤ))).comp infinityEmbedding.toLinearMap
 
-@[simp] theorem shiftPolynomial_apply (N : ℕ) (f : k[X]) :
+@[simp] theorem shiftPolynomial_apply (N : ℕ) (f : (Polynomial k)) :
     shiftPolynomial N f=T (N:ℤ)*infinityEmbedding f := rfl
 
 theorem coeff_shift (f : Laurent k) (N m : ℤ) : (T N*f).coeff m=f.coeff (m-N) := by
@@ -51,7 +51,7 @@ private theorem range_finitePolynomial :
     apply Submodule.span_le.mpr
     rintro _ ⟨m,hm,rfl⟩
     refine ⟨Polynomial.X ^ m.toNat,?_⟩
-    change (Polynomial.X ^ m.toNat : k[X]).toLaurent=T m
+    change (Polynomial.X ^ m.toNat : (Polynomial k)).toLaurent=T m
     rw [Polynomial.toLaurent_X_pow,Int.toNat_of_nonneg hm]
 
 theorem range_shiftPolynomial (N : ℕ) :
@@ -93,22 +93,22 @@ def upperLattice (k ι : Type*) [Field k] (N : ℕ) : Submodule k (ι→Laurent 
   Submodule.pi Set.univ fun _=>AddMonoidAlgebra.supported k k (Set.Iic (N:ℤ))
 
 theorem mem_finiteLattice (v : ι→Laurent k) : v∈finiteLattice k ι ↔
-    ∃ p : ι→k[X], ∀ i,(p i).toLaurent=v i := by
+    ∃ p : ι→(Polynomial k), ∀ i,(p i).toLaurent=v i := by
   classical
   change (∀ i : ι,i∈Set.univ→v i∈AddMonoidAlgebra.supported k k (Set.Ici (0:ℤ))) ↔ _
   simp only [Set.mem_univ,forall_true_left,←range_finitePolynomial,LinearMap.mem_range]
   exact ⟨fun h=>⟨fun i=>(h i).choose,fun i=>(h i).choose_spec⟩,fun ⟨p,hp⟩ i=>⟨p i,hp i⟩⟩
 
-def shiftVector (N : ℕ) : (ι→k[X]) →ₗ[k] (ι→Laurent k) :=
+def shiftVector (N : ℕ) : (ι→(Polynomial k)) →ₗ[k] (ι→Laurent k) :=
   LinearMap.pi fun i=>(shiftPolynomial N).comp (LinearMap.proj i)
 
-@[simp] theorem shiftVector_apply (N : ℕ) (p : ι→k[X]) (i : ι) :
+@[simp] theorem shiftVector_apply (N : ℕ) (p : ι→(Polynomial k)) (i : ι) :
     shiftVector N p i=T (N:ℤ)*infinityEmbedding (p i) := rfl
 
 theorem range_shiftVector (N : ℕ) : LinearMap.range (shiftVector (k:=k) (ι:=ι) N)=upperLattice k ι N := by
   classical
   ext v
-  change (∃ p : ι→k[X],shiftVector N p=v) ↔
+  change (∃ p : ι→(Polynomial k),shiftVector N p=v) ↔
     ∀ i : ι,i∈Set.univ→ v i∈AddMonoidAlgebra.supported k k (Set.Iic (N:ℤ))
   simp only [Set.mem_univ,forall_true_left,←range_shiftPolynomial,LinearMap.mem_range]
   constructor
@@ -120,7 +120,7 @@ theorem range_shiftVector (N : ℕ) : LinearMap.range (shiftVector (k:=k) (ι:=�
 
 /-- The chosen polynomial basis at infinity identifies with the full
 shifted lattice, using its actual element of the Laurent overlap. -/
-def upperEquiv (N : ℕ) : (ι→k[X]) ≃ₗ[k] upperLattice k ι N := by
+def upperEquiv (N : ℕ) : (ι→(Polynomial k)) ≃ₗ[k] upperLattice k ι N := by
   let j := (shiftVector (k:=k) (ι:=ι) N).codRestrict (upperLattice k ι N)
     (fun p=>(range_shiftVector (k:=k) (ι:=ι) N) ▸ LinearMap.mem_range_self _ p)
   refine LinearEquiv.ofBijective j ⟨?_,?_⟩
@@ -131,7 +131,7 @@ def upperEquiv (N : ℕ) : (ι→k[X]) ≃ₗ[k] upperLattice k ι N := by
     obtain ⟨p,hp⟩ := mq
     exact ⟨p,Subtype.ext hp⟩
 
-@[simp] theorem upperEquiv_val (N : ℕ) (p : ι→k[X]) :
+@[simp] theorem upperEquiv_val (N : ℕ) (p : ι→(Polynomial k)) :
     ((upperEquiv N p):ι→Laurent k)=shiftVector N p := rfl
 
 theorem finite_sup_upper (N : ℕ) : finiteLattice k ι⊔upperLattice k ι N=⊤ := by

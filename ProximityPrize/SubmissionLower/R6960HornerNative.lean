@@ -24,10 +24,10 @@ def rationalLaurent : Laurent k →+* RatFunc k :=
   LaurentPolynomial.eval₂_T_n _ _ n
 
 theorem rationalLaurent_finite :
-    (rationalLaurent (k:=k)).comp (chartEmbedding false).toRingHom=algebraMap k[X] (RatFunc k) := by
+    (rationalLaurent (k:=k)).comp (chartEmbedding false).toRingHom=algebraMap (Polynomial k) (RatFunc k) := by
   apply RingHom.ext
   intro p
-  change rationalLaurent p.toLaurent=algebraMap k[X] (RatFunc k) p
+  change rationalLaurent p.toLaurent=algebraMap (Polynomial k) (RatFunc k) p
   rw [rationalLaurent,LaurentPolynomial.eval₂_toLaurent]
   exact RatFunc.aeval_X_left_eq_algebraMap p
 
@@ -38,7 +38,7 @@ theorem rationalLaurent_infinity :
     change rationalLaurent (infinityEmbedding (Polynomial.C c))=MonicChart.AtInfinity k (Polynomial.C c)
     rw [infinityEmbedding_apply,Polynomial.toLaurent_C,invert_C,rationalLaurent,LaurentPolynomial.eval₂_C]
     exact (Polynomial.aeval_C _ _).symm
-  · change rationalLaurent (infinityEmbedding (Polynomial.X : k[X]))=MonicChart.AtInfinity k (Polynomial.X : k[X])
+  · change rationalLaurent (infinityEmbedding (Polynomial.X : (Polynomial k)))=MonicChart.AtInfinity k (Polynomial.X : (Polynomial k))
     rw [infinityEmbedding_apply,Polynomial.toLaurent_X,invert_T]
     have neg := LaurentPolynomial.eval₂_T_neg_n (RatFunc.C : k→+*RatFunc k)
       (Units.mk0 (RatFunc.X:RatFunc k) RatFunc.X_ne_zero) 1
@@ -52,15 +52,15 @@ variable {E : Type*} [Field E] [Algebra (RatFunc k) E]
 scoped instance rationalLaurentAlgebra : Algebra (Laurent k) E :=
   ((algebraMap (RatFunc k) E).comp rationalLaurent).toAlgebra
 
-private theorem chart_finite_eq (q : k[X]) :
+private theorem chart_finite_eq (q : (Polynomial k)) :
     algebraMap (Laurent k) E (chartEmbedding false q)=finiteScalar q :=
   congrArg (algebraMap (RatFunc k) E) (RingHom.congr_fun rationalLaurent_finite q)
 
-private theorem chart_infinity_eq (q : k[X]) :
+private theorem chart_infinity_eq (q : (Polynomial k)) :
     algebraMap (Laurent k) E (chartEmbedding true q)=infinityScalar q :=
   congrArg (algebraMap (RatFunc k) E) (RingHom.congr_fun rationalLaurent_infinity q)
 
-private theorem finite_chart_algebra :
+theorem finite_chart_algebra :
     ((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra =
       (finiteScalar (k:=k) (E:=E)).toAlgebra :=
   congrArg RingHom.toAlgebra (RingHom.ext chart_finite_eq)
@@ -71,17 +71,17 @@ private theorem infinity_chart_algebra :
   congrArg RingHom.toAlgebra (RingHom.ext chart_infinity_eq)
 
 private theorem sectionDet_ne_zero {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (bf : Basis ι k[X] (chartOrder (k:=k) (E:=E) false))
+    (bf : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) false))
     (x : ι→chartOrder (k:=k) (E:=E) false)
     (independent : LinearIndependent (RatFunc k) (fun i=>(x i:E))) : (chartMatrix bf x).det≠0 := by
-  let j := algebraMap k[X] (RatFunc k)
+  let j := algebraMap (Polynomial k) (RatFunc k)
   let P := chartMatrix bf x
   let M := P.map j
   let B := Pi.basisFun (RatFunc k) ι
   let synth := B.constr (RatFunc k) (fun i=>(bf i:E))
   let sections := B.constr (RatFunc k) (fun i=>(x i:E))
   let A := (chartOrder (k:=k) (E:=E) false)
-  let : Algebra k[X] E := ((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra
+  let : Algebra (Polynomial k) E := ((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra
   have expansion (i : ι) : (∑ u, j (P u i) • (bf u:E))=(x i:E) := by
     have eq := bf.equivFun.symm_apply_apply (x i)
     rw [Basis.equivFun_symm_apply,Basis.equivFun_apply] at eq
@@ -120,16 +120,16 @@ private theorem sectionDet_ne_zero {ι : Type*} [Fintype ι] [DecidableEq ι]
 has deficit at most `(e-1)*v`. The bases are those of the original two
 integral closures, and no choice of pole bound for their basis elements
 is assumed. -/
-theorem actual_horner_budget (p : k[X][X]) (v : ℕ) (ep : 0<p.natDegree)
+theorem actual_horner_budget (p : (Polynomial (Polynomial k))) (v : ℕ) (ep : 0<p.natDegree)
     (width : ∀ j,(p.coeff j).natDegree≤v) (y : E)
-    (root : aeval y (p.map (algebraMap k[X] (RatFunc k)))=0)
+    (root : aeval y (p.map (algebraMap (Polynomial k) (RatFunc k)))=0)
     (degree : (minpoly (RatFunc k) y).natDegree=p.natDegree)
-    (bf : Basis (Fin p.natDegree) k[X] (chartOrder (k:=k) (E:=E) false))
-    (bi : Basis (Fin p.natDegree) k[X] (chartOrder (k:=k) (E:=E) true)) :
+    (bf : Basis (Fin p.natDegree) (Polynomial k) (chartOrder (k:=k) (E:=E) false))
+    (bi : Basis (Fin p.natDegree) (Polynomial k) (chartOrder (k:=k) (E:=E) true)) :
     ∃ d : ℤ,(normalizedTransition bf bi).det.degree=(d:WithBot ℤ) ∧
       -d≤((p.natDegree-1:ℕ):ℤ)*(v:ℤ) := by
   classical
-  let j := algebraMap k[X] (RatFunc k)
+  let j := algebraMap (Polynomial k) (RatFunc k)
   let Xinf := algebraMap (RatFunc k) E (RatFunc.X⁻¹)
   let sec (i : Fin p.natDegree) := aeval y ((sectionPoly p i).map j)
   let w (i : Fin p.natDegree) : ℕ := if i.val=0 then 0 else v
@@ -137,7 +137,7 @@ theorem actual_horner_budget (p : k[X][X]) (v : ℕ) (ep : 0<p.natDegree)
     by_cases h0 : i.val=0
     · have eq1 : sec i=1 := by simp [sec,sectionPoly,h0]
       rw [eq1]
-      let : Algebra k[X] E := (finiteScalar (k:=k) (E:=E)).toAlgebra
+      let : Algebra (Polynomial k) E := (finiteScalar (k:=k) (E:=E)).toAlgebra
       exact isIntegral_one
     · let d := p.natDegree-i.val+1
       have dpos : 0<d := by dsimp [d]; omega
@@ -149,7 +149,7 @@ theorem actual_horner_budget (p : k[X][X]) (v : ℕ) (ep : 0<p.natDegree)
     by_cases h0 : i.val=0
     · have eq1 : Xinf^(w i)*sec i=1 := by simp [sec,w,sectionPoly,h0]
       rw [eq1]
-      let : Algebra k[X] E := (infinityScalar (k:=k) (E:=E)).toAlgebra
+      let : Algebra (Polynomial k) E := (infinityScalar (k:=k) (E:=E)).toAlgebra
       exact isIntegral_one
     · let d := p.natDegree-i.val+1
       have dpos : 0<d := by dsimp [d]; omega
@@ -158,11 +158,11 @@ theorem actual_horner_budget (p : k[X][X]) (v : ℕ) (ep : 0<p.natDegree)
       rw [eq,show w i=v by simp [w,h0]]
       exact (scalar_horner_charts p v width dpos y root).2
   let x (i : Fin p.natDegree) : chartOrder (k:=k) (E:=E) false := ⟨sec i,by
-    change @IsIntegral k[X] E _ _ (((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra) _
+    change @IsIntegral (Polynomial k) E _ _ (((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra) _
     rw [finite_chart_algebra]
     exact intf i⟩
   let z (i : Fin p.natDegree) : chartOrder (k:=k) (E:=E) true := ⟨Xinf^(w i)*sec i,by
-    change @IsIntegral k[X] E _ _ (((algebraMap (Laurent k) E).comp (chartEmbedding true).toRingHom).toAlgebra) _
+    change @IsIntegral (Polynomial k) E _ _ (((algebraMap (Laurent k) E).comp (chartEmbedding true).toRingHom).toAlgebra) _
     rw [infinity_chart_algebra]
     exact inti i⟩
   have agree (i : Fin p.natDegree) : (x i:E)=algebraMap (Laurent k) E (T (w i:ℤ))*(z i:E) := by
@@ -171,7 +171,7 @@ theorem actual_horner_budget (p : k[X][X]) (v : ℕ) (ep : 0<p.natDegree)
     change sec i=(algebraMap (RatFunc k) E (RatFunc.X:RatFunc k)*algebraMap (RatFunc k) E (RatFunc.X⁻¹))^(w i)*sec i
     rw [←map_mul,mul_inv_cancel₀ RatFunc.X_ne_zero,map_one,one_pow,one_mul]
   have det : (chartMatrix bf x).det≠0 := sectionDet_ne_zero bf x
-    (sections_independent j (IsFractionRing.injective k[X] (RatFunc k)) p y degree)
+    (sections_independent j (IsFractionRing.injective (Polynomial k) (RatFunc k)) p y degree)
   obtain ⟨d,hd,bd⟩ := determinant_budget _ (normalizedTransition_unit bf bi) _ _ w det
     (normalized_join bf bi x z w agree)
   let j0 : Fin p.natDegree := ⟨0,ep⟩

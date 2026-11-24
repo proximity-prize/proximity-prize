@@ -17,9 +17,9 @@ open K1_11_2 (OmitsMessages sWeight tWeight graph PlaneOutput equation equation_
 open K1_11_2_2 (interpolant parameterNode nodeValue parameterNode_interpolant
   parameterNode_nodeValue degreeOf_interpolant_le degreeOf_nodeValue_le seedEval
   seedEval_nodeValue eval_graph nodeWord_combination nodeWord_omits)
-open private degreeOf_le_of_dvd from ProximityPrize.SubmissionLower.Fast072
-open private no_pair_one_one_of_graph native_column_rank from ProximityPrize.SubmissionLower.Fast070
-open private transfer_at from ProximityPrize.SubmissionLower.Fast068
+open K1_11_2_1 (degreeOf_le_of_dvd)
+open K1_11_2 (no_pair_one_one_of_graph native_column_rank)
+open K1_8 (transfer_at)
 end
 end P3_4
 end
@@ -31,17 +31,9 @@ namespace P3_4
 open P3 Finset
 open P2_4 (Bank)
 open K1_11 (V J)
-open private countRow gradeRow count grade contactRow V_affine rational_fee from ProximityPrize.SubmissionLower.PortFrontA
-open private
-  dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8
-  dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4
-  dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15
-  dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8
-  dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3
-  dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7
-  dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6
-  dims_4_3_5 jets_3_3_5 from ProximityPrize.SubmissionLower.FrontBranch4
-open private dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3 from ProximityPrize.SubmissionLower.SilverBase
+open P0_7 (countRow gradeRow count grade contactRow V_affine rational_fee)
+open P1_4 (dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8 dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4 dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15 dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8 dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3 dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7 dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6 dims_4_3_5 jets_3_3_5)
+open P2_4 (dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3)
 abbrev tariff : ℕ := 0x1eda8e86f984d83
 private theorem priced (E M zeroFee cap : ℕ)
     (h : zeroFee * 16304^2 + 5 * E * (43691*M)^2 ≤ cap * 16304^2)

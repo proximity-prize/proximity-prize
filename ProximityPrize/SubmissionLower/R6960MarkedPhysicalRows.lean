@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.R6960MarkedColumnPlace
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -13,14 +14,14 @@ open Polynomial Finset Algebra Module
 open scoped Polynomial BigOperators Lower6960.RetainedSurfaceClass Lower6960.MarkedEvaluation
 local instance : DecidableEq Scalar := Classical.decEq _
 local instance : DecidableEq ChartField := Classical.decEq _
-local instance (priority := 2200) : SMul Scalar[X] ChartField :=
-  (inferInstance : Algebra Scalar[X] ChartField).toSMul
+local instance (priority := 2200) : SMul (Polynomial Scalar) ChartField :=
+  (inferInstance : Algebra (Polynomial Scalar) ChartField).toSMul
 variable {E Ω I J:Type} [Field E] [Field Ω] [Algebra ChartField E] [Algebra ChartField Ω]
-  [Algebra Scalar[X] Ω] [IsScalarTower Scalar[X] ChartField Ω] [FiniteDimensional ChartField Ω] [IsGalois ChartField Ω]
+  [Algebra (Polynomial Scalar) Ω] [IsScalarTower (Polynomial Scalar) ChartField Ω] [FiniteDimensional ChartField Ω] [IsGalois ChartField Ω]
   [Fintype I] [DecidableEq I]
 local notation "G" => SheetNorm.Aut Scalar Ω
 local notation "ι" => algebraMap ChartField Ω
-local notation "jΩ" => algebraMap Scalar[X] Ω
+local notation "jΩ" => algebraMap (Polynomial Scalar) Ω
 
 private theorem same_denominator (T:Finset L) : (denominator E T:E)=chartDenom E T (false,false) := by
   change (Tor E).val (∏z∈T,cut E true z)=_
@@ -32,7 +33,7 @@ theorem actual_place_rows (T:Finset L) (i e:ℕ) (v:J→E) (o:Tor E) (word:L→T
     (cols:∀j,Column i T o word (v j))
     (c:I→L) (ev:I→(E→+*Ω)) (base:∀i a,ev i (algebraMap ChartField E a)=ι (rowBase (c i) a))
     (deg:∀i,(minpoly ChartField (ev i (o:E))).natDegree=e)
-    (q:I→Scalar[X][X]) (root:∀i,(q i).eval₂ (algebraMap Scalar[X] Ω) (ev i (o:E))=0)
+    (q:I→(Polynomial (Polynomial Scalar))) (root:∀i,(q i).eval₂ (algebraMap (Polynomial Scalar) Ω) (ev i (o:E))=0)
     (z:L) (hz:z∈T) (nz:inner z≠0) (place:MarkPlace Scalar Ω (inner z))
     (sep:∀i,((q i).map (evalRingHom (inner z))).Separable)
     (fixed:∀(g:G) i,g (ev i (word z:E))=ev i (word z:E)) :
@@ -63,13 +64,13 @@ theorem actual_place_rows (T:Finset L) (i e:ℕ) (v:J→E) (o:Tor E) (word:L→T
     change place.V.subtype ((qs i).eval (ys i a))=0
     rw [←Polynomial.eval₂_at_apply,show qs i=(q i).map place.lift from rfl,eval₂_map]
     have maps:place.V.subtype.comp place.lift=jΩ := RingHom.ext (fun r=>
-      (place.value r).trans (IsScalarTower.algebraMap_apply Scalar[X] ChartField Ω r).symm)
+      (place.value r).trans (IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField Ω r).symm)
     rw [maps]
     obtain ⟨g,eq⟩:=a.property
     change (q i).eval₂ jΩ a.val=0
     rw [←eq]
     have coeff:g.toRingHom.comp jΩ=jΩ := RingHom.ext (fun r=>by
-      change g (jΩ r)=jΩ r;rw [IsScalarTower.algebraMap_apply Scalar[X] ChartField Ω,g.commutes])
+      change g (jΩ r)=jΩ r;rw [IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField Ω,g.commutes])
     have evq:=congrArg g.toRingHom (root i)
     rw [Polynomial.hom_eval₂,coeff,map_zero] at evq
     exact evq

@@ -12,14 +12,14 @@ open Polynomial FrobeniusLocator ProximityPrize.Benchmark
 open P0 (Words k amplitudeDegree)
 open K1_9 (K I node twist pencil fold pencil_degree
   seedCoeff crossValue CoefficientIdentities sixNorm_mul sixNorm_ne_zero)
-open private seedCoeff_degree from ProximityPrize.SubmissionLower.Fast068
-open private coefficientsAt pow_eq_twist threeUAt_native relationOnAt_native from ProximityPrize.SubmissionLower.PortFrontA
+open K1_9 (seedCoeff_degree)
+open P0_5 (coefficientsAt pow_eq_twist threeUAt_native relationOnAt_native)
 abbrev heightBound : ℕ := Front6960.heightCap
 structure PolarData (u : Words) where
-  a : K[X]
-  b : K[X]
-  A : Fin 2 → K[X]
-  Q : K → K → K[X]
+  a : (Polynomial K)
+  b : (Polynomial K)
+  A : Fin 2 → (Polynomial K)
+  Q : K → K → (Polynomial K)
   a_ne : a ≠ 0
   norms_ne : K1.sixNorm a ≠ K1.sixNorm b
   primitive : IsCoprime (A 0) (A 1)
@@ -32,7 +32,7 @@ structure PolarData (u : Words) where
       b.eval (node i) * (pencil (A 0) (A 1) s).eval (node i) * twist (fold u r i)
 abbrev PolarData.amp {u : Words} (D : PolarData u) := pencil (D.A 0) (D.A 1)
 private theorem polarData_of_set {u : Words} (S : Finset I) (height : ℕ)
-    (a b : K[X]) (A : Fin 2 → K[X]) (output : P0.Bivar)
+    (a b : (Polynomial K)) (A : Fin 2 → (Polynomial K)) (output : P0.Bivar)
     (hh : height + S.card ≤ heightBound)
     (hout : output.degree < (k + height : ℕ))
     (hfirst : a.natDegree + amplitudeDegree (A 0) (A 1) ≤ height)
@@ -84,7 +84,7 @@ open Polynomial FrobeniusLocator ProximityPrize.Benchmark
 open Front6960 (Words k agreement amplitudeDegree)
 open K1_9 (K I node twist pencil fold map_eval_node pencil_natDegree pencil_degree
   degree_sub_lt eq_on_nodes sixNorm_mul sixNorm_twist sixNorm_ne_zero)
-open private all_card affine_zero residual fold_residual from ProximityPrize.SubmissionLower.Fast068
+open K1_9 (all_card affine_zero residual fold_residual)
 private theorem amp_natDegree_le {u : Words} (D : PolarData u) (z : K) :
     (D.amp z).natDegree ≤ amplitudeDegree (D.A 0) (D.A 1) :=
   pencil_natDegree ..
@@ -99,10 +99,10 @@ private theorem PolarData.amp_nonzero_at {u} (D : PolarData u) {r s : K}
   obtain ⟨P, Q, hPQ⟩ := D.primitive
   have h := congrArg (Polynomial.eval (node i)) hPQ
   simp only [eval_add, eval_mul, h0, h1, mul_zero, add_zero, eval_one, zero_ne_one] at h
-private def PolarData.cross {u} (D : PolarData u) (r s : K) (P Q : K[X]) : K[X] :=
+private def PolarData.cross {u} (D : PolarData u) (r s : K) (P Q : (Polynomial K)) : (Polynomial K) :=
   D.a * (D.amp r).map twist * Q - D.b * D.amp s * P.map twist
 private theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
-    {P Q : K[X]} (hP : P.degree < k) (hQ : Q.degree < k) :
+    {P Q : (Polynomial K)} (hP : P.degree < k) (hQ : Q.degree < k) :
     (D.cross r s P Q).degree < (k + heightBound : ℕ) := by
   have hl : (D.a * (D.amp r).map twist).natDegree ≤ heightBound :=
     natDegree_mul_le.trans <|
@@ -114,14 +114,14 @@ private theorem PolarData.cross_degree {u} (D : PolarData u) (r s : K)
     (Strata.degree_mul_lt_add _ _ heightBound k hl hQ)
     (Strata.degree_mul_lt_add _ _ heightBound k hr (degree_map_le.trans_lt hP))
 private theorem PolarData.decoder_identity {u} (D : PolarData u) (z : K)
-    (S : Finset I) (P : K[X]) (hS : agreement ≤ S.card) (hP : P.degree < k)
+    (S : Finset I) (P : (Polynomial K)) (hS : agreement ≤ S.card) (hP : P.degree < k)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : D.cross z z P P = D.Q z z := by
   have hcard := (show k + heightBound ≤ agreement by decide).trans hS
   have hb : ((k + heightBound : ℕ) : WithBot ℕ) ≤ S.card := by exact_mod_cast hcard
   apply eq_on_nodes S _ _ ((D.cross_degree z z hP hP).trans_le hb) ((D.Q_degree z z).trans_le hb)
   intro i hi
   simp only [PolarData.cross, eval_sub, eval_mul, map_eval_node, hits i hi, D.nodes]
-private def PolarData.subtract {u} (D : PolarData u) (P Q : K[X])
+private def PolarData.subtract {u} (D : PolarData u) (P Q : (Polynomial K))
     (hP : P.degree < k) (hQ : Q.degree < k) : PolarData (residual u P Q) where
   a := D.a
   b := D.b
@@ -200,7 +200,7 @@ private theorem PolarData.zero_of_diagonal_zeros {u} (D : PolarData u) {r s : K}
     (by simp [f, hsr']) (by simp [f, hss]) z
   simpa only [eval_zero] using affine_zero (fun γ => f γ z) twist twist.injective hrs (left z) h₁ h₂ y
 private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q r s = 0) (z : K)
-    (S : Finset I) (P : K[X]) (hS : agreement ≤ S.card) (hP : P.degree < k)
+    (S : Finset I) (P : (Polynomial K)) (hS : agreement ≤ S.card) (hP : P.degree < k)
     (hits : ∀ i ∈ S, P.eval (node i) = fold u z i) : P = 0 := by
   classical
   by_cases hz : D.amp z = 0
@@ -241,7 +241,7 @@ private theorem PolarData.decoder_zero {u} (D : PolarData u) (hQ : ∀ r s, D.Q 
       (mul_right_cancel₀ (sixNorm_ne_zero hne) hN))
 theorem pencil_of_marks {u : Words} (D : PolarData u) (Γ : Finset K)
     (M : ∀ z ∈ Γ, Front6960.BadMark u z) :
-    Γ.card ≤ 2 ∨ ∃ P Q : K[X], P.degree < k ∧ Q.degree < k ∧
+    Γ.card ≤ 2 ∨ ∃ P Q : (Polynomial K), P.degree < k ∧ Q.degree < k ∧
       ∀ z (hz : z ∈ Γ), (M z hz).decoder = pencil P Q z := by
   classical
   let G := Γ.filter (fun z => D.amp z ≠ 0)
@@ -266,7 +266,7 @@ theorem pencil_of_marks {u : Words} (D : PolarData u) (Γ : Finset K)
   let P := Wr - C r * Q
   have hWr : Wr.degree < k := (M r hrΓ).degree
   have hWs : Ws.degree < k := (M s hsΓ).degree
-  have scale (c : K) (V : K[X]) (hV : V.degree < k) : (C c * V).degree < k := by
+  have scale (c : K) (V : (Polynomial K)) (hV : V.degree < k) : (C c * V).degree < k := by
     by_cases hc : c = 0
     · rw [hc, map_zero, zero_mul, degree_zero]
       exact WithBot.bot_lt_coe k
@@ -275,7 +275,7 @@ theorem pencil_of_marks {u : Words} (D : PolarData u) (Γ : Finset K)
   have hP : P.degree < k := degree_sub_lt hWr (scale _ _ hQ)
   have hpr : pencil P Q r = Wr := by simp [pencil, P]
   have hps : pencil P Q s = Ws := by
-    have hc : (C s - C r : K[X]) * C ((s-r)⁻¹) = 1 := by
+    have hc : (C s - C r : (Polynomial K)) * C ((s-r)⁻¹) = 1 := by
       rw [← map_sub, ← map_mul, mul_inv_cancel₀ (sub_ne_zero.mpr hrs.symm), map_one]
     calc
       pencil P Q s = Wr + ((C s - C r) * C ((s-r)⁻¹)) * (Ws-Wr) := by
@@ -305,7 +305,7 @@ noncomputable section
 open Polynomial FrobeniusLocator ProximityPrize.Benchmark
 open Front6960 (Words k agreement t amplitudeDegree)
 open K1_9 (K I node pencil CoefficientIdentities)
-open private coefficientsAt pow_eq_twist threeUAt_native relationOnAt_native from ProximityPrize.SubmissionLower.PortFrontA
+open P0_5 (coefficientsAt pow_eq_twist threeUAt_native relationOnAt_native)
 private theorem coefficients {u : Words} {T : Front6960.TwoActive u} {R : Front6960.Relation T}
     {D : Front6960.Reduction u T R} (B : Front6960.RankThree u T R D) (hp : Front6960.Parallel B)
     (i : I) (hi : i ∉ Front6960.fixedNodes R) :
@@ -323,12 +323,12 @@ private theorem polarData_of_parallel {u : Words} {T : Front6960.TwoActive u} {R
   have hh : D.height + (Front6960.fixedNodes R).card ≤ heightBound := by
     rw [D.height_eq]
     exact (Front6960.relation_height_le hu T).trans (by decide)
-  have hfirst := (congrArg (fun A : Fin 2 → K[X] =>
+  have hfirst := (congrArg (fun A : Fin 2 → (Polynomial K) =>
     B.a.natDegree + amplitudeDegree (A 0) (A 1) ≤ D.height) hp).mpr B.first_degree
   exact polarData_of_set (Front6960.fixedNodes R) D.height B.a B.b B.α B.output hh
     B.output_degree hfirst B.second_degree B.a_ne hn B.α_primitive (coefficients B hp)
 private theorem pencil_count {u : Words} (Γ : Finset K)
-    (M : ∀ z ∈ Γ, Front6960.BadMark u z) {P Q : K[X]} (hP : P.degree < k)
+    (M : ∀ z ∈ Γ, Front6960.BadMark u z) {P Q : (Polynomial K)} (hP : P.degree < k)
     (hQ : Q.degree < k) (h : ∀ z (hz : z ∈ Γ), (M z hz).decoder = pencil P Q z) :
     Γ.card ≤ t + 1 := by
   classical

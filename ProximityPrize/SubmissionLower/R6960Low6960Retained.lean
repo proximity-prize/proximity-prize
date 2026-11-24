@@ -13,9 +13,8 @@ open Lower6960.Low (layerCount)
 local notation "layerNeed" => Lower6960.Low.need
 open Final50PriceLayer (layerTerm)
 open scoped BigOperators
-open private P3_6_8.shapeSum P3_6_8.shapeSum_empty P3_6_8.shapeSum_valid_or_empty P3_6_8.spend_le
-  P3_6_8_1.sumBelow P3_6_8_1.term P3_6_8_1.mass_eq P3_6_8_1.extend
-  from ProximityPrize.SubmissionLower.GoldBranch6N8
+open P3_6_8 (shapeSum shapeSum_empty shapeSum_valid_or_empty spend_le)
+open P3_6_8_1 (sumBelow term mass_eq extend)
 
 
 def Box (a : Shape) : Prop :=

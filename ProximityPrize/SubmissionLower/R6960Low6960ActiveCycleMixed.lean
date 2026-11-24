@@ -20,7 +20,7 @@ open K1_13_6_2 (JetPoint actualPoint actualPoint_injective Demand maximal_demand
 open K1_13_6_2_4 (oldEmbedding)
 open scoped BigOperators
 
-private theorem mixed {Γ : Finset K} {s : K → K[X]} {f Q : Row 4} {l budget : ℕ}
+theorem mixed {Γ : Finset K} {s : K → (Polynomial K)} {f Q : Row 4} {l budget : ℕ}
     {R B : Family} [∀ i, Finite (B i)]
     (input : CutInput Γ s f Q l) (hDB : Doubled R B)
     (hfbox : Section R 0 (oldEmbedding (toGeneric f)))

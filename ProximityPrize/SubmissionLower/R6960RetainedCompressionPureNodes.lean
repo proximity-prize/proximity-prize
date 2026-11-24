@@ -13,9 +13,8 @@ open CurvatureSquares (Ordinate zView coeff_caps)
 open RetainedShortening (Word)
 open RescueGeometry (Model Family)
 open scoped Polynomial
-open private rate_mono from ProximityPrize.SubmissionLower.R6960RetainedCompressionReduction
-open private CurvatureSquares.node_eval CurvatureSquares.node_height CurvatureSquares.node_ne
-  CurvatureSquares.root_count from ProximityPrize.SubmissionLower.R6960QuadraticProjection
+open Lower6960.RetainedCompression (rate_mono)
+open CurvatureSquares (node_eval node_height node_ne root_count)
 
 private abbrev embed := algebraMap K L
 
@@ -33,7 +32,7 @@ private theorem node_coefficient (P : Ordinate) (i : I) (j : ℕ) :
   rw [atNode,coeff_map,coe_evalRingHom]
   exact (CurvatureSquares.node_height ..).trans (coeff_caps P j).2
 
-private theorem root_at_node {P : Ordinate} {z : L} {S : K[X]}
+private theorem root_at_node {P : Ordinate} {z : L} {S : (Polynomial K)}
     (mark : MarkedFiber P z (liftPoly S)) (i : I) :
     ((atNode P i).map (evalRingHom z)).eval (embed (S.eval (node i)))=0 := by
   let x := embed (node i)
@@ -101,7 +100,7 @@ remaining bounded-weight count. -/
 def NonPureFactorPrice : Prop :=
   ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
     Word 179827 wordDegree M.word F.scalar T →
-    ∀ f : Curve L[X], Irreducible f →
+    ∀ f : Curve (Polynomial L), Irreducible f →
       3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
       height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
       ¬PureNodes M.word (view f) →

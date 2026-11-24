@@ -12,7 +12,7 @@ open P3 (p)
 open HighCore82258 (agreement cutoffCount rawWidth  gain)
 open HighCore82258 (Bank debit)
 open K1_14 (Shape shapeSum triangle)
-open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
-open private row rising level   tailSum  from ProximityPrize.SubmissionLower.SilverBase
+open K1_14_2_1 (twice_sum_linear)
+open P2_7_2_2 (row rising level tailSum)
 end HighCore82258Stages
 end

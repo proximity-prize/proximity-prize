@@ -14,7 +14,7 @@ open K1_14 (L)
 open MonicChart (ChartField)
 open NormalizedFiber RetainedSurfaceClass LineEuler Polynomial Algebra
 open scoped Lower6960.CollisionMarked Lower6960.RetainedSurfaceClass Polynomial TensorProduct
-open private Lower6960.LineEuler.chartLocalization from ProximityPrize.SubmissionLower.R6960LineEulerNormalization
+open Lower6960.LineEuler (chartLocalization)
 
 variable {E : Type} [Field E] [Algebra ChartField E] [FiniteDimensional ChartField E]
 
@@ -33,11 +33,11 @@ normalized surface fibre gives the same Laurent ring quotient. -/
 def axisLaurentData (b:Bool) (z:L) (nz:z≠0) :
     let : Algebra (Plane L) E := axisPlaneAlgebra b
     let φ : Fiber E z→+*Axis E true z := (axisFibreData (E:=E) b z nz).val
-    let : Algebra L[X] (Laurent L) := (chartEmbedding b).toRingHom.toAlgebra
-    let : Algebra L[X] (Fiber E z) := CollisionMarked.fibreAlgebra z
-    LaurentFibreComparison L[X] (Laurent L) (Fiber E z) (Axis E true z) φ := by
+    let : Algebra (Polynomial L) (Laurent L) := (chartEmbedding b).toRingHom.toAlgebra
+    let : Algebra (Polynomial L) (Fiber E z) := CollisionMarked.fibreAlgebra z
+    LaurentFibreComparison (Polynomial L) (Laurent L) (Fiber E z) (Axis E true z) φ := by
   let : Algebra (Plane L) E := axisPlaneAlgebra b
-  let R := L[X]
+  let R := (Polynomial L)
   let Λ := Laurent L
   let B := Fiber E z
   let U := Axis E true z

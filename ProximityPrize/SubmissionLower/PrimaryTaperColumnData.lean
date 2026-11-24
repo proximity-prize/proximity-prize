@@ -14,7 +14,7 @@ open scoped BigOperators
 private abbrev Moments := ℤ × ℤ × ℤ
 private def combine (a b : Moments) : Moments := (a.1+b.1, a.2.1+b.2.1, a.2.2+b.2.2)
 open K1_13_2 (denominator)
-open private basePrefix from ProximityPrize.SubmissionLower.PrimaryTaperMoments
+open TaperMoments (basePrefix)
 
 private theorem upper_den : denominator 1650 = 125576826 := by decide +kernel
 private theorem upper_prefix : denPrefix 1650 = 1244339514000 := by decide +kernel

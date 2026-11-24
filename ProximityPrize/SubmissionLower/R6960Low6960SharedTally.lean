@@ -17,10 +17,10 @@ open Low6960ActiveCycle (Chart Section Slice)
 open Low6960Prices (taylorLength)
 open scoped Polynomial BigOperators
 
-def hasBranch (f Q : Row 4) (l : ℕ) (S : Set (Ideal GeoJets)) (g : K1_13.Geom[X]) : Prop :=
+def hasBranch (f Q : Row 4) (l : ℕ) (S : Set (Ideal GeoJets)) (g : (Polynomial K1_13.Geom)) : Prop :=
   ∃ b : Branch f Q l, b.surface ∈ S ∧ b.Contains (actualPoint g)
 
-structure Data (Γ : Finset K) (s : K→K[X]) (f Q : Row 4) (l : ℕ)
+structure Data (Γ : Finset K) (s : K→(Polynomial K)) (f Q : Row 4) (l : ℕ)
     (S : Set (Ideal GeoJets)) where
   branches : Finset (Branch f Q l)
   allowed : ∀ b∈branches, b.surface∈S
@@ -34,7 +34,7 @@ structure Data (Γ : Finset K) (s : K→K[X]) (f Q : Row 4) (l : ℕ)
     CurveSections (labels b) s (demanded b).card ∧ Demand (labels b) s (demanded b)
   covered : ∀ γ∈Γ, hasBranch f Q l S (extend (s γ)) → ∃ b∈branches, γ∈labels b
 
-private def point {s : K→K[X]} (γ : K) : JetPoint := actualPoint (extend (s γ))
+private def point {s : K→(Polynomial K)} (γ : K) : JetPoint := actualPoint (extend (s γ))
 
 def Data.points {Γ s f Q l S} (D : Data Γ s f Q l S) (b : Branch f Q l) :
     Finset JetPoint := by
@@ -80,7 +80,7 @@ def build {Γ s f Q l} (S : Set (Ideal GeoJets)) : Data Γ s f Q l S := by
     exact ⟨assign ⟨γ,hmark⟩,Finset.mem_image.mpr ⟨_,Finset.mem_attach _ _,rfl⟩,
       Finset.mem_filter.mpr ⟨hmark,hmark,rfl⟩⟩
 
-variable {Γ : Finset K} {s : K→K[X]} {f Q : Row 4} {l : ℕ} {S : Set (Ideal GeoJets)}
+variable {Γ : Finset K} {s : K→(Polynomial K)} {f Q : Row 4} {l : ℕ} {S : Set (Ideal GeoJets)}
 
 theorem Data.points_card (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l) (b : Branch f Q l) : (D.points b).card = (D.demanded b).card := by
   classical

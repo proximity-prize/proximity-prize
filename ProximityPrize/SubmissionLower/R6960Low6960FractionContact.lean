@@ -13,14 +13,14 @@ open K1_13_6 (GenericField GeoJets cycleLength intersectionIdeal toGeneric gener
 open K1_13_6_1_2 (VanishesTo hassePartial multiOrder cycleLength_ge_order)
 open K1_13_6_1_2_2 (vanishesTo_of_hasse)
 open Low6960SharedRational
-open private hasse_C_mul from ProximityPrize.SubmissionLower.R6960Low6960SharedShapeRank
+open Low6960SharedShapeRank (hasse_C_mul)
 open scoped Polynomial
 open MvPolynomial
 
-private theorem frac_map (Q : Row 4) :
-    toFraction Q = MvPolynomial.map (algebraMap Geom[X] GenericField) Q := rfl
+theorem frac_map (Q : Row 4) :
+    toFraction Q = MvPolynomial.map (algebraMap (Polynomial Geom) GenericField) Q := rfl
 
-private theorem contact_clear {Q : Row 4} {v : FractionJet} {k : GenericField} {r : ℕ}
+theorem contact_clear {Q : Row 4} {v : FractionJet} {k : GenericField} {r : ℕ}
     {P : Ideal GeoJets} [P.IsPrime]
     (hd : toFraction Q = MvPolynomial.C k * v)
     (hc : ∀ a : Fin 4 →₀ ℕ, multiOrder a < r → hassePartial a (toGeometric v) ∈ P) :
@@ -30,12 +30,12 @@ private theorem contact_clear {Q : Row 4} {v : FractionJet} {k : GenericField} {
   rw [← fraction_geometric Q, hd, map_mul, toGeometric, MvPolynomial.map_C, hasse_C_mul]
   exact P.mul_mem_left _ (hc a ha)
 
-private theorem proper_after_clear {f C : Row 4} {c : FractionJet} {k : GenericField}
+theorem proper_after_clear {f C : Row 4} {c : FractionJet} {k : GenericField}
     (hk : k ≠ 0) (hC : toFraction C = MvPolynomial.C k * c) (hc : ¬ toFraction f ∣ c) :
     ¬ f ∣ C := by
   intro hh
   apply hc
-  obtain ⟨d, hd⟩ := map_dvd (MvPolynomial.map (algebraMap Geom[X] GenericField)) hh
+  obtain ⟨d, hd⟩ := map_dvd (MvPolynomial.map (algebraMap (Polynomial Geom) GenericField)) hh
   have he : MvPolynomial.C k * c = toFraction f * d := hC.symm.trans hd
   refine ⟨MvPolynomial.C k⁻¹ * d, ?_⟩
   calc

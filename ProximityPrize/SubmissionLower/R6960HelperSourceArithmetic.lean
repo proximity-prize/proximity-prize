@@ -11,7 +11,7 @@ open P1_7 (Bank debit)
 open P1_7_5 (kept)
 open P1_7_6 (linearEnd lt_linearEnd)
 open P1_7_1_3 (evaluate evaluate_eq)
-open private slots_anti from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (slots_anti)
 
 /-- Positive part of an arithmetic progression, summed using its support length. -/
 def clippedSum (base step bound cap : ℕ) : ℕ :=

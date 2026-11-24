@@ -31,7 +31,7 @@ private theorem atRoot_value (b:PowerBasis F E) (h:F→+*Ω) (y:Ω) (hy:(minpoly
   exact congrArg (h (b.basis.repr v i)*·) (congrArg (·^i.val) (b.lift_gen y hy))
 
 variable {k K J:Type} [Field k] [Infinite k] [Field K] [Algebra k K]
-  [Algebra K[X] F] [IsFractionRing K[X] F] [Algebra K F] [IsScalarTower K K[X] F]
+  [Algebra (Polynomial K) F] [IsFractionRing (Polynomial K) F] [Algebra K F] [IsScalarTower K (Polynomial K) F]
   [Algebra K E] [IsScalarTower K F E] [Fintype J] [DecidableEq J]
 
 /-- One finite separable splitting polynomial provides an independent horizontal
@@ -94,7 +94,7 @@ theorem horizontal_frame_over {F' : Type} [Field F'] (exchange:F≃+*F')
   rw [eqMat];exact det
 
 theorem horizontal_frame (b:PowerBasis F E) (simple:(minpoly F b.gen).Separable) (v:J→E) (li:LinearIndependent K v) :
-    ∃ p:F[X],p.Separable ∧ ∃ offsets:J→k, ∃ ev:J→(E→+*p.SplittingField),
+    ∃ p:(Polynomial F),p.Separable ∧ ∃ offsets:J→k, ∃ ev:J→(E→+*p.SplittingField),
       (∀j a,ev j (algebraMap F E a)=algebraMap F p.SplittingField (translateField F (algebraMap k K (offsets j)) a)) ∧
       (Matrix.of (fun i j:J=>ev i (v j))).det≠0 :=
   horizontal_frame_over (RingEquiv.refl F) b simple v li

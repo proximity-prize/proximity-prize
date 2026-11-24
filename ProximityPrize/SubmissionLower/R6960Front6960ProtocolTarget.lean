@@ -1,9 +1,10 @@
 import ProximityPrize.SubmissionLower.R6960Front6960Radius
 import ProximityPrize.SubmissionLower.FrontBranch12
+set_option maxRecDepth 200000
 
 set_option Elab.async false
 set_option linter.constructorNameAsVariable false
-set_option maxRecDepth 12000
+set_option maxRecDepth 200000
 set_option backward.isDefEq.respectTransparency false
 
 namespace Front6960ProtocolTarget

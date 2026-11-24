@@ -13,20 +13,20 @@ open K1_14 (L)
 open MonicChart (Scalar ChartField)
 open NormalizedFiber RetainedSurfaceClass MonicChartProbes Polynomial
 open scoped Polynomial Lower6960.MonicChart
-open private Lower6960.MonicChartProbes.planeMap_finite from ProximityPrize.SubmissionLower.R6960MonicChartProbes
+open Lower6960.MonicChartProbes (planeMap_finite)
 
 variable {E:Type} [Field E] [Algebra ChartField E]
 
 /-- The root used in the actual bounded surface theorem is the root of
 the same ordinate equation in the scalar-outside plane model. -/
 theorem projected_root_of_seed (P:CurvatureSquares.Ordinate) (α:E)
-    (root : aeval α ((RetainedLinear.toSeed P).map (algebraMap Scalar[X] ChartField))=0) :
+    (root : aeval α ((RetainedLinear.toSeed P).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     let : Algebra (Plane L) E := axisPlaneAlgebra false
     aeval α (projectedRaw P)=0 := by
   let A := Plane L
   let : Algebra A E := axisPlaneAlgebra false
-  let i := Polynomial.mapRingHom (algebraMap L[X] Scalar)
-  let j := algebraMap Scalar[X] ChartField
+  let i := Polynomial.mapRingHom (algebraMap (Polynomial L) Scalar)
+  let j := algebraMap (Polynomial Scalar) ChartField
   let k := algebraMap ChartField E
   have co : (algebraMap A E).comp (Bivariate.swap (R:=L)).toRingHom=
       (k.comp j).comp i := by

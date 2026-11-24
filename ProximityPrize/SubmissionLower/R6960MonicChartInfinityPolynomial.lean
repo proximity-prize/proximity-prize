@@ -12,7 +12,7 @@ open scoped Polynomial BigOperators
 
 variable {K : Type*} [Field K]
 
-abbrev AtInfinity (K : Type*) [Field K] : K[X]→+*RatFunc K :=
+abbrev AtInfinity (K : Type*) [Field K] : (Polynomial K)→+*RatFunc K :=
   (aeval ((RatFunc.X : RatFunc K)⁻¹)).toRingHom
 
 theorem atInfinity_injective : Function.Injective (AtInfinity K) := by
@@ -23,14 +23,14 @@ theorem atInfinity_injective : Function.Injective (AtInfinity K) := by
 
 /-- Inverting the abscissa and multiplying by its homogenizing power
 preserves a polynomial with the declared degree bound. -/
-theorem reverse_atInfinity (g : K[X]) (n : ℕ) (ng : g.natDegree≤n) :
+theorem reverse_atInfinity (g : (Polynomial K)) (n : ℕ) (ng : g.natDegree≤n) :
     AtInfinity K (g.reflect n) =
-      algebraMap K[X] (RatFunc K) g*((RatFunc.X : RatFunc K)⁻¹)^n := by
+      algebraMap (Polynomial K) (RatFunc K) g*((RatFunc.X : RatFunc K)⁻¹)^n := by
   let x : RatFunc K := RatFunc.X
   have xn : x≠0 := RatFunc.X_ne_zero
   letI : Invertible x := invertibleOfNonzero xn
   have h := eval₂_reflect_mul_pow (algebraMap K (RatFunc K)) x n g ng
-  have evalX : g.eval₂ (algebraMap K (RatFunc K)) x=algebraMap K[X] (RatFunc K) g :=
+  have evalX : g.eval₂ (algebraMap K (RatFunc K)) x=algebraMap (Polynomial K) (RatFunc K) g :=
     RatFunc.aeval_X_left_eq_algebraMap g
   rw [invOf_eq_inv,evalX] at h
   apply mul_right_cancel₀ (pow_ne_zero _ xn)
@@ -39,19 +39,19 @@ theorem reverse_atInfinity (g : K[X]) (n : ℕ) (ng : g.natDegree≤n) :
 
 /-- The infinity equation uses the base coordinate (T=1/X) and the
 ordinate (T^d Y). Its coefficients are separately homogenized. -/
-def weightedInfinity (f : K[X][X]) (H d : ℕ) : K[X][X] :=
+def weightedInfinity (f : (Polynomial (Polynomial K))) (H d : ℕ) : (Polynomial (Polynomial K)) :=
   ∑ i∈f.support, monomial i ((f.coeff i).reflect (H-d*i))
 
-theorem coeff_weightedInfinity (f : K[X][X]) (H d i : ℕ) :
+theorem coeff_weightedInfinity (f : (Polynomial (Polynomial K))) (H d i : ℕ) :
     (weightedInfinity f H d).coeff i=(f.coeff i).reflect (H-d*i) := by
   classical
   by_cases mem : i∈f.support
   · rw [weightedInfinity,Polynomial.finsetSum_coeff,Finset.sum_eq_single_of_mem i mem]
     · simp
     · intro j _ neq; simp [coeff_monomial,neq]
-  · simp [weightedInfinity,Polynomial.finsetSum_coeff,coeff_monomial,mem,notMem_support_iff.mp mem]
+  · simp [weightedInfinity,Polynomial.finsetSum_coeff,coeff_monomial,Finsupp.single_apply,mem,notMem_support_iff.mp mem]
 
-theorem infinity_degree (f : K[X][X]) (H d : ℕ) : (weightedInfinity f H d).natDegree=f.natDegree := by
+theorem infinity_degree (f : (Polynomial (Polynomial K))) (H d : ℕ) : (weightedInfinity f H d).natDegree=f.natDegree := by
   by_cases fn : f=0
   · simp [fn,weightedInfinity]
   apply le_antisymm
@@ -66,22 +66,22 @@ theorem infinity_degree (f : K[X][X]) (H d : ℕ) : (weightedInfinity f H d).nat
     apply nz
     apply Polynomial.ext
     intro j
-    have req := congrArg (fun q : K[X] => q.coeff (revAt (H-d*f.natDegree) j)) zero
+    have req := congrArg (fun q : (Polynomial K) => q.coeff (revAt (H-d*f.natDegree) j)) zero
     simp only [coeff_reflect,revAt_invol,coeff_zero] at req
     exact req
 
-theorem infinity_leading (f : K[X][X]) (H d : ℕ) :
+theorem infinity_leading (f : (Polynomial (Polynomial K))) (H d : ℕ) :
     (weightedInfinity f H d).leadingCoeff=f.leadingCoeff.reflect (H-d*f.natDegree) := by
   rw [leadingCoeff,infinity_degree,coeff_weightedInfinity,coeff_natDegree]
 
 /-- The infinity equation agrees with homogeneous coordinate change over
 the abscissa function field, with the leading scalar explicitly tracked. -/
-theorem infinity_field (f : K[X][X]) (H d : ℕ)
+theorem infinity_field (f : (Polynomial (Polynomial K))) (H d : ℕ)
     (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H) :
     (weightedInfinity f H d).map (AtInfinity K)=
       C (((RatFunc.X : RatFunc K)⁻¹)^(H-d*f.natDegree))*
-        ((f.map (algebraMap K[X] (RatFunc K))).scaleRoots (((RatFunc.X : RatFunc K)⁻¹)^d)) := by
-  let j := algebraMap K[X] (RatFunc K)
+        ((f.map (algebraMap (Polynomial K) (RatFunc K))).scaleRoots (((RatFunc.X : RatFunc K)⁻¹)^d)) := by
+  let j := algebraMap (Polynomial K) (RatFunc K)
   let t := ((RatFunc.X : RatFunc K)⁻¹)
   let e := f.natDegree
   have hf : (f.map j).natDegree=e := natDegree_map_eq_of_injective (IsFractionRing.injective _ _) _
@@ -116,7 +116,7 @@ theorem resultantWidth_eq {e H d : ℕ} (pos : 0<e) (fit : d*e≤H) :
 
 /-- Padded resultants commute with weighted inversion. The identical
 declared ordinate degree is used in the finite and infinity equations. -/
-theorem infinity_resultant (f : K[X][X]) (H d : ℕ) (pos : 0<f.natDegree)
+theorem infinity_resultant (f : (Polynomial (Polynomial K))) (H d : ℕ) (pos : 0<f.natDegree)
     (tame : (f.natDegree:K)≠0)
     (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H)
     (resBound : (paddedRes f).natDegree≤resultantWidth f.natDegree H d) :
@@ -124,7 +124,7 @@ theorem infinity_resultant (f : K[X][X]) (H d : ℕ) (pos : 0<f.natDegree)
       (paddedRes f).reflect (resultantWidth f.natDegree H d) := by
   let e := f.natDegree
   let t := ((RatFunc.X : RatFunc K)⁻¹)
-  let j := algebraMap K[X] (RatFunc K)
+  let j := algebraMap (Polynomial K) (RatFunc K)
   let g := weightedInfinity f H d
   let P := f.map j
   have pdeg : P.natDegree=e := natDegree_map_eq_of_injective (IsFractionRing.injective _ _) _

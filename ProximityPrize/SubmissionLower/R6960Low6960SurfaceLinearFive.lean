@@ -14,8 +14,7 @@ open K1_13_8 (Valid)
 open Low6960Prices (BentCap addBent bentIntegral bentGraph bentLift taylorLength tiltedFits)
 open Low48BentLattice (Chamber)
 
-open private signedFive signed_five_linear signed_five_nonneg
-  from ProximityPrize.SubmissionLower.Final50SurfaceLinearFive
+open Final50SharedPrice (signedFive signed_five_linear signed_five_nonneg)
 
 /-- The tilted signed surface is linear in the cutter shape. Chamber positivity
 also certifies the exact natural-number coefficients in the price ledger. -/

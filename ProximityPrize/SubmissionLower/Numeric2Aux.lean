@@ -24,12 +24,12 @@ theorem scalar_word_count {A cap} (hlist : ScalarList A cap) (w : Node → K) (P
       f.val i = (poly f).eval (IRSProfile.domain i) := (heval f i).symm
       _ = (poly g).eval (IRSProfile.domain i) := by rw [hfg]
       _ = g.val i := heval g i
-  let polys : Finset K[X] := Finset.univ.image poly
+  let polys : Finset (Polynomial K) := Finset.univ.image poly
   have hpolyscard : polys.card = P.card := by
     dsimp [polys]
     rw [Finset.card_image_of_injective _ hinj]
     simp
-  have hpolys : (polys : Set K[X]) ⊆
+  have hpolys : (polys : Set (Polynomial K)) ⊆
       close A w := by
     intro q hq
     obtain ⟨f,_hf,rfl⟩ := Finset.mem_image.mp hq
@@ -113,7 +113,7 @@ def BadFamily (u : Words) (Γ : Finset K) : Prop :=
   ∀ γ ∈ Γ, IsMCA (AffineLineGenerator K) IRSProfile.baseCode γ u radius
 structure BadMarkAt (A : ℕ) (u : Words) (γ : K) where
   support : Finset I
-  decoder : K[X]
+  decoder : (Polynomial K)
   agreement : A ≤ support.card
   degree : decoder.degree < k
   hits : ∀ i ∈ support, decoder.eval (node i) = u 0 i + γ * u 1 i
@@ -136,7 +136,7 @@ structure TwoActive (u : Words) where
   degreeSum : a + b + c = 2 * k + 2
   nullitySum : nullity u + a + b = 2 * (t + 1)
   level : Strata.HasLevelHilbertFunction
-    (fun s j => algebraMap K[X] Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
+    (fun s j => algebraMap (Polynomial K) Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
     k a b c
 def TwoActive.height {u : Words} (T : TwoActive u) := (k + 1) - T.c
 abbrev Relation {u : Words} (T : TwoActive u) :=
@@ -168,10 +168,10 @@ structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
 structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) where
   rank_eq : columnRank D.U D.V = 3
-  α : Fin 2 → K[X]
-  β : Fin 2 → K[X]
-  a : K[X]
-  b : K[X]
+  α : Fin 2 → (Polynomial K)
+  β : Fin 2 → (Polynomial K)
+  a : (Polynomial K)
+  b : (Polynomial K)
   a_ne : a ≠ 0
   b_ne : b ≠ 0
   α_primitive : IsCoprime (α 0) (α 1)
@@ -184,15 +184,15 @@ structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
   nodes : relationOn u (fixedNodes R) (threeU a β) (threeV b α) output
 structure ModelAt (maxHeight : ℕ) (u : Words) (deleted : Finset I) where
   shift : K
-  pencil₀ : K[X]
-  pencil₁ : K[X]
+  pencil₀ : (Polynomial K)
+  pencil₁ : (Polynomial K)
   pencil₀_degree : pencil₀.degree < k
   pencil₁_degree : pencil₁.degree < k
-  E : K[X]
-  factor : K[X]
-  Q : K[X]
-  A₀ : K[X]
-  A₁ : K[X]
+  E : (Polynomial K)
+  factor : (Polynomial K)
+  Q : (Polynomial K)
+  A₀ : (Polynomial K)
+  A₁ : (Polynomial K)
   word : I → K
   word_fixed : ∀ i, twist (word i) = word i
   word_deleted : ∀ i ∈ deleted, word i = 0
@@ -216,12 +216,12 @@ def ModelAt.overhead {h u deleted} (M : ModelAt h u deleted) : ℤ :=
   (M.E.natDegree : ℤ) - M.factor.natDegree - amplitudeDegree M.A₀ M.A₁
 def ModelAt.label {h u deleted} (M : ModelAt h u deleted) (γ : K) : K :=
   γ - M.shift
-def ModelAt.amplitude {h u deleted} (M : ModelAt h u deleted) (γ : K) : K[X] :=
+def ModelAt.amplitude {h u deleted} (M : ModelAt h u deleted) (γ : K) : (Polynomial K) :=
   M.A₀ + Polynomial.C (M.label γ) * M.A₁
 def ModelAt.decoder {h u deleted} (M : ModelAt h u deleted) {A : ℕ} {γ : K}
-    (B : BadMarkAt A u γ) : K[X] :=
+    (B : BadMarkAt A u γ) : (Polynomial K) :=
   B.decoder - M.pencil₀ - Polynomial.C (M.label γ) * M.pencil₁
-structure MarkAt {A h : ℕ} {u deleted} (M : ModelAt h u deleted) (γ : K) (S : K[X]) where
+structure MarkAt {A h : ℕ} {u deleted} (M : ModelAt h u deleted) (γ : K) (S : (Polynomial K)) where
   bad : BadMarkAt A u γ
   avoids_deleted : Disjoint bad.support deleted
   scalar_fixed : S.map twist = S
@@ -231,7 +231,7 @@ structure MarkAt {A h : ℕ} {u deleted} (M : ModelAt h u deleted) (γ : K) (S :
   identity : M.E * M.decoder bad - Polynomial.C (M.label γ) * M.Q =
     M.factor * M.amplitude γ * S
 structure FamilyAt (A : ℕ) {h : ℕ} {u deleted} (M : ModelAt h u deleted) (Γ : Finset K) where
-  scalar : K → K[X]
+  scalar : K → (Polynomial K)
   mark : ∀ γ ∈ Γ, MarkAt (A := A) M γ (scalar γ)
   distinct : Set.InjOn scalar (Γ : Set K)
 abbrev AnchorModel := ModelAt heightCap
@@ -426,10 +426,10 @@ private theorem twice_half (x : ℤ) : 2 * (x * (x - 1) / 2) = x * (x - 1) := by
     · exact dvd_mul_of_dvd_left (by omega : (2 : ℤ) ∣ x) _
     · exact dvd_mul_of_dvd_right (by omega : (2 : ℤ) ∣ x - 1) _
   rw [mul_comm, Int.ediv_mul_cancel h]
-private def denPolynomial (q r : ℤ) : ℤ :=
+def denPolynomial (q r : ℤ) : ℤ :=
   2 + r * (r + 1) + q * (44 + 14 * r + r * (r - 1)) +
     (57 + 6 * r) * (q * (q - 1)) + 12 * q * (q - 1) * (q - 2)
-private theorem twice_den (u : ℤ) (h : 0 ≤ u) :
+theorem twice_den (u : ℤ) (h : 0 ≤ u) :
     2 * denominator u = denPolynomial (u / 6) (u % 6) := by
   let q := u / 6
   let r := u % 6
@@ -441,12 +441,12 @@ private theorem twice_den (u : ℤ) (h : 0 ≤ u) :
   change _ = denPolynomial q r
   unfold denPolynomial
   linear_combination hr + q * twice_half r + (57 + 6 * r) * twice_half q
-private def denPrefixPolynomial (q r : ℤ) : ℤ :=
+def denPrefixPolynomial (q r : ℤ) : ℤ :=
   984 * q + 3084 * q * (q - 1) + 1728 * q * (q - 1) * (q - 2) +
     216 * q * (q - 1) * (q - 2) * (q - 3) + (24 * r + 4 * (r - 1) * r * (r + 1)) +
     q * (528 * r + 84 * (r - 1) * r + 4 * (r - 2) * (r - 1) * r) +
     (684 * r + 36 * (r - 1) * r) * q * (q - 1) + 144 * r * q * (q - 1) * (q - 2)
-private def denPrefix (n : ℤ) : ℤ := denPrefixPolynomial (n / 6) (n % 6)
+def denPrefix (n : ℤ) : ℤ := denPrefixPolynomial (n / 6) (n % 6)
 private theorem denPrefix_step (n : ℤ) (hn : 0 ≤ n) :
     denPrefix (n + 1) = denPrefix n + 24 * denominator n := by
   have hden := twice_den n hn

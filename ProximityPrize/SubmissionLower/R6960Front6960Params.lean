@@ -1,9 +1,10 @@
 import ProximityPrize.SubmissionLower.R6960Front6960ProtocolTarget
+set_option maxRecDepth 200000
 
 set_option Elab.async false
 set_option autoImplicit true
 section
-set_option maxRecDepth 12000
+set_option maxRecDepth 200000
 set_option backward.isDefEq.respectTransparency false
 namespace Front6960
 noncomputable section
@@ -44,10 +45,10 @@ def normalSlopes (u : Words) (Γ : Finset K) : Finset K := by
 def abnormalSlopes (u : Words) (Γ : Finset K) : Finset K := by
   classical exact Γ.filter (fun γ => ¬ Normal u γ)
 def HomogeneousPrincipal (u : Words) : Prop :=
-  ∃ (a : ℕ) (g : Frac[X]), g ≠ 0 ∧ g.natDegree ≤ a ∧ a ≤ t ∧
-    ∀ P : Frac[X], P.natDegree ≤ t →
-      (((twoBlock u).map (algebraMap K[X] Frac)).mulVec (fun i => P.coeff i.val) = 0 ↔
-        ∃ Q : Frac[X], Q.natDegree ≤ t - a ∧ P = g * Q)
+  ∃ (a : ℕ) (g : (Polynomial Frac)), g ≠ 0 ∧ g.natDegree ≤ a ∧ a ≤ t ∧
+    ∀ P : (Polynomial Frac), P.natDegree ≤ t →
+      (((twoBlock u).map (algebraMap (Polynomial K) Frac)).mulVec (fun i => P.coeff i.val) = 0 ↔
+        ∃ Q : (Polynomial Frac), Q.natDegree ≤ t - a ∧ P = g * Q)
 abbrev coefficientStack (u : Words) := coefficientBlocks p node (u 0) (u 1) L t
 def ConstantKernel (u : Words) : Prop :=
   stackRank u = (coefficientStack u).rank
@@ -65,7 +66,7 @@ structure TwoActive (u : Words) where
   degreeSum : a + b + c = 2 * k + 2
   nullitySum : nullity u + a + b = 2 * (t + 1)
   level : Strata.HasLevelHilbertFunction
-    (fun s j => algebraMap K[X] Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
+    (fun s j => algebraMap (Polynomial K) Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
     k a b c
 def TwoActive.height {u : Words} (T : TwoActive u) := (k + 1) - T.c
 abbrev Relation {u : Words} (T : TwoActive u) :=
@@ -79,14 +80,14 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
 def FixedLeftGCD {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  ∃ G : K[X], IsCommonGCD (G.map (algebraMap K Frac))
+  ∃ G : (Polynomial K), IsCommonGCD (G.map (algebraMap K Frac))
     (extendSeed (leftU R)) (extendSeed (leftV R))
 def MovingGCD {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
-  ¬ FixedLeftGCD R ∧ ∃ G : Frac[X], G ≠ 0 ∧ G ∣ extendSeed (leftU R) ∧
+  ¬ FixedLeftGCD R ∧ ∃ G : (Polynomial Frac), G ≠ 0 ∧ G ∣ extendSeed (leftU R) ∧
     G ∣ extendSeed (leftV R) ∧ (fixedNodes R).card < G.natDegree
 def InvalidLeft {u : Words} {T : TwoActive u} (R : Relation T) : Prop :=
   max (leftU R).natDegree (leftV R).natDegree < T.height ∨
-    ∃ G : K[X], G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
+    ∃ G : (Polynomial K), G ≠ 0 ∧ G.map Polynomial.C ∣ leftU R ∧ G.map Polynomial.C ∣ leftV R ∧
       ¬ G ∣ locator node Finset.univ
 structure SaturatedAt {u : Words} {T : TwoActive u} (R : Relation T)
     {γ : K} (M : BadMark u γ) : Prop where
@@ -120,10 +121,10 @@ structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
 structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) where
   rank_eq : columnRank D.U D.V = 3
-  α : Fin 2 → K[X]
-  β : Fin 2 → K[X]
-  a : K[X]
-  b : K[X]
+  α : Fin 2 → (Polynomial K)
+  β : Fin 2 → (Polynomial K)
+  a : (Polynomial K)
+  b : (Polynomial K)
   a_ne : a ≠ 0
   b_ne : b ≠ 0
   α_primitive : IsCoprime (α 0) (α 1)

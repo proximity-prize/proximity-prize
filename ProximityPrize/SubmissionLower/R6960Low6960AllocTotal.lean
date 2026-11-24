@@ -15,11 +15,9 @@ open Low6960Allocation
 open Low6960Retained (Box)
 open Low6960Monotone (physicalPrice_anti)
 open Lower6960.Low (retained_family_fee)
-open private degree_bound from ProximityPrize.SubmissionLower.R6960Low6960Width
+open Lower6960.Low (degree_bound)
 open scoped BigOperators
-open private P3_6_8.shapeSum P3_6_8.shapeSum_empty P3_6_8.shapeSum_insert P3_6_8.shapeSum_union
-  P3_6_8.shapeSum_mono P3_6_8.inBox_trans P3_6_8.inBox_shapeSum P3_6_8.shapeSum_valid_or_empty
-  from ProximityPrize.SubmissionLower.GoldBranch6N8
+open P3_6_8 (shapeSum shapeSum_empty shapeSum_insert shapeSum_union shapeSum_mono inBox_trans inBox_shapeSum shapeSum_valid_or_empty)
 
 def retainedShape {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ) : Shape :=
   P3_6_8.shapeSum a (Finset.univ.filter fun i => l i = 0)

@@ -10,11 +10,10 @@ namespace Front6960_5
 noncomputable section
 open Polynomial Front6960 FrobeniusLocator
 open Front6960Direction (Direction)
-open private column column_ne column_bound column_dvd firstColumn_normal threeU_fun tight_pair
-  slice_bound relationOn_fun outputs nodes_of_columns from ProximityPrize.SubmissionLower.PortFrontB
-private def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : K[X] :=
+open P0_6 (column column_ne column_bound column_dvd firstColumn_normal threeU_fun tight_pair slice_bound relationOn_fun outputs nodes_of_columns)
+private def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : (Polynomial K) :=
   B.a * (B.β l).map twist
-private def rightCoeff {u T R D} (B : RankThree u T R D) (j : Fin 2) : K[X] :=
+private def rightCoeff {u T R D} (B : RankThree u T R D) (j : Fin 2) : (Polynomial K) :=
   -(B.b * B.α j)
 private theorem left_eq {u T R D} (B : RankThree u T R D) :
     threeU B.a B.β = column p (leftCoeff B) := by
@@ -30,7 +29,7 @@ private theorem plane_of_rankThree {u : Words} {T : TwoActive u} {R : Relation T
     Nonempty (K1_10.Plane u (fixedNodes R) D.height (leftCoeff B) (rightCoeff B)) := by
   let U := leftCoeff B
   let V := rightCoeff B
-  have amp_ne (v : Fin 2 → K[X]) (hv : IsCoprime (v 0) (v 1)) : ∃ j, v j ≠ 0 := by
+  have amp_ne (v : Fin 2 → (Polynomial K)) (hv : IsCoprime (v 0) (v 1)) : ∃ j, v j ≠ 0 := by
     by_contra! hz
     obtain ⟨a,b,hab⟩ := hv
     simp [hz] at hab
@@ -59,8 +58,8 @@ private theorem plane_of_rankThree {u : Words} {T : TwoActive u} {R : Relation T
       apply Nat.add_le_add_left
     · exact le_max_left _ _
     · exact le_max_right _ _
-  let φ := algebraMap K[X] Frac
-  have hinj : Function.Injective φ := IsFractionRing.injective K[X] Frac
+  let φ := algebraMap (Polynomial K) Frac
+  have hinj : Function.Injective φ := IsFractionRing.injective (Polynomial K) Frac
   have hd (P : Bivar) : (extendSeed P).natDegree = P.natDegree := natDegree_map_eq_of_injective hinj _
   have hn {P : Bivar} (hp : P ≠ 0) : extendSeed P ≠ 0 := (Polynomial.map_ne_zero_iff hinj).mpr hp
   have hdir := B.same_direction
@@ -139,7 +138,7 @@ theorem direction_of_rankThree {u T R D} (hu : FrontRemainder u)
   change K1.sixNorm B.a = K1.sixNorm B.b at hnorm
   obtain ⟨den, hden, hphase, hnodes⟩ := K1_12_1.denominator B.b_ne hnorm
   have hden' : den.map twist ≠ 0 := (Polynomial.map_ne_zero_iff twist.injective).mpr hden
-  have hdeg := congrArg (fun Q : K[X] => Q.natDegree) hphase
+  have hdeg := congrArg (fun Q : (Polynomial K) => Q.natDegree) hphase
   change (B.a * den.map twist).natDegree = (B.b * den).natDegree at hdeg
   rw [natDegree_mul B.a_ne hden', natDegree_mul B.b_ne hden,
     natDegree_map_eq_of_injective twist.injective] at hdeg
@@ -184,14 +183,14 @@ noncomputable section
 open Polynomial Front6960 FrobeniusLocator
 open Front6960Direction (Direction Regular Offset eval_twist)
 open K1_12 (eval_unit_of_dvd invariant_multiple)
-open private coprime_factor_of_label from ProximityPrize.SubmissionLower.Fast068
+open K1_12 (coprime_factor_of_label)
 open Front6960Direction (E_nodes numerator numerator_degree fixed_numerator hits)
 theorem normalize {u : Words} {deleted : Finset I} (F : Direction u deleted)
     (height : F.U.natDegree + F.s + deleted.card ≤ heightCap) (Γ : Finset K)
     (reg : ∀ γ ∈ Γ, Regular F γ) (original : ∀ g : Γ, BadMark u g.val)
     (avoid : ∀ g, Disjoint (original g).support deleted) (η ζ : Γ) (hne : ζ.val ≠ η.val)
     (O : Offset F (original η)) :
-    ∃ M : AnchorModel u deleted, ∃ S : Γ → K[X],
+    ∃ M : AnchorModel u deleted, ∃ S : Γ → (Polynomial K),
       ∃ marks : ∀ g : Γ, AnchorMark M g.val (S g), ∀ g, (marks g).bad = original g := by
   classical
   let m (g : Γ) := original g
@@ -202,7 +201,7 @@ theorem normalize {u : Words} {deleted : Finset I} (F : Direction u deleted)
   change L.map twist = L at hLf
   have hcn (i : I) : c.eval (node i) ≠ 0 :=
     eval_unit_of_dvd (hL ▸ dvd_mul_left c W) (hLn i)
-  have hscalar (g : Γ) : ∃ S : K[X], S.map twist = S ∧
+  have hscalar (g : Γ) : ∃ S : (Polynomial K), S.map twist = S ∧
       numerator O (m g) = c * F.amp g.val * S := by
     obtain ⟨N, hN, hfix⟩ := fixed_numerator O W hW (m g) (avoid g) (reg g.val g.property)
     obtain ⟨S,hS,hNS⟩ := hsplit N hfix
@@ -312,7 +311,7 @@ namespace Front6960_5
 noncomputable section
 open Polynomial Front6960 FrobeniusLocator
 open Front6960Direction (Regular excluded excluded_card_le cross_lift)
-private theorem other_hits {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]}
+private theorem other_hits {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : (Polynomial K)}
     (m : AnchorMark M γ S) (n : AnchorMark M δ S) (i : I) (hi : i ∈ m.bad.support) :
     n.bad.decoder.eval (node i) = u 0 i + δ * u 1 i := by
   have hd := Finset.disjoint_left.mp m.avoids_deleted hi
@@ -324,7 +323,7 @@ private theorem other_hits {u deleted} {M : AnchorModel u deleted} {γ δ : K} {
   apply sub_eq_zero.mp
   apply (mul_eq_zero.mp (show M.E.eval (node i) * _ = 0 from ?_)).resolve_left (M.E_nodes i)
   linear_combination h - h0 - (δ - M.shift) * h1
-private theorem same_scalar_label {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : K[X]}
+private theorem same_scalar_label {u deleted} {M : AnchorModel u deleted} {γ δ : K} {S : (Polynomial K)}
     (m : AnchorMark M γ S) (n : AnchorMark M δ S) : γ = δ := by
   by_contra hne
   let V := (δ-γ)⁻¹ • (n.bad.decoder - m.bad.decoder)
@@ -378,7 +377,7 @@ theorem proof : Front6960.c5 := by
   obtain ⟨lift⟩ := cross_lift F
   obtain ⟨O⟩ := Front6960Direction.offset_of_anchor F lift (m a) (avoid a) (regular η hη)
   obtain ⟨M, S, marks, _⟩ := normalize F height Δ regular m avoid a b hne.symm O
-  let scalar (γ : K) : K[X] := if h : γ ∈ Δ then S ⟨γ, h⟩ else 0
+  let scalar (γ : K) : (Polynomial K) := if h : γ ∈ Δ then S ⟨γ, h⟩ else 0
   have hmarked (γ : K) (hγ : γ ∈ Δ) : AnchorMark M γ (scalar γ) := by
     simpa only [scalar, dite_eq_left hγ] using marks ⟨γ, hγ⟩
   refine ⟨book, hbook, by omega, M, ⟨⟨scalar, hmarked, ?_⟩⟩⟩

@@ -22,8 +22,7 @@ open K1_13_6_2_4_1 (positiveDiagonal)
 open MvPolynomial
 open scoped BigOperators Pointwise
 
-open private eval_surjective pointIdeal_injective point_component exists_coordinate_cut
-  from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_4 (eval_surjective pointIdeal_injective point_component exists_coordinate_cut)
 
 
 

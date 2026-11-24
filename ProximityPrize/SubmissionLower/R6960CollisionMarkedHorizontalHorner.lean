@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericMeasure
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericCoordinates
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedRootTransport
+set_option synthInstance.maxHeartbeats 200000
 
 set_option Elab.async false
 set_option maxRecDepth 18000
@@ -16,9 +17,9 @@ open RetainedSurfaceClass (Crossing chartImage transition)
 open MarkedEvaluation (swapBase)
 open Polynomial Module LineEuler
 open scoped Polynomial Lower6960.MonicChart Lower6960.RetainedSurfaceClass
-open private Lower6960.MarkedEvaluation.swap_plane from ProximityPrize.SubmissionLower.R6960MarkedScalarAxis
-open private Lower6960.MonicChartProbes.planeMap_finite from ProximityPrize.SubmissionLower.R6960MonicChartProbes
-open private Lower6960.MonicChart.root_finrank from ProximityPrize.SubmissionLower.R6960MonicChartFrobenius
+open Lower6960.MarkedEvaluation (swap_plane)
+open Lower6960.MonicChartProbes (planeMap_finite)
+open Lower6960.MonicChart (root_finrank)
 
 variable {E : Type} [Field E] [original : Algebra ChartField E]
 
@@ -26,12 +27,12 @@ variable {E : Type} [Field E] [original : Algebra ChartField E]
   ((algebraMap ChartField E).comp swapBase.toRingHom).toAlgebra
 
 private theorem horizontalSeedRoot (P : CurvatureSquares.Ordinate) (y : E)
-    (root : aeval y ((RetainedLinear.toSeed P).map (algebraMap Scalar[X] ChartField))=0) :
+    (root : aeval y ((RetainedLinear.toSeed P).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     let : Algebra ChartField E := horizontalFieldAlgebra (E:=E)
-    aeval y ((RetainedLinear.toSeed (projectedRaw P)).map (algebraMap Scalar[X] ChartField))=0 := by
+    aeval y ((RetainedLinear.toSeed (projectedRaw P)).map (algebraMap (Polynomial Scalar) ChartField))=0 := by
   let k := algebraMap ChartField E
-  let j := algebraMap Scalar[X] ChartField
-  let c := Polynomial.mapRingHom (algebraMap L[X] Scalar)
+  let j := algebraMap (Polynomial Scalar) ChartField
+  let c := Polynomial.mapRingHom (algebraMap (Polynomial L) Scalar)
   let a := horizontalFieldAlgebra (E:=E)
   let : Algebra ChartField E := a
   have coordinate : (((k.comp swapBase.toRingHom).comp j).comp c).comp Bivariate.swap.toRingHom =
@@ -76,15 +77,15 @@ private theorem horizontalMinpolyDegree (b : PowerBasis ChartField E) :
   exact (natDegree_map_eq_of_injective (f:=swapBase.symm.toRingHom) swapBase.symm.injective mp).trans md
 
 private theorem horner_of_degree
-    (Q : Scalar[X][X]) (v : ℕ) (pos : 0<Q.natDegree)
+    (Q : (Polynomial (Polynomial Scalar))) (v : ℕ) (pos : 0<Q.natDegree)
     (width : ∀ i, (Q.coeff i).natDegree≤v) (y : E)
-    (root : aeval y (Q.map (algebraMap Scalar[X] ChartField))=0)
+    (root : aeval y (Q.map (algebraMap (Polynomial Scalar) ChartField))=0)
     (mindeg : (minpoly ChartField y).natDegree=Q.natDegree) {n : ℕ}
     (size : n=Q.natDegree)
     (af : let : Algebra (Laurent Scalar) E := Horner.rationalLaurentAlgebra
-          Basis (Fin n) Scalar[X] (chartOrder (k:=Scalar) (E:=E) false))
+          Basis (Fin n) (Polynomial Scalar) (chartOrder (k:=Scalar) (E:=E) false))
     (ai : let : Algebra (Laurent Scalar) E := Horner.rationalLaurentAlgebra
-          Basis (Fin n) Scalar[X] (chartOrder (k:=Scalar) (E:=E) true))
+          Basis (Fin n) (Polynomial Scalar) (chartOrder (k:=Scalar) (E:=E) true))
     (t : ℕ)
     (det : let : Algebra (Laurent Scalar) E := Horner.rationalLaurentAlgebra
            (normalizedTransition af ai).det.degree=((-(t:ℤ):ℤ):WithBot ℤ)) :
@@ -104,21 +105,21 @@ local instance horizontalCrossRing (x z:L) : CommRing (Crossing E x z) :=
 /-- The horizontal determinant deficit measured on the selected original
 line is bounded by the parameter degree of the same ordinate equation. -/
 theorem actual_horizontal_horner
-    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (b : PowerBasis ChartField E)
-    (root : aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0)
+    (root : aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (x z : L) (nx : x≠0) (nz : z≠0)
     [IsReduced (Crossing E x z)] [FiniteDimensional L (Crossing E x z)]
     (p : ℕ) [CharP L p] (small : finrank L (Crossing E x z)<p)
-    {m : ℕ} (xf : Basis (Fin m) L[X] (chartImage E false x false))
-    (xi : Basis (Fin m) L[X] (chartImage E false x true))
+    {m : ℕ} (xf : Basis (Fin m) (Polynomial L) (chartImage E false x false))
+    (xi : Basis (Fin m) (Polynomial L) (chartImage E false x true))
     (t : ℕ) (dt : (transition E false x nx xf xi).det.degree=((-(t:ℤ):ℤ):WithBot ℤ)) :
     t≤(f.degreeOf ordinate-1)*f.degreeOf parameter := by
   let : FiniteDimensional ChartField E := b.finite
   let : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi b root
-  let : Algebra Scalar[X] E := ((algebraMap ChartField E).comp (algebraMap Scalar[X] ChartField)).toAlgebra
-  let : IsScalarTower Scalar[X] ChartField E :=
-    IsScalarTower.of_algebraMap_eq (R:=Scalar[X]) (S:=ChartField) (A:=E) fun _=>rfl
+  let : Algebra (Polynomial Scalar) E := ((algebraMap ChartField E).comp (algebraMap (Polynomial Scalar) ChartField)).toAlgebra
+  let : IsScalarTower (Polynomial Scalar) ChartField E :=
+    IsScalarTower.of_algebraMap_eq (R:=(Polynomial Scalar)) (S:=ChartField) (A:=E) fun _=>rfl
   have root' : aeval b.gen (RetainedLinear.toSeed (view f))=0 := by
     rw [aeval_map_algebraMap] at root
     exact root

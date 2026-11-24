@@ -69,16 +69,16 @@ private def encode (u : vectors) : SourceExponent :=
 private def decode (e : SourceExponent) : vectors :=
   ⟨jetCount e, trim (jetCount e) (jetOf e), e none⟩
 
-private theorem sumCount (e : SourceExponent) :
+theorem sumCount (e : SourceExponent) :
     e.weight jetDegreeWeight = e (some 0) + e (some 1) + e (some 2) + e (some 3) := by
   simp [Finsupp.weight_eq_sum, Fintype.sum_option, Fin.sum_univ_four]
 
-private theorem sumIndex (e : SourceExponent) :
+theorem sumIndex (e : SourceExponent) :
     e.weight jetDerivativeWeight = e (some 1) + 2 * e (some 2) + 3 * e (some 3) := by
   simp [Finsupp.weight_eq_sum, Fintype.sum_option, Fin.sum_univ_four, jetDerivativeWeight,
     smul_eq_mul, Nat.mul_comm]
 
-private theorem sumDifferentiated (e : SourceExponent) :
+theorem sumDifferentiated (e : SourceExponent) :
     e.weight TaperNormalize.differentiated = e (some 1) + e (some 2) + e (some 3) := by
   simp [Finsupp.weight_eq_sum, Fintype.sum_option, Fin.sum_univ_four, TaperNormalize.differentiated]
 
@@ -86,10 +86,10 @@ private theorem sumTop (e : SourceExponent) : e.weight topWeight = e (some 3) :=
   simp [Finsupp.weight_eq_sum, Fintype.sum_option, topWeight,
     Pi.single_apply, smul_eq_mul]
 
-private theorem sumOld (m : JetExp) : m.weight oldWeight = m 1 + 2*m 2 + 3*m 3 := by
+theorem sumOld (m : JetExp) : m.weight oldWeight = m 1 + 2*m 2 + 3*m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, oldWeight, smul_eq_mul, Nat.mul_comm]
 
-private theorem sumGrade (m : JetExp) : m.weight gradeWeight = m 0 + m 1 + m 2 + m 3 := by
+theorem sumGrade (m : JetExp) : m.weight gradeWeight = m 0 + m 1 + m 2 + m 3 := by
   simp [Finsupp.weight_eq_sum, Fin.sum_univ_four, gradeWeight, smul_eq_mul]
 
 private theorem weight_add (D : ℕ) (hD : 3 < D) (e : SourceExponent) :

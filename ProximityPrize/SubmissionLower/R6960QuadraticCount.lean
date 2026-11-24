@@ -60,7 +60,7 @@ private theorem project_z {G : FreshEquation L} {v w : ℕ}
   simpa using coeff_eq_zero_of_natDegree_lt
     ((K1_10.frobeniusGraph_degree _ _ _ _ (axes i j).1 (axes i j).2).trans_lt hn)
 
-private theorem cover_root (P : Ordinate) (ne : P≠0) {z : L} {S : L[X]}
+private theorem cover_root (P : Ordinate) (ne : P≠0) {z : L} {S : (Polynomial L)}
     (hit : ordEval z S P=0) :
     ∃ f : Ordinate, Irreducible f ∧ f∣P ∧ f.natDegree≤P.natDegree ∧ ordEval z S f=0 := by
   induction P using WfDvdMonoid.induction_on_irreducible with
@@ -74,7 +74,7 @@ private theorem cover_root (P : Ordinate) (ne : P≠0) {z : L} {S : L[X]}
       have dv' : g∣f*q := dv.trans (show q∣f*q from ⟨f,by rw [mul_comm f q]⟩)
       exact ⟨g,hg,dv',natDegree_le_of_dvd dv' ne,zr⟩
 
-private theorem eval_project (G : FreshEquation L) (z : L) (S : L[X]) :
+private theorem eval_project (G : FreshEquation L) (z : L) (S : (Polynomial L)) :
     ordEval z S (project G) = SplitCut.StableNode.substitute S
       (G.map (mapRingHom (MvPolynomial.eval ![z,z^K1.p]))) := by
   let left := (ordEval z S).comp project
@@ -132,9 +132,9 @@ theorem small_ordinate_count_at_scale {A d k w s T} (W : Word A d w s T)
       (MvPolynomial.le_degreeOf_of_mem_support 0 hc).trans (axes _).1,
       (MvPolynomial.le_degreeOf_of_mem_support 1 hc).trans (axes _).2⟩
   have hit (g : ↥T) : MvPolynomial.eval (fun i : Option (Fin 2) => i.elim
-      (algebraMap L[X] FX (S g)) (fun j => algebraMap L[X] FX (C (pair g j)))) f'=0 := by
-    have eq : (fun i : Option (Fin 2) => i.elim (algebraMap L[X] FX (S g))
-      (fun j => algebraMap L[X] FX (C (pair g j)))) = K1_14_6.rootPoint (label g) (s g) := by
+      (algebraMap (Polynomial L) FX (S g)) (fun j => algebraMap (Polynomial L) FX (C (pair g j)))) f'=0 := by
+    have eq : (fun i : Option (Fin 2) => i.elim (algebraMap (Polynomial L) FX (S g))
+      (fun j => algebraMap (Polynomial L) FX (C (pair g j)))) = K1_14_6.rootPoint (label g) (s g) := by
       funext i
       cases i with
       | none => rfl
@@ -279,7 +279,7 @@ theorem low_component_count {w s T} (W : Word 179827 133606 w s T)
 #print axioms low_component_count
 
 /-- The actual subset of marks lying on small positive-ordinate factors. -/
-def smallMarks (T : Finset K1.K) (label : K1.K → K1.K) (s : K1.K → K1.K[X]) (f : Equation) :
+def smallMarks (T : Finset K1.K) (label : K1.K → K1.K) (s : K1.K → (Polynomial K1.K)) (f : Equation) :
     Finset K1.K := T.filter (fun γ => ∃ q : Equation, Irreducible q ∧ q∣f ∧
       0<q.natDegree ∧ q.natDegree≤2 ∧ atMark q (label γ) (s γ)=0)
 

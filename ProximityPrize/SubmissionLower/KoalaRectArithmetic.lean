@@ -38,7 +38,7 @@ open Finset
 open K1_14 (Shape shapeSum slots)
 open HighCore82258 (agreement)
 open HighCore82258 (Bank)
-open private rise_of_convex from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (rise_of_convex)
 end KoalaRectArithmetic
 end
 section
@@ -48,7 +48,7 @@ open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape shapeSum slots triangle)
 open HighCore82258 (agreement)
-open private sum_range_guard diagonal from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (sum_range_guard diagonal)
 end KoalaRectArithmetic
 end
 section
@@ -70,7 +70,7 @@ open Finset
 open HighCore82258 (agreement)
 open K1_14 (Shape slots triangle)
 open P1_7_6 (intervalProduct_eq)
-open private yStart_eq sum_clipped from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (yStart_eq sum_clipped)
 end KoalaRectArithmetic
 end
 section
@@ -92,7 +92,7 @@ open Finset
 open K1_14 (Shape)
 open HighCore82258 (agreement)
 open P0_10_5 (Row scan)
-open private scan_sum from ProximityPrize.SubmissionLower.PortHighBase
+open P0_10_5 (scan_sum)
 end KoalaRectArithmetic
 end
 section

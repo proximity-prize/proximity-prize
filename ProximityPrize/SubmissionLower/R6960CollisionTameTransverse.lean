@@ -10,7 +10,7 @@ namespace Lower6960.CollisionTame
 noncomputable section
 open Polynomial UniqueFactorizationMonoid Finset
 open scoped Polynomial BigOperators
-open private Lower6960.BranchIndex.mult_product from ProximityPrize.SubmissionLower.R6960BranchIndex
+open Lower6960.BranchIndex (mult_product)
 
 variable {k : Type} [Field k] [DecidableEq k]
 
@@ -35,14 +35,14 @@ private theorem unique_sum_one {I : Type*} [Fintype I] [DecidableEq I]
 /-- At a simple zero of the reduced, nonzero branch product, exactly one
 irreducible branch factor crosses the fibre and the specialized
 weighted discriminant has precisely that factor's original weight. -/
-theorem simple_branch_weight (δ : k[X][X]) (nz : δ≠0) (z x : k)
+theorem simple_branch_weight (δ : (Polynomial (Polynomial k))) (nz : δ≠0) (z x : k)
     (good : (branchProduct δ).map (evalRingHom z)≠0)
     (simple : ((branchProduct δ).map (evalRingHom z)).rootMultiplicity x=1) :
-    ∃ i : branchFactors δ, (((i:k[X][X]).map (evalRingHom z)).rootMultiplicity x=1) ∧
+    ∃ i : branchFactors δ, (((i:(Polynomial (Polynomial k))).map (evalRingHom z)).rootMultiplicity x=1) ∧
       (δ.map (evalRingHom z)).rootMultiplicity x=branchWeight δ i ∧
-      emultiplicity (i:k[X][X]) δ=(branchWeight δ i:ℕ∞) := by
+      emultiplicity (i:(Polynomial (Polynomial k))) δ=(branchWeight δ i:ℕ∞) := by
   classical
-  let f (i : branchFactors δ) := (i:k[X][X]).map (evalRingHom z)
+  let f (i : branchFactors δ) := (i:(Polynomial (Polynomial k))).map (evalRingHom z)
   let m (i : branchFactors δ) := (f i).rootMultiplicity x
   have gn : (∏ i,f i)≠0 := by
     simpa only [branchProduct,Polynomial.map_prod,f] using good
@@ -72,7 +72,7 @@ theorem simple_branch_weight (δ : k[X][X]) (nz : δ≠0) (z x : k)
     · intro j _ ji
       rw [other j ji,mul_zero]
     · simp
-  · have norm : normalize (i:k[X][X])=(i:k[X][X]) :=
+  · have norm : normalize (i:(Polynomial (Polynomial k)))=(i:(Polynomial (Polynomial k))) :=
       normalize_normalized_factor _ (Multiset.mem_toFinset.mp i.property)
     rw [emultiplicity_eq_count_normalizedFactors (branchFactor_prime δ i).irreducible nz,norm]
     rfl

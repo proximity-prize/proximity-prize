@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960RetainedAxisFree
 import ProximityPrize.SubmissionLower.R6960RetainedLineEvaluation
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -12,15 +13,14 @@ open MonicChart (ChartField)
 open MonicFourChartDescent ChartSections RetainedRestrictionTorus MonicChartProbes
 open Module Submodule Algebra Polynomial
 open scoped Lower6960.RetainedSurfaceClass Polynomial
-open private Lower6960.RetainedSurfaceClass.toCross Lower6960.RetainedSurfaceClass.toCross_kernel
-  Lower6960.RetainedSurfaceClass.finiteX_val Lower6960.RetainedSurfaceClass.finiteZ_val from ProximityPrize.SubmissionLower.R6960RetainedCrossingComparison
-open private Lower6960.RetainedSurfaceClass.chartSpace from ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
+open Lower6960.RetainedSurfaceClass (toCross toCross_kernel finiteX_val finiteZ_val)
+open Lower6960.RetainedSurfaceClass (chartSpace)
 variable (E : Type) [Field E] [Algebra ChartField E]
 
 def atCoord (j:Bool) (x z:L) := if j then z else x
 def nodeMap (j:Bool) (x z:L) : Axis E j (atCoord j x z) →ₗ[L] Crossing E x z :=
   match j with | false=>crossingX E x z | true=>crossingZ E x z
-private theorem through (j:Bool) (x z:L) (v:Tor E) :
+theorem through (j:Bool) (x z:L) (v:Tor E) :
     nodeMap E j x z (red E j (atCoord j x z) v)=Ideal.Quotient.mk _ v := by cases j <;> rfl
 
 theorem onto_at_node (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) :
@@ -33,7 +33,7 @@ theorem onto_at_node (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) :
     rw [s]; exact u.property
   · exact (through E j x z (fromFinite E u)).trans hu
 
-private theorem cut_running (j:Bool) (c:L) :
+theorem cut_running (j:Bool) (c:L) :
     along E j false (Polynomial.X-C c)=cut E (!j) c := by
   apply Subtype.ext
   rw [map_sub]

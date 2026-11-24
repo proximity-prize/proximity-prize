@@ -6,7 +6,7 @@ section
 namespace P1_3
 noncomputable section
 open P1 Polynomial
-def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : K[X] :=
+def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : (Polynomial K) :=
   B.a * (B.β l).map twist
 abbrev Plane := K1_10.Plane
 abbrev Adjugate := K1_10.Adjugate
@@ -28,7 +28,7 @@ structure ScalarSource (bank : Bank) where
   total : ∀ e ∈ poly.support, e 1 + (poly.coeff e).totalDegree ≤ 42
 def ScalarSource.atLabel {bank} (A : ScalarSource bank) (γ : K) : MvPolynomial (Fin 2) K :=
   A.poly.map (MvPolynomial.eval ![γ, γ ^ p])
-def ScalarSource.atDecoder {bank} (A : ScalarSource bank) (γ : K) (P : K[X]) : K[X] :=
+def ScalarSource.atDecoder {bank} (A : ScalarSource bank) (γ : K) (P : (Polynomial K)) : (Polynomial K) :=
   MvPolynomial.aeval ![Polynomial.X, P] (A.atLabel γ)
 abbrev cutDegree : ℕ := (2 * (k - 1) - 1) * (42 - 1) + 1
 def incidenceRatio : ℚ :=
@@ -42,7 +42,7 @@ namespace P1_3
 noncomputable section
 open P1
 open scoped BigOperators
-open private sum_rows ceil_sq_div_eq from ProximityPrize.SubmissionLower.PortFrontB
+open P0_6 (sum_rows ceil_sq_div_eq)
 private theorem jet_st : K1_10.jetDim 4 20 17 = 6981 := by
   let rows : Fin 4 → ℕ := ![3570, 2080, 1007, 324]
   unfold K1_10.jetDim
@@ -79,7 +79,7 @@ private theorem local_ts : K1_10.jetDim 3 16 19 = 3216 := by
       intro i
       fin_cases i <;> decide
     _ = 3216 := by decide
-private theorem jet_quotient (bank : Bank) :
+theorem jet_quotient (bank : Bank) :
     K1_10.jetDim 4 bank.first bank.second -
       K1_10.jetDim 3 (bank.first - 1) (bank.second - 1) = 3765 := by
   cases bank
@@ -99,7 +99,7 @@ namespace P1_3_1
 noncomputable section
 open MvPolynomial K1_11
 open K1_10_1 (Contacts relationBounds)
-open private exists_kernel_outside from ProximityPrize.SubmissionLower.PortFrontB
+open P0_6_1 (exists_kernel_outside)
 abbrev Multipliers (F : Type*) [Field F] (bank : P1_3.Bank) :=
   JetSpace F 2 (bank.first - 1) (bank.second - 1)
 variable {F : Type*} [Field F] {N : ℕ} {L : MvPolynomial (Fin 5) F}
@@ -107,7 +107,7 @@ variable (bank : P1_3.Bank) (C : Contacts N L) {h : ℕ}
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = relationBounds h j)
 private theorem first_sub_add (b : P1_3.Bank) : b.first - 1 + 1 = b.first := by cases b <;> rfl
 private theorem second_sub_add (b : P1_3.Bank) : b.second - 1 + 1 = b.second := by cases b <;> rfl
-private def localMultiply (i : Fin N) : Multipliers F bank →ₗ[F] JetSpace F 3 bank.first bank.second where
+def localMultiply (i : Fin N) : Multipliers F bank →ₗ[F] JetSpace F 3 bank.first bank.second where
   toFun Q := ⟨weightedTruncation contactWeight 4 (C.shifted i L * Q.val), by
     simpa only [first_sub_add, second_sub_add] using
       truncated_mul_mem_jet 2 (bank.first - 1) (bank.second - 1) 1 1 (C.shifted i L)
@@ -115,9 +115,9 @@ private def localMultiply (i : Fin N) : Multipliers F bank →ₗ[F] JetSpace F 
         ((contactShift_parameter_weights _ _ _ _ _ L).2.trans (le_of_eq (hdeg 3))) Q⟩
   map_add' Q R := by apply Subtype.ext; simp [mul_add]
   map_smul' a Q := by apply Subtype.ext; simp
-private abbrev LocalSpace (i : Fin N) :=
+abbrev LocalSpace (i : Fin N) :=
   (JetSpace F 3 bank.first bank.second) ⧸ LinearMap.range (localMultiply bank C hdeg i)
-private theorem local_finrank (i : Fin N) :
+theorem local_finrank (i : Fin N) :
     Module.finrank F (LocalSpace bank C hdeg i) =
       J 4 bank.first bank.second - J 3 (bank.first - 1) (bank.second - 1) := by
   have hinj : Function.Injective (localMultiply bank C hdeg i) := by
@@ -155,7 +155,7 @@ open K1_11 (scalarWeightY scalarWeightYS scalarWeightT scalarWeightTotal scalarI
 open K1_10_1 (groupSeeds)
 open P1 (K p)
 open P1_3 (Bank ScalarSource)
-open private grouped_coeff joinExponents joinExponents_apply group_eval from ProximityPrize.SubmissionLower.Fast076
+open K1_10_1 (grouped_coeff joinExponents joinExponents_apply group_eval)
 def toScalarSource {bank : Bank} (Q : MvPolynomial (Fin 4) K) (hn : Q ≠ 0)
     (hy : Q.weightedTotalDegree scalarWeightY ≤ 5)
     (hs : Q.weightedTotalDegree scalarWeightYS ≤ bank.first + 5)
@@ -218,9 +218,8 @@ open P1_3 (cutDegree)
 open K1_10_2 (Row toGeneric)
 open K1_10_2_2 (dx dy flow numerator)
 open scoped Polynomial
-open private dx_degree dy_degree from ProximityPrize.SubmissionLower.Fast069
-open private clearPower separant taylorNumerator received nodeCut toGeneric_degree
-  order_le_clearPower received_degree from ProximityPrize.SubmissionLower.Fast069
+open K1_10_2_2 (dx_degree dy_degree)
+open K1_10_2_2 (clearPower separant taylorNumerator received nodeCut toGeneric_degree order_le_clearPower received_degree)
 private theorem separant_degree {g : Row} (h : g.totalDegree ≤ 42) : (dy g).totalDegree ≤ 41 := by
   have := dy_degree g
   omega
@@ -254,7 +253,7 @@ private theorem numerator_degree {g : Row} (hg : g.totalDegree ≤ 42) (n : ℕ)
       omega
     · apply (totalDegree_mul _ _).trans
       have hc := totalDegree_mul
-        (MvPolynomial.C ((2*n+1 : ℕ) : K[X]) : Row) (flow g (dy g))
+        (MvPolynomial.C ((2*n+1 : ℕ) : (Polynomial K)) : Row) (flow g (dy g))
       rw [totalDegree_C, zero_add] at hc
       omega
 private theorem sep_pow_degree (g : Row) (hg : g.totalDegree ≤ 42) (a : ℕ) :
@@ -299,11 +298,9 @@ open P1 MvPolynomial
 open P1_3 (ScalarSource incidenceRatio)
 open K1_10_2 (Row RegularRoot derivativeOrder toGeneric atTrajectory point)
 open scoped Polynomial
-open private seedRow seedRow_degree regroup specialize specialize_regroup decoderView
-  decoderView_injective decoderView_degree eval_decoderView exists_simple_derivative
-  eval_specialize specialize_iterate specialize_pderiv from ProximityPrize.SubmissionLower.Fast069
-open private nodeCut eval_nodeCut from ProximityPrize.SubmissionLower.Fast069
-open private derivativeOrder_degree K1_10_2.eval_toGeneric from ProximityPrize.SubmissionLower.Fast069
+open K1_10_2_1 (seedRow seedRow_degree regroup specialize specialize_regroup decoderView decoderView_injective decoderView_degree eval_decoderView exists_simple_derivative eval_specialize specialize_iterate specialize_pderiv)
+open K1_10_2_2 (nodeCut eval_nodeCut)
+open K1_10_2 (derivativeOrder_degree eval_toGeneric)
 private theorem regroup_degree {bank : P1_3.Bank} (A : ScalarSource bank) : (regroup A.poly).totalDegree ≤ 42 := by
   classical
   have hsum : regroup A.poly =
@@ -315,19 +312,19 @@ private theorem regroup_degree {bank : P1_3.Bank} (A : ScalarSource bank) : (reg
   intro e he
   rw [regroup, eval₂Hom_monomial, Finsupp.prod_pow, Fin.prod_univ_two]
   change (seedRow (A.poly.coeff e) *
-    ((C (Polynomial.X : K[X]) : Row) ^ e 0 * (MvPolynomial.X (0 : Fin 3) : Row) ^ e 1)).totalDegree ≤ 42
-  have hx : ((C (Polynomial.X : K[X]) : Row) ^ e 0).totalDegree = 0 := by
+    ((C (Polynomial.X : (Polynomial K)) : Row) ^ e 0 * (MvPolynomial.X (0 : Fin 3) : Row) ^ e 1)).totalDegree ≤ 42
+  have hx : ((C (Polynomial.X : (Polynomial K)) : Row) ^ e 0).totalDegree = 0 := by
     rw [← map_pow, totalDegree_C]
   calc
     _ ≤ (seedRow (A.poly.coeff e)).totalDegree +
-        (((C (Polynomial.X : K[X]) : Row) ^ e 0) * (MvPolynomial.X (0 : Fin 3) : Row) ^ e 1).totalDegree :=
+        (((C (Polynomial.X : (Polynomial K)) : Row) ^ e 0) * (MvPolynomial.X (0 : Fin 3) : Row) ^ e 1).totalDegree :=
       totalDegree_mul _ _
     _ ≤ (A.poly.coeff e).totalDegree + e 1 := by
       apply Nat.add_le_add (seedRow_degree _)
       exact (totalDegree_mul _ _).trans (by rw [hx, zero_add, totalDegree_X_pow])
     _ ≤ 42 := by simpa only [Nat.add_comm] using A.total e he
-private theorem assign_charts {bank : P1_3.Bank} (A : ScalarSource bank) (Γ : Finset K)
-    (P : ∀ γ ∈ Γ, K[X])
+theorem assign_charts {bank : P1_3.Bank} (A : ScalarSource bank) (Γ : Finset K)
+    (P : ∀ γ ∈ Γ, (Polynomial K))
     (hF : ∀ γ (hγ : γ ∈ Γ), A.atLabel γ ≠ 0 ∧ A.atDecoder γ (P γ hγ) = 0) :
     ∃ g : Row, g.totalDegree ≤ 42 ∧
       ∀ γ (hγ : γ ∈ Γ), ∃ j : Fin 5, RegularRoot (derivativeOrder g j) γ (P γ hγ) := by

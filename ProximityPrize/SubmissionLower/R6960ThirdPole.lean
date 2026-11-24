@@ -15,7 +15,7 @@ private def view {F : Type*} [CommRing F] (i : Fin 2) :=
   (MvPolynomial.optionEquivLeft F {j : Fin 2 // j≠i}).toRingHom.comp
     (MvPolynomial.rename (R:=F) (Equiv.optionSubtypeNe i).symm).toRingHom
 
-theorem resultant_axis {F : Type*} [Field F] (f g : (Seeds F)[X]) (m n a b : ℕ)
+theorem resultant_axis {F : Type*} [Field F] (f g : (Polynomial (Seeds F))) (m n a b : ℕ)
     (i : Fin 2) (hf : ∀ j, (f.coeff j).degreeOf i≤a) (hg : ∀ j, (g.coeff j).degreeOf i≤b) :
     (f.resultant g m n).degreeOf i≤n*a+m*b := by
   have deg (Q : Seeds F) : ((view i) Q).natDegree=Q.degreeOf i :=
@@ -27,7 +27,7 @@ theorem resultant_axis {F : Type*} [Field F] (f g : (Seeds F)[X]) (m n a b : ℕ
 
 /-- Eliminate the exterior seed even at labels where either leading coefficient drops. -/
 theorem count_common {F : Type*} [Field F] (p : ℕ) (hp : 0<p)
-    (f g : (Seeds F)[X]) (a b c d : ℕ)
+    (f g : (Polynomial (Seeds F))) (a b c d : ℕ)
     (fb : ∀ j, (f.coeff j).degreeOf 0≤a ∧ (f.coeff j).degreeOf 1≤b)
     (gb : ∀ j, (g.coeff j).degreeOf 0≤c ∧ (g.coeff j).degreeOf 1≤d)
     (pos : f.natDegree≠0 ∨ g.natDegree≠0) (proper : f.resultant g ≠ 0)
@@ -44,11 +44,11 @@ theorem count_common {F : Type*} [Field F] (p : ℕ) (hp : 0<p)
 
 /-- Coefficients of the equation in the ordinate, evaluated at a fixed abscissa.
 The exterior seed is the polynomial variable of the result. -/
-def pull {F : Type*} [Field F] (e : ℕ) (f : ℕ → Seeds F) (num den : F[X]) : (Seeds F)[X] :=
+def pull {F : Type*} [Field F] (e : ℕ) (f : ℕ → Seeds F) (num den : (Polynomial F)) : (Polynomial (Seeds F)) :=
   ∑ j ∈ Finset.range (e+1), C (f j) * (num^j*den^(e-j)).map MvPolynomial.C
 
 theorem pull_degree {F : Type*} [Field F] (e : ℕ) (f : ℕ → Seeds F)
-    {num den : F[X]} (hn : num.natDegree≤1) (hd : den.natDegree≤1) :
+    {num den : (Polynomial F)} (hn : num.natDegree≤1) (hd : den.natDegree≤1) :
     (pull e f num den).natDegree≤e := by
   apply natDegree_sum_le_of_forall_le
   intro j hj
@@ -60,7 +60,7 @@ theorem pull_degree {F : Type*} [Field F] (e : ℕ) (f : ℕ → Seeds F)
   omega
 
 theorem pull_axis {F : Type*} [Field F] (e : ℕ) (f : ℕ → Seeds F)
-    (num den : F[X]) (i : Fin 2) {a : ℕ} (h : ∀ j, (f j).degreeOf i≤a) (k : ℕ) :
+    (num den : (Polynomial F)) (i : Fin 2) {a : ℕ} (h : ∀ j, (f j).degreeOf i≤a) (k : ℕ) :
     ((pull e f num den).coeff k).degreeOf i≤a := by
   classical
   simp only [pull,finsetSum_coeff,coeff_C_mul,coeff_map]
@@ -69,7 +69,7 @@ theorem pull_axis {F : Type*} [Field F] (e : ℕ) (f : ℕ → Seeds F)
   exact (MvPolynomial.degreeOf_mul_le ..).trans (by simpa using h j)
 
 theorem pull_root {F : Type*} [Field F] (e : ℕ) (f : ℕ → Seeds F)
-    (ev : Seeds F →+* F) (const : ∀ a, ev (MvPolynomial.C a)=a) (num den : F[X]) (u y : F)
+    (ev : Seeds F →+* F) (const : ∀ a, ev (MvPolynomial.C a)=a) (num den : (Polynomial F)) (u y : F)
     (residue : den.eval u*y=num.eval u) (word : ∑ j ∈ Finset.range (e+1), ev (f j)*y^j=0) :
     ((pull e f num den).map ev).eval u=0 := by
   have comp : ev.comp MvPolynomial.C=RingHom.id F := RingHom.ext const
@@ -88,7 +88,7 @@ theorem pull_root {F : Type*} [Field F] (e : ℕ) (f : ℕ → Seeds F)
 /-- Two prescribed residues at exterior poles suffice if their equations are
 coprime generically. The retained seed coordinates stay adjacent. -/
 theorem two_probes {F : Type*} [Field F] (p : ℕ) (hp : 0<p) (e a b : ℕ)
-    (f g : ℕ → Seeds F) (n₁ d₁ n₂ d₂ : F[X])
+    (f g : ℕ → Seeds F) (n₁ d₁ n₂ d₂ : (Polynomial F))
     (linear : n₁.natDegree≤1 ∧ d₁.natDegree≤1 ∧ n₂.natDegree≤1 ∧ d₂.natDegree≤1)
     (fit : ∀ j, (f j).degreeOf 0≤a ∧ (f j).degreeOf 1≤b ∧
       (g j).degreeOf 0≤a ∧ (g j).degreeOf 1≤b)
@@ -122,7 +122,7 @@ theorem two_probes {F : Type*} [Field F] (p : ℕ) (hp : 0<p) (e a b : ℕ)
 
 /-- The previous mixed-tangent control has just the zero word. Eval at the
 full abscissa divisor detects this even before using a conjugate pole. -/
-theorem mixed_stress {F : Type*} [Field F] (h₃ h₂ s : F[X]) (v w : F)
+theorem mixed_stress {F : Type*} [Field F] (h₃ h₂ s : (Polynomial F)) (v w : F)
     (d₃ : h₃.natDegree=28000) (d₂ : h₂.natDegree=234144) (hs : s.natDegree≤133606)
     (root : s^2*(s-h₃)+h₃^3*h₂^2*(s-C v-X*C w)=0) : s=0 ∧ v=0 ∧ w=0 := by
   have nz₃ : h₃≠0 := by intro h; simp [h] at d₃
@@ -153,7 +153,7 @@ theorem mixed_stress {F : Type*} [Field F] (h₃ h₂ s : F[X]) (v w : F)
     · rw [sub_eq_zero.mp h,d₃] at slope; omega
   rw [hzero] at affine
   have hv := congrArg (eval 0) affine
-  have hw := congrArg (fun P : F[X] => P.coeff 1) affine
+  have hw := congrArg (fun P : (Polynomial F) => P.coeff 1) affine
   exact ⟨hzero,by simpa using hv.symm,by simpa [coeff_X_mul] using hw.symm⟩
 
 #print axioms mixed_stress

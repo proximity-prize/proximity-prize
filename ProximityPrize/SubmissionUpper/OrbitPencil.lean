@@ -769,11 +769,11 @@ theorem density_nat : Fintype.card FF < NN * 2^128 := by
 theorem epsilon_lt_fraction :
     ProximityPrize.Benchmark.Upper.epsilonStar <
       (NN : ℝ≥0) / (Fintype.card FF : ℝ≥0) := by
-  unfold ProximityPrize.Benchmark.Upper.epsilonStar ProximityGap.prizeThreshold
-  push_cast
-  have hk : (0 : ℝ≥0) < 2^(128 : ℕ) := by positivity
-  have hq : (0 : ℝ≥0) < (Fintype.card FF : ℝ≥0) := by exact_mod_cast Fintype.card_pos
-  rw [div_lt_div_iff₀ hk hq]
+  rw [show ProximityPrize.Benchmark.Upper.epsilonStar = (1 : ℝ≥0) / 2 ^ (128 : ℕ) by
+    unfold ProximityPrize.Benchmark.Upper.epsilonStar ProximityGap.prizeThreshold
+    norm_num]
+  rw [PrescribedTop.card_FF]
+  dsimp [NN]
   norm_num
 
 noncomputable def attack (δ : ℝ≥0) (hhi : δ < (122641 / 262144 : ℝ≥0)) :

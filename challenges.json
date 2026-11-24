@@ -2,22 +2,22 @@
   "challenges": [
     {
       "slug": "proximity-prize-reduction-lower",
-      "version": "irs-reduction-threshold-v20",
+      "version": "irs-reduction-threshold-v25",
       "submission_root": "ProximityPrize/SubmissionLower"
     },
     {
       "slug": "proximity-prize-reduction-upper",
-      "version": "irs-reduction-threshold-v20",
+      "version": "irs-reduction-threshold-v23",
       "submission_root": "ProximityPrize/SubmissionUpper"
     },
     {
       "slug": "proximity-prize-binary-reduction-lower",
-      "version": "binary-irs-reduction-threshold-v3",
+      "version": "binary-irs-reduction-threshold-v6",
       "submission_root": "ProximityPrize/SubmissionBinaryLower"
     },
     {
       "slug": "proximity-prize-binary-reduction-upper",
-      "version": "binary-irs-reduction-threshold-v3",
+      "version": "binary-irs-reduction-threshold-v6",
       "submission_root": "ProximityPrize/SubmissionBinaryUpper"
     }
   ]

@@ -67,9 +67,9 @@ theorem separant_box (f : Row 4) : InBox (shape (separant f))
 theorem separant_proper {f : Row 4} (hf : f ≠ 0) (ht : 0 < f.degreeOf 3)
     (hchar : f.degreeOf 3 < K1.p) : ¬ f ∣ separant f := by
   have : CharP Geom K1.p := charP_of_injective_ringHom K1_13.embed.injective K1.p
-  have : CharP Geom[X] K1.p := charP_of_injective_ringHom Polynomial.C_injective K1.p
-  have hcast : (f.degreeOf 3 : Geom[X]) ≠ 0 := fun hz => (not_le_of_gt hchar)
-    (Nat.le_of_dvd ht ((CharP.cast_eq_zero_iff Geom[X] K1.p _).mp hz))
+  have : CharP (Polynomial Geom) K1.p := charP_of_injective_ringHom Polynomial.C_injective K1.p
+  have hcast : (f.degreeOf 3 : (Polynomial Geom)) ≠ 0 := fun hz => (not_le_of_gt hchar)
+    (Nat.le_of_dvd ht ((CharP.cast_eq_zero_iff (Polynomial Geom) K1.p _).mp hz))
   have hn : separant f ≠ 0 := pderiv_ne_zero_of_natCast_ne_zero 3 f hcast
   rintro ⟨g,hg⟩
   have hgz : g ≠ 0 := fun hz => hn (by simp [hg,hz])

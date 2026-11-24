@@ -96,9 +96,9 @@ lemma upper_algebra (s h q d μ ν e r : ℕ) (hμh : μ ≤ h) (hμs : μ ≤ s
 
 variable {F : Type*} [Field F]
 
-noncomputable local instance : CommRing (Polynomial F) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial F)) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := Polynomial.commRing
+noncomputable local instance : CommRing (Polynomial F) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial F)) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := AddMonoidAlgebra.commRing
 
 local notation "Tri" => Polynomial (Polynomial (Polynomial F))
 

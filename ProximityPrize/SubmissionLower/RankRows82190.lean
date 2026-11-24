@@ -39,7 +39,7 @@ theorem Row.sound (r : Row) : Sound r.bounds r.form :=
   (sound_monomial r.e).mul (product_ok r.factors)
 
 
-private theorem band_mono {d a b : ℕ} {l h l' h' : ℤ} (hl : l' ≤ l) (hh : h ≤ h') (ht : a ≤ b) :
+theorem band_mono {d a b : ℕ} {l h l' h' : ℤ} (hl : l' ≤ l) (hh : h ≤ h') (ht : a ≤ b) :
     bandSpace d l h a ≤ bandSpace d l' h' b := by
   intro p hp
   apply (MvPolynomial.mem_restrictSupport_iff Geom).mpr
@@ -48,7 +48,7 @@ private theorem band_mono {d a b : ℕ} {l h l' h' : ℤ} (hl : l' ≤ l) (hh : 
   exact ⟨hd,hl.trans hlo,hhi.trans hh,hf.trans ht⟩
 
 
-open private independent from ProximityPrize.SubmissionLower.AnchorPivotRank82180
+open AnchorPivot82180 (independent)
 
 
 end RankRows82190

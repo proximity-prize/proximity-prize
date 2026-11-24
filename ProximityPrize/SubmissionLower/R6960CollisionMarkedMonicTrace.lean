@@ -48,9 +48,9 @@ variable {A R V : Type*} [CommRing A] [CommRing R] [CommRing V] [Algebra R V]
 
 /-- The discriminant polynomial comes from the actual monic power-basis
 order over the base, before specializing any coefficient. -/
-def monicDisc {p : A[X]} (hp : p.Monic) : A := (traceMatrix A (AdjoinRoot.powerBasis' hp).basis).det
+def monicDisc {p : (Polynomial A)} (hp : p.Monic) : A := (traceMatrix A (AdjoinRoot.powerBasis' hp).basis).det
 
-theorem monic_basis_trace {p : A[X]} (hp : p.Monic) (j : A→+*R)
+theorem monic_basis_trace {p : (Polynomial A)} (hp : p.Monic) (j : A→+*R)
     (γ : V) (root : aeval γ (p.map j)=0)
     (b : Basis (Fin p.natDegree) R V) (pow : ∀ i,b i=γ^(i:ℕ)) :
     (traceMatrix A (AdjoinRoot.powerBasis' hp).basis).map j=traceMatrix R b := by
@@ -68,7 +68,7 @@ theorem monic_basis_trace {p : A[X]} (hp : p.Monic) (j : A→+*R)
     exact AdjoinRoot.lift_root rr
   exact trace_matrix_map_of_basis j (AdjoinRoot.powerBasis' hp).basis b φ scalar powers
 
-theorem monic_disc_of_basis {p : A[X]} (hp : p.Monic) (j : A→+*R)
+theorem monic_disc_of_basis {p : (Polynomial A)} (hp : p.Monic) (j : A→+*R)
     (γ : V) (root : aeval γ (p.map j)=0)
     (b : Basis (Fin p.natDegree) R V) (pow : ∀ i,b i=γ^(i:ℕ)) :
     j (monicDisc hp)=Algebra.discr R b := by
@@ -84,7 +84,7 @@ variable {A F E : Type*} [CommRing A] [IsDomain A] [IsIntegrallyClosed A]
 
 /-- The discriminant of the monic order clears all coordinates of every
 actual normalized element, in the original power basis. -/
-theorem monic_coordinates {p : A[X]} (hp : p.Monic) (γ : E) (root : aeval γ p=0)
+theorem monic_coordinates {p : (Polynomial A)} (hp : p.Monic) (γ : E) (root : aeval γ p=0)
     (b : Basis (Fin p.natDegree) F E) (pow : ∀ i,b i=γ^(i:ℕ))
     (x : integralClosure A E) :
     ∀ i,∃ c : A,algebraMap A F c=algebraMap A F (monicDisc hp)*b.repr (x:E) i := by
@@ -115,7 +115,7 @@ theorem monic_coordinates {p : A[X]} (hp : p.Monic) (γ : E) (root : aeval γ p=
 
 /-- At a place where the power-basis discriminant is a unit, the monic
 order equals the actual integral closure in the root field. -/
-theorem monic_order_eq_normalization {p : A[X]} (hp : p.Monic) (γ : E) (root : aeval γ p=0)
+theorem monic_order_eq_normalization {p : (Polynomial A)} (hp : p.Monic) (γ : E) (root : aeval γ p=0)
     (b : Basis (Fin p.natDegree) F E) (pow : ∀ i,b i=γ^(i:ℕ))
     (unit : IsUnit (monicDisc hp)) : Algebra.adjoin A {γ}=integralClosure A E := by
   let B := Algebra.adjoin A ({γ}:Set E)

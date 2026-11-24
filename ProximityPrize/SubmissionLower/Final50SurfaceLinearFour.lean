@@ -9,7 +9,7 @@ namespace Final50SharedPrice
 open K1_13 (Shape chart difference volume32)
 open K1_13_8 (Valid)
 open Final50Price (taylorLength)
-open private signedMixed signed_rotate signed_nonneg from ProximityPrize.SubmissionLower.Fast051
+open K1_13_8_2 (signedMixed signed_rotate signed_nonneg)
 
 /-- Extract the three coefficients with the same probes as `weights`. The sign
 conditions ensure that every subtraction in the natural-number probes is exact. -/

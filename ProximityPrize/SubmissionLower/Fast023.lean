@@ -20,16 +20,16 @@ noncomputable section
 open K1 Polynomial
 open scoped BigOperators
 abbrev L := AlgebraicClosure K
-abbrev FX := FractionRing L[X]
+abbrev FX := FractionRing (Polynomial L)
 abbrev Seeds := MvPolynomial (Fin 2) FX
 abbrev Equation := Polynomial Seeds
-def liftPoly (g : K[X]) : L[X] := g.map (algebraMap K L)
-def atX (g : K[X]) : FX := algebraMap L[X] FX (liftPoly g)
+def liftPoly (g : (Polynomial K)) : (Polynomial L) := g.map (algebraMap K L)
+def atX (g : (Polynomial K)) : FX := algebraMap (Polynomial L) FX (liftPoly g)
 def seedEmbedding : K →+* FX :=
-  (algebraMap L[X] FX).comp ((Polynomial.C : L →+* L[X]).comp (algebraMap K L))
+  (algebraMap (Polynomial L) FX).comp ((Polynomial.C : L →+* (Polynomial L)).comp (algebraMap K L))
 def graphEval (z : K) : Seeds →+* FX :=
   MvPolynomial.eval ![seedEmbedding z, (seedEmbedding z) ^ p]
-def atMark (f : Equation) (z : K) (S : K[X]) : FX :=
+def atMark (f : Equation) (z : K) (S : (Polynomial K)) : FX :=
   f.eval₂ (graphEval z) (atX S)
 abbrev Jet := Polynomial Equation
 structure Shape where
@@ -78,7 +78,7 @@ def scheduled (w : ℤ) : List Shape :=
     [⟨45,63,14,812⟩,⟨84,118,24,2907⟩,⟨57,80,18,1041⟩,⟨114,160,33,3775⟩,
      ⟨81,114,26,1383⟩,⟨144,203,42,5064⟩,⟨123,173,40,2173⟩,⟨231,325,67,8061⟩,
      ⟨358,500,105,66251⟩, sub]
-def jetAt (P : Jet) (z : K) (S : K[X]) : FX :=
+def jetAt (P : Jet) (z : K) (S : (Polynomial K)) : FX :=
   P.eval₂ (eval₂RingHom (graphEval z) (atX S)) (atX S.derivative)
 def translateSeed (i : Fin 2) : Seeds →+* Polynomial Seeds :=
   MvPolynomial.eval₂Hom (C.comp MvPolynomial.C)
@@ -118,8 +118,8 @@ section
 namespace K1_14
 noncomputable section
 open K1 Polynomial
-theorem trim (P : L[X]) (h : ℕ) (hh : h ≤ P.natDegree) :
-    ∃ H : L[X], H.Monic ∧ H.natDegree = h ∧ H ∣ P := by
+theorem trim (P : (Polynomial L)) (h : ℕ) (hh : h ≤ P.natDegree) :
+    ∃ H : (Polynomial L), H.Monic ∧ H.natDegree = h ∧ H ∣ P := by
   classical
   have hc : 0 < (P.roots.powersetCard h).card := by
     rw [Multiset.card_powersetCard, IsAlgClosed.card_roots_eq_natDegree]
@@ -128,7 +128,7 @@ theorem trim (P : L[X]) (h : ℕ) (hh : h ≤ P.natDegree) :
   obtain ⟨hle, hsize⟩ := Multiset.mem_powersetCard.mp hs
   exact ⟨_, monic_multisetProd_X_sub_C s, (natDegree_multiset_prod_X_sub_C_eq_card s).trans hsize,
     (Multiset.prod_dvd_prod_of_le (Multiset.map_le_map hle)).trans P.prod_multiset_X_sub_C_dvd⟩
-theorem twist_lift (P : K[X]) :
+theorem twist_lift (P : (Polynomial K)) :
     liftPoly (P.map twist) = (liftPoly P).map (frobenius L p) := by
   simp only [liftPoly, Polynomial.map_map, twist, RingHom.frobenius_comm]
 end

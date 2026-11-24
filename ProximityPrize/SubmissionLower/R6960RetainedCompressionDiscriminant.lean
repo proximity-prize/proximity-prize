@@ -89,7 +89,7 @@ private theorem resultant_weighted_add_le {R : Type*} [CommRing R]
   change M.det.natDegree+d*(m*n)≤_
   omega
 
-private theorem derivative_weighted_add_le {R : Type*} [CommRing R]
+theorem derivative_weighted_add_le {R : Type*} [CommRing R]
     (P : Polynomial (Polynomial R)) (e H d : ℕ) (he : 0<e)
     (cap : ∀ i≤e,(P.coeff i).natDegree+d*i≤H) :
     (P.resultant P.derivative e (e-1)).natDegree+d*e^2≤(2*e-1)*H := by
@@ -116,7 +116,7 @@ private theorem derivative_weighted_add_le {R : Type*} [CommRing R]
 
 /-- The padded derivative resultant satisfies the doubled tame-abscissa
 degree bound, including the separate contribution at infinity. -/
-theorem derivative_resultant_tame (f : Curve L[X]) (d : ℕ)
+theorem derivative_resultant_tame (f : Curve (Polynomial L)) (d : ℕ)
     (lo : 2≤f.degreeOf ordinate) (hi : f.degreeOf ordinate≤47) (degree : d≤164632)
     (bounded : height d f≤heightCap (f.degreeOf ordinate) d) :
     2*((view f).resultant (view f).derivative (f.degreeOf ordinate)
@@ -144,7 +144,7 @@ theorem derivative_resultant_tame (f : Curve L[X]) (d : ℕ)
     decide +kernel
   exact (Nat.add_le_add_right (Nat.mul_le_mul_left 2 R) _).trans_lt numerics
 
-theorem derivative_resultant_nonzero (f : Curve L[X]) (ir : Irreducible f)
+theorem derivative_resultant_nonzero (f : Curve (Polynomial L)) (ir : Irreducible f)
     (pos : 0<f.degreeOf ordinate) (small : f.degreeOf ordinate<K1.p) :
     (view f).resultant (view f).derivative (f.degreeOf ordinate)
       (f.degreeOf ordinate-1)≠0 := by

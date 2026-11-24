@@ -55,7 +55,7 @@ theorem dimension (d₁ : M→ₗ[k]U) (d₂ : N→ₗ[k]V) (x : M→ₗ[k]C) (z
       obtain ⟨_,⟨a,ha,rfl⟩,_,⟨b,hb,rfl⟩,eq⟩:=Submodule.mem_sup.mp hj
       refine ⟨(p u-a,q v+b),?_,?_⟩
       · change x (p u-a)+(-z) (q v+b)=0
-        rw [map_sub,neg_apply,map_add]
+        rw [map_sub,LinearMap.neg_apply,map_add]
         calc _ = (x (p u)-z (q v))-(x a+z b) := by abel
              _ = 0 := sub_eq_zero.mpr eq.symm
       · change (d₁ (p u-a),d₂ (q v+b))=(u,v)
@@ -64,7 +64,7 @@ theorem dimension (d₁ : M→ₗ[k]U) (d₂ : N→ₗ[k]V) (x : M→ₗ[k]C) (z
       obtain ⟨rfl,rfl⟩: d₁ a=u ∧ d₂ b=v :=
         ⟨congrArg Prod.fst eq,congrArg Prod.snd eq⟩
       change x a+(-z) b=0 at join
-      have ju : x a=z b := sub_eq_zero.mp (by simpa only [neg_apply,←sub_eq_add_neg] using join)
+      have ju : x a=z b := sub_eq_zero.mp (by simpa only [LinearMap.neg_apply,←sub_eq_add_neg] using join)
       have h₁ : p (d₁ a)-a∈d₁.ker := by rw [mem_ker,map_sub,hp _ ⟨a,rfl⟩,sub_self]
       have h₂ : b-q (d₂ b)∈d₂.ker := by rw [mem_ker,map_sub,hq _ ⟨b,rfl⟩,sub_self]
       refine ⟨⟨a,rfl⟩,⟨b,rfl⟩,Submodule.mem_sup.mpr ⟨_,⟨_,h₁,rfl⟩,_,⟨_,h₂,rfl⟩,?_⟩⟩

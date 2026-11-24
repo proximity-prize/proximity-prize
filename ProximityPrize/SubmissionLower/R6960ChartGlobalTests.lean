@@ -27,9 +27,9 @@ variable {E : Type*} [Field E] [Algebra ChartField E]
 
 /-- A single field-linear map tests the whole normalized cover. Its common positive twist
 depends on the factor; it is independent of the sections and the twist to be corrected. -/
-theorem simultaneous_tests (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem simultaneous_tests (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (b : PowerBasis ChartField E)
-    (root : aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0) :
+    (root : aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     ∃ n D : ℕ, ∃ P : E →ₗ[ChartField] (Fin n → ChartField), ∀ s (x : E),
       IsIntegral (baseChart s) x ↔ ∀ j, P x j / frame D D s ∈ baseChart s := by
   classical

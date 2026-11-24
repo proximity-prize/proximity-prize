@@ -18,8 +18,8 @@ def lines (x z : L) : ChartField :=
 
 private theorem lines_ne (x z : L) : lines x z≠0 := by
   let m := planeMap (false,false)
-  have a : (Polynomial.X (R:=L[X]))-C (C x)≠0 := X_sub_C_ne_zero _
-  have b : (C (Polynomial.X (R:=L)) : L[X][X])-C (C z)≠0 := by
+  have a : (Polynomial.X (R:=(Polynomial L)))-C (C x)≠0 := X_sub_C_ne_zero _
+  have b : (C (Polynomial.X (R:=L)) : (Polynomial (Polynomial L)))-C (C z)≠0 := by
     rw [←map_sub]; exact C_ne_zero.mpr (X_sub_C_ne_zero _)
   have good := (map_ne_zero_iff m (planeMap_injective _)).mpr (mul_ne_zero a b)
   simpa only [m,map_mul,map_sub,MonicChartProbes.planeMap_constants,MonicChartProbes.planeMap_scalar,
@@ -48,10 +48,10 @@ variable {E : Type*} [Field E] [Algebra ChartField E]
 /-- If an untwisted transition class splits modulo the equation of the two fibres, it
 already splits on the normalized surface. Divisibility takes place in the actual
 normalized overlaps. The representatives on each chart may be chosen independently. -/
-theorem split_of_split_on_lines (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem split_of_split_on_lines (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (x z : L) (g : Chart→Chart→E) (add : ∀ s t r, g s t+g t r=g s r)
     (v : Chart→E) (localV : ∀ s, IsIntegral (baseChart s) (v s))
     (restricted : ∀ s t, ∃ r : E, IsIntegral (overlapRing s t) r ∧

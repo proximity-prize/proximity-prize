@@ -17,7 +17,7 @@ open RescueGeometry (Model Family)
 open RetainedShortening (Word)
 open scoped Polynomial
 
-structure MarkedFiber (P : Ordinate) (z : L) (S : L[X]) : Prop where
+structure MarkedFiber (P : Ordinate) (z : L) (S : (Polynomial L)) : Prop where
   full : (specialize P z).natDegree=P.natDegree
   separable : ((specialize P z).map incl).Separable
   root : (specialize P z).eval S=0
@@ -53,7 +53,7 @@ theorem marked_projection {u deleted} {M : Model u deleted} {Γ T : Finset K}
     exact ⟨mark.bad.support,mark.bad.agreement,mark.scalar_hits⟩
   · intro γ hγ
     have eq := called (M.label γ)
-    have dnon : incl D≠0 := (map_ne_zero_iff _ (IsFractionRing.injective L[X] FX)).mpr dn
+    have dnon : incl D≠0 := (map_ne_zero_iff _ (IsFractionRing.injective (Polynomial L) FX)).mpr dn
     have native := marks γ hγ
     change (f.map (graphEval (M.label γ))).natDegree=f.natDegree ∧
       (f.map (graphEval (M.label γ))).Separable ∧ _ at native
@@ -62,16 +62,16 @@ theorem marked_projection {u deleted} {M : Model u deleted} {Γ T : Finset K}
       rw [fac,eval_mul,eval_sub,eval_X,eval_C,sub_self,zero_mul]
     have smap : ((specialize P (scalar M γ)).map incl).natDegree =
         (specialize P (scalar M γ)).natDegree :=
-      natDegree_map_eq_of_injective (IsFractionRing.injective L[X] FX) _
+      natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial L) FX) _
     refine ⟨?_,?_,?_⟩
     · rw [← smap,eq,natDegree_C_mul dnon,full,deg]
     · rw [eq]
       exact sep.unit_mul (isUnit_C.mpr (isUnit_iff_ne_zero.mpr dnon))
-    · apply (IsFractionRing.injective L[X] FX)
+    · apply (IsFractionRing.injective (Polynomial L) FX)
       rw [← Polynomial.eval_map_apply,eq, map_zero,eval_mul,eval_C]
       exact mul_eq_zero.mpr (Or.inr root)
 
-theorem split_fibre {P Q : Ordinate} {z : L} {S : L[X]}
+theorem split_fibre {P Q : Ordinate} {z : L} {S : (Polynomial L)}
     (pn : P≠0) (qn : Q≠0) (H : MarkedFiber (P*Q) z S) :
     MarkedFiber P z S ∨ MarkedFiber Q z S := by
   have eq : specialize (P*Q) z=specialize P z*specialize Q z := by simp [specialize]
@@ -130,7 +130,7 @@ theorem aggregate {ι : Type*} (P : Ordinate) (T : Finset ι) (z : ι → L) (S 
 
 /-- Ordinate-independent factors cannot carry a mark whose full specialization
 is nonzero. -/
-theorem no_zero_degree {P : Ordinate} {z : L} {S : L[X]}
+theorem no_zero_degree {P : Ordinate} {z : L} {S : (Polynomial L)}
     (H : MarkedFiber P z S) : 0<P.natDegree := by
   by_contra! hm
   have hz : (specialize P z).natDegree=0 := H.full.trans (Nat.eq_zero_of_le_zero hm)
@@ -141,7 +141,7 @@ theorem no_zero_degree {P : Ordinate} {z : L} {S : L[X]}
 
 private theorem specialize_constant {P : Ordinate} (zero : (zView P).natDegree=0) (z : L) :
     specialize P z=specialize P 0 := by
-  apply Polynomial.map_injective incl (IsFractionRing.injective L[X] FX)
+  apply Polynomial.map_injective incl (IsFractionRing.injective (Polynomial L) FX)
   rw [← specialize_into,← specialize_into]
   ext i
   have coeffz : (Bivariate.swap (P.coeff i)).natDegree=0 :=

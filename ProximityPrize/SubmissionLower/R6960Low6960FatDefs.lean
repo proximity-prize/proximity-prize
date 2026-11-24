@@ -38,7 +38,7 @@ open K1 K1_13
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open P0_9_4 (clear_denominators)
 open scoped Polynomial BigOperators
-structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
+structure Messages (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)) : Prop where
   hits : ∀ γ ∈ Γ, ∃ T : Finset I, 179827 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
 def c1 : Prop :=
   ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2338 →
@@ -57,11 +57,11 @@ def c3 : Prop :=
         MixedOrder (toGeneric G) (inclConst (P.z γ)) (trajectory (extend (s γ))) secondOrder)
 
 abbrev fatOrder : ℕ := 43848
-def Holds (E : P3_6.FatEquations) (S : K1_13.Geom[X]) : Prop :=
+def Holds (E : P3_6.FatEquations) (S : (Polynomial K1_13.Geom)) : Prop :=
   K1_13.atJet E.common S = 0 ∨ K1_13.OrderAt E.residual S fatOrder
 
 def Equations : Prop :=
-  ∀ (w : I → K) (Γ : Finset K) (s : K → K[X]),
+  ∀ (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)),
     (∀ γ ∈ Γ, (s γ).natDegree ≤ 133409) →
     (∀ γ ∈ Γ, ∃ T : Finset I, 179827 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i) →
     ∀ P : K1_13.PoleData Γ s, P.H.natDegree ≤ 2338 →

@@ -14,13 +14,13 @@ open RetainedCompression (Curve ordinate view view_y height heightCap wordDegree
 open scoped Polynomial Lower6960.MonicChart
 
 variable {E : Type*} [Field E]
-    [Algebra ChartField E] [Algebra Scalar[X] E] [IsScalarTower Scalar[X] ChartField E]
+    [Algebra ChartField E] [Algebra (Polynomial Scalar) E] [IsScalarTower (Polynomial Scalar) ChartField E]
 
-private theorem root_finrank (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem root_finrank (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0) :
     Module.finrank ChartField E=f.degreeOf ordinate := by
   let P := RetainedLinear.toSeed (view f)
-  let j := algebraMap Scalar[X] ChartField
+  let j := algebraMap (Polynomial Scalar) ChartField
   have deg : P.natDegree=f.degreeOf ordinate := (RetainedLinear.toSeed_degree _).trans (view_y _)
   have pir : Irreducible P := RetainedLinear.toSeed_irreducible
     ((MulEquiv.irreducible_iff view).mpr ir) (by rw [view_y]; omega)
@@ -33,7 +33,7 @@ private theorem root_finrank (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.d
     le_antisymm (natDegree_le_of_dvd assoc.symm.dvd (minpoly.ne_zero b.isIntegral_gen))
       (natDegree_le_of_dvd dvd iq.ne_zero)
   rw [b.finrank,←b.natDegree_minpoly,←size,
-    natDegree_map_eq_of_injective (IsFractionRing.injective Scalar[X] ChartField),deg]
+    natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) ChartField),deg]
 
 variable [DecidableEq ChartField] [Algebra (Infinity Scalar) E] [IsScalarTower (Infinity Scalar) ChartField E]
 
@@ -42,20 +42,20 @@ private theorem overlap_zero [FiniteDimensional ChartField E] [Algebra.IsSeparab
     (share : ∀ a,D (algebraMap ChartField E a)=algebraMap ChartField E (d a))
     (on_scalars : ∀ a : Scalar,∃ b : Scalar,d (RatFunc.C a)=RatFunc.C b)
     (on_X : d RatFunc.X=1 ∨ d RatFunc.X=0)
-    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
-    (x y z : E) (fx : IsIntegral Scalar[X] x) (iy : IsIntegral (Infinity Scalar) y)
+    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
     (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) : D x=0 := by
   obtain ⟨df,hf⟩ := finite_derivation d on_scalars on_X
   obtain ⟨di,hi'⟩ := infinity_derivation d on_scalars on_X
   let : Differential E := ⟨D⟩
-  let : Differential Scalar[X] := ⟨df⟩
+  let : Differential (Polynomial Scalar) := ⟨df⟩
   let : Differential (Infinity Scalar) := ⟨di⟩
-  let : DifferentialAlgebra Scalar[X] E := ⟨fun a=>by
-    change D (algebraMap Scalar[X] E a)=algebraMap Scalar[X] E (df a)
-    rw [IsScalarTower.algebraMap_apply Scalar[X] ChartField E,share,hf]
-    exact (IsScalarTower.algebraMap_apply Scalar[X] ChartField E (df a)).symm⟩
+  let : DifferentialAlgebra (Polynomial Scalar) E := ⟨fun a=>by
+    change D (algebraMap (Polynomial Scalar) E a)=algebraMap (Polynomial Scalar) E (df a)
+    rw [IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField E,share,hf]
+    exact (IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField E (df a)).symm⟩
   let : DifferentialAlgebra (Infinity Scalar) E := ⟨fun a=>by
     change D (algebraMap (Infinity Scalar) E a)=algebraMap (Infinity Scalar) E (di a)
     rw [IsScalarTower.algebraMap_apply (Infinity Scalar) ChartField E,share,hi']
@@ -66,15 +66,15 @@ private theorem overlap_zero [FiniteDimensional ChartField E] [Algebra.IsSeparab
 factor has a p-th root in its own root field. Both underlying coordinate
 partials restrict to the finite and infinity charts used in the pole proof. -/
 theorem actual_coboundary_pth_root
-    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
-    (x y z : E) (fx : IsIntegral Scalar[X] x) (iy : IsIntegral (Infinity Scalar) y)
+    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
     (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) :
     ∃ w : E,w^K1.p=x := by
   let : IsFractionRing (Plane L) ChartField := plane_fractionRing
   let : FiniteDimensional ChartField E := b.finite
-  let incl : L→+*ChartField := RatFunc.C.comp ((algebraMap L[X] Scalar).comp C)
+  let incl : L→+*ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
   let : Fact K1.p.Prime := ⟨KoalaBear.is_prime⟩
   let : CharP E K1.p := charP_of_injective_ringHom ((algebraMap ChartField E).comp incl).injective K1.p
   have small : Module.finrank ChartField E<K1.p := by
@@ -99,15 +99,15 @@ theorem actual_coboundary_pth_root
 /-- The integral roots of both chart sections have the original twist
 rather than its p-th power. -/
 theorem actual_coboundary_descent
-    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
-    (x y z : E) (fx : IsIntegral Scalar[X] x) (iy : IsIntegral (Infinity Scalar) y)
+    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
     (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) :
-    ∃ w : E,w^K1.p=x ∧ IsIntegral Scalar[X] w ∧
+    ∃ w : E,w^K1.p=x ∧ IsIntegral (Polynomial Scalar) w ∧
       IsIntegral (Infinity Scalar) (algebraMap ChartField E RatFunc.X*w+z) ∧
       (algebraMap ChartField E RatFunc.X*w+z)^K1.p=y := by
-  let incl : L→+*ChartField := RatFunc.C.comp ((algebraMap L[X] Scalar).comp C)
+  let incl : L→+*ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
   let : Fact K1.p.Prime := ⟨KoalaBear.is_prime⟩
   let : CharP E K1.p := charP_of_injective_ringHom ((algebraMap ChartField E).comp incl).injective K1.p
   obtain ⟨w,hw⟩ := actual_coboundary_pth_root f ir lo hi bounded b root x y z fx iy overlap

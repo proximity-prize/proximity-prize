@@ -10,8 +10,8 @@ open P3 (K I node)
 open Low6960Prices (Messages taylorLength)
 def membershipTest (g : K1_13.Row 4) : K1_13.Row 4 :=
   K1_13_6.jetNumerator g taylorLength
-open private occupancy from ProximityPrize.SubmissionLower.Fast055
-open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
+open K1_14_6 (occupancy)
+open P0_10 (incidence_arithmetic)
 open K1_13_6 (CurveSections SurfaceSections Pieces)
 open ProximityPrize.Benchmark
 open scoped BigOperators
@@ -151,8 +151,7 @@ noncomputable section
 open K1_13 K1_13_6 K1_13_6_3 K1_13_6_3_5 K1_13_6_3_5_3 MvPolynomial
 open scoped Polynomial WithZero
 attribute [local instance] MvPolynomial.gradedAlgebra
-open private tupleHeight_le_of_inclusion finsum_weighted cone_eval_jets jet_zero_nonzero
-  from ProximityPrize.SubmissionLower.Fast053
+open K1_13_6_3_5_3 (tupleHeight_le_of_inclusion finsum_weighted cone_eval_jets jet_zero_nonzero)
 def ShortSupport (A : CoeffIdeal) : Prop :=
   ∀ i : Fin K1_13.taylorLength, Low6960Prices.taylorLength ≤ i.val → MvPolynomial.X i ∈ A
 
@@ -200,9 +199,9 @@ private theorem height_comparison {R : CoeffIdeal} (D : FreshCurve R)
   have hc₀ : genericArgument ≠ 0 := by
     have hinj : Function.Injective genericCoeffs :=
       (algebraMap GenericField GeoField).injective.comp
-        (IsFractionRing.injective Geom[X] GenericField)
+        (IsFractionRing.injective (Polynomial Geom) GenericField)
     simpa only [genericArgument, map_zero] using
-      hinj.ne (show (Polynomial.X : Geom[X]) ≠ 0 from Polynomial.X_ne_zero)
+      hinj.ne (show (Polynomial.X : (Polynomial Geom)) ≠ 0 from Polynomial.X_ne_zero)
   have hv (v : CurvePlace GeoField D.Fresh) :=
     K1_13_6_3_5_3_6.proof D.Old D.Fresh D.includeOld D.center D.polynomial B v.value
       taylorLength hdeg (v.on_constants _ hc₀) D.independent (K1_13_6_3_5_3_5.proof R D v)

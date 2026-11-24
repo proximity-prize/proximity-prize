@@ -14,14 +14,14 @@ open K1_13_6_1_2 (VanishesTo pair_height cycleLength_ge_order)
 open MvPolynomial
 open Low6960SharedPrice (slope coord)
 
-private theorem weighted_pow (w : Fin 4 → ℕ) {P : Row 4} (h : P ≠ 0) (a : ℕ) :
+theorem weighted_pow (w : Fin 4 → ℕ) {P : Row 4} (h : P ≠ 0) (a : ℕ) :
     (P^a).weightedTotalDegree w = a * P.weightedTotalDegree w := by
   induction a with
   | zero => rw [pow_zero,zero_mul,← MvPolynomial.C_1,weightedTotalDegree_C]
   | succ a ih =>
     rw [pow_succ,weightedTotalDegree_mul _ _ _ (pow_ne_zero _ h) h,ih,Nat.succ_mul]
 
-private theorem valuation_factorization {f P : Row 4} (hf : f ≠ 0)
+theorem valuation_factorization {f P : Row 4} (hf : f ≠ 0)
     (hpos : 0 < f.totalDegree) (hP : P ≠ 0) :
     ∃ a : ℕ, ∃ G : Row 4, P=f^a*G ∧ G≠0 ∧ ¬ f ∣ G := by
   have hm : FiniteMultiplicity f P := by
@@ -35,7 +35,7 @@ private theorem valuation_factorization {f P : Row 4} (hf : f ≠ 0)
   obtain ⟨G,hG,hd⟩ := hm.exists_eq_pow_mul_and_not_dvd
   exact ⟨_,G,hG,fun h0 => hP (by rw [hG,h0,mul_zero]),hd⟩
 
-private theorem weight_coord (i : Fin 3) (P : Row 4) :
+theorem weight_coord (i : Fin 3) (P : Row 4) :
     coord (shape P) i =
       P.weightedTotalDegree (![fun _ : Fin 4 => 1,Fin.val,Pi.single 3 1] i) := by
   fin_cases i
@@ -61,7 +61,7 @@ private theorem cap_coords {Q : Row 4} {r : ℕ}
   · simpa [Finsupp.weight_eq_sum, Finsupp.sum_fintype, Low6960SharedPrice.coord,
       Low6960SharedPrice.slope, Pi.single_apply] using hs.2.2
 
-private theorem minimal_pair {f G : Row 4} {P : Ideal GeoJets} [P.IsPrime]
+theorem minimal_pair {f G : Row 4} {P : Ideal GeoJets} [P.IsPrime]
     (hf : Irreducible f) (hproper : ¬f∣G) (hP : P.height=2)
     (hF : toGeneric f∈P) (hG : toGeneric G∈P) :
     (intersectionIdeal f G).IsMinimalPrime P := by
@@ -85,7 +85,7 @@ private theorem minimal_pair {f G : Row 4} {P : Ideal GeoJets} [P.IsPrime]
     exact (by decide : ¬(2:ℕ∞)+1≤2) hs
   exact heq ▸ hmin
 
-private theorem mem_of_order {P : Ideal GeoJets} [P.IsPrime] {Q : GeoJets} {n : ℕ}
+theorem mem_of_order {P : Ideal GeoJets} [P.IsPrime] {Q : GeoJets} {n : ℕ}
     (hn : 0<n) (hQ : VanishesTo P Q n) : Q∈P := by
   let L := Localization.AtPrime P
   exact (IsLocalization.AtPrime.to_map_mem_maximal_iff L P _).mp

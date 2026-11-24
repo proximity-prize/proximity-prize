@@ -35,7 +35,7 @@ change of integral order and the induced algebra map on residue fibres. -/
 theorem index_le_discriminant_excess {A B : Type*} [CommRing A] [CommRing B]
     [Algebra K A] [Algebra K B] (a : Basis ι K A) (b : Basis ι K B)
     (p : ℕ) [CharP K p] (small : Fintype.card ι<p) (φ : A→ₐ[K]B) (x : K)
-    (D N : Matrix ι ι K[X]) (dn : D.det≠0) (nn : N.det≠0)
+    (D N : Matrix ι ι (Polynomial K)) (dn : D.det≠0) (nn : N.det≠0)
     (mapD : (evalRingHom x).mapMatrix D=LinearMap.toMatrix a b φ.toLinearMap)
     (mapN : (evalRingHom x).mapMatrix N=Algebra.traceMatrix K b)
     (raw : (evalRingHom x).mapMatrix (D.transpose*N*D)=Algebra.traceMatrix K a) :
@@ -57,7 +57,7 @@ theorem index_le_discriminant_excess {A B : Type*} [CommRing A] [CommRing B]
 
 #print axioms index_le_discriminant_excess
 
-open private exists_full_minor from ProximityPrize.SubmissionLower.UpperBranch1
+open P1_7_1_1_2 (exists_full_minor)
 
 /-- Along an irreducible branch component a matrix rank can only drop
 under specialization. The nonzero minor is selected in the special fibre. -/
@@ -99,7 +99,7 @@ matrix over the divisor is compared first generically and then at the point. -/
 theorem transverse_unit {A B : Type*} [CommRing A] [CommRing B] [Algebra K A] [Algebra K B]
     {j : Type} [Fintype j] [DecidableEq j] (a : Basis j K A) (b : Basis j K B)
     (p : ℕ) [CharP K p] (small : Fintype.card j<p) (φ : A→ₐ[K]B) (x : K)
-    (D N : Matrix j j K[X]) (dn : D.det≠0) (nn : N.det≠0)
+    (D N : Matrix j j (Polynomial K)) (dn : D.det≠0) (nn : N.det≠0)
     (mapD : (evalRingHom x).mapMatrix D=LinearMap.toMatrix a b φ.toLinearMap)
     (mapN : (evalRingHom x).mapMatrix N=Algebra.traceMatrix K b)
     (raw : (evalRingHom x).mapMatrix (D.transpose*N*D)=Algebra.traceMatrix K a)

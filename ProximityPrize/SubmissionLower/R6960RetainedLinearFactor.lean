@@ -46,17 +46,17 @@ theorem node_not_zero {P : Plane F} (ir : Irreducible P) (pos : 0<P.natDegree) (
   apply (C_dvd_iff_dvd_coeff ..).mpr
   intro i
   apply dvd_iff_isRoot.mpr
-  have gone := congrArg (fun Q : F[X] => Q.coeff i) zero
+  have gone := congrArg (fun Q : (Polynomial F) => Q.coeff i) zero
   simpa only [Polynomial.IsRoot,coeff_map,coe_evalRingHom,coeff_zero] using gone
 
-abbrev numerator (r : Fn E) : E[X] := IsFractionRing.num E[X] r
-abbrev denominator (r : Fn E) : E[X] := (IsFractionRing.den E[X] r).val
+abbrev numerator (r : Fn E) : (Polynomial E) := IsFractionRing.num (Polynomial E) r
+abbrev denominator (r : Fn E) : (Polynomial E) := (IsFractionRing.den (Polynomial E) r).val
 
 theorem denominator_ne (r : Fn E) : denominator r≠0 :=
-  nonZeroDivisors.coe_ne_zero (IsFractionRing.den E[X] r)
+  nonZeroDivisors.coe_ne_zero (IsFractionRing.den (Polynomial E) r)
 
 theorem numerator_eq (r : Fn E) : r*incl E (denominator r)=incl E (numerator r) :=
-  (IsFractionRing.num_mul_den_eq_num_iff_eq' (A:=E[X])).mpr rfl
+  (IsFractionRing.num_mul_den_eq_num_iff_eq' (A:=(Polynomial E))).mpr rfl
 
 private def line (r : Fn E) : Plane E := C (denominator r)*Polynomial.X+C (-numerator r)
 
@@ -66,7 +66,7 @@ private theorem line_primitive (r : Fn E) : (line r).IsPrimitive := by
   have coef := (C_dvd_iff_dvd_coeff ..).mp hb
   have first : b∣denominator r := by simpa [line] using coef 1
   have second : b∣numerator r := dvd_neg.mp (by simpa [line] using coef 0)
-  exact IsFractionRing.num_den_reduced E[X] r second first
+  exact IsFractionRing.num_den_reduced (Polynomial E) r second first
 
 private theorem mapped_line (r : Fn E) :
     (line r).map (incl E)=C (incl E (denominator r))*(Polynomial.X-C r) := by
@@ -77,7 +77,7 @@ private theorem mapped_line (r : Fn E) :
   ring
 
 private theorem line_prod_primitive (s : Multiset (Fn E)) : ((s.map line).prod).IsPrimitive := by
-  letI : NormalizedGCDMonoid E[X] := Classical.choice inferInstance
+  letI : NormalizedGCDMonoid (Polynomial E) := Classical.choice inferInstance
   induction s using Multiset.induction_on with
   | empty => simp
   | cons r s ih =>
@@ -182,7 +182,7 @@ theorem exists_regular_root {P : Plane F} (ir : Irreducible P) (pos : 0<P.natDeg
     have num : (numerator r).eval x'=0 := by rw [relation,collapse,zero_mul]
     have d₀ : Polynomial.X-C x'∣numerator r := dvd_iff_isRoot.mpr num
     have d₁ : Polynomial.X-C x'∣denominator r := dvd_iff_isRoot.mpr collapse
-    exact (irreducible_X_sub_C x').not_isUnit (IsFractionRing.num_den_reduced E[X] r d₀ d₁)
+    exact (irreducible_X_sub_C x').not_isUnit (IsFractionRing.num_den_reduced (Polynomial E) r d₀ d₁)
   exact ⟨r,hr,den,relation⟩
 
 #print axioms node_not_zero

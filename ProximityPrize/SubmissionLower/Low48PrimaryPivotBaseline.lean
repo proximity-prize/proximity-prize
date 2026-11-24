@@ -12,7 +12,7 @@ open scoped BigOperators
 def rawWindow (w : Window) : ℕ :=
   ∑ i : BlockIndex, if w.Contains i then baseline i else 0
 
-private def baselineFast (g o : ℕ) : ℕ :=
+def baselineFast (g o : ℕ) : ℕ :=
   let delta := (o : ℤ) - 1650
   let F : Flag := ⟨min (g : ℤ) 1650, -delta, 1650, 550, 3000-(g : ℤ)-delta⟩
   if F.order ≤ 0 then 0 else

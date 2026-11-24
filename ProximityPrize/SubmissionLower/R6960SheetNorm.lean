@@ -13,14 +13,14 @@ abbrev Infinity (K : Type*) [Field K] [DecidableEq (RatFunc K)] :=
   (RatFunc.inftyValuation K).valuationSubring
 
 variable {E : Type*} [Field E] [Algebra (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
-  [Algebra K[X] E] [IsScalarTower K[X] (RatFunc K) E]
+  [Algebra (Polynomial K) E] [IsScalarTower (Polynomial K) (RatFunc K) E]
   [Algebra (Infinity K) E] [IsScalarTower (Infinity K) (RatFunc K) E]
 
 /-- A nonzero minor integral at finite places, with the specified twist
 integral at infinity, has a polynomial norm of the required degree. -/
-theorem polynomial_norm (m : E) (nz : m≠0) (finite : IsIntegral K[X] m) (b : ℕ)
+theorem polynomial_norm (m : E) (nz : m≠0) (finite : IsIntegral (Polynomial K) m) (b : ℕ)
     (infty : IsIntegral (Infinity K) (m/algebraMap (RatFunc K) E (RatFunc.X^b))) :
-    ∃ P : K[X], P≠0 ∧ algebraMap K[X] (RatFunc K) P=Algebra.norm (RatFunc K) m ∧
+    ∃ P : (Polynomial K), P≠0 ∧ algebraMap (Polynomial K) (RatFunc K) P=Algebra.norm (RatFunc K) m ∧
       P.natDegree≤Module.finrank (RatFunc K) E*b := by
   let d:=Module.finrank (RatFunc K) E
   obtain ⟨P,hP⟩ := IsIntegrallyClosed.isIntegral_iff.mp (Algebra.isIntegral_norm (RatFunc K) finite)
@@ -32,18 +32,18 @@ theorem polynomial_norm (m : E) (nz : m≠0) (finite : IsIntegral K[X] m) (b : �
   have atInfinity : RatFunc.inftyValuation K (algebraMap (Infinity K) (RatFunc K) v)≤1 := v.property
   rw [hv,div_eq_mul_inv,map_mul,Algebra.norm_inv,Algebra.norm_algebraMap,←hP,←pow_mul,
     ←div_eq_mul_inv] at atInfinity
-  let W : K[X] := Polynomial.X ^ (b*d)
+  let W : (Polynomial K) := Polynomial.X ^ (b*d)
   have wn : W≠0 := pow_ne_zero _ X_ne_zero
-  have we : algebraMap K[X] (RatFunc K) W = RatFunc.X^(b*d) := by simp [W,RatFunc.algebraMap_X]
-  change RatFunc.inftyValuation K ((algebraMap K[X] (RatFunc K) P)/(RatFunc.X^(b*d)))≤1 at atInfinity
+  have we : algebraMap (Polynomial K) (RatFunc K) W = RatFunc.X^(b*d) := by simp [W,RatFunc.algebraMap_X]
+  change RatFunc.inftyValuation K ((algebraMap (Polynomial K) (RatFunc K) P)/(RatFunc.X^(b*d)))≤1 at atInfinity
   rw [←we,map_div₀,div_le_one₀] at atInfinity
-  · change RatFunc.inftyValuationDef K (algebraMap K[X] (RatFunc K) P) ≤
-        RatFunc.inftyValuationDef K (algebraMap K[X] (RatFunc K) W) at atInfinity
+  · change RatFunc.inftyValuationDef K (algebraMap (Polynomial K) (RatFunc K) P) ≤
+        RatFunc.inftyValuationDef K (algebraMap (Polynomial K) (RatFunc K) W) at atInfinity
     rw [RatFunc.inftyValuation.polynomial _ hn,RatFunc.inftyValuation.polynomial _ wn,
       WithZero.exp_le_exp,Int.ofNat_le] at atInfinity
     exact ⟨P,hn,hP,by simpa [W,d,Nat.mul_comm b] using atInfinity⟩
   · exact (RatFunc.inftyValuation K).pos_iff.mpr
-      ((map_ne_zero_iff _ (IsFractionRing.injective K[X] (RatFunc K))).mpr wn)
+      ((map_ne_zero_iff _ (IsFractionRing.injective (Polynomial K) (RatFunc K))).mpr wn)
 
 #print axioms polynomial_norm
 
@@ -57,13 +57,13 @@ theorem count_quotient_directions [IsGalois (RatFunc K) E] {I J : Type*}
     (B : Matrix I (Option J) E) (row : Option J ↪ I)
     (room : Fintype.card (Option J)<Fintype.card I)
     (equivariant : ∀ (σ : Aut K E) i j, B (σ • i) j=σ (B i j))
-    (nz : (B.submatrix row id).det≠0) (finite : IsIntegral K[X] (B.submatrix row id).det)
+    (nz : (B.submatrix row id).det≠0) (finite : IsIntegral (Polynomial K) (B.submatrix row id).det)
     (b : ℕ) (infty : IsIntegral (Infinity K)
       ((B.submatrix row id).det/algebraMap (RatFunc K) E (RatFunc.X^b)))
     (T : Finset K) (O : K→Type*) [∀ z,CommRing (O z)] [∀ z,IsDomain (O z)] [∀ z,IsLocalRing (O z)]
-    (pull : ∀ z,K[X] →+* O z) (into : ∀ z,O z →+* E)
+    (pull : ∀ z,(Polynomial K) →+* O z) (into : ∀ z,O z →+* E)
     (emb : ∀ z,Function.Injective (into z))
-    (base : ∀ z,(into z).comp (pull z)=(algebraMap (RatFunc K) E).comp (algebraMap K[X] (RatFunc K)))
+    (base : ∀ z,(into z).comp (pull z)=(algebraMap (RatFunc K) E).comp (algebraMap (Polynomial K) (RatFunc K)))
     (π : ∀ z,O z) (point : K→I) (A : ∀ z,Matrix I (Option J) (O z))
     (lift : ∀ z∈T, ∀ i j,into z (A z i j)=B i j)
     (V : ∀ z,Submodule (IsLocalRing.ResidueField (O z)) (J→IsLocalRing.ResidueField (O z)))

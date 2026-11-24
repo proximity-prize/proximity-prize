@@ -9,10 +9,10 @@ noncomputable section
 open Polynomial Algebra
 open scoped Polynomial Differential
 
-abbrev paddedRes {A : Type*} [CommRing A] (f : A[X]) : A :=
+abbrev paddedRes {A : Type*} [CommRing A] (f : (Polynomial A)) : A :=
   f.resultant f.derivative f.natDegree (f.natDegree-1)
 
-theorem derivative_degree {R : Type*} [CommRing R] [NoZeroDivisors R] (f : R[X])
+theorem derivative_degree {R : Type*} [CommRing R] [NoZeroDivisors R] (f : (Polynomial R))
     (pos : 0<f.natDegree) (tame : (f.natDegree:R)≠0) :
     f.derivative.natDegree=f.natDegree-1 := by
   have e : f.natDegree-1+1=f.natDegree := Nat.sub_add_cancel pos
@@ -21,7 +21,7 @@ theorem derivative_degree {R : Type*} [CommRing R] [NoZeroDivisors R] (f : R[X])
   rw [coeff_derivative,←Nat.cast_add_one,e,coeff_natDegree]
   exact mul_ne_zero (leadingCoeff_ne_zero.mpr (fun h=>by rw [h,natDegree_zero] at pos; omega)) tame
 
-theorem scaleRoots_derivative {R : Type*} [CommRing R] (f : R[X]) (r : R)
+theorem scaleRoots_derivative {R : Type*} [CommRing R] (f : (Polynomial R)) (r : R)
     (degree : f.derivative.natDegree=f.natDegree-1) :
     (f.scaleRoots r).derivative=f.derivative.scaleRoots r := by
   ext i
@@ -39,20 +39,20 @@ variable {A F E : Type*} [CommRing A] [IsDomain A] [IsIntegrallyClosed A]
 /-- The reciprocal chart after scaling its generator by the evaluation
 value. This equation is monic over the original base, even when the
 evaluation value is a nonunit there. -/
-def scaled (f : A[X]) (c : A) : A[X] := (f.taylor c).reverse.integralNormalization
+def scaled (f : (Polynomial A)) (c : A) : (Polynomial A) := (f.taylor c).reverse.integralNormalization
 
-private theorem reversed_lead (f : A[X]) (c : A) (un : f.eval c≠0) :
+private theorem reversed_lead (f : (Polynomial A)) (c : A) (un : f.eval c≠0) :
     (f.taylor c).reverse.leadingCoeff=f.eval c := by
   have co : (f.taylor c).coeff 0≠0 := by rwa [taylor_coeff_zero]
   rw [reverse_leadingCoeff,trailingCoeff_eq_coeff_zero co,taylor_coeff_zero]
 
-theorem scaled_degree (f : A[X]) (c : A) (un : f.eval c≠0) :
+theorem scaled_degree (f : (Polynomial A)) (c : A) (un : f.eval c≠0) :
     (scaled f c).natDegree=f.natDegree := by
   have co : (f.taylor c).coeff 0≠0 := by rwa [taylor_coeff_zero]
   rw [scaled,natDegree_integralNormalization,reverse_natDegree,
     natTrailingDegree_eq_zero.mpr (Or.inr co),Nat.sub_zero,natDegree_taylor]
 
-private theorem scaled_basis (b : PowerBasis F E) (f : A[X]) (c : A)
+private theorem scaled_basis (b : PowerBasis F E) (f : (Polynomial A)) (c : A)
     (un : f.eval c≠0) (pos : 0<f.natDegree) (degree : f.natDegree=b.dim)
     (root : aeval b.gen f=0) :
     ∃ v : PowerBasis F E, IsIntegral A v.gen ∧ minpoly A v.gen=scaled f c := by
@@ -129,13 +129,13 @@ private theorem scaled_basis (b : PowerBasis F E) (f : A[X]) (c : A)
   exact minimal.symm
 
 private theorem map_reverse {B : Type*} [CommRing B] (j : A→+*B)
-    (inj : Function.Injective j) (f : A[X]) : f.reverse.map j=(f.map j).reverse := by
+    (inj : Function.Injective j) (f : (Polynomial A)) : f.reverse.map j=(f.map j).reverse := by
   rw [reverse,reverse,reflect_map,natDegree_map_eq_of_injective inj]
 
 /-- The scaled chart resultant divides the raw resultant after a power
 of the evaluation value. The multiplier is a unit at every place
 where the reciprocal chart was chosen. -/
-theorem scaled_resultant_eq (b : PowerBasis F E) (f : A[X]) (c : A)
+theorem scaled_resultant_eq (b : PowerBasis F E) (f : (Polynomial A)) (c : A)
     (un : f.eval c≠0) (e2 : 2≤f.natDegree) (degree : f.natDegree=b.dim)
     (tame : (f.natDegree:F)≠0) (root : aeval b.gen f=0) :
     f.leadingCoeff*paddedRes (scaled f c)=(f.eval c)^((f.natDegree-1)*(f.natDegree-2))*paddedRes f := by
@@ -203,7 +203,7 @@ theorem scaled_resultant_eq (b : PowerBasis F E) (f : A[X]) (c : A)
 section Differential
 variable [Differential A] [Differential E] [DifferentialAlgebra A E]
 
-theorem scaled_raw_square_clears (b : PowerBasis F E) (f : A[X]) (c : A)
+theorem scaled_raw_square_clears (b : PowerBasis F E) (f : (Polynomial A)) (c : A)
     (un : f.eval c≠0) (e2 : 2≤f.natDegree) (degree : f.natDegree=b.dim)
     (tame : (f.natDegree:F)≠0) (root : aeval b.gen f=0)
     (x : E) (hx : IsIntegral A x) :

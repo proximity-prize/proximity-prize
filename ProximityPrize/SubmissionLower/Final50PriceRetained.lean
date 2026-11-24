@@ -11,9 +11,8 @@ open P0_9_8 (symbol_count)
 open Final50Price (layerNeed)
 open Final50PriceLayer (layerTerm layerCount)
 open scoped BigOperators
-open private P3_6_8.shapeSum P3_6_8.shapeSum_empty P3_6_8.shapeSum_valid_or_empty P3_6_8.spend_le
-  P3_6_8_1.sumBelow P3_6_8_1.term P3_6_8_1.mass_eq P3_6_8_1.extend
-  from ProximityPrize.SubmissionLower.GoldBranch6N8
+open P3_6_8 (shapeSum shapeSum_empty shapeSum_valid_or_empty spend_le)
+open P3_6_8_1 (sumBelow term mass_eq extend)
 
 
 def combined {n : ℕ} (a : Fin n → Shape) (z : Finset (Fin n)) := P3_6_8.shapeSum a z

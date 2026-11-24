@@ -4,7 +4,7 @@ import ProximityPrize.SubmissionLower.R6960HelperPrefix
 noncomputable section
 namespace Lower6960.DifferentialContact
 open MvPolynomial K1_14_2_2_3
-open private partial_append from ProximityPrize.SubmissionLower.Fast052
+open K1_14_2_2_3_1 (partial_append)
 
 variable {K : Type*} [CommRing K]
 abbrev A (K : Type*) [CommRing K] := MvPolynomial (Fin 2) K
@@ -122,7 +122,7 @@ theorem row_strip {I : Ideal (A K)} (prime : I.IsPrime) (n : ℕ) (g f : A K)
 
 open K1_14 (Jet Seeds)
 open K1_14_2 (Ambient toJet)
-open private shiftedWord specialize_shiftedWord from ProximityPrize.SubmissionLower.Fast052
+open K1_14_2_2_3 (shiftedWord specialize_shiftedWord)
 
 def Native (J : Ideal Ambient) (n : ℕ) (P : Jet) : Prop :=
   ∀ w : List (Fin 2),w.length<n → toJet (shiftedWord P w)∈J

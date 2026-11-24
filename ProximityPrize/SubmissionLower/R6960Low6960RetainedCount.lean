@@ -16,12 +16,12 @@ open Final50GeoCover (activeDegree)
 open K1_13_1 (anchorLead indexDegree_eq)
 open Lower6960.Low (factor_small lower_of_anchor)
 open KoalaRetainedCut (anchor_factors priority_pieces)
-open private index_bounds from ProximityPrize.SubmissionLower.Fast040
+open K1_13_1 (index_bounds)
 open MvPolynomial
 open scoped Polynomial BigOperators
 
 /-- All inputs to the owner's index- or width-weighted arithmetic allocation, on a single bank. -/
-structure AllocationData (Γ : Finset K) (s : K → K[X]) (E : FatEquations) (top anchorK : ℕ) where
+structure AllocationData (Γ : Finset K) (s : K → (Polynomial K)) (E : FatEquations) (top anchorK : ℕ) where
   n : ℕ
   f : Fin n → Row 4
   pieces : Fin n → Finset K
@@ -50,7 +50,7 @@ def Allocation (budget anchorK : ℕ) : Prop :=
 /-- Direct replacement for Final50Geo.count_of_data with the contracted price and the original
     proper cut both available to the same numerical allocation. -/
 theorem count_of_data {budget anchorK : ℕ} (allocate : Allocation budget anchorK)
-    {w : I → K} {Γ : Finset K} {s : K → K[X]} (hm : Messages w Γ s)
+    {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} (hm : Messages w Γ s)
     (bank : Bank Γ s) (rank : bank.Ranked) (P : Row 4) (hP : P ≠ 0)
     (hbox : InBox (shape P) (fullCap 14)) (hw : TrueWeightLE P anchorCutoff)
     (ha : ActiveFits P anchorK) (hz : ∀ γ∈Γ, atJet P (extend (s γ))=0)

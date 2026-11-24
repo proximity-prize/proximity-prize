@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960RetainedGlobalEvaluation
 import ProximityPrize.SubmissionLower.R6960RetainedTwoLineBound
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -11,14 +12,13 @@ open K1_14 (L)
 open MonicChart (ChartField)
 open Module Submodule LinearMap Polynomial LineEuler
 open scoped Lower6960.RetainedSurfaceClass Polynomial
-open private Lower6960.RetainedSurfaceClass.nodeRing Lower6960.RetainedSurfaceClass.eval_subtype
-  from ProximityPrize.SubmissionLower.R6960RetainedGlobalEvaluation
-open private Lower6960.RetainedSurfaceClass.cut_running Lower6960.RetainedSurfaceClass.through from ProximityPrize.SubmissionLower.R6960RetainedAxisPoint
-open private Lower6960.RetainedSurfaceClass.evalX Lower6960.RetainedSurfaceClass.evalZ from ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
-open private Lower6960.RetainedTwoLineBound.diagonal Lower6960.RetainedTwoLineBound.image from ProximityPrize.SubmissionLower.R6960RetainedTwoLineBound
+open Lower6960.RetainedSurfaceClass (nodeRing eval_subtype)
+open Lower6960.RetainedSurfaceClass (cut_running through)
+open Lower6960.RetainedSurfaceClass (evalX evalZ)
+open Lower6960.RetainedTwoLineBound (diagonal image)
 variable (E:Type) [Field E] [Algebra ChartField E]
 
-private theorem point_polynomial (j:Bool) (x z:L) (p:L[X]) :
+theorem point_polynomial (j:Bool) (x z:L) (p:(Polynomial L)) :
     Lower6960.RetainedSurfaceClass.nodeRing E j x z (polyMap E j (atCoord j x z) false p) =
       algebraMap L (Crossing E x z) (p.eval (atCoord (!j) x z)) := by
   let a:=atCoord (!j) x z
@@ -44,13 +44,13 @@ private theorem point_polynomial (j:Bool) (x z:L) (p:L[X]) :
   exact DFunLike.congr_fun eq p
 
 theorem node_rank_le (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) {n:ℕ}
-    (bf:Basis (Fin n) L[X] (chartImage E j (atCoord j x z) false)) :
+    (bf:Basis (Fin n) (Polynomial L) (chartImage E j (atCoord j x z) false)) :
     finrank L (Crossing E x z)≤n := by
   let c:=atCoord j x z
   let F:=(nodeMap E j x z).comp (chartImage E j c false).subtype
   let v (i:Fin n):=F (bf i)
   let generate := (Pi.basisFun L (Fin n)).constr L v
-  have action (r:L[X]) (u:chartImage E j c false) :
+  have action (r:(Polynomial L)) (u:chartImage E j c false) :
       F (r • u) = (r.eval (atCoord (!j) x z)) • F u := by
     change nodeMap E j x z (polyMap E j c false r*u.val)=_
     have eq:=map_mul (Lower6960.RetainedSurfaceClass.nodeRing E j x z) (polyMap E j c false r) u.val
@@ -67,8 +67,8 @@ theorem node_rank_le (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) {n:ℕ}
   have bound:=LinearMap.finrank_le_finrank_of_surjective (f:=generate) onto
   simpa only [Module.finrank_pi,Fintype.card_fin] using bound
 
-def transition (j:Bool) (c:L) (nc:c≠0) {n:ℕ} (bf:Basis (Fin n) L[X] (chartImage E j c false))
-    (bi:Basis (Fin n) L[X] (chartImage E j c true)) : Matrix (Fin n) (Fin n) (Laurent L) := by
+def transition (j:Bool) (c:L) (nc:c≠0) {n:ℕ} (bf:Basis (Fin n) (Polynomial L) (chartImage E j c false))
+    (bi:Basis (Fin n) (Polynomial L) (chartImage E j c true)) : Matrix (Fin n) (Fin n) (Laurent L) := by
   let : Module (Laurent L) (Axis E j c) := (axisAlgebra E j c).toModule
   exact freeTransition (M:=Axis E j c) bf bi (nativeMap E j c false) (nativeMap E j c true)
     (native_localization E j c nc false) (native_localization E j c nc true)
@@ -77,8 +77,8 @@ def transition (j:Bool) (c:L) (nc:c≠0) {n:ℕ} (bf:Basis (Fin n) L[X] (chartIm
 degrees come from the original surface's specialized line orders. -/
 theorem paired_bound (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)]
     [FiniteDimensional L (Crossing E x z)] {m n:ℕ}
-    (xf:Basis (Fin m) L[X] (chartImage E false x false)) (xi:Basis (Fin m) L[X] (chartImage E false x true))
-    (zf:Basis (Fin n) L[X] (chartImage E true z false)) (zi:Basis (Fin n) L[X] (chartImage E true z true)) :
+    (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
+    (zf:Basis (Fin n) (Polynomial L) (chartImage E true z false)) (zi:Basis (Fin n) (Polynomial L) (chartImage E true z true)) :
     FiniteDimensional L (Paired E x z) ∧ ∃ s t:ℕ,
       (transition E false x nx xf xi).det.degree=((-(t:ℤ):ℤ):WithBot ℤ) ∧
       (transition E true z nz zf zi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ) ∧
@@ -131,13 +131,13 @@ open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 
 /-- The first-cohomology bound for the original retained factor. The kernel equality
 identifies the range with its transition classes modulo ordinary coboundaries. -/
-theorem actual_surface_budget (f:Curve L[X]) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
+theorem actual_surface_budget (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
     (hi:f.degreeOf ordinate<48) (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis:PowerBasis ChartField E)
-    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap MonicChart.Scalar[X] ChartField))=0) :
+    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
     ∃ (x z:L) (nx:x≠0) (nz:z≠0) (m n s t:ℕ),
-      ∃ (xf:Basis (Fin m) L[X] (chartImage E false x false)) (xi:Basis (Fin m) L[X] (chartImage E false x true))
-        (zf:Basis (Fin n) L[X] (chartImage E true z false)) (zi:Basis (Fin n) L[X] (chartImage E true z true)),
+      ∃ (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
+        (zf:Basis (Fin n) (Polynomial L) (chartImage E true z false)) (zi:Basis (Fin n) (Polynomial L) (chartImage E true z true)),
       (transition E false x nx xf xi).det.degree=((-(t:ℤ):ℤ):WithBot ℤ) ∧
       (transition E true z nz zf zi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ) ∧
       (rawMap E x z).ker=coboundaries E ∧ FiniteDimensional L (Paired E x z) ∧

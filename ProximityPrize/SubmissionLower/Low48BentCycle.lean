@@ -67,7 +67,7 @@ theorem mem_gradedIdeal_of_grade {B : Family} {P : Ideal GeoJets5} {a : SlotRing
     exact Ideal.toIdeal_homogeneousCore_le (piece (slot B)) (P.comap (taggedMap B)) h
   · intro h
     exact Ideal.mem_homogeneousCore_of_homogeneous_of_mem ⟨t, ha⟩ h
-open private homogeneous_colon regular_colon square_colon from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_4_1 (homogeneous_colon regular_colon square_colon)
 
 private theorem gradedIdeal_colon {B : Family} {P Q : Ideal GeoJets5} {g : SlotRing B}
     {e : Grade} (hg : g ∈ piece (slot B) e)
@@ -176,7 +176,7 @@ theorem diagonal_nsmul (B : Family) (t : Grade) (n : ℕ) :
   | succ n ih => simp only [succ_nsmul, diagonal_add, ih]
 private theorem zero_mem_diagonal (B : Family) (h0 : ∀ i, 0 ∈ B i) (t : Grade) : 0 ∈ diagonalExponents B t :=
   ⟨fun _ _ => 0, fun i _ => h0 i, by simp⟩
-private theorem generator_mem_diagonal {B : Family} (h0 : ∀ i, 0 ∈ B i) (v : Generator B) :
+theorem generator_mem_diagonal {B : Family} (h0 : ∀ i, 0 ∈ B i) (v : Generator B) :
     v.2.val ∈ diagonalExponents B (slotWeight (slot B) v) := by
   classical
   let a (i : Fin 5) : Exponent := if i = v.1 then v.2.val else 0
@@ -247,7 +247,7 @@ private theorem tagged_image (B : Family) (h0 : ∀ i, 0 ∈ B i) (g : Grade) :
     rintro _ ⟨m, hm, rfl⟩
     obtain ⟨a, ha, heq⟩ := tagged_lift hm
     exact ⟨a, ha, heq⟩
-open private affine_image quotient_image_finrank from ProximityPrize.SubmissionLower.Fast077
+open K1_13_6_2_4_1_2 (affine_image quotient_image_finrank)
 
 theorem diagonal_hilbert (B : Family) [∀ i, Finite (B i)] (h0 : ∀ i, 0 ∈ B i)
     (P : Ideal GeoJets5) (t : Grade) (n : ℕ) :
@@ -423,8 +423,7 @@ theorem mixedDegree_nonneg (B : Family) [∀ i, Finite (B i)] (h0 : ∀ i, 0 ∈
   rw [mixedDegree_eq B P I hp hdiag]
   exact div_nonneg (hpos _ (hd.trans_eq (squarefree_degree I).symm)) (by positivity)
 
-open private dim_mono local_step weight weight_eq length_top
-  from ProximityPrize.SubmissionLower.Fast066
+open K1_13_6_2_4_2 (dim_mono local_step weight weight_eq length_top)
 
 private theorem mixed_step {B : Family} [∀ i, Finite (B i)] (h0 : ∀ i, 0 ∈ B i)
     (hcoords : ∀ v : Fin 5, ∃ i, Finsupp.single v 1 ∈ B i) {I : Finset (Fin 5)}

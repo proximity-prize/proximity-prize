@@ -24,10 +24,9 @@ open Low48BentCycle (rawFamily capFamily mixedDegree)
 open Low6960SharedTally (Data)
 open scoped BigOperators Polynomial
 
-open private le_ceil chargedPrice price_formula_old price_formula_tilted price_formula_active
-  from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
+open Low6960GeometryCut (le_ceil chargedPrice price_formula_old price_formula_tilted price_formula_active)
 
-variable {Γ : Finset K} {s : K→K[X]} {f Q : Row 4} {l : ℕ} {S : Set (Ideal GeoJets)}
+variable {Γ : Finset K} {s : K→(Polynomial K)} {f Q : Row 4} {l : ℕ} {S : Set (Ideal GeoJets)}
 
 def orderCost (D : Data Γ s f Q l S) (weight : Ideal GeoJets → ℕ) : ℕ :=
   ∑ b∈D.branches, weight b.surface * (b.weight*(D.points b).card)

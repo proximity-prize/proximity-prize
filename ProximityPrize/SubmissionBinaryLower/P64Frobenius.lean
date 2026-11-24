@@ -17,7 +17,7 @@ noncomputable def dXPoly (f : Polynomial (Polynomial A)) : Polynomial (Polynomia
 @[simp] theorem coeff_dXPoly (f : Polynomial (Polynomial A)) (j : ℕ) :
     (dXPoly f).coeff j = Polynomial.derivative (f.coeff j) := by
   classical
-  simp only [dXPoly, Polynomial.finset_sum_coeff, Polynomial.coeff_monomial]
+  simp only [dXPoly, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finsupp.single_apply]
   by_cases hj : j ∈ f.support
   · rw [Finset.sum_eq_single j]
     · simp
@@ -41,7 +41,7 @@ theorem natDegree_dXPoly_le (f : Polynomial (Polynomial A)) :
 theorem dXPoly_map {B : Type*} [CommRing B] (φ : A →+* B) (f : Polynomial (Polynomial A)) :
     (dXPoly f).map (Polynomial.mapRingHom φ) =
       dXPoly (f.map (Polynomial.mapRingHom φ)) := by
-  ext1 j
+  refine Polynomial.ext_iff.2 fun j => ?_
   simp [Polynomial.coeff_map, Polynomial.derivative_map]
 
 /-- Chain rule along an inseparable polynomial: if `∂f/∂Y = 0` then
@@ -107,7 +107,7 @@ noncomputable def mapYCoeffs {A : Type*} [CommRing A] (g : A → A)
 theorem coeff_mapYCoeffs {A : Type*} [CommRing A] (g : A → A) (hg : g 0 = 0)
     (f : Polynomial A) (j : ℕ) : (mapYCoeffs g f).coeff j = g (f.coeff j) := by
   classical
-  simp only [mapYCoeffs, Polynomial.finset_sum_coeff, Polynomial.coeff_monomial]
+  simp only [mapYCoeffs, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finsupp.single_apply]
   by_cases hj : j ∈ f.support
   · rw [Finset.sum_eq_single j]
     · simp
@@ -156,7 +156,7 @@ theorem frobLift_twistPoly (R : Polynomial (Polynomial (Polynomial F)))
     rw [Polynomial.mapRingHom_comp, h2, Polynomial.mapRingHom_id]
   have hR1 : (mapYCoeffs (Polynomial.contract 2) (Polynomial.contract 2 R)).map
       (Polynomial.expand (Polynomial F) 2).toRingHom = Polynomial.contract 2 R := by
-    ext1 j
+    refine Polynomial.ext_iff.2 fun j => ?_
     rw [Polynomial.coeff_map, coeff_mapYCoeffs _ (by ext n; rw [Polynomial.coeff_contract (by norm_num)]; simp)]
     have hd : Polynomial.derivative ((Polynomial.contract 2 R).coeff j) = 0 := by
       rw [Polynomial.coeff_contract (by norm_num)]

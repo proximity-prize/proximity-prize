@@ -13,8 +13,8 @@ open MonicFourChartDescent ChartSections MonicChartLaurent RetainedRestrictionTo
 open RetainedSurfaceClass RetainedTwistedRestriction ChartOverlapTests
 open Module Submodule LinearMap Algebra Polynomial
 open scoped Polynomial Lower6960.RetainedSurfaceClass Lower6960.MarkedEvaluation
-open private Lower6960.RetainedTwistedRestriction.regular_on_overlap from ProximityPrize.SubmissionLower.R6960RetainedTwistedRestriction
-open private Lower6960.RetainedSurfaceClass.congr_of_eq from ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
+open Lower6960.RetainedTwistedRestriction (regular_on_overlap)
+open Lower6960.RetainedSurfaceClass (congr_of_eq)
 variable {E:Type} [Field E] [Algebra ChartField E]
 local notation "ι" => algebraMap ChartField E
 

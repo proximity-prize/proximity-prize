@@ -9,7 +9,7 @@ open K1_13 Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open K1_13_2 (SourcePolynomial SourceExponent Local topWeight toRow)
 open P3 (I K node)
 open MvPolynomial (mem_support_iff)
-open private weight_eq_sum pointContact from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_2 (weight_eq_sum pointContact)
 def SourceEligible (e : SourceExponent) : Prop :=
   e.weight jetDegreeWeight ≤ 4012 ∧
   e.weight jetDerivativeWeight ≤ 1650 ∧
@@ -38,7 +38,7 @@ open K1_13 PolynomialDifferential ReedSolomon.HiddenDerivative
 open K1_13_2 (SourceExponent Local toRow)
 open P3 (I K node)
 open scoped BigOperators
-open private high_monomial_vanishes  map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_2 (high_monomial_vanishes map_independent_family)
 end
 end P3_6_2
 end
@@ -62,8 +62,7 @@ open P3_6 (TrueWeightLE physicalDegree )
 open P3_6_3 (BankRow)
 open K1_13 (Geom embed Row InBox shape indexDegree Contact atJet)
 open K1_13_3 (Symbol symbolAt)
-open private jetEval jetEval_apply dvd_smul_poly coefficientArray symbolLinear linearFactor
-  linearFactor_ne linearFactor_degree divide_specialization support_linear_mul from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_3 (jetEval jetEval_apply dvd_smul_poly coefficientArray symbolLinear linearFactor linearFactor_ne linearFactor_degree divide_specialization support_linear_mul)
 open scoped BigOperators
 set_option maxRecDepth 1024
 set_option maxHeartbeats 650000
@@ -201,30 +200,30 @@ open P0_9_8 (oneStart twoStart oneOrder indexBudget symbol_count availableMass_a
   orderFor_select orderFor_mono  )
 open P3_6 (factorCap)
 open scoped BigOperators
-private def shapeSum {ι : Type*} (a : ι → Shape) (s : Finset ι) : Shape :=
+def shapeSum {ι : Type*} (a : ι → Shape) (s : Finset ι) : Shape :=
   ⟨∑ i ∈ s, (a i).b, ∑ i ∈ s, (a i).j, ∑ i ∈ s, (a i).t⟩
-private theorem shapeSum_empty {ι : Type*} (a : ι → Shape) :
+theorem shapeSum_empty {ι : Type*} (a : ι → Shape) :
     shapeSum a ∅ = zeroShape := by simp [shapeSum, zeroShape]
-private theorem shapeSum_insert {ι : Type*} [DecidableEq ι] (a : ι → Shape)
+theorem shapeSum_insert {ι : Type*} [DecidableEq ι] (a : ι → Shape)
     {i : ι} {s : Finset ι} (hi : i ∉ s) :
     shapeSum a (insert i s) = (shapeSum a s).plus (a i) := by
   simp [shapeSum, Shape.plus, Finset.sum_insert hi, Nat.add_comm]
-private theorem shapeSum_union {ι : Type*} [DecidableEq ι] (a : ι → Shape)
+theorem shapeSum_union {ι : Type*} [DecidableEq ι] (a : ι → Shape)
     {s t : Finset ι} (h : Disjoint s t) :
     shapeSum a (s ∪ t) = (shapeSum a s).plus (shapeSum a t) := by
   simp [shapeSum, Shape.plus, Finset.sum_union h]
-private theorem shapeSum_mono {ι : Type*} (a : ι → Shape) {s t : Finset ι}
+theorem shapeSum_mono {ι : Type*} (a : ι → Shape) {s t : Finset ι}
     (h : s ⊆ t) : InBox (shapeSum a s) (shapeSum a t) :=
   ⟨Finset.sum_le_sum_of_subset h, Finset.sum_le_sum_of_subset h, Finset.sum_le_sum_of_subset h⟩
-private theorem inBox_trans {a b c : Shape} (hab : InBox a b) (hbc : InBox b c) :
+theorem inBox_trans {a b c : Shape} (hab : InBox a b) (hbc : InBox b c) :
     InBox a c :=
   ⟨hab.1.trans hbc.1, hab.2.1.trans hbc.2.1, hab.2.2.trans hbc.2.2⟩
-private theorem inBox_shapeSum {ι : Type*} (a : ι → Shape) {i : ι} {s : Finset ι}
+theorem inBox_shapeSum {ι : Type*} (a : ι → Shape) {i : ι} {s : Finset ι}
     (hi : i ∈ s) : InBox (a i) (shapeSum a s) :=
   ⟨Finset.single_le_sum (f := fun i => (a i).b) (fun _ _ => Nat.zero_le _) hi,
     Finset.single_le_sum (f := fun i => (a i).j) (fun _ _ => Nat.zero_le _) hi,
     Finset.single_le_sum (f := fun i => (a i).t) (fun _ _ => Nat.zero_le _) hi⟩
-private theorem shapeSum_valid_or_empty {ι : Type*} {a : ι → Shape}
+theorem shapeSum_valid_or_empty {ι : Type*} {a : ι → Shape}
     (ha : ∀ i, Valid (a i)) (s : Finset ι) :
     s = ∅ ∨ Valid (shapeSum a s) := by
   by_cases he : s.Nonempty
@@ -237,7 +236,7 @@ private theorem shapeSum_valid_or_empty {ι : Type*} {a : ι → Shape}
       rw [Finset.mul_sum]
       exact Finset.sum_le_sum fun i _ => (ha i).2.2
   · exact Or.inl (Finset.not_nonempty_iff_eq_empty.mp he)
-private theorem spend_le {ι : Type*} [DecidableEq ι] [Fintype ι] {l : ι → ℕ}
+theorem spend_le {ι : Type*} [DecidableEq ι] [Fintype ι] {l : ι → ℕ}
     (f : ι → ℕ) {z s : Finset ι} {q d L : ℕ}
     (hz : ∀ i ∈ z, l i = 0) (hs : ∀ i ∈ s, l i ≤ L) (hdisj : Disjoint z s)
     (hq : q ≤ ∑ i ∈ z, f i) :
@@ -260,15 +259,15 @@ section
 namespace P3_6_8_1
 open K1_13_8 (fastRemaining zeroMass)
 open scoped BigOperators
-private def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
+def sumBelow (f : ℕ → ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumBelow f n + f n
-private theorem sumBelow_eq (f : ℕ → ℕ) (n : ℕ) :
+theorem sumBelow_eq (f : ℕ → ℕ) (n : ℕ) :
     sumBelow f n = ∑ k ∈ Finset.range n, f k := by
   induction n with
   | zero => simp [sumBelow]
   | succ n ih => rw [sumBelow, Finset.sum_range_succ, ih]
-private theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
+theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
     sumBelow f (m + n) = sumBelow f m + sumBelow (fun k => f (m + k)) n := by
   induction n with
   | zero => simp [sumBelow]
@@ -276,9 +275,9 @@ private theorem sumBelow_add (f : ℕ → ℕ) (m n : ℕ) :
     change sumBelow f (m + n) + f (m + n) =
       sumBelow f m + (sumBelow (fun k => f (m + k)) n + f (m + n))
     rw [ih, Nat.add_assoc]
-private def term (b j k : ℕ) : ℕ :=
+def term (b j k : ℕ) : ℕ :=
   fastRemaining ((k + 1) * b) ((k + 1) * j)
-private theorem mass_eq {b j m : ℕ} (hm : m ≤ 1650 / j)
+theorem mass_eq {b j m : ℕ} (hm : m ≤ 1650 / j)
     (hb : 4012 < (m + 1) * b ∨ m = 1650 / j) :
     zeroMass b j = sumBelow (term b j) m := by
   unfold zeroMass
@@ -289,7 +288,7 @@ private theorem mass_eq {b j m : ℕ} (hm : m ≤ 1650 / j)
     have h := hb.trans_le (Nat.mul_le_mul_right b (Nat.succ_le_succ hk))
     simp [term, fastRemaining, Nat.not_le_of_gt h]
   · rw [h] <;> rfl
-private theorem extend {f : ℕ → ℕ} {m n N x y total : ℕ}
+theorem extend {f : ℕ → ℕ} {m n N x y total : ℕ}
     (hleft : sumBelow f m = x)
     (hright : sumBelow (fun k => f (m + k)) n = y)
     (hlen : m + n = N) (hvalue : x + y = total) :

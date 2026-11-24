@@ -25,7 +25,7 @@ theorem cancel_coefficients (π : B) (hπ : Prime π) (s m : ℕ)
   classical
   intro ρ
   induction ρ using Nat.strong_induction_on with
-  | h ρ ih =>
+  | ind ρ ih =>
     intro hρ
     have hsum : π ^ s ∣ ∑ p ∈ (Finset.antidiagonal ρ).erase (0, ρ),
         PowerSeries.coeff p.1 g * PowerSeries.coeff p.2 h := by
@@ -50,9 +50,9 @@ end Cancellation
 
 variable {F : Type*} [Field F]
 
-noncomputable local instance : CommRing (Polynomial F) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial F)) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := Polynomial.commRing
+noncomputable local instance : CommRing (Polynomial F) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial F)) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := AddMonoidAlgebra.commRing
 
 local notation "Tri" => Polynomial (Polynomial (Polynomial F))
 

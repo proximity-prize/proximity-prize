@@ -85,7 +85,7 @@ private theorem mono_of_difference_nonneg {f : ℤ → ℤ}
     exact Finset.sum_nonneg fun _ _ => h _
   simpa only [difference, Nat.cast_one, Nat.cast_mul, one_mul, hn, sub_sub_cancel,
     sub_nonneg] using hz
-private def polyDen (q r : ℤ) : ℤ :=
+def polyDen (q r : ℤ) : ℤ :=
   2 + r * (r + 1) + q * (44 + 14 * r + r * (r - 1)) +
     (57 + 6 * r) * (q * (q - 1)) + 12 * q * (q - 1) * (q - 2)
 private theorem twice_half (x : ℤ) : 2 * (x * (x - 1) / 2) = x * (x - 1) := by
@@ -94,7 +94,7 @@ private theorem twice_half (x : ℤ) : 2 * (x * (x - 1) / 2) = x * (x - 1) := by
     · exact dvd_mul_of_dvd_left (by omega : (2 : ℤ) ∣ x) _
     · exact dvd_mul_of_dvd_right (by omega : (2 : ℤ) ∣ x - 1) _
   rw [mul_comm, Int.ediv_mul_cancel h]
-private theorem scaled_denominator (u : ℤ) (hu : 0 ≤ u) :
+theorem scaled_denominator (u : ℤ) (hu : 0 ≤ u) :
     2 * denominator u = polyDen (u / 6) (u % 6) := by
   let q := u / 6
   let r := u % 6
@@ -110,7 +110,7 @@ private theorem scaled_shift (u k : ℤ) (h : k ≤ u) :
     2 * denominator (u - k) = polyDen (u / 6 + (u % 6 - k) / 6) ((u % 6 - k) % 6) := by
   rw [scaled_denominator _ (by omega)]
   congr 1 <;> omega
-private theorem denominator_of_neg (u : ℤ) (h : u < 0) : denominator u = 0 := by
+theorem denominator_of_neg (u : ℤ) (h : u < 0) : denominator u = 0 := by
   simp only [denominator, ite_eq_left h]
 private theorem simple_step (u : ℤ) :
     difference 1 (difference 2 (difference 3 denominator)) u = if u < 0 then 0 else 1 := by
@@ -433,7 +433,7 @@ def c1 : Prop := baselineSum 551 1650 ≤ 196232494523570
 def c2 : Prop := baselineSum 1650 2510 ≤ 101832665783054
 def c3 : Prop := baselineSum 2510 4013 ≤ 36565173831277
 def c4 : Prop := ∃ p : BlockIndex → Powers, 9573892230 ≤ savingsSum w1 p
-private theorem bound_le_baseline (i : BlockIndex) (p : Fin 11 → ℕ) :
+theorem bound_le_baseline (i : BlockIndex) (p : Fin 11 → ℕ) :
     blockBound i p ≤ baseline i := by
   have hz (F : Flag) : residualFlag F (fun _ => 0) = F := by
     cases F
@@ -457,7 +457,7 @@ private theorem sum_four_eq {α : Type*} (S : Finset α)
     (∑ i ∈ S, f i) = (∑ i ∈ S, a i) + (∑ i ∈ S, b i) + (∑ i ∈ S, c i) + (∑ i ∈ S, d i) := by
   simp only [← Finset.sum_add_distrib]
   exact Finset.sum_congr rfl h
-private theorem sum_add_pointwise_eq {α : Type*} (S : Finset α)
+theorem sum_add_pointwise_eq {α : Type*} (S : Finset α)
     (f g t : α → ℕ) (h : ∀ i ∈ S, f i + g i = t i) :
     (∑ i ∈ S, f i) + (∑ i ∈ S, g i) = ∑ i ∈ S, t i := by
   rw [← Finset.sum_add_distrib]
@@ -489,7 +489,7 @@ private theorem baseline_parts_on (S : Finset BlockIndex) :
             simp [hs₁, hs₂, hb, hs₃, hn]
           · have hc : 2510 ≤ i.1.val := by omega
             simp [hs₁, hs₂, hs₃, hc, h])
-private theorem baseline_budget_on (S : Finset BlockIndex)
+theorem baseline_budget_on (S : Finset BlockIndex)
     (h₀ : baselineSumOn S 0 551 ≤ 9939265602560)
     (h₁ : baselineSumOn S 551 1650 ≤ 196232494523570)
     (h₂ : baselineSumOn S 1650 2510 ≤ 101832665783054)
@@ -499,10 +499,10 @@ private theorem baseline_budget_on (S : Finset BlockIndex)
   _ ≤ (9939265602560 + 196232494523570 + 101832665783054 + 36565173831277) :=
     Nat.add_le_add (Nat.add_le_add (Nat.add_le_add h₀ h₁) h₂) h₃
   _ ≤ _ := by decide
-private def combine (p₁ p₂ p₃ p₄ : BlockIndex → Powers) (i : BlockIndex) : Powers :=
+def combine (p₁ p₂ p₃ p₄ : BlockIndex → Powers) (i : BlockIndex) : Powers :=
   if i.1.val < 2008 then p₁ i else if i.1.val < 3012 then p₂ i
   else if i.1.val < 3514 then p₃ i else p₄ i
-private theorem savings_parts (p₁ p₂ p₃ p₄ : BlockIndex → Powers) :
+theorem savings_parts (p₁ p₂ p₃ p₄ : BlockIndex → Powers) :
     savingsSum w1 p₁ + savingsSum w2 p₂ + savingsSum w3 p₃ + savingsSum w4 p₄ ≤
       ∑ i : BlockIndex, savings i (combine p₁ p₂ p₃ p₄ i) := by
   exact sum_four_le Finset.univ

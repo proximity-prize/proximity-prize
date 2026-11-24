@@ -160,9 +160,9 @@ variable {K : Type*} [Field K] {O : Type*} [CommRing O] [IsDomain O] [IsLocalRin
 
 /-- Divisibility by powers of the actual base parameter recovers its base
 multiplicity at any place over the scalar, including a ramified place. -/
-theorem base_parameter_order (φ : K[X] →+* O) (z : K) (π : O) (nonzero : π≠0)
+theorem base_parameter_order (φ : (Polynomial K) →+* O) (z : K) (π : O) (nonzero : π≠0)
     (rz : IsLocalRing.residue O π=0)
-    (uniform : φ (Polynomial.X-C z)=π) {P : K[X]} (hn : P≠0) (n : ℕ) :
+    (uniform : φ (Polynomial.X-C z)=π) {P : (Polynomial K)} (hn : P≠0) (n : ℕ) :
     π^n∣φ P ↔ n≤P.rootMultiplicity z := by
   let ρ := (IsLocalRing.residue O).comp φ
   have ev : ρ=(ρ.comp C).comp (evalRingHom z) := by
@@ -182,9 +182,9 @@ theorem base_parameter_order (φ : K[X] →+* O) (z : K) (π : O) (nonzero : π�
   have nu : ¬IsUnit π := fun u=>(u.map (IsLocalRing.residue O)).ne_zero rz
   rw [φP,uq.dvd_mul_right,pow_dvd_pow_iff nonzero nu]
 
-theorem base_order (φ : K[X] →+* O) (z : K) (π : O) (nonzero : π≠0)
+theorem base_order (φ : (Polynomial K) →+* O) (z : K) (π : O) (nonzero : π≠0)
     (gen : IsLocalRing.maximalIdeal O=Ideal.span {π})
-    (uniform : φ (Polynomial.X-C z)=π) {P : K[X]} (hn : P≠0) (n : ℕ) :
+    (uniform : φ (Polynomial.X-C z)=π) {P : (Polynomial K)} (hn : P≠0) (n : ℕ) :
     π^n∣φ P ↔ n≤P.rootMultiplicity z :=
   base_parameter_order φ z π nonzero ((IsLocalRing.residue_eq_zero_iff _).mpr
     (gen.symm ▸ Ideal.subset_span (by simp))) uniform hn n
@@ -200,10 +200,10 @@ variable {G I J K : Type*} [Group G] [Fintype G] [Fintype I] [DecidableEq I]
 /-- Count all marked quotient directions from one descended determinant
 product. A single unramified local ring over each scalar suffices. -/
 theorem marked_dimensions (row : Option J ↪ I) (room : Fintype.card (Option J)<Fintype.card I)
-    (T : Finset K) (P : K[X]) (nonzero : P≠0) (budget : ℕ)
+    (T : Finset K) (P : (Polynomial K)) (nonzero : P≠0) (budget : ℕ)
     (deg : P.natDegree≤Fintype.card G*budget)
     (O : K→Type*) [∀ z,CommRing (O z)] [∀ z,IsDomain (O z)] [∀ z,IsLocalRing (O z)]
-    (φ : ∀ z,K[X] →+* O z) (π : ∀ z,O z) (p : K→I)
+    (φ : ∀ z,(Polynomial K) →+* O z) (π : ∀ z,O z) (p : K→I)
     (A : ∀ z,Matrix I (Option J) (O z))
     (V : ∀ z,Submodule (IsLocalRing.ResidueField (O z)) (J→IsLocalRing.ResidueField (O z)))
     (place : ∀ z∈T,π z≠0 ∧ IsLocalRing.maximalIdeal (O z)=Ideal.span {π z} ∧

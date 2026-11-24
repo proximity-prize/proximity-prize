@@ -62,7 +62,7 @@ theorem card_le (R : Tri) (hirr : Irreducible R) (hh : 1 ≤ R.natDegree)
   classical
   generalize heq : R.natDegree = h
   induction h using Nat.strong_induction_on generalizing R q y S P A with
-  | h h ih =>
+  | ind h ih =>
     rw [← heq]
     by_cases hY : Polynomial.derivative R = 0
     · by_cases hX : P64Incidence.dXPoly R = 0

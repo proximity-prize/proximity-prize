@@ -30,7 +30,7 @@ def SmallFactor (f : Row 4) : Prop :=
 def ActiveFits (f : Row 4) (K : ℕ) : Prop :=
   ∀ m ∈ f.support, m 0 + 2*m 1 + 2*m 2 + 2*m 3 ≤ K
 
-def ProperCut (f : Row 4) (Γ : Finset K) (s : K → K[X]) (l : ℕ) : Prop :=
+def ProperCut (f : Row 4) (Γ : Finset K) (s : K → (Polynomial K)) (l : ℕ) : Prop :=
   ∃ Q : Row 4, (¬ f ∣ Q) ∧ InBox (shape Q) primaryBox ∧ TrueWeightLE Q primaryCutoff ∧
     ActiveFits Q 5164 ∧ ∀ γ ∈ Γ, OrderAt Q (extend (s γ)) l
 abbrev symbolCount : ℕ := 406807694511
@@ -64,10 +64,10 @@ def lowerCap : ℕ → ℕ
   | 13 => 2590394696761443
   | 14 => 1768727921051672
   | _ => 0
-def Holds (E : FatEquations) (S : Geom[X]) : Prop :=
+def Holds (E : FatEquations) (S : (Polynomial Geom)) : Prop :=
   atJet E.common S = 0 ∨ OrderAt E.residual S fatOrder
 
-structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
+structure Messages (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)) : Prop where
   distinct : Set.InjOn s (Γ : Set K)
   degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ physicalDegree
   hits : ∀ γ ∈ Γ, ∃ T : Finset I, agreement ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i

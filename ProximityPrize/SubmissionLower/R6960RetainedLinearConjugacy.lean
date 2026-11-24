@@ -16,7 +16,7 @@ private theorem base_injective : Function.Injective (base (F:=F) (E:=E)) :=
   (incl_injective E).comp (constants_injective (F:=F) (E:=E))
 
 private theorem adjoint_conjugates {P : Plane F} (ir : Irreducible P) (pos : 0<P.natDegree)
-    (b : F[X]) (x t : F) {r s : Fn E} (hr : r∈(geometric (E:=E) P).roots)
+    (b : (Polynomial F)) (x t : F) {r s : Fn E} (hr : r∈(geometric (E:=E) P).roots)
     (hs : s∈(geometric (E:=E) P).roots) :
     (base (F:=F) (E:=E)).IsIntegralElem ((base b)*(r-base (C t))/(base (Polynomial.X-C x))) →
     (base (F:=F) (E:=E)).IsIntegralElem ((base b)*(s-base (C t))/(base (Polynomial.X-C x))) := by
@@ -46,7 +46,7 @@ private theorem adjoint_conjugates {P : Plane F} (ir : Irreducible P) (pos : 0<P
       lift a ha u=base b*(a-base (C t))/base (Polynomial.X-C x) := by
     simp only [u,map_div₀,map_mul,map_sub]
     have root : lift a ha (AdjoinRoot.root Q)=a := AdjoinRoot.lift_root (raw a ha)
-    have one (v : F[X]) : lift a ha (j v)=base v := DFunLike.congr_fun (extends_base a ha) v
+    have one (v : (Polynomial F)) : lift a ha (j v)=base v := DFunLike.congr_fun (extends_base a ha) v
     simp only [root,one]
   intro original
   have at_r : ((lift r hr).comp j).IsIntegralElem (lift r hr u) := by
@@ -61,15 +61,15 @@ has a common arithmetic denominator and the same physical residue. -/
 theorem common_numerators [IsAlgClosed E] [Algebra.IsAlgebraic F E] {P : Plane F}
     (ir : Irreducible P) (pos : 0<P.natDegree)
     (splits : (geometric (E:=E) P).Splits) (x t : F) (hit : (P.map (evalRingHom x)).eval t=0) :
-    ∃ b : F[X], b.eval x≠0 ∧
-      ∀ r∈(geometric (E:=E) P).roots, ∃ a : E[X],
+    ∃ b : (Polynomial F), b.eval x≠0 ∧
+      ∀ r∈(geometric (E:=E) P).roots, ∃ a : (Polynomial E),
         incl E a=base b*r ∧
         a.eval (algebraMap F E x)=algebraMap F E (b.eval x)*algebraMap F E t := by
   obtain ⟨r,hr,rden,rt⟩ := exists_regular_root (E:=E) ir pos splits x t hit
   obtain ⟨b,hb,m,hm⟩ := base_multiple x (denominator r) rden
   let x' := algebraMap F E x
   let t' := algebraMap F E t
-  let pX : E[X] := Polynomial.X-C x'
+  let pX : (Polynomial E) := Polynomial.X-C x'
   have pX_image : base (Polynomial.X-C x) = incl E pX := by
     simp [base,constants,pX,x']
   have x_nonzero : base (E:=E) (Polynomial.X-C x)≠0 :=

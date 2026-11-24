@@ -20,9 +20,8 @@ open Low48BentCycle (Family capFamily capSum ambient_cap integral mixedDegree di
 open MvPolynomial
 open scoped BigOperators Pointwise
 
-open private diagonal_unit grade_sum diagonal_sum coeff_congr
-  from ProximityPrize.SubmissionLower.Low48BentCycleCap
-open private ambient_list from ProximityPrize.SubmissionLower.Low48BentCyclePrice
+open Low48BentCycle (diagonal_unit grade_sum diagonal_sum coeff_congr)
+open Low48BentCycle (ambient_list)
 open Low49ActiveVolume (fits_scale point_scale point_zero)
 
 private def integr (a : Cap) : ℚ := integral a

@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960MarkedActualCount
 import ProximityPrize.SubmissionLower.R6960MarkedEvaluationEndpoint
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -30,7 +31,7 @@ theorem all_labels [DecidableEq L] (p:ℕ) [CharP L p] [CharP Scalar p] (P:Curva
   classical
   let B:=(Bivariate.swap δi).trailingCoeff
   have bn:B≠0 := trailingCoeff_nonzero_iff_nonzero.mpr ((map_ne_zero_iff _ Bivariate.swap.injective).mpr ni)
-  let D:=(Polynomial.X:L[X])*B
+  let D:=(Polynomial.X:(Polynomial L))*B
   have dn:D≠0:=mul_ne_zero Polynomial.X_ne_zero bn
   let bad:=D.roots.toFinset
   let U:=S\bad

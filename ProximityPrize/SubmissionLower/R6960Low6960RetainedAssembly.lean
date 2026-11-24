@@ -34,7 +34,7 @@ def contractedPrice (x h : Shape) (l active : ℕ) : ℕ :=
   if tiltedFits x then min four (cutPrice x l (60*32) (tiltedSurface x.chamber q)) else four
 
 /-- Physical count for the actual extremal bank witness and the selected (off-retained) marks. -/
-theorem price_of_witness_floor {w : I → K} {Γ : Finset K} {s : K → K[X]} {P H f : Row 4}
+theorem price_of_witness_floor {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} {P H f : Row 4}
     {k a l active : ℕ} (hm : Messages w Γ s) (hsmall : SmallFactor f)
     (hactive : ActiveFits f active) (hchar : f.degreeOf 3 < K1.p)
     (hon : ∀ γ∈Γ, K1_13.OnFactor f (extend (s γ)))
@@ -73,7 +73,7 @@ theorem price_of_witness_floor {w : I → K} {Γ : Finset K} {s : K → K[X]} {P
   next => exact hfour
 
 /-- Physical count for the actual extremal bank witness and the selected (off-retained) marks. -/
-theorem price_of_witness {w : I → K} {Γ : Finset K} {s : K → K[X]} {P H f : Row 4}
+theorem price_of_witness {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} {P H f : Row 4}
     {k a l active : ℕ} (hm : Messages w Γ s) (hsmall : SmallFactor f)
     (hactive : ActiveFits f active) (hchar : f.degreeOf 3 < K1.p)
     (hon : ∀ γ∈Γ, K1_13.OnFactor f (extend (s γ)))

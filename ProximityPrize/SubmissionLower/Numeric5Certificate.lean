@@ -10,7 +10,7 @@ structure Row where
   count : ℕ
   packed : ℕ
   deriving Inhabited
-private def unpack (packed : ℕ) : Powers :=
+def unpack (packed : ℕ) : Powers :=
   ⟨packed % 512, packed / 512 % 512, packed / 262144 % 1024⟩
 private def powersAt : ℕ → ℕ → Powers
   | 0, packed => unpack packed

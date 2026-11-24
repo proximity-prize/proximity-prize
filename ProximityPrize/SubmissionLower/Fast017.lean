@@ -23,10 +23,10 @@ abbrev Words := Fin 2 → I → K
 abbrev node := IRSProfile.domain
 abbrev p := Native.p
 abbrev Frac := GenericLayer.GenericField K
-abbrev Bivar := Polynomial K[X]
+abbrev Bivar := Polynomial (Polynomial K)
 structure BadMark (u : Words) (γ : K) where
   support : Finset I
-  decoder : K[X]
+  decoder : (Polynomial K)
   agreement : 180265 ≤ support.card
   degree : decoder.degree < 131072
   hits : ∀ i ∈ support, decoder.eval (node i) = u 0 i + γ * u 1 i
@@ -53,7 +53,7 @@ structure TwoActive (u : Words) where
   degreeSum : a + b + c = 262146
   nullitySum : nullity u + a + b = 163760
   level : Strata.HasLevelHilbertFunction
-    (fun s j => algebraMap K[X] Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
+    (fun s j => algebraMap (Polynomial K) Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
     131072 a b c
 def TwoActive.height {u : Words} (T : TwoActive u) := 131073 - T.c
 abbrev Relation {u : Words} (T : TwoActive u) :=
@@ -66,14 +66,14 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   classical
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
-def extendSeed (U : Bivar) : Frac[X] :=
-  U.map (algebraMap K[X] Frac)
-def atSlope (P : Bivar) (γ : K) : K[X] := P.map (evalRingHom γ)
-def seed : Bivar := Polynomial.C (R := K[X]) (Polynomial.X (R := K))
-def liftX (P : K[X]) : Bivar := P.map Polynomial.C
+def extendSeed (U : Bivar) : (Polynomial Frac) :=
+  U.map (algebraMap (Polynomial K) Frac)
+def atSlope (P : Bivar) (γ : K) : (Polynomial K) := P.map (evalRingHom γ)
+def seed : Bivar := Polynomial.C (R := (Polynomial K)) (Polynomial.X (R := K))
+def liftX (P : (Polynomial K)) : Bivar := P.map Polynomial.C
 def twist : K →+* K := frobenius K p
-def amplitudeDegree (a₀ a₁ : K[X]) : ℕ := max a₀.natDegree a₁.natDegree
-def sixNorm (a : K[X]) : K[X] :=
+def amplitudeDegree (a₀ a₁ : (Polynomial K)) : ℕ := max a₀.natDegree a₁.natDegree
+def sixNorm (a : (Polynomial K)) : (Polynomial K) :=
   ∏ j : Fin 6, a.map (iterateFrobenius K p j.val)
 structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   U : Bivar
@@ -99,11 +99,11 @@ def _root_.K1_8.columnRankAt (q : ℕ) (U V : Bivar) : ℕ :=
   Module.finrank Frac (Submodule.span Frac (Set.range fun j : Fin 4 =>
     extendSeed (Polynomial.Bivariate.swap
       (if j = 0 then U else if j = 1 then seed * U else if j = 2 then V else seed ^ q * V))))
-def threeU (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
+def threeU (a : (Polynomial K)) (β : Fin 2 → (Polynomial K)) : Bivar :=
   liftX a * (liftX ((β 0).map twist) + seed ^ p * liftX ((β 1).map twist))
-def _root_.K1_8.threeUAt (q : ℕ) (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
+def _root_.K1_8.threeUAt (q : ℕ) (a : (Polynomial K)) (β : Fin 2 → (Polynomial K)) : Bivar :=
   liftX a * (liftX ((β 0).map twist) + seed ^ q * liftX ((β 1).map twist))
-def threeV (b : K[X]) (α : Fin 2 → K[X]) : Bivar :=
+def threeV (b : (Polynomial K)) (α : Fin 2 → (Polynomial K)) : Bivar :=
   -(liftX b * (liftX (α 0) + seed * liftX (α 1)))
 def sameDirection (U V U' V' : Bivar) : Prop := U * V' = V * U'
 def relationOn (u : Words) (deleted : Finset I) (U V output : Bivar) : Prop :=
@@ -119,10 +119,10 @@ def _root_.K1_8.relationOnAt (q : ℕ) (u : Words) (deleted : Finset I) (U V out
 structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) where
   rank_eq : columnRank D.U D.V = 3
-  α : Fin 2 → K[X]
-  β : Fin 2 → K[X]
-  a : K[X]
-  b : K[X]
+  α : Fin 2 → (Polynomial K)
+  β : Fin 2 → (Polynomial K)
+  a : (Polynomial K)
+  b : (Polynomial K)
   a_ne : a ≠ 0
   b_ne : b ≠ 0
   α_primitive : IsCoprime (α 0) (α 1)
@@ -135,15 +135,15 @@ structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
   nodes : relationOn u (fixedNodes R) (threeU a β) (threeV b α) output
 structure AnchorModel (u : Words) (deleted : Finset I) where
   shift : K
-  pencil₀ : K[X]
-  pencil₁ : K[X]
+  pencil₀ : (Polynomial K)
+  pencil₁ : (Polynomial K)
   pencil₀_degree : pencil₀.degree < 131072
   pencil₁_degree : pencil₁.degree < 131072
-  E : K[X]
-  factor : K[X]
-  Q : K[X]
-  A₀ : K[X]
-  A₁ : K[X]
+  E : (Polynomial K)
+  factor : (Polynomial K)
+  Q : (Polynomial K)
+  A₀ : (Polynomial K)
+  A₁ : (Polynomial K)
   word : I → K
   word_fixed : ∀ i, twist (word i) = word i
   word_deleted : ∀ i ∈ deleted, word i = 0
@@ -167,12 +167,12 @@ def AnchorModel.overhead {u deleted} (M : AnchorModel u deleted) : ℤ :=
   (M.E.natDegree : ℤ) - M.factor.natDegree - amplitudeDegree M.A₀ M.A₁
 def AnchorModel.label {u deleted} (M : AnchorModel u deleted) (γ : K) : K :=
   γ - M.shift
-def AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) (γ : K) : K[X] :=
+def AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) (γ : K) : (Polynomial K) :=
   M.A₀ + Polynomial.C (M.label γ) * M.A₁
 def AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K}
-    (B : BadMark u γ) : K[X] :=
+    (B : BadMark u γ) : (Polynomial K) :=
   B.decoder - M.pencil₀ - Polynomial.C (M.label γ) * M.pencil₁
-structure AnchorMark {u deleted} (M : AnchorModel u deleted) (γ : K) (S : K[X]) where
+structure AnchorMark {u deleted} (M : AnchorModel u deleted) (γ : K) (S : (Polynomial K)) where
   bad : BadMark u γ
   avoids_deleted : Disjoint bad.support deleted
   scalar_fixed : S.map twist = S
@@ -182,7 +182,7 @@ structure AnchorMark {u deleted} (M : AnchorModel u deleted) (γ : K) (S : K[X])
   identity : M.E * M.decoder bad - Polynomial.C (M.label γ) * M.Q =
     M.factor * M.amplitude γ * S
 structure AnchoredFamily {u deleted} (M : AnchorModel u deleted) (Γ : Finset K) where
-  scalar : K → K[X]
+  scalar : K → (Polynomial K)
   mark : ∀ γ ∈ Γ, AnchorMark M γ (scalar γ)
   distinct : Set.InjOn scalar (Γ : Set K)
 def highPrefix (w : ℤ) : ℕ :=
@@ -200,14 +200,14 @@ open Polynomial K1
 open scoped BigOperators
 abbrev Geom := AlgebraicClosure K
 abbrev embed := algebraMap K Geom
-abbrev extend (S : K[X]) := S.map embed
-abbrev Row (n : ℕ) := MvPolynomial (Fin n) Geom[X]
-def jet (S : Geom[X]) {n : ℕ} (i : Fin n) : Geom[X] := hasseDeriv i.val S
-def atJet {n : ℕ} (P : Row n) (S : Geom[X]) : Geom[X] :=
+abbrev extend (S : (Polynomial K)) := S.map embed
+abbrev Row (n : ℕ) := MvPolynomial (Fin n) (Polynomial Geom)
+def jet (S : (Polynomial Geom)) {n : ℕ} (i : Fin n) : (Polynomial Geom) := hasseDeriv i.val S
+def atJet {n : ℕ} (P : Row n) (S : (Polynomial Geom)) : (Polynomial Geom) :=
   MvPolynomial.eval (jet S) P
-def shiftJet {n : ℕ} (P : Row n) (S : Geom[X]) : Row n :=
+def shiftJet {n : ℕ} (P : Row n) (S : (Polynomial Geom)) : Row n :=
   MvPolynomial.eval₂ MvPolynomial.C (fun i => MvPolynomial.X i + MvPolynomial.C (jet S i)) P
-def OrderAt {n : ℕ} (P : Row n) (S : Geom[X]) (d : ℕ) : Prop :=
+def OrderAt {n : ℕ} (P : Row n) (S : (Polynomial Geom)) (d : ℕ) : Prop :=
   ∀ m ∈ (shiftJet P S).support, d ≤ m.sum (fun _ a => a)
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
@@ -224,18 +224,18 @@ def InBox (x y : Shape) : Prop := x.b ≤ y.b ∧ x.j ≤ y.j ∧ x.t ≤ y.t
 def Fits {n : ℕ} (a : Fin n → Shape) : Prop :=
   (∀ i, 1 ≤ (a i).t ∧ 3 * (a i).t ≤ (a i).j ∧ (a i).j ≤ 3 * (a i).b) ∧
   (∑ i, (a i).b) ≤ 120 ∧ (∑ i, (a i).j) ≤ 48 ∧ (∑ i, (a i).t) ≤ 10
-structure PoleData (Γ : Finset K) (s : K → K[X]) where
-  H : Geom[X]
+structure PoleData (Γ : Finset K) (s : K → (Polynomial K)) where
+  H : (Polynomial Geom)
   monic : H.Monic
   small : 1 ≤ H.natDegree ∧ H.natDegree ≤ 2600
   nodes : ∀ i, H.eval (embed (node i)) ≠ 0
   degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ 131071 + H.natDegree
   z : K → Geom
   injective : Function.Injective z
-  c : Geom[X]
-  q : Geom[X]
-  a₀ : Geom[X]
-  a₁ : Geom[X]
+  c : (Polynomial Geom)
+  q : (Polynomial Geom)
+  a₀ : (Polynomial Geom)
+  a₁ : (Polynomial Geom)
   c_unit : IsCoprime c H
   q_unit : IsCoprime q H
   a₀_unit : IsCoprime a₀ H
@@ -244,14 +244,14 @@ structure PoleData (Γ : Finset K) (s : K → K[X]) where
 def SmallFactor (f : Row 4) : Prop :=
   Irreducible f ∧ 0 < (shape f).t ∧ InBox (shape f) ⟨120, 48, 10⟩ ∧
     TrueWeightLE f (90 * 180265 - 1)
-def topLead (f : Row 4) (S : Geom[X]) : Geom[X] :=
+def topLead (f : Row 4) (S : (Polynomial Geom)) : (Polynomial Geom) :=
   (MvPolynomial.eval₂ Polynomial.C
     (fun i : Fin 4 => if i = 3 then Polynomial.X else Polynomial.C (jet S i)) f).coeff (shape f).t
-def OnFactor (f : Row 4) (S : Geom[X]) : Prop :=
+def OnFactor (f : Row 4) (S : (Polynomial Geom)) : Prop :=
   atJet f S = 0 ∧ topLead f S ≠ 0
 def LowerRow (g : Row 3) : Prop :=
   g ≠ 0 ∧ g.totalDegree ≤ 120 ∧ indexDegree g ≤ 48 ∧ TrueWeightLE g (90 * 180265 - 1)
-structure Cover {n : ℕ} (Γ : Finset K) (s : K → K[X])
+structure Cover {n : ℕ} (Γ : Finset K) (s : K → (Polynomial K))
     (g : Row 3) (f : Fin n → Row 4) : Prop where
   lower : LowerRow g
   factors : ∀ i, SmallFactor (f i)
@@ -259,7 +259,7 @@ structure Cover {n : ℕ} (Γ : Finset K) (s : K → K[X])
   fits : Fits (fun i => shape (f i))
   covers : ∀ γ ∈ Γ, atJet g (extend (s γ)) = 0 ∨ ∃ i, OnFactor (f i) (extend (s γ))
 def Contact (w : I → K) (P : Row 4) : Prop :=
-  ∀ i (S : Geom[X]), S.eval (embed (node i)) = embed (w i) →
+  ∀ i (S : (Polynomial Geom)), S.eval (embed (node i)) = embed (w i) →
     (Polynomial.X - C (embed (node i))) ^ 3000 ∣ atJet P S
 structure FatEquations where
   common : Row 3
@@ -307,8 +307,8 @@ namespace K1_13
 noncomputable section
 open Polynomial K1
 open scoped BigOperators
-theorem trim_divisor (P : Geom[X]) (hm : P.Monic) (h : ℕ) (hh : h ≤ P.natDegree) :
-    ∃ H : Geom[X], H.Monic ∧ H.natDegree = h ∧ H ∣ P := by
+theorem trim_divisor (P : (Polynomial Geom)) (hm : P.Monic) (h : ℕ) (hh : h ≤ P.natDegree) :
+    ∃ H : (Polynomial Geom), H.Monic ∧ H.natDegree = h ∧ H ∣ P := by
   classical
   have hroots : h ≤ P.roots.card := hh.trans_eq (IsAlgClosed.splits P).natDegree_eq_card_roots
   have hpos : 0 < (P.roots.powersetCard h).card := by
@@ -422,12 +422,12 @@ open scoped BigOperators
 open MvPolynomial (mem_support_iff)
 def toRow : SourcePolynomial ≃ₐ[Geom] Row 4 :=
   MvPolynomial.optionEquivRight Geom (Fin 4)
-theorem atJet_toRow (Q : SourcePolynomial) (S : Geom[X]) :
+theorem atJet_toRow (Q : SourcePolynomial) (S : (Polynomial Geom)) :
     atJet (toRow Q) S = differentialSpecialization Q S := by
-  let values : Option (Fin 4) → Geom[X] := fun v => v.elim Polynomial.X (jet S)
+  let values : Option (Fin 4) → (Polynomial Geom) := fun v => v.elim Polynomial.X (jet S)
   have h := MvPolynomial.aeval_map_optionEquivRight values Q
   have hx : values none = Polynomial.X := rfl
-  have hid : (AlgHom.id Geom Geom[X]).toRingHom = RingHom.id Geom[X] := rfl
+  have hid : (AlgHom.id Geom (Polynomial Geom)).toRingHom = RingHom.id (Polynomial Geom) := rfl
   rw [hx, Polynomial.aeval_X_left, hid, MvPolynomial.map_id, MvPolynomial.aeval_eq_eval] at h
   have hhom : MvPolynomial.aeval values = differentialSpecializationHom (d := 3) S := by
     apply MvPolynomial.algHom_ext
@@ -451,7 +451,7 @@ open scoped BigOperators
 def c2 : Prop :=
   ∀ i : BlockIndex, ∀ power : Fin 11 → ℕ,
     Module.finrank Geom (LinearMap.range (originBlock i)) ≤ blockBound i power
-private theorem finrank_finset_sup_le {ι V : Type*} [AddCommGroup V] [Module Geom V]
+theorem finrank_finset_sup_le {ι V : Type*} [AddCommGroup V] [Module Geom V]
     (p : ι → Submodule Geom V) [∀ i, Module.Finite Geom (p i)] (s : Finset ι) :
     Module.finrank Geom (s.sup p : Submodule Geom V) ≤ ∑ i ∈ s, Module.finrank Geom (p i) := by
   classical

@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast052
+import ProximityPrize.SubmissionLower.RingHomShortcuts
 import ProximityPrize.SubmissionLower.Fast053
 import ProximityPrize.SubmissionLower.Fast054
 set_option Elab.async false
@@ -364,7 +365,7 @@ end
 section
 namespace K1_13_2_3_6
 open K1_13_2 K1_13_2_3 K1_13_2_3_5
-open private   sumFrom    from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 private def eDen (n : ℕ) : ℕ := (n * (n * (2*n+15)+30)+25)/72
 private def eThree (n : ℕ) : ℕ := n * (n+2) * (2*n-1) / 24
 private def eCore (r dr h l o : ℕ) : ℕ :=
@@ -388,7 +389,7 @@ end
 section
 namespace K1_13_2_3_6
 open K1_13_2_3
-open private    sumFrom   from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 set_option maxHeartbeats 2000000
 private def withNatF (n : ℕ) (f : ℕ → ℕ) : ℕ :=
   match n with
@@ -400,7 +401,7 @@ end
 section
 namespace K1_13_2_3_6
 open K1_13_2_3
-open private sumFrom       from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 section
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
@@ -419,14 +420,14 @@ noncomputable section
 attribute [local instance] Polynomial.algebra
 private abbrev SlopeField := RatFunc SeedField
 private abbrev InterceptField := RatFunc SlopeField
-private local instance (priority := high) jetEval (I : Ideal Ambient) : Algebra SlopeField[X] (SlopeRing I) :=
+private local instance (priority := high) jetEval (I : Ideal Ambient) : Algebra (Polynomial SlopeField) (SlopeRing I) :=
   (Polynomial.aeval (jetForm I) : _ →ₐ[SlopeField] SlopeRing I).toRingHom.toAlgebra
 private local instance (priority := high) jetModule (I : Ideal Ambient) :
-    Module SlopeField[X] (SlopeRing I) :=
+    Module (Polynomial SlopeField) (SlopeRing I) :=
   (jetEval I).toModule
 private abbrev Fibre (I : Ideal Ambient) :=
-  letI : Algebra SlopeField[X] (SlopeRing I) := jetEval I
-  InterceptField ⊗[SlopeField[X]] SlopeRing I
+  letI : Algebra (Polynomial SlopeField) (SlopeRing I) := jetEval I
+  InterceptField ⊗[(Polynomial SlopeField)] SlopeRing I
 private abbrev mixedIdeal (I : Ideal Ambient) : Ideal SectionAmbient :=
   I.map sectionBase ⊔ Ideal.span {sectionSeedLine, sectionJetLine}
 private def mixedMk (I : Ideal Ambient) : SectionAmbient →+* OverMixed I :=
@@ -519,15 +520,15 @@ private theorem slopeToMixed_form (I : Ideal Ambient) :
   rw [scalarToMixed_slope, scalarToMixed_intercept]
   simpa only [sectionJetLine, map_sub, map_add, map_mul] using mixedMk_jet I
 private def toMixed (I : Ideal Ambient) : Fibre I →+* OverMixed I :=
-  tensorLift (R := SlopeField[X]) (scalarToMixed I) (slopeToMixed I) <| by
+  tensorLift (R := (Polynomial SlopeField)) (scalarToMixed I) (slopeToMixed I) <| by
     apply Polynomial.ringHom_ext
     · intro a
-      change scalarToMixed I (algebraMap SlopeField[X] InterceptField (Polynomial.C a)) =
+      change scalarToMixed I (algebraMap (Polynomial SlopeField) InterceptField (Polynomial.C a)) =
         slopeToMixed I (Polynomial.aeval (jetForm I) (Polynomial.C a))
       rw [RatFunc.algebraMap_C, Polynomial.aeval_C, Algebra.TensorProduct.algebraMap_apply]
       simp only [slopeToMixed, tensorLift_tmul, map_one, mul_one]
       rfl
-    · change scalarToMixed I (algebraMap SlopeField[X] InterceptField Polynomial.X) =
+    · change scalarToMixed I (algebraMap (Polynomial SlopeField) InterceptField Polynomial.X) =
         slopeToMixed I (Polynomial.aeval (jetForm I) Polynomial.X)
       rw [RatFunc.algebraMap_X, Polynomial.aeval_X, slopeToMixed_form]
 private abbrev fibreScalar (I : Ideal Ambient) : InterceptField →+* Fibre I :=
@@ -541,12 +542,12 @@ private abbrev fibreSeed (I : Ideal Ambient) : JetSeedSection I →+* Fibre I :=
 private theorem fibreSlope_scalar (I : Ideal Ambient) (a : SlopeField) :
     fibreSlope I (algebraMap SlopeField (SlopeRing I) a) =
       fibreScalar I (RatFunc.C a) := by
-  have h : fibreScalar I (algebraMap SlopeField[X] InterceptField (Polynomial.C a)) =
-      fibreSlope I (algebraMap SlopeField[X] (SlopeRing I) (Polynomial.C a)) :=
+  have h : fibreScalar I (algebraMap (Polynomial SlopeField) InterceptField (Polynomial.C a)) =
+      fibreSlope I (algebraMap (Polynomial SlopeField) (SlopeRing I) (Polynomial.C a)) :=
     RingHom.congr_fun (Algebra.TensorProduct.includeLeftRingHom_comp_algebraMap
-      (R := SlopeField[X]) (A := InterceptField) (B := SlopeRing I)) (Polynomial.C a)
+      (R := (Polynomial SlopeField)) (A := InterceptField) (B := SlopeRing I)) (Polynomial.C a)
   rw [RatFunc.algebraMap_C,
-    show algebraMap SlopeField[X] (SlopeRing I) (Polynomial.C a) =
+    show algebraMap (Polynomial SlopeField) (SlopeRing I) (Polynomial.C a) =
       algebraMap SlopeField (SlopeRing I) a from Polynomial.aeval_C _ _] at h
   exact h.symm
 private theorem fibreSeed_scalar (I : Ideal Ambient) (a : SeedField) :
@@ -562,12 +563,12 @@ private theorem fibreSeed_scalar (I : Ideal Ambient) (a : SeedField) :
   exact (fibreSlope_scalar I _).trans (by rw [RatFunc.algebraMap_eq_C])
 private theorem fibreSlope_form (I : Ideal Ambient) :
     fibreSlope I (jetForm I) = fibreScalar I RatFunc.X := by
-  have h : fibreScalar I (algebraMap SlopeField[X] InterceptField Polynomial.X) =
-      fibreSlope I (algebraMap SlopeField[X] (SlopeRing I) Polynomial.X) :=
+  have h : fibreScalar I (algebraMap (Polynomial SlopeField) InterceptField Polynomial.X) =
+      fibreSlope I (algebraMap (Polynomial SlopeField) (SlopeRing I) Polynomial.X) :=
     RingHom.congr_fun (Algebra.TensorProduct.includeLeftRingHom_comp_algebraMap
-      (R := SlopeField[X]) (A := InterceptField) (B := SlopeRing I)) Polynomial.X
+      (R := (Polynomial SlopeField)) (A := InterceptField) (B := SlopeRing I)) Polynomial.X
   rw [RatFunc.algebraMap_X,
-    show algebraMap SlopeField[X] (SlopeRing I) Polynomial.X =
+    show algebraMap (Polynomial SlopeField) (SlopeRing I) Polynomial.X =
       jetForm I from Polynomial.aeval_X _] at h
   exact h.symm
 private abbrev scalarToFibre (I : Ideal Ambient) : SectionField →+* Fibre I :=
@@ -637,11 +638,11 @@ private def toFibre (I : Ideal Ambient) : OverMixed I →+* Fibre I :=
         (Ideal.span_singleton_le_iff_mem _).mpr (sectionEvalFibre_jet I)⟩
 private theorem toMixed_scalar (I : Ideal Ambient) (a : InterceptField) :
     toMixed I (fibreScalar I a) = scalarToMixed I a := by
-  change toMixed I (a ⊗ₜ[SlopeField[X]] 1) = _
+  change toMixed I (a ⊗ₜ[(Polynomial SlopeField)] 1) = _
   simp only [toMixed, tensorLift_tmul, map_one, mul_one]
 private theorem toMixed_slope (I : Ideal Ambient) (b : SlopeRing I) :
     toMixed I (fibreSlope I b) = slopeToMixed I b := by
-  change toMixed I (1 ⊗ₜ[SlopeField[X]] b) = _
+  change toMixed I (1 ⊗ₜ[(Polynomial SlopeField)] b) = _
   simp only [toMixed, tensorLift_tmul, map_one, one_mul]
 private theorem slopeToMixed_seed (I : Ideal Ambient) (b : JetSeedSection I) :
     slopeToMixed I (slopeSeed I b) = seedToMixed I b := by

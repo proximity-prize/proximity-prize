@@ -27,21 +27,21 @@ noncomputable section
 section Evaluation
 open K1 K1_13 PolynomialDifferential Polynomial ReedSolomon.HiddenDerivative
 open scoped BigOperators
-private theorem coeff_flatten {n : ℕ} (P : Row n) (m : Fin n →₀ ℕ) (i : ℕ) :
+theorem coeff_flatten {n : ℕ} (P : Row n) (m : Fin n →₀ ℕ) (i : ℕ) :
     ((MvPolynomial.optionEquivRight Geom (Fin n)).symm P).coeff (m.optionElim i) =
       (P.coeff m).coeff i := by
   rw [← MvPolynomial.optionEquivRight_coeff_coeff, AlgEquiv.apply_symm_apply]
-private theorem atJet_unflatten (Q : DifferentialPolynomial Geom 3) (S : Geom[X]) :
+theorem atJet_unflatten (Q : DifferentialPolynomial Geom 3) (S : (Polynomial Geom)) :
     atJet (MvPolynomial.optionEquivRight Geom (Fin 4) Q) S =
       differentialSpecialization Q S := by
-  let x : Option (Fin 4) → Geom[X] := fun
+  let x : Option (Fin 4) → (Polynomial Geom) := fun
     | none => Polynomial.X
     | some i => jet S i
   have h := MvPolynomial.aeval_map_optionEquivRight (R := Geom) x Q
   have hx : x none = Polynomial.X := rfl
   have hj : (fun j => x (some j)) = jet S := rfl
   rw [hx, hj, Polynomial.aeval_X_left] at h
-  rw [show (AlgHom.id Geom Geom[X]).toRingHom = RingHom.id (Geom[X]) from rfl,
+  rw [show (AlgHom.id Geom (Polynomial Geom)).toRingHom = RingHom.id ((Polynomial Geom)) from rfl,
     MvPolynomial.map_id] at h
   rw [MvPolynomial.aeval_eq_eval] at h
   unfold atJet differentialSpecialization
@@ -54,8 +54,8 @@ end Evaluation
 section LeadingCoefficient
 open K1_13 MvPolynomial
 open scoped Polynomial
-def topView : Row 4 ≃ₐ[Geom[X]] Polynomial (Row 3) :=
-  (renameEquiv Geom[X] finSuccEquivLast).trans (optionEquivLeft Geom[X] (Fin 3))
+def topView : Row 4 ≃ₐ[(Polynomial Geom)] Polynomial (Row 3) :=
+  (renameEquiv (Polynomial Geom) finSuccEquivLast).trans (optionEquivLeft (Polynomial Geom) (Fin 3))
 def anchorLead (P : Row 4) : Row 3 := (topView P).leadingCoeff
 theorem topView_degree (P : Row 4) : (topView P).natDegree = (shape P).t := by
   change (optionEquivLeft _ _ (rename finSuccEquivLast P)).natDegree = P.degreeOf 3
@@ -66,10 +66,10 @@ theorem anchorLead_ne {P : Row 4} (hP : P ≠ 0) : anchorLead P ≠ 0 :=
 theorem anchorLead_mul (P Q : Row 4) : anchorLead (P * Q) = anchorLead P * anchorLead Q := by
   rw [anchorLead, map_mul, Polynomial.leadingCoeff_mul]
   rfl
-private def partialEval (S : Geom[X]) : Row 4 →+* Geom[X][X] :=
+private def partialEval (S : (Polynomial Geom)) : Row 4 →+* (Polynomial (Polynomial Geom)) :=
   eval₂Hom Polynomial.C fun i : Fin 4 =>
     if i = 3 then Polynomial.X else Polynomial.C (jet S i)
-private theorem partialEval_eq_map (P : Row 4) (S : Geom[X]) :
+private theorem partialEval_eq_map (P : Row 4) (S : (Polynomial Geom)) :
     partialEval S P = (topView P).map (eval (jet S)) := by
   have hlast : finSuccEquivLast (3 : Fin 4) = none := finSuccEquivLast_last
   have h : partialEval S = (Polynomial.mapRingHom (eval (jet S))).comp topView.toRingHom := by
@@ -82,12 +82,12 @@ private theorem partialEval_eq_map (P : Row 4) (S : Geom[X]) :
       · have hj : j.castSucc ≠ (3 : Fin 4) := Fin.castSucc_ne_last j
         simp [partialEval, topView, optionEquivLeft_X_some, hj, jet]
   exact RingHom.congr_fun h P
-theorem eval_anchorLead (P : Row 4) (S : Geom[X]) :
+theorem eval_anchorLead (P : Row 4) (S : (Polynomial Geom)) :
     atJet (anchorLead P) S = topLead P S := by
   change eval (jet S) (topView P).leadingCoeff =
     (partialEval S P).coeff (shape P).t
   rw [partialEval_eq_map, Polynomial.coeff_map, ← topView_degree, Polynomial.leadingCoeff]
-theorem atJet_eq_anchorLead_of_top_zero (P : Row 4) (S : Geom[X]) (ht : (shape P).t = 0) :
+theorem atJet_eq_anchorLead_of_top_zero (P : Row 4) (S : (Polynomial Geom)) (ht : (shape P).t = 0) :
     atJet P S = atJet (anchorLead P) S := by
   have he : atJet P S = (partialEval S P).eval (jet S (3 : Fin 4)) := by
     have h : eval (jet S) =
@@ -110,7 +110,7 @@ theorem atJet_eq_anchorLead_of_top_zero (P : Row 4) (S : Geom[X]) (ht : (shape P
 theorem indexDegree_eq {n : ℕ} (P : Row n) :
     indexDegree P = P.weightedTotalDegree (fun i => i.val) := by
   simp only [indexDegree, weightedTotalDegree, Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm]
-private theorem anchorLead_term (P : Row 4) (m : Fin 3 →₀ ℕ) (hm : m ∈ (anchorLead P).support) :
+theorem anchorLead_term (P : Row 4) (m : Fin 3 →₀ ℕ) (hm : m ∈ (anchorLead P).support) :
     ∃ u ∈ P.support, P.coeff u = (anchorLead P).coeff m ∧
       ∀ w : Fin 4 → ℕ, m.weight (fun i => w i.castSucc) ≤ u.weight w := by
   classical
@@ -143,7 +143,7 @@ end LeadingCoefficient
 section FactorCover
 open K1 K1_13 MvPolynomial UniqueFactorizationMonoid
 open scoped BigOperators Polynomial
-private theorem index_bounds (P : Row 4) :
+theorem index_bounds (P : Row 4) :
     3 * (shape P).t ≤ (shape P).j ∧ (shape P).j ≤ 3 * (shape P).b := by
   classical
   change 3 * P.degreeOf 3 ≤ indexDegree P ∧ indexDegree P ≤ 3 * P.totalDegree

@@ -7,7 +7,7 @@ set_option maxRecDepth 16000
 namespace Low48PrimaryPivot.RawClosed
 open Finset K1_13_2 K1_13_2_2 K1_13_2_3
 open scoped BigOperators
-open private columnsAt targetAt target_eq from ProximityPrize.SubmissionLower.Low48PrimaryPivotRawFast
+open Low48PrimaryPivot.RawReceipt (columnsAt targetAt target_eq)
 
 def firstCross (p : ℕ → Bool) : ℕ → ℕ → ℕ → ℕ
   | 0,lo,_ => lo

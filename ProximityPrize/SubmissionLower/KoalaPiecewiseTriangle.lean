@@ -61,7 +61,7 @@ private def lineCutSum (b : BandCuts) (l q : Line) (k lo : ℤ) (n : ℕ) : ℤ 
       (n : ℤ) * KoalaAffineTriangle.twiceTriangle (b.l0-k-b.q1))
 
 
-private def lineBandSum (b : BandCuts) (l q : Line) (lo : ℤ) (n : ℕ) : ℤ :=
+def lineBandSum (b : BandCuts) (l q : Line) (lo : ℤ) (n : ℕ) : ℤ :=
   lineCutSum b l q b.first lo n - lineCutSum b l q b.last lo n
 
 

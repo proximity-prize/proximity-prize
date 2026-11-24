@@ -23,8 +23,8 @@ abbrev H0 (G : Matrix ι ι (Laurent k)) := ↥(finiteLattice k ι⊓transitionL
 /-- First cohomology is the actual Laurent quotient by the two chart images. -/
 abbrev H1 (G : Matrix ι ι (Laurent k)) := (ι→Laurent k) ⧸ (finiteLattice k ι⊔transitionLattice G)
 
-private theorem action_commutes (G : Matrix ι ι (Laurent k)) (N : ℕ) (A : Matrix ι ι k[X])
-    (clear : G=(T (R:=k) (N:ℤ)) • A.map (infinityEmbedding (k:=k))) (v : ι→k[X]) :
+private theorem action_commutes (G : Matrix ι ι (Laurent k)) (N : ℕ) (A : Matrix ι ι (Polynomial k))
+    (clear : G=(T (R:=k) (N:ℤ)) • A.map (infinityEmbedding (k:=k))) (v : ι→(Polynomial k)) :
     Matrix.toLin' G (shiftVector 0 v)=shiftVector N (Matrix.toLin' A v) := by
   funext i
   rw [Matrix.toLin'_apply,shiftVector_apply,Matrix.toLin'_apply]
@@ -37,7 +37,7 @@ private theorem action_commutes (G : Matrix ι ι (Laurent k)) (N : ℕ) (A : Ma
 
 /-- The transition lattice is the image of the polynomial matrix inside
 its shifted comparison lattice. -/
-theorem transition_eq_cleared (G : Matrix ι ι (Laurent k)) (N : ℕ) (A : Matrix ι ι k[X])
+theorem transition_eq_cleared (G : Matrix ι ι (Laurent k)) (N : ℕ) (A : Matrix ι ι (Polynomial k))
     (clear : G=(T (R:=k) (N:ℤ)) • A.map (infinityEmbedding (k:=k))) :
     transitionLattice G=((Matrix.toLin' A).range.restrictScalars k).map (shiftVector N) := by
   rw [transitionLattice,←range_shiftVector 0]
@@ -48,15 +48,15 @@ theorem transition_eq_cleared (G : Matrix ι ι (Laurent k)) (N : ℕ) (A : Matr
   · rintro ⟨w,⟨p,rfl⟩,rfl⟩
     exact ⟨shiftVector 0 p,⟨p,rfl⟩,action_commutes G N A clear p⟩
 
-private def relative_quotient (G : Matrix ι ι (Laurent k)) (N : ℕ) (A : Matrix ι ι k[X])
+private def relative_quotient (G : Matrix ι ι (Laurent k)) (N : ℕ) (A : Matrix ι ι (Polynomial k))
     (clear : G=(T (R:=k) (N:ℤ)) • A.map (infinityEmbedding (k:=k))) :
-    ((ι→k[X]) ⧸ (Matrix.toLin' A).range) ≃ₗ[k]
+    ((ι→(Polynomial k)) ⧸ (Matrix.toLin' A).range) ≃ₗ[k]
       ((upperLattice k ι N) ⧸ (transitionLattice G).comap (upperLattice k ι N).subtype) := by
   let B := upperLattice k ι N
   let D := (transitionLattice G).comap B.subtype
   let R := (Matrix.toLin' A).range.restrictScalars k
-  change ((ι→k[X]) ⧸ R) ≃ₗ[k] (B ⧸ D)
-  let e : (ι→k[X]) ≃ₗ[k] B := upperEquiv N
+  change ((ι→(Polynomial k)) ⧸ R) ≃ₗ[k] (B ⧸ D)
+  let e : (ι→(Polynomial k)) ≃ₗ[k] B := upperEquiv N
   refine Submodule.Quotient.equiv R D e ?_
   ext v
   change (∃ p∈R,e p=v) ↔ (v:ι→Laurent k)∈transitionLattice G

@@ -7,12 +7,12 @@ open Polynomial
 open scoped Polynomial
 
 variable {k : Type*} [Field k]
-abbrev Plane (k : Type*) [Field k] := Polynomial k[X]
+abbrev Plane (k : Type*) [Field k] := Polynomial (Polynomial k)
 
 /-- A scalar denominator in one ruling is relatively prime to a nonzero
 denominator in the other, even if their zero curves intersect on the plane. -/
-theorem independent_denominators (a b : k[X]) (an : a≠0) (bn : b≠0) :
-    IsRelPrime (C a : Plane k) (b.map (C : k→+*k[X])) := by
+theorem independent_denominators (a b : (Polynomial k)) (an : a≠0) (bn : b≠0) :
+    IsRelPrime (C a : Plane k) (b.map (C : k→+*(Polynomial k))) := by
   intro d da db
   have cd := natDegree_le_of_dvd da (C_ne_zero.mpr an)
   rw [natDegree_C] at cd
@@ -31,8 +31,8 @@ use independent denominators. -/
 theorem affine_iff (F : Type*) [Field F] [Algebra (Plane k) F] [IsFractionRing (Plane k) F]
     [Algebra F E] [IsScalarTower (Plane k) F E] [FiniteDimensional F E] (x : E) :
     IsIntegral (Plane k) x ↔
-      (∃ a:k[X], a≠0 ∧ IsIntegral (Plane k) (algebraMap (Plane k) E (C a)*x)) ∧
-      (∃ b:k[X], b≠0 ∧ IsIntegral (Plane k) (algebraMap (Plane k) E (b.map (C : k→+*k[X]))*x)) := by
+      (∃ a:(Polynomial k), a≠0 ∧ IsIntegral (Plane k) (algebraMap (Plane k) E (C a)*x)) ∧
+      (∃ b:(Polynomial k), b≠0 ∧ IsIntegral (Plane k) (algebraMap (Plane k) E (b.map (C : k→+*(Polynomial k)))*x)) := by
   constructor
   · intro h
     exact ⟨⟨1,one_ne_zero,by simpa using h⟩,⟨1,one_ne_zero,by simpa using h⟩⟩
@@ -44,10 +44,10 @@ theorem affine_iff (F : Type*) [Field F] [Algebra (Plane k) F] [IsFractionRing (
 
 /-- The base localizations which keep the other coordinate polynomial. -/
 def innerDenominators (k : Type*) [Field k] : Submonoid (Plane k) :=
-  (nonZeroDivisors k[X]).map (C : k[X]→+*Plane k).toMonoidHom
+  (nonZeroDivisors (Polynomial k)).map (C : (Polynomial k)→+*Plane k).toMonoidHom
 
 def outerDenominators (k : Type*) [Field k] : Submonoid (Plane k) :=
-  (nonZeroDivisors k[X]).map (mapRingHom (C : k→+*k[X])).toMonoidHom
+  (nonZeroDivisors (Polynomial k)).map (mapRingHom (C : k→+*(Polynomial k))).toMonoidHom
 
 /-- The intersection formula for actual integral closures of the two
 localized rings. It also applies after changing either coordinate to its

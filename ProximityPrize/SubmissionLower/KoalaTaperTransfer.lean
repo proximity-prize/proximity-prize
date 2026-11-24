@@ -11,13 +11,10 @@ open K1_13 (Geom)
 open K1_13_2 K1_13_2_3 TaperBudget Low48PrimaryPivot
 open PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
-open private charged inWindow charged_add_gain gain window_gain
-  from ProximityPrize.SubmissionLower.Wide50EulerPrimaryRank
-open private fees saved_by_fees fees_le_baseline
-  from ProximityPrize.SubmissionLower.PrimaryTaperBudget
-open private combine baseline_budget_on sum_add_pointwise_eq
-  from ProximityPrize.SubmissionLower.Fast022
-open private sum_checked from ProximityPrize.SubmissionLower.PrimaryTaperRankData
+open Wide50EulerPrimary (charged inWindow charged_add_gain gain window_gain)
+open TaperBudget (fees saved_by_fees fees_le_baseline)
+open K1_13_2_3 (combine baseline_budget_on sum_add_pointwise_eq)
+open TaperBudget (sum_checked)
 
 abbrev localRank : ℕ := 343744005134722
 

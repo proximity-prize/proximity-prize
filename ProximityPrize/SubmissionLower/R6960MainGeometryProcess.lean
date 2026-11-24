@@ -21,8 +21,8 @@ open RescueGeometry (Model Family OnMark OnSurface SurfacePass TerminalPass word
   contact_at_mark zero_of_contact reserve_small)
 open MainPrefixSource (copies)
 open FreeSource (reserve)
-open private envelope_caps from ProximityPrize.SubmissionLower.HighCore82258PrefixProcess
-open private proper_cut from ProximityPrize.SubmissionLower.R6960RescueGeometryCuts
+open HighCore82258_3 (envelope_caps)
+open Lower6960.RescueGeometry (proper_cut)
 open scoped Classical BigOperators
 
 def Initial.kept {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}

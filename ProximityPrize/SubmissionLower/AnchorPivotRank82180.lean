@@ -23,7 +23,7 @@ structure Row where
 
 
 
-private theorem independent {V ι : Type} [AddCommGroup V] [Module Geom V] [Fintype ι]
+theorem independent {V ι : Type} [AddCommGroup V] [Module Geom V] [Fintype ι]
     (f : V →ₗ[Geom] Polynomial Geom) (v : ι → V) (tag : ι → ℕ) (inj : Function.Injective tag)
     (hdeg : ∀ i, (f (v i)).degree = (tag i : ℕ)) : LinearIndependent Geom v := by
   classical

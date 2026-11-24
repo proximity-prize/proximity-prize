@@ -13,7 +13,7 @@ open K1_14_2_2 (Active dual orderOn mass sectionDegree)
 open K1_14_2_2_4 (pairCap)
 open K1_14_3 (Surface Parent ProjectedProduct)
 open scoped Classical
-open private sections from ProximityPrize.SubmissionLower.UpperBranch4
+open P1_7_4_2 (sections)
 
 theorem product_power {R G H : Jet} {k : ℕ} (cop : IsRelPrime G H)
     (left : G^k∣R) (right : H^k∣R) : (G*H)^k∣R := by
@@ -33,11 +33,11 @@ theorem powered_contact {R : Type*} [CommRing R] (I : Ideal R)
 
 /-- Strip a factor that is nonzero at the mark. Use the translated generic
 seed direction and the univariate order at the origin. -/
-theorem strip_contact {K : Type*} [Field K] (g a : K[X]) {n k : ℕ}
-    (unit : g.eval 0≠0) (van : (Polynomial.X : K[X])^n∣g^k*a) :
-    (Polynomial.X : K[X])^n∣a := by
-  have nd : ¬ (Polynomial.X : K[X])∣g := fun h => unit ((coeff_zero_eq_eval_zero g).symm.trans (Polynomial.X_dvd_iff.mp h))
-  have cop : IsCoprime (Polynomial.X : K[X]) g := Polynomial.irreducible_X.coprime_iff_not_dvd.mpr nd
+theorem strip_contact {K : Type*} [Field K] (g a : (Polynomial K)) {n k : ℕ}
+    (unit : g.eval 0≠0) (van : (Polynomial.X : (Polynomial K))^n∣g^k*a) :
+    (Polynomial.X : (Polynomial K))^n∣a := by
+  have nd : ¬ (Polynomial.X : (Polynomial K))∣g := fun h => unit ((coeff_zero_eq_eval_zero g).symm.trans (Polynomial.X_dvd_iff.mp h))
+  have cop : IsCoprime (Polynomial.X : (Polynomial K)) g := Polynomial.irreducible_X.coprime_iff_not_dvd.mpr nd
   exact (cop.pow (m:=n) (n:=k)).dvd_of_dvd_mul_left van
 
 /-- The rescue history uses a proper pair and every retained prime is dual.
@@ -79,7 +79,7 @@ theorem union_terminal (rows : Banks) (s : Shape) (left right : Finset Surface)
   exact ⟨f,prod,fun q mem=>(mem_union.mp mem).elim (pl q) (pr q)⟩
 
 open K1_14_2_2_3
-open private shiftedWord specialize_shiftedWord from ProximityPrize.SubmissionLower.Fast052
+open K1_14_2_2_3 (shiftedWord specialize_shiftedWord)
 
 /-- The prefix only needs order on the dual parents. A passing family of
 seed tests gives that order even for a powered or stripped synthetic row. -/
@@ -133,7 +133,7 @@ theorem not_two_common (s : Shape) (h N : ℕ) (hh : 0<h)
   · exact Lower6960.PowerLayers.forced_power hh hw h' hs hu np (allH P inside) small pc
       (fun i a ha=>allH _ (shift W hw R hr i a ha))
 
-open private fixed_of_no_seed from ProximityPrize.SubmissionLower.Fast051
+open K1_14_3R (fixed_of_no_seed)
 
 /-- Choose one helper for the entire finite prefix after stripping its unique
 exception. Its powers preserve the same factor avoidance. -/
@@ -159,8 +159,8 @@ theorem one_helper {ι : Type*} [Fintype ι] (P : ι→Jet) (ks : ι→ℕ)
   exact all G irr (left.trans (Finset.dvd_prod_of_mem P (Finset.mem_univ i))) degree seeded
     (irr.prime.dvd_of_dvd_pow right)
 
-open private section_bound component_height from ProximityPrize.SubmissionLower.PortHighFinish
-open private irreducible_cut from ProximityPrize.SubmissionLower.UpperBranch4
+open P0_10R_1 (section_bound component_height)
+open P1_7_4_1 (irreducible_cut)
 
 /-- The exceptional branch starts with just the known prime and its
 avoiding row. All its parent components really contain that prime. -/

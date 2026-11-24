@@ -107,7 +107,7 @@ theorem small_marks {w s T} (W : Word 179827 164632 w s T) (label : K→K)
 
 #print axioms small_marks
 
-private theorem root_factor {f : Equation} (nf : f≠0) (z : K) (S : K[X])
+private theorem root_factor {f : Equation} (nf : f≠0) (z : K) (S : (Polynomial K))
     (root : atMark f z S=0) : ∃ q : Equation,Irreducible q ∧ q∣f ∧ atMark q z S=0 := by
   let ev := eval₂RingHom (graphEval z) (atX S)
   change ev f=0 at root

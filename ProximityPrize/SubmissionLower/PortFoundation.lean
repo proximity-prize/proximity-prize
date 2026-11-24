@@ -95,17 +95,17 @@ def OrderTwo (s : Source) (Q : DifferentialPolynomial K 2) : Prop :=
     jetDegree Q (Fin.last 2) ≤ s.C
 def OrderOne (s : Source) (Q : DifferentialPolynomial K 1) : Prop :=
   Q ≠ 0 ∧ jetTotalDegree Q ≤ H s ∧ jetDegree Q (Fin.last 1) ≤ I₁ s
-def RegularRoot {r : ℕ} (Q : DifferentialPolynomial K r) (f : K[X]) : Prop :=
+def RegularRoot {r : ℕ} (Q : DifferentialPolynomial K r) (f : (Polynomial K)) : Prop :=
   ∃ G : DifferentialPolynomial K r, Irreducible G ∧ G ∣ Q ∧
     differentialSpecialization G f = 0 ∧ differentialSpecialization (separant G (Fin.last r)) f ≠ 0
-abbrev FX := FractionRing K[X]
+abbrev FX := FractionRing (Polynomial K)
 abbrev Geo := AlgebraicClosure FX
 abbrev CoeffRing := MvPolynomial (Fin k) Geo
 abbrev InitialRing (r : ℕ) := MvPolynomial (Fin (r+1)) Geo
 def embed : K →+* Geo :=
-  (algebraMap FX Geo).comp ((algebraMap K[X] FX).comp Polynomial.C)
-def center : Geo := algebraMap FX Geo (algebraMap K[X] FX Polynomial.X)
-def coeffPoint (f : K[X]) (i : Fin k) : Geo := embed (f.coeff i.val)
+  (algebraMap FX Geo).comp ((algebraMap (Polynomial K) FX).comp Polynomial.C)
+def center : Geo := algebraMap FX Geo (algebraMap (Polynomial K) FX Polynomial.X)
+def coeffPoint (f : (Polynomial K)) (i : Fin k) : Geo := embed (f.coeff i.val)
 def readJet (y : Fin k → Geo) (j : ℕ) : Geo :=
   ∑ i : Fin k, (i.val.choose j : Geo) * center^(i.val-j) * y i
 structure Chart (r : ℕ) where
@@ -134,7 +134,7 @@ structure Family₁ (s : Source) (F : Family 1) : Prop where
   index : (∑ i, (F.chart i).equation.degreeOf (Fin.last 1)) ≤ I₁ s
   bands : ∀ i, inBand₁ s (F.chart i).denominator ∧ ∀ j, inBand₁ s ((F.chart i).numerator j)
 def CoversRegular {r} (F : Family r) (Q : DifferentialPolynomial K r) : Prop :=
-  ∀ f : K[X], f.degree < k → RegularRoot Q f → ∃ i, coeffPoint f ∈ (F.chart i).imageSet
+  ∀ f : (Polynomial K), f.degree < k → RegularRoot Q f → ∃ i, coeffPoint f ∈ (F.chart i).imageSet
 structure ImageDegrees {r} (F : Family r) (budget : ℕ) : Prop where
   prime : ∀ i, (F.chart i).ideal.IsPrime
   dimension : ∀ i, (MvPolynomial.affineHilbertPolynomial (F.chart i).ideal).natDegree = r
@@ -178,10 +178,10 @@ abbrev frontLimit : ℕ := 16
 abbrev heightCap : ℕ := t + 1 - L - (frontLimit + 1)
 abbrev lowCutoff : ℤ := 2480
 abbrev Frac := GenericLayer.GenericField K
-abbrev Bivar := Polynomial K[X]
+abbrev Bivar := Polynomial (Polynomial K)
 structure BadMark (u : Words) (γ : K) where
   support : Finset I
-  decoder : K[X]
+  decoder : (Polynomial K)
   agreement : P0.agreement ≤ support.card
   degree : decoder.degree < k
   hits : ∀ i ∈ support, decoder.eval (node i) = u 0 i + γ * u 1 i
@@ -196,10 +196,10 @@ def Normal (u : Words) (γ : K) : Prop :=
 def TypeAtMostOne (u : Words) : Prop :=
   Principal.TypeOneSyndromes node (u 0) (u 1) k p
 def HomogeneousPrincipal (u : Words) : Prop :=
-  ∃ (a : ℕ) (g : Frac[X]), g ≠ 0 ∧ g.natDegree ≤ a ∧ a ≤ t ∧
-    ∀ P : Frac[X], P.natDegree ≤ t →
-      (((twoBlock u).map (algebraMap K[X] Frac)).mulVec (fun i => P.coeff i.val) = 0 ↔
-        ∃ Q : Frac[X], Q.natDegree ≤ t - a ∧ P = g * Q)
+  ∃ (a : ℕ) (g : (Polynomial Frac)), g ≠ 0 ∧ g.natDegree ≤ a ∧ a ≤ t ∧
+    ∀ P : (Polynomial Frac), P.natDegree ≤ t →
+      (((twoBlock u).map (algebraMap (Polynomial K) Frac)).mulVec (fun i => P.coeff i.val) = 0 ↔
+        ∃ Q : (Polynomial Frac), Q.natDegree ≤ t - a ∧ P = g * Q)
 def coefficientBlocks {F ι : Type} [Field F] [Fintype ι] [DecidableEq ι]
     (p : ℕ) (x u v : ι → F) (l t : ℕ) : Matrix (Fin 4 × Fin l) (Fin (t + 1)) F :=
   fun i j =>
@@ -224,7 +224,7 @@ structure TwoActive (u : Words) where
   degreeSum : a + b + c = 2 * k + 2
   nullitySum : nullity u + a + b = 2 * (t + 1)
   level : Strata.HasLevelHilbertFunction
-    (fun s j => algebraMap K[X] Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
+    (fun s j => algebraMap (Polynomial K) Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
     k a b c
 def TwoActive.height {u : Words} (T : TwoActive u) := (k + 1) - T.c
 abbrev Relation {u : Words} (T : TwoActive u) :=
@@ -237,16 +237,16 @@ def fixedNodes {u : Words} {T : TwoActive u} (R : Relation T) : Finset I := by
   classical
   exact Finset.univ.filter fun i =>
     (leftU R).eval (C (node i)) = 0 ∧ (leftV R).eval (C (node i)) = 0
-def extendSeed (U : Bivar) : Frac[X] :=
-  U.map (algebraMap K[X] Frac)
-def IsCommonGCD {F : Type} [Field F] (G U V : F[X]) : Prop :=
-  G ≠ 0 ∧ G ∣ U ∧ G ∣ V ∧ ∀ H : F[X], H ∣ U → H ∣ V → H ∣ G
-def atSlope (P : Bivar) (γ : K) : K[X] := P.map (evalRingHom γ)
-def seed : Bivar := Polynomial.C (R := K[X]) (Polynomial.X (R := K))
-def liftX (P : K[X]) : Bivar := P.map Polynomial.C
+def extendSeed (U : Bivar) : (Polynomial Frac) :=
+  U.map (algebraMap (Polynomial K) Frac)
+def IsCommonGCD {F : Type} [Field F] (G U V : (Polynomial F)) : Prop :=
+  G ≠ 0 ∧ G ∣ U ∧ G ∣ V ∧ ∀ H : (Polynomial F), H ∣ U → H ∣ V → H ∣ G
+def atSlope (P : Bivar) (γ : K) : (Polynomial K) := P.map (evalRingHom γ)
+def seed : Bivar := Polynomial.C (R := (Polynomial K)) (Polynomial.X (R := K))
+def liftX (P : (Polynomial K)) : Bivar := P.map Polynomial.C
 def twist : K →+* K := frobenius K p
-def amplitudeDegree (a₀ a₁ : K[X]) : ℕ := max a₀.natDegree a₁.natDegree
-def sixNorm (a : K[X]) : K[X] :=
+def amplitudeDegree (a₀ a₁ : (Polynomial K)) : ℕ := max a₀.natDegree a₁.natDegree
+def sixNorm (a : (Polynomial K)) : (Polynomial K) :=
   ∏ j : Fin 6, a.map (iterateFrobenius K p j.val)
 structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
   U : Bivar
@@ -272,13 +272,13 @@ def _root_.P0_4.columnRankAt (q : ℕ) (U V : Bivar) : ℕ :=
   Module.finrank Frac (Submodule.span Frac (Set.range fun j : Fin 4 =>
     extendSeed (Polynomial.Bivariate.swap
       (if j = 0 then U else if j = 1 then seed * U else if j = 2 then V else seed ^ q * V))))
-def threeU (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
+def threeU (a : (Polynomial K)) (β : Fin 2 → (Polynomial K)) : Bivar :=
   liftX a * (liftX ((β 0).map twist) + seed ^ p * liftX ((β 1).map twist))
-def _root_.P0_4.threeUAt (q : ℕ) (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
+def _root_.P0_4.threeUAt (q : ℕ) (a : (Polynomial K)) (β : Fin 2 → (Polynomial K)) : Bivar :=
   liftX a * (liftX ((β 0).map twist) + seed ^ q * liftX ((β 1).map twist))
-def _root_.P0_5.threeUAt (q : ℕ) (a : K[X]) (β : Fin 2 → K[X]) : Bivar :=
+def _root_.P0_5.threeUAt (q : ℕ) (a : (Polynomial K)) (β : Fin 2 → (Polynomial K)) : Bivar :=
   liftX a * (liftX ((β 0).map twist) + seed ^ q * liftX ((β 1).map twist))
-def threeV (b : K[X]) (α : Fin 2 → K[X]) : Bivar :=
+def threeV (b : (Polynomial K)) (α : Fin 2 → (Polynomial K)) : Bivar :=
   -(liftX b * (liftX (α 0) + seed * liftX (α 1)))
 def sameDirection (U V U' V' : Bivar) : Prop := U * V' = V * U'
 def relationOn (u : Words) (deleted : Finset I) (U V output : Bivar) : Prop :=
@@ -299,10 +299,10 @@ def _root_.P0_5.relationOnAt (q : ℕ) (u : Words) (deleted : Finset I) (U V out
 structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) where
   rank_eq : columnRank D.U D.V = 3
-  α : Fin 2 → K[X]
-  β : Fin 2 → K[X]
-  a : K[X]
-  b : K[X]
+  α : Fin 2 → (Polynomial K)
+  β : Fin 2 → (Polynomial K)
+  a : (Polynomial K)
+  b : (Polynomial K)
   a_ne : a ≠ 0
   b_ne : b ≠ 0
   α_primitive : IsCoprime (α 0) (α 1)
@@ -315,15 +315,15 @@ structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
   nodes : relationOn u (fixedNodes R) (threeU a β) (threeV b α) output
 structure AnchorModel (u : Words) (deleted : Finset I) where
   shift : K
-  pencil₀ : K[X]
-  pencil₁ : K[X]
+  pencil₀ : (Polynomial K)
+  pencil₁ : (Polynomial K)
   pencil₀_degree : pencil₀.degree < k
   pencil₁_degree : pencil₁.degree < k
-  E : K[X]
-  factor : K[X]
-  Q : K[X]
-  A₀ : K[X]
-  A₁ : K[X]
+  E : (Polynomial K)
+  factor : (Polynomial K)
+  Q : (Polynomial K)
+  A₀ : (Polynomial K)
+  A₁ : (Polynomial K)
   word : I → K
   word_fixed : ∀ i, twist (word i) = word i
   word_deleted : ∀ i ∈ deleted, word i = 0
@@ -347,12 +347,12 @@ def AnchorModel.overhead {u deleted} (M : AnchorModel u deleted) : ℤ :=
   (M.E.natDegree : ℤ) - M.factor.natDegree - amplitudeDegree M.A₀ M.A₁
 def AnchorModel.label {u deleted} (M : AnchorModel u deleted) (γ : K) : K :=
   γ - M.shift
-def AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) (γ : K) : K[X] :=
+def AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) (γ : K) : (Polynomial K) :=
   M.A₀ + Polynomial.C (M.label γ) * M.A₁
 def AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K}
-    (B : BadMark u γ) : K[X] :=
+    (B : BadMark u γ) : (Polynomial K) :=
   B.decoder - M.pencil₀ - Polynomial.C (M.label γ) * M.pencil₁
-structure AnchorMark {u deleted} (M : AnchorModel u deleted) (γ : K) (S : K[X]) where
+structure AnchorMark {u deleted} (M : AnchorModel u deleted) (γ : K) (S : (Polynomial K)) where
   bad : BadMark u γ
   avoids_deleted : Disjoint bad.support deleted
   scalar_fixed : S.map twist = S
@@ -362,7 +362,7 @@ structure AnchorMark {u deleted} (M : AnchorModel u deleted) (γ : K) (S : K[X])
   identity : M.E * M.decoder bad - Polynomial.C (M.label γ) * M.Q =
     M.factor * M.amplitude γ * S
 structure AnchoredFamily {u deleted} (M : AnchorModel u deleted) (Γ : Finset K) where
-  scalar : K → K[X]
+  scalar : K → (Polynomial K)
   mark : ∀ γ ∈ Γ, AnchorMark M γ (scalar γ)
   distinct : Set.InjOn scalar (Γ : Set K)
 def highPrefix (w : ℤ) : ℕ :=
@@ -383,7 +383,7 @@ open Polynomial Code LinearCode CoreDefinitions ToyProblem
 open FrobeniusLocator ProximityPrize.Benchmark
 open Sol1.OneCount Sol1.FiniteRowProjection
 open scoped NNReal
-private theorem dyadic_mul {a i j x y u v z w e s : ℕ}
+theorem dyadic_mul {a i j x y u v z w e s : ℕ}
     (hi : a ^ i ≤ x * 2 ^ u) (hj : a ^ j ≤ y * 2 ^ v)
     (hc : x * y ≤ z * 2 ^ w) (he : i + j = e) (hs : u + v + w = s) :
     a ^ e ≤ z * 2 ^ s := by

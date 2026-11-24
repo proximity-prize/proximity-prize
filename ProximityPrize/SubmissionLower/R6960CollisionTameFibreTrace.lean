@@ -9,7 +9,7 @@ namespace Lower6960.CollisionTame
 noncomputable section
 open Polynomial Module NormalizedFiber
 open scoped Polynomial Matrix BigOperators
-open private Lower6960.NormalizedFiber.specialize from ProximityPrize.SubmissionLower.R6960NormalizedFiber
+open Lower6960.NormalizedFiber (specialize)
 
 variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
   [Algebra (FractionRing (Plane k)) E] [IsScalarTower (Plane k) (FractionRing (Plane k)) E]
@@ -18,8 +18,8 @@ variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
 local instance fibreRing (z : k) : CommRing (Fiber E z) :=
   @Ideal.Quotient.commRing (↥(Order k E)) ((Order k E).toCommRing) (sliceIdeal E z)
 
-local instance fibreAlgebra (z : k) : Algebra k[X] (Fiber E z) :=
-  @RingHom.toAlgebra k[X] (Fiber E z) _ (fibreRing (E:=E) z).toCommSemiring (baseMap E z)
+local instance fibreAlgebra (z : k) : Algebra (Polynomial k) (Fiber E z) :=
+  @RingHom.toAlgebra (Polynomial k) (Fiber E z) _ (fibreRing (E:=E) z).toCommSemiring (baseMap E z)
 
 private abbrev FieldDegree (k E : Type) [Field k] [Field E] [Algebra (FractionRing (Plane k)) E] :=
   Fin (finrank (FractionRing (Plane k)) E)
@@ -36,7 +36,7 @@ private theorem quotient_smul (z : k) (a : Plane k) (x : Order k E) :
 /-- The restricted generic trace specializes to the actual fibre trace.
 The calculation uses the common lift basis and clears the multiplication
 columns by a scalar that becomes one on the fibre. -/
-theorem trace_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) k[X] (Fiber E z))
+theorem trace_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) (Polynomial k) (Fiber E z))
     (bf : Basis (FieldDegree k E) (FractionRing (Plane k)) E)
     (u : FieldDegree k E→Order k E) (g : Plane k)
     (red : ∀ i,quotientMap E z (u i)=b i) (gen : ∀ i,bf i=(u i:E))
@@ -44,7 +44,7 @@ theorem trace_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) k[X] (Fiber 
     (patch : ∀ w : Order k E,∃ t : FieldDegree k E→Plane k,(∑ i,t i • u i)=g • w)
     (x : Order k E) :
     (integralTraceForm (A:=Plane k) (E:=E) (FractionRing (Plane k)) x 1).eval (C z)=
-      Algebra.trace k[X] (Fiber E z) (quotientMap E z x) := by
+      Algebra.trace (Polynomial k) (Fiber E z) (quotientMap E z x) := by
   let A := Plane k
   let F := FractionRing A
   let j := algebraMap A F
@@ -89,14 +89,14 @@ theorem trace_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) k[X] (Fiber 
 
 /-- Literal trace-matrix agreement between the integral coefficients on
 the plane and the free basis on the scalar fibre. -/
-theorem gram_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) k[X] (Fiber E z))
+theorem gram_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) (Polynomial k) (Fiber E z))
     (bf : Basis (FieldDegree k E) (FractionRing (Plane k)) E)
     (u : FieldDegree k E→Order k E) (g : Plane k)
     (red : ∀ i,quotientMap E z (u i)=b i) (gen : ∀ i,bf i=(u i:E))
     (one : g.eval (C z)=1)
     (patch : ∀ w : Order k E,∃ t : FieldDegree k E→Plane k,(∑ i,t i • u i)=g • w) :
     (tupleGram (integralTraceForm (A:=Plane k) (E:=E) (FractionRing (Plane k))) u).map (evalRingHom (C z))=
-      Algebra.traceMatrix k[X] b := by
+      Algebra.traceMatrix (Polynomial k) b := by
   apply Matrix.ext
   intro i j
   have same : integralTraceForm (A:=Plane k) (E:=E) (FractionRing (Plane k)) (u i) (u j)=
@@ -113,8 +113,8 @@ the chosen frame disappears since it is one on the whole fibre. -/
 theorem fibre_trace_det_associated (δ : Plane k)
     (principal : normalizationDiscriminant (A:=Plane k) (E:=E) (FractionRing (Plane k))=Ideal.span {δ})
     (z : k) :
-    ∃ b : Basis (FieldDegree k E) k[X] (Fiber E z),
-      Associated (Algebra.traceMatrix k[X] b).det (δ.eval (C z)) := by
+    ∃ b : Basis (FieldDegree k E) (Polynomial k) (Fiber E z),
+      Associated (Algebra.traceMatrix (Polynomial k) b).det (δ.eval (C z)) := by
   obtain ⟨b,bf,u,g,red,gen,one,patch⟩ := scalar_fibre_frames (E:=E) z
   let tr := integralTraceForm (A:=Plane k) (E:=E) (FractionRing (Plane k))
   let n := Fintype.card (FieldDegree k E)
@@ -133,7 +133,7 @@ theorem fibre_trace_det_associated (δ : Plane k)
     rw [map_mul,map_pow,show j g=1 from one,one_pow,one_mul] at d
     exact d
   have eq := congrArg Matrix.det (gram_reduces_on_fibre z b bf u g red gen one patch)
-  have det : j D=(Algebra.traceMatrix k[X] b).det := (RingHom.map_det j _).trans eq
+  have det : j D=(Algebra.traceMatrix (Polynomial k) b).det := (RingHom.map_det j _).trans eq
   exact ⟨b,det ▸ (dvd_dvd_iff_associated.mp ⟨rev,map_dvd j divides⟩)⟩
 
 #print axioms trace_reduces_on_fibre

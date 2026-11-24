@@ -19,7 +19,7 @@ variable {E : Type} [Field E] [Algebra ChartField E]
 local instance multiplesAxisRing (z:L) : CommRing (Axis E true z) :=
   @Ideal.Quotient.commRing (Tor E) inferInstance (axisIdeal E true z)
 
-private def chartSubring (b:Bool) (z:L) : Subring (Axis E true z) where
+def chartSubring (b:Bool) (z:L) : Subring (Axis E true z) where
   carrier := chartImage E true z b
   zero_mem' := (chartImage E true z b).zero_mem
   one_mem' := ⟨1,isIntegral_one,map_one (Ideal.Quotient.mk (axisIdeal E true z))⟩
@@ -29,7 +29,7 @@ private def chartSubring (b:Bool) (z:L) : Subring (Axis E true z) where
     exact ⟨u*v,iu.mul iv,map_mul (Ideal.Quotient.mk (axisIdeal E true z)) _ _⟩
   neg_mem' := (chartImage E true z b).neg_mem
 
-private theorem chart_poly_mem [FiniteDimensional ChartField E] (b:Bool) (z:L) (nz:z≠0) (h:L[X]) :
+theorem chart_poly_mem [FiniteDimensional ChartField E] (b:Bool) (z:L) (nz:z≠0) (h:(Polynomial L)) :
     polyMap E true z b h∈chartImage E true z b := by
   let : Algebra (Plane L) E := axisPlaneAlgebra b
   let e := axisFibreData (E:=E) b z nz
@@ -41,7 +41,7 @@ once the calculated indices clear the finite multiple and the common
 projector at the reciprocal boundary. -/
 theorem marked_axis_multiple [FiniteDimensional ChartField E] [Algebra.IsSeparable ChartField E]
     (z:L) (nz:z≠0) (η:AxisGeneric (E:=E) z)
-    (h d : L[X]) (a:ℕ) (degree:h.natDegree≤a) (unit:d.eval 0≠0)
+    (h d : (Polynomial L)) (a:ℕ) (degree:h.natDegree≤a) (unit:d.eval 0≠0)
     (finite : ∃ v∈chartImage E true z false,
       axisToGeneric (E:=E) z v=axisToGeneric (E:=E) z (polyMap E true z false h)*η)
     (infinity : ∃ v∈chartImage E true z true,
@@ -58,24 +58,24 @@ theorem marked_axis_multiple [FiniteDimensional ChartField E] [Algebra.IsSeparab
   let φf : Af→+*V := ρ.comp Af.subtype
   let φi : Ai→+*V := ρ.comp Ai.subtype
   let poly := (polyMap E true z true).codRestrict Ai (fun h=>chart_poly_mem true z nz h)
-  let : Algebra L[X] Ai := poly.toAlgebra
-  have ev (b:Bool) (p:L[X]) :
+  let : Algebra (Polynomial L) Ai := poly.toAlgebra
+  have ev (b:Bool) (p:(Polynomial L)) :
       ρ (polyMap E true z b p)=p.eval₂ ι (if b then (↑xu⁻¹:V) else ↑xu) := by
     rw [axis_polyEval,Polynomial.hom_eval₂]
     cases b <;> rfl
-  have scal (p:L[X]) : φi (algebraMap L[X] Ai p)=p.eval₂ ι (↑xu⁻¹) := ev true p
+  have scal (p:(Polynomial L)) : φi (algebraMap (Polynomial L) Ai p)=p.eval₂ ι (↑xu⁻¹) := ev true p
   have common (u:Af) : ∃ n:ℕ,∃ v:Ai,φi v=(↑xu⁻¹:V)^n*φf u := by
-    let S := Submonoid.powers (Polynomial.X:L[X])
-    let : Module L[X] U := Module.compHom U (chartEmbedding (k:=L) true).toRingHom
+    let S := Submonoid.powers (Polynomial.X:(Polynomial L))
+    let : Module (Polynomial L) U := Module.compHom U (chartEmbedding (k:=L) true).toRingHom
     let nmap := nativeMap E true z true
     let : IsLocalizedModule S nmap := native_localization E true z nz true
     obtain ⟨⟨v,p⟩,rel⟩ := IsLocalizedModule.surj S nmap (u:U)
     obtain ⟨n,pn⟩ := p.property
     let y : Ai := ⟨v.val,v.property⟩
     refine ⟨n,y,?_⟩
-    change axisLaurent E true z (chartEmbedding true (p:L[X]))*(u:U)=v.val at rel
-    have axisPow : axisLaurent E true z (chartEmbedding true (p:L[X]))=((↑(axisX (E:=E) z)⁻¹:U)^n) := by
-      rw [show axisLaurent E true z (chartEmbedding true (p:L[X]))=polyMap E true z true p from
+    change axisLaurent E true z (chartEmbedding true (p:(Polynomial L)))*(u:U)=v.val at rel
+    have axisPow : axisLaurent E true z (chartEmbedding true (p:(Polynomial L)))=((↑(axisX (E:=E) z)⁻¹:U)^n) := by
+      rw [show axisLaurent E true z (chartEmbedding true (p:(Polynomial L)))=polyMap E true z true p from
         DFunLike.congr_fun (signed_chart E true z true) _]
       rw [←pn,map_pow,axis_polyEval]
       exact congrArg (·^n) (eval₂_X _ _)

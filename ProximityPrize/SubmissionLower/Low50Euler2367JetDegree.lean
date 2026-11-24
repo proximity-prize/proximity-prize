@@ -54,12 +54,12 @@ private theorem signedChoose_eq {D i k : ℕ} (h : k ≤ D) :
       ring
 
 /-- Euler-adjusted Hasse jet, using physical degree cap `D`. -/
-noncomputable def euler (D i : ℕ) (f : R[X]) : R[X] :=
+noncomputable def euler (D i : ℕ) (f : (Polynomial R)) : (Polynomial R) :=
   ∑ r ∈ Finset.range (i+1),
     C ((-1 : R) ^ r * (D-r).choose (i-r)) * (X^r * hasseDeriv r f)
 
 
-theorem coeff_euler {D i k : ℕ} (f : R[X]) (hk : k ≤ D) :
+theorem coeff_euler {D i k : ℕ} (f : (Polynomial R)) (hk : k ≤ D) :
     (euler D i f).coeff k = ((D-k).choose i : R) * f.coeff k := by
   rw [← signedChoose_eq hk]
   unfold euler signedChoose
@@ -71,7 +71,7 @@ theorem coeff_euler {D i k : ℕ} (f : R[X]) (hk : k ≤ D) :
   · simp [hr, hasseDeriv_coeff, Nat.sub_add_cancel hr, mul_assoc]
   · simp [hr, Nat.choose_eq_zero_of_lt (Nat.lt_of_not_ge hr)]
 
-theorem natDegree_euler_le (D i : ℕ) (f : R[X]) : (euler D i f).natDegree ≤ f.natDegree := by
+theorem natDegree_euler_le (D i : ℕ) (f : (Polynomial R)) : (euler D i f).natDegree ≤ f.natDegree := by
   apply natDegree_le_iff_coeff_eq_zero.mpr
   intro k hk
   unfold euler
@@ -83,7 +83,7 @@ theorem natDegree_euler_le (D i : ℕ) (f : R[X]) : (euler D i f).natDegree ≤ 
   · simp [hr, hasseDeriv_coeff, Nat.sub_add_cancel hr, coeff_eq_zero_of_natDegree_lt hk]
   · simp [hr]
 
-theorem natDegree_euler_le_sub {D i : ℕ} {f : R[X]} (hf : f.natDegree ≤ D) :
+theorem natDegree_euler_le_sub {D i : ℕ} {f : (Polynomial R)} (hf : f.natDegree ≤ D) :
     (euler D i f).natDegree ≤ D-i := by
   apply natDegree_le_iff_coeff_eq_zero.mpr
   intro k hk

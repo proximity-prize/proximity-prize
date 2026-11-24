@@ -110,10 +110,10 @@ section
 namespace CJ0
 noncomputable section
 open Polynomial Finset ProximityPrize.Benchmark
-open private occupancy from ProximityPrize.SubmissionLower.Fast055
-open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
-theorem section_capacity {A : ℕ} {w : Node → K} {T : Finset K[X]}
-    (h : (T : Set K[X]) ⊆ close A w) (hA : AgreementOK A) (cap : ℕ)
+open K1_14_6 (occupancy)
+open P0_10 (incidence_arithmetic)
+theorem section_capacity {A : ℕ} {w : Node → K} {T : Finset (Polynomial K)}
+    (h : (T : Set (Polynomial K)) ⊆ close A w) (hA : AgreementOK A) (cap : ℕ)
     (hsection : ∀ i : Node, (∃ γ ∈ T, γ.eval (node i) ≠ w i) →
       (T.filter fun γ => γ.eval (node i) = w i).card ≤ cap) :
     (gap A) * T.card ≤ errors A * cap + (gap A) := by
@@ -124,20 +124,20 @@ theorem section_capacity {A : ℕ} {w : Node → K} {T : Finset K[X]}
   · have hb := Nat.mul_le_mul_left (gap A) hm
     simp only [Nat.mul_one] at hb
     omega
-  let hits (γ : K[X]) : Finset Node := univ.filter fun i => γ.eval (node i) = w i
+  let hits (γ : (Polynomial K)) : Finset Node := univ.filter fun i => γ.eval (node i) = w i
   let common : Finset Node := univ.filter fun i => ∀ γ ∈ T, γ.eval (node i) = w i
   let nodes : Finset Node := univ \ common
-  have common_le (γ : K[X]) (hγ : γ ∈ T) : common ⊆ hits γ := by
+  have common_le (γ : (Polynomial K)) (hγ : γ ∈ T) : common ⊆ hits γ := by
     intro i hi
     exact mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hi).2 γ hγ⟩
-  have hit_count (γ : K[X]) (hγ : γ ∈ T) : A ≤ (hits γ).card := by
+  have hit_count (γ : (Polynomial K)) (hγ : γ ∈ T) : A ≤ (hits γ).card := by
     exact (h hγ).2
-  have degree (a : K[X]) (ha : a ∈ T) : a.natDegree ≤ N := by
+  have degree (a : (Polynomial K)) (ha : a ∈ T) : a.natDegree ≤ N := by
     by_cases hz : a = 0
     · simp [hz]
     · have hdeg := (Polynomial.natDegree_lt_iff_degree_lt hz).2 (h ha).1
       exact Nat.le_of_lt_succ hdeg
-  have pair_count (a : K[X]) (ha : a ∈ T) (b : K[X]) (hb : b ∈ T) (hab : a ≠ b) :
+  have pair_count (a : (Polynomial K)) (ha : a ∈ T) (b : (Polynomial K)) (hb : b ∈ T) (hab : a ≠ b) :
       (hits a ∩ hits b).card ≤ N := by
     refine (FrobeniusLocator.Strata.root_nodes_card_le node node.injective
       (a-b) (sub_ne_zero.mpr hab) _ ?_).trans
@@ -159,7 +159,7 @@ theorem section_capacity {A : ℕ} {w : Node → K} {T : Finset K[X]}
     change n - common.card = (A-common.card) + (n-A)
     have hbound := hcommon.trans hd.le
     omega
-  have exists_trim (γ : K[X]) : ∃ B : Finset Node, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
+  have exists_trim (γ : (Polynomial K)) : ∃ B : Finset Node, γ ∈ T → B ⊆ hits γ \ common ∧ B.card = x := by
     by_cases hγ : γ ∈ T
     · have hc := hit_count γ hγ
       have hsize : x ≤ (hits γ \ common).card := by
@@ -170,10 +170,10 @@ theorem section_capacity {A : ℕ} {w : Node → K} {T : Finset K[X]}
       exact ⟨B, fun _ => ⟨hB, hcard⟩⟩
     · exact ⟨∅, fun h => (hγ h).elim⟩
   choose B hB using exists_trim
-  have into_nodes (γ : K[X]) (hγ : γ ∈ T) : B γ ⊆ nodes := by
+  have into_nodes (γ : (Polynomial K)) (hγ : γ ∈ T) : B γ ⊆ nodes := by
     intro i hi
     exact mem_sdiff.mpr ⟨mem_univ _, (mem_sdiff.mp ((hB γ hγ).1 hi)).2⟩
-  have overlap (a : K[X]) (ha : a ∈ T) (b : K[X]) (hb : b ∈ T) (hab : a ≠ b) :
+  have overlap (a : (Polynomial K)) (ha : a ∈ T) (b : (Polynomial K)) (hb : b ∈ T) (hab : a ≠ b) :
       (B a ∩ B b).card ≤ t := by
     have cover : (B a ∩ B b) ∪ common ⊆ hits a ∩ hits b := by
       intro i hi
@@ -208,21 +208,21 @@ namespace CJ0
 noncomputable section
 open Finset MvPolynomial
 open scoped Polynomial BigOperators
-open private curve_degree_nat from ProximityPrize.SubmissionLower.Fast055
-private def valueCut (x a : K) : CoeffRing :=
+open K1_14_6 (curve_degree_nat)
+def valueCut (x a : K) : CoeffRing :=
   (∑ i : Fin k, C (embed x ^ i.val) * MvPolynomial.X i) - C (embed a)
-private theorem valueCut_degree (x a : K) : (valueCut x a).totalDegree ≤ 1 := by
+theorem valueCut_degree (x a : K) : (valueCut x a).totalDegree ≤ 1 := by
   apply (totalDegree_sub_C_le _ _).trans
   apply totalDegree_finsetSum_le
   intro i _
   simpa only [totalDegree_C, totalDegree_X, zero_add] using
     (totalDegree_mul (C (embed x ^ i.val)) (MvPolynomial.X i))
-private theorem natDegree_bound {f : K[X]} (h : f.degree < k) : f.natDegree < k := by
+private theorem natDegree_bound {f : (Polynomial K)} (h : f.degree < k) : f.natDegree < k := by
   by_cases hz : f = 0
   · rw [hz, Polynomial.natDegree_zero]
     exact Nat.zero_lt_succ _
   · exact (Polynomial.natDegree_lt_iff_degree_lt hz).2 h
-private theorem valueCut_eval {f : K[X]} (h : f.degree < k) (x a : K) :
+theorem valueCut_eval {f : (Polynomial K)} (h : f.degree < k) (x a : K) :
     aeval (coeffPoint f) (valueCut x a) = 0 ↔ f.eval x = a := by
   have heval : f.eval x = ∑ j : Fin k, f.coeff j.val * x ^ j.val := by
     rw [Fin.sum_univ_eq_sum_range (fun j => f.coeff j * x ^ j)]
@@ -235,8 +235,8 @@ private theorem valueCut_eval {f : K[X]} (h : f.degree < k) (x a : K) :
     Algebra.algebraMap_self_apply]
   rw [heval, ← hmap]
   exact embed.injective.eq_iff
-private theorem coeffPoint_injOn {A w} {Γ : Finset K[X]} (h : (Γ : Set K[X]) ⊆ close A w) :
-    Set.InjOn coeffPoint (Γ : Set K[X]) := by
+private theorem coeffPoint_injOn {A w} {Γ : Finset (Polynomial K)} (h : (Γ : Set (Polynomial K)) ⊆ close A w) :
+    Set.InjOn coeffPoint (Γ : Set (Polynomial K)) := by
   intro f hf g hg heq
   apply Polynomial.ext
   intro j
@@ -245,7 +245,7 @@ private theorem coeffPoint_injOn {A w} {Γ : Finset K[X]} (h : (Γ : Set K[X]) �
   · have hfj := (natDegree_bound (h hf).1).trans_le (Nat.le_of_not_gt hj)
     have hgj := (natDegree_bound (h hg).1).trans_le (Nat.le_of_not_gt hj)
     rw [Polynomial.coeff_eq_zero_of_natDegree_lt hfj, Polynomial.coeff_eq_zero_of_natDegree_lt hgj]
-private theorem zeroDim_count {A w} {Γ : Finset K[X]} (h : (Γ : Set K[X]) ⊆ close A w) (P : Ideal CoeffRing)
+private theorem zeroDim_count {A w} {Γ : Finset (Polynomial K)} (h : (Γ : Set (Polynomial K)) ⊆ close A w) (P : Ideal CoeffRing)
     (hdim : (affineHilbertPolynomial P).natDegree = 0)
     (hpoints : ∀ γ ∈ Γ, coeffPoint γ ∈ zeroLocus Geo P) :
     (Γ.card : ℚ) ≤ affineDegree P := by
@@ -261,11 +261,11 @@ private theorem zeroDim_count {A w} {Γ : Finset K[X]} (h : (Γ : Set K[X]) ⊆ 
   have hn := Set.ncard_le_ncard hsub hfinite
   rw [Set.ncard_coe_finset, hA] at hn
   exact (Nat.cast_le.mpr hn).trans hdegree
-private theorem section_count {A w} {Γ : Finset K[X]} (h : (Γ : Set K[X]) ⊆ close A w) {P : Ideal CoeffRing}
+private theorem section_count {A w} {Γ : Finset (Polynomial K)} (h : (Γ : Set (Polynomial K)) ⊆ close A w) {P : Ideal CoeffRing}
     (hP : P.IsPrime) (hpoints : ∀ γ ∈ Γ, coeffPoint γ ∈ zeroLocus Geo P)
     (x a : K) (hmiss : ∃ γ ∈ Γ, γ.eval x ≠ a)
     {c : ℚ} (hc : 0 ≤ c)
-    (bound : ∀ (V : Finset K[X]), V ⊆ Γ → ∀ (Q : Ideal CoeffRing), Q.IsPrime →
+    (bound : ∀ (V : Finset (Polynomial K)), V ⊆ Γ → ∀ (Q : Ideal CoeffRing), Q.IsPrime →
       (affineHilbertPolynomial Q).natDegree + 1 = (affineHilbertPolynomial P).natDegree →
       (∀ γ ∈ V, coeffPoint γ ∈ zeroLocus Geo Q) →
       (V.card : ℚ) ≤ c * affineDegree Q) :
@@ -305,7 +305,7 @@ private theorem section_count {A w} {Γ : Finset K[X]} (h : (Γ : Set K[X]) ⊆ 
         (principalCut_natDegree_affineHilbertPolynomial_add_one hproper hmin)
         (fun _ hγ => (mem_filter.mp hγ).2)
     _ ≤ c * affineDegree P := by rw [← mul_sum]; exact mul_le_mul_of_nonneg_left hdeg hc
-private theorem curve_capacity {A w} {T : Finset K[X]} (hT : (T : Set K[X]) ⊆ close A w)
+theorem curve_capacity {A w} {T : Finset (Polynomial K)} (hT : (T : Set (Polynomial K)) ⊆ close A w)
     (hA : AgreementOK A) {P : Ideal CoeffRing} (hp : P.IsPrime)
     (hd : (affineHilbertPolynomial P).natDegree = 1)
     (hpoints : ∀ f ∈ T, coeffPoint f ∈ zeroLocus Geo P) :
@@ -329,7 +329,7 @@ private theorem curve_capacity {A w} {T : Finset K[X]} (hT : (T : Set K[X]) ⊆ 
   have hstrict := Nat.mul_lt_mul_of_pos_right hA.beta_lt_two hδ
   rw [mul_comm 2 (gap A), mul_assoc] at hstrict
   omega
-private theorem surface_capacity {A w} {T : Finset K[X]} (hT : (T : Set K[X]) ⊆ close A w)
+private theorem surface_capacity {A w} {T : Finset (Polynomial K)} (hT : (T : Set (Polynomial K)) ⊆ close A w)
     (hA : AgreementOK A) {P : Ideal CoeffRing} (hp : P.IsPrime)
     (hd : (affineHilbertPolynomial P).natDegree = 2)
     (hpoints : ∀ f ∈ T, coeffPoint f ∈ zeroLocus Geo P) :
@@ -345,7 +345,7 @@ private theorem surface_capacity {A w} {T : Finset K[X]} (hT : (T : Set K[X]) �
   have hq : (gap A : ℚ)*T.card ≤ (errors A : ℚ)*(⌊cost⌋₊ : ℚ) + gap A := by exact_mod_cast hn
   exact hq.trans (add_le_add (mul_le_mul_of_nonneg_left (Nat.floor_le hcost)
     (Nat.cast_nonneg (errors A))) le_rfl)
-theorem family_capacity {A w r budget} {T : Finset K[X]} (hT : (T : Set K[X]) ⊆ close A w)
+theorem family_capacity {A w r budget} {T : Finset (Polynomial K)} (hT : (T : Set (Polynomial K)) ⊆ close A w)
     (hA : AgreementOK A) (hr : r = 1 ∨ r = 2) (F : Family r) (hg : ImageDegrees F budget)
     (hcover : ∀ f ∈ T, ∃ i, coeffPoint f ∈ (F.chart i).imageSet) :
     (gap A : ℚ)*T.card ≤ (errors A : ℚ)*(r*budget : ℕ) + (gap A : ℚ)*F.count := by
@@ -358,7 +358,7 @@ theorem family_capacity {A w r budget} {T : Finset K[X]} (hT : (T : Set K[X]) �
     exact mem_biUnion.mpr ⟨i, mem_univ _, mem_filter.mpr ⟨hf, hi⟩⟩
   have hone (i : Fin F.count) : (gap A : ℚ)*(part i).card ≤
       (errors A : ℚ)*r*affineDegree (F.chart i).ideal + gap A := by
-    have hsub : (part i : Set K[X]) ⊆ close A w := fun _ hf => hT (mem_filter.mp hf).1
+    have hsub : (part i : Set (Polynomial K)) ⊆ close A w := fun _ hf => hT (mem_filter.mp hf).1
     have hp : ∀ f ∈ part i, coeffPoint f ∈ zeroLocus Geo (F.chart i).ideal :=
       fun _ hf => zeroLocus_vanishingIdeal_le _ (mem_filter.mp hf).2
     rcases hr with h | h
@@ -393,7 +393,7 @@ def c2 : Prop :=
     stackRank A s w ≤ n * originRank A s
 def c5 : Prop :=
   ∀ s, ShapeOK s → ∀ Q, OrderTwo s Q →
-    ∃ Q₁, OrderOne s Q₁ ∧ ∀ f : K[X], f.degree < k →
+    ∃ Q₁, OrderOne s Q₁ ∧ ∀ f : (Polynomial K), f.degree < k →
       differentialSpecialization Q f = 0 → ¬ RegularRoot Q f →
       differentialSpecialization Q₁ f = 0
 def c6 : Prop :=
@@ -403,8 +403,8 @@ def c7 : Prop :=
   ∀ s, ShapeOK s → ∀ F : Family 1, Family₁ s F → ImageDegrees F (R₁ s)
 def c8 : Prop :=
   ∀ s, ShapeOK s → ∀ Q₁, OrderOne s Q₁ →
-    ∃ G : Polynomial K[X], G ≠ 0 ∧ G.natDegree ≤ H s*(H s-1) ∧
-      ∀ f : K[X], f.degree < k → differentialSpecialization Q₁ f = 0 →
+    ∃ G : Polynomial (Polynomial K), G ≠ 0 ∧ G.natDegree ≤ H s*(H s-1) ∧
+      ∀ f : (Polynomial K), f.degree < k → differentialSpecialization Q₁ f = 0 →
         ¬ RegularRoot Q₁ f → G.eval f = 0
 end
 end CJ0
@@ -920,15 +920,15 @@ noncomputable section
 open CJ0 PolynomialDifferential
 open scoped BigOperators Polynomial
 abbrev Equation := DifferentialPolynomial K 2
-def centerMap : K[X] →+* Geo :=
-  (algebraMap FX Geo).comp (algebraMap K[X] FX)
+def centerMap : (Polynomial K) →+* Geo :=
+  (algebraMap FX Geo).comp (algebraMap (Polynomial K) FX)
 def lifted (G : Equation) : DifferentialPolynomial Geo 2 :=
   MvPolynomial.map embed G
 def initial (G : Equation) : InitialRing 2 :=
   initialJetEquation center (lifted G)
 def initialSep (G : Equation) : InitialRing 2 :=
   initialJetSeparant center (lifted G)
-def nativeJet (f : K[X]) : Fin 3 → Geo :=
+def nativeJet (f : (Polynomial K)) : Fin 3 → Geo :=
   polynomialJet center (f.map embed)
 structure FactorFamily (Q : Equation) where
   count : ℕ
@@ -940,7 +940,7 @@ structure FactorFamily (Q : Equation) where
   component : ∀ i, equation i ∣ initial (source i)
   regular : ∀ i, ¬ equation i ∣ initialSep (source i)
   product_dvd : (∏ i, equation i) ∣ initial Q
-  covers : ∀ f : K[X], RegularRoot Q f →
+  covers : ∀ f : (Polynomial K), RegularRoot Q f →
     ∃ i, differentialSpecialization (source i) f = 0 ∧
       MvPolynomial.eval (nativeJet f) (equation i) = 0 ∧
       MvPolynomial.eval (nativeJet f) (initialSep (source i)) ≠ 0
@@ -955,7 +955,7 @@ open scoped BigOperators
 set_option maxHeartbeats 600000
 set_option maxRecDepth 4000
 theorem centerMap_injective : Function.Injective centerMap :=
-  (algebraMap FX Geo).injective.comp (IsFractionRing.injective K[X] FX)
+  (algebraMap FX Geo).injective.comp (IsFractionRing.injective (Polynomial K) FX)
 theorem initial_eq_map (G : Equation) :
     initial G = MvPolynomial.map centerMap (MvPolynomial.optionEquivRight K (Fin 3) G) := by
   let a : Equation →+* InitialRing 2 :=
@@ -985,7 +985,7 @@ theorem initial_ne_zero {G : Equation} (hG : G ≠ 0) : initial G ≠ 0 := by
   intro h
   apply hG
   exact initial_injective (h.trans (by simp [initial, lifted, initialJetEquation]))
-private theorem eval_at_center (P : K[X]) : (P.map embed).eval center = centerMap P := by
+theorem eval_at_center (P : (Polynomial K)) : (P.map embed).eval center = centerMap P := by
   rw [eval_map]
   change eval₂RingHom embed center P = centerMap P
   have h : eval₂RingHom embed center = centerMap := by
@@ -998,19 +998,19 @@ private theorem eval_at_center (P : K[X]) : (P.map embed).eval center = centerMa
       rw [eval₂_X]
       rfl
   rw [h]
-theorem initial_eval (G : Equation) (f : K[X]) :
+theorem initial_eval (G : Equation) (f : (Polynomial K)) :
     MvPolynomial.eval (nativeJet f) (initial G) =
       centerMap (differentialSpecialization G f) := by
   rw [initial, ← MvPolynomial.aeval_eq_eval, aeval_initialJetEquation, nativeJet,
     ← eval_differentialSpecialization, lifted, ← map_differentialSpecialization, eval_at_center]
-theorem initialSep_eval (G : Equation) (f : K[X]) :
+theorem initialSep_eval (G : Equation) (f : (Polynomial K)) :
     MvPolynomial.eval (nativeJet f) (initialSep G) =
       centerMap (differentialSpecialization (separant G (Fin.last 2)) f) := by
   have he : initialSep G = initial (separant G (Fin.last 2)) := by
     rw [initialSep, initialJetSeparant, initial, lifted, lifted, map_separant]
     rfl
   rw [he, initial_eval]
-private theorem readJet_eq {L : ℕ} (P : Geo[X]) (hp : P.degree < L) (j : ℕ) :
+theorem readJet_eq {L : ℕ} (P : (Polynomial Geo)) (hp : P.degree < L) (j : ℕ) :
     (∑ i : Fin L, (i.val.choose j : Geo) * center^(i.val-j) * P.coeff i.val) =
       (hasseDeriv j P).eval center := by
   rw [hasseDeriv_apply, ← Polynomial.sum_fin
@@ -1037,12 +1037,12 @@ private theorem weighted_map_eq {σ R S : Type*} [CommSemiring R] [CommSemiring 
 theorem initial_weight (w : Fin 3 → ℕ) (G : Equation) :
     (initial G).weightedTotalDegree w = G.weightedTotalDegree (fun j => j.elim 0 w) := by
   rw [initial_eq_map, weighted_map_eq _ centerMap_injective, weightedTotalDegree_optionEquivRight]
-private theorem lifted_weight (w : Option (Fin 3) → ℕ) (G : Equation) :
+theorem lifted_weight (w : Option (Fin 3) → ℕ) (G : Equation) :
     (lifted G).weightedTotalDegree w = G.weightedTotalDegree w :=
   weighted_map_eq embed embed.injective w G
-private theorem lifted_total (G : Equation) : jetTotalDegree (lifted G) = jetTotalDegree G :=
+theorem lifted_total (G : Equation) : jetTotalDegree (lifted G) = jetTotalDegree G :=
   lifted_weight jetDegreeWeight G
-private theorem lifted_top (G : Equation) :
+theorem lifted_top (G : Equation) :
     jetDegree (lifted G) (Fin.last 2) = jetDegree G (Fin.last 2) := by
   simpa only [jetDegree, weightedTotalDegree_piSingle] using
     lifted_weight (Pi.single (some (Fin.last 2)) 1) G
@@ -1054,7 +1054,7 @@ theorem orderTwo_of_dvd {s : Source} {G Q : Equation} (hQ : OrderTwo s Q) (h : G
   have htop := weightedTotalDegree_le_of_dvd (Pi.single (some (Fin.last 2)) 1) h hQ.1
   rw [weightedTotalDegree_piSingle, weightedTotalDegree_piSingle] at htop
   exact htop.trans hQ.2.2.2
-private theorem totalWeight_eq : (fun j : Option (Fin 3) => j.elim 0 (1 : Fin 3 → ℕ)) =
+theorem totalWeight_eq : (fun j : Option (Fin 3) => j.elim 0 (1 : Fin 3 → ℕ)) =
     jetDegreeWeight := by
   funext j
   cases j <;> rfl
@@ -1092,7 +1092,7 @@ theorem factor_count {Q : Equation} (F : FactorFamily Q) :
   calc
     F.count = ∑ _ : Fin F.count, (1 : ℕ) := by simp
     _ ≤ _ := Finset.sum_le_sum fun i _ => h i
-private theorem degreeOf_top_of_index {P : InitialRing 2} {d : ℕ}
+theorem degreeOf_top_of_index {P : InitialRing 2} {d : ℕ}
     (hP : P.weightedTotalDegree Fin.val ≤ d) : P.degreeOf (Fin.last 2) ≤ d / 2 := by
   classical
   apply degreeOf_le_iff.mpr
@@ -1105,10 +1105,10 @@ private theorem degreeOf_top_of_index {P : InitialRing 2} {d : ℕ}
     simpa only [Fin.val_last, smul_eq_mul, Nat.mul_comm 2] using hsum
   have h := hweight.trans ((le_weightedTotalDegree Fin.val hm).trans hP)
   omega
-private theorem indexWeight_eq : Astra7.jetWeight 0 1 3 = CJ0.indexWeight := by
+theorem indexWeight_eq : Astra7.jetWeight 0 1 3 = CJ0.indexWeight := by
   funext i
   cases i <;> simp [Astra7.jetWeight, CJ0.indexWeight]
-private theorem coeffWeight_eq : Astra7.coeffWeight 0 1 (2 + 1) = Fin.val := by
+theorem coeffWeight_eq : Astra7.coeffWeight 0 1 (2 + 1) = Fin.val := by
   funext i
   simp [Astra7.coeffWeight]
 end
@@ -1137,7 +1137,7 @@ local instance : StrongNormalizationMonoid (InitialRing 2) :=
 private def initialHom : Equation →+* InitialRing 2 :=
   (MvPolynomial.aeval (fun j : Option (Fin 3) =>
     j.elim (MvPolynomial.C center) MvPolynomial.X)).toRingHom.comp (MvPolynomial.map embed)
-private theorem root_of_associated {G G' : Equation} {f : K[X]}
+private theorem root_of_associated {G G' : Equation} {f : (Polynomial K)}
     (ha : Associated G G') (hG : differentialSpecialization G f = 0)
     (hS : differentialSpecialization (separant G (Fin.last 2)) f ≠ 0) :
     differentialSpecialization G' f = 0 ∧
@@ -1299,7 +1299,7 @@ private theorem rationalTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c :
       (2 * (l - 2) - 1) * (c - 1) + (l - 1) := by
   have hsep := (degreeOf_initialJetSeparant_le x Q).trans (Nat.sub_le_sub_right hQ 1)
   induction l using Nat.strong_induction_on with
-  | h l ih =>
+  | ind l ih =>
     rw [rationalTaylorNumerator]
     split_ifs with hl
     · exact (initial_coord_bound (F := F) l hl).trans (Nat.le_add_left _ _)
@@ -1320,7 +1320,7 @@ private theorem rationalTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c :
       simp only [degreeOf_neg, degreeOf_C, zero_add]
       apply hd.trans
       rw [hstep, Nat.add_mul, one_mul, hbudget, Nat.add_assoc]
-private theorem commonTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c L τ : ℕ}
+theorem commonTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c L τ : ℕ}
     (hc : 0 < c) (hQ : Q.degreeOf (some (Fin.last 2)) ≤ c) (hτ : TaylorExponentSufficient 2 L τ)
     (l : Fin L) :
     (commonTaylorNumerator x Q τ l.val).degreeOf (Fin.last 2) ≤ τ * (c - 1) + (l.val - 1) := by
@@ -1415,16 +1415,16 @@ private theorem in_zeroLocus {T : Chart r} {y : Fin (r+1) → Geo}
 private def pointEval {T : Chart r} {y : Fin (r+1) → Geo} (hy : y ∈ T.locus) :
     (InitialRing r ⧸ sourceIdeal T) →ₐ[Geo] Geo :=
   Ideal.Quotient.liftₐ (sourceIdeal T) (aeval y) fun q hq => in_zeroLocus hy q hq
-private def openEval {T : Chart r} {y : Fin (r+1) → Geo} (hy : y ∈ T.locus) :
+def openEval {T : Chart r} {y : Fin (r+1) → Geo} (hy : y ∈ T.locus) :
     ChartOpen T →ₐ[Geo] Geo :=
   IsLocalization.Away.liftAlgHom (f := pointEval hy)
     (Ideal.Quotient.mk (sourceIdeal T) T.denominator) (isUnit_iff_ne_zero.mpr hy.2)
-private theorem openEval_localize {T : Chart r} {y : Fin (r+1) → Geo} (hy : y ∈ T.locus)
+theorem openEval_localize {T : Chart r} {y : Fin (r+1) → Geo} (hy : y ∈ T.locus)
     (q : InitialRing r) : openEval hy (localize T q) = eval y q :=
   IsLocalization.Away.lift_eq (g := (pointEval hy).toRingHom)
     (Ideal.Quotient.mk (sourceIdeal T) T.denominator) (isUnit_iff_ne_zero.mpr hy.2)
     (Ideal.Quotient.mk (sourceIdeal T) q)
-private theorem openEval_chartMap {T : Chart r} {y : Fin (r+1) → Geo} (hy : y ∈ T.locus)
+theorem openEval_chartMap {T : Chart r} {y : Fin (r+1) → Geo} (hy : y ∈ T.locus)
     (q : CoeffRing) : openEval hy (chartMap T q) = eval (T.output y) q := by
   have hu := congrArg (openEval hy) (denom_mul_inv T)
   rw [map_mul, openEval_localize, map_one] at hu
@@ -1566,7 +1566,7 @@ private theorem quotientBand_add_finrank_le (T : Chart 2) (a d e b j c : ℕ)
   have hRank := F.finrank_range_add_finrank_ker
   rw [hF] at hRank
   exact (Nat.add_le_add_left (LinearMap.finrank_le_finrank_of_injective hG) _).trans_eq hRank
-private def surfaceBound (a d e b j c : ℚ) : ℚ :=
+def surfaceBound (a d e b j c : ℚ) : ℚ :=
   2 * e * (d-e) * b + e * (2*a-2*d+e) * j + (d-2*e) * (2*a-d) * c
 private abbrev indexDegree (P : InitialRing 2) : ℕ :=
   P.weightedTotalDegree Fin.val
@@ -1611,7 +1611,7 @@ private theorem degree_le_of_quadratic
   rw [hc] at hcoeff
   rw [affineDegree, hdim]
   exact mul_le_mul_of_nonneg_left hcoeff (by norm_num)
-private theorem chart_degree (h1 : c1) (h2 : c2)
+theorem chart_degree (h1 : c1) (h2 : c2)
     (T : Chart 2) (hT : ChartOK T) (hdim : (affineHilbertPolynomial T.ideal).natDegree = 2)
     (a d e : ℕ) (hda : d ≤ a) (hed : 2*e ≤ d)
     (hD : T.denominator ∈ bandSpace a d e) (hN : ∀ i, T.numerator i ∈ bandSpace a d e) :

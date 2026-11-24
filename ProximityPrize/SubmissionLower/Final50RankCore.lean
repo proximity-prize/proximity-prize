@@ -6,8 +6,8 @@ open K1_13_1_1 (Form bandSpace bandCount backShift targetOrder bandSpace_finite 
 open AnchorPivot82180 (encode)
 open MvPolynomial
 open scoped BigOperators
-open private band_mono from ProximityPrize.SubmissionLower.RankRows82190
-open private independent from ProximityPrize.SubmissionLower.AnchorPivotRank82180
+open RankRows82190 (band_mono)
+open AnchorPivot82180 (independent)
 
 abbrev Row := RankRows82190.Row
 

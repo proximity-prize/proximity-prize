@@ -10,10 +10,9 @@ noncomputable section
 open K1_14 K1_14_1 K1_14_1_8
 open K1 (I)
 open scoped BigOperators Polynomial
-open private Position boundaryMap sourceCoord boundaryDegree sourceCoord_degree jetCoords coords_center
-  independent_at_fraction strict_of_ker trueWidth trueWidth_eq_add completeFinite
-  from ProximityPrize.SubmissionLower.Fast065
-open private zero_of_strict_cutoff from ProximityPrize.SubmissionLower.UpperBranch1
+open K1_14_1_8 (Position boundaryMap sourceCoord boundaryDegree sourceCoord_degree jetCoords coords_center independent_at_fraction strict_of_ker completeFinite)
+open K1_14_1_5 (trueWidth trueWidth_eq_add)
+open P1_7_1 (zero_of_strict_cutoff)
 
 private def rectInclusion {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I → L)
     (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) : rectComplete Crt word s W U →ₗ[L] complete Crt word s W :=
@@ -52,7 +51,7 @@ private theorem rectBoundary_rank {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (
   have heval : LinearIndependent FX (fun k => centerEval (P k : Source)) := by
     apply LinearIndependent.of_comp jetCoords
     have hf : jetCoords ∘ (fun k => centerEval (P k : Source)) =
-        fun k t => algebraMap L[X] FX (sourceCoord (P k : Source) t) :=
+        fun k t => algebraMap (Polynomial L) FX (sourceCoord (P k : Source) t) :=
       funext fun k => funext fun t => coords_center (P k : Source) t
     rw [hf]
     exact independent_at_fraction (fun k => sourceCoord (P k : Source))

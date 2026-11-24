@@ -65,7 +65,7 @@ theorem width_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
   · rw [Int.ofNat_sub hxy, he, max_eq_right (by omega)]
   · have hz : x-y = 0 := Nat.sub_eq_zero_of_le (by omega)
     rw [hz, Int.ofNat_zero, max_eq_left (by omega)]
-private theorem rise_of_convex {f : ℕ → ℤ} {lo h : ℕ}
+theorem rise_of_convex {f : ℕ → ℤ} {lo h : ℕ}
     (hc : ∀ n < h, f (n+1) + f (n+1) ≤ f n + f (n+2))
     (hl : lo ≤ h) (hf : f lo ≤ f (lo+1)) :
     f lo ≤ f h ∧ f h ≤ f (h+1) := by
@@ -87,14 +87,14 @@ section
 namespace P1_7_6
 open Finset
 open K1_14 (Shape shapeSum slots triangle)
-private theorem slots_anti (U : ℕ) : Antitone (slots U) := by
+theorem slots_anti (U : ℕ) : Antitone (slots U) := by
   intro a b hab
   unfold slots
   split_ifs with ha hb hb
   · apply Nat.div_le_div_right
     exact Nat.mul_le_mul (by omega) (by omega)
   all_goals omega
-private theorem sum_range_guard {f : ℕ → ℤ} (L R : ℕ)
+theorem sum_range_guard {f : ℕ → ℤ} (L R : ℕ)
     (hz : ∀ a, R ≤ a → a < L → f a = 0) :
     ∑ a ∈ range L, f a = ∑ a ∈ range R, if a < L then f a else 0 := by
   have hf : (range R).filter (· < L) = range (min L R) := by
@@ -166,7 +166,7 @@ private theorem phaseQ_expand (s : Shape) (h E v d q : ℕ) :
   apply sum_eq_zero
   intro a _
   rw [ite_eq_right (by omega)]
-private theorem diagonal (J R : ℕ) (f : ℕ → ℕ → ℤ) :
+theorem diagonal (J R : ℕ) (f : ℕ → ℕ → ℤ) :
     (∑ j ∈ range (J+1), ∑ a ∈ range (R+1), f j a) =
       ∑ t ∈ range (J+R+1), ∑ a ∈ Ico (t-J) (min t R+1), f (t-a) a := by
   calc
@@ -203,7 +203,7 @@ namespace P1_7_6
 open Finset
 open P1 (agreement)
 open K1_14 (Shape)
-open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
+open K1_14_2_1 (twice_sum_linear)
 theorem lt_linearEnd (base step bound cap i : ℕ) :
     i < linearEnd base step bound cap ↔ i < cap ∧ base + step*i < bound := by
   unfold linearEnd
@@ -470,19 +470,19 @@ open Finset
 open P1 (agreement)
 open K1_14 (Shape slots triangle)
 open P1_7 (debit)
-private theorem lt_seedEnd (s : Shape) (v d R a : ℕ) :
+theorem lt_seedEnd (s : Shape) (v d R a : ℕ) :
     a < seedEnd s v d R ↔ a < R ∧ (a+d)*v ≤ s.U := by
   unfold seedEnd
   by_cases hv : v = 0
   · simp [hv]
   · rw [ite_eq_right hv, lt_min_iff, ← Nat.le_div_iff_mul_le (Nat.pos_of_ne_zero hv)]
     omega
-private theorem yStart_eq (E d t a : ℕ) (he : 0 < E) (ha : a ≤ t) :
+theorem yStart_eq (E d t a : ℕ) (he : 0 < E) (ha : a ≤ t) :
     t-a+E*(a+d) = yStart E d t + (E-1)*a := by
   apply Int.ofNat_inj.mp
   simp only [yStart, Nat.cast_add, Nat.cast_mul, Nat.cast_sub ha, Nat.cast_sub he, Nat.cast_one]
   ring
-private theorem seedQuad_eq (s : Shape) (v d a : ℕ) (ha : (a+d)*v ≤ s.U) :
+theorem seedQuad_eq (s : Shape) (v d a : ℕ) (ha : (a+d)*v ≤ s.U) :
     (seedQuad s v d).eval a = 2*(slots s.U ((a+d)*v) : ℤ) := by
   let n := s.U-(a+d)*v
   have hc : (n : ℤ) = (s.U : ℤ)-((a : ℤ)+d)*v := by
@@ -498,7 +498,7 @@ private theorem seedQuad_eq (s : Shape) (v d a : ℕ) (ha : (a+d)*v ≤ s.U) :
   change _ = 2*(triangle n : ℤ)
   rw [← hp, hc, seedQuad, Quad.eval_ofLines]
   ring
-private theorem sum_clipped {f g : ℕ → ℤ} {L R T : ℕ}
+theorem sum_clipped {f g : ℕ → ℤ} {L R T : ℕ}
     (hr : ∀ a, a < T → a < R)
     (hz : ∀ a ∈ Ico L R, T ≤ a → f a = 0)
     (he : ∀ a ∈ Ico L T, f a = g a) :

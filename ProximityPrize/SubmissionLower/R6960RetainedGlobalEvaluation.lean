@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.R6960RetainedNativeEuler
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -11,7 +12,7 @@ open MonicChart (ChartField)
 open MonicFourChartDescent ChartSections RetainedRestrictionTorus
 open Module Submodule LinearMap Algebra Polynomial LineEuler
 open scoped Lower6960.RetainedSurfaceClass Polynomial
-open private Lower6960.RetainedSurfaceClass.chartSpace from ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
+open Lower6960.RetainedSurfaceClass (chartSpace)
 variable (E:Type) [Field E] [Algebra ChartField E]
 
 def imageAlg (j:Bool) (c:L) (b:Bool) : Subalgebra L (Axis E j c) where
@@ -29,22 +30,22 @@ def imageAlg (j:Bool) (c:L) (b:Bool) : Subalgebra L (Axis E j c) where
     exact ⟨algebraMap L (Tor E) r,
       isIntegral_algebraMap (A:=E) (x:=(⟨_,chart_constant _ r⟩:baseChart (reference j b))),rfl⟩
 
-def imagePoly (j:Bool) (c:L) (b:Bool) : L[X]→+*imageAlg E j c b :=
+def imagePoly (j:Bool) (c:L) (b:Bool) : (Polynomial L)→+*imageAlg E j c b :=
   (polyMap E j c b).codRestrict (imageAlg E j c b) (fun p=>by
-    letI : Module L[X] (Axis E j c) := Module.compHom _ (polyMap E j c b)
+    letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (polyMap E j c b)
     have h:1∈polyImage E j c b := (imageAlg E j c b).one_mem
     have v:=(polyImage E j c b).smul_mem p h
     change polyMap E j c b p * 1∈_ at v
     rw [mul_one] at v
     exact v)
 scoped instance imagePolyAlgebra (j:Bool) (c:L) (b:Bool) :
-    Algebra L[X] (imageAlg E j c b) :=
-  RingHom.toAlgebra' (R:=L[X]) (S:=imageAlg E j c b) (imagePoly E j c b)
+    Algebra (Polynomial L) (imageAlg E j c b) :=
+  RingHom.toAlgebra' (R:=(Polynomial L)) (S:=imageAlg E j c b) (imagePoly E j c b)
     (fun r x => mul_comm (imagePoly E j c b r) x)
 
 private def ringBasis (j:Bool) (c:L) (b:Bool) {n:ℕ}
-    (B : Basis (Fin n) L[X] (chartImage E j c b)) : Basis (Fin n) L[X] (imageAlg E j c b) :=
-  let e : chartImage E j c b≃ₗ[L[X]]imageAlg E j c b :=
+    (B : Basis (Fin n) (Polynomial L) (chartImage E j c b)) : Basis (Fin n) (Polynomial L) (imageAlg E j c b) :=
+  let e : chartImage E j c b≃ₗ[(Polynomial L)]imageAlg E j c b :=
    { toFun:=fun v=>⟨v,v.property⟩
      invFun:=fun v=>⟨v,v.property⟩
      left_inv:=fun _=>rfl
@@ -53,17 +54,17 @@ private def ringBasis (j:Bool) (c:L) (b:Bool) {n:ℕ}
      map_smul':=fun _ _=>rfl }
   B.map e
 
-private def nodeRing (j:Bool) (x z:L) : Axis E j (atCoord j x z) →ₐ[L] Crossing E x z :=
+def nodeRing (j:Bool) (x z:L) : Axis E j (atCoord j x z) →ₐ[L] Crossing E x z :=
   match j with
   | false=>Ideal.Quotient.factorₐ L (show axisIdeal E false x ≤ _⊔axisIdeal E true z from le_sup_left)
   | true=>Ideal.Quotient.factorₐ L (show axisIdeal E true z ≤ axisIdeal E false x⊔_ from le_sup_right)
 
-private theorem eval_subtype (j:Bool) (x z:L) (u:chartImage E j (atCoord j x z) false) :
+theorem eval_subtype (j:Bool) (x z:L) (u:chartImage E j (atCoord j x z) false) :
     nodeRing E j x z u.val=nodeMap E j x z u.val := by cases j <;> rfl
 
-private theorem vanishing_divides (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
+theorem vanishing_divides (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
     (u:imageAlg E j (atCoord j x z) false) (h:nodeRing E j x z u.val=0) :
-    algebraMap L[X] (imageAlg E j (atCoord j x z) false) (Polynomial.X-C (atCoord (!j) x z)) ∣ u := by
+    algebraMap (Polynomial L) (imageAlg E j (atCoord j x z) false) (Polynomial.X-C (atCoord (!j) x z)) ∣ u := by
   let w : chartImage E j (atCoord j x z) false:=⟨u.val,u.property⟩
   obtain ⟨v,eq⟩:=(kernel_at_node E j x z nx nz w).mp ((eval_subtype E j x z w) ▸ h)
   exact ⟨⟨v.val,v.property⟩,Subtype.ext eq⟩
@@ -72,7 +73,7 @@ private theorem vanishing_divides (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
 evaluation is injective even if the selected fibre has several components. -/
 theorem global_eval_injective (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)]
     [FiniteDimensional L (LineGlobals E j (atCoord j x z))] {n:ℕ}
-    (bf:Basis (Fin n) L[X] (chartImage E j (atCoord j x z) false)) :
+    (bf:Basis (Fin n) (Polynomial L) (chartImage E j (atCoord j x z) false)) :
     Function.Injective ((nodeMap E j x z).comp (chartImage E j (atCoord j x z) false⊓
       chartImage E j (atCoord j x z) true).subtype) := by
   let c:=atCoord j x z
@@ -84,7 +85,7 @@ theorem global_eval_injective (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced 
   have : FiniteDimensional L U := FiniteDimensional.of_injective e.toLinearMap e.injective
   let into : U→ₐ[L] R:=Subalgebra.inclusion inf_le_left
   let evaluate:= (nodeRing E j x z).toRingHom.comp R.subtype
-  have free : Module.Free L[X] R := Module.Free.of_basis (ringBasis E j c false bf)
+  have free : Module.Free (Polynomial L) R := Module.Free.of_basis (ringBasis E j c false bf)
   have redRing : IsReduced R := RetainedLineEvaluation.reduced_of_point (S:=R) (D:=Crossing E x z)
     (atCoord (!j) x z) evaluate (vanishing_divides E j x z nx nz)
   intro u v eq

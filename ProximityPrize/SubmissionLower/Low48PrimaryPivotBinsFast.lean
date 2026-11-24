@@ -240,7 +240,7 @@ theorem keep_cast (j q : ℕ) : (keep j q : ℤ) = uncharged j q := by
     show 2*(q:ℤ)-4950+2*(j:ℤ)-(f:ℤ) = C by dsimp [C]; ring,max_hinges,← hB,← hC,← hw]
   exact tsub_cast _ _ _
 
-open private binWeight from ProximityPrize.SubmissionLower.Low48PrimaryPivotSectionSum
+open Low48PrimaryPivot (binWeight)
 
 theorem volume_cast (w : Window) (j q : ℕ) : (volume w j q : ℤ) = binWeight w j q := by
   unfold volume binWeight
@@ -263,9 +263,9 @@ end Low48PrimaryPivot.Hinge
 namespace Low48PrimaryPivot
 open Finset K1_13_2_3
 open scoped BigOperators
-open private qMin from ProximityPrize.SubmissionLower.Low48PrimaryPivotBinWeight
-open private binWeight from ProximityPrize.SubmissionLower.Low48PrimaryPivotSectionSum
-open private binAt_eq_interval from ProximityPrize.SubmissionLower.Low48PrimaryPivotBinAggregate
+open Low48PrimaryPivot (qMin)
+open Low48PrimaryPivot (binWeight)
+open Low48PrimaryPivot (binAt_eq_interval)
 
 private def allFree (j q : ℤ) : Prop :=
   j/3 ≤ 1650-q ∧ 3*q-9900+5*j ≤ 0 ∧ q-4950+3*j ≤ 0 ∧ 2*q-4950+2*j ≤ 0

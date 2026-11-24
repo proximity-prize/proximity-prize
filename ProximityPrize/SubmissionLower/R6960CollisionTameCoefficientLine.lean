@@ -13,12 +13,12 @@ open scoped Polynomial BigOperators
 
 variable (k : Type) [Field k]
 
-abbrev PlaneRing := k[X][X]
+abbrev PlaneRing := (Polynomial (Polynomial k))
 abbrev PlaneField := FractionRing (PlaneRing k)
-abbrev GenericCoefficients := FractionRing k[X]
-abbrev GenericLine := (GenericCoefficients k)[X]
+abbrev GenericCoefficients := FractionRing (Polynomial k)
+abbrev GenericLine := (Polynomial (GenericCoefficients k))
 
-private abbrev coeffDenominators : Submonoid (PlaneRing k) := (nonZeroDivisors k[X]).map Polynomial.C
+abbrev coeffDenominators : Submonoid (PlaneRing k) := (nonZeroDivisors (Polynomial k)).map Polynomial.C
 
 attribute [local instance] Polynomial.algebra Polynomial.isLocalization
 
@@ -33,11 +33,11 @@ def genericFinite : GenericLine k→+*PlaneField k :=
     IsUnit.mk0 _ ((map_ne_zero_iff _ (IsFractionRing.injective (PlaneRing k) _)).mpr
       (mem_nonZeroDivisors_iff_ne_zero.mp (coeffDenominators_regular k s.property)))
 
-private theorem genericFinite_on_plane (a : PlaneRing k) :
+theorem genericFinite_on_plane (a : PlaneRing k) :
     genericFinite k (algebraMap (PlaneRing k) (GenericLine k) a)=algebraMap (PlaneRing k) (PlaneField k) a :=
   IsLocalization.lift_eq _ _
 
-private theorem genericFinite_fraction :
+theorem genericFinite_fraction :
     let : Algebra (GenericLine k) (PlaneField k) := (genericFinite k).toAlgebra
     IsFractionRing (GenericLine k) (PlaneField k) := by
   let : Algebra (GenericLine k) (PlaneField k) := (genericFinite k).toAlgebra
@@ -59,7 +59,7 @@ function field. -/
 def genericLaurent : Laurent (GenericCoefficients k)→+*PlaneField k :=
   LaurentPolynomial.eval₂ ((genericFinite k).comp Polynomial.C) (Units.mk0 (t k) (t_ne k))
 
-private theorem genericLaurent_finite :
+theorem genericLaurent_finite :
     (genericLaurent k).comp (chartEmbedding false).toRingHom=genericFinite k := by
   apply Polynomial.ringHom_ext
   · intro a
@@ -70,10 +70,10 @@ private theorem genericLaurent_finite :
     rw [genericLaurent,LaurentPolynomial.eval₂_toLaurent,Polynomial.eval₂_X]
     rfl
 
-private abbrev genericInverse : GenericLine k→+*PlaneField k :=
+abbrev genericInverse : GenericLine k→+*PlaneField k :=
   Polynomial.eval₂RingHom ((genericFinite k).comp Polynomial.C) ((t k)⁻¹)
 
-private theorem genericLaurent_inverse :
+theorem genericLaurent_inverse :
     (genericLaurent k).comp (chartEmbedding true).toRingHom=genericInverse k := by
   apply Polynomial.ringHom_ext
   · intro a
@@ -86,7 +86,7 @@ private theorem genericLaurent_inverse :
     simpa only [genericLaurent,genericInverse,Int.natCast_one,pow_one,Units.val_inv_eq_inv_val,
       Units.val_mk0,Polynomial.coe_eval₂RingHom,Polynomial.eval₂_X] using val
 
-private theorem genericInverse_fractions :
+theorem genericInverse_fractions :
     let : Algebra (GenericLine k) (PlaneField k) := (genericInverse k).toAlgebra
     IsFractionRing (GenericLine k) (PlaneField k) := by
   let J := (genericFinite k).comp Polynomial.C
@@ -194,7 +194,7 @@ theorem plane_generic_outer_degree (δ : PlaneRing k) (nz : δ≠0)
   obtain ⟨bf⟩ := genericLine_basis (E:=E) k false
   obtain ⟨bi⟩ := genericLine_basis (E:=E) k true
   obtain ⟨d,dd,cap⟩ := localized_line_discriminant_degree (F:=F) (E:=E) (coeffDenominators k) δ nz generator bf bi
-  change ((δ.map (algebraMap k[X] (GenericCoefficients k))).natDegree:ℤ)≤-2*d at cap
+  change ((δ.map (algebraMap (Polynomial k) (GenericCoefficients k))).natDegree:ℤ)≤-2*d at cap
   rw [natDegree_map_eq_of_injective (IsFractionRing.injective _ _)] at cap
   exact ⟨bf,bi,d,dd,cap⟩
 

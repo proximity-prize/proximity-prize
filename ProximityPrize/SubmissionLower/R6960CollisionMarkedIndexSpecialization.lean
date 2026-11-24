@@ -44,30 +44,30 @@ theorem comparison_tensor_specialization (j:R→+*k)
       (Algebra.TensorProduct.includeRight (R:=R) (A:=k) (B:=B)).toRingHom
       (fun _=>Algebra.TensorProduct.includeRight.commutes _) (fun i=>(b.baseChange_apply k i).symm)
 
-variable {B0 N0 : Type} [CommRing B0] [CommRing N0] [Algebra k[X] B0] [Algebra k[X] N0]
+variable {B0 N0 : Type} [CommRing B0] [CommRing N0] [Algebra (Polynomial k) B0] [Algebra (Polynomial k) N0]
 
 /-- A comparison determinant of the actual original fibre cannot vanish
 at a transverse branch point of the actual lifted trace matrix. -/
 theorem comparison_transverse_unit {J : Type} [Fintype J] [DecidableEq J]
-    (b : Basis J k[X] B0) (n : Basis J k[X] N0) (φ : B0→ₐ[k[X]]N0)
-    (D : Matrix J J k[X]) (coords : D=n.toMatrix (fun i=>φ (b i)))
-    (dn : D.det≠0) (nn : (traceMatrix k[X] n).det≠0)
-    (trace : traceMatrix k[X] b=D.transpose*traceMatrix k[X] n*D)
+    (b : Basis J (Polynomial k) B0) (n : Basis J (Polynomial k) N0) (φ : B0→ₐ[(Polynomial k)]N0)
+    (D : Matrix J J (Polynomial k)) (coords : D=n.toMatrix (fun i=>φ (b i)))
+    (dn : D.det≠0) (nn : (traceMatrix (Polynomial k) n).det≠0)
+    (trace : traceMatrix (Polynomial k) b=D.transpose*traceMatrix (Polynomial k) n*D)
     (p : ℕ) [CharP k p] (small : Fintype.card J<p)
     (x : k) {A F : Type} [CommRing A] [Field F]
     (along : Matrix J J A) (spec : A→+*k) (gen : A→+*F) (inj : Function.Injective gen)
-    (point : along.map spec=(traceMatrix k[X] b).map (evalRingHom x))
-    (transverse : (traceMatrix k[X] b).det.rootMultiplicity x≤Fintype.card J-(along.map gen).rank) :
+    (point : along.map spec=(traceMatrix (Polynomial k) b).map (evalRingHom x))
+    (transverse : (traceMatrix (Polynomial k) b).det.rootMultiplicity x≤Fintype.card J-(along.map gen).rank) :
     D.det.eval x≠0 := by
   classical
   let j := evalRingHom x
-  let : Algebra k[X] k := j.toAlgebra
+  let : Algebra (Polynomial k) k := j.toAlgebra
   obtain ⟨dc,nc,bc⟩ := comparison_tensor_specialization j b n φ
   rw [←coords] at dc
-  have raw : j.mapMatrix (D.transpose*traceMatrix k[X] n*D)=traceMatrix k (b.baseChange k) :=
+  have raw : j.mapMatrix (D.transpose*traceMatrix (Polynomial k) n*D)=traceMatrix k (b.baseChange k) :=
     trace ▸ bc
   exact TraceIndex.transverse_unit (b.baseChange k) (n.baseChange k) p small
-    (Algebra.TensorProduct.map (AlgHom.id k k) φ) x D (traceMatrix k[X] n) dn nn dc nc raw
+    (Algebra.TensorProduct.map (AlgHom.id k k) φ) x D (traceMatrix (Polynomial k) n) dn nn dc nc raw
     along spec gen inj (trace ▸ point) (trace ▸ transverse)
 
 #print axioms comparison_transverse_unit

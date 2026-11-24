@@ -19,7 +19,7 @@ def ShortenChartClaim : Prop :=
       (E : InitialRing 2) (_ : Irreducible E) (_ : E ∣ CJ0_3.initial G)
       (_ : ¬ E ∣ CJ0_3.initialSep G) (S : Finset Node) (_ : S.card + 3 ≤ k) (w : Node → K),
     ∃ T : Chart 2, ChartOK T ∧ T.equation = E ∧ ShortBand s (k-S.card) T ∧
-      ∀ f : K[X], f.degree < k → differentialSpecialization G f = 0 →
+      ∀ f : (Polynomial K), f.degree < k → differentialSpecialization G f = 0 →
         MvPolynomial.eval (CJ0_3.nativeJet f) E = 0 →
         MvPolynomial.eval (CJ0_3.nativeJet f) (CJ0_3.initialSep G) ≠ 0 →
         (∀ i∈S, f.eval (node i)=w i) → coeffPoint f ∈ T.imageSet
@@ -28,8 +28,8 @@ private theorem factorPrice (shorten : ShortenChartClaim)
     {A w s} (hA : AgreementOK A) (hA₅ : k + 5 ≤ A) (hs : ShapeOK s)
     (hJ : 2 * s.C + 1 ≤ s.J) {G : CJ0_3.Equation} (hG : OrderTwo s G)
     {E : InitialRing 2} (hE : Irreducible E) (hEdvd : E ∣ CJ0_3.initial G)
-    (hreg : ¬ E ∣ CJ0_3.initialSep G) (V : Finset K[X])
-    (hV : (V : Set K[X]) ⊆ close A w)
+    (hreg : ¬ E ∣ CJ0_3.initialSep G) (V : Finset (Polynomial K))
+    (hV : (V : Set (Polynomial K)) ⊆ close A w)
     (hroots : ∀ f∈V, differentialSpecialization G f = 0 ∧
       MvPolynomial.eval (CJ0_3.nativeJet f) E = 0 ∧
       MvPolynomial.eval (CJ0_3.nativeJet f) (CJ0_3.initialSep G) ≠ 0) :
@@ -44,7 +44,7 @@ private theorem factorPrice (shorten : ShortenChartClaim)
       rw [hcard]; unfold shortLength k; omega
     obtain ⟨T, hT, heq, hband, hcovers⟩ := shorten s hs G hG E hE hEdvd hreg S' hshort w
     rw [hL] at hband
-    have hcov (f : K[X]) (hf : f ∈ V) : coeffPoint f ∈ T.imageSet := by
+    have hcov (f : (Polynomial K)) (hf : f ∈ V) : coeffPoint f ∈ T.imageSet := by
       obtain ⟨h₁, h₂, h₃⟩ := hroots f hf
       exact hcovers f (hV hf).1 h₁ h₂ h₃ (fun i hi => mem_commonSites.mp (hsubset hi) f hf)
     have hc : S.card ≤ N := commonSites_card_le hV hv
@@ -88,12 +88,12 @@ private theorem factorPrice (shorten : ShortenChartClaim)
 
 private theorem regularPrice (shorten : ShortenChartClaim)
     {A w s Q} (hA : AgreementOK A) (hA₅ : k + 5 ≤ A) (hs : ShapeOK s)
-    (hJ : 2 * s.C + 1 ≤ s.J) (hQ : OrderTwo s Q) (T : Finset K[X])
-    (hT : (T : Set K[X]) ⊆ close A w) (hreg : ∀ f∈T, RegularRoot Q f) :
+    (hJ : 2 * s.C + 1 ≤ s.J) (hQ : OrderTwo s Q) (T : Finset (Polynomial K))
+    (hT : (T : Set (Polynomial K)) ⊆ close A w) (hreg : ∀ f∈T, RegularRoot Q f) :
     (T.card : ℚ) ≤ surfacePrice A s + s.B := by
   classical
   obtain ⟨F⟩ := CJ0_3_1.proof Q hQ.1
-  let root (i : Fin F.count) (f : K[X]) := differentialSpecialization (F.source i) f = 0 ∧
+  let root (i : Fin F.count) (f : (Polynomial K)) := differentialSpecialization (F.source i) f = 0 ∧
     MvPolynomial.eval (CJ0_3.nativeJet f) (F.equation i) = 0 ∧
     MvPolynomial.eval (CJ0_3.nativeJet f) (CJ0_3.initialSep (F.source i)) ≠ 0
   let part (i : Fin F.count) := T.filter (root i)
@@ -158,7 +158,7 @@ theorem scalar_list_of_shortening (shorten : ShortenChartClaim)
   have hfin : (close A w).Finite :=
     ReedSolomon.closePolynomialSet_finite node w (show k ≤ A from hA.gt_degree)
   let T := hfin.toFinset
-  have hall (f : K[X]) (hf : f ∈ T) : f ∈ close A w := hfin.mem_toFinset.mp hf
+  have hall (f : (Polynomial K)) (hf : f ∈ T) : f ∈ close A w := hfin.mem_toFinset.mp hf
   let T₂ := T.filter (RegularRoot Q)
   let rest := T.filter fun f => ¬ RegularRoot Q f
   let T₁ := rest.filter (RegularRoot Q₁)

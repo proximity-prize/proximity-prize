@@ -11,9 +11,8 @@ namespace Lower6960.CollisionTame
 noncomputable section
 open Ideal IsLocalRing Module Polynomial Matrix NormalizedFiber
 open scoped Polynomial Matrix BigOperators
-open private Lower6960.CollisionTame.gram_map Lower6960.CollisionTame.integralsIncl
-  from ProximityPrize.SubmissionLower.R6960CollisionTameDiscriminantLocalization
-open private Lower6960.CollisionTame.integralClosure_torsionFree from ProximityPrize.SubmissionLower.R6960CollisionTamePlaneDiscriminant
+open Lower6960.CollisionTame (gram_map integralsIncl)
+open Lower6960.CollisionTame (integralClosure_torsionFree)
 
 variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
   [Algebra (FractionRing (Plane k)) E] [IsScalarTower (Plane k) (FractionRing (Plane k)) E]

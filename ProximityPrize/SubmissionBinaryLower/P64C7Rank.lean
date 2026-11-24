@@ -16,9 +16,9 @@ open Polynomial P64Found P64C7 P64C7Boxes P64C7Truncation P64C7Multiples P64C7Li
 
 variable {F : Type*} [Field F]
 
-noncomputable local instance : CommRing (Polynomial F) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial F)) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := Polynomial.commRing
+noncomputable local instance : CommRing (Polynomial F) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial F)) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := AddMonoidAlgebra.commRing
 
 local notation "Tri" => Polynomial (Polynomial (Polynomial F))
 

@@ -12,18 +12,18 @@ open K1_13_3 (symbolAt symbolIndex cofactor_rank)
 open Low6960Prices (Messages SmallFactor ActiveFits primaryBox primaryCutoff layerWidth layerNeed
   TrueWeightLE LayerBudget)
 open scoped Polynomial BigOperators
-open private exists_fresh specialization_bounds sum_by_layer from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_3 (exists_fresh specialization_bounds sum_by_layer)
 
 def levelOrder (T : ℕ) : ℕ := (primaryCutoff-T)/layerWidth+1
 
 /-- These are the existing primary bank's per-row facts. The bank may depend on the word. -/
-structure Bank (Γ : Finset K) (s : K → K[X]) where
+structure Bank (Γ : Finset K) (s : K → (Polynomial K)) where
   row : ℕ → Row 4 → Prop
   bounds : ∀ T ≤ primaryCutoff, ∀ P, row T P →
     InBox (shape P) primaryBox ∧ TrueWeightLE P primaryCutoff ∧ ActiveFits P 5164
   order : ∀ T ≤ primaryCutoff, ∀ P, row T P → ∀ γ ∈ Γ, OrderAt P (extend (s γ)) (levelOrder T)
 
-variable {Γ : Finset K} {s : K → K[X]}
+variable {Γ : Finset K} {s : K → (Polynomial K)}
 
 /-- The published independence and uniform tapered symbol bound, with the rank threshold explicit. -/
 def Bank.Ranked (D : Bank Γ s) : Prop :=

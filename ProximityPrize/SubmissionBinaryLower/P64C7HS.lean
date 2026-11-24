@@ -44,7 +44,7 @@ lemma coeff_sum_mono (T : Finset (ℕ × ℕ)) (c : T → K) (a b : ℕ) :
     ((∑ q : T, c q • mono (K := K) q.1.1 q.1.2).coeff b).coeff a =
       if h : (a, b) ∈ T then c ⟨(a, b), h⟩ else 0 := by
   rw [finsetSum_coeff, finsetSum_coeff]
-  simp only [coeff_smul, smul_eq_mul, coeff_mono]
+  simp only [Polynomial.coeff_smul, smul_eq_mul, coeff_mono]
   split_ifs with h
   · rw [Fintype.sum_eq_single ⟨(a, b), h⟩]
     · simp
@@ -73,7 +73,7 @@ lemma comb_apply (T : Finset (ℕ × ℕ)) (c : T → K) :
 noncomputable def extr (T : Finset (ℕ × ℕ)) : Polynomial (Polynomial K) →ₗ[K] (T → K) where
   toFun f q := (f.coeff q.1.2).coeff q.1.1
   map_add' f g := by ext q; simp
-  map_smul' c f := by ext q; simp [coeff_smul]
+  map_smul' c f := by ext q; simp [Polynomial.coeff_smul]
 
 /-- A polynomial supported on `T` is the combination of its coefficients. -/
 lemma eq_comb_extr {T : Finset (ℕ × ℕ)} {g : Polynomial (Polynomial K)}

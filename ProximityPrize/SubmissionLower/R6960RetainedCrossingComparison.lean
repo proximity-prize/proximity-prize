@@ -34,10 +34,10 @@ def point (x z:L) : Base→ₐ[L]L :=
 def finiteX (x:L) : Base := planeEquiv (false,false) (Polynomial.X-C (C x))
 def finiteZ (z:L) : Base := planeEquiv (false,false) (C (Polynomial.X-C z))
 
-private theorem finiteX_val (x:L) : (finiteX x:ChartField)=divisor false x := by
+theorem finiteX_val (x:L) : (finiteX x:ChartField)=divisor false x := by
   change planeMap _ _=_
   simp [divisor,coordinate,chartCoordinate]
-private theorem finiteZ_val (z:L) : (finiteZ z:ChartField)=divisor true z := by
+theorem finiteZ_val (z:L) : (finiteZ z:ChartField)=divisor true z := by
   change planeMap _ _=_
   simp [divisor,coordinate,chartCoordinate]
 
@@ -78,7 +78,7 @@ def fromFinite : finiteOrder E→ₐ[L]Tor E where
   map_mul' _ _:=rfl
   commutes' _:=rfl
 
-private def toCross (x z:L) : finiteOrder E→ₐ[L]Crossing E x z :=
+def toCross (x z:L) : finiteOrder E→ₐ[L]Crossing E x z :=
   (Ideal.Quotient.mkₐ L (axisIdeal E false x⊔axisIdeal E true z)).comp (fromFinite E)
 
 private theorem scaled (x z:L) (v:Tor E) :
@@ -113,12 +113,12 @@ theorem cross_surjective (x z:L) (nx:x≠0) (nz:z≠0) : Function.Surjective (to
   obtain ⟨v,rfl⟩:=Ideal.Quotient.mk_surjective w
   obtain ⟨n,y,eq⟩:=scaled E x z v
   refine ⟨(x*z)⁻¹^n • y,?_⟩
-  rw [map_smul,eq,←map_pow,←Algebra.smul_def,smul_smul,←mul_pow,inv_mul_cancel₀ (mul_ne_zero nx nz),one_pow,one_smul]
+  rw [AlgHom.map_smul_of_tower,eq,←map_pow,←Algebra.smul_def,smul_smul,←mul_pow,inv_mul_cancel₀ (mul_ne_zero nx nz),one_pow,one_smul]
 
 #print axioms point_kernel
 #print axioms cross_surjective
 
-private theorem toCross_kernel (x z:L) (nx:x≠0) (nz:z≠0) :
+theorem toCross_kernel (x z:L) (nx:x≠0) (nz:z≠0) :
     RingHom.ker (toCross E x z).toRingHom=(RingHom.ker (point x z).toRingHom).map
       (algebraMap Base (finiteOrder E)) := by
   let S:=finiteOrder E
@@ -168,9 +168,9 @@ def crossingEquiv (x z:L) (nx:x≠0) (nz:z≠0) :
 open RetainedCompression (Curve ordinate view)
 /-- The crossing space in the actual restriction map is reduced and has precisely
 the ordinate degree, for one finite pair off the coordinate boundary. -/
-theorem actual_crossing (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem actual_crossing (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap MonicChart.Scalar[X] ChartField))=0) :
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
     ∃ x z:L,x≠0 ∧ z≠0 ∧ Nonempty (Basis (Fin (f.degreeOf ordinate)) L (Crossing E x z)) ∧
       IsReduced (Crossing E x z) := by
   obtain ⟨x,z,nx,nz,good⟩:=RetainedCrossingBasis.actual_good_lines f ir lo hi basis root

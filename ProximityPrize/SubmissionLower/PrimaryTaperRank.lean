@@ -25,7 +25,7 @@ def originBlock (k : ℕ) (i : BlockIndex) : BlockSpace k i →ₗ[Geom] Local :
   (localConstraintAt 3000 0 0).domRestrict (BlockSpace k i)
 
 variable (k : ℕ)
-private def residualDegree (k : ℕ) (i : BlockIndex) : ℕ := min i.1.val k
+def residualDegree (k : ℕ) (i : BlockIndex) : ℕ := min i.1.val k
 
 def activeFlag (i : BlockIndex) : Flag :=
   {K1_13_2_2.activeFlag i with degree := (residualDegree k i : ℤ)}
@@ -258,7 +258,7 @@ theorem origin_block_rank (i : BlockIndex) :
       Module.finrank Geom (LinearMap.range f) by omega).trans
     (Submodule.finrank_mono (LinearMap.range_comp_le_range _ _))
 
-open private rank_zero_of_order_nonpos lower_le_kernel from ProximityPrize.SubmissionLower.Fast068
+open K1_13_2_2 (rank_zero_of_order_nonpos lower_le_kernel)
 
 def initialFlag (i : BlockIndex) : Flag :=
   {K1_13_2.initialFlag i with degree := (residualDegree k i : ℤ)}
@@ -327,8 +327,8 @@ theorem origin_block_rank_bound (h2 : K1_13_2_2.c2) (h3 : K1_13_2_2.c3) (h4 : K1
   rw [ite_eq_right ho]
   omega
 
-open private high_monomial_vanishes from ProximityPrize.SubmissionLower.PortLowBase
-open private finrank_finset_sup_le from ProximityPrize.SubmissionLower.Fast017
+open P0_9_2 (high_monomial_vanishes)
+open K1_13_2 (finrank_finset_sup_le)
 
 def differentiated : JetVariable 3 → ℕ := fun v => v.elim 0 (fun j => if j = 0 then 0 else 1)
 

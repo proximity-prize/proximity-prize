@@ -14,9 +14,7 @@ open MonicChart (ChartField)
 open NormalizedFiber MonicFourChartDescent ChartOverlapTests RetainedRestrictionTorus
 open RetainedSurfaceClass Polynomial
 open scoped Polynomial Lower6960.CollisionMarked Lower6960.RetainedSurfaceClass Lower6960.MonicChartProbes
-open private Lower6960.RetainedSurfaceClass.oriented_var Lower6960.RetainedSurfaceClass.oriented_const
-  Lower6960.RetainedSurfaceClass.finite_along Lower6960.RetainedSurfaceClass.embedBase
-  from ProximityPrize.SubmissionLower.R6960RetainedAxisCharts
+open Lower6960.RetainedSurfaceClass (oriented_var oriented_const finite_along embedBase)
 
 variable {E : Type} [Field E] [Algebra ChartField E]
 
@@ -189,7 +187,7 @@ def lineFibreData (j b:Bool) (z:L) (nz:z≠0) :
 
 /-- The fibre embedding sends the native polynomial scalar to the
 literal line-coordinate polynomial in the common torus quotient. -/
-theorem lineFibreData_scalar (j b:Bool) (z:L) (nz:z≠0) (g:L[X]) :
+theorem lineFibreData_scalar (j b:Bool) (z:L) (nz:z≠0) (g:(Polynomial L)) :
     let : Algebra (Plane L) E := linePlaneAlgebra j b
     let h : Fiber E z→+*Axis E j z := (lineFibreData (E:=E) j b z nz).val
     h (baseMap E z g)=polyMap E j z b g := by
@@ -218,7 +216,7 @@ abbrev axisOrderMap (b:Bool) (z:L) := lineOrderMap (E:=E) true b z
 abbrev axisFibreData (b:Bool) (z:L) (nz:z≠0) :=
   lineFibreData (E:=E) true b z nz
 
-theorem axisFibreData_scalar (b:Bool) (z:L) (nz:z≠0) (g:L[X]) :
+theorem axisFibreData_scalar (b:Bool) (z:L) (nz:z≠0) (g:(Polynomial L)) :
     let : Algebra (Plane L) E := axisPlaneAlgebra b
     let h : Fiber E z→+*Axis E true z := (axisFibreData (E:=E) b z nz).val
     h (baseMap E z g)=polyMap E true z b g :=

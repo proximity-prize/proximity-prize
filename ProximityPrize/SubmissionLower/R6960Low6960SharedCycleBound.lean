@@ -24,7 +24,7 @@ open MvPolynomial
 open scoped BigOperators Pointwise
 
 open Low6960ActiveCycle (Section Doubled Slice)
-open private square_support bound_marks from ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleBound
+open Low6960ActiveCycle (square_support bound_marks)
 
 private theorem initial_bound {R B : Family} [∀ i, Finite (B i)] (hB : Doubled R B)
     (f Q : Row 4) (weight : Ideal GeoJets → ℕ) (hf : SmallFactor f) (hQ : ¬ f ∣ Q)

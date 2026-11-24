@@ -15,19 +15,19 @@ open scoped BigOperators
 
 variable {F : Type*} [Field F]
 
-abbrev Rational (F : Type*) [Field F] := FractionRing F[X]
+abbrev Rational (F : Type*) [Field F] := FractionRing (Polynomial F)
 
 /-- A basis chosen from the physical evaluation rows preserves their degree bound.
     Solving the coefficient equations on the basis solves every row. -/
 theorem compress_matrix {α ι : Type*} [Finite α] [Fintype ι]
-    (A : Matrix α ι F[X]) (p D k : ℕ) (hk : k ≤ Fintype.card ι)
+    (A : Matrix α ι (Polynomial F)) (p D k : ℕ) (hk : k ≤ Fintype.card ι)
     (hA : ∀ i j, (A i j).natDegree ≤ D) (hguard : Fintype.card ι * D < k * p)
     (hker : k ≤ Module.finrank (Rational F)
-      (LinearMap.ker (A.map (algebraMap F[X] (Rational F))).mulVecLin)) :
-    ∃ w : ι → degreeLT F (p-D), w ≠ 0 ∧ ∀ i, ∑ j, A i j * (w j : F[X]) = 0 := by
+      (LinearMap.ker (A.map (algebraMap (Polynomial F) (Rational F))).mulVecLin)) :
+    ∃ w : ι → degreeLT F (p-D), w ≠ 0 ∧ ∀ i, ∑ j, A i j * (w j : (Polynomial F)) = 0 := by
   classical
   let E := Rational F
-  let a : F[X] →+* E := algebraMap F[X] E
+  let a : (Polynomial F) →+* E := algebraMap (Polynomial F) E
   let M : Matrix α ι E := A.map a
   let R := Submodule.span E (Set.range M.row)
   let m := Module.finrank E R
@@ -61,15 +61,15 @@ theorem compress_matrix {α ι : Type*} [Finite α] [Fintype ι]
     ext i : 1
     simpa [w] using congrFun h (j.symm i)
   refine ⟨w, hw, fun i => ?_⟩
-  have hB (i : Fin m) : B i ⬝ᵥ (fun l => a (w l : F[X])) = 0 := by
+  have hB (i : Fin m) : B i ⬝ᵥ (fun l => a (w l : (Polynomial F))) = 0 := by
     rw [← hrow i]
-    have he : (∑ l : Fin n, A (row i) (j.symm l) * (v l : F[X])) =
-        ∑ l : ι, A (row i) l * (w l : F[X]) := by
+    have he : (∑ l : Fin n, A (row i) (j.symm l) * (v l : (Polynomial F))) =
+        ∑ l : ι, A (row i) l * (w l : (Polynomial F)) := by
       rw [← j.sum_comp]
       simp [w]
     have hh := congrArg a ((he.symm.trans (hvA i)))
     simpa only [map_sum, map_mul, map_zero, M, Matrix.row, Matrix.map_apply, dotProduct] using hh
-  let vE : ι → E := fun l => a (w l : F[X])
+  let vE : ι → E := fun l => a (w l : (Polynomial F))
   have hbi : M.row i ⬝ᵥ vE = 0 := by
     have hi : M.row i ∈ Submodule.span E (Set.range B) := by
       rw [hspan]
@@ -82,7 +82,7 @@ theorem compress_matrix {α ι : Type*} [Finite α] [Fintype ι]
       simp [add_dotProduct, hx, hy]
     · intro c x _ hx
       simp [smul_dotProduct, hx]
-  apply IsFractionRing.injective F[X] E
+  apply IsFractionRing.injective (Polynomial F) E
   simpa only [map_sum, map_mul, map_zero, M, Matrix.row, Matrix.map_apply, vE, dotProduct] using hbi
 
 open BoxDegree
@@ -91,15 +91,15 @@ private theorem card_exps (a b c : ℕ) : Fintype.card (exps a b c) = (a+1)*(b+1
   rw [Fintype.card_congr (slots a b c)]
   simp [Nat.mul_assoc]
 
-def evalRow {α : Type*} (S : α → F[X]) (z : α → Fin 2 → F)
-    (g : α) (m : Exp) : F[X] :=
+def evalRow {α : Type*} (S : α → (Polynomial F)) (z : α → Fin 2 → F)
+    (g : α) (m : Exp) : (Polynomial F) :=
   S g ^ m none * Polynomial.C ((z g 0)^m (some 0) * (z g 1)^m (some 1))
 
-private theorem eval_monomial_row {α : Type*} (S : α → F[X]) (z : α → Fin 2 → F)
+private theorem eval_monomial_row {α : Type*} (S : α → (Polynomial F)) (z : α → Fin 2 → F)
     (g : α) (m : Exp) (a : Rational F) :
-    MvPolynomial.eval (fun i : Idx => i.elim (algebraMap F[X] (Rational F) (S g))
-      (fun j => algebraMap F[X] (Rational F) (Polynomial.C (z g j)))) (monomial m a) =
-      algebraMap F[X] (Rational F) (evalRow S z g m) * a := by
+    MvPolynomial.eval (fun i : Idx => i.elim (algebraMap (Polynomial F) (Rational F) (S g))
+      (fun j => algebraMap (Polynomial F) (Rational F) (Polynomial.C (z g j)))) (monomial m a) =
+      algebraMap (Polynomial F) (Rational F) (evalRow S z g m) * a := by
   rw [MvPolynomial.eval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _),
     Fintype.prod_option, Fin.prod_univ_two]
   simp only [Option.elim_none, Option.elim_some, evalRow, map_mul, map_pow]
@@ -107,20 +107,20 @@ private theorem eval_monomial_row {α : Type*} (S : α → F[X]) (z : α → Fin
 
 /-- A nonzero relation over the rational function field supplies the independent
     seed multiples which pay for compression of all physical evaluation rows. -/
-theorem compress_box {α : Type*} [Finite α] (S : α → F[X]) (z : α → Fin 2 → F)
+theorem compress_box {α : Type*} [Finite α] (S : α → (Polynomial F)) (z : α → Fin 2 → F)
     {f : MvPolynomial Idx (Rational F)} (hf : f ≠ 0) {e v w b d p : ℕ}
     (hfit : f ∈ space (Rational F) e v w)
     (hS : ∀ g, (S g).natDegree ≤ d)
-    (hroot : ∀ g, MvPolynomial.eval (fun i : Idx => i.elim (algebraMap F[X] (Rational F) (S g))
-      (fun j => algebraMap F[X] (Rational F) (Polynomial.C (z g j)))) f = 0)
+    (hroot : ∀ g, MvPolynomial.eval (fun i : Idx => i.elim (algebraMap (Polynomial F) (Rational F) (S g))
+      (fun j => algebraMap (Polynomial F) (Rational F) (Polynomial.C (z g j)))) f = 0)
     (hguard : Fintype.card (exps e (v+b) (w+b))*(e*d) < ((b+1)*(b+1))*p) :
     ∃ W : exps e (v+b) (w+b) → degreeLT F (p-e*d), W ≠ 0 ∧
-      ∀ g, ∑ m : exps e (v+b) (w+b), evalRow S z g m * (W m : F[X]) = 0 := by
+      ∀ g, ∑ m : exps e (v+b) (w+b), evalRow S z g m * (W m : (Polynomial F)) = 0 := by
   classical
   let E := Rational F
-  let u : F[X] →+* E := algebraMap F[X] E
+  let u : (Polynomial F) →+* E := algebraMap (Polynomial F) E
   let ι := exps e (v+b) (w+b)
-  let A : Matrix α ι F[X] := Matrix.of (fun g m => evalRow S z g m)
+  let A : Matrix α ι (Polynomial F) := Matrix.of (fun g m => evalRow S z g m)
   let B := space E e (v+b) (w+b)
   let C := space E 0 b b
   let coords : (ι → E) ≃ₗ[E] B := (basisRestrictSupport E ι).equivFun.symm

@@ -89,10 +89,10 @@ private theorem count_comparison (e v d : ℕ) (he : 2≤e) (hd : 0<d) :
 /-- The actual weighted kernel is strictly larger than the entire quotient
 box when the compressible factor has weight above `heightCap e d`. -/
 theorem relation_space_gt {F : Type*} [Field F] {α : Type*} [Finite α]
-    {e v d : ℕ} (he : 2≤e) (hd : 0<d) (A : Matrix α (Rect e v) F[X])
+    {e v d : ℕ} (he : 2≤e) (hd : 0<d) (A : Matrix α (Rect e v) (Polynomial F))
     (columns : ∀ i j,(A i j).natDegree≤columnWeight d j)
-    (ker : Fintype.card (QuotRect e v) ≤ Module.finrank (FractionRing F[X])
-      (LinearMap.ker (A.map (algebraMap F[X] (FractionRing F[X]))).mulVecLin)) :
+    (ker : Fintype.card (QuotRect e v) ≤ Module.finrank (FractionRing (Polynomial F))
+      (LinearMap.ker (A.map (algebraMap (Polynomial F) (FractionRing (Polynomial F)))).mulVecLin)) :
     Module.finrank F (HeightCompression.Coeffs F
       (fun j : QuotRect e v => columnWeight d j) (quotientWidth e d)) <
       Module.finrank F (LinearMap.ker (HeightCompression.evaluation A

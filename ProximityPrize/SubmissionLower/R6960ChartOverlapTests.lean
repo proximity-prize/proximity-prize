@@ -16,7 +16,7 @@ def boundary (s t : Chart) : ChartField :=
 
 theorem scalar_ne : scalarCoordinate≠0 := by
   exact (map_ne_zero_iff _ RatFunc.C_injective).mpr
-    ((map_ne_zero_iff _ (IsFractionRing.injective L[X] Scalar)).mpr X_ne_zero)
+    ((map_ne_zero_iff _ (IsFractionRing.injective (Polynomial L) Scalar)).mpr X_ne_zero)
 
 private theorem xmem (s : Chart) : chartCoordinate s.1 RatFunc.X∈baseChart s :=
   Subring.subset_closure (Or.inr (Or.inl rfl))

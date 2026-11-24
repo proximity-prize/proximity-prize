@@ -405,7 +405,7 @@ theorem coeff_weight_add_le {σ : Type*} (w : σ → ℕ)
     rw [Finsupp.weight_optionElim, one_mul] at hw
     omega
   omega
-theorem topPresentation_eval (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) (P : E[X]) :
+theorem topPresentation_eval (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) (P : (Polynomial E)) :
     (topPresentation d Q).eval₂ (differentialSpecializationHom (d := d) P).toRingHom
       (Polynomial.hasseDeriv (d + 1) P) = differentialSpecialization Q P := by
   induction Q using MvPolynomial.induction_on with
@@ -482,10 +482,10 @@ theorem lower_ne_zero (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) :
 theorem regular_presentation (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) :
     topPresentation d (regularPart d Q) = ordinaryRootPolynomial (topReindex d Q) := by
   simp [topPresentation, regularPart, ordinaryRootPolynomial]
-def rootEvaluation (d : ℕ) (P : E[X]) :
-    MvPolynomial (Option (JetVariable d)) E →+* E[X] :=
+def rootEvaluation (d : ℕ) (P : (Polynomial E)) :
+    MvPolynomial (Option (JetVariable d)) E →+* (Polynomial E) :=
   (differentialSpecializationHom (d := d + 1) P).toRingHom.comp (topReindex d).symm.toRingHom
-theorem rootEvaluation_content (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) (P : E[X]) :
+theorem rootEvaluation_content (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) (P : (Polynomial E)) :
     rootEvaluation d P (radicalContent none (topReindex d Q)) =
       differentialSpecialization (lowerPart d Q) P := by
   have h := topPresentation_eval d
@@ -497,7 +497,7 @@ theorem rootEvaluation_content (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) 
   change differentialSpecialization
     ((topReindex d).symm (radicalContent none (topReindex d Q))) P = _
   simpa only [Polynomial.eval₂_C, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, differentialSpecialization] using h.symm
-theorem root_split (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) (hQ : Q ≠ 0) (P : E[X])
+theorem root_split (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) (hQ : Q ≠ 0) (P : (Polynomial E))
     (hroot : differentialSpecialization Q P = 0) :
     differentialSpecialization (lowerPart d Q) P = 0 ∨
       differentialSpecialization (regularPart d Q) P = 0 := by
@@ -967,7 +967,7 @@ noncomputable section
 open MvPolynomial Polynomial
 variable {F : Type*} [Field F]
 theorem contact_mod_relation_pullback {σ : Type*} (v : σ → ℕ) (m : ℕ)
-    (P L H : MvPolynomial σ F) (g : σ → F[X]) (z : F[X])
+    (P L H : MvPolynomial σ F) (g : σ → (Polynomial F)) (z : (Polynomial F))
     (hcontact : P-L*H∈restrictWeightedOrder v m)
     (hg : ∀ i,z^(v i) ∣ g i)
     (hL : eval₂Hom Polynomial.C g L=0) :
@@ -1154,7 +1154,7 @@ theorem frobeniusGraph_coeff (p : ℕ) (hp : 0<p) (Q : MvPolynomial (Fin 2) F)
   trans ((Polynomial.monomial (graphExponent p e) (Q.coeff e)).coeff (graphExponent p e))
   · apply Finset.sum_eq_single_of_mem e he
     intro f hf hfe
-    rw [Polynomial.coeff_monomial,ite_eq_right]
+    rw [Polynomial.coeff_monomial,Finsupp.single_apply,ite_eq_right]
     intro h
     apply hfe
     apply graphExponent_injOn p hp
@@ -1499,7 +1499,7 @@ theorem rationalTaylor_weight {r : ℕ} (a b V : ℕ) (center : F)
   have hs := (initialSeparant_weight a b center Q).trans
     (Nat.sub_le_sub_right hQ (a+b*r))
   induction l using Nat.strong_induction_on with
-  | h l ih =>
+  | ind l ih =>
     rw [rationalTaylorNumerator]
     split_ifs with hl
     · have he : 2*(l-r)-1 = 0 := by omega
@@ -2105,20 +2105,20 @@ namespace Sol1.C40Primitives
 open Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 theorem map_resultant_eq_zero_of_common_root
     {R S : Type*} [CommRing R] [CommRing S]
-    (phi : R →+* S) (f g : R[X]) (m n : ℕ)
+    (phi : R →+* S) (f g : (Polynomial R)) (m n : ℕ)
     (hf : f.natDegree ≤ m) (hg : g.natDegree ≤ n) (hsize : m ≠ 0 ∨ n ≠ 0)
     (z : S) (hfroot : f.eval₂ phi z = 0) (hgroot : g.eval₂ phi z = 0) :
     phi (f.resultant g m n) = 0 := by
   obtain ⟨p, q, _hp, _hq, hbezout⟩ :=
     Polynomial.exists_mul_add_mul_eq_C_resultant f g hf hg hsize
-  have he := congrArg (fun t : R[X] ↦ t.eval₂ phi z) hbezout
+  have he := congrArg (fun t : (Polynomial R) ↦ t.eval₂ phi z) hbezout
   simpa only [eval₂_add, eval₂_mul, eval₂_C, hfroot, hgroot, zero_mul, zero_add] using he.symm
 theorem native_binomial_guard {E : Type*} [Field E] [CharP E 2130706433]
     (r : ℕ) (_hr : r ≤ 2) (i : ℕ) (hri : r < i) (hi : i < 131073) :
     (i.choose r : E) ≠ 0 := by
   have h := natCast_choose_ne_zero_of_ringChar (D := 131072) (s := r)
     (Or.inr (by rw [ringChar.eq E 2130706433]; norm_num)) (i - r)
-    (by omega) (by omega)
+    (by omega)
   simpa only [Nat.sub_add_cancel (Nat.le_of_lt hri)] using h
 end Sol1.C40Primitives
 end
@@ -2142,7 +2142,7 @@ theorem singular_weight (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) :
   change i + ((optionEquivLeft E (JetVariable d)
     (radicalPrimPart none (topReindex d Q))).coeff i).weightedTotalDegree jetDegreeWeight ≤ _
   exact h.trans_eq (regular_weight d Q)
-theorem singular_root (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) (P : E[X])
+theorem singular_root (d : ℕ) (Q : DifferentialPolynomial E (d + 1)) (P : (Polynomial E))
     (hpos : 0 < jetDegree (regularPart d Q) (Fin.last (d + 1)))
     (hroot : differentialSpecialization (regularPart d Q) P = 0)
     (hsep : differentialSpecialization (separant (regularPart d Q) (Fin.last (d + 1))) P = 0) :
@@ -2172,7 +2172,7 @@ theorem exceptional_ne_zero (d : ℕ) (Q : DifferentialPolynomial E (d + 1))
     exceptionalEquation d Q ≠ 0 :=
   mul_ne_zero (lower_ne_zero d Q) (singularEquation_ne_zero d Q hchar)
 theorem root_regular_or_exceptional (d : ℕ) (Q : DifferentialPolynomial E (d + 1))
-    (hQ : Q ≠ 0) (P : E[X]) (hroot : differentialSpecialization Q P = 0)
+    (hQ : Q ≠ 0) (P : (Polynomial E)) (hroot : differentialSpecialization Q P = 0)
     (hpos : 0 < jetDegree (regularPart d Q) (Fin.last (d + 1))) :
     (differentialSpecialization (regularPart d Q) P = 0 ∧
       differentialSpecialization (separant (regularPart d Q) (Fin.last (d + 1))) P ≠ 0) ∨

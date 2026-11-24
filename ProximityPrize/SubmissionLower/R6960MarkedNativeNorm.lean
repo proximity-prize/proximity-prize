@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960MarkedPhysicalRows
 import ProximityPrize.SubmissionLower.R6960MarkedTranslatedEquation
 import ProximityPrize.SubmissionLower.R6960MarkedFamilyFrame
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -14,9 +15,9 @@ open MonicFourChartDescent RetainedRestrictionTorus RetainedSurfaceClass Collisi
 open scoped Polynomial Matrix BigOperators Lower6960.MarkedEvaluation Lower6960.RetainedSurfaceClass
 local instance : DecidableEq Scalar := Classical.decEq _
 local instance : DecidableEq ChartField := Classical.decEq _
-local instance (priority:=2200) : SMul Scalar[X] ChartField := (inferInstance:Algebra Scalar[X] ChartField).toSMul
+local instance (priority:=2200) : SMul (Polynomial Scalar) ChartField := (inferInstance:Algebra (Polynomial Scalar) ChartField).toSMul
 variable {E:Type} [Field E] [Algebra ChartField E]
-local notation "j" => algebraMap Scalar[X] ChartField
+local notation "j" => algebraMap (Polynomial Scalar) ChartField
 local notation "aE" => algebraMap ChartField E
 def planeFinite : NormalizedFiber.Plane L→+*ChartField :=
   (baseChart (reference true false)).subtype.comp (oriented true false).toRingHom
@@ -38,7 +39,7 @@ theorem native_norm {J:Type} [Fintype J] (v:J→E) (li:LinearIndependent L v)
     (i:ℕ) (T:Finset L) (nz:∀z∈T,z≠0) (o:Tor E) (word:L→Tor E)
     (cols:∀h,Column i T o word (v h)) (b:PowerBasis ChartField E) (simple:(minpoly ChartField b.gen).Separable)
     (a:ChartField) (an:a≠0) (ord:(o:E)=aE a*b.gen)
-    (q:(NormalizedFiber.Plane L)[X]) (root:q.eval₂ ((algebraMap ChartField E).comp πp) (o:E)=0)
+    (q:(Polynomial (NormalizedFiber.Plane L))) (root:q.eval₂ ((algebraMap ChartField E).comp πp) (o:E)=0)
     (sep:∀z∈T,(q.map (genericFibreBase z)).Separable)
     (baseWord:∀z∈T,∃w:ChartField,(word z:E)=aE w) :
     ∃ (r d:ℕ),r=finrank Scalar (span Scalar (Set.range v)) ∧ Fintype.card J≤r+d ∧ b.dim*d≤T.card*r := by
@@ -49,11 +50,11 @@ theorem native_norm {J:Type} [Fintype J] (v:J→E) (li:LinearIndependent L v)
   let Ω:=p.SplittingField
   let δ:=algebraMap ChartField Ω
   letI : IsGalois ChartField Ω := IsGalois.of_separable_splitting_field (p:=p) ps
-  let jeg:=algebraMap Scalar[X] Ω
+  let jeg:=algebraMap (Polynomial Scalar) Ω
   have extb (n:Fin r) (a:ChartField) : ev n (aE a)=δ (rowBase (c n) a) := horizontal n a
-  have cof (n:Fin r) (z:L[X]) : ev n (algebraMap Scalar E (algebraMap L[X] Scalar z))=jeg (z.map inner) := by
+  have cof (n:Fin r) (z:(Polynomial L)) : ev n (algebraMap Scalar E (algebraMap (Polynomial L) Scalar z))=jeg (z.map inner) := by
     change ev n (aE (RatFunc.C _))=_
-    rw [extb,row_seed_polynomial];exact (IsScalarTower.algebraMap_apply Scalar[X] ChartField Ω _).symm
+    rw [extb,row_seed_polynomial];exact (IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField Ω _).symm
   let A:Matrix (Fin r) J Ω:=fun n t=>ev n (v t)
   let B:Matrix (Fin r) (Fin r) Ω:=fun n t=>ev n (w t)
   let inc:=jeg.comp (Polynomial.mapRingHom inner)
@@ -72,7 +73,7 @@ theorem native_norm {J:Type} [Fintype J] (v:J→E) (li:LinearIndependent L v)
   let qs (n:Fin r):=q.map (rowPlane (c n))
   have localRoot (n:Fin r) : (qs n).eval₂ jeg (ev n (o:E))=0 := by
     have mapcoef:jeg.comp (rowPlane (c n))=(ev n).comp ((algebraMap ChartField E).comp πp) :=
-      RingHom.ext (fun a=>(IsScalarTower.algebraMap_apply Scalar[X] ChartField Ω _).trans
+      RingHom.ext (fun a=>(IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField Ω _).trans
         ((congrArg δ (row_plane (c n) a)).symm.trans (extb n _).symm))
     rw [show qs n=q.map (rowPlane (c n)) from rfl,eval₂_map,mapcoef,←Polynomial.hom_eval₂,root,map_zero]
   have deg (n:Fin r) : (minpoly ChartField (ev n (o:E))).natDegree=b.dim := by

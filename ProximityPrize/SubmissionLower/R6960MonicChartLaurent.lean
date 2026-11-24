@@ -136,7 +136,7 @@ private theorem toPlane_injective : Function.Injective toPlane := by
 
 private theorem toPlane_surjective : Function.Surjective toPlane := by
   intro p
-  let table : ℕ →₀ ℕ →₀ L := p.coeff.mapRange Polynomial.coeff (by ext i; simp)
+  let table : ℕ →₀ ℕ →₀ L := p.coeff.mapRange (fun q : Polynomial L => q.coeff) (by ext i; simp)
   refine ⟨table.uncurry,?_⟩
   apply Polynomial.ext
   intro i

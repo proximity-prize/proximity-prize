@@ -7,10 +7,10 @@ set_option maxHeartbeats 1500000
 namespace Low48PrimaryPivot
 open Finset K1_13_2_3
 open scoped BigOperators
-open private band_card from ProximityPrize.SubmissionLower.Low48PrimaryPivotRect
-open private binWeight from ProximityPrize.SubmissionLower.Low48PrimaryPivotSectionSum
+open Low48PrimaryPivot (band_card)
+open Low48PrimaryPivot (binWeight)
 
-private def qMin (w : Window) : ℤ := 4650-(w.diagonalHi : ℤ)
+def qMin (w : Window) : ℤ := 4650-(w.diagonalHi : ℤ)
 
 private def gradeOK (w : Window) (q l : ℤ) : Prop :=
   (w.gradeLo : ℤ)-3000 ≤ l-q ∧ l-q < (w.gradeHi : ℤ)-3000

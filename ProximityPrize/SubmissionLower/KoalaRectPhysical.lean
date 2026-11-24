@@ -11,10 +11,7 @@ noncomputable section
 open Polynomial K1_14 K1_14_1 K1_14_1_6
 open K1 (I)
 open scoped BigOperators
-open private Low Low.mk cut localGen high_gen mul_add_pow_mem mul_shift_pow_mem
-  collect_adapted move_v shiftedY mem_of_monomials product_eq_monomial seed_scalar
-  K1_14_1_6.seedC K1_14_1_6.sx K1_14_1_6.sy K1_14_1_6.sv K1_14_1_6.physical_x
-  K1_14_1_6.physical_y K1_14_1_6.physical_v K1_14_1_6.physical_seed from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1_6 (Low cut localGen high_gen mul_add_pow_mem mul_shift_pow_mem collect_adapted move_v shiftedY mem_of_monomials product_eq_monomial seed_scalar seedC sx sy sv physical_x physical_y physical_v physical_seed)
 
 private abbrev RectGen (s : Shape) (U : Fin 2 → ℕ) :=
   (Σ q : Fin (s.B+1), Σ k : Fin (min q.val s.J+1),

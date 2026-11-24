@@ -17,7 +17,7 @@ open K1_14_2_2_4 (pairCap)
 open RescueSource (bank reserve cutoff jetCap seedCap)
 open DifferentialContact (Native)
 open scoped Classical
-open private shiftedWord from ProximityPrize.SubmissionLower.Fast052
+open K1_14_2_2_3 (shiftedWord)
 
 /-- The initial proper pair already passes the reserve-zero test. The checked
 stage filters can therefore be intersected without an extra first loss bin. -/

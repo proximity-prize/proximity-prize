@@ -16,7 +16,7 @@ theorem anchor_factors {P : Row 4} (hP : P ≠ 0) :
     ∃ (n : ℕ) (f : Fin n → Row 4),
       (∀ i, Irreducible (f i) ∧ 0 < (shape (f i)).t ∧ f i ∣ P) ∧
       (∀ i j, i ≠ j → ¬ Associated (f i) (f j)) ∧ (∏ i, f i) ∣ P ∧
-      ∀ S : Geom[X], atJet P S = 0 → atJet (anchorLead P) S = 0 ∨ ∃ i, OnFactor (f i) S := by
+      ∀ S : (Polynomial Geom), atJet P S = 0 → atJet (anchorLead P) S = 0 ∨ ∃ i, OnFactor (f i) S := by
   classical
   let _ : StrongNormalizationMonoid (Row 4) := UniqueFactorizationMonoid.strongNormalizationMonoid
   let A := normalizedFactors P
@@ -65,7 +65,7 @@ theorem anchor_factors {P : Row 4} (hP : P ≠ 0) :
     have hj : f j = q := congrArg Subtype.val (e.apply_symm_apply ⟨q,hqT⟩)
     exact ⟨j,by rw [hj,OnFactor,← eval_anchorLead]; exact ⟨hqS,hqlead⟩⟩
 
-theorem topLead_off_lower {P f : Row 4} {S : Geom[X]} (h : f ∣ P)
+theorem topLead_off_lower {P f : Row 4} {S : (Polynomial Geom)} (h : f ∣ P)
     (hoff : atJet (anchorLead P) S ≠ 0) : topLead f S ≠ 0 := by
   obtain ⟨G,rfl⟩ := h
   rw [anchorLead_mul,atJet,map_mul] at hoff
@@ -74,7 +74,7 @@ theorem topLead_off_lower {P f : Row 4} {S : Geom[X]} (h : f ∣ P)
 
 /-- Charge the lower leading coefficient first, then all retained factors. Every other mark is off the retained product. -/
 theorem priority_pieces {n : ℕ} {P : Row 4} {f : Fin n → Row 4} (hdiv : ∀ i, f i ∣ P)
-    {Γ : Finset K} (s : K → K[X]) (book : Finset K) (z : Finset (Fin n))
+    {Γ : Finset K} (s : K → (Polynomial K)) (book : Finset K) (z : Finset (Fin n))
     (hbase : ∀ γ ∈ Γ, atJet (anchorLead P) (extend (s γ)) = 0 ∨ ∃ i, OnFactor (f i) (extend (s γ))) :
     ∃ (low : Finset K) (piece : Fin n → Finset K),
       low ⊆ Γ ∧ (∀ γ ∈ low, atJet (anchorLead P) (extend (s γ)) = 0) ∧

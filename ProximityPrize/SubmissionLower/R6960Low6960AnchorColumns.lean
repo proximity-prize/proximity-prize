@@ -294,7 +294,7 @@ theorem column_wide {u : Ex} (h : ColumnEligible u) :
 
 
 
-private theorem spec_eul (S : Geom[X]) (i : Fin 4) :
+private theorem spec_eul (S : (Polynomial Geom)) (i : Fin 4) :
     differentialSpecializationHom S (eul i) = EulerJetDegree.euler 133409 i.val S := by
   rw [eul, map_sum, EulerJetDegree.euler, ← Fin.sum_univ_eq_sum_range]
   refine Finset.sum_congr rfl fun k _ => ?_
@@ -303,7 +303,7 @@ private theorem spec_eul (S : Geom[X]) (i : Fin 4) :
     map_mul, map_mul, map_pow]
   simp [differentialSpecializationHom, mul_assoc]
 
-private theorem natDegree_prod_bound (S : Geom[X]) (u : Ex) (hS : S.natDegree ≤ 133409) :
+private theorem natDegree_prod_bound (S : (Polynomial Geom)) (u : Ex) (hS : S.natDegree ≤ 133409) :
     (differentialSpecializationHom S (orth u)).natDegree ≤ 133409*jdeg u - jidx u := by
   rw [orth,map_mul,map_mul,map_mul,map_pow,map_pow,map_pow,map_pow,spec_eul,spec_eul,spec_eul,spec_eul]
   have hh (i : Fin 4) := (Polynomial.natDegree_pow_le
@@ -319,7 +319,7 @@ private theorem natDegree_prod_bound (S : Geom[X]) (u : Ex) (hS : S.natDegree �
     (u (some 0)*0+u (some 1)*1+u (some 2)*2+u (some 3)*3)
   omega
 
-theorem column_eval_degree (S : Geom[X]) {u : Ex} (h : ColumnEligible u)
+theorem column_eval_degree (S : (Polynomial Geom)) {u : Ex} (h : ColumnEligible u)
     (hs : S.natDegree ≤ 133409) :
     (differentialSpecialization (column u) S).natDegree ≤ 99 * 179827 - 1 := by
   obtain ⟨hd,hi,_,_,hw⟩ := h

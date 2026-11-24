@@ -9,7 +9,7 @@ open K1_14_2 (Ambient toJet jetMarkHom OnJet)
 open K1_14_2_2 (RowCaps Active dual orderOn)
 open K1_14_2_2R (chainCompatible)
 open DifferentialContact (Native)
-open private shiftedWord from ProximityPrize.SubmissionLower.Fast052
+open K1_14_2_2_3 (shiftedWord)
 
 private theorem shifted_caps {P : Jet} {s : Shape} (hp : RowCaps P s) (w : List (Fin 2)) :
     RowCaps (shiftedWord P w) s := by
@@ -17,7 +17,7 @@ private theorem shifted_caps {P : Jet} {s : Shape} (hp : RowCaps P s) (w : List 
   | nil => exact hp
   | cons j w ih => exact P1_7_4_1_2.proof _ _ ih j 1
 
-private theorem failed_contact {J : Ideal Ambient} {P : Jet} {s : Shape} {r : ℕ}
+theorem failed_contact {J : Ideal Ambient} {P : Jet} {s : Shape} {r : ℕ}
     (cap : RowCaps P s) (fails : ¬Native J (r+1) P) :
     ∃ C : Jet, RowCaps C s ∧ toJet C∉J ∧
       ∀ z S, Native (RingHom.ker (jetMarkHom z S)) (r+1) P → jetAt C z S=0 := by

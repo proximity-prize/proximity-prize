@@ -57,12 +57,12 @@ private theorem batches_pay {k : Band} {t : ℕ} (batches : List (PaidBatch k t)
     rw [pays_append, head.property, ih]
     rfl
 
-private def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
+def InRectangle (r : Rectangle) (width index : ℕ) : Prop :=
   r.widthLow ≤ width ∧ width ≤ r.widthHigh ∧ r.indexLow ≤ index ∧ index ≤ r.indexHigh
 
 
 /-- Extend the covered width prefix when this tile contains its next width. -/
-private def step (index firstMissing : ℕ) (tile : Tile) : ℕ :=
+def step (index firstMissing : ℕ) (tile : Tile) : ℕ :=
   let r := tile.bounds
   if r.indexLow ≤ index ∧ index ≤ r.indexHigh ∧ r.widthLow ≤ firstMissing then
     max firstMissing (r.widthHigh+1)
@@ -77,7 +77,7 @@ private theorem step_cover {tile : Tile} {j first b : ℕ}
     exact ⟨hb.trans hFirst, by omega, hj, hJ⟩
   · omega
 
-private theorem fold_cover (tiles : List Tile) (j first b : ℕ)
+theorem fold_cover (tiles : List Tile) (j first b : ℕ)
     (hFirst : first ≤ b) (h : b < tiles.foldl (step j) first) :
     ∃ tile ∈ tiles, InRectangle tile.bounds b j := by
   induction tiles generalizing first with

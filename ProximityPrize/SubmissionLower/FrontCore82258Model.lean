@@ -24,7 +24,7 @@ abbrev AnchoredFamily {u D} (M : AnchorModel u D) (Γ : Finset K) :=
   P1.FamilyAt HighCore82258.agreement M Γ
 
 def AdjacentChart {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (H : L[X]) : Prop :=
+    (H : (Polynomial L)) : Prop :=
   let σ := frobenius L p
   let H' := H.map σ
   H.Monic ∧ H.natDegree = M.overhead.toNat ∧ H ∣ liftPoly M.E ∧

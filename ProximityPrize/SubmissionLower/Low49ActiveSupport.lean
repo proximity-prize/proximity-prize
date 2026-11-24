@@ -13,7 +13,7 @@ open K1_13_6_2_4 (Exponent)
 open Low48BentLattice (Cap Allowed coords)
 open Low48BentSupport (graph lifted)
 open Low49ActiveLattice (Active points)
-open private support_bounds from ProximityPrize.SubmissionLower.Fast074
+open K1_13_6_2_2_1 (support_bounds)
 noncomputable section
 
 def Fits (P : Row 4) (K : ℕ) : Prop :=

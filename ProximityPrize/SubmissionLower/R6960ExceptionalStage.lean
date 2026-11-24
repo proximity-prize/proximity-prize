@@ -9,9 +9,9 @@ open K1_14_2 (Ambient toJet jetMarkHom)
 open K1_14_2_2 (RowCaps Active dual orderOn mass)
 open K1_14_2_2_4 (pairCap)
 open DifferentialContact (Native)
-open private K1_14_2_2_2_3.jetEquiv jetEquiv_apply from ProximityPrize.SubmissionLower.Fast051
-open private power_caps from ProximityPrize.SubmissionLower.R6960PrefixRows
-open private failed_contact from ProximityPrize.SubmissionLower.R6960PrefixStage
+open K1_14_2_2_2_3 (jetEquiv jetEquiv_apply)
+open Lower6960.PrefixRows (power_caps)
+open Lower6960.PrefixStage (failed_contact)
 
 /-- Intersect the passing dual parents with the power of their exceptional
 factor; each failing parent gets a cutter bounded solely by the rescue row. -/

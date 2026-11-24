@@ -13,7 +13,7 @@ open scoped Polynomial Differential
 /-- A primitive local equation has a reciprocal chart when the residue
 field is infinite. -/
 theorem exists_unit_evaluation {A : Type*} [CommRing A] [IsLocalRing A]
-    [Infinite (IsLocalRing.ResidueField A)] (f : A[X])
+    [Infinite (IsLocalRing.ResidueField A)] (f : (Polynomial A))
     (primitive : ∃ i, IsUnit (f.coeff i)) : ∃ c : A, IsUnit (f.eval c) := by
   let residue := IsLocalRing.residue A
   by_contra! no
@@ -27,7 +27,7 @@ theorem exists_unit_evaluation {A : Type*} [CommRing A] [IsLocalRing A]
     simpa only [all, Set.setOf_true] using
       (Set.infinite_univ : (Set.univ : Set (IsLocalRing.ResidueField A)).Infinite)
   obtain ⟨i,h⟩ := primitive
-  have eq := congrArg (fun p : (IsLocalRing.ResidueField A)[X] => p.coeff i) zero
+  have eq := congrArg (fun p : (Polynomial (IsLocalRing.ResidueField A)) => p.coeff i) zero
   rw [coeff_map,coeff_zero] at eq
   exact ((IsLocalRing.residue_ne_zero_iff_isUnit _).mpr h) eq
 
@@ -39,7 +39,7 @@ theorem raw_square_clears_local {A F E : Type*} [CommRing A] [IsDomain A] [IsInt
     [Field E] [Algebra F E] [Algebra A E] [IsScalarTower A F E]
     [Algebra.IsSeparable F E] [FiniteDimensional F E]
     [Differential A] [Differential E] [DifferentialAlgebra A E]
-    (b : PowerBasis F E) (f : A[X]) (primitive : ∃ i,IsUnit (f.coeff i))
+    (b : PowerBasis F E) (f : (Polynomial A)) (primitive : ∃ i,IsUnit (f.coeff i))
     (degree : f.natDegree=b.dim) (positive : 2≤f.natDegree) (root : aeval b.gen f=0)
     (x : E) (hx : IsIntegral A x) :
     IsIntegral A (algebraMap A E ((f.resultant f.derivative f.natDegree (f.natDegree-1))^2)*x′) := by

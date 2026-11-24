@@ -26,8 +26,8 @@ def axisLaurent (j:Bool) (c:L) : Laurent L→+*Axis E j c :=
   (Ideal.Quotient.mk _).comp (LaurentPolynomial.eval₂ (algebraMap L (Tor E)) (varUnit E (!j)))
 scoped instance axisAlgebra (j:Bool) (c:L) : Algebra (Laurent L) (Axis E j c) :=
   @RingHom.toAlgebra (Laurent L) (Axis E j c) _ (Ideal.Quotient.commSemiring (axisIdeal E j c)) (axisLaurent E j c)
-scoped instance chartModule (j:Bool) (c:L) (b:Bool) : Module L[X] (chartImage E j c b) :=
-  letI : Module L[X] (Axis E j c) := Module.compHom _ (polyMap E j c b)
+scoped instance chartModule (j:Bool) (c:L) (b:Bool) : Module (Polynomial L) (chartImage E j c b) :=
+  letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (polyMap E j c b)
   (polyImage E j c b).module
 
 theorem signed_chart (j:Bool) (c:L) (b:Bool) :
@@ -40,7 +40,7 @@ theorem signed_chart (j:Bool) (c:L) (b:Bool) :
       cases b <;> simp [chartEmbedding,infinityEmbedding_apply]
     have eq : along E j b (Polynomial.C r)=algebraMap L (Tor E) r := eval₂_C _ _
     rw [co,LaurentPolynomial.eval₂_C,eq]
-  · have v : chartEmbedding b (Polynomial.X : L[X])=T (if b then (-1:ℤ) else 1) := by
+  · have v : chartEmbedding b (Polynomial.X : (Polynomial L))=T (if b then (-1:ℤ) else 1) := by
       cases b <;> simp [chartEmbedding,infinityEmbedding_apply]
     change π (LaurentPolynomial.eval₂ _ _ (chartEmbedding b Polynomial.X))=π (along E j b Polynomial.X)
     rw [v,LaurentPolynomial.eval₂_T]
@@ -56,7 +56,7 @@ theorem laurent_scalar_tower (j:Bool) (c:L) : IsScalarTower L (Laurent L) (Axis 
   simp [axisLaurent]
 
 def nativeMap (j:Bool) (c:L) (b:Bool) : ChartMap (k:=L) b (chartImage E j c b) (Axis E j c) :=
-  letI : Module L[X] (Axis E j c) := Module.compHom _ (chartEmbedding (k:=L) b).toRingHom
+  letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (chartEmbedding (k:=L) b).toRingHom
   { toFun := fun u=>u.val
     map_add' := fun _ _=>rfl
     map_smul' := fun p u=>by

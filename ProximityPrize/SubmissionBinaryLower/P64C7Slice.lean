@@ -14,9 +14,9 @@ open Polynomial P64LineOrder P64C7Auxiliary
 
 variable {F : Type*} [Field F]
 
-noncomputable local instance : CommRing (Polynomial F) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial F)) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := Polynomial.commRing
+noncomputable local instance : CommRing (Polynomial F) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial F)) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := AddMonoidAlgebra.commRing
 
 local notation "Tri" => Polynomial (Polynomial (Polynomial F))
 
@@ -27,7 +27,7 @@ theorem exists_slice (R : Tri) (hirr : Irreducible R) (hh : 1 ≤ R.natDegree)
         Polynomial.X ^ ν * R'' ∧ R''.coeff 0 ≠ 0 := by
   let Q := (lineShift R x y).map (Polynomial.constantCoeff (R := Polynomial F))
   have heq : Q = (evalXAt R x).comp (Polynomial.X + Polynomial.C y) := by
-    ext b : 1
+    refine Polynomial.ext_iff.2 fun b => ?_
     simpa [Q, Polynomial.coeff_zero_eq_eval_zero] using lineShift_coeff_zero R x y b
   have hQ : Q ≠ 0 := by
     rw [heq]

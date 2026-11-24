@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960MarkedScalarPlace
 import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
 import ProximityPrize.SubmissionLower.R6960MarkedFunctionSpace
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -16,16 +17,16 @@ open scoped Polynomial BigOperators Lower6960.RetainedSurfaceClass Lower6960.Mar
 open scoped Lower6960.MonicChart
 local instance : DecidableEq Scalar := Classical.decEq _
 local instance : DecidableEq ChartField := Classical.decEq _
-local instance (priority := 2200) : Algebra Scalar[X] ChartField :=
+local instance (priority := 2200) : Algebra (Polynomial Scalar) ChartField :=
   inferInstanceAs (Algebra (Polynomial Scalar) (RatFunc Scalar))
-local instance (priority := 2200) : SMul Scalar[X] ChartField :=
-  (inferInstance : Algebra Scalar[X] ChartField).toSMul
-open private Lower6960.MarkedEvaluation.leading_unit Lower6960.MarkedEvaluation.integral_infty from ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
+local instance (priority := 2200) : SMul (Polynomial Scalar) ChartField :=
+  (inferInstance : Algebra (Polynomial Scalar) ChartField).toSMul
+open Lower6960.MarkedEvaluation (leading_unit integral_infty)
 variable {E Ω:Type} [Field E] [Field Ω] [Algebra ChartField E] [Algebra ChartField Ω]
-variable [Algebra Scalar[X] Ω] [IsScalarTower Scalar[X] ChartField Ω]
+variable [Algebra (Polynomial Scalar) Ω] [IsScalarTower (Polynomial Scalar) ChartField Ω]
 local notation "ι" => algebraMap ChartField Ω
-local notation "poly" => algebraMap Scalar[X] ChartField
-local notation "jo" => algebraMap Scalar[X] Ω
+local notation "poly" => algebraMap (Polynomial Scalar) ChartField
+local notation "jo" => algebraMap (Polynomial Scalar) Ω
 variable (c:L) (ev:E→+*Ω) (base:∀a,ev (algebraMap ChartField E a)=algebraMap ChartField Ω (rowBase c a))
 
 private theorem row_cut (z:L) : rowBase c (divisor true z)=poly (Polynomial.X-C (inner z)) := by
@@ -50,10 +51,10 @@ theorem mapped_denom (T:Finset L) (b:Bool) :
 
 include base in
 theorem mapped_finite {i:ℕ} {T:Finset L} {v:E} (reg:controlled E i T v) :
-    IsIntegral Scalar[X] (jo (polePolynomial (T.image inner))*ev v) := by
+    IsIntegral (Polynomial Scalar) (jo (polePolynomial (T.image inner))*ev v) := by
   have h:IsIntegral (baseChart (false,false)) (chartDenom E T (false,false)*v) := by
     simpa [Regular,fr,localFrame,axisBit] using reg (false,false)
-  have v':=integral_section c _ ev base (IsFractionRing.injective Scalar[X] ChartField) (fun _ h=>finite_base c h) h
+  have v':=integral_section c _ ev base (IsFractionRing.injective (Polynomial Scalar) ChartField) (fun _ h=>finite_base c h) h
   simpa only [map_mul,mapped_denom c ev base,Bool.false_eq_true,ite_false,one_pow,div_one] using v'
 
 include base in
@@ -74,13 +75,13 @@ theorem mapped_infty [FiniteDimensional ChartField Ω]
   rw [map_inv₀,map_div₀,←IsScalarTower.algebraMap_apply,map_pow,d] at inv
   have nz:jo D/(ι RatFunc.X)^T.card≠0 := by
     refine div_ne_zero ?_ (pow_ne_zero _ ((map_ne_zero_iff _ (algebraMap ChartField Ω).injective).mpr RatFunc.X_ne_zero))
-    rw [IsScalarTower.algebraMap_apply Scalar[X] ChartField Ω]
+    rw [IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField Ω]
     exact (map_ne_zero_iff _ (algebraMap ChartField Ω).injective).mpr
       ((map_ne_zero_iff _ (IsFractionRing.injective _ _)).mpr (polePolynomial_monic _).ne_zero)
   change IsIntegral (SheetNorm.Infinity Scalar) ((jo D/(ι RatFunc.X)^T.card)*ev v) at v'
   have t:=inv.mul v';rwa [←mul_assoc,inv_mul_cancel₀ nz,one_mul] at t
 
-private def boundaryPolynomial (c:L) : Scalar[X] := C (algebraMap L[X] Scalar Polynomial.X+inner c)*Polynomial.X
+private def boundaryPolynomial (c:L) : (Polynomial Scalar) := C (algebraMap (Polynomial L) Scalar Polynomial.X+inner c)*Polynomial.X
 private theorem row_boundary : rowBase c (boundary (false,false) (true,true))=poly (boundaryPolynomial c) := by
   change rowBase c (RatFunc.X*scalarCoordinate)=_
   rw [map_mul,row_abscissa,row_parameter,boundaryPolynomial,map_mul,RatFunc.algebraMap_X,RatFunc.algebraMap_C,map_add]
@@ -90,10 +91,10 @@ include base in
 theorem torus_mem {z:Scalar} (P:MarkPlace Scalar Ω z) (nz:z≠0) (v:Tor E) : ev (v:E)∈P.V := by
   classical
   obtain ⟨n,regular⟩:=clear_torus (false,false) (v:E) v.property
-  have fd:=integral_section c _ ev base (IsFractionRing.injective Scalar[X] ChartField) (fun _ h=>finite_base c h) regular
+  have fd:=integral_section c _ ev base (IsFractionRing.injective (Polynomial Scalar) ChartField) (fun _ h=>finite_base c h) regular
   let p:=boundaryPolynomial c
-  have hn: (algebraMap L[X] Scalar Polynomial.X+inner c)≠0 := by
-    change algebraMap L[X] Scalar Polynomial.X+algebraMap L[X] Scalar (C c)≠0
+  have hn: (algebraMap (Polynomial L) Scalar Polynomial.X+inner c)≠0 := by
+    change algebraMap (Polynomial L) Scalar Polynomial.X+algebraMap (Polynomial L) Scalar (C c)≠0
     rw [←map_add];exact (map_ne_zero_iff _ (IsFractionRing.injective _ _)).mpr (X_add_C_ne_zero _)
   have unit:IsUnit (P.lift p) := P.lift_unit (by simpa [p,boundaryPolynomial] using mul_ne_zero hn nz)
   have scaled:=P.integral_mem fd

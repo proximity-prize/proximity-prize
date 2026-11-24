@@ -153,7 +153,7 @@ python3 scripts/challenges.py slugs
 
 `challenges.json` is the source of truth for all immutable versions. The binary slugs are `proximity-prize-binary-reduction-lower` and `proximity-prize-binary-reduction-upper`.
 
-Version numbers are independent per slug and must be allocated against the independent verifier's served history. This migration selects Koala versions above the production history; dev `main` alone is insufficient to choose a fresh version. Existing Koala submissions need migration and fresh acceptance on Lean 4.34.0, including the leading proofs whose migration remains unresolved. See the [version policy and leaderboard migration requirements](docs/binary-profile.md#release-requirements) before registration.
+Version numbers are independent per slug and must be allocated against the independent verifier's served history. This migration selects Koala versions above the production history; dev `main` alone is insufficient to choose a fresh version. Existing Koala submissions need migration and fresh acceptance on Lean 4.36.0, including the leading proofs whose migration remains unresolved. See the [version policy and leaderboard migration requirements](docs/binary-profile.md#release-requirements) before registration.
 
 The new binary profiles and the migrated Koala profiles must be registered with the independent verifier before their workflows can issue authoritative scores. Public repository routing alone does not register a service-side challenge.
 

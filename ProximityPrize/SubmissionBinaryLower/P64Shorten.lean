@@ -90,7 +90,7 @@ theorem card_filter_subset_le (ω : ι ↪ F) (u₀ u₁ : ι → F) (Λs : Fins
   let f : Fin n' → F := fun k => (u₀ (idx k) - p₀.eval (ω (idx k))) / G.eval (ω (idx k))
   let g : Fin n' → F := fun k => (u₁ (idx k) - p₁.eval (ω (idx k))) / G.eval (ω (idx k))
   obtain ⟨ex, hexcard, hex⟩ :=
-    exists_weightedJohnson_line_exactCorrelatedPair dom f g hcert hD1 hDA hAn hB
+    exists_weightedJohnson_line_exactCorrelatedPair dom f g hcert hD1 hDA hB
   refine le_trans ?_ hexcard
   have hsub : (Vs.filter fun z => Λs ⊆ Az z) ⊆ ex := by
     intro z hz

@@ -29,20 +29,20 @@ theorem toSeed_injective : Function.Injective toSeed :=
 theorem toSeed_degree (P : Ordinate) : (toSeed P).natDegree=P.natDegree :=
   natDegree_map_eq_of_injective (Polynomial.map_injective _ (incl_injective L)) P
 
-private def seedScalar (b : L[X]) : Plane Seed := C (C (incl L b))
+private def seedScalar (b : (Polynomial L)) : Plane Seed := C (C (incl L b))
 
-private theorem seedScalar_isUnit (b : L[X]) (hb : b≠0) : IsUnit (seedScalar b) :=
+private theorem seedScalar_isUnit (b : (Polynomial L)) (hb : b≠0) : IsUnit (seedScalar b) :=
   isUnit_C.mpr (isUnit_C.mpr (isUnit_iff_ne_zero.mpr ((map_ne_zero_iff _ (incl_injective L)).mpr hb)))
 
 private theorem clear_seed (Q : Plane Seed) :
-    ∃ (b : L[X]) (R : Ordinate), b≠0 ∧ toSeed R=seedScalar b*Q := by
+    ∃ (b : (Polynomial L)) (R : Ordinate), b≠0 ∧ toSeed R=seedScalar b*Q := by
   obtain ⟨b,R,nonzero,hr⟩ := RetainedCompression.clear_abscissa Q
   refine ⟨b,R.map Bivariate.swap.toRingHom,nonzero,?_⟩
   show (R.map Bivariate.swap.toRingHom).map (mapRingHom (incl L))=_
   rw [Polynomial.map_map]
   exact hr
 
-private theorem lifted_scalar_product (P : Ordinate) (a b : L[X]) :
+private theorem lifted_scalar_product (P : Ordinate) (a b : (Polynomial L)) :
     toSeed (C (C (a*b))*P)=seedScalar a*seedScalar b*toSeed P := by
   rw [map_mul]
   simp only [toSeed,coe_mapRingHom,Polynomial.map_C,map_mul,seedScalar]
@@ -64,7 +64,7 @@ theorem toSeed_irreducible {P : Ordinate} (ir : Irreducible P) (pos : 0<P.natDeg
     rw [mul_comm P, lifted_scalar_product,map_mul,ua,vb,split]
     ring
   have dvd : P∣U*V := ⟨_,product⟩
-  have with_unit {c : L[X]} {H : Ordinate} {J : Plane Seed}
+  have with_unit {c : (Polynomial L)} {H : Ordinate} {J : Plane Seed}
       (cn : c≠0) (h : toSeed H=seedScalar c*J) (dv : P∣H) : toSeed P∣J := by
     have image := map_dvd toSeed dv
     rw [h] at image
@@ -118,7 +118,7 @@ irreducibles which have at least one nonlinear geometric component. -/
 def NonlinearFactorPrice : Prop :=
   ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
     Word 179827 wordDegree M.word F.scalar T→
-    ∀ f : Curve L[X], Irreducible f →
+    ∀ f : Curve (Polynomial L), Irreducible f →
       3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
       height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
       ¬GeometricallyLinear (view f) →

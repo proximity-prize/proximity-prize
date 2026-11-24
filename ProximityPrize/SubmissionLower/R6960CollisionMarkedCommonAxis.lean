@@ -33,8 +33,8 @@ theorem axisToGeneric_injective [FiniteDimensional ChartField E] [Algebra.IsSepa
   let B := chartImage E true z false
   let Λ := Laurent L
   let F := FractionRing Λ
-  let : Module.Free L[X] B := chart_free E true z false
-  let A := Module.Free.chooseBasis L[X] B
+  let : Module.Free (Polynomial L) B := chart_free E true z false
+  let A := Module.Free.chooseBasis (Polynomial L) B
   let b := localFreeBasis false A (nativeMap E true z false) (native_localization E true z nz false)
   let bk := b.baseChange F
   intro v w eq
@@ -49,7 +49,7 @@ theorem axisToGeneric_injective [FiniteDimensional ChartField E] [Algebra.IsSepa
 
 /-- Evaluation in the native line chart is literal polynomial evaluation
 at either the abscissa unit or its reciprocal on the common torus. -/
-theorem axis_polyEval (b:Bool) (z:L) (h:L[X]) :
+theorem axis_polyEval (b:Bool) (z:L) (h:(Polynomial L)) :
     polyMap E true z b h=h.eval₂ (algebraMap L (Axis E true z))
       (if b then ↑(axisX (E:=E) z)⁻¹ else ↑(axisX (E:=E) z)) := by
   let U := Axis E true z
@@ -71,19 +71,19 @@ theorem axis_polyEval (b:Bool) (z:L) (h:L[X]) :
 /-- A scalar from either affine chart maps to the matching polynomial
 in the common generic fibre. -/
 theorem axisGenericData_scalar [FiniteDimensional ChartField E]
-    (b:Bool) (z:L) (nz:z≠0) (h:L[X]) :
+    (b:Bool) (z:L) (nz:z≠0) (h:(Polynomial L)) :
     let : Algebra (Plane L) E := axisPlaneAlgebra b
     let V := FibreGeneric (E:=E) z
     let g : V≃+*AxisGeneric (E:=E) z := (axisGenericData (E:=E) b z nz).val
-    g (algebraMap L[X] V h)=axisToGeneric (E:=E) z (polyMap E true z b h) := by
+    g (algebraMap (Polynomial L) V h)=axisToGeneric (E:=E) z (polyMap E true z b h) := by
   let : Algebra (Plane L) E := axisPlaneAlgebra b
   let B := Fiber E z
   let V := FibreGeneric (E:=E) z
   let g := axisGenericData (E:=E) b z nz
   let f := axisFibreData (E:=E) b z nz
-  have j : algebraMap L[X] V h=(1 ⊗ₜ[L[X]] (algebraMap L[X] B h):V) :=
-    (Algebra.TensorProduct.includeRight (R:=L[X]) (A:=FractionRing L[X]) (B:=B)).commutes h |>.symm
-  change g.val (algebraMap L[X] V h)=axisToGeneric (E:=E) z (polyMap E true z b h)
+  have j : algebraMap (Polynomial L) V h=(1 ⊗ₜ[(Polynomial L)] (algebraMap (Polynomial L) B h):V) :=
+    (Algebra.TensorProduct.includeRight (R:=(Polynomial L)) (A:=FractionRing (Polynomial L)) (B:=B)).commutes h |>.symm
+  change g.val (algebraMap (Polynomial L) V h)=axisToGeneric (E:=E) z (polyMap E true z b h)
   rw [j,g.property.1]
   change axisToGeneric (E:=E) z (f.val (baseMap E z h))=_
   rw [axisFibreData_scalar]

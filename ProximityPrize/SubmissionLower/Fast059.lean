@@ -22,7 +22,7 @@ section
 namespace K1_13_2_3_5
 namespace DataC2344
 open K1_13_2_3
-open private   unpack from ProximityPrize.SubmissionLower.Numeric5Certificate
+open K1_13_2_3_5 (unpack)
 set_option maxHeartbeats 3000000
 set_option maxRecDepth 50000
 private structure CEntry where
@@ -35,7 +35,7 @@ section
 namespace K1_13_2_3_6
 open K1_13_2 K1_13_2_3
 open K1_13_2_3_5
-open private    sumFrom   from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 private def dRegion (s j a b c : ℕ) : Prop :=
   3162 ≤ s ∧ s ≤ 3213 ∧ 3383 ≤ s+j ∧ a+4*c ≤ 512 ∧ b ≤ 256 ∧ a ≤ b+384
 private instance (s j a b c : ℕ) : Decidable (dRegion s j a b c) := by
@@ -50,7 +50,7 @@ namespace K1_13_7_1
 noncomputable section
 open Polynomial MvPolynomial K1_13 K1_13_1 K1_13_6 K1_13_7
 local notation "W" => MvPolynomial.weightedTotalDegree
-private theorem topPartial_bound (w : Fin 4 → ℕ) (P : Row 4) :
+theorem topPartial_bound (w : Fin 4 → ℕ) (P : Row 4) :
     W w (separant P) ≤ W w P - w 3 :=
   weightedTotalDegree_pderiv_le_sub w 3 P
 private theorem pderiv_zero_of_weight_lt (w : Fin 4 → ℕ) (i : Fin 4) (P : Row 4)
@@ -126,19 +126,19 @@ private theorem step_bound (w : Fin 4 → ℕ) (Δ : ℕ)
       ((Nat.add_le_add hsep (flow_bound w Δ hshift hB hg hP)).trans (by omega))
   · apply mem_restrictWeightedDegree_iff_weightedTotalDegree_le.mpr
     apply (weightedTotalDegree_mul_le _ _ _).trans
-    rw [← map_natCast (MvPolynomial.C : Geom[X] →+* Row 4)]
+    rw [← map_natCast (MvPolynomial.C : (Polynomial Geom) →+* Row 4)]
     exact (Nat.add_le_add ((weight_const_mul_le _ _ _).trans (flow_bound w Δ hshift hB hg hsep))
       hP).trans (by omega)
-private theorem jet_bound (w : Fin 4 → ℕ) (Δ : ℕ)
+theorem jet_bound (w : Fin 4 → ℕ) (Δ : ℕ)
     (hshift : ∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ) {g : Row 4} {B : ℕ}
     (hB : w 3 ≤ B) (hg : W w g ≤ B) (n : ℕ) :
     W w (jetNumerator g n) ≤ w 0 + n * (2 * (B - w 3) + Δ) := by
   induction n with
-  | zero => simpa only [jetNumerator, zero_mul, add_zero] using weight_X_le (R := Geom[X]) w 0
+  | zero => simpa only [jetNumerator, zero_mul, add_zero] using weight_X_le (R := (Polynomial Geom)) w 0
   | succ n ih =>
     simpa only [jetNumerator, Nat.add_mul, one_mul, Nat.add_assoc] using
       step_bound w Δ hshift hB hg ih (2 * n)
-private def denominator (L : ℕ) (g : Row 4) : Row 4 :=
+def denominator (L : ℕ) (g : Row 4) : Row 4 :=
   separant g ^ (2 * L)
 private def numerator (L : ℕ) (g : Row 4) (i : TaylorIndex) : Row 4 :=
   if hi : i.val < 4 then MvPolynomial.X ⟨i.val, hi⟩ * denominator L g
@@ -153,7 +153,7 @@ private def taylorChart (L : ℕ) (g : Row 4) : TaylorChart where
     have hi : (i.castLE (by decide : 4 ≤ taylorLength)).val < 4 := i.isLt
     rw [dite_eq_left hi, map_mul, MvPolynomial.map_X]
     rfl
-private theorem denominator_bound (L : ℕ) (w : Fin 4 → ℕ) {g : Row 4} {B : ℕ} (hg : W w g ≤ B) :
+theorem denominator_bound (L : ℕ) (w : Fin 4 → ℕ) {g : Row 4} {B : ℕ} (hg : W w g ≤ B) :
     W w (denominator L g) ≤ 2 * L * (B - w 3) :=
   (weightedTotalDegree_pow_le _ _ _).trans
     (Nat.mul_le_mul_left _ ((topPartial_bound w g).trans (Nat.sub_le_sub_right hg _)))
@@ -229,20 +229,20 @@ private theorem chart_box {L : ℕ} (hL : taylorLength ≤ L) (g : Row 4) (p : S
     · have hwle : w 3 ≤ p.t := hw3.symm ▸ ht
       have h := numerator_bound hL w 1 1 hshift hw hwle h₃ i
       simpa only [hw3, mul_one, Nat.add_left_comm, Nat.add_comm, Nat.add_assoc] using h
-private theorem ordinary_eq_hasse (S : Geom[X]) (n : ℕ) :
+theorem ordinary_eq_hasse (S : (Polynomial Geom)) (n : ℕ) :
     derivative^[n] S = Polynomial.C (n.factorial : Geom) * hasseDeriv n S := by
   ext m
   rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
     Nat.descFactorial_eq_factorial_mul_choose]
   simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
-theorem evalGeneric_toGeneric (S : Geom[X]) (P : Row 4) :
+theorem evalGeneric_toGeneric (S : (Polynomial Geom)) (P : Row 4) :
     evalGeneric S (toGeneric P) = genericCoeffs (atJet P S) := by
   exact (MvPolynomial.map_eval genericCoeffs (jet S) P).symm
-private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) (g : Row 4) (S : Geom[X])
+private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) (g : Row 4) (S : (Polynomial Geom))
     (hg : atJet g S = 0) (hr : RegularAt g S) : (taylorChart L g).Recovers S := by
   have hp : atJet (separant g) S ≠ 0 := hr
   have hden : atJet (denominator L g) S = atJet (separant g) S ^ (2 * L) :=
-    map_pow (MvPolynomial.eval (jet S : Fin 4 → Geom[X])) _ _
+    map_pow (MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))) _ _
   constructor
   · change evalGeneric S (toGeneric (denominator L g)) ≠ 0
     rw [evalGeneric_toGeneric]
@@ -259,7 +259,7 @@ private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) (g : Row 4) (
     · unfold atJet
       rw [map_mul, MvPolynomial.eval_X, mul_comm]
       rfl
-    · let E := MvPolynomial.eval (jet S : Fin 4 → Geom[X])
+    · let E := MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))
       change E (_ * (_ ^ _ * _)) = _
       rw [map_mul, map_mul, map_pow, MvPolynomial.eval_C]
       change _ * (atJet (separant g) S ^ (2 * (L - i.val)) *
@@ -280,7 +280,7 @@ private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) (g : Row 4) (
 theorem exists_chart (g : Row 4) (p : Shape) (hB : InBox (shape g) p)
     (hp : Chamber p) (ht : 0 < p.t) :
     ∃ C : TaylorChart, C.Fits (chart (taylorLength + 4) p) ∧
-      ∀ S : Geom[X], atJet g S = 0 → RegularAt g S → C.Recovers S :=
+      ∀ S : (Polynomial Geom), atJet g S = 0 → RegularAt g S → C.Recovers S :=
   ⟨taylorChart (taylorLength + 4) g, chart_box (Nat.le_add_right _ _) g p hB hp ht,
     chart_recovers (Nat.le_add_right _ _) g⟩
 end
@@ -300,13 +300,13 @@ namespace K1_13_5_4_4
 noncomputable section
 open K1_13 K1_13_5 K1_13_5_4
 open scoped Polynomial
-abbrev FreshField := FractionRing GeometricX[X]
+abbrev FreshField := FractionRing (Polynomial GeometricX)
 abbrev FreshJetRing := MvPolynomial (Fin 3) FreshField
 abbrev FreshCoeffRing := MvPolynomial (Fin taylorLength) FreshField
 abbrev FreshJetIdeal := Ideal FreshJetRing
-def freshArgument : FreshField := algebraMap GeometricX[X] FreshField Polynomial.X
-def freshCoeff : Geom[X] →+* FreshField :=
-  (algebraMap GeometricX[X] FreshField).comp
+def freshArgument : FreshField := algebraMap (Polynomial GeometricX) FreshField Polynomial.X
+def freshCoeff : (Polynomial Geom) →+* FreshField :=
+  (algebraMap (Polynomial GeometricX) FreshField).comp
     (Polynomial.mapRingHom (algebraMap Geom GeometricX))
 def freshRow (g : Row 3) : FreshJetRing := MvPolynomial.map freshCoeff g
 def freshHypersurface (f : Row 3) : FreshJetIdeal := Ideal.span {freshRow f}

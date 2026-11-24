@@ -93,8 +93,8 @@ theorem polyMap_coeff_pair {F : Type} [Field F] (c : (VarIndex p) → F) (a j : 
   by_cases hj : (q.1 : ℕ) = j
   · by_cases ha : (q.2.1 : ℕ) = a
     · simp [hj, ha, Polynomial.smul_monomial]
-    · simp [hj, ha, Polynomial.coeff_smul, Polynomial.coeff_monomial]
-  · simp [hj, Polynomial.coeff_smul, Polynomial.coeff_monomial]
+    · simp [hj, ha, Polynomial.coeff_smul, Polynomial.coeff_monomial, Finsupp.single_apply]
+  · simp [hj, Polynomial.coeff_smul, Polynomial.coeff_monomial, Finsupp.single_apply]
 
 open scoped BigOperators in
 theorem polyMap_coeff_index {F : Type} [Field F] (c : (VarIndex p) → F) (q : (VarIndex p)) :
@@ -120,7 +120,7 @@ theorem polyMap_coeff_index {F : Type} [Field F] (c : (VarIndex p) → F) (q : (
             (fun z : Fin p.DY => p.DZ - (z : ℕ)) (Fin.ext he.1))).mpr
           exact hh
       rw [if_pos he]
-      simp only [Polynomial.coeff_monomial, if_neg hh]
+      simp only [Polynomial.coeff_monomial, Finsupp.single_apply, if_neg hh]
     · simp [he]
   · simp
 

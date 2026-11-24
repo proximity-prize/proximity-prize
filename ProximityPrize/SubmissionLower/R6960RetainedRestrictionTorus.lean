@@ -42,7 +42,7 @@ theorem clear_torus {E : Type*} [Field E] [Algebra ChartField E] (s : Chart)
   rw [all_charts s] at h
   exact localize_integral _ _ (edge s (opposite s)) (edge_ne s (opposite s)) le_rfl u h
 
-private def linear (b : Bool) (c : L) : L[X] := if b then 1-C c*Polynomial.X else Polynomial.X-C c
+def linear (b : Bool) (c : L) : (Polynomial L) := if b then 1-C c*Polynomial.X else Polynomial.X-C c
 private theorem at_zero (b : Bool) (c:L) (nz:c≠0) : (linear b c).eval 0≠0 := by
   cases b <;> simp [linear,nz]
 private theorem lne (b : Bool) (c:L) (nz:c≠0) : linear b c≠0 := by
@@ -51,7 +51,7 @@ private theorem lne (b : Bool) (c:L) (nz:c≠0) : linear b c≠0 := by
 def xcut (s : Chart) (x : L) : baseChart s := planeEquiv s ((linear s.1 x).map C)
 def zcut (s : Chart) (z : L) : baseChart s := planeEquiv s (C (linear s.2 z))
 
-private theorem rel_equiv {R S : Type*} [CommRing R] [CommRing S] (e : R≃+*S) {a b : R}
+theorem rel_equiv {R S : Type*} [CommRing R] [CommRing S] (e : R≃+*S) {a b : R}
     (h : IsRelPrime a b) : IsRelPrime (e a) (e b) := by
   intro d da db
   have ha : e.symm d ∣ a := by simpa using map_dvd e.symm da
@@ -62,7 +62,7 @@ theorem cuts_rel (s : Chart) (x z : L) (nx:x≠0) (nz:z≠0) :
     IsRelPrime (xcut s x) (zcut s z) := rel_equiv _ (TwoRulings.independent_denominators
       (linear s.2 z) (linear s.1 x) (lne _ _ nz) (lne _ _ nx)).symm
 
-private theorem prime_axis (a : L[X]) (hn : a.eval 0≠0) :
+private theorem prime_axis (a : (Polynomial L)) (hn : a.eval 0≠0) :
     IsCoprime Polynomial.X a := by
   apply (irreducible_X (R:=L)).coprime_iff_not_dvd.mpr
   intro dv
@@ -75,8 +75,8 @@ theorem boundary_rel (s : Chart) (x z : L) (nx : x≠0) (nz : z≠0) :
   let b:=linear s.2 z
   have an:=lne s.1 x nx
   have bn:=lne s.2 z nz
-  let i:= (Polynomial.mapRingHom (C : L→+*L[X]))
-  let j:= (C : L[X]→+*L[X][X])
+  let i:= (Polynomial.mapRingHom (C : L→+*(Polynomial L)))
+  let j:= (C : (Polynomial L)→+*(Polynomial (Polynomial L)))
   have e : edge s (opposite s)=planeEquiv s (i Polynomial.X * j Polynomial.X) := by
     apply Subtype.ext
     change boundary s (opposite s)=planeMap s (i Polynomial.X*j Polynomial.X)

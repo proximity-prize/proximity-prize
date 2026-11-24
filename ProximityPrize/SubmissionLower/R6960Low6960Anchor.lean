@@ -10,7 +10,7 @@ noncomputable section
 open K1 K1_13 K1_13_1_1 Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open Low6960AnchorColumns Low6960AnchorLocal
 open scoped BigOperators
-open private atJet_unflatten from ProximityPrize.SubmissionLower.Fast040
+open K1_13_1 (atJet_unflatten)
 
 private abbrev Slot := {u : Ex // ColumnEligible u}
 
@@ -51,7 +51,7 @@ private theorem dim_source : Module.finrank Geom source = 4342163275225 := by
   letI : Fintype Slot := Fintype.ofEquiv _ e.symm
   rw [source,finrank_span_eq_card independent_dp,Fintype.card_congr e,Fintype.card_fin]
 
-private theorem source_eval (Q : source) (S : Geom[X]) (hs : S.natDegree ≤ 133409) :
+private theorem source_eval (Q : source) (S : (Polynomial Geom)) (hs : S.natDegree ≤ 133409) :
     (differentialSpecialization (Q.val : DP) S).natDegree ≤ 99*179827-1 := by
   change (differentialSpecializationHom S Q.val).natDegree ≤ _
   let f := (differentialSpecializationHom (d := 3) S).toLinearMap
@@ -98,7 +98,7 @@ theorem exists_anchor (w : I → K) :
     ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨132,55,14⟩ ∧ Low50Anchor.ActiveFits P 165 ∧
       differentialWeightedDegree 133409 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
         99 * 179827 - 1 + 55 ∧
-      ∀ (S : K[X]) (T : Finset I), S.natDegree ≤ 133409 → 179827 ≤ T.card →
+      ∀ (S : (Polynomial K)) (T : Finset I), S.natDegree ≤ 133409 → 179827 ≤ T.card →
         (∀ i ∈ T, S.eval (node i) = w i) → atJet P (extend S) = 0 := by
   classical
   obtain ⟨Q,hQ,hloc⟩ := exists_local w

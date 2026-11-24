@@ -9,15 +9,15 @@ namespace Lower6960.MarkedEvaluation
 open Polynomial Module Matrix Submodule Algebra
 open scoped Polynomial Matrix BigOperators
 variable {k E J:Type} [Field k] [Field E] [Fintype J]
-local notation "F" => FractionRing k[X]
-variable [Algebra (FractionRing k[X]) E] [Algebra k E] [IsScalarTower k (FractionRing k[X]) E]
-local notation "ι" => algebraMap k[X] F
+local notation "F" => FractionRing (Polynomial k)
+variable [Algebra (FractionRing (Polynomial k)) E] [Algebra k E] [IsScalarTower k (FractionRing (Polynomial k)) E]
+local notation "ι" => algebraMap (Polynomial k) F
 
 /-- The primitive polynomial frame of the actual functions. Both directions
 are identities in their field, so they survive every horizontal embedding. -/
 theorem function_frame (v:J→E) (li:LinearIndependent k v) :
     ∃ r:ℕ, r=finrank F (span F (Set.range v)) ∧
-      ∃ (w:Fin r→E) (Q:Matrix (Fin r) J k[X]) (T:Matrix J (Fin r) k[X]) (pick:Fin r↪J),
+      ∃ (w:Fin r→E) (Q:Matrix (Fin r) J (Polynomial k)) (T:Matrix J (Fin r) (Polynomial k)) (pick:Fin r↪J),
         LinearIndependent F w ∧
         (∀j,v j=∑i,ι (Q i j) • w i) ∧ (∀i,w i=∑j,ι (T j i) • v j) ∧
         (Q.submatrix _root_.id pick).det≠0 ∧ Fintype.card J≤r+(Q.submatrix _root_.id pick).det.natDegree := by

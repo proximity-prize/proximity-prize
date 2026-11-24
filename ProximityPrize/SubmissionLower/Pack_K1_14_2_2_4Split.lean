@@ -107,7 +107,7 @@ def c5 : Prop :=
     (∀ I ∈ S, ∃ hI : Active I,
       sectionDegree I k ≠ 0 → (d : ℕ∞) ≤ localLength P Q I hI.prime) →
     d * mass S k ≤ pairCap s t k
-private theorem cancel_fixed {I : Ideal Ambient} (hp : I.IsPrime) (G : ODE) (P : Jet)
+theorem cancel_fixed {I : Ideal Ambient} (hp : I.IsPrime) (G : ODE) (P : Jet)
     (m : ℕ) (hG : ¬ fixedOn G I) (ho : orderOn I (fixedIncl G * P) m) :
     orderOn I P m := by
   obtain ⟨a, ha, h⟩ := ho

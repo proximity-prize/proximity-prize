@@ -33,11 +33,11 @@ noncomputable def mono3 (a b l : ℕ) : Polynomial (Polynomial (Polynomial F)) :
 lemma c3_mono3 (a b l a' b' l' : ℕ) :
     c3 (mono3 (F := F) a b l) a' b' l' = if a = a' ∧ b = b' ∧ l = l' then 1 else 0 := by
   unfold c3 mono3
-  rw [coeff_monomial]
+  rw [coeff_monomial, Finsupp.single_apply]
   by_cases hb : b = b'
-  · rw [if_pos hb, coeff_monomial]
+  · rw [if_pos hb, coeff_monomial, Finsupp.single_apply]
     by_cases ha : a = a'
-    · rw [if_pos ha, coeff_monomial]
+    · rw [if_pos ha, coeff_monomial, Finsupp.single_apply]
       by_cases hl : l = l'
       · simp [ha, hb, hl]
       · simp [hl]
@@ -51,7 +51,7 @@ lemma c3_zero (a b l : ℕ) : c3 (0 : Polynomial (Polynomial (Polynomial F))) a 
   simp [c3]
 
 lemma c3_smul (c : F) (f : Polynomial (Polynomial (Polynomial F))) (a b l : ℕ) :
-    c3 (c • f) a b l = c * c3 f a b l := by simp [c3, coeff_smul]
+    c3 (c • f) a b l = c * c3 f a b l := by simp [c3, Polynomial.coeff_smul]
 
 lemma c3_sum {ι : Type*} (s : Finset ι) (f : ι → Polynomial (Polynomial (Polynomial F)))
     (a b l : ℕ) : c3 (∑ i ∈ s, f i) a b l = ∑ i ∈ s, c3 (f i) a b l := by
@@ -113,6 +113,11 @@ def supp (T : Finset (ℕ × ℕ × ℕ)) : Submodule F (Polynomial (Polynomial 
   add_mem' hf hg a b l h := by rw [c3_add, hf a b l h, hg a b l h, add_zero]
   zero_mem' a b l _ := c3_zero a b l
   smul_mem' c f hf a b l h := by rw [c3_smul, hf a b l h, mul_zero]
+
+/-- Instance search no longer finds this on Lean 4.36 Mathlib, though it typechecks. -/
+@[instance_reducible] noncomputable instance (T : Finset (ℕ × ℕ × ℕ)) :
+    AddCommGroup (supp (F := F) T) :=
+  @Submodule.addCommGroup F (Polynomial (Polynomial (Polynomial F))) _ _ _ (supp T)
 
 lemma mem_supp {T : Finset (ℕ × ℕ × ℕ)} {f : Polynomial (Polynomial (Polynomial F))} :
     f ∈ supp T ↔ ∀ a b l, (a, b, l) ∉ T → c3 f a b l = 0 := Iff.rfl

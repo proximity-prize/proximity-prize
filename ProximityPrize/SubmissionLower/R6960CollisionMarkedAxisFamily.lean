@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisMultiples
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisIndex
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisWord
+set_option synthInstance.maxHeartbeats 200000
 
 set_option Elab.async false
 set_option maxRecDepth 18000
@@ -15,8 +16,7 @@ open MonicChart (ChartField)
 open NormalizedFiber RetainedSurfaceClass RetainedRestrictionTorus MarkedEvaluation Polynomial
 open CollisionTame Finset Module
 open scoped Lower6960.CollisionMarked Lower6960.RetainedSurfaceClass Polynomial TensorProduct
-open private Lower6960.CollisionMarked.chart_poly_mem Lower6960.CollisionMarked.chartSubring
-  from ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisMultiples
+open Lower6960.CollisionMarked (chart_poly_mem chartSubring)
 
 variable {E : Type} [Field E] [Algebra ChartField E] [FiniteDimensional ChartField E]
   [Algebra.IsSeparable ChartField E]
@@ -27,19 +27,19 @@ local instance familyAxisRing (z:L) : CommRing (Axis E true z) :=
 /-- The original marked fibre has exactly the needed family of regular
 polynomial multiples of its nonzero projector. The only degree loss is
 the affine determinant, with its actual collision support. -/
-theorem actual_axis_marked_family (p:ℕ) [CharP L p] [CharP (FractionRing L[X]) p]
+theorem actual_axis_marked_family (p:ℕ) [CharP L p] [CharP (FractionRing (Polynomial L)) p]
     (P:CurvatureSquares.Ordinate) (pn:projectedRaw P≠0)
     (large:2≤P.natDegree) (small:P.natDegree<p)
     (b:PowerBasis ChartField E) (dim:b.dim=P.natDegree)
     (root : let : Algebra (Plane L) E := axisPlaneAlgebra false; aeval b.gen (projectedRaw P)=0)
-    (z:L) (nz:z≠0) (S:L[X]) (mark:RetainedCompression.MarkedFiber P z S) (s:ℕ)
+    (z:L) (nz:z≠0) (S:(Polynomial L)) (mark:RetainedCompression.MarkedFiber P z S) (s:ℕ)
     (δf δi:Plane L) (nf:δf≠0) (ni:δi≠0)
     (df:axisDiscriminant (E:=E) false=Ideal.span {δf})
     (di:axisDiscriminant (E:=E) true=Ideal.span {δi})
     [DecidableEq L]
     (gi:(Bivariate.swap δi).trailingCoeff.eval z≠0) :
     (branchProduct (Bivariate.swap δf)).map (evalRingHom z)≠0 ∧
-    ∃ d:L[X], d≠0 ∧ d^2∣δf.eval (C z) ∧
+    ∃ d:(Polynomial L), d≠0 ∧ d^2∣δf.eval (C z) ∧
       (∀ x∈d.roots,2≤((branchProduct (Bivariate.swap δf)).map (evalRingHom z)).rootMultiplicity x) ∧
       ∃ v:Fin (s+1-d.natDegree)→Axis E true z,
         LinearIndependent L v ∧
@@ -55,7 +55,7 @@ theorem actual_axis_marked_family (p:ℕ) [CharP L p] [CharP (FractionRing L[X])
   obtain ⟨gf,d,dn,dsquare,dsupport,clearF⟩ := actual_axis_finite_index (E:=E) p size z nz δf nf df
   obtain ⟨D,d0,clearI⟩ := actual_axis_infinity_index (E:=E) p size z nz δi ni di gi
   let J := Fin (s+1-d.natDegree)
-  let h (i:J) : L[X] := d*Polynomial.X^i.val
+  let h (i:J) : (Polynomial L) := d*Polynomial.X^i.val
   have degree (i:J) : (h i).natDegree≤s := by
     unfold h
     rw [natDegree_mul dn (pow_ne_zero _ Polynomial.X_ne_zero),natDegree_X_pow]
@@ -76,9 +76,9 @@ theorem actual_axis_marked_family (p:ℕ) [CharP L p] [CharP (FractionRing L[X])
   choose v vreg vvalue using fun i:J=>marked_axis_multiple z nz η (h i) D s (degree i) d0
     (clear_prod i) (clearI η idem)
   refine ⟨gf,d,dn,dsquare,dsupport,v,?_,vreg,?_⟩
-  · have units_poly (w:L[X]) (wne:w≠0) : IsUnit (ρ (polyMap E true z false w)) := by
+  · have units_poly (w:(Polynomial L)) (wne:w≠0) : IsUnit (ρ (polyMap E true z false w)) := by
       let : Algebra (Plane L) E := axisPlaneAlgebra false
-      let R := L[X]
+      let R := (Polynomial L)
       let K := FractionRing R
       let W := FibreGeneric (E:=E) z
       let e := (axisGenericData (E:=E) false z nz).val
@@ -87,12 +87,12 @@ theorem actual_axis_marked_family (p:ℕ) [CharP L p] [CharP (FractionRing L[X])
       change IsUnit (e (algebraMap R W w))
       rw [IsScalarTower.algebraMap_apply R K W]
       let jW : K→+*W := Algebra.TensorProduct.includeLeftRingHom (R:=R) (A:=K) (B:=Fiber E z)
-      have out : IsUnit (e.toRingHom (jW (algebraMap R K w))) := wu.map (e.toRingHom.comp jW)
+      have out : IsUnit (e (jW (algebraMap R K w))) := (wu.map jW).map e
       exact out
     apply Fintype.linearIndependent_iff.mpr
     intro c zero i
-    let H : L[X] := ∑ j:J,Polynomial.monomial j.val (c j)
-    let f : L[X]→+*V := ρ.comp (polyMap E true z false)
+    let H : (Polynomial L) := ∑ j:J,Polynomial.monomial j.val (c j)
+    let f : (Polynomial L)→+*V := ρ.comp (polyMap E true z false)
     have HC (q:L) : f (C q)=ρ (algebraMap L U q) := by
       change ρ (polyMap E true z false (C q))=_
       rw [axis_polyEval,eval₂_C]
@@ -118,8 +118,8 @@ theorem actual_axis_marked_family (p:ℕ) [CharP L p] [CharP (FractionRing L[X])
       have k := congrArg (fun x:V=>(↑u⁻¹:V)*x) eq
       rw [mul_zero,←mul_assoc,←hu,Units.inv_mul,one_mul] at k
       exact nonzero k
-    have c0 := congrArg (fun f:L[X]=>f.coeff i.val) Hzero
-    simp only [H,Polynomial.finsetSum_coeff,coeff_monomial,←Fin.ext_iff,coeff_zero] at c0
+    have c0 := congrArg (fun f:(Polynomial L)=>f.coeff i.val) Hzero
+    simp only [H,Polynomial.finsetSum_coeff,coeff_monomial,Finsupp.single_apply,←Fin.ext_iff,coeff_zero] at c0
     have val : (∑ j:J, if j=i then c j else 0)=c i := by
       rw [Finset.sum_eq_single i]
       · simp

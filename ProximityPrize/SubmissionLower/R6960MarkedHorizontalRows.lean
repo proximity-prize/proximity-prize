@@ -7,14 +7,14 @@ set_option backward.isDefEq.respectTransparency.types false
 namespace Lower6960.MarkedEvaluation
 open Polynomial Module Matrix LinearMap Finset
 open scoped Polynomial Matrix BigOperators
-open private P1_7_1_1_2.exists_full_minor from ProximityPrize.SubmissionLower.UpperBranch1
+open P1_7_1_1_2 (exists_full_minor)
 variable {k K I J:Type} [Field k] [Infinite k] [Field K] [Algebra k K]
   [Fintype I] [Fintype J] [DecidableEq J]
 
 /-- Distinct abscissas can all be translates of one transcendental variable.
 There is already a nonzero coordinate minor of the desired size after evaluating
 that variable at zero. The shifts lie in the original ground field k. -/
-theorem translated_minor (P:Matrix I J K[X]) (li:LinearIndependent K P.col) :
+theorem translated_minor (P:Matrix I J (Polynomial K)) (li:LinearIndependent K P.col) :
     ∃ N:ℕ, ∃ shifts:Fin N ↪ k, ∃ rows:J↪(Fin N×I),
       (Matrix.of (fun u v:J=>Polynomial.taylor (algebraMap k K (shifts (rows u).1)) (P (rows u).2 v))).det≠0 := by
   classical
@@ -24,7 +24,7 @@ theorem translated_minor (P:Matrix I J K[X]) (li:LinearIndependent K P.col) :
   let V:=degreeLT K (m+1)
   let C (j:J) (i:I):V:=⟨P i j,mem_degreeLT.mpr (degree_le_natDegree.trans_lt
     (by exact_mod_cast Nat.lt_succ_of_le (show (P i j).natDegree≤m from Finset.le_sup (f:=fun ij:I×J=>(P ij.1 ij.2).natDegree) (Finset.mem_univ (i,j)))))⟩
-  let proj:(I→V) →ₗ[K] (I→K[X]) := LinearMap.pi (fun i=>V.subtype.comp (LinearMap.proj i))
+  let proj:(I→V) →ₗ[K] (I→(Polynomial K)) := LinearMap.pi (fun i=>V.subtype.comp (LinearMap.proj i))
   have ic:LinearIndependent K C := LinearIndependent.of_comp proj li
   let eval:(I→V) →ₗ[K] ((Fin (m+1)×I)→K) := LinearMap.pi (fun i=>
     (Polynomial.leval (val i.1)).comp (V.subtype.comp (LinearMap.proj i.2)))

@@ -30,9 +30,9 @@ section
 namespace P0_9_7_1
 noncomputable section
 open Polynomial MvPolynomial K1_13 K1_13_1 K1_13_6 K1_13_7 K1_13_7_1
-open private topAt eval_topAt topAt_coeff topView_separant from ProximityPrize.SubmissionLower.Fast056
-private def derivativeBox (p : Shape) : Shape := ⟨p.b - 1, p.j - 3, p.t - 1⟩
-private theorem derivative_box (f : Row 4) {j : ℕ} (hj : 0 < j) :
+open K1_13_7_1 (topAt eval_topAt topAt_coeff topView_separant)
+def derivativeBox (p : Shape) : Shape := ⟨p.b - 1, p.j - 3, p.t - 1⟩
+theorem derivative_box (f : Row 4) {j : ℕ} (hj : 0 < j) :
     InBox (shape ((separant^[j]) f)) (derivativeBox (shape f).chamber) := by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hj)
   rw [Function.iterate_succ_apply]
@@ -70,7 +70,7 @@ structure FatTaylor (f : Row 4) where
   test_iff : ∀ (surface : Ideal GeoJets), surface.IsPrime → toGeneric f ∈ surface →
     toGeneric (separant f) ∉ surface →
     (toGeneric test ∈ surface ↔ toGeneric (P0_9_6.membershipTest f) ∈ surface)
-  recovers : ∀ (L : Type) [Field L] [Algebra Geom L] (S : L[X]),
+  recovers : ∀ (L : Type) [Field L] [Algebra Geom L] (S : (Polynomial L)),
     S.natDegree ≤ physicalDegree → evalTrajectory f S = 0 →
     evalTrajectory (separant f) S ≠ 0 →
     evalTrajectory denom S ≠ 0 ∧ evalTrajectory test S = 0 ∧
@@ -84,17 +84,17 @@ noncomputable section
 open K1_13 K1_13_6 K1_13_7 K1_13_7_2 K1_13_7_2_1 K1_13_7_2_1_2
 open MvPolynomial UniqueFactorizationMonoid
 open scoped Polynomial
-open private geometric_injective liftLower_ne_zero from ProximityPrize.SubmissionLower.Fast070
-open private local_length_one tangent_invariant from ProximityPrize.SubmissionLower.Fast070
-open private top top_rename_lower top_map top_derivative from ProximityPrize.SubmissionLower.Fast070
-private theorem local_generators (f : Row 4) (q : Row 3)
+open K1_13_7_2_1 (geometric_injective liftLower_ne_zero)
+open K1_13_7_2_1 (local_length_one tangent_invariant)
+open K1_13_7_2_1_2 (top top_rename_lower top_map top_derivative)
+theorem local_generators (f : Row 4) (q : Row 3)
     (hq : Squarefree (genericRow q)) (surface : Ideal GeoJets)
     (h : LiftedSurface f q surface) : LocalGenerators f q surface h.minimal.isPrime := by
   let : surface.IsPrime := h.minimal.isPrime
   let A := Localization.AtPrime surface
   let l : GeoJets →+* A := algebraMap GeoJets A
   let J := intersectionIdeal f (liftLower q)
-  let e : GeoJets ≃ₐ[GeoField] Lower[X] := top
+  let e : GeoJets ≃ₐ[GeoField] (Polynomial Lower) := top
   let F := e (toGeneric f)
   have hlower (u : Row 3) : e (toGeneric (liftLower u)) = Polynomial.C (genericRow u) := by
     change top (MvPolynomial.map genericCoeffs (MvPolynomial.rename Fin.castSucc u)) = _
@@ -163,7 +163,7 @@ private theorem generic_degree_le (g : Row 4) : (toGeneric g).totalDegree ≤ g.
   exact Finset.sup_mono (MvPolynomial.support_map_subset _ _)
 theorem generic_ne_zero {f : Row 4} (hf : Irreducible f) : toGeneric f ≠ 0 := by
   have hinj : Function.Injective genericCoeffs :=
-    (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
+    (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective (Polynomial Geom) GenericField)
   exact (map_ne_zero_iff (MvPolynomial.map genericCoeffs) (MvPolynomial.map_injective _ hinj)).mpr
     hf.ne_zero
 theorem whole_dimension {f : Row 4} {component : JetIdeal} (hf : Irreducible f)
@@ -187,11 +187,11 @@ namespace P0_9_7_3
 noncomputable section
 open Polynomial K1_13 K1_13_7 K1_13_7_1 K1_13_7_5 K1_13_7_5_1 K1_13_7_5_3
 open scoped BigOperators Pointwise
-open private lift_length_ge lift_length_finite from ProximityPrize.SubmissionLower.Fast066
-open private supported_anchor supported_lower supported_coordinate mixed_matches from ProximityPrize.SubmissionLower.Fast066
-private theorem common_section : K1_13_7_5_3.c1 :=
+open K1_13_7_5_1 (lift_length_ge lift_length_finite)
+open K1_13_7_5_3 (supported_anchor supported_lower supported_coordinate mixed_matches)
+theorem common_section : K1_13_7_5_3.c1 :=
   K1_13_7_5_3_1.of_children K1_13_7_5_3_1_1.proof K1_13_7_5_3_1_2.proof
-private theorem sparse_length : K1_13_7_5_3.c3 :=
+theorem sparse_length : K1_13_7_5_3.c3 :=
   K1_13_7_5_3_3.of_children K1_13_7_5_3_3_1.proof
     (K1_13_7_5_3_3_2.of_children K1_13_7_5_3_3_2_1.proof K1_13_7_5_3_3_2_2.proof)
     (K1_13_7_5_3_3_3.of_children K1_13_7_5_3_3_3_1.proof K1_13_7_5_3_3_3_2.proof)
@@ -204,9 +204,8 @@ namespace P0_9_7_3
 noncomputable section
 open Polynomial Finset K1 K1_13 K1_13_7 K1_13_7_5 K1_13_7_1
 open scoped BigOperators
-open private supported_sub supported_C supported_X exists_coordinate_cut jetPoint_injective
-  chart_section eval_chart_section weighted_ceil from ProximityPrize.SubmissionLower.Fast066
-private theorem choose_linear_cut {f : Row 4} (ht : 0 < (shape f).t)
+open K1_13_7_5 (supported_sub supported_C supported_X exists_coordinate_cut jetPoint_injective chart_section eval_chart_section weighted_ceil)
+theorem choose_linear_cut {f : Row 4} (ht : 0 < (shape f).t)
     {r : PrimeSpectrum Jets} {y : JetPoint} (h : r.asIdeal < jetPointIdeal y) :
     ∃ F : Jets, Supported (shape f).chamber F ∧ F ∉ r.asIdeal ∧
       r.asIdeal ≤ jetPointIdeal y ∧ MvPolynomial.eval y F = 0 := by
@@ -226,20 +225,19 @@ namespace P0_9_7_3_1
 noncomputable section
 open Polynomial MvPolynomial K1 K1_13 K1_13_1 K1_13_6 K1_13_7 K1_13_7_1 K1_13_7_5
 open scoped BigOperators
-open private linearJet eval_linearJet separant_bound linearJet_bound K1_13_7_5_2.denominator ordinary_eq_hasse
-  from ProximityPrize.SubmissionLower.Fast072
-open private supported_of_fits eval_center from ProximityPrize.SubmissionLower.Fast072
-open private supported_C_mul from ProximityPrize.SubmissionLower.Fast066
+open K1_13_7_5_2 (linearJet eval_linearJet separant_bound linearJet_bound denominator ordinary_eq_hasse)
+open K1_13_7_5_2 (supported_of_fits eval_center)
+open K1_13_7_5 (supported_C_mul)
 local notation "W" => MvPolynomial.weightedTotalDegree
-private def numerator (L : ℕ) (f : Row 4) (n : ℕ) : Row 4 :=
+def numerator (L : ℕ) (f : Row 4) (n : ℕ) : Row 4 :=
   if hn : n < 4 then MvPolynomial.X ⟨n, hn⟩ * K1_13_7_5_2.denominator L f
   else
     MvPolynomial.C (Polynomial.C (↑n.factorial : Geom)⁻¹) *
       (separant f ^ (L - n) * linearJet f n)
-private theorem denominator_bound (L : ℕ) (w : Fin 4 → ℕ) {f : Row 4} {B : ℕ}
+theorem denominator_bound (L : ℕ) (w : Fin 4 → ℕ) {f : Row 4} {B : ℕ}
     (hf : W w f ≤ B) : W w (K1_13_7_5_2.denominator L f) ≤ L * (B - w 3) :=
   (weightedTotalDegree_pow_le _ _ _).trans (Nat.mul_le_mul_left _ (separant_bound w hf))
-private theorem numerator_bound {L n : ℕ} (hn : n ≤ L) (w : Fin 4 → ℕ) (Δ d₀ : ℕ)
+theorem numerator_bound {L n : ℕ} (hn : n ≤ L) (w : Fin 4 → ℕ) (Δ d₀ : ℕ)
     (hshift : ∀ i : Fin 3, w i.succ ≤ w i.castSucc + Δ) (hw : ∀ i, w i ≤ d₀)
     {f : Row 4} {B : ℕ} (hB : w 3 ≤ B) (hf : W w f ≤ B) :
     W w (numerator L f n) ≤ d₀ + L * (B - w 3 + Δ) := by
@@ -260,14 +258,14 @@ private theorem numerator_bound {L n : ℕ} (hn : n ≤ L) (w : Fin 4 → ℕ) (
         rw [Nat.sub_add_cancel hn, Nat.mul_add]
         simpa only [Nat.add_assoc] using
           Nat.add_le_add (Nat.add_le_add_right (hw 0) _) (Nat.mul_le_mul_right Δ hn)
-private theorem coefficients_recover {L : ℕ} (hL : L < K1.p) {f : Row 4}
-    (hf : (shape f).t = 1) (S : Geom[X]) (hon : atJet f S = 0) (hr : RegularAt f S) :
+theorem coefficients_recover {L : ℕ} (hL : L < K1.p) {f : Row 4}
+    (hf : (shape f).t = 1) (S : (Polynomial Geom)) (hon : atJet f S = 0) (hr : RegularAt f S) :
     evalGeneric S (toGeneric (K1_13_7_5_2.denominator L f)) ≠ 0 ∧
       ∀ i : Fin L, evalGeneric S (toGeneric (numerator L f i.val)) =
         evalGeneric S (toGeneric (K1_13_7_5_2.denominator L f)) * genericCoeffs (hasseDeriv i.val S) := by
   have hp : atJet (separant f) S ≠ 0 := hr
   have hden : atJet (K1_13_7_5_2.denominator L f) S = atJet (separant f) S ^ L :=
-    map_pow (MvPolynomial.eval (jet S : Fin 4 → Geom[X])) _ _
+    map_pow (MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))) _ _
   constructor
   · rw [evalGeneric_toGeneric, hden]
     exact (map_ne_zero_iff _ genericCoeffs_injective).mpr (pow_ne_zero _ hp)
@@ -279,12 +277,12 @@ private theorem coefficients_recover {L : ℕ} (hL : L < K1.p) {f : Row 4}
     · unfold atJet
       rw [map_mul, MvPolynomial.eval_X, mul_comm]
       rfl
-    · let E := MvPolynomial.eval (jet S : Fin 4 → Geom[X])
+    · let E := MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))
       change E (_ * (_ ^ _ * _)) = _
       rw [map_mul, map_mul, map_pow, MvPolynomial.eval_C]
       change _ * (atJet (separant f) S ^ (L - i.val) *
         atJet (linearJet f i.val) S) = _
-      rw [eval_linearJet hf S hon hr, ordinary_eq_hasse]
+      rw [eval_linearJet hf S hon hr, K1_13_7_5_2.ordinary_eq_hasse]
       have hinv : Polynomial.C (↑i.val.factorial : Geom)⁻¹ *
           Polynomial.C (↑i.val.factorial : Geom) = 1 := by
         rw [← map_mul, inv_mul_cancel₀ (factorial_cast_ne_zero (i.isLt.trans hL)), map_one]
@@ -296,7 +294,7 @@ private theorem coefficients_recover {L : ℕ} (hL : L < K1.p) {f : Row 4}
         _ = _ := by rw [hinv, one_mul, ← pow_add, hpow, hden]
 private abbrev constants : Geom →+* GeometricX := genericCoeff.comp Polynomial.C
 private abbrev center : GeometricX := genericCoeff Polynomial.X
-private theorem eval_taylor {L : ℕ} (S : K[X]) (hS : S.natDegree < L) (x : K) :
+private theorem eval_taylor {L : ℕ} (S : (Polynomial K)) (hS : S.natDegree < L) (x : K) :
     (∑ j : Fin L, (constantCoeff x - center) ^ j.val *
       genericCoeff (hasseDeriv j.val (extend S))) = constantCoeff (S.eval x) := by
   let P := (extend S).map constants
@@ -320,7 +318,7 @@ private theorem eval_taylor {L : ℕ} (S : K[X]) (hS : S.natDegree < L) (x : K) 
     _ = _ := hev
 theorem values_of_coefficients {L : ℕ} {H : Shape} (D : GeoJets) (N : Fin L → GeoJets)
     (hD : GeoFits D H) (hN : ∀ j, GeoFits (N j) H) :
-    ∃ C : ValueChart H, ∀ S : K[X], S.natDegree < L →
+    ∃ C : ValueChart H, ∀ S : (Polynomial K), S.natDegree < L →
       (evalGeneric (extend S) D ≠ 0 ∧ ∀ j, evalGeneric (extend S) (N j) =
         evalGeneric (extend S) D * genericCoeffs (hasseDeriv j.val (extend S))) →
       C.recovers S := by
@@ -356,12 +354,11 @@ noncomputable section
 open Polynomial MvPolynomial K1 K1_13 K1_13_6 K1_13_7 K1_13_7_1 K1_13_7_5
 open K1_13_1 (indexDegree_eq)
 open scoped BigOperators
-open private denominator denominator_bound topPartial_bound jet_bound ordinary_eq_hasse
-  from ProximityPrize.SubmissionLower.Fast059
-open private supported_of_fits constants center eval_center from ProximityPrize.SubmissionLower.Fast072
-open private supported_C_mul from ProximityPrize.SubmissionLower.Fast066
+open K1_13_7_1 (denominator denominator_bound topPartial_bound jet_bound ordinary_eq_hasse)
+open K1_13_7_5_2 (supported_of_fits constants center eval_center)
+open K1_13_7_5 (supported_C_mul)
 local notation "W" => MvPolynomial.weightedTotalDegree
-private def coefficientNumerator (L : ℕ) (g : Row 4) (n : ℕ) : Row 4 :=
+def coefficientNumerator (L : ℕ) (g : Row 4) (n : ℕ) : Row 4 :=
   if hn : n < 4 then MvPolynomial.X ⟨n, hn⟩ * denominator L g
   else
     MvPolynomial.C (Polynomial.C (↑n.factorial : Geom)⁻¹) *
@@ -386,7 +383,7 @@ private theorem numerator_bound {L n : ℕ} (hn : n ≤ L) (w : Fin 4 → ℕ) (
       _ ≤ _ := by
         rw [Nat.add_sub_of_le hn]
         exact Nat.add_le_add (Nat.add_le_add_right (hw 0) _) (Nat.mul_le_mul_right Δ hn)
-private theorem coefficients_fit (L : ℕ) (g : Row 4) (p : Shape) (hB : InBox (shape g) p)
+theorem coefficients_fit (L : ℕ) (g : Row 4) (p : Shape) (hB : InBox (shape g) p)
     (hp : Chamber p) (ht : 0 < p.t) :
     GeoFits (toGeneric (denominator L g)) (chart L p) ∧
       ∀ n ≤ L, GeoFits (toGeneric (coefficientNumerator L g n)) (chart L p) := by
@@ -438,7 +435,7 @@ private theorem coefficients_fit (L : ℕ) (g : Row 4) (p : Shape) (hB : InBox (
     · have hwle : w 3 ≤ p.t := hw3.symm ▸ ht
       have h := numerator_bound hn w 1 1 hshift hw hwle h₃
       simpa only [hw3, mul_one, Nat.add_left_comm, Nat.add_comm, Nat.add_assoc] using h
-private theorem coefficients_recover (L : ℕ) (g : Row 4) (S : Geom[X])
+theorem coefficients_recover (L : ℕ) (g : Row 4) (S : (Polynomial Geom))
     (hg : atJet g S = 0) (hr : RegularAt g S) :
     evalGeneric S (toGeneric (denominator L g)) ≠ 0 ∧
       ∀ n ≤ L, n < K1.p →
@@ -446,7 +443,7 @@ private theorem coefficients_recover (L : ℕ) (g : Row 4) (S : Geom[X])
           evalGeneric S (toGeneric (denominator L g)) * genericCoeffs (hasseDeriv n S) := by
   have hp : atJet (separant g) S ≠ 0 := hr
   have hden : atJet (denominator L g) S = atJet (separant g) S ^ (2 * L) :=
-    map_pow (MvPolynomial.eval (jet S : Fin 4 → Geom[X])) _ _
+    map_pow (MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))) _ _
   constructor
   · rw [evalGeneric_toGeneric]
     apply (map_ne_zero_iff _ genericCoeffs_injective).mpr
@@ -460,7 +457,7 @@ private theorem coefficients_recover (L : ℕ) (g : Row 4) (S : Geom[X])
     · unfold atJet
       rw [map_mul, MvPolynomial.eval_X, mul_comm]
       rfl
-    · let E := MvPolynomial.eval (jet S : Fin 4 → Geom[X])
+    · let E := MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))
       change E (_ * (_ ^ _ * _)) = _
       rw [map_mul, map_mul, map_pow, MvPolynomial.eval_C]
       change _ * (atJet (separant g) S ^ (2 * (L - n)) * atJet (jetNumerator g n) S) = _

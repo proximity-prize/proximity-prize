@@ -240,9 +240,9 @@ open K1_14_2_2 (Active dual orderOn FixedPart ODECaps fixedOn RowCaps CutCover
   sectionDegree weight dot joinCuts joinCuts_cost sum_dot emptyCut mass)
 open K1_14_2_2_3
 open K1_14_2_2_7
-open private specialize_shiftedWord shift_word from ProximityPrize.SubmissionLower.Fast052
-open private seed_value_eq from ProximityPrize.SubmissionLower.Fast052
-open private parent_caps from ProximityPrize.SubmissionLower.Fast052
+open K1_14_2_2_3 (specialize_shiftedWord shift_word)
+open K1_14_2_2_7 (seed_value_eq)
+open K1_14_2_2_5 (parent_caps)
 open scoped BigOperators Classical
 abbrev StageIndex (b : HighBand) := Fin (stages b).length
 def pairAt {b h rows} (pairs : P1_7.Pairs b h rows) (i : StageIndex b) :
@@ -282,8 +282,7 @@ open K1_14_2 (Ambient OnJet SeedField RootSeedSection)
 open K1_14_2_2 (CutCover CurveGeometry)
 open K1_14_2_3 (SeedSlice seedImage rootImage constantCoefficients DefinedOverConstants seedLength
   yLength)
-open private on_root on_seed moving_graph_count seed_graph_count equal_image_degree
-  union_card_le from ProximityPrize.SubmissionLower.Fast062
+open K1_14_2_3 (on_root on_seed moving_graph_count seed_graph_count equal_image_degree union_card_le)
 open scoped BigOperators Classical
 end
 end P1_7_4
@@ -319,11 +318,11 @@ open K1_14 (Jet Shape)
 open K1_14_2 (Ambient toJet)
 open K1_14_2_2 K1_14_2_2_4 Polynomial
 open scoped Classical
-open private cancel_fixed from ProximityPrize.SubmissionLower.Pack_K1_14_2_2_4Split
-open private factor_caps from ProximityPrize.SubmissionLower.Fast071
+open K1_14_2_2_4 (cancel_fixed)
+open K1_14_2_2_4_1 (factor_caps)
 private theorem cancellation : K1_14_2_2_4.c3 :=
   K1_14_2_2_4_3.of_children K1_14_2_2_4_3_1.proof K1_14_2_2_4_3_2.proof
-private theorem sections : K1_14_2_2_4.c5 :=
+theorem sections : K1_14_2_2_4.c5 :=
   K1_14_2_2_4_5.of_children K1_14_2_2_4_5_1.proof K1_14_2_2_4_5_2.proof
     K1_14_2_2_4_5_3.proof K1_14_2_2_4_5_4.proof K1_14_2_2_4_5_5.proof
 private theorem scaled_le_div {d m c : ℕ} (hd : 0 < d) (h : d * m ≤ c) :
@@ -687,7 +686,7 @@ open P1_7_4 (stageAt initialCap initialE  InitialCover OnParent)
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_2 K1_14_3_2 Polynomial
 open K1_14_3 (SeedCover joinCovers joinCovers_degree joinCovers_points joinCovers_covers)
 open scoped BigOperators Classical
-open private section_bound seed_projection component_height ordinary_cover from ProximityPrize.SubmissionLower.PortHighFinish
+open P0_10R_1 (section_bound seed_projection component_height ordinary_cover)
 theorem proper_cover {P Q : Jet} (hp : ProperPair P Q) {s t : Shape}
     (hs : s.J ≤ s.B) (ht : t.J ≤ t.B) (hP : RowCaps P s) (hQ : RowCaps Q t) :
     ∃ S : Finset (Ideal Ambient), SectionGeometry S ∧ Fits S (residualBudget s t) ∧
@@ -707,7 +706,7 @@ theorem ordinary_component_cover (f : Equation) (hi : Irreducible f)
   exact ⟨S, fun I hI => ⟨(hS I hI).1, (hS I hI).2.1, (hS I hI).2.2.1,
     (hS I hI).2.2.2.1⟩, hf, hc⟩
 theorem collect {α : Type*} (D : Finset α)
-    (budget : α → Fin 4 → ℕ) (T : α → K → K[X] → Prop)
+    (budget : α → Fin 4 → ℕ) (T : α → K → (Polynomial K) → Prop)
     (h : ∀ d ∈ D, ∃ S : Finset (Ideal Ambient), SectionGeometry S ∧ Fits S (budget d) ∧
       ∀ z R, T d z R → ∃ I ∈ S, OnJet I z R) :
     ∃ S : Finset (Ideal Ambient), SectionGeometry S ∧ Fits S (fun k => ∑ d ∈ D, budget d k) ∧
@@ -746,9 +745,9 @@ open K1_14_2_1_1 (view exists_view_degree_pos view_seedHasse view_degree_le Othe
 open K1_14_3_2_1 (seedToJet markEval_fixed markEval_seed)
 open K1_14_3 (fixedEmbedding)
 open scoped BigOperators Classical
-open private seedContent_cap divisor_caps from ProximityPrize.SubmissionLower.Fast051
-open private exists_fixedIncl from ProximityPrize.SubmissionLower.Fast051
-open private dvd_pow_of_dvd_hasse derivative_not_dvd from ProximityPrize.SubmissionLower.Fast076
+open K1_14_2_2_2_1 (seedContent_cap divisor_caps)
+open K1_14_2_2_2_1 (exists_fixedIncl)
+open K1_14_2_1_1 (dvd_pow_of_dvd_hasse derivative_not_dvd)
 structure Stripped {P : Jet} {s : Shape} (A : FixedPart P s) where
   content : Seeds
   row : Jet
@@ -1030,12 +1029,12 @@ open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_2 K1_14_3_2 Polynomial
 open K1_14_3 (NoMovingCommon)
 open K1_14_2_2_2_1 (jetDegree_C seedDegree_C)
 open scoped BigOperators Classical
-open private ordinary_factor from ProximityPrize.SubmissionLower.Fast067
-private theorem irreducible_cut {f C : Jet} (hf : Irreducible f) (hd : ¬ f ∣ C) :
+open K1_14_3_2_1 (ordinary_factor)
+theorem irreducible_cut {f C : Jet} (hf : Irreducible f) (hd : ¬ f ∣ C) :
     ProperPair f C :=
   ⟨hf.ne_zero, fun h => hd (h ▸ dvd_zero _), fun _ hD hDf hDC =>
     hd ((hD.associated_of_dvd hf hDf).dvd'.trans hDC)⟩
-private theorem terminal_piece {P Q : Jet} {t : Shape} {D : Finset Jet}
+theorem terminal_piece {P Q : Jet} {t : Shape} {D : Finset Jet}
     (hD : IntroFactors P D) (hnc : NoMovingCommon P Q)
     (hQc : RowCaps Q t) (hJB : t.J ≤ t.B) (hB : t.B < p) (hQ : Q ≠ 0)
     (f : Jet) (hf : f ∈ D) :
@@ -1170,8 +1169,8 @@ open K1_13_5_3
 open K1_14 (seedEmbedding)
 open K1_14_3_6 (power totalCap topCap)
 open scoped BigOperators
-open private specialization_flatten eval_at_center from ProximityPrize.SubmissionLower.Fast073
-private theorem solution_taylor {f : Row 2} {S : K[X]} {d : ℕ}
+open K1_14_3_6_2 (specialization_flatten eval_at_center)
+private theorem solution_taylor {f : Row 2} {S : (Polynomial K)} {d : ℕ}
     (hd : d < p) (hS : RegularAt 1 f (extend S)) :
     MvPolynomial.aeval (marked (extend S)) (initialJetSeparant center (chart f)) ≠ 0 ∧
     ∀ j ≤ d, rationalTaylorCoefficient center (chart f) (marked (extend S)) j =
@@ -1179,17 +1178,17 @@ private theorem solution_taylor {f : Row 2} {S : K[X]} {d : ℕ}
   let P := (extend S).map constants
   have hsol : differentialSpecialization (chart f) P = 0 := by
     change differentialSpecialization (chart f) ((extend S).map constants) = 0
-    rw [chart, ← map_differentialSpecialization, specialization_flatten, hS.1, Polynomial.map_zero]
+    rw [chart, ← map_differentialSpecialization, K1_14_3_6_2.specialization_flatten, hS.1, Polynomial.map_zero]
   have hsf : differentialSpecialization (PolynomialDifferential.separant (flatten f) 1) (extend S) ≠ 0 := by
     change differentialSpecialization
       (MvPolynomial.pderiv (some 1) ((MvPolynomial.optionEquivRight Geom (Fin 2)).symm f)) _ ≠ 0
     rw [← MvPolynomial.optionEquivRight_symm_pderiv]
-    exact (specialization_flatten (MvPolynomial.pderiv 1 f) _).substr hS.2
+    exact (K1_14_3_6_2.specialization_flatten (MvPolynomial.pderiv 1 f) _).substr hS.2
   have hsep : jetEvaluation (PolynomialDifferential.separant (chart f) (Fin.last 1))
       center (marked (extend S)) ≠ 0 := by
     change jetEvaluation (PolynomialDifferential.separant (chart f) 1) center (marked (extend S)) ≠ 0
     rw [marked, ← eval_differentialSpecialization, chart, ← map_separant,
-      ← map_differentialSpecialization, eval_at_center]
+      ← map_differentialSpecialization, K1_14_3_6_2.eval_at_center]
     exact fun he => hsf (toCenter_inj (he.trans (map_zero _).symm))
   refine ⟨by rwa [aeval_initialJetSeparant], ?_⟩
   have hcharG : CharP Geom p := charP_of_injective_ringHom embed.injective p
@@ -1218,7 +1217,7 @@ private theorem short_numerator_bound (f : Row 2) {B J t : ℕ} (hJ : 0 < J)
       (Nat.add_le_add_left (Nat.mul_le_mul_left _ (Nat.sub_le_sub_right ((chart_degree f).trans hB) 1)) 1)
   exact mem_capped _ htot (le_min
     ((MvPolynomial.degreeOf_le_totalDegree _ _).trans htot)
-    ((degreeOf_commonTaylorNumerator_firstOrder_le center Q J (t+1) (power t) hτ hJ
+    ((degreeOf_commonTaylorNumerator_firstOrder_le center Q J (t+1) (power t) hτ
       ((chart_top f).trans hj) j).trans (Nat.add_le_add_left (Nat.le_of_lt_succ j.isLt) _)))
 private theorem short_denominator_bound (f : Row 2) {B J t : ℕ}
     (hB : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J) :
@@ -1241,7 +1240,7 @@ theorem short_cut (f : Row 2) {d t B J : ℕ} (hd : d < p) (ht : t ≤ d)
     (sites : Finset I) (hs : d ≤ sites.card + t) (w : I → K) (i : I) :
     ∃ cut : MvPolynomial (Fin 2) CenterField,
       cut ∈ MvPolynomial.restrictCappedDegree (Fin 2) CenterField 1 (totalCap t B) (topCap t B J) ∧
-      ∀ S : K[X], S.natDegree ≤ d → RegularAt 1 f (extend S) →
+      ∀ S : (Polynomial K), S.natDegree ≤ d → RegularAt 1 f (extend S) →
         (∀ j ∈ sites, S.eval (node j) = w j) →
         (MvPolynomial.aeval (marked (extend S)) cut = 0 ↔ S.eval (node i) = w i) := by
   classical

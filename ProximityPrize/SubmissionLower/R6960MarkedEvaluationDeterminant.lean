@@ -47,10 +47,10 @@ theorem row_average {G J : Type*} [Group G] [Fintype G] [Fintype J] (I:J→Type*
 the meromorphic sections. Each chosen abscissa contributes at most one sheet's
 share of a pole. -/
 theorem pole_degree {K G J : Type*} [Field K] [Group G] [Fintype G] [Fintype J] [DecidableEq J]
-    (e d : ℕ) (ep : 0<e) (T:Finset K) (P:K[X]) (nz:P≠0)
+    (e d : ℕ) (ep : 0<e) (T:Finset K) (P:(Polynomial K)) (nz:P≠0)
     (cap : P.natDegree+Fintype.card G*d≤Fintype.card G*(T.card*Fintype.card J))
     (O:K→Type*) [∀ z,CommRing (O z)] [∀ z,IsDomain (O z)] [∀ z,IsLocalRing (O z)]
-    (φ:∀ z,K[X]→+*O z) (π:∀z,O z) (place:∀ z∈T,π z≠0 ∧ IsLocalRing.residue _ (π z)=0 ∧ φ z (Polynomial.X-C z)=π z)
+    (φ:∀ z,(Polynomial K)→+*O z) (π:∀z,O z) (place:∀ z∈T,π z≠0 ∧ IsLocalRing.residue _ (π z)=0 ∧ φ z (Polynomial.X-C z)=π z)
     (A:∀ z,G→Matrix J J (O z)) (rows:K→G→Finset J)
     (norm:∀ z∈T,φ z P=∏g:G,(A z g).det)
     (hits:∀ z∈T,∀g,∀i∈rows z g,∀j,π z∣A z g i j)

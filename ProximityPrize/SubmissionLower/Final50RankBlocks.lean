@@ -14,9 +14,7 @@ noncomputable section
 open K1_13 K1_13_1_1 MvPolynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open Final50AnchorSpace
 open scoped BigOperators
-open private liftJets liftJets_X lift_value liftImage liftPower liftVar lift_order lift_value_order
-  project_monomial jet_index_formula value_hom source_monomial_expr form_monomial_expr merge merge_single
-  from ProximityPrize.SubmissionLower.Fast063
+open K1_13_1_1 (liftJets liftJets_X lift_value liftImage liftPower liftVar lift_order lift_value_order project_monomial jet_index_formula value_hom source_monomial_expr form_monomial_expr merge merge_single)
 
 private abbrev Local := LocalPolynomial Geom 3
 private abbrev T : Local := MvPolynomial.X (localT 3)

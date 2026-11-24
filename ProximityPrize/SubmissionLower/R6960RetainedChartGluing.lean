@@ -11,8 +11,7 @@ open MonicChart MonicFourChartDescent MonicScalarCorrection ChartGlobalTests
 open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 open Polynomial
 open K1_14 (L)
-open private Lower6960.MonicFourChartDescent.finite_inclusion
-  Lower6960.MonicFourChartDescent.infinity_inclusion from ProximityPrize.SubmissionLower.R6960MonicFourChartDescent
+open Lower6960.MonicFourChartDescent (finite_inclusion infinity_inclusion)
 
 private theorem frame_add (a b D : ℕ) (s : Chart) :
     frame (a+D) (b+D) s=frame a b s*frame D D s := by
@@ -22,9 +21,9 @@ variable {E : Type*} [Field E] [Algebra ChartField E]
 
 /-- High negative twists have a common correction in the root field itself. The threshold
 is fixed by the factor's probe map and is uniform in the four potentials. -/
-theorem high_twist (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem high_twist (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0) :
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     ∃ H : ℕ, ∀ a b, H<a → H<b →
       ∀ u : Chart→E, Compatible a b u → ∃ c, Correction a b u c := by
   classical
@@ -60,7 +59,7 @@ theorem high_twist (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf or
     apply image i ik c (P (u (false,false))) (P (u (true,false))) ⟨_,rfl⟩ ⟨_,rfl⟩
     · intro r
       have h:=Lower6960.MonicFourChartDescent.finite_inclusion (sol r (false,false))
-      simpa [frame] using (algebraMap Scalar[X] ChartField).range.neg_mem h
+      simpa [frame] using (algebraMap (Polynomial Scalar) ChartField).range.neg_mem h
     · intro r
       have h:=@Lower6960.MonicFourChartDescent.infinity_inclusion deq _ (sol r (true,false))
       obtain ⟨v,eq⟩:=h
@@ -77,10 +76,10 @@ theorem high_twist (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf or
 
 /-- For an arbitrary bounded retained factor there is one root-field correction for every
 compatible family on the four normalized charts, already at twist (-1,-1). -/
-theorem common_correction (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem common_correction (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (a b : ℕ) (ha : 0<a) (hb : 0<b) (u : Chart→E) (compatible : Compatible a b u) :
     ∃ c : E, Correction a b u c := by
   obtain ⟨H,high⟩:=high_twist f ir lo hi basis root
@@ -96,10 +95,10 @@ theorem common_correction (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degr
 
 /-- Additive transition functions on the overlaps are differences of regular local
 sections on the normalized four-chart cover. -/
-theorem split_cocycle (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem split_cocycle (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (a b : ℕ) (ha : 0<a) (hb : 0<b) (g : Chart→Chart→E)
     (add : ∀ s t r, g s t+g t r=g s r)
     (regular : ∀ s t, IsIntegral (MonicChartLaurent.overlapRing s t)

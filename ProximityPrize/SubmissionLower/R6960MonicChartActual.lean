@@ -10,8 +10,7 @@ open Polynomial
 open K1_14 (L)
 open RetainedCompression (Curve ordinate view view_y height heightCap wordDegree abscissa_coeff_height)
 open scoped Polynomial Differential
-open private Lower6960.RetainedCompression.derivative_weighted_add_le
-  from ProximityPrize.SubmissionLower.R6960RetainedCompressionDiscriminant
+open Lower6960.RetainedCompression (derivative_weighted_add_le)
 
 private theorem width_at_cutoff (e d : ℕ) (pos : 0<e) :
     resultantWidth e (heightCap e d) d=(3*e-1)*(e-1)*d := by
@@ -32,19 +31,19 @@ private theorem width_at_cutoff (e d : ℕ) (pos : 0<e) :
 and infinity chart coefficients has zero derivative. The only overlap
 input is their Frobenius relation in the root field. -/
 theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scalar)]
-    [Algebra (RatFunc Scalar) E] [Algebra Scalar[X] E]
-    [IsScalarTower Scalar[X] (RatFunc Scalar) E]
+    [Algebra (RatFunc Scalar) E] [Algebra (Polynomial Scalar) E]
+    [IsScalarTower (Polynomial Scalar) (RatFunc Scalar) E]
     [Algebra (Infinity Scalar) E] [IsScalarTower (Infinity Scalar) (RatFunc Scalar) E]
     [Algebra.IsSeparable (RatFunc Scalar) E] [FiniteDimensional (RatFunc Scalar) E]
-    [Differential Scalar[X]] [Differential (Infinity Scalar)] [Differential E]
-    [DifferentialAlgebra Scalar[X] E] [DifferentialAlgebra (Infinity Scalar) E]
-    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    [Differential (Polynomial Scalar)] [Differential (Infinity Scalar)] [Differential E]
+    [DifferentialAlgebra (Polynomial Scalar) E] [DifferentialAlgebra (Infinity Scalar) E]
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (b : PowerBasis (RatFunc Scalar) E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
-    (x y z : E) (fx : IsIntegral Scalar[X] x) (iy : IsIntegral (Infinity Scalar) y)
+    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
     (overlap : y=(algebraMap (RatFunc Scalar) E RatFunc.X)^K1.p*x+z^K1.p) :
     x′=0 := by
-  let seed : L→+*Scalar := (algebraMap L[X] Scalar).comp C
+  let seed : L→+*Scalar := (algebraMap (Polynomial L) Scalar).comp C
   letI : Infinite Scalar := Infinite.of_injective seed seed.injective
   letI : CharP Scalar K1.p := charP_of_injective_ringHom seed.injective K1.p
   let inE : Scalar→+*E := (algebraMap (RatFunc Scalar) E).comp RatFunc.C
@@ -83,14 +82,14 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
     exact (Nat.mul_le_mul_left 2 (Nat.mul_le_mul_right wordDegree
       (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 3 (by omega : e≤47)) 1)
        (Nat.sub_le_sub_right (by omega : e≤47) 1)))).trans_lt (by decide +kernel)
-  have tameA : (P.natDegree:Scalar[X])≠0 := by
+  have tameA : (P.natDegree:(Polynomial Scalar))≠0 := by
     simpa only [map_natCast] using
-      (map_ne_zero_iff (Polynomial.C : Scalar→+*Scalar[X]) Polynomial.C_injective).mpr tame
+      (map_ne_zero_iff (Polynomial.C : Scalar→+*(Polynomial Scalar)) Polynomial.C_injective).mpr tame
   have dp := derivative_degree P ep tameA
   have der : P.derivative≠0 := by intro zero; rw [zero,natDegree_zero] at dp; omega
   have resNZ : paddedRes P≠0 := Polynomial.resultant_derivative_ne_zero_of_irreducible P pir der
   have prim := pir.isPrimitive ep.ne'
-  let ι := algebraMap Scalar[X] (RatFunc Scalar)
+  let ι := algebraMap (Polynomial Scalar) (RatFunc Scalar)
   let Q := P.map ι
   have iq : Irreducible Q := prim.irreducible_iff_irreducible_map_fraction_map.mp pir
   have rq : aeval b.gen Q=0 := by rw [aeval_map_algebraMap]; exact root
@@ -100,7 +99,7 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
     le_antisymm (natDegree_le_of_dvd associated.symm.dvd (minpoly.ne_zero b.isIntegral_gen))
       (natDegree_le_of_dvd dvd iq.ne_zero)
   have dimension : P.natDegree=b.dim :=
-    (natDegree_map_eq_of_injective (IsFractionRing.injective Scalar[X] (RatFunc Scalar)) P).symm.trans
+    (natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) (RatFunc Scalar)) P).symm.trans
       (size.trans b.natDegree_minpoly)
   exact common_coboundary_zero_generic b P H wordDegree K1.p prim e2 dimension tame weights
     resBound room resNZ root x y z fx iy overlap

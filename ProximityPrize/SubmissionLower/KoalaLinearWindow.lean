@@ -72,7 +72,7 @@ theorem Span.sum_eq_range (s : Span) (g : ℤ → ℤ) :
   rw [Span.finset, Int.Ico_eq_finset_map, sum_map]
   rfl
 
-open private lineBandSum  from ProximityPrize.SubmissionLower.KoalaPiecewiseTriangle
+open KoalaPiecewiseTriangle (lineBandSum)
 
 def Span.charge (s : Span) (b : BandCuts) (l q : Line) : ℤ :=
   if s.hi ≤ s.lo ∨ (l.d = 0 ∧ l.a = b.l0) ∨ (q.d = 0 ∧ q.a = b.q1) then 0

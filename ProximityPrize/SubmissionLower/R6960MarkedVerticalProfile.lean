@@ -3,6 +3,7 @@ import ProximityPrize.SubmissionLower.R6960MarkedZeroDegree
 import ProximityPrize.SubmissionLower.R6960MarkedConstantDescent
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericMeasure
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericCoordinates
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -25,13 +26,13 @@ local instance profileNodeRing (x z:L) : CommRing (Crossing E x z) :=
 
 /-- The vertical deficit of this precise surface is positive on the nonlinear
 branch, is tame at the profile prime, and supplies the physical function rank. -/
-theorem vertical_profile (f:Curve L[X]) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
+theorem vertical_profile (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
     (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (nonlin:¬RetainedLinear.GeometricallyLinear (view f))
     (b:PowerBasis ChartField E) (dim:b.dim=(view f).natDegree)
-    (root:aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0)
+    (root:aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)] [FiniteDimensional L (Crossing E x z)]
     (small:finrank L (Crossing E x z)<K1.p) {n:ℕ}
-    (zf:Basis (Fin n) L[X] (chartImage E true z false)) (zi:Basis (Fin n) L[X] (chartImage E true z true))
+    (zf:Basis (Fin n) (Polynomial L) (chartImage E true z false)) (zi:Basis (Fin n) (Polynomial L) (chartImage E true z true))
     (s:ℕ) (measure:(transition E true z nz zf zi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ)) :
     0<s ∧ 2*s<K1.p ∧ ∀(U:Finset L)(m:ℕ)(v:Fin m→E),(∀j,controlled E (s-1) U (v j)) →
       finrank Scalar (span Scalar (Set.range v))+s≤(view f).natDegree*s := by
@@ -61,8 +62,8 @@ theorem vertical_profile (f:Curve L[X]) (ir:Irreducible f) (lo:3≤f.degreeOf or
     · rw [z,natDegree_zero];omega
     · exact (Nat.le_add_right _ _).trans ((RetainedCompression.abscissa_coeff_height f wordDegree j z).trans bounded)
   have hr (n':ℕ) (eq:n'=Q.natDegree)
-      (F':Basis (Fin n') Scalar[X] (chartOrder (k:=Scalar) (E:=E) false))
-      (I':Basis (Fin n') Scalar[X] (chartOrder (k:=Scalar) (E:=E) true))
+      (F':Basis (Fin n') (Polynomial Scalar) (chartOrder (k:=Scalar) (E:=E) false))
+      (I':Basis (Fin n') (Polynomial Scalar) (chartOrder (k:=Scalar) (E:=E) true))
       (dd:(normalizedTransition F' I').det.degree=((-(s:ℤ):ℤ):WithBot ℤ)) :
       s≤(Q.natDegree-1)*heightCap (f.degreeOf ordinate) wordDegree := by
     subst n'
