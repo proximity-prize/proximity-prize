@@ -1,0 +1,21 @@
+import ProximityPrize.SubmissionLower.R6960Low6960Rectangle
+
+set_option Elab.async false
+set_option maxRecDepth 22000
+set_option maxHeartbeats 6000000
+
+namespace Low6960Allocation.Group24
+
+private def m0 : MassCell 24 :=
+  ⟨⟨1,3,15⟩,mass_cell 24 1 3 15 220 (by decide)
+    (by decide +kernel) [4537252938928, 3806961548926, 3029334912806, 2374548352918, 1830695851270, 1384727588726, 1024386469606, 738208121686, 515520896198, 346445867830, 221896834726, 133580318486, 73995564166, 36434540278, 14981938790, 4515175126, 704388166, 14293684, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m1 : MassCell 24 :=
+  ⟨⟨10,8,52⟩,mass_cell 24 10 8 52 177 (by decide)
+    (by decide +kernel) [4537252938928, 3904237942060, 3339896880272, 2839073027164, 2232878023321, 1446205200278, 880105313362, 497388075142, 254097997106, 112126071382, 39209770738, 8933048582, 726338962, 262980, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m2 : MassCell 24 :=
+  ⟨⟨6,17,64⟩,mass_cell 24 6 17 64 138 (by decide)
+    (by decide +kernel) [4537252938928, 3904237942060, 3339896880272, 2839073027164, 2396810968336, 1753229450936, 851061452095, 330694849531, 87237536855, 9218010451, 19196364, 0] (by decide +kernel) (by decide +kernel)⟩
+
+def orders : List (MassCell 24) := [m0, m1, m2]
+
+end Low6960Allocation.Group24

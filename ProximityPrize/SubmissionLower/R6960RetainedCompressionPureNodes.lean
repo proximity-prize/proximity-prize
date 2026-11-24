@@ -198,7 +198,7 @@ theorem relation_space_gt {F : Type*} [Field F] {α : Type*} [Finite α]
     simp [HeightCompression.Coeffs,Module.finrank_pi_fintype,(degreeLTEquiv F _).finrank_eq]
   rw [dim]
   omega
-theorem tame_height {e d : ℕ} (he : e≤47) (hd : d≤164650) :
+theorem tame_height {e d : ℕ} (he : e≤47) (hd : d≤164670) :
     2*((3*e-2)*(e-1)*d+(e-1))<2130706433 :=
   (Nat.mul_le_mul_left 2 (Nat.add_le_add
     (Nat.mul_le_mul (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 3 he) 2)
@@ -842,10 +842,10 @@ open RetainedShortening (Word)
 open CurvatureSquares (Ordinate ordEval xView zView)
 open scoped Polynomial
 open CurvatureSquares (degree_two_count)
-abbrev wordDegree : ℕ := 164650
+abbrev wordDegree : ℕ := 164670
 def FactorPriceAt (rate:ℕ→ℕ) : Prop :=
   ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
-    Word 179818 wordDegree M.word F.scalar T →
+    Word 179808 wordDegree M.word F.scalar T →
     ∀ f : Curve (Polynomial L), Irreducible f →
       3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
       height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
@@ -859,7 +859,7 @@ theorem rate_mono {e n : ℕ} (h : e≤n) : MarkedSheet.rate e≤MarkedSheet.rat
     (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 9 h) 6)
       (Nat.sub_le_sub_right h 1))
     (Nat.mul_le_mul_left 2 h)) 1
-private theorem vote_scale : CurvatureVotes.VoteScale 179818 wordDegree 18 :=
+private theorem vote_scale : CurvatureVotes.VoteScale 179808 wordDegree 18 :=
   Or.inl (by decide +kernel)
 private theorem word_roots {u deleted} {M : Model u deleted} {Γ U : Finset K} (F : Family M Γ)
     (Q : Ordinate) (H : ∀ γ∈U, MarkedFiber Q (scalar M γ) (liftPoly (F.scalar γ))) :
@@ -871,7 +871,7 @@ private theorem word_roots {u deleted} {M : Model u deleted} {Γ U : Finset K} (
 private theorem factor_price (rate:ℕ→ℕ) (mono:Monotone rate) (small:24≤rate 3)
     (proper:∀e,3≤e→e<48→12*e≤rate e) (bounded : FactorPriceAt rate)
     {u deleted} {M : Model u deleted} {Γ U : Finset K} (F : Family M Γ) (sub : U⊆Γ)
-    (words : Word 179818 wordDegree M.word F.scalar U)
+    (words : Word 179808 wordDegree M.word F.scalar U)
     {Q : Ordinate} (ir : Irreducible Q) (n : ℕ) (lo : 3≤n) (hi : n<48)
     (degree : Q.natDegree≤n) (mark : ∀ γ∈U, MarkedFiber Q (scalar M γ) (liftPoly (F.scalar γ))) :
     U.card≤rate n*(zView Q).natDegree+(n-1)*Q.natDegree := by
@@ -951,7 +951,7 @@ theorem retained_of_tariff (rate:ℕ→ℕ) (mono:Monotone rate) (small:24≤rat
   have count := aggregate P T (scalar M) (fun γ=>liftPoly (F.scalar γ))
     (rate P.natDegree) (P.natDegree-1) pn fibre (by
       intro Q ir dvd U us qmark
-      have words : Word 179818 wordDegree M.word F.scalar U :=
+      have words : Word 179808 wordDegree M.word F.scalar U :=
         ⟨W.distinct.mono us,fun γ hγ=>W.degree γ (us hγ),fun γ hγ=>W.hits γ (us hγ)⟩
       exact factor_price rate mono small proper bounded F (us.trans sub) words ir _ pmin pmax
         (natDegree_le_of_dvd dvd pn) qmark)
@@ -1011,7 +1011,7 @@ private theorem root_at_node {P : Ordinate} {z : L} {S : (Polynomial K)}
     (p:=specialize P z) (x:=liftPoly S)
   rw [commute,coe_evalRingHom,value] at eq
   exact eq.trans (h.trans eval_zero)
-theorem pure_node_price {w s T} (W : Word 179818 wordDegree w s T)
+theorem pure_node_price {w s T} (W : Word 179808 wordDegree w s T)
     (z : K → L) (inj : Set.InjOn z (T:Set K)) (P : Ordinate) (irr : Irreducible P)
     (pos : 0<P.natDegree) (pure : PureNodes w P)
     (marks : ∀ γ∈T, MarkedFiber P (z γ) (liftPoly (s γ))) :
@@ -1058,7 +1058,7 @@ theorem pure_node_price {w s T} (W : Word 179818 wordDegree w s T)
     exact (mul_eq_zero.mp hz).resolve_right (pow_ne_zero _ (sub_ne_zero.mpr (embed.injective.ne miss)))
 def NonPureFactorPrice : Prop :=
   ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
-    Word 179818 wordDegree M.word F.scalar T →
+    Word 179808 wordDegree M.word F.scalar T →
     ∀ f : Curve (Polynomial L), Irreducible f →
       3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
       height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →

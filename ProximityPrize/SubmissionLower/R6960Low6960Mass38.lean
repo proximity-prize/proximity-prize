@@ -1,0 +1,24 @@
+import ProximityPrize.SubmissionLower.R6960Low6960Rectangle
+
+set_option Elab.async false
+set_option maxRecDepth 22000
+set_option maxHeartbeats 6000000
+
+namespace Low6960Allocation.Group38
+
+private def m0 : MassCell 38 :=
+  ⟨⟨1,3,49⟩,mass_cell 38 1 3 49 213 (by decide)
+    (by decide +kernel) [4483126465980, 3763215762552, 3129616788460, 2575724450328, 2004401747297, 1462615030245, 1031740385993, 697641910541, 446750483889, 266063770037, 143146216985, 66129056733, 23710305281, 5154762629, 294012777, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m1 : MassCell 38 :=
+  ⟨⟨6,6,69⟩,mass_cell 38 6 6 69 194 (by decide)
+    (by decide +kernel) [4483126465980, 3763215762552, 3129616788460, 2575724450328, 2095149399036, 1660714284041, 1107173815867, 662187613219, 360518737451, 170964445459, 64888371355, 16220526467, 1457299339, 588207, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m2 : MassCell 38 :=
+  ⟨⟨57,3,78⟩,mass_cell 38 57 3 78 242 (by decide)
+    (by decide +kernel) [4483126465980, 3763215762552, 3129616788460, 2575724450328, 2095149399036, 1681718029720, 1253541420058, 686744054965, 313517410193, 103814887501, 10163464141, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m3 : MassCell 38 :=
+  ⟨⟨6,16,84⟩,mass_cell 38 6 16 84 154 (by decide)
+    (by decide +kernel) [4483126465980, 3763215762552, 3129616788460, 2575724450328, 2095149399036, 1681718029720, 1325134220042, 727542113262, 246032280074, 46607599022, 1660396504, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+
+def orders : List (MassCell 38) := [m0, m1, m2, m3]
+
+end Low6960Allocation.Group38

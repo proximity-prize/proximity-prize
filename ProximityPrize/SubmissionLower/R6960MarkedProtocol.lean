@@ -283,7 +283,7 @@ theorem nonlinear_price : NonlinearPrice := by
 
 /-- Unconditional 69.61 lower-track protocol claim. -/
 theorem candidate_of_gates (gates : Low6960Allocation.Gates) :
-    ProximityPrize.Benchmark.ProtocolClaim 6961 ProximityPrize.SubmissionLower.Front6960Radius.p
+    ProximityPrize.Benchmark.ProtocolClaim 6962 ProximityPrize.SubmissionLower.Front6960Radius.p
       ProximityPrize.SubmissionLower.Front6960Radius.q := protocol_of_price gates nonlinear_price
 
 #print axioms candidate_of_gates

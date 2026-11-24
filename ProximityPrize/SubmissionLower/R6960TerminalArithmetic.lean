@@ -6,7 +6,7 @@ set_option autoImplicit true
 set_option maxRecDepth 18000
 section
 namespace Lower6960.TerminalArithmetic
-abbrev agreement : ℕ := 179818
+abbrev agreement : ℕ := 179808
 open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset

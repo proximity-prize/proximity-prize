@@ -32,7 +32,7 @@ theorem fixedFee_eq (B J : ℕ) :
   unfold fixedFee persistentTop persistentTotal
   rw [he,hl,hm]
 theorem Initial.rank_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {G Q₀ : Jet} {rect : Fin 4} (ini : Initial F G Q₀ rect) (hi : M.overhead.toNat≤33579) :
+    {G Q₀ : Jet} {rect : Fin 4} (ini : Initial F G Q₀ rect) (hi : M.overhead.toNat≤33599) :
     (ini.rankMarks.card : ℚ)≤dotQ (rankWeight rect) (massQ ini.rankExit)+rankRound rect := by
   let S := ini.rankExit
   let B := max 2 (mass S 2)
@@ -83,7 +83,7 @@ private theorem card_round {a : ℕ} {q : ℚ} (bound : (a : ℚ)≤q) : a≤q.c
   exact_mod_cast bound.trans (Rat.le_ceil.trans ceil_cast)
 theorem CutBooks.curve_bin_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} {R : Run F Crt G}
-    (C : CutBooks R) (hiM : M.overhead.toNat≤33579) {i : ℕ} (hi : i<17) :
+    (C : CutBooks R) (hiM : M.overhead.toNat≤33599) {i : ℕ} (hi : i<17) :
     ((curveMarks F (C.cover i)).card : ℚ)≤
       dotQ (lossWeight R.rect i) (massQ (R.lost i))+((C.cover i).cost 0 : ℚ) := by
   have global : ((C.cover i).cost 0 : ℚ)≤seedLimit R.rect :=
@@ -110,7 +110,7 @@ def CutBooks.lossMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     Finset K := R.initial.rankMarks ∪ (range 17).biUnion (fun i=>curveMarks F (C.cover i))
 theorem CutBooks.loss_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} {R : Run F Crt G}
-    (C : CutBooks R) (hi : M.overhead.toNat≤33579) : C.lossMarks.card ≤ (lossLimit R.rect).ceil.toNat := by
+    (C : CutBooks R) (hi : M.overhead.toNat≤33599) : C.lossMarks.card ≤ (lossLimit R.rect).ceil.toNat := by
   apply card_round
   have cum : (C.lossMarks.card : ℚ) ≤ (R.initial.rankMarks.card : ℚ) +
       ∑ i∈range 17,((curveMarks F (C.cover i)).card : ℚ) := by
@@ -131,7 +131,7 @@ def CutBooks.paid {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     Finset K := ((C.lossMarks ∪ C.pointMarks) ∪ R.initial.seedMarks) ∪ R.initial.ordinateMarks
 theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} {R : Run F Crt G}
-    (C : CutBooks R) (hi : M.overhead.toNat≤33579) : C.paid.card≤rescueFee R.rect := by
+    (C : CutBooks R) (hi : M.overhead.toNat≤33599) : C.paid.card≤rescueFee R.rect := by
   have h1 := card_union_le ((C.lossMarks∪C.pointMarks)∪R.initial.seedMarks) R.initial.ordinateMarks
   have h2 := card_union_le (C.lossMarks∪C.pointMarks) R.initial.seedMarks
   have h3 := card_union_le C.lossMarks C.pointMarks
@@ -143,13 +143,13 @@ theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M
   omega
 theorem exceptional_prefix {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2359≤M.overhead.toNat) (hi : M.overhead.toNat≤33579)
+    (lo : 2379≤M.overhead.toNat) (hi : M.overhead.toNat≤33599)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (common : PrefixRows.Common
       (evaluated Crt (word M) HelperSource.helperBank.shape (HelperSource.helperCutoff M.overhead.toNat)) G) :
     ∃ (paid : Finset K) (S : Finset Surface),
-      paid.card ≤ 118460744183568976 ∧
+      paid.card ≤ 117270526256058618 ∧
       (∀ q∈S,Parent q ∧ SurfacePass Crt (word M) q) ∧
       ∀ γ∈Γ,jetAt G (M.label γ) (F.scalar γ)=0 → γ∈paid ∨ ∃ q∈S,OnSurface F q γ := by
   obtain ⟨R,C,S,geom,cover⟩ := inventory F Crt lo hi noPole residues common
@@ -262,7 +262,7 @@ structure Rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
 
 theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2359≤M.overhead.toNat) (hi : M.overhead.toNat≤33579)
+    (lo : 2379≤M.overhead.toNat) (hi : M.overhead.toNat≤33599)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     Nonempty (Rows F Crt) := by
@@ -277,8 +277,8 @@ theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     · exact contact_at_mark F Crt noPole residues (inside i) (FreeSource.cutoff_fit lo hi i) γ mem
     · intro H hm
       have wh := HelperSource.helper_width lo hi
-      have width : helperCutoff M.overhead.toNat+2*M.overhead.toNat*10 < helperBank.shape.m*179818 :=
-        FreeSource.buffered_fit helperBank 179818 _ 10 wh
+      have width : helperCutoff M.overhead.toNat+2*M.overhead.toNat*10 < helperBank.shape.m*179808 :=
+        FreeSource.buffered_fit helperBank 179808 _ 10 wh
       exact contact_at_mark F Crt noPole residues hm width γ mem
   · intro i
     exact Classical.choice (K1_14_2_2_1.proof _ _ (out.free_ne i) (out.free_caps i))
@@ -881,23 +881,23 @@ def initialMass : Mass := fun k=>initialCap k
 
 private def historyTable : List Mass :=
   [
-    ![10597, 106674, 492190, 2145993],
-    ![5756, 165809/2, 375084, 1980456],
-    ![22349/9, 351832/9, 375084, 1915456],
-    ![13715/8, 390915/16, 1775816/9, 9168368/9],
-    ![5216/5, 407313/25, 130626, 734373],
-    ![4699/6, 145283/12, 248109/2, 2772225/4],
-    ![34803/64, 501165/64, 80446, 1016044/3],
-    ![39209/121, 579508/121, 2652560/49, 259081],
-    ![39209/121, 579508/121, 48147, 259081],
-    ![39209/121, 579508/121, 48147, 1006009/4],
-    ![11153/40, 865023/200, 1943756/49, 216225],
-    ![253791/961, 3699363/961, 4120626/121, 15944049/100],
-    ![38497/150, 3699363/961, 4115580/121, 15944049/100],
-    ![38497/150, 3699363/961, 4115580/121, 15944049/100],
-    ![1173662/4761, 5666773/1587, 8407560/289, 99765932/729],
-    ![1140713/5184, 17363647/5184, 141744/5, 99765932/729],
-    ![1140713/5184, 17363647/5184, 3051745/108, 48750750/361]
+    ![10597, 105703, 487833, 2113934],
+    ![5756, 330095/4, 373350, 7822617/4],
+    ![22349/9, 349436/9, 373350, 1857769],
+    ![13715/8, 389379/16, 589604/3, 1008183],
+    ![5216/5, 405099/25, 129150, 11590425/16],
+    ![4699/6, 216881/18, 1975335/16, 2719201/4],
+    ![34803/64, 499459/64, 239878/3, 4030279/12],
+    ![39209/121, 577700/121, 2644281/49, 1026169/4],
+    ![39209/121, 577700/121, 95931/2, 1026169/4],
+    ![39209/121, 577700/121, 95931/2, 249001],
+    ![11153/40, 172597/40, 3878349/98, 10543009/49],
+    ![253791/961, 3693561/961, 4114251/121, 3988009/25],
+    ![38497/150, 3693561/961, 4114251/121, 3988009/25],
+    ![38497/150, 3693561/961, 4114251/121, 3988009/25],
+    ![1173662/4761, 246155/69, 8400182/289, 4928077/36],
+    ![1140713/5184, 4338299/1296, 28432, 4928077/36],
+    ![1140713/5184, 4338299/1296, 24397385/864, 390358155/2888]
   ]
 
 def history (i : ℕ) : Mass := historyTable.getD i initialMass
@@ -986,7 +986,7 @@ theorem Initial.content_count {u deleted} {M : Model u deleted} {Γ} {F : Family
     |>.trans (Nat.mul_le_mul_left _ ini.content_cap)
 
 theorem Rows.fixed_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt) (hi : M.overhead.toNat≤33579) :
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt) (hi : M.overhead.toNat≤33599) :
     R.fixedMarks.card≤fixedLimit := by
   calc
     _ ≤ ∑ i : Fin 17, (R.fixedMarksOf (R.fixedFree i).equation ∪ R.fixedMarksOf (R.fixedMoving i).equation).card :=
@@ -1116,10 +1116,10 @@ open Lower6960.RescueGeometry (heightBound height_spec)
 open scoped Classical BigOperators
 
 def degreeRates : List ℕ :=
-  [155997388, 155997388, 155997388, 155997388, 155997388, 155997388, 155997388, 80403997, 41020580, 80403997, 118503960, 41707115, 117383052, 94698036, 94698036, 132932404, 218921550]
+  [155119719, 155119719, 155119719, 155119719, 155119719, 155119719, 155119719, 80403997, 41020580, 80403997, 118503946, 41707115, 117383052, 94698007, 94698007, 132932368, 229672665]
 
 def heightRates : List ℕ :=
-  [3042427, 3042427, 3042427, 3042427, 3042427, 3042427, 3042427, 6114031, 12228062, 6114031, 4076021, 12022955, 4114661, 5152695, 5152695, 3606887, 2100971]
+  [3060963, 3060963, 3060963, 3060963, 3060963, 3060963, 3060963, 6115114, 12230228, 6115114, 4076743, 12025084, 4115390, 5153609, 5153609, 3607526, 1992320]
 
 def degreeRate (i : ℕ) : ℕ := degreeRates.getD i 0
 
@@ -1157,7 +1157,7 @@ def lossLimit : ℚ :=
 def mainFee : ℕ := lossLimit.ceil.toNat+pointLimit.ceil.toNat+initialSeedLimit+initialCap 0+
   fixedLimit+contentLimit
 
-theorem main_fee_bound : mainFee ≤ 116835760512599839 := by decide +kernel
+theorem main_fee_bound : mainFee ≤ 118834526389521683 := by decide +kernel
 
 theorem rank_guard : rankB<p ∧ 0≤rankWeight 1 ∧ 0≤rankWeight 2 := by decide +kernel
 

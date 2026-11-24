@@ -117,7 +117,7 @@ theorem derivative_weighted_add_le {R : Type*} [CommRing R]
 /-- The padded derivative resultant satisfies the doubled tame-abscissa
 degree bound, including the separate contribution at infinity. -/
 theorem derivative_resultant_tame (f : Curve (Polynomial L)) (d : ℕ)
-    (lo : 2≤f.degreeOf ordinate) (hi : f.degreeOf ordinate≤47) (degree : d≤164650)
+    (lo : 2≤f.degreeOf ordinate) (hi : f.degreeOf ordinate≤47) (degree : d≤164670)
     (bounded : height d f≤heightCap (f.degreeOf ordinate) d) :
     2*((view f).resultant (view f).derivative (f.degreeOf ordinate)
       (f.degreeOf ordinate-1)).natDegree+2*(f.degreeOf ordinate-1)<2130706433 := by

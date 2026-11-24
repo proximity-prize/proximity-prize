@@ -3,7 +3,6 @@ import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import ProximityPrize.SubmissionLower.Gate61Tally
-set_option Elab.async false
 
 -- merged module Gate61Combine
 section Merged_Gate61Combine

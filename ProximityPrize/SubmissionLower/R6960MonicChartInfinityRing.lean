@@ -187,14 +187,14 @@ theorem pole_budget {K E : Type*} [Field K] [DecidableEq (RatFunc K)] [Field E]
 #print axioms pole_budget
 private def rawDegree (e : ℕ) :=
   let m:=e+1
-  let H:=164650*(10*(2*e)*(2*e+1)-9*m*(m-1))/(18*m)
-  (2*e-2)*H-e*(e-1)*164650
+  let H:=164670*(10*(2*e)*(2*e+1)-9*m*(m-1))/(18*m)
+  (2*e-2)*H-e*(e-1)*164670
 theorem profile_room :
-    (∀ e : Fin 48,3≤e.val → 2*rawDegree e.val≤1707353296) ∧
-    rawDegree 47=853676648 ∧ 1707353296+423353137=K1.p := by decide +kernel
+    (∀ e : Fin 48,3≤e.val → 2*rawDegree e.val≤1707560664) ∧
+    rawDegree 47=853780332 ∧ 1707560664+423145769=K1.p := by decide +kernel
 theorem coarse_room : ∀ e : Fin 48,3≤e.val →
-    2*((e.val-1)*(3*e.val-2)*164650+(e.val-1))≤2105544292 ∧
-    2105544292+25162141=K1.p := by decide +kernel
+    2*((e.val-1)*(3*e.val-2)*164670+(e.val-1))≤2105800052 ∧
+    2105800052+24906381=K1.p := by decide +kernel
 #print axioms profile_room
 end Lower6960.DifferentialPoles
 

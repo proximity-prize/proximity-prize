@@ -59,8 +59,8 @@ def simpleSheet (f : Equation) (label : K) (word : (Polynomial K)) : Prop :=
 def excCap : ℕ := 93*2400*K1.p
 def paidCap : ℕ := MainGeometry.prefixCap+TerminalSmall.smallCap+excCap
 theorem good_remainder {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    {D : PoleData M.overhead.toNat} (Crt : CRTLift D) (lo : 2359≤M.overhead.toNat)
-    (hi : M.overhead.toNat≤33579) (regular : ∀ j i,(D.block j).eval (nodeL i)≠0)
+    {D : PoleData M.overhead.toNat} (Crt : CRTLift D) (lo : 2379≤M.overhead.toNat)
+    (hi : M.overhead.toNat≤33599) (regular : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     Γ.card≤paidCap ∨ ∃ (T : Finset K) (f : Equation),T⊆Γ ∧ Γ.card≤paidCap+T.card ∧
       3≤f.natDegree ∧ f.natDegree<48 ∧ axisDegree f 0+axisDegree f 1≤2400 ∧

@@ -514,9 +514,9 @@ theorem cover_counts {w Γ s f Q l} (hm : Messages w Γ s)
       omega
     omega
   have hSurface : d≤surfaceCap (shape f) := by
-    change F.union.card≤2*(133429*(shape f).b*primaryBox.b)
+    change F.union.card≤2*(133449*(shape f).b*primaryBox.b)
     have hF' := Low6960GeometryCut.pieces_surface_capacity F hm hF hFP
-    change 2*F.total ≤ 133429*(shape f).b*primaryBox.b at hFB
+    change 2*F.total ≤ 133449*(shape f).b*primaryBox.b at hFB
     exact hF'.trans ((show 4*F.total=2*(2*F.total) by ring).le.trans
       (Nat.mul_le_mul_left 2 hFB))
   exact ⟨a,c,d,hCard,hAux,hCurve,hSurface⟩

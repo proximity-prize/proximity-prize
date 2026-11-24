@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.R6960HelperSourceArithmetic
-set_option Elab.async false
 
 -- merged module Low48BentLattice
 section Merged_Low48BentLattice
