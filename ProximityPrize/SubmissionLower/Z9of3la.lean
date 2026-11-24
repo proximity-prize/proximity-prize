@@ -1,0 +1,19 @@
+import ProximityPrize.SubmissionLower.ZL8vffb
+import ProximityPrize.SubmissionLower.ZLt6kU
+set_option Elab.async false
+set_option autoImplicit true
+namespace qpECY2d
+set_option maxRecDepth 8192
+set_option maxHeartbeats 6000000
+private def d0_0:=s2! 11722 2444 2444 43 8 0x86e0dcd9c80d007672390131be6927201a424880e4020a297b9c8022535ce390019e754a720007985f0e40
+private def d0_1 :=s2! 11722 2444 4492 44 8 0xc1efe91bd00b5a9b41bd00a831df1bd0099886a1bd0089ad551bd0078a0a01bd006672477c58154538b10e40
+private def d0_2 :=s2! 11722 2444 6540 44 8 0xf927111bd00f66ddc1bd00f283071bd00ed66921bd00e7187d1bd00df98c81bd00d6e7731bd00cd047e1bd00
+private def d0_3:=s2! 11722 2444 8588 44 8 0xe3f6391bd00eaca041bd00f06c2f1bd00f4dcba1bd00f81ba51bd00fa28f01bd00fb049b1bd00faaea61bd00
+private def d0_4 :=s2! 11722 2444 10636 44 8 0x87a3637e52b952f707a6b4a2ad6600044affafd1dd83bcb6cd1bd00c851181bd00d2b9c31bd00dbf0ce1bd00
+private def d0_5:=s2! 11722 2444 12684 43 8 0x4eaa32938c0c4e8145b181dfc051845dc75a6c40aa5a6bc25585f97fa6eb09a17670f164590fa29c75eeb3
+private def d0_6:=s2! 11722 2444 14732 41 8 0x136ea93f823c32bb1804d7bdf78c059b6bc8c60507598ae303edad38b182d08e25f8c1e68e7fcc60
+private def r0:=j2! 11722 2444 0x1c91bb99c39fb [d0_0,d0_1,d0_2,d0_3,d0_4,d0_5,d0_6]
+def dataM:Array aqm := #[
+  r0
+]
+end qpECY2d
