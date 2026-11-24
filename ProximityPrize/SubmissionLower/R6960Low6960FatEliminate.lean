@@ -26,7 +26,7 @@ private theorem order_cancel_coeff (A B : GenericRow) (d : ℕ) (hA : A.coeff 0 
     exact fun a ha => h _ a rfl ha
   intro n
   induction n using Nat.strong_induction_on with
-  | h n ih =>
+  | ind n ih =>
     intro a ha hd
     have hab := hAB a (ha.symm ▸ hd)
     rw [MvPolynomial.coeff_mul, Finset.sum_eq_single_of_mem (0, a) (by simp)] at hab
@@ -64,8 +64,8 @@ private theorem mixedOrder_cancel (A B : GenericRow) (z : GenericX) (y : Fin 3 �
     rw [← map_mul]
     by_contra hne
     exact (Nat.not_lt_of_ge (h b (MvPolynomial.mem_support_iff.mpr hne))) hb
-open private moving_lower total_prod index_prod eval_prod_factor_ne_zero from ProximityPrize.SubmissionLower.GoldBranch6N4
-theorem eliminate_common (Γ : Finset K) (z : K → Geom) (S : K → Geom[X])
+open P3_6_4 (moving_lower total_prod index_prod eval_prod_factor_ne_zero)
+theorem eliminate_common (Γ : Finset K) (z : K → Geom) (S : K → (Polynomial Geom))
     (hzinj : Function.Injective z) {F G : GenericRow} (D : CommonPair F G)
     (hOrders : ∀ γ ∈ Γ, PairOrders F G (inclConst (z γ)) (trajectory (S γ))) :
       ∃ (book : Finset K) (Q : Lower), book.card ≤ 140000 ∧ Q ≠ 0 ∧
@@ -182,13 +182,13 @@ namespace Low6960Fat
 open Polynomial
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
-open private resultant_taylor_formal from ProximityPrize.SubmissionLower.GoldBranch6N4
+open P3_6_4 (resultant_taylor_formal)
 private def weight (d i : ℕ) : ℕ := d - 7014 * i
 private def power (w : ℕ) : ℕ := (48757 + w) / 48758
 private theorem coefficient_bound {k : Type*} [CommRing k]
-    (P : k[X][X]) (d e i j : ℕ) (hij : j ≤ i)
+    (P : (Polynomial (Polynomial k))) (d e i j : ℕ) (hij : j ≤ i)
     (hP : ∀ i l : ℕ, 7014 * i + 48758 * l < d → (P.coeff i).coeff l = 0) :
-    (Polynomial.X : k[X]) ^ power (weight (d + e) i - weight e j) ∣ P.coeff (i - j) := by
+    (Polynomial.X : (Polynomial k)) ^ power (weight (d + e) i - weight e j) ∣ P.coeff (i - j) := by
   have hweight : weight (d + e) i ≤ weight e j + weight d (i - j) := by
     unfold weight
     omega
@@ -202,11 +202,11 @@ private theorem coefficient_bound {k : Type*} [CommRing k]
 private def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
   j.addCases (fun j : Fin m => weight firstOrder j) (fun j : Fin n => weight secondOrder j)
 private theorem sylvester_entry {k : Type*} [CommRing k]
-    (F G : k[X][X]) (m n : ℕ)
+    (F G : (Polynomial (Polynomial k))) (m n : ℕ)
     (hF : ∀ i l : ℕ, 7014 * i + 48758 * l < firstOrder → (F.coeff i).coeff l = 0)
     (hG : ∀ i l : ℕ, 7014 * i + 48758 * l < secondOrder → (G.coeff i).coeff l = 0)
     (i j : Fin (m + n)) :
-    (Polynomial.X : k[X]) ^ power (weight (firstOrder + secondOrder) i - columnWeight j) ∣
+    (Polynomial.X : (Polynomial k)) ^ power (weight (firstOrder + secondOrder) i - columnWeight j) ∣
       sylvester F G m n i j := by
   induction j using Fin.addCases with
   | left j =>
@@ -221,16 +221,16 @@ private theorem sylvester_entry {k : Type*} [CommRing k]
     · exact coefficient_bound F firstOrder secondOrder i j h.1 hF
     · exact dvd_zero _
 private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
-    (M : Matrix (Fin N) (Fin N) k[X]) (row col : Fin N → ℕ)
-    (hM : ∀ i j, (Polynomial.X : k[X]) ^ power (row i - col j) ∣ M i j)
+    (M : Matrix (Fin N) (Fin N) (Polynomial k)) (row col : Fin N → ℕ)
+    (hM : ∀ i j, (Polynomial.X : (Polynomial k)) ^ power (row i - col j) ∣ M i j)
     (hbudget : (∑ j, col j) + 48758 * D ≤ (∑ i, row i) + 48757) :
-    (Polynomial.X : k[X]) ^ D ∣ M.det := by
+    (Polynomial.X : (Polynomial k)) ^ D ∣ M.det := by
   classical
   rw [Matrix.det_apply']
   apply Finset.dvd_sum
   intro σ _
   let a : Fin N → ℕ := fun j => power (row (σ j) - col j)
-  have hprod : (Polynomial.X : k[X]) ^ (∑ j, a j) ∣ ∏ j, M (σ j) j := by
+  have hprod : (Polynomial.X : (Polynomial k)) ^ (∑ j, a j) ∣ ∏ j, M (σ j) j := by
     rw [← Finset.prod_pow_eq_pow_sum]
     exact Finset.prod_dvd_prod_of_dvd _ _ (fun j _ => hM (σ j) j)
   have hsum : (∑ i, row i) ≤ (∑ j, col j) + 48758 * (∑ j, a j) := by
@@ -285,14 +285,14 @@ private theorem benchmark_budget :
   simp only [columnWeight, Fin.addCases_left, Fin.addCases_right, hF, hG]
   decide
 private theorem resultant_bound
-    (F G : GenericX[X][X]) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
+    (F G : (Polynomial (Polynomial GenericX))) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
     (hFO : ∀ i l : ℕ, 7014 * i + 48758 * l < firstOrder →
       ((F.taylor (C z)).coeff i).coeff l = 0)
     (hGO : ∀ i l : ℕ, 7014 * i + 48758 * l < secondOrder →
       ((G.taylor (C z)).coeff i).coeff l = 0)
     (hbudget : (∑ j : Fin (m + n), columnWeight (m := m) (n := n) j) + 48758 * D ≤
       (∑ i : Fin (m + n), weight (firstOrder + secondOrder) i) + 48757) :
-    (Polynomial.X : GenericX[X]) ^ D ∣ resultant F G m n := by
+    (Polynomial.X : (Polynomial GenericX)) ^ D ∣ resultant F G m n := by
   rw [← resultant_taylor_formal F G (C z) hF hG]
   unfold resultant
   exact det_bound
@@ -300,13 +300,13 @@ private theorem resultant_bound
     (fun i => weight (firstOrder + secondOrder) i)
     (columnWeight (m := m) (n := n))
     (sylvester_entry _ _ m n hFO hGO) hbudget
-theorem line_resultant_order (F G : GenericX[X][X]) (z : GenericX)
+theorem line_resultant_order (F G : (Polynomial (Polynomial GenericX))) (z : GenericX)
     (hF : F.natDegree ≤ 70000) (hG : G.natDegree ≤ 70000)
     (hFO : ∀ i j, 7014 * i + 48758 * j < firstOrder →
       ((F.taylor (Polynomial.C z)).coeff i).coeff j = 0)
     (hGO : ∀ i j, 7014 * i + 48758 * j < secondOrder →
       ((G.taylor (Polynomial.C z)).coeff i).coeff j = 0) :
-    (Polynomial.X : GenericX[X]) ^ 43848 ∣ Polynomial.resultant F G 70000 70000 := by
+    (Polynomial.X : (Polynomial GenericX)) ^ 43848 ∣ Polynomial.resultant F G 70000 70000 := by
   exact resultant_bound F G z (m := 70000) (n := 70000) (D := 43848)
     hF hG hFO hGO benchmark_budget
 end Low6960Fat
@@ -318,7 +318,7 @@ open K1_13 Polynomial
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped BigOperators
 set_option maxRecDepth 4000
-private def ray (v : Fin 3 → GenericX) : Lower →+* GenericX[X] :=
+private def ray (v : Fin 3 → GenericX) : Lower →+* (Polynomial GenericX) :=
   MvPolynomial.eval₂Hom C (fun i => C (v i) * Polynomial.X)
 private theorem ray_monomial (v : Fin 3 → GenericX) (a : Fin 3 →₀ ℕ) (c : GenericX) :
     ray v (MvPolynomial.monomial a c) =
@@ -398,7 +398,7 @@ private theorem line_resultant (F G : GenericRow) (y v : Fin 3 → GenericX) :
   unfold seedResultant
   rw [resultant_map_map, RingHom.comp_apply]
 theorem mixedOrder_pad {F : GenericRow} {z : GenericX} {y : Fin 3 → GenericX}
-    {d : ℕ} (a : Geom[X]) (h : MixedOrder F z y d) :
+    {d : ℕ} (a : (Polynomial Geom)) (h : MixedOrder F z y d) :
     MixedOrder (pad F a) z y d := by
   classical
   intro m hm

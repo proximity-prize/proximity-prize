@@ -14,31 +14,31 @@ open scoped Polynomial BigOperators
 variable {k : Type} [Field k] [DecidableEq k]
 
 /-- The distinct normalized branch factors of the actual discriminant. -/
-def branchFactors (δ : k[X][X]) : Finset (k[X][X]) := (normalizedFactors δ).toFinset
+def branchFactors (δ : (Polynomial (Polynomial k))) : Finset ((Polynomial (Polynomial k))) := (normalizedFactors δ).toFinset
 
-def branchWeight (δ : k[X][X]) (i : branchFactors δ) : ℕ := (normalizedFactors δ).count (i:k[X][X])
+def branchWeight (δ : (Polynomial (Polynomial k))) (i : branchFactors δ) : ℕ := (normalizedFactors δ).count (i:(Polynomial (Polynomial k)))
 
-def branchProduct (δ : k[X][X]) : k[X][X] := ∏ i : branchFactors δ,(i:k[X][X])
+def branchProduct (δ : (Polynomial (Polynomial k))) : (Polynomial (Polynomial k)) := ∏ i : branchFactors δ,(i:(Polynomial (Polynomial k)))
 
-theorem branch_weight_pos (δ : k[X][X]) (i : branchFactors δ) : 0<branchWeight δ i :=
+theorem branch_weight_pos (δ : (Polynomial (Polynomial k))) (i : branchFactors δ) : 0<branchWeight δ i :=
   Multiset.count_pos.mpr (Multiset.mem_toFinset.mp i.property)
 
-theorem branchFactor_prime (δ : k[X][X]) (i : branchFactors δ) : Prime (i:k[X][X]) :=
+theorem branchFactor_prime (δ : (Polynomial (Polynomial k))) (i : branchFactors δ) : Prime (i:(Polynomial (Polynomial k))) :=
   prime_of_normalized_factor _ (Multiset.mem_toFinset.mp i.property)
 
-theorem branch_weighted_product (δ : k[X][X]) (nz : δ≠0) :
-    Associated (∏ i : branchFactors δ,(i:k[X][X])^branchWeight δ i) δ := by
+theorem branch_weighted_product (δ : (Polynomial (Polynomial k))) (nz : δ≠0) :
+    Associated (∏ i : branchFactors δ,(i:(Polynomial (Polynomial k)))^branchWeight δ i) δ := by
   unfold branchWeight
-  rw [Finset.prod_coe_sort (branchFactors δ) (fun p : k[X][X]=>p^(normalizedFactors δ).count p)]
+  rw [Finset.prod_coe_sort (branchFactors δ) (fun p : (Polynomial (Polynomial k))=>p^(normalizedFactors δ).count p)]
   change Associated (∏ p∈(normalizedFactors δ).toFinset,p^(normalizedFactors δ).count p) δ
   rw [←Finset.prod_multiset_count]
   exact prod_normalizedFactors nz
 
 /-- Both weighted sums used by the collision bound are exactly the
 corresponding affine degrees of the original discriminant generator. -/
-theorem branch_weighted_degrees (δ : k[X][X]) (nz : δ≠0) :
-    (∑ i : branchFactors δ,branchWeight δ i*(i:k[X][X]).natDegree)=δ.natDegree ∧
-    (∑ i : branchFactors δ,branchWeight δ i*CurvatureSquares.height (i:k[X][X]))=
+theorem branch_weighted_degrees (δ : (Polynomial (Polynomial k))) (nz : δ≠0) :
+    (∑ i : branchFactors δ,branchWeight δ i*(i:(Polynomial (Polynomial k))).natDegree)=δ.natDegree ∧
+    (∑ i : branchFactors δ,branchWeight δ i*CurvatureSquares.height (i:(Polynomial (Polynomial k))))=
       CurvatureSquares.height δ := by
   have factor := branch_weighted_product δ nz
   constructor
@@ -46,11 +46,11 @@ theorem branch_weighted_degrees (δ : k[X][X]) (nz : δ≠0) :
     rw [natDegree_prod _ _ (fun i _=>pow_ne_zero _ (branchFactor_prime δ i).ne_zero)] at eq
     simpa only [natDegree_pow] using eq
   · have eq := factor.map Bivariate.swap.toRingHom
-    have swap : Bivariate.swap (∏ i : branchFactors δ,(i:k[X][X])^branchWeight δ i)=
-        ∏ i : branchFactors δ,(Bivariate.swap (i:k[X][X]))^branchWeight δ i := by
+    have swap : Bivariate.swap (∏ i : branchFactors δ,(i:(Polynomial (Polynomial k)))^branchWeight δ i)=
+        ∏ i : branchFactors δ,(Bivariate.swap (i:(Polynomial (Polynomial k))))^branchWeight δ i := by
       rw [map_prod]
       simp only [map_pow]
-    change Associated (Bivariate.swap (∏ i : branchFactors δ,(i:k[X][X])^branchWeight δ i))
+    change Associated (Bivariate.swap (∏ i : branchFactors δ,(i:(Polynomial (Polynomial k)))^branchWeight δ i))
       (Bivariate.swap δ) at eq
     rw [swap] at eq
     have deg := natDegree_eq_of_degree_eq (degree_eq_degree_of_associated eq)
@@ -62,15 +62,15 @@ theorem branch_weighted_degrees (δ : k[X][X]) (nz : δ≠0) :
 discriminant. It suffices to bound its ordinary bidegrees and supply the
 support and separability receipts for its reduced branch product. -/
 theorem branch_index_of_discriminant [IsAlgClosed k]
-    (δ : k[X][X]) (nz : δ≠0)
-    (sep : ((branchProduct δ).map (algebraMap k[X] (FractionRing k[X]))).Separable)
+    (δ : (Polynomial (Polynomial k))) (nz : δ≠0)
+    (sep : ((branchProduct δ).map (algebraMap (Polynomial k) (FractionRing (Polynomial k)))).Separable)
     (T : Finset k) (good : ∀ z∈T,(branchProduct δ).map (evalRingHom z)≠0)
-    (idx : k→k[X]) (supported : ∀ z∈T,∀ x∈(idx z).roots,
+    (idx : k→(Polynomial k)) (supported : ∀ z∈T,∀ x∈(idx z).roots,
       2≤((branchProduct δ).map (evalRingHom z)).rootMultiplicity x)
     (disc : ∀ z∈T,idx z^2∣δ.map (evalRingHom z))
     {s t : ℕ} (xcap : δ.natDegree≤2*s) (zcap : CurvatureSquares.height δ≤2*t) :
     (∑ z∈T,(idx z).natDegree)≤8*s*t := by
-  let f : branchFactors δ→k[X][X] := Subtype.val
+  let f : branchFactors δ→(Polynomial (Polynomial k)) := Subtype.val
   have weights := branch_weighted_degrees δ nz
   refine BranchIndex.index_degree f (branchWeight δ) (branch_weight_pos δ) (branchProduct δ) rfl
     sep T good idx supported ?_ (weights.1 ▸ xcap) (weights.2 ▸ zcap)

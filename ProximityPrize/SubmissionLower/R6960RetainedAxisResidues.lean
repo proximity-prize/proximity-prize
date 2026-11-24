@@ -11,7 +11,7 @@ open ChartSections (Chart)
 open MonicChart (ChartField)
 open MonicFourChartDescent MonicChartProbes ChartOverlapTests MonicChartLaurent
 open Polynomial
-open private Lower6960.RetainedRestrictionTorus.linear from ProximityPrize.SubmissionLower.R6960RetainedRestrictionTorus
+open Lower6960.RetainedRestrictionTorus (linear)
 open scoped Polynomial
 
 def coordinate (zAxis : Bool) : ChartField := if zAxis then scalarCoordinate else RatFunc.X

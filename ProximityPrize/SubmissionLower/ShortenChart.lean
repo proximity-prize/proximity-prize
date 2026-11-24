@@ -8,9 +8,8 @@ noncomputable section
 open CJ0 CJ0_3 PolynomialDifferential MvPolynomial
 open StructuralList (ShortBand InBand exponent totalCap indexCap topCap)
 open scoped Polynomial BigOperators
-open private lifted_total lifted_top lifted_weight indexWeight_eq coeffWeight_eq totalWeight_eq
-  degreeOf_top_of_index readJet_eq from ProximityPrize.SubmissionLower.ListProofA
-open private commonTaylor_top from ProximityPrize.SubmissionLower.ListProofA
+open CJ0_3 (lifted_total lifted_top lifted_weight indexWeight_eq coeffWeight_eq totalWeight_eq degreeOf_top_of_index readJet_eq)
+open CJ0_3_2 (commonTaylor_top)
 
 private theorem exponent_sufficient (length : ℕ) :
     TaylorExponentSufficient 2 length (exponent length) := by
@@ -29,19 +28,19 @@ private theorem top_monotone : Monotone (Pi.single (Fin.last 2) (1 : ℕ)) := by
     rw [hw]
     exact Nat.zero_le _
 
-private theorem lift_total {s : Source} {G : Equation} (hG : OrderTwo s G) (g L : K[X]) :
+private theorem lift_total {s : Source} {G : Equation} (hG : OrderTwo s G) (g L : (Polynomial K)) :
     jetTotalDegree (lifted (transform g L G)) ≤ s.B := by
   rw [lifted_total]
   have h := transform_weight g L G 1 (fun _ _ _ => le_rfl)
   rw [totalWeight_eq] at h
   exact h.trans hG.2.1
 
-private theorem lift_index {s : Source} {G : Equation} (hG : OrderTwo s G) (g L : K[X]) :
+private theorem lift_index {s : Source} {G : Equation} (hG : OrderTwo s G) (g L : (Polynomial K)) :
     (lifted (transform g L G)).weightedTotalDegree (Astra7.jetWeight 0 1 3) ≤ s.J := by
   rw [lifted_weight, indexWeight_eq]
   exact (transform_weight g L G Fin.val (fun _ _ h => h)).trans hG.2.2.1
 
-private theorem lift_top {s : Source} {G : Equation} (hG : OrderTwo s G) (g L : K[X]) :
+private theorem lift_top {s : Source} {G : Equation} (hG : OrderTwo s G) (g L : (Polynomial K)) :
     (lifted (transform g L G)).degreeOf (some (Fin.last 2)) ≤ s.C := by
   change jetDegree (lifted (transform g L G)) (Fin.last 2) ≤ s.C
   rw [lifted_top]
@@ -53,24 +52,24 @@ private theorem lift_top {s : Source} {G : Equation} (hG : OrderTwo s G) (g L : 
   rw [he, weightedTotalDegree_piSingle, weightedTotalDegree_piSingle] at hw
   exact hw.trans hG.2.2.2
 
-private def basisPolynomial (L : K[X]) (j : ℕ) : Geo[X] :=
+private def basisPolynomial (L : (Polynomial K)) (j : ℕ) : (Polynomial Geo) :=
   L.map embed * (Polynomial.X - Polynomial.C center) ^ j
 
 private def rawDenominator (length : ℕ) (G : Equation) : InitialRing 2 :=
   initialSep G ^ exponent length
 
-private def rawNumerator (length : ℕ) (g L : K[X]) (G : Equation)
+private def rawNumerator (length : ℕ) (g L : (Polynomial K)) (G : Equation)
     (i : Fin k) : InitialRing 2 :=
   C ((g.map embed).coeff i.val) * rawDenominator length G +
     ∑ l : Fin length, C ((basisPolynomial L l.val).coeff i.val) *
       commonTaylorNumerator center (lifted G) (exponent length) l.val
 
-def chart (length : ℕ) (g L : K[X]) (G : Equation) (E : InitialRing 2) : Chart 2 :=
+def chart (length : ℕ) (g L : (Polynomial K)) (G : Equation) (E : InitialRing 2) : Chart 2 :=
   ⟨E, inverseMap (nativeJet g) (nativeJet L) (rawDenominator length (transform g L G)),
     fun i => inverseMap (nativeJet g) (nativeJet L) (rawNumerator length g L (transform g L G) i)⟩
 
 private theorem rawDenominator_band (s : Source) (length : ℕ) (hK : 3 ≤ length)
-    (g L : K[X]) (G : Equation) (hG : OrderTwo s G) :
+    (g L : (Polynomial K)) (G : Equation) (hG : OrderTwo s G) :
     InBand s length (rawDenominator length (transform g L G)) := by
   let Q := lifted (transform g L G)
   have hb : (initialJetSeparant center Q).totalDegree ≤ s.B - 1 :=
@@ -90,7 +89,7 @@ private theorem rawDenominator_band (s : Source) (length : ℕ) (hK : 3 ≤ leng
   exact ((degreeOf_pow_le _ _ _).trans (Nat.mul_le_mul_left _ ht)).trans (by omega)
 
 private theorem rawCentered_band (s : Source) (hs : ShapeOK s) (length : ℕ) (hK : 3 ≤ length)
-    (g L : K[X]) (G : Equation) (hG : OrderTwo s G) (l : Fin length) :
+    (g L : (Polynomial K)) (G : Equation) (hG : OrderTwo s G) (l : Fin length) :
     InBand s length (commonTaylorNumerator center (lifted (transform g L G)) (exponent length) l.val) := by
   let Q := lifted (transform g L G)
   have hlK := l.isLt
@@ -113,7 +112,7 @@ private theorem rawCentered_band (s : Source) (hs : ShapeOK s) (length : ℕ) (h
     exact Nat.add_le_add_left hl _
 
 private theorem rawNumerator_band (s : Source) (hs : ShapeOK s) (length : ℕ) (hK : 3 ≤ length)
-    (g L : K[X]) (G : Equation) (hG : OrderTwo s G) (i : Fin k) :
+    (g L : (Polynomial K)) (G : Equation) (hG : OrderTwo s G) (i : Fin k) :
     InBand s length (rawNumerator length g L (transform g L G) i) := by
   let V := CJ0_4.bandSpace (totalCap s length) (indexCap s length) (topCap s length)
   have hmem {P : InitialRing 2} (hp : InBand s length P) : P ∈ V := CJ0_4.mem_bandSpace.mpr hp
@@ -125,7 +124,7 @@ private theorem rawNumerator_band (s : Source) (hs : ShapeOK s) (length : ℕ) (
   exact V.add_mem (hc _ (rawDenominator_band s length hK g L G hG))
     (V.sum_mem fun l _ => hc _ (rawCentered_band s hs length hK g L G hG l))
 
-private theorem inverse_band (s : Source) (length : ℕ) (g L : K[X]) {P : InitialRing 2}
+private theorem inverse_band (s : Source) (length : ℕ) (g L : (Polynomial K)) {P : InitialRing 2}
     (hp : InBand s length P) : InBand s length (inverseMap (nativeJet g) (nativeJet L) P) := by
   have hb := inverse_weight (1 : Fin 3 → ℕ) (fun _ _ _ => le_rfl) (nativeJet g) (nativeJet L) P
   have hi := inverse_weight Fin.val (fun _ _ h => h) (nativeJet g) (nativeJet L) P
@@ -135,12 +134,12 @@ private theorem inverse_band (s : Source) (length : ℕ) (g L : K[X]) {P : Initi
   exact ⟨hb.trans hp.1, hi.trans hp.2.1, ht.trans hp.2.2⟩
 
 theorem chart_band (s : Source) (hs : ShapeOK s) (length : ℕ) (hK : 3 ≤ length)
-    (g L : K[X]) (G : Equation) (hG : OrderTwo s G) (E : InitialRing 2) :
+    (g L : (Polynomial K)) (G : Equation) (hG : OrderTwo s G) (E : InitialRing 2) :
     ShortBand s length (chart length g L G E) :=
   ⟨inverse_band s length g L (rawDenominator_band s length hK g L G hG),
     fun i => inverse_band s length g L (rawNumerator_band s hs length hK g L G hG i)⟩
 
-private theorem denominator_eval (length : ℕ) (g L : K[X]) (G : Equation) (E : InitialRing 2)
+private theorem denominator_eval (length : ℕ) (g L : (Polynomial K)) (G : Equation) (E : InitialRing 2)
     (u : Fin 3 → Geo) (hL : L ≠ 0) :
     MvPolynomial.eval u (chart length g L G E).denominator =
       (nativeJet L 0 * MvPolynomial.eval u (initialSep G)) ^ exponent length := by
@@ -149,7 +148,7 @@ private theorem denominator_eval (length : ℕ) (g L : K[X]) (G : Equation) (E :
   rw [eval_inverse, rawDenominator, map_pow, transform_initialSep, map_mul, MvPolynomial.eval_C,
     eval_affine, triangular_inverse _ _ _ (nativeJet_zero_ne hL)]
 
-private theorem denominator_regular (length : ℕ) (g L : K[X]) (G : Equation) (E : InitialRing 2)
+private theorem denominator_regular (length : ℕ) (g L : (Polynomial K)) (G : Equation) (E : InitialRing 2)
     (hL : L ≠ 0) (hE : Irreducible E) (hreg : ¬ E ∣ initialSep G) :
     ¬ E ∣ (chart length g L G E).denominator := by
   have he : (chart length g L G E).denominator =
@@ -164,7 +163,7 @@ private theorem denominator_regular (length : ℕ) (g L : K[X]) (G : Equation) (
   have hh := (hE.prime.dvd_or_dvd h).resolve_left (fun hd => hE.not_isUnit (isUnit_of_dvd_unit hd hu))
   exact hreg (hE.prime.dvd_of_dvd_pow hh)
 
-private theorem reconstruct_basis (length : ℕ) (L : K[X]) (G : Equation) (u : Fin 3 → Geo) :
+private theorem reconstruct_basis (length : ℕ) (L : (Polynomial K)) (G : Equation) (u : Fin 3 → Geo) :
     L.map embed * rationalTaylorPolynomial center (lifted G) length u =
       ∑ l : Fin length, Polynomial.C (rationalTaylorCoefficient center (lifted G) u l.val) *
         basisPolynomial L l.val := by
@@ -175,7 +174,7 @@ private theorem reconstruct_basis (length : ℕ) (L : K[X]) (G : Equation) (u : 
   unfold basisPolynomial
   ring
 
-private theorem raw_output (length : ℕ) (g L : K[X]) (G : Equation)
+private theorem raw_output (length : ℕ) (g L : (Polynomial K)) (G : Equation)
     (u : Fin 3 → Geo) (hsep : MvPolynomial.eval u (initialSep G) ≠ 0) (i : Fin k) :
     MvPolynomial.eval u (rawNumerator length g L G i) / MvPolynomial.eval u (rawDenominator length G) =
       (g.map embed + L.map embed * rationalTaylorPolynomial center (lifted G) length u).coeff i.val := by
@@ -192,7 +191,7 @@ private theorem raw_output (length : ℕ) (g L : K[X]) (G : Equation)
     MvPolynomial.eval u (initialSep G) ^ exponent length = _
   field_simp
 
-private theorem chart_output (length : ℕ) (hK : 3 ≤ length) (g L : K[X]) (G : Equation)
+private theorem chart_output (length : ℕ) (hK : 3 ≤ length) (g L : (Polynomial K)) (G : Equation)
     (E : InitialRing 2) (u : Fin 3 → Geo) (hu : MvPolynomial.eval u (chart length g L G E).denominator ≠ 0)
     (i : Fin k) :
     (chart length g L G E).output u i =
@@ -210,7 +209,7 @@ private theorem chart_output (length : ℕ) (hK : 3 ≤ length) (g L : K[X]) (G 
   rw [Chart.output, chart, eval_inverse, eval_inverse]
   exact raw_output length g L (transform g L G) v hv i
 
-private theorem geoJet_affine (g L h : Geo[X]) :
+private theorem geoJet_affine (g L h : (Polynomial Geo)) :
     polynomialJet (d := 2) center (g + L * h) =
       triangular (polynomialJet center g) (polynomialJet center L) (polynomialJet center h) := by
   funext i
@@ -220,13 +219,13 @@ private theorem geoJet_affine (g L h : Geo[X]) :
   rw [derivatives_affine]
   exact map_triangular (Polynomial.evalRingHom center) _ _ _ i
 
-private theorem natDegree_lt {F : Type*} [Field F] {P : F[X]} {b : ℕ} (hb : 0 < b)
+private theorem natDegree_lt {F : Type*} [Field F] {P : (Polynomial F)} {b : ℕ} (hb : 0 < b)
     (hp : P.degree < b) : P.natDegree < b := by
   by_cases hz : P = 0
   · simpa [hz] using hb
   · exact (Polynomial.natDegree_lt_iff_degree_lt hz).mpr hp
 
-private theorem reconstruction_degree (length : ℕ) (hK : 3 ≤ length) (g L : K[X])
+private theorem reconstruction_degree (length : ℕ) (hK : 3 ≤ length) (g L : (Polynomial K))
     (hg : g.degree < k) (hsum : L.natDegree + length ≤ k) (G : Equation) (u : Fin 3 → Geo) :
     (g.map embed + L.map embed * rationalTaylorPolynomial center (lifted G) length u).degree < k := by
   let U := rationalTaylorPolynomial center (lifted G) length u
@@ -240,7 +239,7 @@ private theorem reconstruction_degree (length : ℕ) (hK : 3 ≤ length) (g L : 
     (Polynomial.natDegree_add_le _ _).trans_lt (max_lt hg' hm)
   exact Polynomial.degree_le_natDegree.trans_lt (by exact_mod_cast hh)
 
-theorem chart_ok (length : ℕ) (hK : 3 ≤ length) (g L : K[X]) (hL : L ≠ 0)
+theorem chart_ok (length : ℕ) (hK : 3 ≤ length) (g L : (Polynomial K)) (hL : L ≠ 0)
     (hg : g.degree < k) (hsum : L.natDegree + length ≤ k) (G : Equation)
     (E : InitialRing 2) (hE : Irreducible E) (hreg : ¬ E ∣ initialSep G) :
     ChartOK (chart length g L G E) := by
@@ -262,8 +261,8 @@ theorem chart_ok (length : ℕ) (hK : 3 ≤ length) (g L : K[X]) (hL : L ≠ 0)
   exact congrFun (triangular_inverse (nativeJet g) (nativeJet L) u (nativeJet_zero_ne hL)) j
 
 private theorem chart_contains (length : ℕ) (hK : 3 ≤ length) (hk : length ≤ k)
-    (g L : K[X]) (hL : L ≠ 0) (G : Equation) (E : InitialRing 2)
-    {f h : K[X]} (hh : h.degree < length) (hf : f = g + L * h)
+    (g L : (Polynomial K)) (hL : L ≠ 0) (G : Equation) (E : InitialRing 2)
+    {f h : (Polynomial K)} (hh : h.degree < length) (hf : f = g + L * h)
     (hsol : differentialSpecialization G f = 0) (hE : MvPolynomial.eval (nativeJet f) E = 0)
     (hsep : MvPolynomial.eval (nativeJet f) (initialSep G) ≠ 0) :
     coeffPoint f ∈ (chart length g L G E).imageSet := by
@@ -298,7 +297,7 @@ theorem shortenChart (s : Source) (hs : ShapeOK s) (G : Equation) (hG : OrderTwo
     (E : InitialRing 2) (hE : Irreducible E) (_hEdvd : E ∣ initial G)
     (hreg : ¬ E ∣ initialSep G) (S : Finset Node) (hS : S.card + 3 ≤ k) (w : Node → K) :
     ∃ T : Chart 2, ChartOK T ∧ T.equation = E ∧ ShortBand s (k - S.card) T ∧
-      ∀ f : K[X], f.degree < k → differentialSpecialization G f = 0 →
+      ∀ f : (Polynomial K), f.degree < k → differentialSpecialization G f = 0 →
         MvPolynomial.eval (nativeJet f) E = 0 → MvPolynomial.eval (nativeJet f) (initialSep G) ≠ 0 →
         (∀ i ∈ S, f.eval (node i) = w i) → coeffPoint f ∈ T.imageSet := by
   classical

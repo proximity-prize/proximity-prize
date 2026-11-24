@@ -10,8 +10,8 @@ noncomputable section
 open K1 K1_13 K1_13_1_1 Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative
 open Final50AnchorSpace (gradeLimit gradeLimit_antitone cap_of_grade cap_active AnchorEligible anchorLocal anchorSpace)
 open scoped BigOperators
-open private atJet_unflatten from ProximityPrize.SubmissionLower.Fast040
-open private exponent_le_of_mem_translation_monomial from ProximityPrize.SubmissionLower.Fast064
+open K1_13_1 (atJet_unflatten)
+open K1_13_1_1 (exponent_le_of_mem_translation_monomial)
 
 def WideEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
   u.some.degree ≤ 132 ∧ u.some.weight (fun i => i.val) ≤ 55 ∧ u (some 3) ≤ 14 ∧

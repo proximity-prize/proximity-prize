@@ -7,7 +7,7 @@ namespace StructuralList
 
 open CJ0 CJ0_4 MvPolynomial
 open scoped BigOperators
-open private chart_degree surfaceBound from ProximityPrize.SubmissionLower.ListProofA
+open CJ0_4 (chart_degree surfaceBound)
 
 noncomputable section
 

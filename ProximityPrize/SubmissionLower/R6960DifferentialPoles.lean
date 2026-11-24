@@ -9,8 +9,8 @@ namespace Lower6960.DifferentialPoles
 open Polynomial Algebra Module
 open scoped Polynomial Differential
 
-private theorem resultant_norm {F E : Type*} [Field F] [Field E] [Algebra F E]
-    [FiniteDimensional F E] [Algebra.IsSeparable F E] (b : PowerBasis F E) (g : F[X])
+theorem resultant_norm {F E : Type*} [Field F] [Field E] [Algebra F E]
+    [FiniteDimensional F E] [Algebra.IsSeparable F E] (b : PowerBasis F E) (g : (Polynomial F))
     (n : ℕ) (bound : g.natDegree≤n) :
     (minpoly F b.gen).resultant g (minpoly F b.gen).natDegree n=Algebra.norm F (aeval b.gen g) := by
   classical
@@ -44,7 +44,7 @@ variable {A F E : Type*} [CommRing A] [IsDomain A] [IsIntegrallyClosed A]
     [Differential A] [Differential E] [DifferentialAlgebra A E]
 
 omit [IsDomain A] [IsIntegrallyClosed A] [Differential A] [Differential E] [DifferentialAlgebra A E] in
-private theorem eval_integral {u : E} (hu : IsIntegral A u) (q : A[X]) :
+private theorem eval_integral {u : E} (hu : IsIntegral A u) (q : (Polynomial A)) :
     IsIntegral A (aeval u q) := by
   apply adjoin_le_integralClosure hu
   rw [adjoin_singleton_eq_range_aeval]
@@ -53,7 +53,7 @@ private theorem eval_integral {u : E} (hu : IsIntegral A u) (q : A[X]) :
 omit [IsDomain A] [IsIntegrallyClosed A] in
 /-- The derivative of the root is cleared by the native resultant.
 The cofactors are obtained from the Sylvester identity over the base. -/
-theorem root_derivative {y : E} (integral : IsIntegral A y) (f : A[X])
+theorem root_derivative {y : E} (integral : IsIntegral A y) (f : (Polynomial A))
     (positive : 0<f.natDegree) (root : aeval y f=0) :
     IsIntegral A (algebraMap A E (f.resultant f.derivative f.natDegree (f.natDegree-1))*y′) := by
   let Δ:=f.resultant f.derivative f.natDegree (f.natDegree-1)
@@ -73,7 +73,7 @@ omit [IsDomain A] in
 /-- One resultant and one power-basis discriminant clear the derivative of
 every element of the normalization. The powers do not depend on the element. -/
 theorem integral_derivative (b : PowerBasis F E) (integral : IsIntegral A b.gen)
-    (f : A[X]) (positive : 0<f.natDegree) (root : aeval b.gen f=0)
+    (f : (Polynomial A)) (positive : 0<f.natDegree) (root : aeval b.gen f=0)
     (d : A) (hd : algebraMap A F d=Algebra.discr F b.basis) (x : E) (hx : IsIntegral A x) :
     IsIntegral A (algebraMap A E (d*(f.resultant f.derivative f.natDegree (f.natDegree-1)))*x′) := by
   let r:=f.resultant f.derivative f.natDegree (f.natDegree-1)
@@ -130,21 +130,21 @@ end Local
 is integral at infinity vanishes, by the norm degree on the base line. -/
 theorem negative_twist {K E : Type*} [Field K] [DecidableEq (RatFunc K)] [Field E]
     [Algebra (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
-    [Algebra K[X] E] [IsScalarTower K[X] (RatFunc K) E]
+    [Algebra (Polynomial K) E] [IsScalarTower (Polynomial K) (RatFunc K) E]
     [Algebra (SheetNorm.Infinity K) E] [IsScalarTower (SheetNorm.Infinity K) (RatFunc K) E]
-    (x : E) (finite : IsIntegral K[X] x)
+    (x : E) (finite : IsIntegral (Polynomial K) x)
     (infty : IsIntegral (SheetNorm.Infinity K) (algebraMap (RatFunc K) E RatFunc.X*x)) : x=0 := by
   by_contra ne
   let y:=algebraMap (RatFunc K) E RatFunc.X*x
   have xn : algebraMap (RatFunc K) E (RatFunc.X : RatFunc K)≠0 :=
     (map_ne_zero_iff _ (algebraMap (RatFunc K) E).injective).mpr RatFunc.X_ne_zero
-  have ni : IsIntegral K[X] (algebraMap (RatFunc K) E RatFunc.X) := by
+  have ni : IsIntegral (Polynomial K) (algebraMap (RatFunc K) E RatFunc.X) := by
     rw [←RatFunc.algebraMap_X,←IsScalarTower.algebraMap_apply]; exact isIntegral_algebraMap
   obtain ⟨P,pn,norm,deg⟩ := SheetNorm.polynomial_norm y (mul_ne_zero xn ne) (ni.mul finite) 0 (by simpa [y] using infty)
   obtain ⟨Q,qeq⟩ := IsIntegrallyClosed.isIntegral_iff.mp (Algebra.isIntegral_norm (RatFunc K) finite)
-  have eq : P=(Polynomial.X : K[X])^Module.finrank (RatFunc K) E*Q := by
-    apply IsFractionRing.injective K[X] (RatFunc K)
-    change algebraMap K[X] (RatFunc K) P=algebraMap K[X] (RatFunc K) _
+  have eq : P=(Polynomial.X : (Polynomial K))^Module.finrank (RatFunc K) E*Q := by
+    apply IsFractionRing.injective (Polynomial K) (RatFunc K)
+    change algebraMap (Polynomial K) (RatFunc K) P=algebraMap (Polynomial K) (RatFunc K) _
     rw [norm]
     simp only [y,map_mul,map_pow,RatFunc.algebraMap_X,qeq,Algebra.norm_algebraMap]
   have qn : Q≠0 := fun z=>pn (by rw [eq,z,mul_zero])
@@ -161,12 +161,12 @@ too small to support a nonzero coefficient vanishing to Frobenius order at
 an unbranched infinity. This is a function-field statement on both charts. -/
 theorem pole_budget {K E : Type*} [Field K] [DecidableEq (RatFunc K)] [Field E]
     [Algebra (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
-    [Algebra K[X] E] [IsScalarTower K[X] (RatFunc K) E]
+    [Algebra (Polynomial K) E] [IsScalarTower (Polynomial K) (RatFunc K) E]
     [Algebra (SheetNorm.Infinity K) E] [IsScalarTower (SheetNorm.Infinity K) (RatFunc K) E]
-    (Δ : K[X]) (nz : Δ≠0) (p : ℕ) (fit : 2*Δ.natDegree<p) (v : E)
-    (finite : IsIntegral K[X] (algebraMap K[X] E (Δ^2)*v))
+    (Δ : (Polynomial K)) (nz : Δ≠0) (p : ℕ) (fit : 2*Δ.natDegree<p) (v : E)
+    (finite : IsIntegral (Polynomial K) (algebraMap (Polynomial K) E (Δ^2)*v))
     (atInf : IsIntegral (SheetNorm.Infinity K) ((algebraMap (RatFunc K) E RatFunc.X)^p*v)) : v=0 := by
-  let a:=algebraMap K[X] (RatFunc K)
+  let a:=algebraMap (Polynomial K) (RatFunc K)
   let ι:=algebraMap (RatFunc K) E
   let D:=a (Δ^2)
   let t:=RatFunc.X (K:=K)
@@ -185,18 +185,18 @@ theorem pole_budget {K E : Type*} [Field K] [DecidableEq (RatFunc K)] [Field E]
   have ci : IsIntegral (SheetNorm.Infinity K) (ι cval) := by
     change IsIntegral _ (algebraMap (RatFunc K) E (algebraMap (SheetNorm.Infinity K) (RatFunc K) c))
     rw [←IsScalarTower.algebraMap_apply]; exact isIntegral_algebraMap
-  have eq : ι cval*((ι t)^p*v) = ι t*(algebraMap K[X] E (Δ^2)*v) := by
+  have eq : ι cval*((ι t)^p*v) = ι t*(algebraMap (Polynomial K) E (Δ^2)*v) := by
     have cancel : ι cval*(ι t)^p=ι t*(ι D) := by
       change ι (D/t^k)*(ι t)^p=_
       rw [map_div₀,map_pow,show p=k+1 by dsimp [k]; omega,pow_succ]
       have tn : ι t≠0 := (map_ne_zero_iff _ ι.injective).mpr xn
       field_simp [tn]
     rw [←mul_assoc,cancel,mul_assoc]
-    rw [show ι D=algebraMap K[X] E (Δ^2) from (IsScalarTower.algebraMap_apply K[X] (RatFunc K) E _).symm]
+    rw [show ι D=algebraMap (Polynomial K) E (Δ^2) from (IsScalarTower.algebraMap_apply (Polynomial K) (RatFunc K) E _).symm]
   have zero := negative_twist _ finite (eq ▸ ci.mul atInf)
   exact (mul_eq_zero.mp zero).resolve_left ((map_ne_zero_iff _
-    ((IsScalarTower.algebraMap_eq K[X] (RatFunc K) E) ▸
-      ι.injective.comp (IsFractionRing.injective K[X] (RatFunc K)))).mpr (pow_ne_zero _ nz))
+    ((IsScalarTower.algebraMap_eq (Polynomial K) (RatFunc K) E) ▸
+      ι.injective.comp (IsFractionRing.injective (Polynomial K) (RatFunc K)))).mpr (pow_ne_zero _ nz))
 
 #print axioms pole_budget
 

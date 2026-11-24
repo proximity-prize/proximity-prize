@@ -15,12 +15,12 @@ variable {F : Type*} [Field F]
 abbrev SeedPoly (F : Type*) [CommRing F] := MvPolynomial (Fin 2) F
 abbrev FreshEquation (F : Type*) [CommRing F] := Polynomial (Polynomial (SeedPoly F))
 
-def pack {e v w : ℕ} (W : exps e v w → F[X]) : FreshEquation F :=
+def pack {e v w : ℕ} (W : exps e v w → (Polynomial F)) : FreshEquation F :=
   ∑ m : exps e v w,
     (W m).map (Polynomial.C.comp MvPolynomial.C) *
       Polynomial.C (Polynomial.monomial (m.val none) (MvPolynomial.monomial m.val.some 1))
 
-theorem pack_coeff {e v w : ℕ} (W : exps e v w → F[X]) (i j : ℕ) :
+theorem pack_coeff {e v w : ℕ} (W : exps e v w → (Polynomial F)) (i j : ℕ) :
     ((pack W).coeff i).coeff j =
       ∑ m : exps e v w, if m.val none = j then MvPolynomial.monomial m.val.some ((W m).coeff i) else 0 := by
   classical
@@ -33,7 +33,7 @@ theorem pack_coeff {e v w : ℕ} (W : exps e v w → F[X]) (i j : ℕ) :
   · simp [h, MvPolynomial.C_mul_monomial]
   · simp [h, Ne.symm h]
 
-theorem pack_recover {e v w : ℕ} (W : exps e v w → F[X]) (m : exps e v w) (i : ℕ) :
+theorem pack_recover {e v w : ℕ} (W : exps e v w → (Polynomial F)) (m : exps e v w) (i : ℕ) :
     (((pack W).coeff i).coeff (m.val none)).coeff m.val.some = (W m).coeff i := by
   classical
   rw [pack_coeff, MvPolynomial.coeff_sum]
@@ -54,7 +54,7 @@ theorem pack_recover {e v w : ℕ} (W : exps e v w → F[X]) (m : exps e v w) (i
   · intro h
     exact (h (Finset.mem_univ m)).elim
 
-theorem pack_ne_zero {e v w : ℕ} {W : exps e v w → F[X]} (hW : W ≠ 0) : pack W ≠ 0 := by
+theorem pack_ne_zero {e v w : ℕ} {W : exps e v w → (Polynomial F)} (hW : W ≠ 0) : pack W ≠ 0 := by
   intro h
   apply hW
   funext m
@@ -63,7 +63,7 @@ theorem pack_ne_zero {e v w : ℕ} {W : exps e v w → F[X]} (hW : W ≠ 0) : pa
   rw [← pack_recover W m, h]
   simp
 
-theorem pack_x_bound {e v w b : ℕ} (W : exps e v w → F[X])
+theorem pack_x_bound {e v w b : ℕ} (W : exps e v w → (Polynomial F))
     (hW : ∀ m, (W m).natDegree ≤ b) : (pack W).natDegree ≤ b := by
   unfold pack
   apply Polynomial.natDegree_sum_le_of_forall_le
@@ -72,7 +72,7 @@ theorem pack_x_bound {e v w b : ℕ} (W : exps e v w → F[X])
     rw [Polynomial.natDegree_C, add_zero]
     exact Polynomial.natDegree_map_le.trans (hW m))
 
-theorem pack_y_bound {e v w : ℕ} (W : exps e v w → F[X]) (i : ℕ) :
+theorem pack_y_bound {e v w : ℕ} (W : exps e v w → (Polynomial F)) (i : ℕ) :
     ((pack W).coeff i).natDegree ≤ e := by
   apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
   intro j hj
@@ -81,7 +81,7 @@ theorem pack_y_bound {e v w : ℕ} (W : exps e v w → F[X]) (i : ℕ) :
   intro m _
   simp [show m.val none ≠ j from ne_of_lt (m.property.1.trans_lt hj)]
 
-theorem pack_seed_bound {e v w : ℕ} (W : exps e v w → F[X]) (i j : ℕ) (a : Fin 2) :
+theorem pack_seed_bound {e v w : ℕ} (W : exps e v w → (Polynomial F)) (i j : ℕ) (a : Fin 2) :
     (((pack W).coeff i).coeff j).degreeOf a ≤ (![v,w] : Fin 2 → ℕ) a := by
   classical
   rw [pack_coeff]
@@ -96,8 +96,8 @@ theorem pack_seed_bound {e v w : ℕ} (W : exps e v w → F[X]) (i j : ℕ) (a :
     · exact m.property.2.2
   · simp
 
-theorem pack_substitute {A : Type*} [CommRing A] (ι : F →+* A) (z : Fin 2 → A) (S : A[X])
-    {e v w : ℕ} (W : exps e v w → F[X]) :
+theorem pack_substitute {A : Type*} [CommRing A] (ι : F →+* A) (z : Fin 2 → A) (S : (Polynomial A))
+    {e v w : ℕ} (W : exps e v w → (Polynomial F)) :
     StableNode.substitute S ((pack W).map (Polynomial.mapRingHom (MvPolynomial.eval₂Hom ι z))) =
       ∑ m : exps e v w, (W m).map ι *
         (S^m.val none * Polynomial.C (z 0^m.val (some 0) * z 1^m.val (some 1))) := by
@@ -108,7 +108,7 @@ theorem pack_substitute {A : Type*} [CommRing A] (ι : F →+* A) (z : Fin 2 →
   congr 1
   · rw [Polynomial.map_map]
     change ((W m).map _).eval₂
-      (Polynomial.eval₂RingHom Polynomial.C S) (Polynomial.X : A[X]) = _
+      (Polynomial.eval₂RingHom Polynomial.C S) (Polynomial.X : (Polynomial A)) = _
     rw [Polynomial.eval₂_map]
     rw [show ((Polynomial.eval₂RingHom Polynomial.C S).comp
       (((Polynomial.mapRingHom (MvPolynomial.eval₂Hom ι z))).comp
@@ -125,11 +125,11 @@ theorem pack_substitute {A : Type*} [CommRing A] (ι : F →+* A) (z : Fin 2 →
       Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fin.prod_univ_two, map_one, one_mul]
     exact mul_comm _ _
 
-theorem compressed_polynomial {α : Type*} [Finite α] (S : α → F[X]) (z : α → Fin 2 → F)
+theorem compressed_polynomial {α : Type*} [Finite α] (S : α → (Polynomial F)) (z : α → Fin 2 → F)
     {f : MvPolynomial Idx (Rational F)} (hf : f ≠ 0) {e v w b d p : ℕ}
     (hfit : f ∈ space (Rational F) e v w) (hS : ∀ g, (S g).natDegree ≤ d)
-    (hroot : ∀ g, MvPolynomial.eval (fun i : Idx => i.elim (algebraMap F[X] (Rational F) (S g))
-      (fun j => algebraMap F[X] (Rational F) (Polynomial.C (z g j)))) f = 0)
+    (hroot : ∀ g, MvPolynomial.eval (fun i : Idx => i.elim (algebraMap (Polynomial F) (Rational F) (S g))
+      (fun j => algebraMap (Polynomial F) (Rational F) (Polynomial.C (z g j)))) f = 0)
     (hguard : Fintype.card (exps e (v+b) (w+b))*(e*d) < ((b+1)*(b+1))*p)
     (hp : e*d < p) :
     ∃ G : FreshEquation F, G ≠ 0 ∧ G.natDegree + e*d < p ∧
@@ -139,7 +139,7 @@ theorem compressed_polynomial {α : Type*} [Finite α] (S : α → F[X]) (z : α
         (G.map (Polynomial.mapRingHom (MvPolynomial.eval (z g)))) = 0) := by
   classical
   obtain ⟨W, hW, hWzero⟩ := compress_box S z hf hfit hS hroot hguard
-  let U : exps e (v+b) (w+b) → F[X] := fun m => W m
+  let U : exps e (v+b) (w+b) → (Polynomial F) := fun m => W m
   have hU : U ≠ 0 := by
     intro h
     apply hW

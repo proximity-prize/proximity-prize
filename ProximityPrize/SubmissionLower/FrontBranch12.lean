@@ -44,7 +44,7 @@ structure TwoActive (u : Words) where
   degreeSum : a + b + c = 2 * k + 2
   nullitySum : nullity u + a + b = 2 * (t + 1)
   level : Strata.HasLevelHilbertFunction
-    (fun s j => algebraMap K[X] Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
+    (fun s j => algebraMap (Polynomial K) Frac (Principal.parameterSyndromes p node (u 0) (u 1) s j))
     k a b c
 def TwoActive.height {u : Words} (T : TwoActive u) := (k + 1) - T.c
 abbrev Relation {u : Words} (T : TwoActive u) :=
@@ -76,10 +76,10 @@ structure Reduction (u : Words) (T : TwoActive u) (R : Relation T) where
 structure RankThree (u : Words) (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) where
   rank_eq : columnRank D.U D.V = 3
-  α : Fin 2 → K[X]
-  β : Fin 2 → K[X]
-  a : K[X]
-  b : K[X]
+  α : Fin 2 → (Polynomial K)
+  β : Fin 2 → (Polynomial K)
+  a : (Polynomial K)
+  b : (Polynomial K)
   a_ne : a ≠ 0
   b_ne : b ≠ 0
   α_primitive : IsCoprime (α 0) (α 1)
@@ -120,7 +120,7 @@ open Polynomial Code LinearCode CoreDefinitions ToyProblem
 open FrobeniusLocator ProximityPrize.Benchmark
 open Sol1.OneCount Sol1.FiniteRowProjection
 open scoped NNReal
-open private dyadic_mul from ProximityPrize.SubmissionLower.PortFoundation
+open P0 (dyadic_mul)
 local notation "step!" left "," right "," mant "," shift "," power "," total =>
   dyadic_mul left right (z := mant) (w := shift) (e := power) (s := total) (by decide) (by decide) (by decide)
 end
@@ -132,18 +132,18 @@ noncomputable section
 open Polynomial
 open K1_13 (Geom embed extend)
 abbrev physicalDegree : ℕ := k - 1 + lowCutoff.toNat
-structure PoleData (Γ : Finset K) (s : K → K[X]) where
-  H : Geom[X]
+structure PoleData (Γ : Finset K) (s : K → (Polynomial K)) where
+  H : (Polynomial Geom)
   monic : H.Monic
   small : 1 ≤ H.natDegree ∧ H.natDegree ≤ lowCutoff.toNat
   nodes : ∀ i, H.eval (embed (node i)) ≠ 0
   degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ k - 1 + H.natDegree
   z : K → Geom
   injective : Function.Injective z
-  c : Geom[X]
-  q : Geom[X]
-  a₀ : Geom[X]
-  a₁ : Geom[X]
+  c : (Polynomial Geom)
+  q : (Polynomial Geom)
+  a₀ : (Polynomial Geom)
+  a₁ : (Polynomial Geom)
   c_unit : IsCoprime c H
   q_unit : IsCoprime q H
   a₀_unit : IsCoprime a₀ H
@@ -176,18 +176,18 @@ namespace P1_1
 noncomputable section
 open Polynomial Matrix FrobeniusLocator P1
 open ProximityPrize.Benchmark
-private theorem eval_atSlope (P : Bivar) (a γ : K) :
+theorem eval_atSlope (P : Bivar) (a γ : K) :
     (atSlope P γ).eval a = (P.eval (C a)).eval γ := by
   simpa only [atSlope, Polynomial.coe_evalRingHom, Polynomial.eval_C] using
     (Polynomial.eval_map_apply (Polynomial.evalRingHom γ) (C a) (p := P))
-private theorem atSlope_constant (G : K[X]) (γ : K) :
+private theorem atSlope_constant (G : (Polynomial K)) (γ : K) :
     atSlope (G.map C) γ = G := by
   rw [atSlope, Polynomial.map_map]
   have h : (Polynomial.evalRingHom γ).comp C = RingHom.id K := by
     ext a
     simp
   rw [h, Polynomial.map_id]
-private theorem commonGCD_of_roots (U V : K[X]) (hV : V ≠ 0) (S : Finset I)
+theorem commonGCD_of_roots (U V : (Polynomial K)) (hV : V ≠ 0) (S : Finset I)
     (hroots : ∀ i ∈ S, (GCDMonoid.gcd U V).eval (node i) = 0)
     (hcard : S.card = (GCDMonoid.gcd U V).natDegree) :
     IsCommonGCD (locator node S) U V := by
@@ -197,7 +197,7 @@ private theorem commonGCD_of_roots (U V : K[X]) (hV : V ≠ 0) (S : Finset I)
     (by rw [locator_natDegree, hcard])
   exact ⟨(locator_monic node S).ne_zero, hdiv.trans (gcd_dvd_left U V),
     hdiv.trans (gcd_dvd_right U V), fun H hHU hHV => (dvd_gcd hHU hHV).trans hassoc.dvd'⟩
-private theorem lift_dvd_atSlope {P : Bivar} {G : K[X]} (γ : K) (h : G.map C ∣ P) :
+theorem lift_dvd_atSlope {P : Bivar} {G : (Polynomial K)} (γ : K) (h : G.map C ∣ P) :
     G ∣ atSlope P γ := by
   have h' := map_dvd (Polynomial.mapRingHom (Polynomial.evalRingHom γ)) h
   change atSlope (G.map C) γ ∣ atSlope P γ at h'
@@ -215,14 +215,14 @@ open Polynomial FrobeniusLocator ProximityPrize.Benchmark
 open P0 (Words k amplitudeDegree)
 open K1_9 (K I node twist pencil fold pencil_degree
   seedCoeff crossValue CoefficientIdentities sixNorm_mul sixNorm_ne_zero)
-open private seedCoeff_degree from ProximityPrize.SubmissionLower.Fast068
-open private coefficientsAt pow_eq_twist threeUAt_native relationOnAt_native from ProximityPrize.SubmissionLower.PortFrontA
+open K1_9 (seedCoeff_degree)
+open P0_5 (coefficientsAt pow_eq_twist threeUAt_native relationOnAt_native)
 abbrev heightBound : ℕ := P1.heightCap
 structure PolarData (u : Words) where
-  a : K[X]
-  b : K[X]
-  A : Fin 2 → K[X]
-  Q : K → K → K[X]
+  a : (Polynomial K)
+  b : (Polynomial K)
+  A : Fin 2 → (Polynomial K)
+  Q : K → K → (Polynomial K)
   a_ne : a ≠ 0
   norms_ne : K1.sixNorm a ≠ K1.sixNorm b
   primitive : IsCoprime (A 0) (A 1)
@@ -234,7 +234,7 @@ structure PolarData (u : Words) where
       a.eval (node i) * twist ((pencil (A 0) (A 1) r).eval (node i)) * fold u s i -
       b.eval (node i) * (pencil (A 0) (A 1) s).eval (node i) * twist (fold u r i)
 private theorem polarData_of_set {u : Words} (S : Finset I) (height : ℕ)
-    (a b : K[X]) (A : Fin 2 → K[X]) (output : P0.Bivar)
+    (a b : (Polynomial K)) (A : Fin 2 → (Polynomial K)) (output : P0.Bivar)
     (hh : height + S.card ≤ heightBound)
     (hout : output.degree < (k + height : ℕ))
     (hfirst : a.natDegree + amplitudeDegree (A 0) (A 1) ≤ height)

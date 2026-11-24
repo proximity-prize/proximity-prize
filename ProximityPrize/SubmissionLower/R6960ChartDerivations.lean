@@ -86,18 +86,18 @@ section Coordinates
 open PlaneConstants (Plane)
 variable {k : Type} [Field k]
 
-private def dx : Derivation ℤ (Plane k) (Plane k) :=
-  (Polynomial.derivative' : Derivation k[X] (Plane k) (Plane k)).restrictScalars ℤ
+def dx : Derivation ℤ (Plane k) (Plane k) :=
+  (Polynomial.derivative' : Derivation (Polynomial k) (Plane k) (Plane k)).restrictScalars ℤ
 
-private def dz : Derivation ℤ (Plane k) (Plane k) :=
-  letI : Differential k[X] := ⟨(Polynomial.derivative' : Derivation k k[X] k[X]).restrictScalars ℤ⟩
+def dz : Derivation ℤ (Plane k) (Plane k) :=
+  letI : Differential (Polynomial k) := ⟨(Polynomial.derivative' : Derivation k (Polynomial k) (Polynomial k)).restrictScalars ℤ⟩
   Differential.mapCoeffs
 
-private theorem dz_apply (q : Plane k) : dz q=Bivariate.swap (Bivariate.swap q).derivative := by
+theorem dz_apply (q : Plane k) : dz q=Bivariate.swap (Bivariate.swap q).derivative := by
   ext i j
   change (q.coeff i).derivative.coeff j=_
   rw [CurvatureSquares.coeff_swap,coeff_derivative,coeff_derivative,
-    show ((j:k[X])+1)=C ((j:k)+1) by simp,coeff_mul_C,CurvatureSquares.coeff_swap]
+    show ((j:(Polynomial k))+1)=C ((j:k)+1) by simp,coeff_mul_C,CurvatureSquares.coeff_swap]
 
 /-- Both compatible partials exist on any terminal-degree root field, and
 their common constants admit p-th roots in that field. -/

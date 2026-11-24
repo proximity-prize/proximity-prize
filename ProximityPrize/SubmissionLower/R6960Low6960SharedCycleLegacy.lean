@@ -15,7 +15,7 @@ open K1_13_6_2_4 (Admissible Chamber Component DimLE DivisorBound OfDim LengthAt
 open scoped BigOperators
 open Low6960GeometryCut_2_3 (boxes graphLift last_caps boxes_admissible chart_index_eq
   graphLift_same_chart membership_same_chart graphLift_comap member_proper_on_graph ambient_budget)
-open private bound_marks from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
+open Low6960GeometryCut_2_3 (bound_marks)
 
 private theorem initial_bound
     (f Q : Row 4) (weight : Ideal GeoJets → ℕ) (hf : SmallFactor f) (hQ : ¬ f ∣ Q)

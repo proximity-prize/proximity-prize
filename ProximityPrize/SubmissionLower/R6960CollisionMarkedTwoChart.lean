@@ -14,22 +14,22 @@ open Polynomial
 open scoped Polynomial
 
 variable {k V Bf Bi : Type*} [Field k] [CommRing V] [CommRing Bf] [CommRing Bi]
-  [Algebra k[X] Bi]
+  [Algebra (Polynomial k) Bi]
 
 /-- A power of the boundary coordinate and a polynomial unit at the
 boundary are relatively prime. Two clearings of this form in the same
 original order recover the original section there. -/
-theorem boundary_clearings (φ : Bi→+*V) (a : k[X]→+*V)
-    (scalars : ∀ f,φ (algebraMap k[X] Bi f)=a f)
-    (w : V) (n : ℕ) (D : k[X]) (unit : D.eval 0≠0)
+theorem boundary_clearings (φ : Bi→+*V) (a : (Polynomial k)→+*V)
+    (scalars : ∀ f,φ (algebraMap (Polynomial k) Bi f)=a f)
+    (w : V) (n : ℕ) (D : (Polynomial k)) (unit : D.eval 0≠0)
     (p : ∃ u : Bi,φ u=a (Polynomial.X^n)*w)
     (d : ∃ u : Bi,φ u=a D*w) : ∃ u : Bi,φ u=w := by
-  have nx : ¬ (Polynomial.X:k[X])∣D := by
+  have nx : ¬ (Polynomial.X:(Polynomial k))∣D := by
     intro dv
     obtain ⟨g,hg⟩ := dv
     apply unit
     rw [hg,eval_mul,eval_X,zero_mul]
-  have cp : IsCoprime ((Polynomial.X:k[X])^n) D :=
+  have cp : IsCoprime ((Polynomial.X:(Polynomial k))^n) D :=
     (irreducible_X.coprime_iff_not_dvd.mpr nx).pow_left
   obtain ⟨x,y,xy⟩ := cp
   obtain ⟨u,hu⟩ := p
@@ -45,11 +45,11 @@ an arbitrary polynomial denominator. The second chart only needs the
 index to be a unit at its boundary point. -/
 theorem marked_multiple_two_charts (ι : k→+*V) (X : Vˣ)
     (φf : Bf→+*V) (φi : Bi→+*V)
-    (scalars : ∀ f,φi (algebraMap k[X] Bi f)=f.eval₂ ι (↑X⁻¹))
+    (scalars : ∀ f,φi (algebraMap (Polynomial k) Bi f)=f.eval₂ ι (↑X⁻¹))
     (common : ∀ u : Bf,∃ n : ℕ,∃ v : Bi,φi v=((↑X⁻¹:V)^n)*φf u)
-    (η : V) (D : k[X]) (unit : D.eval 0≠0)
+    (η : V) (D : (Polynomial k)) (unit : D.eval 0≠0)
     (clears : ∃ v : Bi,φi v=D.eval₂ ι (↑X⁻¹)*η)
-    (h : k[X]) (a : ℕ) (deg : h.natDegree≤a)
+    (h : (Polynomial k)) (a : ℕ) (deg : h.natDegree≤a)
     (finite : ∃ u : Bf,φf u=h.eval₂ ι (X:V)*η) :
     ∃ (u : Bf) (v : Bi),φf u=h.eval₂ ι (X:V)*η ∧
       φi v=((↑X⁻¹:V)^a)*φf u := by
@@ -60,7 +60,7 @@ theorem marked_multiple_two_charts (ι : k→+*V) (X : Vˣ)
   let j := eval₂RingHom ι (↑X⁻¹:V)
   have jX : j Polynomial.X=(↑X⁻¹:V) := eval₂_X ι (↑X⁻¹:V)
   have power_clear : ∃ v : Bi,φi v=j (Polynomial.X^n)*w := by
-    refine ⟨((Polynomial.X:k[X])^a) • y,?_⟩
+    refine ⟨((Polynomial.X:(Polynomial k))^a) • y,?_⟩
     rw [Algebra.smul_def,map_mul,scalars,hy]
     change j (Polynomial.X^a)*_ = _
     rw [map_pow,map_pow,jX]

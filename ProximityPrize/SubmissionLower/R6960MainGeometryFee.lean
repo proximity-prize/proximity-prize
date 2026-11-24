@@ -18,7 +18,7 @@ open P1_7_4 (ODEGuard Mass massQ dotQ dotQ_mono_mass massQ_mono dotQ_scale_add)
 open HighCore82268JointRank (fixed_fee_linear)
 open RescueGeometry (Model Family OnMark OnSurface SurfacePass word curveMarks mem_curveMarks
   curve_tariff rated_curve_count fixedFee lambda mu tau)
-open private fixedFee_eq from ProximityPrize.SubmissionLower.R6960RescueGeometryFee
+open Lower6960.RescueGeometry (fixedFee_eq)
 open scoped Classical BigOperators
 
 def Initial.rankMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}

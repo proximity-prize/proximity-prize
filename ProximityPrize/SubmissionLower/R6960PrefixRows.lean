@@ -10,8 +10,8 @@ open K1_14_1 (PoleData CRTLift MarkResidues evaluated nodeL)
 open K1_14_2 (Ambient toJet UsesSeed jetMarkHom)
 open Lower6960.DifferentialContact (Native native_strip native_power weaken)
 open Lower6960.HelperPrefix (one_helper timesShape)
-open private shiftedWord shift_word from ProximityPrize.SubmissionLower.Fast052
-open private divisor_caps from ProximityPrize.SubmissionLower.Fast051
+open K1_14_2_2_3 (shiftedWord shift_word)
+open K1_14_2_2_2_1 (divisor_caps)
 open scoped Classical
 
 /-- Mixed seed contact of a buffered CRT source at an actual marked word. -/
@@ -19,7 +19,7 @@ theorem contact_of_crt {h agreement W reserve : ℕ} {D : PoleData h}
     (Crt : CRTLift D) (word : I → L) (s : Shape) (P : Jet)
     (inside : P ∈ evaluated Crt word s W) (width : W + 2*h*reserve < s.m*agreement)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
-    (z : K) (S : K[X]) (residues : MarkResidues D z S)
+    (z : K) (S : (Polynomial K)) (residues : MarkResidues D z S)
     (degree : (liftPoly S).natDegree ≤ 131071+h)
     (hits : Finset I) (many : agreement ≤ hits.card)
     (agree : ∀ i ∈ hits, (liftPoly S).eval (nodeL i) = word i) :
@@ -56,7 +56,7 @@ structure Prepared {ι : Type*} (P : ι→Jet) (s : ι→Shape) (ks : ι→ℕ)
     ∀ r a : ℕ, r≤ks i*a → Native J r (P i) → (∀ H∈V,Native J a H) →
       Native J r (free i) ∧ Native J r (helper^(ks i))
 
-private theorem power_caps {H : Jet} {hs : Shape} (hn : H≠0)
+theorem power_caps {H : Jet} {hs : Shape} (hn : H≠0)
     (cap : K1_14_2_2.RowCaps H hs) (k : ℕ) :
     K1_14_2_2.RowCaps (H^k) (timesShape k hs) := by
   open K1_14_2_2_2_1 in

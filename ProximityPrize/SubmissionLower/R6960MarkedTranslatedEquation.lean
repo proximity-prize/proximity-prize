@@ -12,18 +12,17 @@ open K1_14 (L)
 open MonicChart (ChartField Scalar)
 open MonicFourChartDescent RetainedSurfaceClass NormalizedFiber CollisionMarked Polynomial Algebra
 open scoped Polynomial Lower6960.MonicChart
-open private Lower6960.RetainedSurfaceClass.oriented_var Lower6960.RetainedSurfaceClass.oriented_const
-  Lower6960.RetainedSurfaceClass.oriented_line from ProximityPrize.SubmissionLower.R6960RetainedAxisCharts
+open Lower6960.RetainedSurfaceClass (oriented_var oriented_const oriented_line)
 
-def translatedX (c:L) : L[X]→+*Scalar := (translateField Scalar c).toRingHom.comp (algebraMap L[X] Scalar)
-def rowPlane (c:L) : Plane L→+*Scalar[X] := eval₂RingHom (C.comp (translatedX c)) Polynomial.X
-local notation "fp" => algebraMap Scalar[X] ChartField
+def translatedX (c:L) : (Polynomial L)→+*Scalar := (translateField Scalar c).toRingHom.comp (algebraMap (Polynomial L) Scalar)
+def rowPlane (c:L) : Plane L→+*(Polynomial Scalar) := eval₂RingHom (C.comp (translatedX c)) Polynomial.X
+local notation "fp" => algebraMap (Polynomial Scalar) ChartField
 
 private theorem translatedX_const (c a:L) : translatedX c (C a)=inner a := by
-  change translateField Scalar c (algebraMap L[X] Scalar (C a))=_
+  change translateField Scalar c (algebraMap (Polynomial L) Scalar (C a))=_
   rw [translate_polynomial,taylor_C];rfl
-private theorem translatedX_var (c:L) : translatedX c Polynomial.X=algebraMap L[X] Scalar Polynomial.X+inner c := by
-  change translateField Scalar c (algebraMap L[X] Scalar Polynomial.X)=_
+private theorem translatedX_var (c:L) : translatedX c Polynomial.X=algebraMap (Polynomial L) Scalar Polynomial.X+inner c := by
+  change translateField Scalar c (algebraMap (Polynomial L) Scalar Polynomial.X)=_
   rw [translate_polynomial,taylor_X,map_add];rfl
 
 /-- Every original coefficient becomes a polynomial in the scalar variable
@@ -31,7 +30,7 @@ after translating its physical abscissa and exchanging the axes. -/
 theorem row_plane (c:L) (p:Plane L) :
     rowBase c ((oriented true false p):ChartField)=fp (rowPlane c p) := by
   let f:Plane L→+*ChartField:= (rowBase c).toRingHom.comp ((baseChart _).subtype.comp (oriented true false).toRingHom)
-  let g:Plane L→+*ChartField:=(algebraMap Scalar[X] ChartField).comp (rowPlane c)
+  let g:Plane L→+*ChartField:=(algebraMap (Polynomial Scalar) ChartField).comp (rowPlane c)
   have eq:f=g := by
     apply Polynomial.ringHom_ext
     · intro v
@@ -53,13 +52,13 @@ theorem row_specialization (c z:L) :
   apply Polynomial.ringHom_ext
   · intro v
     change ((C v).eval₂ (C.comp (translatedX c)) Polynomial.X).eval (inner z)=
-      translateField Scalar c (algebraMap L[X] Scalar ((C v).eval (C z)))
+      translateField Scalar c (algebraMap (Polynomial L) Scalar ((C v).eval (C z)))
     rw [eval₂_C,RingHom.comp_apply,eval_C,eval_C];rfl
   · change (Polynomial.X.eval₂ (C.comp (translatedX c)) Polynomial.X).eval (inner z)=
-      translateField Scalar c (algebraMap L[X] Scalar (Polynomial.X.eval (C z)))
+      translateField Scalar c (algebraMap (Polynomial L) Scalar (Polynomial.X.eval (C z)))
     rw [eval₂_X,eval_X,eval_X];exact (translatedX_const c z).symm
 
-theorem normalized_fibre_separable (z:L) (P:CurvatureSquares.Ordinate) (S:L[X])
+theorem normalized_fibre_separable (z:L) (P:CurvatureSquares.Ordinate) (S:(Polynomial L))
     (p:ℕ) [CharP Scalar p] (lo:0<P.natDegree) (hi:P.natDegree<p)
     (mark:RetainedCompression.MarkedFiber P z S) :
     ((projectedRaw P).integralNormalization.map (genericFibreBase z)).Separable := by
@@ -72,7 +71,7 @@ theorem normalized_fibre_separable (z:L) (P:CurvatureSquares.Ordinate) (S:L[X])
   rw [←integralNormalization_map J raw nz]
   apply integralNormalization_separable p _ _ _ base <;> rwa [full,projectedRaw_degree]
 
-theorem marked_row_separable (c z:L) (P:CurvatureSquares.Ordinate) (S:L[X])
+theorem marked_row_separable (c z:L) (P:CurvatureSquares.Ordinate) (S:(Polynomial L))
     (p:ℕ) [CharP Scalar p] (lo:0<P.natDegree) (hi:P.natDegree<p) (mark:RetainedCompression.MarkedFiber P z S) :
     ((((projectedRaw P).integralNormalization.map (rowPlane c)).map (evalRingHom (inner z)))).Separable := by
   rw [Polynomial.map_map,row_specialization,←Polynomial.map_map]

@@ -15,7 +15,7 @@ open scoped BigOperators nonZeroDivisors
 abbrev FractionJet := MvPolynomial (Fin 4) GenericField
 
 def toFraction (P : Row 4) : FractionJet :=
-  MvPolynomial.map (algebraMap Geom[X] GenericField) P
+  MvPolynomial.map (algebraMap (Polynomial Geom) GenericField) P
 
 def toGeometric : FractionJet →+* K1_13_6.GeoJets :=
   MvPolynomial.map (algebraMap GenericField GeoField)
@@ -25,15 +25,15 @@ theorem fraction_geometric (P : Row 4) :
   simp [toGeometric,toFraction,toGeneric,genericCoeffs,MvPolynomial.map_map]
 
 theorem fraction_injective : Function.Injective toFraction :=
-  MvPolynomial.map_injective _ (IsFractionRing.injective Geom[X] _)
+  MvPolynomial.map_injective _ (IsFractionRing.injective (Polynomial Geom) _)
 
 theorem support_fraction (P : Row 4) : (toFraction P).support = P.support :=
-  MvPolynomial.support_map_of_injective P (IsFractionRing.injective Geom[X] GenericField)
+  MvPolynomial.support_map_of_injective P (IsFractionRing.injective (Polynomial Geom) GenericField)
 
-private theorem primitive_relation {ι : Type*} (s : Finset ι) (c : ι → Geom[X])
+private theorem primitive_relation {ι : Type*} (s : Finset ι) (c : ι → (Polynomial Geom))
     (e : ι → Row 4) (h : ∑ i ∈ s, c i • e i = 0)
     (hne : ∃ i ∈ s, c i ≠ 0) (x : Geom) :
-    ∃ b : ι → Geom[X], (∑ i ∈ s, b i • e i = 0) ∧ ∃ i ∈ s, (b i).eval x ≠ 0 := by
+    ∃ b : ι → (Polynomial Geom), (∑ i ∈ s, b i • e i = 0) ∧ ∃ i ∈ s, (b i).eval x ≠ 0 := by
   classical
   let S := s.filter fun i => c i ≠ 0
   have hS : S.Nonempty := by
@@ -41,7 +41,7 @@ private theorem primitive_relation {ι : Type*} (s : Finset ι) (c : ι → Geom
     exact ⟨i,Finset.mem_filter.mpr ⟨hi,hc⟩⟩
   obtain ⟨i,hi,hmin⟩ := S.exists_min_image (fun i => (c i).rootMultiplicity x) hS
   let k := (c i).rootMultiplicity x
-  let D : Geom[X] := (Polynomial.X - Polynomial.C x)^k
+  let D : (Polynomial Geom) := (Polynomial.X - Polynomial.C x)^k
   have hd : D ≠ 0 := pow_ne_zero _ (Polynomial.X_sub_C_ne_zero x)
   have hdiv (j : ι) : D ∣ c j ∨ j ∉ s := by
     by_cases hzero : c j = 0
@@ -50,7 +50,7 @@ private theorem primitive_relation {ι : Type*} (s : Finset ι) (c : ι → Geom
       · exact Or.inl ((pow_dvd_pow _ (hmin j (Finset.mem_filter.mpr ⟨hs,hzero⟩))).trans
           (Polynomial.pow_rootMultiplicity_dvd _ _))
       · exact Or.inr hs
-  have hclear (j : ι) : ∃ b : Geom[X], j ∈ s → c j = D*b := by
+  have hclear (j : ι) : ∃ b : (Polynomial Geom), j ∈ s → c j = D*b := by
     rcases hdiv j with ⟨b,hb⟩ | hno
     · exact ⟨b,fun _ => hb⟩
     · exact ⟨0,fun hyes => (hno hyes).elim⟩
@@ -80,7 +80,7 @@ theorem independent_fraction {ι : Type*} (x : Geom) (e : ι → Row 4)
   classical
   apply linearIndependent_iff'.mpr
   intro s a ha i hi
-  let R := Geom[X]
+  let R := (Polynomial Geom)
   obtain ⟨d,hd⟩ := IsLocalization.exist_integer_multiples (R⁰) s a
   have hd0 : (d : R) ≠ 0 := nonZeroDivisors.ne_zero d.property
   have hc (j : ι) : ∃ c : R, j ∈ s →
@@ -100,7 +100,7 @@ theorem independent_fraction {ι : Type*} (x : Geom) (e : ι → Row 4)
         apply Finset.sum_congr rfl
         intro j hj
         have heq := hc j hj
-        change algebraMap Geom[X] GenericField (c j) = _ at heq
+        change algebraMap (Polynomial Geom) GenericField (c j) = _ at heq
         simp only [← MvPolynomial.C_mul', map_mul,MvPolynomial.map_C,heq]
         rw [mul_assoc]
       _ = (algebraMap R GenericField d) • ∑ j ∈ s, a j • toFraction (e j) := by
@@ -125,16 +125,16 @@ theorem independent_fraction {ι : Type*} (x : Geom) (e : ι → Row 4)
   exact hjx (linearIndependent_iff'.mp he s (fun j => (b j).eval x) hx j hj)
 
 theorem clear_denominators (R : FractionJet) :
-    ∃ (d : Geom[X]) (Q : Row 4), d ≠ 0 ∧ Q.support = R.support ∧
-      toFraction Q = MvPolynomial.C (algebraMap Geom[X] GenericField d) * R := by
+    ∃ (d : (Polynomial Geom)) (Q : Row 4), d ≠ 0 ∧ Q.support = R.support ∧
+      toFraction Q = MvPolynomial.C (algebraMap (Polynomial Geom) GenericField d) * R := by
   classical
-  let M := nonZeroDivisors (Geom[X])
+  let M := nonZeroDivisors ((Polynomial Geom))
   let d := IsLocalization.commonDenom M R.support R.coeff
   let num := IsLocalization.integerMultiple M R.support R.coeff
   let Q : Row 4 := ∑ a : ↥R.support, MvPolynomial.monomial a.val (num a)
-  have hd : (d : Geom[X]) ≠ 0 := nonZeroDivisors.coe_ne_zero d
-  have hi : algebraMap Geom[X] GenericField (d : Geom[X]) ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective Geom[X] GenericField)).mpr hd
-  have hQ : toFraction Q = MvPolynomial.C (algebraMap Geom[X] GenericField d) * R := by
+  have hd : (d : (Polynomial Geom)) ≠ 0 := nonZeroDivisors.coe_ne_zero d
+  have hi : algebraMap (Polynomial Geom) GenericField (d : (Polynomial Geom)) ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective (Polynomial Geom) GenericField)).mpr hd
+  have hQ : toFraction Q = MvPolynomial.C (algebraMap (Polynomial Geom) GenericField d) * R := by
     unfold toFraction
     ext m
     simp only [MvPolynomial.coeff_map, MvPolynomial.coeff_C_mul, Q, MvPolynomial.coeff_sum]
@@ -142,7 +142,7 @@ theorem clear_denominators (R : FractionJet) :
     · let a : ↥R.support := ⟨m, hm⟩
       rw [Finset.sum_eq_single_of_mem a (Finset.mem_univ a)]
       · have hn := IsLocalization.map_integerMultiple M R.support R.coeff a
-        change algebraMap Geom[X] GenericField (num a) = (d : Geom[X]) • R.coeff a.val at hn
+        change algebraMap (Polynomial Geom) GenericField (num a) = (d : (Polynomial Geom)) • R.coeff a.val at hn
         rw [Algebra.smul_def] at hn
         simpa [a] using hn
       · intro b _ hba

@@ -8,7 +8,7 @@ namespace Lower6960.MonicChart
 noncomputable section
 open Polynomial Algebra Module
 open scoped Polynomial Differential
-open private Lower6960.DifferentialPoles.resultant_norm from ProximityPrize.SubmissionLower.R6960DifferentialPoles
+open Lower6960.DifferentialPoles (resultant_norm)
 
 section Comparison
 
@@ -19,7 +19,7 @@ variable {A F E : Type*} [CommRing A] [IsDomain A] [IsIntegrallyClosed A]
 
 /-- The original derivative resultant has the extra leading-coefficient
 factor appropriate to a nonmonic polynomial. -/
-private theorem original_norm (b : PowerBasis F E) (f : A[X])
+private theorem original_norm (b : PowerBasis F E) (f : (Polynomial A))
     (degree : f.natDegree=b.dim) (positive : 0<f.natDegree) (root : aeval b.gen f=0) :
     algebraMap A F (f.resultant f.derivative f.natDegree (f.natDegree-1))=
     (algebraMap A F f.leadingCoeff)^(f.natDegree-1)*Algebra.norm F (aeval b.gen f.derivative) := by
@@ -33,7 +33,7 @@ private theorem original_norm (b : PowerBasis F E) (f : A[X])
   change _*resultant (minpoly F b.gen) D f.natDegree (f.natDegree-1)=_
   rw [N,aeval_map_algebraMap]
 
-private theorem monic_norm (v : PowerBasis F E) (g : A[X])
+private theorem monic_norm (v : PowerBasis F E) (g : (Polynomial A))
     (integral : IsIntegral A v.gen) (poly : minpoly A v.gen=g) :
     algebraMap A F (g.resultant g.derivative g.natDegree (g.natDegree-1))=
       Algebra.norm F (aeval v.gen g.derivative) := by
@@ -80,7 +80,7 @@ private theorem chart_scaling {K : Type*} [Field K] (e : ℕ) (he : 2≤e)
 
 /-- The padded raw resultant is the monic chart resultant times the raw
 leading coefficient and a power of the unit used in the chart. -/
-theorem resultant_eq_chart (b : PowerBasis F E) (f : A[X]) (c : A) (u : Aˣ)
+theorem resultant_eq_chart (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u : Aˣ)
     (hu : f.eval c=(u:A)) (degree : f.natDegree=b.dim) (positive : 2≤f.natDegree)
     (root : aeval b.gen f=0) :
     f.resultant f.derivative f.natDegree (f.natDegree-1)=
@@ -119,7 +119,7 @@ theorem resultant_eq_chart (b : PowerBasis F E) (f : A[X]) (c : A) (u : Aˣ)
     monic_norm v g integral minimal]
   exact scale
 
-theorem chart_resultant_dvd (b : PowerBasis F E) (f : A[X]) (c : A) (u : Aˣ)
+theorem chart_resultant_dvd (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u : Aˣ)
     (hu : f.eval c=(u:A)) (degree : f.natDegree=b.dim) (positive : 2≤f.natDegree)
     (root : aeval b.gen f=0) :
     (equation f c u).resultant (equation f c u).derivative
@@ -130,7 +130,7 @@ theorem chart_resultant_dvd (b : PowerBasis F E) (f : A[X]) (c : A) (u : Aˣ)
 
 /-- The discriminant of the reciprocal power basis is represented by a
 divisor of the original padded derivative resultant in the base domain. -/
-theorem discriminant_dvd (b : PowerBasis F E) (f : A[X]) (c : A) (u : Aˣ)
+theorem discriminant_dvd (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u : Aˣ)
     (hu : f.eval c=(u:A)) (degree : f.natDegree=b.dim) (positive : 2≤f.natDegree)
     (root : aeval b.gen f=0) :
     ∃ (v : PowerBasis F E) (d : A), v.gen=reciprocal b c ∧ IsIntegral A v.gen ∧
@@ -155,7 +155,7 @@ variable [Differential A] [Differential E] [DifferentialAlgebra A E]
 
 /-- The square of the original padded resultant clears the derivative of
 every integral element at any reciprocal chart with unit value. -/
-theorem raw_square_clears (b : PowerBasis F E) (f : A[X]) (c : A) (u : Aˣ)
+theorem raw_square_clears (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u : Aˣ)
     (hu : f.eval c=(u:A)) (degree : f.natDegree=b.dim) (positive : 2≤f.natDegree)
     (root : aeval b.gen f=0) (x : E) (hx : IsIntegral A x) :
     IsIntegral A (algebraMap A E ((f.resultant f.derivative f.natDegree (f.natDegree-1))^2)*x′) := by

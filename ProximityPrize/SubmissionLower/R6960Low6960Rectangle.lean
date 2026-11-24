@@ -8,13 +8,8 @@ open K1_13 (Shape InBox ceilDiv)
 open K1_13_8_2 (Chamber mixed_mono)
 open Low6960RetainedCut (contractedPrice cutPrice fourSurface chamberHull residualBox hull_valid)
 open Low6960Prices (physicalPrice physicalPriceOld)
-open private chargedPrice from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
-open private Low6960Monotone.box_refl Low6960Monotone.normalize_mono
-  Low6960Monotone.normalize_chamber Low6960Monotone.plus_mono
-  Low6960Monotone.plus_chamber Low6960Monotone.scale_mono
-  Low6960Monotone.scale_chamber Low6960Monotone.chart_mono
-  Low6960Monotone.chart_chamber
-  from ProximityPrize.SubmissionLower.R6960Low6960Monotone
+open Low6960GeometryCut (chargedPrice)
+open Low6960Monotone (box_refl normalize_mono normalize_chamber plus_mono plus_chamber scale_mono scale_chamber chart_mono chart_chamber)
 open Low6960Monotone (box_refl normalize_mono normalize_chamber plus_mono plus_chamber
   scale_mono scale_chamber chart_mono chart_chamber)
 

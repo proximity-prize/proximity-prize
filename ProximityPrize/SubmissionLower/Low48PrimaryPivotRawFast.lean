@@ -7,7 +7,7 @@ set_option maxRecDepth 16000
 
 namespace Low48PrimaryPivot.RawReceipt
 open K1_13_2 K1_13_2_3
-open private baselineFast from ProximityPrize.SubmissionLower.Low48PrimaryPivotBaseline
+open Low48PrimaryPivot (baselineFast)
 
 private theorem denom_neg {u : ℤ} (h : u < 0) : denominator u = 0 := by
   simp [denominator, h]
@@ -31,7 +31,7 @@ private theorem cum_one (d u : ℤ) (hd : 0 ≤ d) (hu : u ≤ d) :
   simp [denom_neg (by omega : u-d-1 < 0), denom_neg (by omega : u-d-2 < 0),
     denom_neg (by omega : u-d-3 < 0)]
 
-private def columnsAt (o : ℕ) : ℤ :=
+def columnsAt (o : ℕ) : ℤ :=
   denominator 1650 - denominator (1649 - (o : ℤ))
 
 private theorem columns_eq (o : ℕ) (order : ℤ) :
@@ -49,7 +49,7 @@ private theorem columns_eq (o : ℕ) (order : ℤ) :
     cum_neg _ (by omega : (1649-(o : ℤ))-3*(550+1) < 0)]
   simp [columnsAt]
 
-private def targetAt (g o : ℕ) : ℤ :=
+def targetAt (g o : ℕ) : ℤ :=
   let removed := (4649 - (g : ℤ)) / 4 + 1
   let degree := 1650 - removed
   let order := 4649 - (g : ℤ) - (o : ℤ)
@@ -58,7 +58,7 @@ private def targetAt (g o : ℕ) : ℤ :=
     denominator (lower-degree-1) - denominator (lower-degree-2) -
     denominator (lower-degree-3)
 
-private theorem target_eq (g o : ℕ) (hg : 1650 ≤ g) (hlo : 3000 ≤ g+o)
+theorem target_eq (g o : ℕ) (hg : 1650 ≤ g) (hlo : 3000 ≤ g+o)
     (hhi : g+o < 4650) :
     targetCount ⟨1650, 1650-(o : ℤ), 1650, 550, 4650-(g : ℤ)-(o : ℤ)⟩ = targetAt g o := by
   let removed : ℤ := (4649-(g : ℤ))/4+1
@@ -116,13 +116,13 @@ private theorem grade_eq (g o : ℕ) (hg : 1650 ≤ g) (hlo : 3000 ≤ g+o)
   congr 1
   omega
 
-private def fastAt (w : Window) (o : ℕ) : ℕ :=
+def fastAt (w : Window) (o : ℕ) : ℕ :=
   let lo := max w.gradeLo (w.diagonalLo-o)
   let hi := min w.gradeHi (w.diagonalHi+1-o)
   let columns := columnsAt o
   ((List.range' lo (hi-lo)).map fun g => (min columns (targetAt g o)).toNat).sum
 
-private theorem rawAt_fast (w : Window) (hg : 1650 ≤ w.gradeLo) (hl : 3000 ≤ w.diagonalLo)
+theorem rawAt_fast (w : Window) (hg : 1650 ≤ w.gradeLo) (hl : 3000 ≤ w.diagonalLo)
     (hh : w.diagonalHi < 4650) (o : ℕ) (ho : o ≤ 2999) : rawAt w o = fastAt w o := by
   unfold rawAt fastAt
   apply congrArg List.sum

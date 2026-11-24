@@ -16,9 +16,9 @@ open Polynomial P64Found P64LineOrder P64C6Coordinates P64C6Count P64C6Line
 
 variable {F ι : Type*} [Field F]
 
-noncomputable local instance : CommRing (Polynomial F) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial F)) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := Polynomial.commRing
+noncomputable local instance : CommRing (Polynomial F) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial F)) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := AddMonoidAlgebra.commRing
 
 local notation "Tri" => Polynomial (Polynomial (Polynomial F))
 local notation "wd" => P64Caps.Weighted.weightedSupportDegree

@@ -19,7 +19,7 @@ private def raw {A : Type*} [CommSemiring A] : Curve A ≃+* Polynomial (Polynom
 
 /-- View an integral equation as a polynomial in the ordinate with
 coefficients in the abscissa and seed variables. -/
-def view : Curve L[X] ≃+* Ordinate :=
+def view : Curve (Polynomial L) ≃+* Ordinate :=
   raw.trans (Polynomial.mapEquiv Bivariate.swap.toRingEquiv)
 
 private theorem raw_y {A : Type*} [CommSemiring A] (Q : Curve A) :
@@ -32,7 +32,7 @@ private theorem raw_y {A : Type*} [CommSemiring A] (Q : Curve A) :
       (MvPolynomial.uniqueAlgEquiv A PUnit).injective _
   · exact MvPolynomial.natDegree_optionEquivLeft A Q
 
-theorem view_y (Q : Curve L[X]) : (view Q).natDegree=Q.degreeOf ordinate := by
+theorem view_y (Q : Curve (Polynomial L)) : (view Q).natDegree=Q.degreeOf ordinate := by
   change (((raw Q).map Bivariate.swap.toRingHom).natDegree)=_
   exact (natDegree_map_eq_of_injective (f:=Bivariate.swap.toRingHom)
     Bivariate.swap.injective _).trans (raw_y Q)
@@ -57,7 +57,7 @@ private theorem raw_seed {A : Type*} [CommSemiring A] (Q : Curve A) (i : ℕ) :
   simp [parameter] at deg
   exact (not_lt_of_ge (show j ≤ Q.degreeOf parameter from deg)) hj
 
-theorem view_z (Q : Curve L[X]) : (zView (view Q)).natDegree=Q.degreeOf parameter := by
+theorem view_z (Q : Curve (Polynomial L)) : (zView (view Q)).natDegree=Q.degreeOf parameter := by
   have swap_twice : (view Q).map Bivariate.swap.toRingHom=raw Q := by
     apply Polynomial.ext
     intro i
@@ -88,7 +88,7 @@ theorem view_z (Q : Curve L[X]) : (zView (view Q)).natDegree=Q.degreeOf paramete
     exact Polynomial.le_natDegree_of_ne_zero term
 
 /-- Every nonzero ordinate coefficient retains its individual abscissa weight. -/
-theorem abscissa_coeff_height (Q : Curve L[X]) (d i : ℕ)
+theorem abscissa_coeff_height (Q : Curve (Polynomial L)) (d i : ℕ)
     (nz : (view Q).coeff i≠0) :
     ((view Q).coeff i).natDegree+d*i≤height d Q := by
   let n := ((view Q).coeff i).natDegree
@@ -106,7 +106,7 @@ theorem abscissa_coeff_height (Q : Curve L[X]) (d i : ℕ)
   rw [Finsupp.optionElim_apply_none] at cap
   exact (Nat.add_le_add_right (Polynomial.le_natDegree_of_ne_zero term) _).trans cap
 
-theorem abscissa_le_height (Q : Curve L[X]) (d : ℕ) :
+theorem abscissa_le_height (Q : Curve (Polynomial L)) (d : ℕ) :
     (CurvatureSquares.xView (view Q)).natDegree≤height d Q := by
   apply natDegree_le_iff_coeff_eq_zero.mpr
   intro n hn
@@ -123,21 +123,21 @@ theorem abscissa_le_height (Q : Curve L[X]) (d : ℕ) :
   have h := coeff_height d Q _ zero
   omega
 
-private theorem eval_raw {F : Type*} [Field F] (z : F) (S : F[X]) (Q : Curve F[X]) :
+private theorem eval_raw {F : Type*} [Field F] (z : F) (S : (Polynomial F)) (Q : Curve (Polynomial F)) :
     evaluate z S Q=((raw Q).map (evalRingHom (C z))).eval S := by
   rw [evaluate,MvPolynomial.optionEquivLeft_elim_eval]
-  change ((MvPolynomial.optionEquivLeft F[X] PUnit Q).map (MvPolynomial.eval (fun _=>C z))).eval S =
-    ((((MvPolynomial.optionEquivLeft F[X] PUnit Q).map
-      (MvPolynomial.uniqueAlgEquiv F[X] PUnit).toRingHom).map (evalRingHom (C z)))).eval S
+  change ((MvPolynomial.optionEquivLeft (Polynomial F) PUnit Q).map (MvPolynomial.eval (fun _=>C z))).eval S =
+    ((((MvPolynomial.optionEquivLeft (Polynomial F) PUnit Q).map
+      (MvPolynomial.uniqueAlgEquiv (Polynomial F) PUnit).toRingHom).map (evalRingHom (C z)))).eval S
   rw [Polynomial.map_map]
   congr 2
   apply RingHom.ext
   intro a
   change MvPolynomial.eval (fun _ : PUnit => C z) a =
-    (((MvPolynomial.uniqueAlgEquiv F[X] PUnit) a : Polynomial F[X])).eval (C z)
-  exact (MvPolynomial.eval₂_const_uniqueAlgEquiv (φ:=RingHom.id F[X]) (f:=a) (a:=C z)).symm
+    (((MvPolynomial.uniqueAlgEquiv (Polynomial F) PUnit) a : Polynomial (Polynomial F))).eval (C z)
+  exact (MvPolynomial.eval₂_const_uniqueAlgEquiv (φ:=RingHom.id (Polynomial F)) (f:=a) (a:=C z)).symm
 
-theorem evaluate_view (z : L) (S : L[X]) (Q : Curve L[X]) :
+theorem evaluate_view (z : L) (S : (Polynomial L)) (Q : Curve (Polynomial L)) :
     evaluate z S Q=(specialize (view Q) z).eval S := by
   rw [eval_raw]
   apply congrArg (fun E : Polynomial (Polynomial L) => E.eval S)
@@ -151,7 +151,7 @@ theorem evaluate_view (z : L) (S : L[X]) (Q : Curve L[X]) :
   exact eq
 
 private theorem resultant_ne_of_cut {R : Type*} [CommRing R] [IsDomain R] [IsGCDMonoid R]
-    (P Q : R[X]) (ir : Irreducible P) (positive : 0<P.natDegree) (cut : ¬ P∣Q) :
+    (P Q : (Polynomial R)) (ir : Irreducible P) (positive : 0<P.natDegree) (cut : ¬ P∣Q) :
     P.resultant Q≠0 := by
   let φ := algebraMap R (FractionRing R)
   have ph := ir.isPrimitive (ne_of_gt positive)
@@ -169,7 +169,7 @@ private theorem resultant_ne_of_cut {R : Type*} [CommRing R] [IsDomain R] [IsGCD
 A nonzero abscissa coefficient counts all of its marked scalar labels. -/
 theorem proper_cut_price {F : Type} [Field F] {ι : Type*} (T : Finset ι)
     (z : ι → F) (S : ι → Polynomial F) (inj : Set.InjOn z (T:Set ι))
-    (f g : Curve F[X]) (ir : Irreducible f) (cut : ¬ f∣g) {e v : ℕ} (he : 0<e)
+    (f g : Curve (Polynomial F)) (ir : Irreducible f) (cut : ¬ f∣g) {e v : ℕ} (he : 0<e)
     (fy : f.degreeOf ordinate=e) (fz : f.degreeOf parameter=v)
     (gy : g.degreeOf ordinate≤2*e) (gz : g.degreeOf parameter≤10*v)
     (fmarks : ∀ i∈T,evaluate (z i) (S i) f=0)
@@ -180,11 +180,11 @@ theorem proper_cut_price {F : Type} [Field F] {ι : Type*} (T : Finset ι)
   let Q := raw g
   have pd : P.natDegree=e := (raw_y f).trans fy
   have qd : Q.natDegree≤2*e := (raw_y g).trans_le gy
-  have irr : Irreducible P := (MulEquiv.irreducible_iff (raw (A:=F[X]))).mpr ir
+  have irr : Irreducible P := (MulEquiv.irreducible_iff (raw (A:=(Polynomial F)))).mpr ir
   have notdvd : ¬ P∣Q := by
     rintro ⟨a, h⟩
     apply cut
-    refine ⟨(raw (A:=F[X])).symm a, (raw (A:=F[X])).injective ?_⟩
+    refine ⟨(raw (A:=(Polynomial F))).symm a, (raw (A:=(Polynomial F))).injective ?_⟩
     rw [map_mul, RingEquiv.apply_symm_apply]
     exact h
   let R := P.resultant Q
@@ -217,7 +217,7 @@ theorem proper_cut_price {F : Type} [Field F] {ι : Type*} (T : Finset ι)
       have e := eval_swap (Bivariate.swap R) (z i)
       rw [Bivariate.swap_swap_apply,atRoot] at e
       exact e.symm
-    have killed := congrArg (fun A : F[X] => A.coeff (Bivariate.swap R).natDegree) swapped
+    have killed := congrArg (fun A : (Polynomial F) => A.coeff (Bivariate.swap R).natDegree) swapped
     simpa only [Polynomial.IsRoot,coeff_map,coeff_natDegree,coeff_zero,coe_evalRingHom] using killed
   rw [← card_image_of_injOn inj]
   exact (card_le_card roots).trans ((Multiset.toFinset_card_le ..).trans

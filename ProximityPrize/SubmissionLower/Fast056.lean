@@ -890,6 +890,9 @@ theorem of_children (h1 : c1) (h2 : c2) : K1_13_6_1_4_2_1_2.c2 := by
   let : Algebra F E := inferInstanceAs (Algebra F (FractionRing D))
   let : IsScalarTower F D E := inferInstanceAs (IsScalarTower F D (FractionRing D))
   let : Algebra GeoField E := Algebra.compHom E (algebraMap GeoField F)
+  let : SMul GeoField E := Algebra.toSMul
+  let : SMul GeoField F := Algebra.toSMul
+  let : SMul F E := Algebra.toSMul
   let : IsScalarTower GeoField F E := IsScalarTower.of_algebraMap_eq' rfl
   let φ : Rees surface a h →ₐ[F] E :=
     (IsScalarTower.toAlgHom F D E).comp (Ideal.Quotient.mkₐ F J)
@@ -1155,7 +1158,7 @@ theorem high_degree_of_charts (I K : Ideal (P (k := k) (α := α) (β := β)))
   let S : Set (P (k := k) (α := α) (β := β)) :=
     {p | p ∈ K ∧ ∃ e : ℕ × ℕ, p ∈ grade e}
   have hS : Ideal.span S = K := by
-    apply le_antisymm (Ideal.span_le.mpr fun _ hp => hp.1)
+    apply le_antisymm (Ideal.span_le.mpr fun p (hp : p ∈ S) => hp.1)
     have hle : (K.homogeneousCore grade).toIdeal ≤ Ideal.span S := by
       change Ideal.span _ ≤ _
       apply Ideal.span_mono
@@ -1855,7 +1858,7 @@ namespace K1_13_2_3_5
 set_option maxRecDepth 10000
 set_option maxHeartbeats 2000000
 open K1_13_2_3
-open private   unpack from ProximityPrize.SubmissionLower.Numeric5Certificate
+open K1_13_2_3_5 (unpack)
 end K1_13_2_3_5
 end
 section
@@ -2008,7 +2011,7 @@ private theorem topView_X (i : Fin 4) :
     simp [topView, hlast, optionEquivLeft_X_none, show Fin.last 3 = (3 : Fin 4) by rfl]
   · have h : j.castSucc ≠ (3 : Fin 4) := Fin.castSucc_ne_last j
     simp [topView, optionEquivLeft_X_some, h]
-private theorem topView_separant (f : Row 4) :
+theorem topView_separant (f : Row 4) :
     topView (separant f) = derivative (topView f) := by
   classical
   induction f using MvPolynomial.induction_on with
@@ -2023,9 +2026,9 @@ private theorem topView_separant (f : Row 4) :
     · subst i
       simp
     · simp only [dite_eq_right h, pderiv_X_of_ne h, map_zero, derivative_C, mul_zero, add_zero]
-private def topAt (S : Geom[X]) (f : Row 4) : Geom[X][X] :=
+def topAt (S : (Polynomial Geom)) (f : Row 4) : (Polynomial (Polynomial Geom)) :=
   (topView f).map (MvPolynomial.eval (jet S))
-private theorem eval_topAt (S : Geom[X]) (f : Row 4) :
+theorem eval_topAt (S : (Polynomial Geom)) (f : Row 4) :
     (topAt S f).eval (jet S (3 : Fin 4)) = atJet f S := by
   let e := (Polynomial.evalRingHom (jet S (3 : Fin 4))).comp
     ((Polynomial.mapRingHom (MvPolynomial.eval (jet S))).comp topView.toRingHom)
@@ -2039,7 +2042,7 @@ private theorem eval_topAt (S : Geom[X]) (f : Row 4) :
       · simp [e, topView_X, show Fin.last 3 = (3 : Fin 4) by rfl]
       · simp [e, topView_X, show j.castSucc ≠ (3 : Fin 4) from Fin.castSucc_ne_last j, jet]
   rw [he]
-private theorem topAt_coeff (S : Geom[X]) (f : Row 4) :
+theorem topAt_coeff (S : (Polynomial Geom)) (f : Row 4) :
     (topAt S f).coeff (shape f).t = topLead f S := by
   rw [topAt, Polynomial.coeff_map, ← eval_anchorLead, atJet, anchorLead,
     Polynomial.leadingCoeff, topView_degree]
@@ -2071,18 +2074,18 @@ section
 namespace K1_13_7
 noncomputable section
 open Polynomial K1_13
-def RegularAt (f : Row 4) (S : Geom[X]) : Prop :=
+def RegularAt (f : Row 4) (S : (Polynomial Geom)) : Prop :=
   atJet (MvPolynomial.pderiv (3 : Fin 4) f) S ≠ 0
 def LowerCaps (P : Row 3) (b j : ℕ) : Prop :=
   P.totalDegree ≤ b ∧ indexDegree P ≤ j
-abbrev GenericX := FractionRing Geom[X]
+abbrev GenericX := FractionRing (Polynomial Geom)
 abbrev GeometricX := AlgebraicClosure GenericX
 abbrev Lower := MvPolynomial (Fin 3) GeometricX
 abbrev LowerPoint := Fin 3 → GeometricX
-abbrev genericCoeff : Geom[X] →+* GeometricX :=
-  (algebraMap GenericX GeometricX).comp (algebraMap Geom[X] GenericX)
+abbrev genericCoeff : (Polynomial Geom) →+* GeometricX :=
+  (algebraMap GenericX GeometricX).comp (algebraMap (Polynomial Geom) GenericX)
 def genericRow (P : Row 3) : Lower := MvPolynomial.map genericCoeff P
-def lowerPoint (S : Geom[X]) : LowerPoint :=
+def lowerPoint (S : (Polynomial Geom)) : LowerPoint :=
   fun i => genericCoeff (jet S i)
 def ProperLowerPair (P Q : Row 3) : Prop :=
   P ≠ 0 ∧ Q ≠ 0 ∧ IsRelPrime (genericRow P) (genericRow Q)
@@ -2237,12 +2240,12 @@ structure ReducedCut (f : Row 4) (D q : Row 3) : Prop where
   caps : LowerCaps q 35007 12106
   reduced : Squarefree (genericRow q)
   proper : IsRelPrime (toGeneric f) (toGeneric (liftLower q))
-  roots : ∀ S : Geom[X], atJet D S = 0 → atJet q S = 0
+  roots : ∀ S : (Polynomial Geom), atJet D S = 0 → atJet q S = 0
   flow_box : InBox (shape (lowerFlow q)) ⟨35007, 12107, 1⟩
   simple : ∀ surface, (h : LiftedSurface f q surface) → surface.height = 2 ∧
     cycleLength (intersectionIdeal f (liftLower q)) surface h.minimal.isPrime = 1
   invariant : ∀ surface, LiftedSurface f q surface → toGeneric (lowerFlow q) ∈ surface → Invariant f surface
-def evalTrajectory {L : Type} [Field L] [Algebra Geom L] (P : Row 4) (S : L[X]) : L[X] :=
+def evalTrajectory {L : Type} [Field L] [Algebra Geom L] (P : Row 4) (S : (Polynomial L)) : (Polynomial L) :=
   MvPolynomial.eval₂ (Polynomial.mapRingHom (algebraMap Geom L))
     (fun i => Polynomial.hasseDeriv i.val S) P
 structure FatTaylor (f : Row 4) where
@@ -2255,35 +2258,35 @@ structure FatTaylor (f : Row 4) where
   test_iff : ∀ (surface : Ideal GeoJets), surface.IsPrime → toGeneric f ∈ surface →
     toGeneric (separant f) ∉ surface →
     (toGeneric test ∈ surface ↔ toGeneric (membershipTest f) ∈ surface)
-  recovers : ∀ (L : Type) [Field L] [Algebra Geom L] (S : L[X]),
+  recovers : ∀ (L : Type) [Field L] [Algebra Geom L] (S : (Polynomial L)),
     S.natDegree ≤ 133671 → evalTrajectory f S = 0 →
     evalTrajectory (separant f) S ≠ 0 →
     evalTrajectory denom S ≠ 0 ∧ evalTrajectory test S = 0 ∧
       ∀ i, evalTrajectory (numer i) S = evalTrajectory denom S * C (S.coeff i.val)
-def ProperMark (f : Row 4) (q : Row 3) (E : Row 4) (S : Geom[X]) : Prop :=
+def ProperMark (f : Row 4) (q : Row 3) (E : Row 4) (S : (Polynomial Geom)) : Prop :=
   ∃ surface, LiftedSurface f q surface ∧ surface ≤ markIdeal S ∧
     (toGeneric E ∉ surface ∨ toGeneric (lowerFlow q) ∉ surface)
 abbrev CoeffRing := MvPolynomial (Fin taylorLength) Geom
-def universalPolynomial : CoeffRing[X] :=
+def universalPolynomial : (Polynomial CoeffRing) :=
   ∑ i : Fin taylorLength, C (MvPolynomial.X i) * Polynomial.X ^ i.val
-def universalEval (f : Row 4) : CoeffRing[X] :=
+def universalEval (f : Row 4) : (Polynomial CoeffRing) :=
   MvPolynomial.eval₂ (Polynomial.mapRingHom (MvPolynomial.C : Geom →+* CoeffRing))
     (fun i => hasseDeriv i.val universalPolynomial) f
-def coefficientPointIdeal (S : Geom[X]) : Ideal CoeffRing :=
+def coefficientPointIdeal (S : (Polynomial Geom)) : Ideal CoeffRing :=
   RingHom.ker (MvPolynomial.eval (fun i : Fin taylorLength => S.coeff i.val))
 structure ActualFamily (f : Row 4) (P : Ideal CoeffRing) : Prop where
   prime : P.IsPrime
   dimension : 2 ≤ (MvPolynomial.affineHilbertPolynomial P).natDegree
   solves : ∀ i, (universalEval f).coeff i ∈ P
   regular : ∃ i, (universalEval (separant f)).coeff i ∉ P
-def IntegratedMark (f : Row 4) (S : Geom[X]) : Prop :=
+def IntegratedMark (f : Row 4) (S : (Polynomial Geom)) : Prop :=
   ∃ P, ActualFamily f P ∧ P ≤ coefficientPointIdeal S
-def ThreefoldSections (Γ : Finset K) (s : K → K[X]) (d : ℕ) : Prop := by
+def ThreefoldSections (Γ : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop := by
   classical
   exact ∀ x a : K, (∃ γ ∈ Γ, (s γ).eval x ≠ a) →
     let H := Γ.filter (fun γ => (s γ).eval x = a)
     ∃ C : Pieces H, H ⊆ C.union ∧ C.surfaces s ∧ (∀ i, 0 < C.degree i) ∧ C.total ≤ d
-def ThreefoldPieces {Γ : Finset K} (C : Pieces Γ) (s : K → K[X]) : Prop :=
+def ThreefoldPieces {Γ : Finset K} (C : Pieces Γ) (s : K → (Polynomial K)) : Prop :=
   ∀ i, ThreefoldSections (C.piece i) s (C.degree i)
 end
 end K1_13_7_2

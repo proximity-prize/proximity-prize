@@ -6,13 +6,13 @@ namespace K1_13_2_3_6
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
 open K1_13_2_3
-open private       sumFrom from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 end K1_13_2_3_6
 end
 section
 namespace K1_13_2_3_5
 open K1_13_2_3
-open private unpack   from ProximityPrize.SubmissionLower.Numeric5Certificate
+open K1_13_2_3_5 (unpack)
 section
 set_option maxHeartbeats 0
 set_option maxRecDepth 50000
@@ -22,13 +22,13 @@ end
 section
 namespace K1_13_2_3_6
 open K1_13_2_3
-open private   sumFrom    from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 end K1_13_2_3_6
 end
 section
 namespace K1_13_2_3_6
 open K1_13_2 K1_13_2_3
-open private   sumFrom    from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 section
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
@@ -75,7 +75,7 @@ private theorem fastDen_eq (u : ℤ) : fastDen u = denominator u := by
     constructor <;> nlinarith only [hq]
 private theorem den_neg {u : ℤ} (h : u < 0) : denominator u = 0 := by
   simp only [denominator, ite_eq_left h]
-private theorem fastCum_eq (d u : ℤ) : fastCum d u = cumulative d u := by
+theorem fastCum_eq (d u : ℤ) : fastCum d u = cumulative d u := by
   by_cases hd : d < 0
   · simp [fastCum, cumulative, hd]
   by_cases hu : u < 0
@@ -104,15 +104,15 @@ private theorem cap_inactive (d u : ℤ) (hu : u ≤ 1650) :
   unfold cappedCount
   rw [ite_eq_right (by decide : ¬ (550 : ℤ) < 0), cumulative_neg_right (d - 550 - 1) _ (by omega),
     sub_zero, fastCum_eq]
-private def chart (d j h : ℤ) : Flag := ⟨d, 1650 - j, 1650, 550, h + 1⟩
-private theorem oldCount_eq (d j h : ℤ) (hj : 0 ≤ j) :
+def chart (d j h : ℤ) : Flag := ⟨d, 1650 - j, 1650, 550, h + 1⟩
+theorem oldCount_eq (d j h : ℤ) (hj : 0 ≤ j) :
     oldCount (chart d j h) = fastCum d 1650 - fastCum d (1649 - j) := by
   have hl : min (1650 : ℤ) (1650 - j - 1) = 1649 - j := by
     rw [min_eq_right (by omega)]
     omega
   simp only [oldCount, chart, hl, cap_inactive _ _ (le_refl _),
     cap_inactive _ _ (show 1649 - j ≤ 1650 by omega)]
-private theorem kernel_eq (d j h : ℤ) (hd : 0 ≤ d) (hj : 0 ≤ j) :
+theorem kernel_eq (d j h : ℤ) (hd : 0 ≤ d) (hj : 0 ≤ j) :
     kernelLower (chart d j h) = signedKernel d j h := by
   unfold kernelLower
   simp only [chart, show ¬ d < 0 by omega, decide_false, Bool.false_or, Bool.false_eq_true,
@@ -125,7 +125,7 @@ private theorem kernel_eq (d j h : ℤ) (hd : 0 ≤ d) (hj : 0 ≤ j) :
   · simp only [ite_eq_left hb, sub_zero]
   · simp only [ite_eq_right hb, fastCum_eq]
     ring
-private theorem residual_eq (d j h : ℤ) (v : ℕ) :
+theorem residual_eq (d j h : ℤ) (v : ℕ) :
     residualFlag (chart d j h) (Powers.expand ⟨v, 0, 0⟩) = chart (d - v) j h := by
   rw [residualFlag_expand]
   simp [chart]

@@ -10,7 +10,7 @@ namespace Front6960_1
 noncomputable section
 open Polynomial Matrix FrobeniusLocator Front6960
 open ProximityPrize.Benchmark
-open private eval_atSlope commonGCD_of_roots lift_dvd_atSlope from ProximityPrize.SubmissionLower.FrontBranch12
+open P1_1 (eval_atSlope commonGCD_of_roots lift_dvd_atSlope)
 private theorem twoBlock_atSlope (u : Words) (γ : K) :
     ((twoBlock u).map (evalRingHom γ)) =
       Strata.conjugateHankel (Strata.twoConjugations (frobenius K p))
@@ -133,7 +133,7 @@ theorem proof : Front6960.c1 := by
   have hv0 : V.eval (node i) = 0 := by
     change (atSlope (leftV R) γ).eval (node i) = 0
     rw [eval_atSlope, hzero.2, eval_zero]
-  have hdiv : (Polynomial.X : K[X]) - C (node i) ∣ locator node S :=
+  have hdiv : (Polynomial.X : (Polynomial K)) - C (node i) ∣ locator node S :=
     hG.2.2.2 _ (dvd_iff_isRoot.mpr hu0) (dvd_iff_isRoot.mpr hv0)
   have hroot : (locator node S).eval (node i) = 0 :=
     eval_eq_zero_of_dvd_of_eval_eq_zero hdiv (by rw [eval_sub, eval_X, eval_C, sub_self])

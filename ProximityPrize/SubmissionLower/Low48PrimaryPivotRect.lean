@@ -78,7 +78,7 @@ private theorem sum_cut (l0 l1 q0 q1 k : ℤ) (hl : l0 ≤ l1) (hq : q0 ≤ q1) 
 def fee2 (l0 l1 q0 q1 a b : ℤ) : ℤ :=
   cutFee l0 l1 q0 q1 a - cutFee l0 l1 q0 q1 b
 
-private theorem band_card (l0 l1 q0 q1 a b : ℤ)
+theorem band_card (l0 l1 q0 q1 a b : ℤ)
     (hl : l0 ≤ l1) (hq : q0 ≤ q1) (hab : a ≤ b) :
     2 * ↑(((Ico l0 l1).product (Ico q0 q1)).filter
       (fun x => a ≤ x.1-x.2 ∧ x.1-x.2 < b)).card = fee2 l0 l1 q0 q1 a b := by

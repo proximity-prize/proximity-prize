@@ -14,8 +14,8 @@ open K1_14 (Shape Banks Jet FX triangle shapeSum seedHasse)
 open K1_14_2 (UsesSeed)
 open K1_14_2_1 (exists_layered)
 open Polynomial Finset
-open private fixed_of_no_seed from ProximityPrize.SubmissionLower.Fast051
-open private eligible  cutoff_total from ProximityPrize.SubmissionLower.UpperBranch2
+open K1_14_3R (fixed_of_no_seed)
+open P1_7_2 (eligible cutoff_total)
 end
 end HighCore82258
 end

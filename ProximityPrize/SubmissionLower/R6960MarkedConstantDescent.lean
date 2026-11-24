@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960MarkedNativeNorm
 import ProximityPrize.SubmissionLower.R6960RetainedLinearAssembly
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -16,7 +17,7 @@ constant field. This includes inseparable constant extensions. -/
 theorem splits_of_constant_basis {k F A H E I:Type} [Field k] [Field F] [Field A] [Field H]
     [Field E] [Algebra k F] [Algebra F E] [Algebra k E] [IsScalarTower k F E] [IsAlgClosed A] [Fintype I]
     (j:F→+*H) (t:k→+*A) (n:A→+*H) (co:∀a,j (algebraMap k F a)=n (t a))
-    (q:F[X]) (ir:Irreducible q) (b:PowerBasis F E) (root:aeval b.gen q=0)
+    (q:(Polynomial F)) (ir:Irreducible q) (b:PowerBasis F E) (root:aeval b.gen q=0)
     (w:Basis I F E) (ints:∀i,IsIntegral k (w i)) : (q.map j).Splits := by
   classical
   let p:=q.map j
@@ -58,11 +59,11 @@ open RetainedCompression (view ordinate Curve)
 open scoped Lower6960.MarkedEvaluation
 local instance (priority:=2200) descentScalarBase : Algebra Scalar ChartField:=RatFunc.instAlgebraOfPolynomial Scalar Scalar
 
-def genericToFraction : ChartField≃+*Fn Scalar:=(IsLocalization.algEquiv (nonZeroDivisors Scalar[X]) ChartField (Fn Scalar)).toRingEquiv
+def genericToFraction : ChartField≃+*Fn Scalar:=(IsLocalization.algEquiv (nonZeroDivisors (Polynomial Scalar)) ChartField (Fn Scalar)).toRingEquiv
 
 theorem actual_geometric_of_constants {E I:Type} [Field E] [Algebra ChartField E] [Fintype I] [Nonempty I]
     (P:CurvatureSquares.Ordinate) (ir:Irreducible P) (pos:0<P.natDegree) (b:PowerBasis ChartField E)
-    (root:aeval b.gen ((toSeed P).map (algebraMap Scalar[X] ChartField))=0)
+    (root:aeval b.gen ((toSeed P).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (w:I→E) (li:LinearIndependent ChartField w) (size:Fintype.card I=finrank ChartField E)
     (ints:∀i,IsIntegral Scalar (w i)) : GeometricallyLinear P := by
   let A:=AlgebraicClosure Scalar
@@ -71,11 +72,11 @@ theorem actual_geometric_of_constants {E I:Type} [Field E] [Algebra ChartField E
   let n: A→+*Fn A:=(RetainedLinear.incl A).comp Polynomial.C
   let B:=basisOfLinearIndependentOfCardEqFinrank li size
   have bEq (i:I):B i=w i:=congrFun (coe_basisOfLinearIndependentOfCardEqFinrank li size) i
-  have fieldMap (p:Scalar[X]):genericToFraction (algebraMap Scalar[X] ChartField p)=RetainedLinear.incl Scalar p :=
-    (IsLocalization.algEquiv (nonZeroDivisors Scalar[X]) ChartField (Fn Scalar)).commutes p
-  have mapEq:j.comp (algebraMap Scalar[X] ChartField)=RetainedLinear.base (F:=Scalar) (E:=A) := by
+  have fieldMap (p:(Polynomial Scalar)):genericToFraction (algebraMap (Polynomial Scalar) ChartField p)=RetainedLinear.incl Scalar p :=
+    (IsLocalization.algEquiv (nonZeroDivisors (Polynomial Scalar)) ChartField (Fn Scalar)).commutes p
+  have mapEq:j.comp (algebraMap (Polynomial Scalar) ChartField)=RetainedLinear.base (F:=Scalar) (E:=A) := by
     apply RingHom.ext;intro p
-    change c (genericToFraction ((algebraMap Scalar[X] ChartField) p))=_
+    change c (genericToFraction ((algebraMap (Polynomial Scalar) ChartField) p))=_
     rw [fieldMap];exact RetainedLinear.rationalConstants_incl p
   have co (a:Scalar):j (algebraMap Scalar ChartField a)=n (algebraMap Scalar A a) := by
     change j (RatFunc.C a)=_
@@ -83,7 +84,7 @@ theorem actual_geometric_of_constants {E I:Type} [Field E] [Algebra ChartField E
     have eq:=DFunLike.congr_fun mapEq (Polynomial.C a)
     exact eq.trans (congrArg (RetainedLinear.incl A) (Polynomial.map_C (algebraMap Scalar A)))
   have pi:=RetainedLinear.toSeed_irreducible ir pos
-  have qp:Irreducible ((toSeed P).map (algebraMap Scalar[X] ChartField)) :=
+  have qp:Irreducible ((toSeed P).map (algebraMap (Polynomial Scalar) ChartField)) :=
     (pi.isPrimitive (by rw [RetainedLinear.toSeed_degree];omega)).irreducible_iff_irreducible_map_fraction_map.mp pi
   have split:=splits_of_constant_basis j (algebraMap Scalar A) n co _ qp b root B (fun i=>bEq i ▸ ints i)
   rw [Polynomial.map_map,mapEq] at split

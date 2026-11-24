@@ -28,9 +28,9 @@ instance (caps : Fin 5 → Cap) (i : Fin 5) : Finite (capFamily caps i) :=
   inferInstanceAs (Finite (latticePoints (caps i)))
 
 
-open private generator_mem_diagonal from ProximityPrize.SubmissionLower.Low48BentCycle
+open Low48BentCycle (generator_mem_diagonal)
 
-private theorem diagonal_unit (B : Family) (h0 : ∀ i, 0 ∈ B i) (i : Fin 5) :
+theorem diagonal_unit (B : Family) (h0 : ∀ i, 0 ∈ B i) (i : Fin 5) :
     diagonalExponents B (unitGrade i) = B i := by
   ext m
   constructor
@@ -52,7 +52,7 @@ private theorem diagonal_unit (B : Family) (h0 : ∀ i, 0 ∈ B i) (i : Fin 5) :
   · intro hm
     exact generator_mem_diagonal h0 (⟨i, ⟨m, hm⟩⟩ : Generator B)
 
-private theorem grade_sum (t : Grade) : (∑ i : Fin 5, t i • unitGrade i) = t := by
+theorem grade_sum (t : Grade) : (∑ i : Fin 5, t i • unitGrade i) = t := by
   ext i
   rw [Finsupp.finsetSum_apply, Finset.sum_eq_single i]
   · simp [unitGrade]
@@ -60,7 +60,7 @@ private theorem grade_sum (t : Grade) : (∑ i : Fin 5, t i • unitGrade i) = t
     simp [unitGrade, Ne.symm hj]
   · simp
 
-private theorem diagonal_sum (B : Family) (s : Finset (Fin 5)) (t : Fin 5 → Grade) :
+theorem diagonal_sum (B : Family) (s : Finset (Fin 5)) (t : Fin 5 → Grade) :
     diagonalExponents B (∑ i ∈ s, t i) = ∑ i ∈ s, diagonalExponents B (t i) := by
   classical
   induction s using Finset.induction_on with
@@ -91,7 +91,7 @@ theorem diagonal_cap (caps : Fin 5 → Cap) (h : ∀ i, Chamber (caps i)) (t : G
       exact lattice_scale _ (h i) _
     _ = _ := lattice_sum _ _ (fun i _ => chamber_scale (h i) (t i))
 
-private theorem coeff_congr (S T : Set Exponent) [Finite S] [Finite T] (h : S = T) :
+theorem coeff_congr (S T : Set Exponent) [Finite S] [Finite T] (h : S = T) :
     (affineHilbertPolynomial (Ideal.comap (monomialMap GeoField S) ⊥)).coeff 5 =
       (affineHilbertPolynomial (Ideal.comap (monomialMap GeoField T) ⊥)).coeff 5 := by
   subst T

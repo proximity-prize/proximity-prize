@@ -7,9 +7,9 @@ namespace Front6960_3
 noncomputable section
 open Front6960 Polynomial
 open P1_3 (Bank cutDegree)
-def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : K[X] :=
+def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : (Polynomial K) :=
   B.a * (B.β l).map twist
-def rightCoeff {u T R D} (B : RankThree u T R D) (j : Fin 2) : K[X] :=
+def rightCoeff {u T R D} (B : RankThree u T R D) (j : Fin 2) : (Polynomial K) :=
   -(B.b * B.α j)
 abbrev sourceCutoff : ℕ := 4 * agreement - 1
 def quotientSurplus (bank : Bank) (n h : ℕ) : Prop :=
@@ -29,7 +29,7 @@ namespace Front6960_3
 noncomputable section
 open Front6960 Polynomial ProximityPrize.Benchmark FrobeniusLocator
 open P1_3 (Adjugate Plane)
-open private amp_le primitive_lift contraction_degree from ProximityPrize.SubmissionLower.PortFrontB
+open P0_6 (amp_le primitive_lift contraction_degree)
 theorem adjugate_of_plane {u : Words} {T : TwoActive u} {R : Relation T} {D : Reduction u T R}
     (B : RankThree u T R D) (hnp : Nonparallel B)
     (W : Plane u (fixedNodes R) D.height (leftCoeff B) (rightCoeff B))
@@ -40,7 +40,7 @@ theorem adjugate_of_plane {u : Words} {T : TwoActive u} {R : Relation T} {D : Re
   let V := fun j => (B.β j).map twist
   let s := amplitudeDegree (A 0) (A 1)
   let t := amplitudeDegree (V 0) (V 1)
-  have htw (P : K[X]) : (P.map twist).natDegree = P.natDegree :=
+  have htw (P : (Polynomial K)) : (P.map twist).natDegree = P.natDegree :=
     natDegree_map_eq_of_injective twist.injective _
   have ht : t = amplitudeDegree (B.β 0) (B.β 1) := by simp only [t, V, amplitudeDegree, htw]
   have ha : B.a.natDegree + t ≤ D.height := ht ▸ B.first_degree
@@ -77,7 +77,7 @@ theorem adjugate_of_plane {u : Words} {T : TwoActive u} {R : Relation T} {D : Re
   have hfixed (i : I) : τ (node i) = node i := by
     have hh : twist (node i) = node i := Native.native_domain_fixed i
     simpa only [hh] using hundo (node i)
-  have hmap (F : K[X]) (i : I) : (F.map τ).eval (node i) = τ (F.eval (node i)) :=
+  have hmap (F : (Polynomial K)) (i : I) : (F.map τ).eval (node i) = τ (F.eval (node i)) :=
     Strata.eval_coefficient_map τ _ _ (hfixed i)
   have hβ (l : Fin 2) (i : I) : (V l).eval (node i) = twist ((B.β l).eval (node i)) :=
     Strata.eval_coefficient_map twist _ _ (Native.native_domain_fixed i)
@@ -131,8 +131,8 @@ noncomputable section
 open Front6960
 open P1_3 (Bank)
 open scoped BigOperators
-open private jet_quotient from ProximityPrize.SubmissionLower.FrontBranch3
-open private sum_rows ceil_sq_div_eq from ProximityPrize.SubmissionLower.PortFrontB
+open P1_3 (jet_quotient)
+open P0_6 (sum_rows ceil_sq_div_eq)
 private theorem source_st : K1_10.sourceDim sourceCutoff 5 20 17 = 1980511330 := by
   let rows : Fin 6 → ℕ := ![813022959, 547966200, 339193358, 183750588, 78159761, 18418464]
   unfold K1_10.sourceDim
@@ -224,7 +224,7 @@ namespace Front6960_3
 noncomputable section
 open Front6960 FrobeniusLocator ProximityPrize.Benchmark Polynomial
 open P1_3 (Adjugate)
-open private natDegree_lt_of_degree_lt_pos from ProximityPrize.SubmissionLower.PortFrontB
+open P0_6 (natDegree_lt_of_degree_lt_pos)
 theorem mark_disjoint {u : Words} {T : TwoActive u} {R : Relation T} (D : Reduction u T R)
     {γ : K} (hn : Normal u γ) (M : BadMark u γ) :
     Disjoint M.support (fixedNodes R) := by
@@ -310,8 +310,7 @@ namespace Front6960_3
 noncomputable section
 open Front6960 Polynomial FrobeniusLocator
 open P1_3 (Plane)
-open private column column_ne column_bound column_dvd firstColumn_normal threeU_fun
-  tight_pair outputs slice_bound nodes_of_columns relationOn_fun from ProximityPrize.SubmissionLower.PortFrontB
+open P0_6 (column column_ne column_bound column_dvd firstColumn_normal threeU_fun tight_pair outputs slice_bound nodes_of_columns relationOn_fun)
 private theorem left_eq {u T R D} (B : RankThree u T R D) :
     threeU B.a B.β = column p (leftCoeff B) := by
   rw [threeU_fun]
@@ -326,7 +325,7 @@ theorem plane_of_rankThree {u : Words} {T : TwoActive u} {R : Relation T}
     Nonempty (Plane u (fixedNodes R) D.height (leftCoeff B) (rightCoeff B)) := by
   let U := leftCoeff B
   let V := rightCoeff B
-  have amp_ne (v : Fin 2 → K[X]) (hv : IsCoprime (v 0) (v 1)) : ∃ j, v j ≠ 0 := by
+  have amp_ne (v : Fin 2 → (Polynomial K)) (hv : IsCoprime (v 0) (v 1)) : ∃ j, v j ≠ 0 := by
     by_contra! hz
     obtain ⟨a,b,hab⟩ := hv
     simp [hz] at hab
@@ -355,8 +354,8 @@ theorem plane_of_rankThree {u : Words} {T : TwoActive u} {R : Relation T}
       apply Nat.add_le_add_left
     · exact le_max_left _ _
     · exact le_max_right _ _
-  let φ := algebraMap K[X] Frac
-  have hinj : Function.Injective φ := IsFractionRing.injective K[X] Frac
+  let φ := algebraMap (Polynomial K) Frac
+  have hinj : Function.Injective φ := IsFractionRing.injective (Polynomial K) Frac
   have hd (P : Bivar) : (extendSeed P).natDegree = P.natDegree := natDegree_map_eq_of_injective hinj _
   have hn {P : Bivar} (hp : P ≠ 0) : extendSeed P ≠ 0 := (Polynomial.map_ne_zero_iff hinj).mpr hp
   have hdir := B.same_direction
@@ -467,8 +466,8 @@ open MvPolynomial K1_11
 open K1_10_1 (Contacts relationBounds)
 open Front6960_3 (sourceCutoff)
 open P1_3_1 (Multipliers)
-open private localMultiply LocalSpace local_finrank from ProximityPrize.SubmissionLower.FrontBranch3
-open private exists_kernel_outside from ProximityPrize.SubmissionLower.PortFrontB
+open P1_3_1 (localMultiply LocalSpace local_finrank)
+open P0_6_1 (exists_kernel_outside)
 abbrev Source (F : Type*) [Field F] (bank : P1_3.Bank) :=
   filtered (F := F) (sourceWeights 131071) (sourceBounds sourceCutoff 5 bank.first bank.second)
 variable {F : Type*} [Field F] {N : ℕ} {L : MvPolynomial (Fin 5) F}
@@ -510,8 +509,9 @@ theorem quotientSource (hL : L ≠ 0) (hh : h ≤ 33561) (hs : Front6960_3.quoti
       V sourceCutoff 131071 5 bank.first bank.second -
         V (sourceCutoff - 131071 - h) 131071 4 (bank.first - 1) (bank.second - 1) at hs
     omega
-  obtain ⟨G, hG, hnot⟩ := exists_kernel_outside (G := ∀ i : Fin N, LocalSpace bank C hdeg i)
+  have hk := P0_6_1.exists_kernel_outside (G := ∀ i : Fin N, LocalSpace bank C hdeg i)
     (LinearMap.pi (nodeMap bank C hdeg)) (LinearMap.range mult) hdim
+  obtain ⟨G, hG, hnot⟩ := hk
   refine ⟨G, (mem_filteredMul_range_iff _ _ _ L hL hdeg hfit G).not.mp hnot, ?_⟩
   intro i
   have hi : nodeMap bank C hdeg i G = 0 := congrFun hG i
@@ -535,8 +535,8 @@ open P1_3 (Plane)
 open Front6960_3 (sourceCutoff)
 open P1_3_1 (toScalarSource toScalarSource_atDecoder)
 open K1_10_1 (Contacts denominator numerator planeRelation planeRelation_view relationBounds)
-open private coeff_bounds denominator_ne relation_eval from ProximityPrize.SubmissionLower.PortFrontB
-open private scalar_total_weight_le from ProximityPrize.SubmissionLower.Fast071
+open P0_6_1 (coeff_bounds denominator_ne relation_eval)
+open K1_11 (scalar_total_weight_le)
 private theorem mark_degree {u : Words} {γ : K} (M : BadMark u γ) :
     M.decoder.natDegree ≤ 131071 := by
   apply Polynomial.natDegree_le_of_degree_le
@@ -663,9 +663,9 @@ open Front6960_3 (incidenceRatio)
 open K1_10_2 (GenericRow point surface_count_with_terminal RegularRoot
   derivativeOrder toGeneric atTrajectory)
 open scoped Polynomial
-open private assign_charts from ProximityPrize.SubmissionLower.FrontBranch3
-open private nodeCut eval_nodeCut from ProximityPrize.SubmissionLower.Fast069
-open private derivativeOrder_degree K1_10_2.eval_toGeneric from ProximityPrize.SubmissionLower.Fast069
+open P1_3_2 (assign_charts)
+open K1_10_2_2 (nodeCut eval_nodeCut)
+open K1_10_2 (derivativeOrder_degree eval_toGeneric)
 private abbrev Marks (u : Words) (Γ : Finset K) := ∀ γ ∈ Γ, BadMark u γ
 private structure TaylorCuts {u : Words} {Γ : Finset K} (F : Marks u Γ) where
   equation : I → GenericRow
@@ -674,7 +674,7 @@ private structure TaylorCuts {u : Words} {Γ : Finset K} (F : Marks u Γ) where
     MvPolynomial.eval (point γ (F γ hγ).decoder) (equation i) = 0 ↔
       (F γ hγ).decoder.eval (node i) = u 0 i + γ * u 1 i
 private theorem pencil_count {u : Words} (Γ : Finset K) (F : Marks u Γ)
-    (P Q : K[X]) (hP : P.degree < 131072) (hQ : Q.degree < 131072)
+    (P Q : (Polynomial K)) (hP : P.degree < 131072) (hQ : Q.degree < 131072)
     (hpencil : ∀ γ (hγ : γ ∈ Γ), (F γ hγ).decoder = P + Polynomial.C γ * Q) :
     Γ.card ≤ 82318 := by
   classical
@@ -792,7 +792,7 @@ private theorem count_chart {u : Words} {Γ : Finset K} (F : Marks u Γ) (C : Ta
     intro γ δ h
     apply Subtype.ext
     apply Polynomial.C_injective
-    apply IsFractionRing.injective K[X] Frac
+    apply IsFractionRing.injective (Polynomial K) Frac
     exact congrFun h 1
   let S := Γ.attach.image x
   have hcard : S.card = Γ.card := by
@@ -859,13 +859,13 @@ theorem proof : Front6960_3.c2 := by
     let C : TaylorCuts M :=
       ⟨nodeCut u G, nodeCut_degree u G hG, fun γ hγ i =>
         eval_nodeCut u G γ (M γ hγ).decoder (hregular γ hγ) (M γ hγ).degree i⟩
-    have hinj := IsFractionRing.injective K[X] Frac
+    have hinj := IsFractionRing.injective (Polynomial K) Frac
     have hGne : G ≠ 0 := by
       intro h
       exact (hregular γ₀ hγ₀).2 (by simp [h, atTrajectory])
     have hgne : toGeneric G ≠ 0 := by
       intro h
-      exact hGne (MvPolynomial.map_injective (algebraMap K[X] Frac) hinj
+      exact hGne (MvPolynomial.map_injective (algebraMap (Polynomial K) Frac) hinj
         (by simpa [toGeneric] using h))
     have hgd : (toGeneric G).totalDegree ≤ 42 := by
       simpa only [toGeneric, totalDegree, support_map_of_injective G hinj] using hG

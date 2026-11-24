@@ -31,7 +31,8 @@ lemma shear_coeff_zero (η : Polynomial B) (hη : η.coeff 0 = 0)
   | add f g hf hg => simp [hf, hg]
   | monomial a p =>
       have hη' : η.eval 0 = 0 := by simpa only [coeff_zero_eq_eval_zero] using hη
-      simp [shear, coeff_zero_eq_eval_zero, eval_comp, hη', eval_pow]
+      simp [shear, coeff_zero_eq_eval_zero, eval_comp, hη', eval_pow, Finsupp.single_apply]
+      split_ifs <;> simp [*]
 
 lemma shear_derivative (η : Polynomial B) (f : Polynomial (Polynomial B)) :
     shear η (Polynomial.derivative f) = Polynomial.derivative (shear η f) := by

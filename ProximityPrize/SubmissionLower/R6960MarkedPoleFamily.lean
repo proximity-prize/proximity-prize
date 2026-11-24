@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.R6960MarkedWordResidues
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -19,7 +20,7 @@ def chartDenom (T:Finset L) (s:Chart) : E:=∏z∈T,algebraMap (baseChart s) E (
 def controlled (i:ℕ) (T:Finset L) (v:E) : Prop :=
   ∀s,Regular s i (chartDenom E T s*v)
 
-private theorem denom_integral (T:Finset L) (s:Chart) : IsIntegral (baseChart s) (chartDenom E T s) := by
+theorem denom_integral (T:Finset L) (s:Chart) : IsIntegral (baseChart s) (chartDenom E T s) := by
   unfold chartDenom
   rw [←map_prod];exact isIntegral_algebraMap
 
@@ -36,7 +37,7 @@ private theorem denom_value (T:Finset L) (z:L) :
   rw [denominator,map_prod,map_prod]
   exact Finset.prod_congr rfl (fun y _=>eval_cut E z y)
 
-private theorem denom_zero (T:Finset L) (z:L) (hz:z∈T) :
+theorem denom_zero (T:Finset L) (z:L) (hz:z∈T) :
     Ideal.Quotient.mk (axisIdeal E true z) (denominator E T)=0 := by
   rw [denom_value,Finset.prod_eq_zero (f:=fun u:L=>z-u) hz (sub_self z),map_zero]
 

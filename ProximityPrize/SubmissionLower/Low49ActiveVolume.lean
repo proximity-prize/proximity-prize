@@ -13,8 +13,7 @@ open K1_13 (Shape)
 open K1_13_6 (GeoField)
 open K1_13_6_2 (GeoJets5)
 open K1_13_6_2_4_3 (monomial_hilbert_count)
-open private latticePolynomial latticePolynomial_eval
-  from ProximityPrize.SubmissionLower.Low48BentVolume
+open Low48BentVolume (latticePolynomial latticePolynomial_eval)
 open scoped BigOperators Pointwise
 noncomputable section
 
@@ -109,7 +108,7 @@ private theorem sumLoss_eval (c h n : ℚ) :
   unfold sumLoss sliceLoss coeff1 coeff2 coeff3 coeff4 coeff5
   ring
 
-private def lossPolynomial (c h : ℚ) : ℚ[X] :=
+private def lossPolynomial (c h : ℚ) : (Polynomial ℚ) :=
   Polynomial.C (coeff5 c h)*Polynomial.X^5+Polynomial.C (coeff4 c h)*Polynomial.X^4+
     Polynomial.C (coeff3 c h)*Polynomial.X^3+Polynomial.C (coeff2 c h)*Polynomial.X^2+
     Polynomial.C (coeff1 c h)*Polynomial.X^1

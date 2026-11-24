@@ -21,8 +21,7 @@ open K1_13_2_2 (JetExp oldWeight gradeWeight cumulativeColumns cumulativeExponen
   mem_cumulativeColumns)
 open scoped BigOperators
 open Finset
-open private K1_13_2_2_3.cappedColumns K1_13_2_2_3.mem_cappedColumns K1_13_2_2_3.capped_card
-  from ProximityPrize.SubmissionLower.Fast068
+open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 
 /-! ### Monotonicity of the accepted count -/

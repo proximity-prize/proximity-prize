@@ -52,10 +52,10 @@ theorem bad_labels (f : Equation) (sep : (f.map (algebraMap Seeds K1_14_2.SeedFi
   rw [eq] at cap
   exact cap.trans_eq (by ring)
 
-def simpleSheet (f : Equation) (label : K) (word : K[X]) : Prop :=
+def simpleSheet (f : Equation) (label : K) (word : (Polynomial K)) : Prop :=
   let q:=f.map (graphEval label)
   q.natDegree=f.natDegree ∧ q.Separable ∧
-  ∃ H Q : FX[X], q=(Polynomial.X-C (atX word))*Q ∧ H.eval (atX word)=1 ∧ Q∣H ∧
+  ∃ H Q : (Polynomial FX), q=(Polynomial.X-C (atX word))*Q ∧ H.eval (atX word)=1 ∧ Q∣H ∧
     let e:=AdjoinRoot.mk q H
     e^2=e ∧ e≠0 ∧ e≠1
 
@@ -101,7 +101,7 @@ theorem good_remainder {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
   have root : (f.map (graphEval (M.label γ))).eval (atX (F.scalar γ))=0 := by
     change eval₂ (graphEval (M.label γ)) (atX (F.scalar γ)) q=0 at hit
     rw [eval_map,eq,eval₂_mul,hit,zero_mul]
-  have full := natDegree_map_eq_of_resultant_derivative_padded_ne_zero _ _ le_rfl (by omega : 0<f.natDegree) safe
+  have full := natDegree_map_eq_of_resultant_derivative_padded_ne_zero _ _ le_rfl safe
   exact ⟨full,separable_map_of_resultant_derivative_padded_ne_zero _ _ le_rfl (by omega) safe,
     MarkedRoot.sheet (by omega) _ root
       (eval_derivative_map_ne_zero_of_resultant_derivative_padded_ne_zero _ _ le_rfl (by omega) safe _ root)⟩

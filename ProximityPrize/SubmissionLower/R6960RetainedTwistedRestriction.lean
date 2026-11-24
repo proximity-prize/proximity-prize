@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960RetainedSurfaceDimension
 import ProximityPrize.SubmissionLower.R6960RetainedCodimension
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -13,7 +14,7 @@ open MonicFourChartDescent ChartSections MonicChartLaurent MonicChartProbes
 open RetainedRestrictionTorus ChartOverlapTests RetainedSurfaceClass
 open Module Submodule LinearMap Algebra Polynomial
 open scoped Lower6960.RetainedSurfaceClass Lower6960.MonicChartProbes Polynomial
-open private Lower6960.RetainedRestrictionTorus.frame_integral from ProximityPrize.SubmissionLower.R6960RetainedPairedResidues
+open Lower6960.RetainedRestrictionTorus (frame_integral)
 variable {E:Type} [Field E] [Algebra ChartField E]
 local notation "ι" => algebraMap ChartField E
 def fr (s:Chart) : E := ι (localFrame s false)
@@ -35,7 +36,7 @@ private theorem ratio (s t:Chart) : localFrame t false/localFrame s false∈base
     simp [localFrame,coordinate,axisBit,a,b,RatFunc.X_ne_zero] at * <;>
     simpa [chartCoordinate,a] using h
 
-private theorem regular_on_overlap (s t:Chart) (i:ℕ) (v:E) (ok:Regular t i v) : Over s t i v := by
+theorem regular_on_overlap (s t:Chart) (i:ℕ) (v:E) (ok:Regular t i v) : Over s t i v := by
   have r:= (order_mono (into_cleared _ (edge s t)) (baseReg (E:=E) (ratio s t))).pow i
   have a:=r.mul (order_mono (chart_cover s t) ok)
   have eq : ι (localFrame t false/localFrame s false)^i * ((fr t)⁻¹^i*v)=(fr s)⁻¹^i*v := by

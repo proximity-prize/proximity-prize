@@ -50,15 +50,15 @@ private theorem vector_recover {A : Type*} [CommSemiring A] {a b : ℕ} (Q : Cur
     exact has (exponent_exhaustive (hW (MvPolynomial.mem_support_iff.mpr hn)))
   rw [zero _ (vector_box _), zero _ fit]
 
-def evaluate {F : Type*} [Field F] (z : F) (S : F[X]) : Curve F[X] →+* F[X] :=
+def evaluate {F : Type*} [Field F] (z : F) (S : (Polynomial F)) : Curve (Polynomial F) →+* (Polynomial F) :=
   MvPolynomial.eval (fun j : Index => j.elim S (fun _ => C z))
 
-def markMatrix {F α : Type*} [Field F] (z : α→F) (S : α→F[X]) (a b : ℕ) :
-    Matrix α (Slots a b) F[X] :=
+def markMatrix {F α : Type*} [Field F] (z : α→F) (S : α→(Polynomial F)) (a b : ℕ) :
+    Matrix α (Slots a b) (Polynomial F) :=
   Matrix.of fun i j => S i ^ j.1.val * C (z i ^ j.2.val)
 
 private theorem mark_degree {F α : Type*} [Field F]
-    (z : α→F) (S : α→F[X]) (d a b : ℕ) (deg : ∀ i,(S i).natDegree≤d) :
+    (z : α→F) (S : α→(Polynomial F)) (d a b : ℕ) (deg : ∀ i,(S i).natDegree≤d) :
     ∀ i j,(markMatrix z S a b i j).natDegree≤columnWeight d j := by
   intro i j
   have h := Polynomial.natDegree_mul_le
@@ -79,13 +79,13 @@ private theorem eval_vector {A : Type*} [CommSemiring A] {a b : ℕ}
   simp only [Option.elim_none,Option.elim_some,exponent_y,Fintype.prod_unique,exponent_z]
   ac_rfl
 
-private theorem eval_map_incl {F : Type*} [Field F] (z : F) (S : F[X]) (Q : Curve F[X]) :
+private theorem eval_map_incl {F : Type*} [Field F] (z : F) (S : (Polynomial F)) (Q : Curve (Polynomial F)) :
     MvPolynomial.eval (fun j : Index => j.elim
-        (algebraMap F[X] (FractionRing F[X]) S)
-        (fun _ => algebraMap F[X] (FractionRing F[X]) (C z)))
-      (MvPolynomial.map (algebraMap F[X] (FractionRing F[X])) Q) =
-      algebraMap F[X] (FractionRing F[X]) (evaluate z S Q) := by
-  let incl := algebraMap F[X] (FractionRing F[X])
+        (algebraMap (Polynomial F) (FractionRing (Polynomial F)) S)
+        (fun _ => algebraMap (Polynomial F) (FractionRing (Polynomial F)) (C z)))
+      (MvPolynomial.map (algebraMap (Polynomial F) (FractionRing (Polynomial F))) Q) =
+      algebraMap (Polynomial F) (FractionRing (Polynomial F)) (evaluate z S Q) := by
+  let incl := algebraMap (Polynomial F) (FractionRing (Polynomial F))
   have ring : (MvPolynomial.eval (fun j : Index => j.elim (incl S) (fun _ => incl (C z)))).comp
       (MvPolynomial.map incl) = incl.comp (evaluate z S) := by
     apply MvPolynomial.ringHom_ext
@@ -96,21 +96,21 @@ private theorem eval_map_incl {F : Type*} [Field F] (z : F) (S : F[X]) (Q : Curv
 /-- Multiplication by the nonzero marked factor supplies the full quotient
 rectangle as independent rational kernel directions. -/
 theorem rational_kernel {F α : Type*} [Field F] [Finite α]
-    (z : α→F) (S : α→F[X]) (f : Curve F[X]) (fn : f≠0) (e v : ℕ)
-    (box : f∈Box F[X] e v) (marks : ∀ i,evaluate (z i) (S i) f=0) :
-    Fintype.card (QuotRect e v)≤Module.finrank (FractionRing F[X])
+    (z : α→F) (S : α→(Polynomial F)) (f : Curve (Polynomial F)) (fn : f≠0) (e v : ℕ)
+    (box : f∈Box (Polynomial F) e v) (marks : ∀ i,evaluate (z i) (S i) f=0) :
+    Fintype.card (QuotRect e v)≤Module.finrank (FractionRing (Polynomial F))
       (LinearMap.ker ((markMatrix z S (boxOrdinate e) (paddedSeed v)).map
-        (algebraMap F[X] (FractionRing F[X]))).mulVecLin) := by
+        (algebraMap (Polynomial F) (FractionRing (Polynomial F)))).mulVecLin) := by
   classical
-  let E := FractionRing F[X]
-  let j := algebraMap F[X] E
+  let E := FractionRing (Polynomial F)
+  let j := algebraMap (Polynomial F) E
   let g := MvPolynomial.map j f
   let W := markMatrix z S (boxOrdinate e) (paddedSeed v)
-  have gn : g≠0 := (map_ne_zero_iff _ (MvPolynomial.map_injective _ (IsFractionRing.injective F[X] E))).mpr fn
+  have gn : g≠0 := (map_ne_zero_iff _ (MvPolynomial.map_injective _ (IsFractionRing.injective (Polynomial F) E))).mpr fn
   have gbox : g∈Box E e v := by
     change ∀ m∈g.support,m∈Exponents e v
     have supp : g.support=f.support :=
-      MvPolynomial.support_map_of_injective f (IsFractionRing.injective F[X] E)
+      MvPolynomial.support_map_of_injective f (IsFractionRing.injective (Polynomial F) E)
     rw [supp]
     exact box
   let mulVec : (QuotRect e v→E) →ₗ[E] (Rect e v→E) := {
@@ -163,11 +163,11 @@ theorem rational_kernel {F α : Type*} [Field F] [Finite α]
     nsmul_eq_mul,mul_one,Nat.cast_id,W,j,E] using dim
 
 private theorem eval_packed {F α : Type*} [Field F]
-    (z : α→F) (S : α→F[X]) {a b d W : ℕ}
+    (z : α→F) (S : α→(Polynomial F)) {a b d W : ℕ}
     (u : HeightCompression.Coeffs F (fun j : Slots a b => columnWeight d j) W) (i : α) :
     evaluate (z i) (S i) (packLinear F a b d W u) =
       HeightCompression.evaluation (markMatrix z S a b) (columnWeight d) W u i := by
-  change evaluate (z i) (S i) (vectorPoly (fun j => (u j : F[X])))=_
+  change evaluate (z i) (S i) (vectorPoly (fun j => (u j : (Polynomial F))))=_
   unfold evaluate
   rw [eval_vector]
   simp [HeightCompression.evaluation,markMatrix,C_pow]
@@ -175,11 +175,11 @@ private theorem eval_packed {F α : Type*} [Field F]
 /-- At excessive weight, the full kernel cannot consist entirely of multiples
 of the marked factor. The resulting relation is an actual escaping cutter. -/
 theorem escape {F α : Type*} [Field F] [Finite α]
-    (z : α→F) (S : α→F[X]) (d : ℕ) (hd : 0<d) (degree : ∀ i,(S i).natDegree≤d)
-    (f : Curve F[X]) (fn : f≠0) {e v : ℕ} (he : 2≤e)
+    (z : α→F) (S : α→(Polynomial F)) (d : ℕ) (hd : 0<d) (degree : ∀ i,(S i).natDegree≤d)
+    (f : Curve (Polynomial F)) (fn : f≠0) {e v : ℕ} (he : 2≤e)
     (ed : f.degreeOf ordinate=e) (vd : f.degreeOf parameter=v)
     (marks : ∀ i,evaluate (z i) (S i) f=0) (hlarge : heightCap e d<height d f) :
-    ∃ G : Curve F[X], G≠0 ∧ ¬ f∣G ∧ G∈Box F[X] (boxOrdinate e) (paddedSeed v) ∧
+    ∃ G : Curve (Polynomial F), G≠0 ∧ ¬ f∣G ∧ G∈Box (Polynomial F) (boxOrdinate e) (paddedSeed v) ∧
       height d G<width e d ∧ ∀ i,evaluate (z i) (S i) G=0 := by
   classical
   let A := markMatrix z S (boxOrdinate e) (paddedSeed v)
@@ -206,7 +206,7 @@ theorem escape {F α : Type*} [Field F] [Finite α]
     · exact zero ▸ Submodule.zero_mem _
     obtain ⟨Q,eq⟩ := all u
     have qn : Q≠0 := fun no => zero (by rw [eq,no,mul_zero])
-    have dQ : Q∈Box F[X] e (quotientSeed v) := by
+    have dQ : Q∈Box (Polynomial F) e (quotientSeed v) := by
       have fit := (box_iff _ _ _).mp (pack_box u.val)
       change (pack u.val).degreeOf ordinate≤_ ∧ (pack u.val).degreeOf parameter≤_ at fit
       rw [eq,MvPolynomial.degreeOf_mul_eq fn qn,MvPolynomial.degreeOf_mul_eq fn qn,ed,vd] at fit

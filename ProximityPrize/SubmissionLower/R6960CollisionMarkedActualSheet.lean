@@ -20,7 +20,7 @@ variable {K : Type*} [Field K]
 
 /-- Leading-coefficient normalization preserves separability on a full
 fibre whose degree is below the characteristic. -/
-theorem integralNormalization_separable (p : ℕ) [CharP K p] (q : K[X])
+theorem integralNormalization_separable (p : ℕ) [CharP K p] (q : (Polynomial K))
     (pos : 0<q.natDegree) (small : q.natDegree<p) (sep : q.Separable) :
     q.integralNormalization.Separable := by
   let a := q.leadingCoeff
@@ -53,7 +53,7 @@ variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
 
 /-- The actual integral leading-coefficient times ordinate in the surface
 order, before reducing the scalar variable. -/
-def scaledRoot (P : (Plane k)[X]) (g : E) (pn : P≠0) (root : aeval g P=0) : Order k E :=
+def scaledRoot (P : (Polynomial (Plane k))) (g : E) (pn : P≠0) (root : aeval g P=0) : Order k E :=
   ⟨algebraMap (Plane k) E P.leadingCoeff*g,
     by
       have j : Function.Injective (algebraMap (Plane k) E) := by
@@ -63,34 +63,34 @@ def scaledRoot (P : (Plane k)[X]) (g : E) (pn : P≠0) (root : aeval g P=0) : Or
       exact ⟨P.integralNormalization,monic_integralNormalization pn,
         integralNormalization_aeval_eq_zero root (fun a az=>j (az.trans (map_zero _).symm))⟩⟩
 
-def scaledOrdinate (P : (Plane k)[X]) (g : E) (pn : P≠0) (root : aeval g P=0) (z : k) :
-    ((FractionRing k[X])⊗[k[X]] Fiber E z) :=
-  1 ⊗ₜ[k[X]] quotientMap E z (scaledRoot P g pn root)
+def scaledOrdinate (P : (Polynomial (Plane k))) (g : E) (pn : P≠0) (root : aeval g P=0) (z : k) :
+    ((FractionRing (Polynomial k))⊗[(Polynomial k)] Fiber E z) :=
+  1 ⊗ₜ[(Polynomial k)] quotientMap E z (scaledRoot P g pn root)
 
 /-- The generic abscissa of the original scalar fibre is the actual
 specialized ordinate quotient. The idempotent selects the marked word,
 after the invertible leading-coefficient change of ordinate. -/
-theorem actual_scaled_word_sheet (p : ℕ) [CharP (FractionRing k[X]) p]
-    (P : (Plane k)[X]) (large : 2≤P.natDegree) (small : P.natDegree<p)
+theorem actual_scaled_word_sheet (p : ℕ) [CharP (FractionRing (Polynomial k)) p]
+    (P : (Polynomial (Plane k))) (large : 2≤P.natDegree) (small : P.natDegree<p)
     (b : PowerBasis (FractionRing (Plane k)) E) (dim : b.dim=P.natDegree)
-    (root : aeval b.gen P=0) (z : k) (S : k[X])
+    (root : aeval b.gen P=0) (z : k) (S : (Polynomial k))
     (full : (P.map (genericFibreBase z)).natDegree=P.natDegree)
     (sep : (P.map (genericFibreBase z)).Separable)
-    (word : (P.map (genericFibreBase z)).eval (algebraMap k[X] (FractionRing k[X]) S)=0) :
+    (word : (P.map (genericFibreBase z)).eval (algebraMap (Polynomial k) (FractionRing (Polynomial k)) S)=0) :
     let pn : P≠0 := fun h=>by rw [h,natDegree_zero] at large; omega
     let q := P.integralNormalization.map (genericFibreBase z)
-    let y := genericFibreBase z P.leadingCoeff*algebraMap k[X] (FractionRing k[X]) S
-    ∃ (e : AdjoinRoot q ≃ₐ[FractionRing k[X]]
-        ((FractionRing k[X])⊗[k[X]] Fiber E z)) (H Q : (FractionRing k[X])[X]),
+    let y := genericFibreBase z P.leadingCoeff*algebraMap (Polynomial k) (FractionRing (Polynomial k)) S
+    ∃ (e : AdjoinRoot q ≃ₐ[FractionRing (Polynomial k)]
+        ((FractionRing (Polynomial k))⊗[(Polynomial k)] Fiber E z)) (H Q : (Polynomial (FractionRing (Polynomial k)))),
       q.Separable ∧ q=(Polynomial.X-C y)*Q ∧ H.eval y=1 ∧ Q∣H ∧
       e (AdjoinRoot.root q)=scaledOrdinate P b.gen pn root z ∧
       let η:=e (AdjoinRoot.mk q H)
       η^2=η ∧ η≠0 ∧ η≠1 ∧
-        (scaledOrdinate P b.gen pn root z-(y ⊗ₜ[k[X]] (1:Fiber E z)))*η=0 := by
+        (scaledOrdinate P b.gen pn root z-(y ⊗ₜ[(Polynomial k)] (1:Fiber E z)))*η=0 := by
   classical
   let A := Plane k
   let F := FractionRing A
-  let K := FractionRing k[X]
+  let K := FractionRing (Polynomial k)
   let j := genericFibreBase z
   let raw := P.map j
   have Pn : P≠0 := by intro h; rw [h,natDegree_zero] at large; omega
@@ -132,7 +132,7 @@ theorem actual_scaled_word_sheet (p : ℕ) [CharP (FractionRing k[X]) p]
     have d : raw.natDegree=P.natDegree := full
     exact integralNormalization_separable p raw (by rw [d]; omega) (by rw [d]; exact small) sep
   have qdeg : q.natDegree=P.natDegree := (fm.natDegree_map j).trans fd
-  let s := algebraMap k[X] K S
+  let s := algebraMap (Polynomial k) K S
   let y := j P.leadingCoeff*s
   have yroot : q.eval y=0 := by
     have lead : raw.leadingCoeff=j P.leadingCoeff := leadingCoeff_map_of_leadingCoeff_ne_zero _ rlc
@@ -147,7 +147,7 @@ theorem actual_scaled_word_sheet (p : ℕ) [CharP (FractionRing k[X]) p]
     have one : IsCoprime q q.derivative := qs
     obtain ⟨v,w,h⟩ := one
     intro zero
-    have h0 := congrArg (fun t : K[X]=>t.eval y) h
+    have h0 := congrArg (fun t : (Polynomial K)=>t.eval y) h
     rw [eval_add,eval_mul,eval_mul,yroot,zero,mul_zero,mul_zero,zero_add,eval_one] at h0
     exact zero_ne_one h0
   obtain ⟨H,Q,split,one,div,he⟩ := MarkedRoot.sheet (qdeg ▸ large) y yroot simple
@@ -172,7 +172,7 @@ theorem actual_scaled_word_sheet (p : ℕ) [CharP (FractionRing k[X]) p]
     ⟨J,by rw [hJ,split,mul_assoc]⟩
   have annih := congrArg e zero
   rw [map_zero,map_mul,map_sub,AdjoinRoot.mk_X,AdjoinRoot.mk_C,map_mul,map_sub,image] at annih
-  have ey : e (AdjoinRoot.of q y)=y ⊗ₜ[k[X]] (1:Fiber E z) := e.commutes y
+  have ey : e (AdjoinRoot.of q y)=y ⊗ₜ[(Polynomial k)] (1:Fiber E z) := e.commutes y
   rw [ey] at annih
   exact annih
 end Generic

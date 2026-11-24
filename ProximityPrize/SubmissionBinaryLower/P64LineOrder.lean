@@ -59,15 +59,15 @@ lemma coeff_homog (S : Polynomial (Polynomial K)) (k b a : ℕ) :
           split_ifs <;> simp
       | monomial a' c =>
           rw [homog_monomial]
-          simp only [coeff_monomial]
+          simp only [coeff_monomial, Finsupp.single_apply]
           by_cases h2 : b' = b
           · subst h2
             by_cases h3 : a' = a
             · subst h3
               split_ifs <;> simp_all
-            · have : ((monomial a') c).coeff a = 0 := by simp [coeff_monomial, h3]
-              split_ifs <;> simp [this]
-          · split_ifs <;> simp [coeff_monomial, h2]
+            · have : ((monomial a') c).coeff a = 0 := by simp [coeff_monomial, Finsupp.single_apply, h3]
+              split_ifs <;> simp [Finsupp.single_apply, h3]
+          · split_ifs <;> simp [coeff_monomial, Finsupp.single_apply, h2]
 
 lemma homog_eq_zero_iff (S : Polynomial (Polynomial K)) : homog S = 0 ↔ S = 0 := by
   constructor

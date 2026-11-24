@@ -10,14 +10,13 @@ open K1_13 (Geom)
 open K1_13_2 K1_13_2_3 TaperBudget
 open PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators
-open private fees saved_by_fees fees_le_baseline sumRange_fin sumRange_eq
-  from ProximityPrize.SubmissionLower.PrimaryTaperBudget
-open private baseline_budget_on sum_add_pointwise_eq from ProximityPrize.SubmissionLower.Fast022
-open private sum_checked from ProximityPrize.SubmissionLower.PrimaryTaperRankData
-open private sum_embed_le from ProximityPrize.SubmissionLower.Fast068
+open TaperBudget (fees saved_by_fees fees_le_baseline sumRange_fin sumRange_eq)
+open K1_13_2_3 (baseline_budget_on sum_add_pointwise_eq)
+open TaperBudget (sum_checked)
+open K1_13_2_3_7 (sum_embed_le)
 
 
-private def inWindow (i : BlockIndex) : Prop :=
+def inWindow (i : BlockIndex) : Prop :=
   3514 ≤ i.1.val ∧ i.1.val < 3594 ∧ 77 ≤ i.2.val ∧ i.2.val < 121
 
 private instance (i : BlockIndex) : Decidable (inWindow i) := by
@@ -31,7 +30,7 @@ private def alternate (i : BlockIndex) : ℕ :=
   TaperNormalize.bound (cap i.1.val) i
     (windowPower (i.1.val - 3514) (i.2.val - 77)).expand
 
-private def gain (i : BlockIndex) : ℕ :=
+def gain (i : BlockIndex) : ℕ :=
   if inWindow i then
     min (baseline i) (TaperNormalize.bound (cap i.1.val) i (power i)) - alternate i
   else 0
@@ -95,7 +94,7 @@ set_option maxHeartbeats 0 in
 private theorem row_checked (t : Fin 80) : row t.val = rowTotals t := by
   fin_cases t <;> decide +kernel
 
-private theorem window_gain : 854889514 ≤ ∑ i : BlockIndex, gain i := by
+theorem window_gain : 854889514 ≤ ∑ i : BlockIndex, gain i := by
   have h : (∑ x : Fin 80 × Fin 44, gain (window x)) = 854889514 := by
     rw [← Finset.univ_product_univ, Finset.sum_product]
     calc
@@ -110,11 +109,11 @@ private theorem window_gain : 854889514 ≤ ∑ i : BlockIndex, gain i := by
       _ = 854889514 := by decide
   exact h ▸ sum_embed_le window gain
 
-private def charged (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) : ℕ :=
+def charged (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) : ℕ :=
   if inWindow i then min (fees p₁ p₂ p₃ i) (alternate i)
   else fees p₁ p₂ p₃ i
 
-private theorem charged_add_gain (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) :
+theorem charged_add_gain (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) :
     charged p₁ p₂ p₃ i + gain i = fees p₁ p₂ p₃ i := by
   by_cases hi : inWindow i
   · have hg : ¬ i.1.val < 3514 := by unfold inWindow at hi; omega

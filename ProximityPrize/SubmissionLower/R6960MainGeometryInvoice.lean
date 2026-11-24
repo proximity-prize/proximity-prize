@@ -10,7 +10,7 @@ open Finset
 open K1 (p)
 open P1_7_4 (Mass dotQ weightedBill)
 open RescueGeometry (RateOK beforeCuts lambda mu tau)
-open private heightBound height_spec from ProximityPrize.SubmissionLower.R6960RescueGeometryInvoice
+open Lower6960.RescueGeometry (heightBound height_spec)
 open scoped Classical BigOperators
 
 def degreeRates : List ℕ :=

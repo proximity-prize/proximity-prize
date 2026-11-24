@@ -5,7 +5,7 @@ set_option autoImplicit true
 section
 namespace K1_14_2_1
 open K1 K1_14 K1_14_2 Finset
-private theorem twice_sum_linear (a b : ℤ) (n : ℕ) :
+theorem twice_sum_linear (a b : ℤ) (n : ℕ) :
     2 * (∑ j ∈ range n, (a + b * (j : ℤ))) =
       n * (2 * a + b * ((n : ℤ) - 1)) := by
   induction n with
@@ -39,7 +39,7 @@ private theorem width_cast (h r : ℕ) (s : Shape) (q j : ℕ)
   rw [Nat.cast_sub (by omega : q * (131071 - h) ≤ s.m * 180265 - 2 * h * r + j)]
   push_cast [Nat.cast_sub hh, Nat.cast_sub hbuf]
   rfl
-private theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
+theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
     (hw : s.B * (131071 - h) < cutoffCount h r s) :
     2 * ((rawVolume h r s : ℤ) - mode * (movingCeiling h s : ℤ)) =
       (triangle s.U : ℤ) * (widthBase s + h * widthSlope s r mode) := by
@@ -71,10 +71,10 @@ private theorem volume_eq (h r mode : ℕ) (s : Shape) (hh : h ≤ 131071)
       push_cast
       dsimp [a, b]
       ring
-private def worstBase (s : Shape) : ℤ := (s.m : ℤ) * 180265 - (s.B : ℤ) * 131071
-private def worstSlope (s : Shape) (r : ℕ) : ℤ := (s.B : ℤ) - 2 * r
-private def surplusBase (s : Shape) : ℤ := (triangle s.U : ℤ) * widthBase s - 2 * nodeCost s
-private def surplusSlope (s : Shape) (r mode : ℕ) : ℤ :=
+def worstBase (s : Shape) : ℤ := (s.m : ℤ) * 180265 - (s.B : ℤ) * 131071
+def worstSlope (s : Shape) (r : ℕ) : ℤ := (s.B : ℤ) - 2 * r
+def surplusBase (s : Shape) : ℤ := (triangle s.U : ℤ) * widthBase s - 2 * nodeCost s
+def surplusSlope (s : Shape) (r mode : ℕ) : ℤ :=
   (triangle s.U : ℤ) * widthSlope s r mode - 2 * poleSlope s
 private def Certificate (s : Shape) (r mode : ℕ) : Prop :=
   0 < worstBase s + 2601 * worstSlope s r ∧

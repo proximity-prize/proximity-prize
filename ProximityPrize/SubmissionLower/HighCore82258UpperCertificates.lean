@@ -19,8 +19,7 @@ open HighCore82258Upper_3_1_2
 open Polynomial (C)
 open TrivSqZeroExt
 open scoped BigOperators Ring
-open private flow flow_mul flow_C flow_sep flow_tangentEquation coeffDiff_one
-  coeff_coeffDiff dx_nat from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open HighCore82258Upper_3_1_1 (flow flow_mul flow_C flow_sep flow_tangentEquation coeffDiff_one coeff_coeffDiff dx_nat)
 end
 end HighCore82258GeometryCert_1
 end
@@ -33,8 +32,7 @@ open HighCore82258Upper_3 (JetRing ordinate)
 open HighCore82258Upper_3_1 (velocity jetSeparant coefficientDerivative secondAlongVelocity)
 open HighCore82258Upper_3_1_2
 open Polynomial (C eval₂RingHom)
-open private flow flow_mul flow_C flow_X coeffDiff_add coeffDiff_mul coeff_coeffDiff
-  coeffDiff_derivative from ProximityPrize.SubmissionLower.HighCore82258UpperGeometry
+open HighCore82258Upper_3_1_1 (flow flow_mul flow_C flow_X coeffDiff_add coeffDiff_mul coeff_coeffDiff coeffDiff_derivative)
 end
 end HighCore82258GeometryCert_1
 end

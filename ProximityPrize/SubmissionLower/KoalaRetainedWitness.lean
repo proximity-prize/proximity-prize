@@ -10,9 +10,7 @@ noncomputable section
 open MvPolynomial
 open K1_13 (Row Geom Shape shape InBox OrderAt atJet extend embed indexDegree)
 open Final50Price (primaryBox primaryCutoff TrueWeightLE ActiveFits physicalDegree)
-open private translateTop topHasse topHasse_zero topHasse_coeff source_support sum_add_top
-  total_add_top apply_add_top erase_top_add topHasse_order exact_hasse_not_dvd
-  from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_3_2 (translateTop topHasse topHasse_zero topHasse_coeff source_support sum_add_top total_add_top apply_add_top erase_top_add topHasse_order exact_hasse_not_dvd)
 open scoped Polynomial BigOperators
 
 /-- The primary box after extracting at least l copies of a retained product of shape h. -/
@@ -84,7 +82,7 @@ private theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
     rw [sum_add_top (fun i => physicalDegree - i.val)] at hp
     rw [topHasse_coeff]
     have hc := Polynomial.natDegree_mul_le
-      (p := (↑((m 3 + a).choose a) : Geom[X])) (q := P.coeff (m + Finsupp.single 3 a))
+      (p := (↑((m 3 + a).choose a) : (Polynomial Geom))) (q := P.coeff (m + Finsupp.single 3 a))
     rw [Polynomial.natDegree_natCast, zero_add] at hc
     exact (Nat.add_le_add_right hc _).trans ((Nat.add_le_add_left (Nat.le_add_right _ _) _).trans hp)
 private theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
@@ -109,7 +107,7 @@ private theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
       rw [add_assoc, ← Finsupp.single_add, Nat.sub_add_cancel hupos, erase_top_add]
     have hm : m 3 + 1 = u 3 := by
       rw [← apply_add_top, hsum]
-    have hc : (↑(u 3) : Geom[X]) ≠ 0 := by
+    have hc : (↑(u 3) : (Polynomial Geom)) ≠ 0 := by
       have : CharP Geom K1.p :=
         charP_of_injective_ringHom (RingHom.injective embed) K1.p
       intro hz
@@ -138,7 +136,7 @@ theorem exists_divided_cut {P H f : Row 4} {k a l A : ℕ} (hP : P ≠ 0) (hH : 
     (hactive : ActiveFits P A) (divH : H^k ∣ P) (divF : f^a ∣ P) (exactF : ¬ f^(a+1) ∣ P) :
     ∃ Q : Row 4, (¬ f ∣ Q) ∧ InBox (shape Q) (residualBox (shape H) l) ∧
       TrueWeightLE Q primaryCutoff ∧ ActiveFits Q A ∧
-      ∀ S : Geom[X], atJet H S ≠ 0 → OrderAt P S k → OrderAt Q S l := by
+      ∀ S : (Polynomial Geom), atJet H S ≠ 0 → OrderAt P S k → OrderAt Q S l := by
   obtain ⟨G,rfl⟩ := divH
   have hn : G ≠ 0 := right_ne_zero_of_mul hP
   have hGb := residual_box (hl.trans (Nat.sub_le k a)) hH hn hb

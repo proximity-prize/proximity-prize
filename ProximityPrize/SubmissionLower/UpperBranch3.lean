@@ -8,8 +8,8 @@ noncomputable section
 open K1 K1_14 K1_14_2 K1_14_2_4
 open K1_14_2_4_1 
 open scoped Polynomial
-open private chartEvaluation from ProximityPrize.SubmissionLower.Fast055
-open private donor_1_1 donor_1_2 donor_1_3 donor_1_4 donor_1_5 from ProximityPrize.SubmissionLower.PortHighFinish
+open K1_14_2_4_1 (chartEvaluation)
+open P0_10R.Bridge (donor_1_1 donor_1_2 donor_1_3 donor_1_4 donor_1_5)
 private theorem generic_separability {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {J g}
     (R : PrimitiveRoot C₀ J g) (hg : 0 < g) (hgp : g < p) :
     (R.equation.map (insertX C₀)).Separable := by
@@ -18,14 +18,14 @@ private theorem generic_separability {C₀ : ConstantSeeds} [Fact (Irreducible C
     charP_of_injective_ringHom ((extendX C₀).comp seedEmbedding).injective p
   have hdeg : F.natDegree = g :=
     (Polynomial.natDegree_map_eq_of_injective
-      (IsFractionRing.injective (ConstantSeedField C₀)[X] (ConstantSeedX C₀)) _).trans R.degree
+      (IsFractionRing.injective (Polynomial (ConstantSeedField C₀)) (ConstantSeedX C₀)) _).trans R.degree
   have hgc : (g : ConstantSeedX C₀) ≠ 0 := by
     intro hz
     have hp := (CharP.cast_eq_zero_iff (ConstantSeedX C₀) p g).mp hz
     exact (not_le_of_gt hgp) (Nat.le_of_dvd hg hp)
   refine (Polynomial.separable_iff_derivative_ne_zero R.irreducible).mpr ?_
   intro hd
-  have hz := congrArg (fun Q : (ConstantSeedX C₀)[X] => Q.coeff (g - 1)) hd
+  have hz := congrArg (fun Q : (Polynomial (ConstantSeedX C₀)) => Q.coeff (g - 1)) hd
   have hsucc : g - 1 + 1 = g := Nat.sub_add_cancel hg
   have hcast : (↑(g - 1) + 1 : ConstantSeedX C₀) = (g : ConstantSeedX C₀) := by
     simpa only [Nat.cast_add, Nat.cast_one] using
@@ -45,7 +45,7 @@ theorem chartResultant_proper {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {
       (Polynomial.C.comp (insertConstant C₀))
   have hFdeg : F.natDegree = g :=
     (Polynomial.natDegree_map_eq_of_injective
-      (IsFractionRing.injective (ConstantSeedField C₀)[X] (ConstantSeedX C₀)) _).trans R.degree
+      (IsFractionRing.injective (Polynomial (ConstantSeedField C₀)) (ConstantSeedX C₀)) _).trans R.degree
   have hG : (equationAtX A.equation).map ev = Polynomial.C a * F := by
     rw [equationAtX, Polynomial.map_map, chartEvaluation A, ← Polynomial.map_map,
       A.generic_eq, Polynomial.map_mul, Polynomial.map_C]
@@ -56,7 +56,7 @@ theorem chartResultant_proper {C₀ : ConstantSeeds} [Fact (Irreducible C₀)] {
   have hres := Polynomial.resultant_derivative_ne_zero_of_separable _ hsep
   rw [hGdeg, ← hG, Polynomial.derivative_map, Polynomial.resultant_map_map] at hres
   exact fun h => hres (RingHom.mem_ker.mp h)
-theorem regular_chart (T : Finset K) (z : K → K) (s : K → K[X])
+theorem regular_chart (T : Finset K) (z : K → K) (s : K → (Polynomial K))
     (J : Ideal RootAmbient) (g H : ℕ) (hg : 0 < g) (hgp : g < p)
     (hcurve : SmallRootCurve J g H) (hinj : Set.InjOn z (T : Set K))
     (hmark : ∀ γ ∈ T, OnRoot J (z γ) (s γ)) :
@@ -117,15 +117,15 @@ open K1_14 (FX L seedEmbedding)
 open K1_14_2_4 hiding specialize
 open Polynomial MvPolynomial Finset ProximityPrize.Benchmark
 open scoped BigOperators
-open private proper_section_card from ProximityPrize.SubmissionLower.Fast055
-def persistentNodes (w : I → K) (U : Finset K) (s : K → K[X]) : Finset I := by
+open K1_14_2_4 (proper_section_card)
+def persistentNodes (w : I → K) (U : Finset K) (s : K → (Polynomial K)) : Finset I := by
   classical
   exact univ.filter fun i => ∀ γ ∈ U, (s γ).eval (node i) = w i
 theorem hits_persistent {w U s} {γ : K} (hγ : γ ∈ U) {i : I}
     (hi : i ∈ persistentNodes w U s) : (s γ).eval (node i) = w i := by
   classical
   exact (mem_filter.mp hi).2 γ hγ
-theorem section_bounds {n g H t : ℕ} {U : Finset K} {s : K → K[X]} {w : I → K}
+theorem section_bounds {n g H t : ℕ} {U : Finset K} {s : K → (Polynomial K)} {w : I → K}
     (A : RegularChart U s g H n) (ht : 0 < t) (hdistinct : Set.InjOn s (U : Set K))
     (C : TaylorForms n (ordinateBound t g) (taylorPower t))
     (hrec : ∀ γ ∈ U, C.Recovers (A.parameter γ) (s γ)) :
@@ -165,7 +165,7 @@ theorem section_bounds {n g H t : ℕ} {U : Finset K} {s : K → K[X]} {w : I �
       single_mem_bidegreeExponents ha hb i) : Function.Injective
       (monomialPoint (E := FX) (bidegreeExponents (Fin n) a b))) heq
     exact hdistinct hγ hη (Polynomial.map_injective _ (algebraMap K L).injective
-      (IsFractionRing.injective L[X] FX (congrFun hv none)))
+      (IsFractionRing.injective (Polynomial L) FX (congrFun hv none)))
   have hsection (i : I) (hmiss : ∃ γ ∈ U, (s γ).eval (node i) ≠ w i) :
       (U.filter fun γ => (s γ).eval (node i) = w i).card ≤ D := by
     let x := node i
@@ -209,7 +209,7 @@ open scoped BigOperators
 private theorem mapped_node_ne_center (x : K) : seedEmbedding x ≠ center := by
   intro h
   exact (Polynomial.X_ne_C (algebraMap K L x))
-    ((IsFractionRing.injective L[X] FX) h.symm)
+    ((IsFractionRing.injective (Polynomial L) FX) h.symm)
 set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem linear_interpolation_weights {E : Type} [Field E]
@@ -217,7 +217,7 @@ private theorem linear_interpolation_weights {E : Type} [Field E]
     (ξ : E) (hne : ∀ i, nodes i ≠ ξ)
     (sites : Finset I) (d t : ℕ) (hdt : d ≤ sites.card + t)
     (w : I → E) (x : E) :
-    ∃ c : E, ∃ a : Fin (t+1) → E, ∀ P : E[X], P.natDegree ≤ d →
+    ∃ c : E, ∃ a : Fin (t+1) → E, ∀ P : (Polynomial E), P.natDegree ≤ d →
       (∀ i ∈ sites, P.eval (nodes i) = w i) →
       P.eval (x) = c + ∑ j, a j * (taylor ξ P).coeff j := by
   classical
@@ -304,7 +304,7 @@ private theorem linear_interpolation_weights {E : Type} [Field E]
   rfl
 theorem interpolation_weights (sites : Finset I) (d t : ℕ) (hdt : d ≤ sites.card + t)
     (w : I → K) (x : K) :
-    ∃ c : FX, ∃ a : Fin (t+1) → FX, ∀ P : FX[X], P.natDegree ≤ d →
+    ∃ c : FX, ∃ a : Fin (t+1) → FX, ∀ P : (Polynomial FX), P.natDegree ≤ d →
       (∀ i ∈ sites, P.eval (seedEmbedding (node i)) = seedEmbedding (w i)) →
       P.eval (seedEmbedding x) = c + ∑ j, a j * (taylor center P).coeff j :=
   linear_interpolation_weights (seedEmbedding ∘ node)
@@ -321,7 +321,7 @@ open K1_14 (L FX seedEmbedding liftPoly atX)
 open K1_14_2_4 K1_14_2_4_2 MvPolynomial
 open K1_14_6_1 (derivativeAt)
 open scoped Polynomial BigOperators
-open private eval_center factorial_ne_zero from ProximityPrize.SubmissionLower.Fast069
+open K1_14_2_4_2 (eval_center factorial_ne_zero)
 private def jetNumerator {n : ℕ} (f : SourceRing n) (t : ℕ) :
     Fin (t+1) → SourceRing n :=
   Fin.cases (separant f ^ taylorPower t * ordinate) fun i =>
@@ -352,7 +352,7 @@ private theorem jet_bound {n g t : ℕ} {f : SourceRing n} (hg : 0 < g)
         _ = _ := by rw [hpad, ordinateBound]
     rwa [hy, ← Nat.add_mul, hpad, Nat.mul_one] at h
 private theorem jet_eval {n t : ℕ} (htp : t < p) (f : SourceRing n)
-    (v : Fin n → L) (S : K[X]) (hroot : markEval v S f = 0) (j : Fin (t+1)) :
+    (v : Fin n → L) (S : (Polynomial K)) (hroot : markEval v S f = 0) (j : Fin (t+1)) :
     markEval v S (jetNumerator f t j) =
       markEval v S (separant f ^ taylorPower t) *
         (Polynomial.taylor center (S.map seedEmbedding)).coeff j := by
@@ -386,7 +386,7 @@ theorem persistent_taylor {n d t g : ℕ} (sites : Finset I) (w : I → K)
     (hdt : d ≤ sites.card + t) (htp : t < p) (hg : 0 < g)
     (f : FamilyEquation n) (hf : FamilyDegree f g) :
     ∃ C : TaylorForms n (ordinateBound t g) (taylorPower t),
-      ∀ (v : Fin n → L) (S : K[X]), S.natDegree ≤ d →
+      ∀ (v : Fin n → L) (S : (Polynomial K)), S.natDegree ≤ d →
         (∀ i ∈ sites, S.eval (node i) = w i) →
         (specialize f v).eval (liftPoly S) = 0 →
         (specialize f v).derivative.eval (liftPoly S) ≠ 0 → C.Recovers v S := by
@@ -410,7 +410,7 @@ theorem persistent_taylor {n d t g : ℕ} (sites : Finset I) (w : I → K)
   · change markEval v S (separant F ^ taylorPower t) ≠ 0
     rw [map_pow, eval_separant]
     exact pow_ne_zero _ (by
-      simpa only [map_zero] using (IsFractionRing.injective L[X] FX).ne hsep)
+      simpa only [map_zero] using (IsFractionRing.injective (Polynomial L) FX).ne hsep)
   · intro x
     change markEval v S (N x) = markEval v S D * seedEmbedding (S.eval x)
     have hv := hweights x (S.map seedEmbedding) (Polynomial.natDegree_map_le.trans hS)

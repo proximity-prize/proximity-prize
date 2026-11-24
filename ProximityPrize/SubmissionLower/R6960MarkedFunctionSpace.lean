@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.R6960MarkedPoleFamily
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -11,8 +12,8 @@ open MonicChart (ChartField)
 open MonicFourChartDescent ChartSections MonicChartLaurent RetainedRestrictionTorus RetainedSurfaceClass
 open RetainedTwistedRestriction Module Submodule LinearMap Algebra Polynomial Finset
 open scoped Polynomial Lower6960.RetainedSurfaceClass Lower6960.MarkedEvaluation BigOperators
-open private Lower6960.MarkedEvaluation.denom_integral Lower6960.MarkedEvaluation.denom_zero from ProximityPrize.SubmissionLower.R6960MarkedPoleFamily
-open private Lower6960.RetainedSurfaceClass.finite_along from ProximityPrize.SubmissionLower.R6960RetainedAxisCharts
+open Lower6960.MarkedEvaluation (denom_integral denom_zero)
+open Lower6960.RetainedSurfaceClass (finite_along)
 variable {E:Type} [Field E] [Algebra ChartField E]
 local notation "ι" => algebraMap ChartField E
 
@@ -50,9 +51,9 @@ private theorem xpow_independent (a:ℕ) : LinearIndependent L (fun j:Fin a=>(xp
   classical
   apply Fintype.linearIndependent_iff.mpr
   intro coeff eq j
-  let P:L[X]:=∑h:Fin a,Polynomial.monomial h.val (coeff h)
-  let eval: L[X]→+*E := (algebraMap ChartField E).comp ((MonicChartProbes.planeMap (false,false)).comp
-    (Polynomial.mapRingHom (C:L→+*L[X])))
+  let P:(Polynomial L):=∑h:Fin a,Polynomial.monomial h.val (coeff h)
+  let eval: (Polynomial L)→+*E := (algebraMap ChartField E).comp ((MonicChartProbes.planeMap (false,false)).comp
+    (Polynomial.mapRingHom (C:L→+*(Polynomial L))))
   have injective:Function.Injective eval := (algebraMap ChartField E).injective.comp
     ((MonicChartProbes.planeMap_injective _).comp (Polynomial.map_injective _ C_injective))
   have zero:eval P=0 := by
@@ -61,12 +62,12 @@ private theorem xpow_independent (a:ℕ) : LinearIndependent L (fun j:Fin a=>(xp
     apply Finset.sum_congr rfl; intro h _
     rw [←C_mul_X_pow_eq_monomial,map_mul,map_pow]
     change ι (MonicChartProbes.planeMap (false,false) ((C (coeff h)).map C)) *
-      ι (MonicChartProbes.planeMap (false,false) ((Polynomial.X:L[X]).map C))^h.val=_
+      ι (MonicChartProbes.planeMap (false,false) ((Polynomial.X:(Polynomial L)).map C))^h.val=_
     rw [Polynomial.map_C,map_X,MonicChartProbes.planeMap_constants,MonicChartProbes.planeMap_abscissa]
     rfl
   have poly := (map_eq_zero_iff _ injective).mp zero
-  have c:=congrArg (fun p:L[X]=>p.coeff j.val) poly
-  simpa [P,Polynomial.finsetSum_coeff,coeff_monomial,←Fin.ext_iff] using c
+  have c:=congrArg (fun p:(Polynomial L)=>p.coeff j.val) poly
+  simpa [P,Polynomial.finsetSum_coeff,coeff_monomial,Finsupp.single_apply,←Fin.ext_iff] using c
 
 theorem family_from_fibres [FiniteDimensional ChartField E] (i n:ℕ) (budget:Budget E i n)
     (T:Finset L) (nz:∀z∈T,z≠0) (J:T→Type) [∀z,Fintype (J z)]

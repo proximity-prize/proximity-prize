@@ -12,8 +12,8 @@ open scoped Polynomial
 /-- Extract a polynomial p-th root by contracting the exponents and
 lifting each remaining coefficient through Frobenius. -/
 private theorem polynomial_power {R : Type*} [CommRing R] [IsDomain R] (p : ℕ)
-    [Fact p.Prime] [CharP R p] (f : R[X]) (zero : f.derivative=0)
-    (coeffs : ∀ i,∃ r:R,r^p=f.coeff i) : ∃ g:R[X],g^p=f := by
+    [Fact p.Prime] [CharP R p] (f : (Polynomial R)) (zero : f.derivative=0)
+    (coeffs : ∀ i,∃ r:R,r^p=f.coeff i) : ∃ g:(Polynomial R),g^p=f := by
   classical
   have hp := (Fact.out : p.Prime).ne_zero
   have hr : contract p f∈Polynomial.lifts (frobenius R p) := by
@@ -27,7 +27,7 @@ private theorem polynomial_power {R : Type*} [CommRing R] [IsDomain R] (p : ℕ)
   rw [←map_frobenius_expand p,map_expand,eq,expand_contract p zero hp]
 
 variable {k : Type} [Field k]
-abbrev Plane (k : Type) [Field k] := Polynomial k[X]
+abbrev Plane (k : Type) [Field k] := Polynomial (Polynomial k)
 
 theorem plane_power (p : ℕ) [Fact p.Prime] [CharP k p] [PerfectRing k p]
     (f : Plane k) (horizontal : f.derivative=0) (vertical : (Bivariate.swap f).derivative=0) :
@@ -37,14 +37,14 @@ theorem plane_power (p : ℕ) [Fact p.Prime] [CharP k p] [PerfectRing k p]
   apply polynomial_power p (f.coeff j) _ (fun i=>surjective_frobenius k p _)
   ext i
   have eq := congrArg (fun g : Plane k=>(g.coeff i).coeff j) vertical
-  rw [coeff_derivative,show ((i:k[X])+1)=C ((i:k)+1) by simp,
+  rw [coeff_derivative,show ((i:(Polynomial k))+1)=C ((i:k)+1) by simp,
     coeff_mul_C,CurvatureSquares.coeff_swap,coeff_zero,coeff_zero] at eq
   simpa only [coeff_derivative,coeff_zero] using eq
 
 private theorem coprime_derivatives {R : Type*} [CommRing R] [IsDomain R]
-    [UniqueFactorizationMonoid R[X]] {f g : R[X]} (cop : IsRelPrime f g)
+    [UniqueFactorizationMonoid (Polynomial R)] {f g : (Polynomial R)} (cop : IsRelPrime f g)
     (zero : f.derivative*g=f*g.derivative) : f.derivative=0 ∧ g.derivative=0 := by
-  have vanish (h : R[X]) (div : h∣h.derivative) : h.derivative=0 := by
+  have vanish (h : (Polynomial R)) (div : h∣h.derivative) : h.derivative=0 := by
     by_contra ne
     have pos : h.natDegree≠0 := by intro z; apply ne; rw [eq_C_of_natDegree_eq_zero z,derivative_C]
     exact (not_le_of_gt (natDegree_derivative_lt pos)) (natDegree_le_of_dvd div ne)

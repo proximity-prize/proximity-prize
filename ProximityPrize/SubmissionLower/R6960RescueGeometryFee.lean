@@ -17,14 +17,14 @@ open K1_14_3 (Surface Parent)
 open P1_7_4 (ODEGuard Mass massQ dotQ dotQ_mono_mass massQ_mono dotQ_scale_add)
 open P1_7_4_3 (mix)
 open HighCore82268JointRank (fixed_fee_linear)
-open private persistentTotal persistentTop siteRatio density from ProximityPrize.SubmissionLower.R6960RescueGeometryTariffs
+open Lower6960.RescueGeometry (persistentTotal persistentTop siteRatio density)
 open scoped Classical BigOperators
 
 def Initial.rankMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {G Q₀ : Jet} {rect : Fin 4} (ini : Initial F G Q₀ rect) : Finset K :=
   Γ.filter (fun γ=>∃ J∈ini.rankExit,OnMark F J γ)
 
-private theorem fixedFee_eq (B J : ℕ) :
+theorem fixedFee_eq (B J : ℕ) :
     fixedFee B J = (mix B J (mu+2*lambda*(B-1 : ℕ))
       (min (mu+2*lambda*(B-1 : ℕ)) (lambda*(2*J-1 : ℕ)))).ceil.toNat+B^2 := by
   have he : 2*density*(endpointDegree : ℚ)=2*lambda := by unfold lambda density; ring

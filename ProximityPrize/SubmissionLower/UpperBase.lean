@@ -854,7 +854,7 @@ open K1_14 (L FX Seeds Equation Shape Jet Banks SeedBound liftPoly graphEval atX
 open K1_14_3 (Surface Parent)
 open scoped BigOperators
 def AdjacentChart {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (H : L[X]) : Prop :=
+    (H : (Polynomial L)) : Prop :=
   let σ := frobenius L p
   let H' := H.map σ
   H.Monic ∧ H.natDegree = M.overhead.toNat ∧ H ∣ liftPoly M.E ∧
@@ -910,7 +910,7 @@ def tested (b : HighBand) : Test b → Bank
   | some i => subbank b ((grades b).get i)
 def Reduced (f : Equation) : Prop :=
   0 < f.natDegree ∧ f.IsPrimitive ∧ (f.map (algebraMap Seeds (FractionRing Seeds))).Separable
-def regularRoot (f : Equation) (z : K) (S : K[X]) : Prop :=
+def regularRoot (f : Equation) (z : K) (S : (Polynomial K)) : Prop :=
   atMark f z S = 0 ∧ graphEval z (f.resultant f.derivative) ≠ 0 ∧
     atMark f.derivative z S ≠ 0
 end

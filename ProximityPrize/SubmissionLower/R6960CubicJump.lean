@@ -10,10 +10,10 @@ open scoped BigOperators Polynomial
 
 /-- The same nonzero determinant accounts for all special abscissa degrees. -/
 theorem sum_losses {L : Type} [Field L] [DecidableEq L]
-    (Q : Polynomial L[X]) (T : Finset L) (odd : L → ℕ) {r v : ℕ}
+    (Q : Polynomial (Polynomial L)) (T : Finset L) (odd : L → ℕ) {r v : ℕ}
     (hr : 0 < r) (height : Q.natDegree ≤ r) (seed : ∀ j, (Q.coeff j).natDegree ≤ v)
     (sep : Q.resultant Q.derivative r (r-1) ≠ 0)
-    (fact : ∀ z ∈ T, ∃ h a : L[X], Q.map (evalRingHom z) = h^2*a ∧ a.natDegree ≤ odd z) :
+    (fact : ∀ z ∈ T, ∃ h a : (Polynomial L), Q.map (evalRingHom z) = h^2*a ∧ a.natDegree ≤ odd z) :
     (∑ z ∈ T, (r-odd z+1)/2) ≤ (2*r-1)*v := by
   have each (z) (hz : z ∈ T) : (r-odd z+1)/2 ≤ r+(r-1)-
       (sylvester (Q.map (evalRingHom z)) (Q.derivative.map (evalRingHom z)) r (r-1)).rank := by
@@ -25,7 +25,7 @@ theorem sum_losses {L : Type} [Field L] [DecidableEq L]
   have upper := sum_sylvester_coranks_le_resultant_natDegree Q Q.derivative r (r-1) T sep
   have fee := Polynomial.natDegree_resultant_le_of_coeff_natDegree_le Q Q.derivative r (r-1) v v seed
     (fun j => by
-      rw [coeff_derivative,mul_comm,show ((j:L[X])+1)=C ((j:L)+1) by simp]
+      rw [coeff_derivative,mul_comm,show ((j:(Polynomial L))+1)=C ((j:L)+1) by simp]
       exact (natDegree_C_mul_le ..).trans (seed _))
   calc _ ≤ _ := (bound.trans upper).trans fee
        _ = (2*r-1)*v := by rw [←Nat.add_mul]; congr 1; omega
@@ -33,11 +33,11 @@ theorem sum_losses {L : Type} [Field L] [DecidableEq L]
 /-- Price the good seeds from a global splitting-jump bound and the actual
 Sylvester determinant. The geometric splitting-jump estimate is an input. -/
 theorem marked_price {L : Type} [Field L] [DecidableEq L]
-    (Q : Polynomial L[X]) (T : Finset L) (odd jump : L → ℕ) {r q s m v : ℕ}
+    (Q : Polynomial (Polynomial L)) (T : Finset L) (odd jump : L → ℕ) {r q s m v : ℕ}
     (large : 812 ≤ r) (thin : 1600*q ≤ r) (ramification : 2*s ≤ r+2*q+2) (weight : m ≤ 140915)
     (height : Q.natDegree ≤ r) (seed : ∀ j, (Q.coeff j).natDegree ≤ 4*v)
     (sep : Q.resultant Q.derivative r (r-1) ≠ 0)
-    (fact : ∀ z ∈ T, ∃ h a : L[X], Q.map (evalRingHom z) = h^2*a ∧ a.natDegree ≤ odd z)
+    (fact : ∀ z ∈ T, ∃ h a : (Polynomial L), Q.map (evalRingHom z) = h^2*a ∧ a.natDegree ≤ odd z)
     (fibre : ∀ z ∈ T, odd z ≤ 2*(jump z + (2*s)/3))
     (global : (∑ z ∈ T, jump z) ≤ (6*m+s)*v) : T.card ≤ 6495*v := by
   let losses := fun z => (r-odd z+1)/2

@@ -26,8 +26,8 @@ open K1_13_5 (RegularAt)
 open K1_13_5_3
 open P1_7_4 (ODEGuard)
 open P1_7_4_3 (mix mix_eq)
-open private seed_value_eq from ProximityPrize.SubmissionLower.Fast052
-open private on_seed seed_graph_count from ProximityPrize.SubmissionLower.Fast062
+open K1_14_2_2_7 (seed_value_eq)
+open K1_14_2_3 (on_seed seed_graph_count)
 open scoped BigOperators Classical
 open Finset
 
@@ -38,7 +38,7 @@ def OnParent {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
 def curveMarks {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ) (C : CutCover) :
     Finset K := C.curves.biUnion fun I => Γ.filter (OnParent F I)
 
-theorem section_bound {w : I → K} {T : Finset K} {s : K → K[X]} {d a v : ℕ}
+theorem section_bound {w : I → K} {T : Finset K} {s : K → (Polynomial K)} {d a v : ℕ}
     (hw : HighCore82258.FixedWord w T s d) (f : Row 2) (hf : Irreducible f) (hfpos : 0 < f.degreeOf 1)
     (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) (ha : 0 < a) (hv : 0 < v)
     (i : I) (hmiss : ∃ γ ∈ T, (s γ).eval (node i) ≠ w i)

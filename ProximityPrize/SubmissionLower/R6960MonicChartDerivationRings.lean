@@ -9,7 +9,7 @@ noncomputable section
 open Polynomial
 open scoped Polynomial Lower6960.MonicChart
 
-scoped instance (priority := 2000) chartPolyIntAlgebra : Algebra ℤ Scalar[X] :=
+scoped instance (priority := 2000) chartPolyIntAlgebra : Algebra ℤ (Polynomial Scalar) :=
   Ring.toIntAlgebra _
 
 private theorem derivation_restrict {R F : Type*} [CommRing R] [CommRing F]
@@ -31,9 +31,9 @@ private theorem derivation_restrict {R F : Type*} [CommRing R] [CommRing F]
   exact ⟨out,hd⟩
 
 private theorem derivation_polynomial_image {K R F : Type*} [CommRing K] [CommRing R]
-    [CommRing F] (g : K[X] →+* R) (j : R →+* F) (D : Derivation ℤ F F)
+    [CommRing F] (g : (Polynomial K) →+* R) (j : R →+* F) (D : Derivation ℤ F F)
     (coeffs : ∀ a,∃ b,D (j (g (C a)))=j b) (gen : ∃ t,D (j (g (Polynomial.X (R:=K))))=j t)
-    (p : K[X]) : ∃ q,D (j (g p))=j q := by
+    (p : (Polynomial K)) : ∃ q,D (j (g p))=j q := by
   obtain ⟨t,ht⟩ := gen
   induction p using Polynomial.induction_on' with
   | add p q hp hq =>
@@ -51,9 +51,9 @@ private theorem derivation_polynomial_image {K R F : Type*} [CommRing K] [CommRi
 theorem finite_derivation (D : Derivation ℤ ChartField ChartField)
     (on_scalars : ∀ a : Scalar,∃ b : Scalar,D (RatFunc.C a)=RatFunc.C b)
     (on_X : D RatFunc.X=1 ∨ D RatFunc.X=0) :
-    ∃ d : Derivation ℤ Scalar[X] Scalar[X],∀ r,
-      D (algebraMap Scalar[X] ChartField r)=algebraMap Scalar[X] ChartField (d r) := by
-  let j := algebraMap Scalar[X] ChartField
+    ∃ d : Derivation ℤ (Polynomial Scalar) (Polynomial Scalar),∀ r,
+      D (algebraMap (Polynomial Scalar) ChartField r)=algebraMap (Polynomial Scalar) ChartField (d r) := by
+  let j := algebraMap (Polynomial Scalar) ChartField
   apply derivation_restrict j (IsFractionRing.injective _ _) D
   apply derivation_polynomial_image (RingHom.id _) j D
   · intro a
@@ -66,10 +66,10 @@ theorem finite_derivation (D : Derivation ℤ ChartField ChartField)
 /-- Every element of the infinity ring is a ratio of polynomials in
 inverse abscissa whose denominator has nonzero constant term. -/
 theorem infinity_ratio {K : Type*} [Field K] [DecidableEq (RatFunc K)] (v : Infinity K) :
-    ∃ p q : K[X], q.coeff 0≠0 ∧
+    ∃ p q : (Polynomial K), q.coeff 0≠0 ∧
       algebraMap (Infinity K) (RatFunc K) v = AtInfinity K p / AtInfinity K q := by
-  let j := algebraMap K[X] (RatFunc K)
-  obtain ⟨a,b,bmem,eq⟩ := IsFractionRing.div_surjective K[X] (v:RatFunc K)
+  let j := algebraMap (Polynomial K) (RatFunc K)
+  obtain ⟨a,b,bmem,eq⟩ := IsFractionRing.div_surjective (Polynomial K) (v:RatFunc K)
   have bn : b≠0 := mem_nonZeroDivisors_iff_ne_zero.mp bmem
   by_cases an : a=0
   · refine ⟨0,1,by simp,?_⟩
@@ -83,7 +83,7 @@ theorem infinity_ratio {K : Type*} [Field K] [DecidableEq (RatFunc K)] (v : Infi
       rwa [RatFunc.inftyValuation.polynomial _ an,RatFunc.inftyValuation.polynomial _ bn,
         WithZero.exp_le_exp,Int.ofNat_le] at val
     · exact (RatFunc.inftyValuation K).pos_iff.mpr
-        ((map_ne_zero_iff _ (IsFractionRing.injective K[X] (RatFunc K))).mpr bn)
+        ((map_ne_zero_iff _ (IsFractionRing.injective (Polynomial K) (RatFunc K))).mpr bn)
   refine ⟨a.reflect b.natDegree,b.reverse,by rw [coeff_zero_reverse]; exact leadingCoeff_ne_zero.mpr bn,?_⟩
   change (v:RatFunc K)=_
   rw [reverse_atInfinity _ _ fit,Polynomial.reverse,reverse_atInfinity _ _ le_rfl,
@@ -100,15 +100,15 @@ theorem infinity_derivation [DecidableEq ChartField] (D : Derivation ℤ ChartFi
   let j := algebraMap (Infinity Scalar) ChartField
   let g := inftyRingEval Scalar
   have Cmap (a : Scalar) : j (g (C a))=RatFunc.C a := aeval_C _ _
-  have Xmap : j (g (Polynomial.X : Scalar[X]))=RatFunc.X⁻¹ := mapped_X_infty
-  have hpoly : ∀ p : Scalar[X],∃ q,D (j (g p))=j q := by
+  have Xmap : j (g (Polynomial.X : (Polynomial Scalar)))=RatFunc.X⁻¹ := mapped_X_infty
+  have hpoly : ∀ p : (Polynomial Scalar),∃ q,D (j (g p))=j q := by
     apply derivation_polynomial_image g j D
     · intro a
       obtain ⟨b,hb⟩ := on_scalars a
       exact ⟨g (C b),by rw [Cmap,Cmap,hb]⟩
     · rw [Xmap,D.leibniz_inv,smul_eq_mul]
       rcases on_X with eq|eq
-      · exact ⟨-(g (Polynomial.X : Scalar[X]))^2,by rw [map_neg,map_pow,Xmap,eq,mul_one]⟩
+      · exact ⟨-(g (Polynomial.X : (Polynomial Scalar)))^2,by rw [map_neg,map_pow,Xmap,eq,mul_one]⟩
       · exact ⟨0,by rw [eq,mul_zero,map_zero]⟩
   apply derivation_restrict j (ValuationSubring.algebraMap_injective _ ChartField) D
   intro v

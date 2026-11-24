@@ -233,8 +233,8 @@ noncomputable def red (f : Polynomial (Polynomial B)) (s : B) : Polynomial (Poly
 lemma coeff_red (f : Polynomial (Polynomial B)) (s : B) (a b : ℕ) :
     ((red f s).coeff a).coeff b = redCoeff f s a b := by
   classical
-  simp only [red, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial]
-  simp only [apply_ite (fun p : Polynomial B => p.coeff b), Polynomial.coeff_monomial,
+  simp only [red, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finsupp.single_apply]
+  simp only [apply_ite (fun p : Polynomial B => p.coeff b), Polynomial.coeff_monomial, Finsupp.single_apply,
     Polynomial.coeff_zero, Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq',
     Finset.mem_range]
   split_ifs with ha hb

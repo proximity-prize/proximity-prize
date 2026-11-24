@@ -102,11 +102,11 @@ namespace Low48PrimaryPivot
 open KoalaLinearWindow KoalaPiecewiseTriangle Finset K1_13_2_3
 open scoped BigOperators
 
-private def paritySpan (fmax r : ℤ) : Span := ⟨0,(fmax-r)/2+1⟩
+def paritySpan (fmax r : ℤ) : Span := ⟨0,(fmax-r)/2+1⟩
 
-private def widthLine (j r : ℤ) : Line := ⟨(j-3*r)/2+1,-3⟩
+def widthLine (j r : ℤ) : Line := ⟨(j-3*r)/2+1,-3⟩
 
-private def countTree (j q r : ℤ) : ReceiptTree Line :=
+def countTree (j q r : ℤ) : ReceiptTree Line :=
   let k := (widthLine j r).a
   let a := widthLine j r
   let b : Line := ⟨k-(3*q-9900+5*j)+3*r,3⟩
@@ -114,7 +114,7 @@ private def countTree (j q r : ℤ) : ReceiptTree Line :=
   let d : Line := ⟨k-(2*q-4950+2*j)+r,-1⟩
   ((chooseMin c d).bind (chooseMin b)).bind (chooseMin a)
 
-private theorem countTree_at (j q r x : ℤ) :
+theorem countTree_at (j q r x : ℤ) :
     ((countTree j q r).eval x).at x =
       (j-3*(2*x+r))/2+1 -
         max 0 (max (3*q-9900+5*j-3*(2*x+r))
@@ -134,7 +134,7 @@ def totalAtIndex (j : ℤ) : ℤ :=
   let s1 := paritySpan (j/3) 1
   s0.sumLine (widthLine j 0) + s1.sumLine (widthLine j 1)
 
-private def binWeight (w : Window) (j q : ℤ) : ℤ :=
+def binWeight (w : Window) (j q : ℤ) : ℤ :=
   max 0 (min (min (j+1) (1651-(w.offsetLo : ℤ))) (q+(w.gradeHi : ℤ)-3000) -
     max (1650-(w.offsetHi : ℤ)) (q+(w.gradeLo : ℤ)-3000))
 

@@ -7,8 +7,8 @@ noncomputable section
 open K1_14 (Shape Jet Seeds Equation FX Banks triangle shapeSum)
 open K1_14_3 (RowCaps LeadingFilter)
 open Polynomial Finset
-open private seed_finrank from ProximityPrize.SubmissionLower.Fast073
-private def eligible (h N W q j : ℕ) : Prop :=
+open K1_14_2_1_2 (seed_finrank)
+def eligible (h N W q j : ℕ) : Prop :=
   q * (131071 - h) ≤ W + j ∧ N ≤ W + 2 * h * j
 private instance (h N W q j : ℕ) : Decidable (eligible h N W q j) := by
   unfold eligible
@@ -45,7 +45,7 @@ private theorem position_sum (h N q j : ℕ) (hj : j ≤ q * (131071-h)) :
       simp [he, ht, hd, hw]
   · have he : ¬ eligible h N W q j := fun he => ht he.1
     simp [he, ht]
-private theorem cutoff_total (s : Shape) (h N : ℕ) (hk : 1 ≤ 131071-h) :
+theorem cutoff_total (s : Shape) (h N : ℕ) (hk : 1 ≤ 131071-h) :
     (∑ W ∈ range N, shapeSum s (fun q j => if eligible h N W q j then 1 else 0)) +
       shapeSum s (fun q j => N+j-q*(131071-h)-2*h*j) =
       shapeSum s (fun q j => N+j-q*(131071-h)) := by

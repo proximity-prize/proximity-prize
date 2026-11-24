@@ -16,7 +16,7 @@ open K1_13 (Geom extend Row Shape shape InBox atJet indexDegree OnFactor)
 open K1_13_1 (anchorLead anchorLead_ne indexDegree_eq)
 open Final50Price (Fits ActiveFits fullCap)
 open Final50GeoCover (activeDegree activeFits_iff)
-open private coeff_flatten anchorLead_term index_bounds from ProximityPrize.SubmissionLower.Fast040
+open K1_13_1 (coeff_flatten anchorLead_term index_bounds)
 open scoped BigOperators Polynomial Classical
 
 abbrev anchorCutoff : ℕ := 99*agreement-1+55
@@ -99,7 +99,7 @@ end FactorCover
 
 /-- Actual low-band pieces, with the same native rows beneath their layer
 budget, retained-width guard, and fat equations. -/
-structure Inventory (Γ : Finset K) (s : K→K[X]) where
+structure Inventory (Γ : Finset K) (s : K→(Polynomial K)) where
   top : ℕ
   top_le : top≤14
   g : Row 3

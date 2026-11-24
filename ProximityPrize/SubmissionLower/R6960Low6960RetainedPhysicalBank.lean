@@ -18,7 +18,7 @@ def physicalRow (jets : Row 4 → Prop) (w : I → K) (T : ℕ) (P : Row 4) : Pr
 
 def AllContact (jets : Row 4 → Prop) : Prop :=
   ∀ (w : I → K) (T : ℕ) (P : Row 4), T ≤ primaryCutoff → physicalRow jets w T P →
-    ∀ S : Geom[X], S.natDegree ≤ physicalDegree →
+    ∀ S : (Polynomial Geom), S.natDegree ≤ physicalDegree →
     (∃ H : Finset I, agreement ≤ H.card ∧ ∀ i ∈ H, S.eval (embed (node i)) = embed (w i)) →
     OrderAt P S (levelOrder T)
 

@@ -8,13 +8,13 @@ set_option maxRecDepth 16000
 namespace Low48PrimaryPivot
 open Finset K1_13_2_3
 open scoped BigOperators
-open private qMin from ProximityPrize.SubmissionLower.Low48PrimaryPivotBinWeight
-open private binWeight from ProximityPrize.SubmissionLower.Low48PrimaryPivotSectionSum
-open private mem_indexFiber from ProximityPrize.SubmissionLower.Low48PrimaryPivotBinIndex
+open Low48PrimaryPivot (qMin)
+open Low48PrimaryPivot (binWeight)
+open Low48PrimaryPivot (mem_indexFiber)
 
 attribute [local irreducible] Finset.univ
 
-private theorem binAt_eq_interval (w : Window) (j : ℕ) :
+theorem binAt_eq_interval (w : Window) (j : ℕ) :
     binAt w j = ∑ q ∈ Ico (qMin w) (orderHi w),
       binWeight w j q * (totalAtIndex j-uncharged j q) := by
   rw [Int.Ico_eq_finset_map,sum_map]

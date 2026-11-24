@@ -25,8 +25,7 @@ open K1_13_4_2_1 (jetSum)
 open Function
 open scoped BigOperators Polynomial
 noncomputable section
-open private Column colExp colX column column_li coordinate coordinate_column column_bounds
-  space space_bounds from ProximityPrize.SubmissionLower.PortLow4
+open P0_9_4_1 (Column colExp colX column column_li coordinate coordinate_column column_bounds space space_bounds)
 private abbrev NewColumn (b : Bank) (h : ℕ) :=
   Σ q : Fin (b.box.b + 1), Σ k : Fin (min q.val 1150 + 1),
     Σ l : Fin (min (q.val - k.val) (2300 - 2 * k.val) + 1),
@@ -109,8 +108,7 @@ open K1_13_4_2 (Bank poleDebit)
 open K1_13_4_2_1 (jetSum)
 open Finset
 open scoped BigOperators
-open private moment moment_eq slice antidifference credit extra pole_eq bank_moments
-  from ProximityPrize.SubmissionLower.Fast074
+open K1_13_4_2_1 (moment moment_eq slice antidifference credit extra pole_eq bank_moments)
 private def rawVolume (b : Bank) : ℕ := moment b.box.b (rawBase b) 1 131071 0
 private theorem volume_eq (b : Bank) (h : ℕ) :
     jetSum b.box.b (width b h) = rawVolume b + credit b.box.b * h := by
@@ -173,8 +171,7 @@ namespace Low6960FatBanks
 noncomputable section
 open K1 K1_13 K1_13_4 K1_13_4_2
 open scoped Polynomial BigOperators
-open private codim_inf_le codim_finset_inf_le separable_rank dimension_of_debits
-  from ProximityPrize.SubmissionLower.Fast050
+open K1_13_4_2 (codim_inf_le codim_finset_inf_le separable_rank dimension_of_debits)
 private theorem contact_bound : K1_13_4_2.c2 :=
   K1_13_4_2_2.of_children K1_13_4_2_2_1.proof K1_13_4_2_2_2.proof K1_13_4_2_2_3.proof
     K1_13_4_2_2_4.proof K1_13_4_2_2_5.proof K1_13_4_2_2_6.proof

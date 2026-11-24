@@ -10,12 +10,11 @@ open K1_13_4_4 (layerSpan)
 open K1_13_4_4_1 (Exponent)
 open Low6960Fat (secondCut bankRank)
 open scoped BigOperators
-open private bank bankEval mem_bank K1_13_4_4_1.kernel_le boundary below_boundary independent_generic
-  from ProximityPrize.SubmissionLower.Fast050
-open private K1_13_4_4_1.endpoint from ProximityPrize.SubmissionLower.Fast074
+open K1_13_4_4_1 (bank bankEval mem_bank kernel_le boundary below_boundary independent_generic)
+open K1_13_4_4_1 (endpoint)
 set_option maxHeartbeats 1000000
 set_option backward.isDefEq.respectTransparency false
-theorem telescope (w : I → K) (Γ : Finset K) (s : K → K[X]) (P : PoleData Γ s)
+theorem telescope (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)) (P : PoleData Γ s)
     (L : ResidueChart P) (hr : HasRank w P L secondBox secondCut bankRank) :
     ∃ r : ℕ → ℕ, bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t ∧
       ∀ t ≤ secondCut, ∃ e : Fin (r t) → GenericRow,
@@ -70,8 +69,7 @@ open K1_13_4 hiding mixedWeight secondCut
 open K1_13_4_4 (FactorsFor factorProduct mixedHasse_zero toGeneric_caps topSlots cutoff_sum_le slot_constants)
 open Low6960Fat (mixedWeight secondCut bankRank)
 open scoped Polynomial BigOperators
-open private line line_zero line_toGeneric transverse pow_dvd_of_coeff positive_jet_degree
-  from ProximityPrize.SubmissionLower.Fast076
+open K1_13_4_4_2 (line line_zero line_toGeneric transverse pow_dvd_of_coeff positive_jet_degree)
 def reserveCost (moving : Bool) : ℕ := if moving then 7014 else 48758
 def layerPower (e t : ℕ) : ℕ := 1 + (secondCut - t) / e
 private theorem choose_coordinate {moving : Bool} {A : Finset GenericRow}
@@ -195,7 +193,7 @@ open K1_13_4_4 (layerSpan FactorsFor factorProduct topSlots slot_constants rowMa
   capSpace mem_capSpace mixedHasse_zero toGeneric_ne_zero toGeneric_caps mixedHasse_caps layerSpan_caps)
 open Low6960Fat (Necessary mixedWeight secondCut bankRank)
 open scoped BigOperators
-open private multiples mem_multiples count_layer weighted_pow from ProximityPrize.SubmissionLower.Fast050
+open K1_13_4_4 (multiples mem_multiples count_layer weighted_pow)
 set_option maxRecDepth 1024
 private theorem has_nonzero_necessary {Γ s} {w : I → K} {P : PoleData Γ s}
     {L : ResidueChart P} (hr : HasRank w P L secondBox secondCut bankRank) :

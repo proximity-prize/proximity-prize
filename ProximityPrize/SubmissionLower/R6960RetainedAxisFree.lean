@@ -11,9 +11,8 @@ open MonicChart (ChartField)
 open MonicFourChartDescent ChartSections MonicChartLaurent MonicChartProbes RetainedRestrictionTorus ChartOverlapTests
 open Module Submodule LinearMap Algebra Polynomial
 open scoped Polynomial Lower6960.RetainedSurfaceClass Lower6960.MonicChartProbes
-open private Lower6960.RetainedSurfaceClass.oriented_var Lower6960.RetainedSurfaceClass.oriented_const
-  Lower6960.RetainedSurfaceClass.finite_along Lower6960.RetainedSurfaceClass.embedBase from ProximityPrize.SubmissionLower.R6960RetainedAxisCharts
-open private Lower6960.RetainedRestrictionTorus.rel_equiv from ProximityPrize.SubmissionLower.R6960RetainedRestrictionTorus
+open Lower6960.RetainedSurfaceClass (oriented_var oriented_const finite_along embedBase)
+open Lower6960.RetainedRestrictionTorus (rel_equiv)
 
 variable (E : Type) [Field E] [Algebra ChartField E] [FiniteDimensional ChartField E]
 local notation "ι" => algebraMap ChartField E
@@ -21,7 +20,7 @@ local notation "ι" => algebraMap ChartField E
 /-- On a chosen line, a nonzero polynomial in its running coordinate cannot kill
 a nonzero section, including on a reducible fibre. Both coordinate orientations use
 divisibility in the original surface normalization. -/
-theorem no_axis_torsion (j:Bool) (c:L) (b:Bool) (p:L[X]) (pn:p≠0) (u:Tor E)
+theorem no_axis_torsion (j:Bool) (c:L) (b:Bool) (p:(Polynomial L)) (pn:p≠0) (u:Tor E)
     (zero : polyMap E j c b p * red E j c u=0) : red E j c u=0 := by
   let s:=reference j b
   let A:=baseChart s
@@ -89,11 +88,11 @@ theorem no_axis_torsion (j:Bool) (c:L) (b:Bool) (p:L[X]) (pn:p≠0) (u:Tor E)
   rw [←hf]; exact uy.symm
 
 theorem chart_free [Algebra.IsSeparable ChartField E] (j:Bool) (c:L) (b:Bool) :
-    letI : Module L[X] (Axis E j c) := Module.compHom _ (polyMap E j c b)
-    Module.Free L[X] (polyImage E j c b) := by
-  letI : Module L[X] (Axis E j c) := Module.compHom _ (polyMap E j c b)
+    letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (polyMap E j c b)
+    Module.Free (Polynomial L) (polyImage E j c b) := by
+  letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (polyMap E j c b)
   have :=chart_finite E j c b
-  have : Module.IsTorsionFree L[X] (polyImage E j c b) := by
+  have : Module.IsTorsionFree (Polynomial L) (polyImage E j c b) := by
     apply Module.IsTorsionFree.of_smul_eq_zero
     intro p u hz
     by_cases pn:p=0

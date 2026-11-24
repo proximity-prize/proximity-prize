@@ -12,7 +12,7 @@ variable {k U : Type*} [Field k] [AddCommGroup U] [Module k U]
 
 def difference (P Q : Submodule k U) : (P×Q)→ₗ[k]U := P.subtype.coprod (-Q.subtype)
 
-private theorem image (P Q : Submodule k U) : (difference P Q).range = P⊔Q := by
+theorem image (P Q : Submodule k U) : (difference P Q).range = P⊔Q := by
   ext v
   constructor
   · rintro ⟨⟨u,w⟩,rfl⟩
@@ -21,7 +21,7 @@ private theorem image (P Q : Submodule k U) : (difference P Q).range = P⊔Q := 
     obtain ⟨u,hu,w,hw,rfl⟩:=mem_sup.mp h
     exact ⟨(⟨u,hu⟩,⟨-w,Q.neg_mem hw⟩),by simp [difference]⟩
 
-private def diagonal (P Q : Submodule k U) : ↥(P⊓Q) ≃ₗ[k] (difference P Q).ker where
+def diagonal (P Q : Submodule k U) : ↥(P⊓Q) ≃ₗ[k] (difference P Q).ker where
   toFun w:=⟨(⟨w,w.property.1⟩,⟨w,w.property.2⟩),by simp [difference]⟩
   invFun v:=⟨(v.val.1:U),v.val.1.property,by
     have diff : (v.val.1:U)+ -(v.val.2:U)=0 := v.property
@@ -47,6 +47,7 @@ abbrev ev (G : Matrix ι ι (Laurent k)) (x : finiteLattice k ι →ₗ[k] C) :=
 abbrev globals (G : Matrix ι ι (Laurent k)) (x : finiteLattice k ι →ₗ[k] C) :
     H0 G →ₗ[k] C := x.comp (Submodule.inclusion inf_le_left)
 
+set_option synthInstance.maxHeartbeats 200000 in
 /-- On two rank-e Laurent lines meeting in rank e, the joint obstruction space has
 dimension at most the sum of their determinant deficits. The overlap equations have
 one shared crossing evaluation. Each global section is detected there. -/

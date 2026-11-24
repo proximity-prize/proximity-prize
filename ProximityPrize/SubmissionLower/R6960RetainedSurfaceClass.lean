@@ -40,7 +40,7 @@ def crossingX (x z:L) : Axis E false x →ₗ[L] Crossing E x z :=
 def crossingZ (x z:L) : Axis E true z →ₗ[L] Crossing E x z :=
   (Ideal.Quotient.factorₐ L (show axisIdeal E true z ≤ axisIdeal E false x ⊔ axisIdeal E true z from le_sup_right)).toLinearMap
 
-private def chartSpace (s:Chart) : Submodule L (Tor E) where
+def chartSpace (s:Chart) : Submodule L (Tor E) where
   carrier:={u | IsIntegral (baseChart s) (u:E)}
   zero_mem' := isIntegral_zero
   add_mem' a b:=a.add b
@@ -54,9 +54,9 @@ def difference (j:Bool) (c:L) :
     (chartImage E j c false × chartImage E j c true) →ₗ[L] Axis E j c :=
   (chartImage E j c false).subtype.coprod (-(chartImage E j c true).subtype)
 
-private def evalX (x z:L) := (crossingX E x z).comp
+def evalX (x z:L) := (crossingX E x z).comp
   ((chartImage E false x false).subtype.comp (LinearMap.fst L (chartImage E false x false) (chartImage E false x true)))
-private def evalZ (x z:L) := (crossingZ E x z).comp
+def evalZ (x z:L) := (crossingZ E x z).comp
   ((chartImage E true z false).subtype.comp (LinearMap.fst L (chartImage E true z false) (chartImage E true z true)))
 abbrev Paired (x z:L) := (Axis E false x × Axis E true z) ⧸
   RetainedNodalIndex.boundaries (difference E false x) (difference E true z) (evalX E x z) (evalZ E x z)
@@ -141,7 +141,7 @@ private theorem raw_zero (x z:L) (u:potentials E) : rawMap E x z u=0 ↔
       · change red E true z (w false)+ -(red E true z (w true))=_
         rw [←sub_eq_add_neg,←map_sub]; exact ez.symm
 
-private theorem congr_of_eq (j c) (a b:Tor E) (eq : red E j c a=red E j c b) :
+theorem congr_of_eq (j c) (a b:Tor E) (eq : red E j c a=red E j c b) :
     Congruent j c (a:E) (b:E) := by
   obtain ⟨r,hr⟩:=Ideal.mem_span_singleton.mp (Ideal.Quotient.eq.mp eq)
   exact ⟨r,r.property,congrArg Subtype.val hr⟩
@@ -158,10 +158,10 @@ open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 
 /-- The actual bounded cover's untwisted obstruction space embeds in the quotient
 formed by the two torus fibres and a single shared crossing. -/
-theorem restriction_kernel (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem restriction_kernel (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap MonicChart.Scalar[X] ChartField))=0)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) :
     (rawMap E x z).ker=coboundaries E := by
     ext u

@@ -13,7 +13,7 @@ open RescueGeometry (Model Family)
 open RetainedShortening (Word)
 open CurvatureSquares (Ordinate ordEval xView zView)
 open scoped Polynomial
-open private degree_two_count from ProximityPrize.SubmissionLower.R6960QuadraticProjection
+open CurvatureSquares (degree_two_count)
 
 abbrev wordDegree : ℕ := 164632
 
@@ -22,7 +22,7 @@ ordinate degree at least three after the weighted compression step. -/
 def FactorPriceAt (rate:ℕ→ℕ) : Prop :=
   ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
     Word 179827 wordDegree M.word F.scalar T →
-    ∀ f : Curve L[X], Irreducible f →
+    ∀ f : Curve (Polynomial L), Irreducible f →
       3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
       height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
       (∀ γ∈T, MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
@@ -31,7 +31,7 @@ def FactorPriceAt (rate:ℕ→ℕ) : Prop :=
 
 abbrev BoundedFactorPrice := FactorPriceAt MarkedSheet.rate
 
-private theorem rate_mono {e n : ℕ} (h : e≤n) : MarkedSheet.rate e≤MarkedSheet.rate n := by
+theorem rate_mono {e n : ℕ} (h : e≤n) : MarkedSheet.rate e≤MarkedSheet.rate n := by
   unfold MarkedSheet.rate
   exact Nat.sub_le_sub_right (Nat.add_le_add
     (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 9 h) 6)

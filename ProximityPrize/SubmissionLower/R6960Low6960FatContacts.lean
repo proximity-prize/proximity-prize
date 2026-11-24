@@ -6,11 +6,11 @@ namespace Low6960FatContacts
 noncomputable section
 open Polynomial K1 K1_13 K1_13_4 K1_13_4_3 FrobeniusLocator ProximityPrize.Benchmark
 open scoped BigOperators
-open private line eval_line coeff_contact order_of_locator_lines translate_map from ProximityPrize.SubmissionLower.PortLow4
+open P0_9_4 (line eval_line coeff_contact order_of_locator_lines translate_map)
 set_option maxRecDepth 12000
-private def Bounded (F : Polynomial Geom[X]) (b : ℕ) : Prop :=
+private def Bounded (F : Polynomial (Polynomial Geom)) (b : ℕ) : Prop :=
   ∀ j, (F.coeff j).natDegree ≤ b + 48758 * j
-private theorem bounded_mul {F G : Polynomial Geom[X]} {a b : ℕ}
+private theorem bounded_mul {F G : Polynomial (Polynomial Geom)} {a b : ℕ}
     (hF : Bounded F a) (hG : Bounded G b) : Bounded (F * G) (a + b) := by
   intro j
   rw [Polynomial.coeff_mul]
@@ -20,34 +20,34 @@ private theorem bounded_mul {F G : Polynomial Geom[X]} {a b : ℕ}
   refine natDegree_mul_le.trans ((Nat.add_le_add (hF ij.1) (hG ij.2)).trans ?_)
   rw [← hsum, Nat.mul_add]
   omega
-private theorem bounded_C (f : Geom[X]) {a : ℕ} (hf : f.natDegree ≤ a) :
+private theorem bounded_C (f : (Polynomial Geom)) {a : ℕ} (hf : f.natDegree ≤ a) :
     Bounded (Polynomial.C f) a := by
   intro j
   by_cases h : j = 0
   · simpa [h] using hf
   · simp [Polynomial.coeff_C, h]
 private theorem bounded_prod {ι : Type*} (A : Finset ι)
-    (f : ι → Polynomial Geom[X]) (b : ι → ℕ) (hf : ∀ i ∈ A, Bounded (f i) (b i)) :
+    (f : ι → Polynomial (Polynomial Geom)) (b : ι → ℕ) (hf : ∀ i ∈ A, Bounded (f i) (b i)) :
     Bounded (∏ i ∈ A, f i) (∑ i ∈ A, b i) := by
   classical
   induction A using Finset.induction_on with
-  | empty => simpa using bounded_C (1 : Geom[X]) (a := 0) (by simp)
+  | empty => simpa using bounded_C (1 : (Polynomial Geom)) (a := 0) (by simp)
   | insert i A hi ih =>
     rw [Finset.prod_insert hi, Finset.sum_insert hi]
     exact bounded_mul (hf i (Finset.mem_insert_self _ _))
       (ih fun k hk => hf k (Finset.mem_insert_of_mem hk))
-private theorem bounded_pow {f : Polynomial Geom[X]} {b : ℕ} (hf : Bounded f b) (n : ℕ) :
+private theorem bounded_pow {f : Polynomial (Polynomial Geom)} {b : ℕ} (hf : Bounded f b) (n : ℕ) :
     Bounded (f ^ n) (b * n) := by
   induction n with
-  | zero => simpa using bounded_C (1 : Geom[X]) (a := 0) (by simp)
+  | zero => simpa using bounded_C (1 : (Polynomial Geom)) (a := 0) (by simp)
   | succ n ih =>
     rw [pow_succ, Nat.mul_succ]
     exact bounded_mul ih hf
-private theorem line_degree (Q : Row 3) (T U : Geom[X]) (t : ℕ)
+private theorem line_degree (Q : Row 3) (T U : (Polynomial Geom)) (t : ℕ)
     (hQ : RawCut t Q) (hT : T.natDegree ≤ 131071) (hU : U.natDegree ≤ 179829)
     (j : ℕ) : ((line Q T U).coeff j).natDegree ≤ t + 48758 * j := by
   let b (i : Fin 3) : ℕ := 131071 - i.val
-  let F (i : Fin 3) : Polynomial Geom[X] :=
+  let F (i : Fin 3) : Polynomial (Polynomial Geom) :=
     Polynomial.C (jet T i) + Polynomial.C (jet U i) * Polynomial.X
   have hF (i : Fin 3) : Bounded (F i) (b i) := by
     intro k
@@ -74,11 +74,11 @@ private theorem line_degree (Q : Row 3) (T U : Geom[X]) (t : ℕ)
     (bounded_prod a.support (fun i => F i ^ a i) (fun i => b i * a i)
       (fun i _ => bounded_pow (hF i) (a i))) j
   exact hterm.trans (Nat.add_le_add_right (hQ a ha) _)
-private theorem line_coeff_zero (w : I → K) (H res T : Geom[X]) (t r : ℕ) (Q : Row 3)
+private theorem line_coeff_zero (w : I → K) (H res T : (Polynomial Geom)) (t r : ℕ) (Q : Row 3)
     (hT : T.natDegree ≤ 131071) (hQ : RawCut t Q) (hcontact : RawContact r w H res Q)
     (A : Finset I) (hA : A.card = 179827)
     (hhit : ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
-    (V : Geom[X]) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 48758 * j < r * 179827) :
+    (V : (Polynomial Geom)) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 48758 * j < r * 179827) :
     (line Q T (locator (fun i => embed (node i)) A * V)).coeff j = 0 := by
   classical
   let x (i : I) : Geom := embed (node i)
@@ -102,7 +102,7 @@ private theorem line_coeff_zero (w : I → K) (H res T : Geom[X]) (t r : ℕ) (Q
   · exact fun i hi => coeff_contact _ _ _ (hc i hi) j
   · rw [hA]
     exact (line_degree Q T U t hQ hT hU j).trans_lt hj
-theorem raw_locator_order (w : I → K) (H res T : Geom[X]) (t k : ℕ) (Q : Row 3)
+theorem raw_locator_order (w : I → K) (H res T : (Polynomial Geom)) (t k : ℕ) (Q : Row 3)
     (hT : T.natDegree ≤ 131071)
     (hhits : ∃ A : Finset I, 179827 ≤ A.card ∧
       ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
@@ -130,9 +130,9 @@ noncomputable section
 open K1 K1_13 K1_13_4_3 Low6960Fat
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
-open private coeff_scalar support_seed weight_shift from ProximityPrize.SubmissionLower.Fast050
-open private coeff_eq_zero_of_lowerOrder from ProximityPrize.SubmissionLower.Fast050
-private theorem trueCut_seed (H : Geom[X]) (i t : ℕ) (F : PhysicalRow)
+open K1_13_4_3_1 (coeff_scalar support_seed weight_shift)
+open K1_13_4_3 (coeff_eq_zero_of_lowerOrder)
+private theorem trueCut_seed (H : (Polynomial Geom)) (i t : ℕ) (F : PhysicalRow)
     (hH : H.natDegree ≤ 2338) (hF : TrueCut H.natDegree t F) :
     TrueCut H.natDegree (t + 7014 * i) (clearedSeed H i F) := by
   intro b hb
@@ -230,7 +230,7 @@ private theorem source_order (h2 : K1_13_4_3.c2)
     simp [clearedSeed, toGeneric, a, atSeed, K1_13_4.translate]
   rw [hmap, MvPolynomial.coeff_C_mul] at hc
   have hn : inclX (P.H ^ (3 * m none)) ≠ 0 :=
-    (map_ne_zero_iff _ (IsFractionRing.injective Geom[X] GenericX)).mpr (pow_ne_zero _ P.monic.ne_zero)
+    (map_ne_zero_iff _ (IsFractionRing.injective (Polynomial Geom) GenericX)).mpr (pow_ne_zero _ P.monic.ne_zero)
   have hcoef := (mul_eq_zero.mp hc).resolve_left hn
   rw [translate_atSeed, coeff_atSeed_zero, ← partial_eq_mixedHasse, toGeneric, map_partial,
     translate_partial] at hcoef

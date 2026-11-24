@@ -10,7 +10,7 @@ noncomputable section
 open Polynomial MvPolynomial
 open K1_14 (FX Equation)
 open Cardinal
-open private seedView seedView_coeff flatten from ProximityPrize.SubmissionLower.Fast069
+open K1_14_4 (seedView seedView_coeff flatten)
 
 /-- Degree in one seed coordinate with the ordinate kept in the coefficient ring. -/
 def axisDegree (f : Equation) (z : Fin 2) : ℕ := (seedView f).degreeOf z

@@ -19,7 +19,7 @@ theorem disc_at_root {R : Type*} [CommRing R] (a b c d s : R)
 
 variable {L : Type} [Field L]
 
-theorem complement_degree (a b c s : L[X]) {W d : ℕ} (room : 3*d≤W)
+theorem complement_degree (a b c s : (Polynomial L)) {W d : ℕ} (room : 3*d≤W)
     (sa : a.natDegree≤W-3*d) (sb : b.natDegree≤W-2*d)
     (sc : c.natDegree≤W-d) (ss : s.natDegree≤d) :
     ((b+a*s)^2-4*a*(c+(b+a*s)*s)).natDegree ≤ 2*W-4*d := by
@@ -36,8 +36,8 @@ variable [DecidableEq L]
 
 /-- Removing a generic square from a discriminant preserves the specialized
 bound on the degree outside its square part. The two squares can share roots. -/
-theorem cancel_squares (H G R D : L[X]) (hn : H≠0) (eqn : H^2*G=R^2*D) :
-    ∃ h t : L[X], G=h^2*t ∧ t.natDegree≤D.natDegree := by
+theorem cancel_squares (H G R D : (Polynomial L)) (hn : H≠0) (eqn : H^2*G=R^2*D) :
+    ∃ h t : (Polynomial L), G=h^2*t ∧ t.natDegree≤D.natDegree := by
   by_cases rn : R=0
   · have z : G=0 := by simpa [rn,hn] using eqn
     exact ⟨0,0,by simp [z],by simp⟩
@@ -66,10 +66,10 @@ theorem cancel_squares (H G R D : L[X]) (hn : H≠0) (eqn : H^2*G=R^2*D) :
 
 /-- A specialization count with residual degree t. Simultaneous degree
 loss and repeated roots both contribute to the rank defect. -/
-theorem marked_corank (Q : Polynomial L[X]) {r v t : ℕ} (hr : 0<r) (deg : Q.natDegree≤r)
+theorem marked_corank (Q : Polynomial (Polynomial L)) {r v t : ℕ} (hr : 0<r) (deg : Q.natDegree≤r)
     (seed : ∀ i,(Q.coeff i).natDegree≤v)
     (sep : Q.resultant Q.derivative r (r-1)≠0) (T : Finset L)
-    (marks : ∀ z∈T, ∃ h a : L[X], Q.map (evalRingHom z)=h^2*a ∧ a.natDegree≤t) :
+    (marks : ∀ z∈T, ∃ h a : (Polynomial L), Q.map (evalRingHom z)=h^2*a ∧ a.natDegree≤t) :
     T.card*((r-t+1)/2) ≤ (2*r-1)*v := by
   have each (z) (hz : z∈T) : (r-t+1)/2 ≤ r+(r-1)-
       (sylvester (Q.map (evalRingHom z)) (Q.derivative.map (evalRingHom z)) r (r-1)).rank := by
@@ -80,7 +80,7 @@ theorem marked_corank (Q : Polynomial L[X]) {r v t : ℕ} (hr : 0<r) (deg : Q.na
   have bound:=Finset.sum_le_sum each
   simp only [sum_const,nsmul_eq_mul] at bound
   have fee:=Polynomial.natDegree_resultant_le_of_coeff_natDegree_le Q Q.derivative r (r-1) v v seed (fun i=>by
-    rw [coeff_derivative,mul_comm,show ((i:L[X])+1)=C ((i:L)+1) by simp]
+    rw [coeff_derivative,mul_comm,show ((i:(Polynomial L))+1)=C ((i:L)+1) by simp]
     exact (natDegree_C_mul_le ..).trans (seed _))
   have upper := sum_sylvester_coranks_le_resultant_natDegree Q Q.derivative r (r-1) T sep
   have sum_fee : T.card*((r-t+1)/2) ≤ r*v+(r-1)*v :=
@@ -104,25 +104,25 @@ theorem first_band (r v marks : ℕ) (large : 278868≤r)
 
 private abbrev sp (z : L) := Polynomial.mapRingHom (evalRingHom z)
 
-open private root_count from ProximityPrize.SubmissionLower.R6960QuadraticProjection
+open CurvatureSquares (root_count)
 
 /-- Count a scalar family from its discriminant, including parameter-content
 zeros, abscissa degree drops and nonmonic cubic fibres. -/
-theorem high_odd_cubics (A B C₁ D H G : Polynomial L[X]) (c : L[X]) (r v : ℕ)
+theorem high_odd_cubics (A B C₁ D H G : Polynomial (Polynomial L)) (c : (Polynomial L)) (r v : ℕ)
     (factor : disc A B C₁ D=Polynomial.C c*H^2*G)
     (large : 278868≤r) (height : G.natDegree≤r)
     (seed : ∀ j,(G.coeff j).natDegree≤4*v)
     (sep : G.resultant G.derivative r (r-1)≠0)
     (j : ℕ) (proper : (disc A B C₁ D).coeff j≠0) (price : ((disc A B C₁ D).coeff j).natDegree≤4*v)
     (degrees : A.natDegree≤406446-3*133606 ∧ B.natDegree≤406446-2*133606 ∧ C₁.natDegree≤406446-133606)
-    (T : Finset L) (words : ∀ z∈T,∃ s : L[X],s.natDegree≤133606 ∧
+    (T : Finset L) (words : ∀ z∈T,∃ s : (Polynomial L),s.natDegree≤133606 ∧
       sp z A*s^3+sp z B*s^2+sp z C₁*s+sp z D=0) :
     T.card≤11200*v := by
   classical
   let bad := T.filter (fun z => ((disc A B C₁ D).coeff j).eval z=0)
   have ex : bad.card≤4*v := (root_count (S:=bad) (z:=id) (fun _ _ _ _ h=>h)
     ((disc A B C₁ D).coeff j) proper (fun z hz=> (mem_filter.mp hz).2)).trans price
-  have marks (z) (hz : z∈T \ bad) : ∃ h t : L[X],
+  have marks (z) (hz : z∈T \ bad) : ∃ h t : (Polynomial L),
       G.map (evalRingHom z)=h^2*t ∧ t.natDegree≤278468 := by
     obtain ⟨mem,nb⟩:=mem_sdiff.mp hz
     obtain ⟨s,ds,root⟩:=words z mem
@@ -131,7 +131,7 @@ theorem high_odd_cubics (A B C₁ D H G : Polynomial L[X]) (c : L[X]) (r v : ℕ
       apply nb
       apply mem_filter.mpr ⟨mem,?_⟩
       change (disc A B C₁ D).map (evalRingHom z)=0 at eq
-      simpa only [coeff_map,coe_evalRingHom,coeff_zero] using congrArg (fun P : L[X]=>P.coeff j) eq
+      simpa only [coeff_map,coe_evalRingHom,coeff_zero] using congrArg (fun P : (Polynomial L)=>P.coeff j) eq
     have eval_factor := congrArg (sp z) factor
     simp only [map_mul,map_pow] at eval_factor
     have scalar : sp z (Polynomial.C c) = Polynomial.C (c.eval z) := Polynomial.map_C ..

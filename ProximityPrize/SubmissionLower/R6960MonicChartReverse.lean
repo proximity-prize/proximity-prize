@@ -15,7 +15,7 @@ section Euler
 
 variable {R : Type*} [CommRing R]
 
-private theorem coeff_mul_X_derivative (f : R[X]) (i : ℕ) :
+private theorem coeff_mul_X_derivative (f : (Polynomial R)) (i : ℕ) :
     (Polynomial.X*f.derivative).coeff i=f.coeff i*(i:R) := by
   cases i with
   | zero => simp
@@ -23,7 +23,7 @@ private theorem coeff_mul_X_derivative (f : R[X]) (i : ℕ) :
 
 /-- Euler's identity for the reversed homogeneous equation, with
 declared degree preserved through differentiation. -/
-theorem reflect_derivative (f : R[X]) (e : ℕ) (he : 0<e) (bound : f.natDegree≤e) :
+theorem reflect_derivative (f : (Polynomial R)) (e : ℕ) (he : 0<e) (bound : f.natDegree≤e) :
     Polynomial.X*(f.reflect e).derivative =
       C (e:R)*f.reflect e-f.derivative.reflect (e-1) := by
   ext i
@@ -53,23 +53,23 @@ section Basic
 variable {A : Type*} [CommRing A] [IsDomain A]
 
 /-- The monic polynomial for the reciprocal ordinate on a chart at c. -/
-def equation (f : A[X]) (c : A) (u : Aˣ) : A[X] :=
+def equation (f : (Polynomial A)) (c : A) (u : Aˣ) : (Polynomial A) :=
   C ((↑u⁻¹ : A))*(f.taylor c).reverse
 
-theorem equation_degree (f : A[X]) (c : A) (u : Aˣ) (hu : f.eval c=(u:A)) :
+theorem equation_degree (f : (Polynomial A)) (c : A) (u : Aˣ) (hu : f.eval c=(u:A)) :
     (equation f c u).natDegree=f.natDegree := by
   have nn : (f.taylor c).coeff 0≠0 := by rw [taylor_coeff_zero,hu]; exact u.ne_zero
   rw [equation,natDegree_C_mul (Units.ne_zero _),reverse_natDegree,
     natTrailingDegree_eq_zero.mpr (Or.inr nn),Nat.sub_zero,natDegree_taylor]
 
-theorem equation_monic (f : A[X]) (c : A) (u : Aˣ) (hu : f.eval c=(u:A)) :
+theorem equation_monic (f : (Polynomial A)) (c : A) (u : Aˣ) (hu : f.eval c=(u:A)) :
     (equation f c u).Monic := by
   have nn : (f.taylor c).coeff 0≠0 := by rw [taylor_coeff_zero,hu]; exact u.ne_zero
   unfold Monic equation
   rw [leadingCoeff_mul,leadingCoeff_C,reverse_leadingCoeff,trailingCoeff_eq_coeff_zero nn,
     taylor_coeff_zero,hu,Units.inv_mul]
 
-theorem equation_coeff_zero (f : A[X]) (c : A) (u : Aˣ) :
+theorem equation_coeff_zero (f : (Polynomial A)) (c : A) (u : Aˣ) :
     (equation f c u).coeff 0=(↑u⁻¹:A)*f.leadingCoeff := by
   rw [equation,coeff_C_mul,coeff_zero_reverse,leadingCoeff_taylor]
 
@@ -79,22 +79,22 @@ section Evaluation
 
 variable {A E : Type*} [CommRing A] [IsDomain A] [Field E]
 
-private theorem taylor_root_eval (i : A→+*E) (f : A[X]) (c : A) (α : E) :
+private theorem taylor_root_eval (i : A→+*E) (f : (Polynomial A)) (c : A) (α : E) :
     (f.taylor c).eval₂ i (α-i c)=f.eval₂ i α := by
   rw [taylor_apply,eval₂_comp,eval₂_add,eval₂_X,eval₂_C,sub_add_cancel]
 
-private theorem derivative_taylor (f : A[X]) (c : A) :
+private theorem derivative_taylor (f : (Polynomial A)) (c : A) :
     (f.taylor c).derivative=f.derivative.taylor c := by
   simp [taylor_apply,derivative_comp]
 
-theorem sub_ne_at_root (i : A→+*E) {f : A[X]} {c : A} {u : Aˣ}
+theorem sub_ne_at_root (i : A→+*E) {f : (Polynomial A)} {c : A} {u : Aˣ}
     (hu : f.eval c=(u:A)) {α : E} (root : f.eval₂ i α=0) : α-i c≠0 := by
   intro h
   have e : α=i c := sub_eq_zero.mp h
   rw [e,eval₂_at_apply,hu] at root
   exact (u.isUnit.map i).ne_zero root
 
-theorem equation_root (i : A→+*E) (f : A[X]) (c : A) (u : Aˣ)
+theorem equation_root (i : A→+*E) (f : (Polynomial A)) (c : A) (u : Aˣ)
     (hu : f.eval c=(u:A)) {α : E} (root : f.eval₂ i α=0) :
     (equation f c u).eval₂ i (α-i c)⁻¹=0 := by
   let w := α-i c
@@ -107,7 +107,7 @@ theorem equation_root (i : A→+*E) (f : A[X]) (c : A) (u : Aˣ)
 
 /-- The derivative at the reciprocal root is obtained by homogeneous
 differentiation of the same chart polynomial. -/
-theorem equation_derivative (i : A→+*E) (f : A[X]) (c : A) (u : Aˣ)
+theorem equation_derivative (i : A→+*E) (f : (Polynomial A)) (c : A) (u : Aˣ)
     (hu : f.eval c=(u:A)) (degree : 2≤f.natDegree)
     {α : E} (root : f.eval₂ i α=0) :
     f.derivative.eval₂ i α*((α-i c)⁻¹)^(f.natDegree-2)=

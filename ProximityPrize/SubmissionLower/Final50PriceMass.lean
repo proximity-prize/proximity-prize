@@ -11,21 +11,20 @@ open K1_13_8 (zeroShape)
 open Final50PriceLayer (fastLayer availableMass)
 open K1_13_8_2 (Threshold)
 open P0_9_8 (symbol_count)
-open private P3_6_8_1.sumBelow P3_6_8_1.sumBelow_eq P3_6_8_1.sumBelow_add
-  from ProximityPrize.SubmissionLower.GoldBranch6N8
+open P3_6_8_1 (sumBelow sumBelow_eq sumBelow_add)
 
-private theorem mass_eq (r y : Shape) (L : ℕ) (hr : r = zeroShape ∨ 0 < r.j)
+theorem mass_eq (r y : Shape) (L : ℕ) (hr : r = zeroShape ∨ 0 < r.j)
     (hj : 0 < r.j+y.j) : availableMass r y L =
     P3_6_8_1.sumBelow (fastLayer r y L) (L + 1650 / (r.j+y.j)) := by
   rw [P3_6_8_1.sumBelow_eq, Final50PriceLayer.availableMass_eq_sum hr hj le_rfl]
 
-private def check (f : ℕ → ℕ) (offset length : ℕ) : List ℕ → Bool
+def check (f : ℕ → ℕ) (offset length : ℕ) : List ℕ → Bool
   | [] => decide (length = 0)
   | v :: vs =>
       decide (P3_6_8_1.sumBelow (fun k => f (offset + k)) (min length 12) = v) &&
         check f (offset + min length 12) (length - 12) vs
 
-private theorem check_sum (f : ℕ → ℕ) (offset length : ℕ) (values : List ℕ)
+theorem check_sum (f : ℕ → ℕ) (offset length : ℕ) (values : List ℕ)
     (h : check f offset length values = true) :
     P3_6_8_1.sumBelow f (offset + length) = P3_6_8_1.sumBelow f offset + values.sum := by
   induction values generalizing offset length with

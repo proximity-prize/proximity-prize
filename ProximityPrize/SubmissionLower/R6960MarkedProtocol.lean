@@ -2,6 +2,7 @@ import ProximityPrize.SubmissionLower.R6960MarkedAllLabels
 import ProximityPrize.SubmissionLower.R6960MarkedVerticalProfile
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedHorizontalHorner
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedRootTransport
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -25,7 +26,7 @@ theorem nonlinear_price : NonlinearPrice := by
   classical
   intro u deleted M Γ F T sub words f ir lo hi seed bounded nonlin marks
   let P:=view f
-  let Q:ChartField[X]:=(RetainedLinear.toSeed P).map (algebraMap Scalar[X] ChartField)
+  let Q:(Polynomial ChartField):=(RetainedLinear.toSeed P).map (algebraMap (Polynomial Scalar) ChartField)
   have pi:Irreducible P:=(MulEquiv.irreducible_iff view).mpr ir
   have degP:P.natDegree=f.degreeOf ordinate:=view_y f
   have seedI:=RetainedLinear.toSeed_irreducible pi (by omega : 0<P.natDegree)
@@ -35,7 +36,7 @@ theorem nonlinear_price : NonlinearPrice := by
   let E:=AdjoinRoot Q
   let b:PowerBasis ChartField E:=AdjoinRoot.powerBasis qi.ne_zero
   have root:aeval b.gen Q=0 := (AdjoinRoot.aeval_eq Q).trans (AdjoinRoot.mk_self)
-  have dim:b.dim=P.natDegree:=(natDegree_map_eq_of_injective (IsFractionRing.injective Scalar[X] ChartField)
+  have dim:b.dim=P.natDegree:=(natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) ChartField)
     (RetainedLinear.toSeed P)).trans degS
   have : FiniteDimensional ChartField E:=b.finite
   have : Algebra.IsSeparable ChartField E:=MonicChartProbes.actual_separable f ir lo hi b root
@@ -50,7 +51,7 @@ theorem nonlinear_price : NonlinearPrice := by
   obtain ⟨δf,δi,nf,ni,df,di,xc,zc,tail⟩:=
     actual_measured_discriminants x z nx nz K1.p small xf xi zf zi s t ds dt
   let S:=T.image (scalar M)
-  let wt (z:L):L[X]:=liftPoly (F.scalar (Function.invFun (scalar M) z))
+  let wt (z:L):(Polynomial L):=liftPoly (F.scalar (Function.invFun (scalar M) z))
   have mark (z:L) (mem:z∈S):MarkedFiber P z (wt z) := by
     obtain ⟨a,ha,rfl⟩:=Finset.mem_image.mp mem
     change MarkedFiber P _ (liftPoly (F.scalar (Function.invFun (scalar M) (scalar M a))))

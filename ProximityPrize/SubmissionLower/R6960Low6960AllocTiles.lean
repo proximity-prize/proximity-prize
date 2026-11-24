@@ -13,7 +13,7 @@ open Low6960Prices (physicalPrice physicalPriceOld tiltedFits activeFitsPrice)
 open Low6960RetainedCut (contractedPrice)
 open Low6960WeightedRate (Allowed)
 open Low6960Monotone (physicalPrice_le_old physical_mono)
-open private InRectangle fold_cover step from ProximityPrize.SubmissionLower.Compact50Cover
+open Compact50Cover (InRectangle fold_cover step)
 
 def actualRate (u : Final50SharedPrice.Rate) : Low6960SharedPrice.Rate :=
   ⟨(match u.kind with | .ordinary=>.ordinary | .tilted=>.tilted),

@@ -23,16 +23,15 @@ open P0_9_6_1_2 (exists_value_cut)
 open Low6960Prices (taylorLength primaryBox Messages)
 open Low6960GeometryCut (CutInput)
 open Low6960GeometryCut_3 (cutCycle)
-open private P0_9_6_3.canonical_unique P0_9_6_3.cycleWeight_ge
-  from ProximityPrize.SubmissionLower.PortLow6
-open private K1_14_6.curve_degree_nat from ProximityPrize.SubmissionLower.Fast055
+open P0_9_6_3 (canonical_unique cycleWeight_ge)
+open K1_14_6 (curve_degree_nat)
 
 abbrev chartWidth (f : Row 4) : ℕ := (chart (taylorLength+2) (shape f).chamber).b
 
-def Marked (f Q : Row 4) (l : ℕ) (surfaces : Finset (Ideal GeoJets)) (S : Geom[X]) : Prop :=
+def Marked (f Q : Row 4) (l : ℕ) (surfaces : Finset (Ideal GeoJets)) (S : (Polynomial Geom)) : Prop :=
   ∃ P ∈ surfaces, ∃ r, HighChart f Q l S P r
 
-private theorem points_of_value {Γ : Finset K} {s : K → K[X]} {C : Ideal GeoJets}
+private theorem points_of_value {Γ : Finset K} {s : K → (Polynomial K)} {C : Ideal GeoJets}
     (prime : C.IsPrime) (hdim : dimension C = 1)
     (hinj : Set.InjOn s (Γ : Set K))
     (hC : ∀ γ ∈ Γ, C ≤ markIdeal (extend (s γ)))
@@ -69,7 +68,7 @@ private theorem points_of_value {Γ : Finset K} {s : K → K[X]} {C : Ideal GeoJ
   rw [Set.ncard_coe_finset, card_image_of_injOn (hpoint.mono (filter_subset _ _))] at hcard
   exact Nat.le_floor ((Nat.cast_le.mpr hcard).trans (hcount.trans hdeg))
 
-private theorem curve_family {Γ : Finset K} {s : K → K[X]} {f Q R : Row 4} {l : ℕ}
+private theorem curve_family {Γ : Finset K} {s : K → (Polynomial K)} {f Q R : Row 4} {l : ℕ}
     (input : CutInput Γ s f Q l) {P C : Ideal GeoJets}
     (hP : (intersectionIdeal f Q).IsMinimalPrime P) (hR : toGeneric R ∉ P)
     (hC : (divisorIdeal P R).IsMinimalPrime C) :
@@ -118,7 +117,7 @@ private theorem curve_family {Γ : Finset K} {s : K → K[X]} {f Q R : Row 4} {l
   have hvan := mem_markIdeal.mp (hh.point (hh.chart.2.1 r le_rfl))
   exact hv (s γ) ((input.degree γ (hsub hγ)).trans_lt (by decide)) hvan hh.regular
 
-private theorem cut_degree {f Q R : Row 4} {l : ℕ} {Γ : Finset K} {s : K → K[X]}
+private theorem cut_degree {f Q R : Row 4} {l : ℕ} {Γ : Finset K} {s : K → (Polynomial K)}
     (input : CutInput Γ s f Q l) (surfaces : Finset (Ideal GeoJets))
     (origin : ∀ P ∈ surfaces, ∃ h : (intersectionIdeal f Q).IsMinimalPrime P,
       (l : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) P h.isPrime)
@@ -154,7 +153,7 @@ private theorem cut_degree {f Q R : Row 4} {l : ℕ} {Γ : Finset K} {s : K → 
     _ = _ := by push_cast; ring
 
 /-- Assign third-cut curves using the old surface and one regular value section. -/
-theorem cover {Γ : Finset K} {s : K → K[X]} {f Q : Row 4} {l : ℕ}
+theorem cover {Γ : Finset K} {s : K → (Polynomial K)} {f Q : Row 4} {l : ℕ}
     (input : CutInput Γ s f Q l) (surfaces : Finset (Ideal GeoJets)) (R : Row 4)
     (origin : ∀ P ∈ surfaces, ∃ h : (intersectionIdeal f Q).IsMinimalPrime P,
       (l : ℕ∞) ≤ cycleLength (intersectionIdeal f Q) P h.isPrime)
@@ -215,10 +214,10 @@ theorem cover {Γ : Finset K} {s : K → K[X]} {f Q : Row 4} {l : ℕ}
         have hc := mul_le_mul_of_nonneg_left
           (cut_degree input surfaces origin hproper hwidth) (by positivity : 0 ≤ (chartWidth f : ℚ))
         push_cast at hc
-        simpa only [mul_comm, mul_left_comm, mul_assoc] using hc
+        exact hc.trans_eq (by ring)
 
 /-- The charged nonpersistent labels use the third-cut fee alone. -/
-theorem count {Γ : Finset K} {s : K → K[X]} {w : I → K} {f Q : Row 4} {l : ℕ}
+theorem count {Γ : Finset K} {s : K → (Polynomial K)} {w : I → K} {f Q : Row 4} {l : ℕ}
     (hmsg : Messages w Γ s) (input : CutInput Γ s f Q l)
     (surfaces : Finset (Ideal GeoJets)) (R : Row 4)
     (origin : ∀ P ∈ surfaces, ∃ h : (intersectionIdeal f Q).IsMinimalPrime P,

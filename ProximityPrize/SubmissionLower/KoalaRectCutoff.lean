@@ -11,7 +11,7 @@ open Finset Polynomial
 open K1_14 (FX Jet Equation Shape)
 open K1_14_3 (RowCaps)
 open K1_14_4 (gradeWidth)
-open private gradeMap mem_filtered finrank_le_grades from ProximityPrize.SubmissionLower.Fast069
+open K1_14_4 (gradeMap mem_filtered finrank_le_grades)
 open scoped BigOperators
 
 theorem rectCutoff_finrank_le (A h : ℕ) (s : Shape) (E W : ℕ) (U d : Fin 2 → ℕ)

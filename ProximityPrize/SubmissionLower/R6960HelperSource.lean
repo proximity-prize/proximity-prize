@@ -16,9 +16,9 @@ open P1_7 (Bank debit)
 open P1_7_1 (nodeRows groupedPoleMoment)
 open P1_7_5 (kept)
 open PowerLayers (eligiblePositions layerCost)
-open private position_sum from ProximityPrize.SubmissionLower.UpperBranch5
-open private pole_bound from ProximityPrize.SubmissionLower.UpperBranch1
-open private slots_anti rise_of_convex from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_5 (position_sum)
+open P1_7_1 (pole_bound)
+open P1_7_6 (slots_anti rise_of_convex)
 
 /-- The last nonzero power permitted by the slope and total jet caps. -/
 def orderCap (s : Shape) (d c q j : ℕ) : ℕ :=

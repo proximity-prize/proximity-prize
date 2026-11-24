@@ -6,7 +6,7 @@ set_option maxRecDepth 12000
 namespace P0_4
 noncomputable section
 open Polynomial P0
-private theorem threeUAt_eq (q : ℕ) (a : K[X]) (β : Fin 2 → K[X]) :
+private theorem threeUAt_eq (q : ℕ) (a : (Polynomial K)) (β : Fin 2 → (Polynomial K)) :
     threeUAt q a β = K1_8.threeUAt q a β := by
   delta threeUAt K1_8.threeUAt P0.liftX K1.liftX P0.seed K1.seed P0.twist K1.twist P0.p K1.p
     P0.Bivar K1.Bivar P0.K K1.K
@@ -21,12 +21,12 @@ private theorem columnRankAt_eq (q : ℕ) (U V : Bivar) :
   delta columnRankAt K1_8.columnRankAt P0.seed K1.seed P0.extendSeed K1.extendSeed
     P0.Bivar K1.Bivar P0.Frac K1.Frac P0.K K1.K
   rfl
-open private K1_8.threeUAt_native from ProximityPrize.SubmissionLower.Fast068
+open K1_8 (threeUAt_native)
 private theorem native_threeU :
-    threeUAt P0.p = (P0.threeU : K[X] → (Fin 2 → K[X]) → Bivar) := by
+    threeUAt P0.p = (P0.threeU : (Polynomial K) → (Fin 2 → (Polynomial K)) → Bivar) := by
   unfold threeUAt P0.threeU
   rfl
-theorem threeU_eq (a : K[X]) (β : Fin 2 → K[X]) :
+theorem threeU_eq (a : (Polynomial K)) (β : Fin 2 → (Polynomial K)) :
     P0.threeU a β = K1.threeU a β := by
   calc
     P0.threeU a β = threeUAt P0.p a β := congrFun (congrFun native_threeU.symm a) β
@@ -57,14 +57,13 @@ namespace P0_4
 noncomputable section
 open Polynomial P0 FrobeniusLocator ProximityPrize.Benchmark
 open K1_8 (seedInclusion seedInclusion_injective extendSeed_injective extendSeedHom AmplitudeDirection)
-open private transfer_at from ProximityPrize.SubmissionLower.Fast068
-open private threeU_height threeV_height common_multiplier multiplier_degree_zero
-  seed_scalar_coeff descend_scalar proportional_amplitudes rescale_threeU from ProximityPrize.SubmissionLower.Fast068
-private theorem sameDirection_eq (U V P Q : Bivar) :
+open K1_8 (transfer_at)
+open K1_8 (threeU_height threeV_height common_multiplier multiplier_degree_zero seed_scalar_coeff descend_scalar proportional_amplitudes rescale_threeU)
+theorem sameDirection_eq (U V P Q : Bivar) :
     sameDirection U V P Q = K1.sameDirection U V P Q := by
   delta P0.sameDirection K1.sameDirection
   rfl
-private theorem threeV_eq (b : K[X]) (α : Fin 2 → K[X]) :
+theorem threeV_eq (b : (Polynomial K)) (α : Fin 2 → (Polynomial K)) :
     threeV b α = K1.threeV b α := by
   delta P0.threeV K1.threeV P0.liftX K1.liftX P0.seed K1.seed
   rfl
@@ -81,13 +80,13 @@ open Polynomial FrobeniusLocator ProximityPrize.Benchmark
 open P0 (Words k amplitudeDegree)
 open K1_9 (K I node twist pencil fold pencil_degree
   seedCoeff crossValue CoefficientIdentities sixNorm_mul sixNorm_ne_zero)
-open private seedCoeff_degree from ProximityPrize.SubmissionLower.Fast068
+open K1_9 (seedCoeff_degree)
 abbrev heightBound : ℕ := 32781
 structure PolarData (u : Words) where
-  a : K[X]
-  b : K[X]
-  A : Fin 2 → K[X]
-  Q : K → K → K[X]
+  a : (Polynomial K)
+  b : (Polynomial K)
+  A : Fin 2 → (Polynomial K)
+  Q : K → K → (Polynomial K)
   a_ne : a ≠ 0
   norms_ne : K1.sixNorm a ≠ K1.sixNorm b
   primitive : IsCoprime (A 0) (A 1)
@@ -98,16 +97,16 @@ structure PolarData (u : Words) where
     (Q r s).eval (node i) =
       a.eval (node i) * twist ((pencil (A 0) (A 1) r).eval (node i)) * fold u s i -
       b.eval (node i) * (pencil (A 0) (A 1) s).eval (node i) * twist (fold u r i)
-private theorem pow_eq_twist (z : K) : z ^ P0.p = twist z :=
+theorem pow_eq_twist (z : K) : z ^ P0.p = twist z :=
   (frobenius_def P0.p z).symm
-private theorem threeUAt_native : threeUAt P0.p = P0.threeU := by
+theorem threeUAt_native : threeUAt P0.p = P0.threeU := by
   unfold threeUAt P0.threeU
   rfl
-private theorem relationOnAt_native : relationOnAt P0.p = P0.relationOn := by
+theorem relationOnAt_native : relationOnAt P0.p = P0.relationOn := by
   unfold relationOnAt P0.relationOn
   rfl
-private theorem coefficientsAt (q : ℕ) (hq : 1 < q) (hσ : ∀ z : K, z ^ q = twist z)
-    (u : Words) (deleted : Finset I) (a b : K[X]) (A B : Fin 2 → K[X])
+theorem coefficientsAt (q : ℕ) (hq : 1 < q) (hσ : ∀ z : K, z ^ q = twist z)
+    (u : Words) (deleted : Finset I) (a b : (Polynomial K)) (A B : Fin 2 → (Polynomial K))
     (output : P0.Bivar) (hp : A = B)
     (hn : relationOnAt q u deleted (threeUAt q a B) (P0.threeV b A) output)
     (i : I) (hi : i ∉ deleted) :
@@ -128,15 +127,15 @@ set_option maxHeartbeats 900000
 namespace P0_7
 open P0 Finset
 open K1_11 (V J)
-private def countRow (B s t i : ℕ) : ℕ :=
+def countRow (B s t i : ℕ) : ℕ :=
   ∑ j ∈ range (B + 1 - i), (s + 1 - i) * (t + 1 - j)
-private def gradeRow (B s t i : ℕ) : ℕ :=
+def gradeRow (B s t i : ℕ) : ℕ :=
   ∑ j ∈ range (B + 1 - i), (i + j) * ((s + 1 - i) * (t + 1 - j))
-private def count (B s t : ℕ) : ℕ := ∑ i ∈ range (B + 1), countRow B s t i
-private def grade (B s t : ℕ) : ℕ := ∑ i ∈ range (B + 1), gradeRow B s t i
-private def contactRow (m s t i : ℕ) : ℕ :=
+def count (B s t : ℕ) : ℕ := ∑ i ∈ range (B + 1), countRow B s t i
+def grade (B s t : ℕ) : ℕ := ∑ i ∈ range (B + 1), gradeRow B s t i
+def contactRow (m s t i : ℕ) : ℕ :=
   ∑ j ∈ range (m - i), (m - i - j) * (s + 1 - i) * (t + 1 - j)
-private theorem V_affine (D w B s t : ℕ) (hB : w * B ≤ D + 1) :
+theorem V_affine (D w B s t : ℕ) (hB : w * B ≤ D + 1) :
     V D w B s t + w * grade B s t = (D + 1) * count B s t := by
   unfold V count grade countRow gradeRow
   simp only [Finset.mul_sum, ← Finset.sum_add_distrib]
@@ -148,7 +147,7 @@ private theorem V_affine (D w B s t : ℕ) (hB : w * B ≤ D + 1) :
   calc
     _ = ((D + 1 - w * (i + j)) + w * (i + j)) * ((s + 1 - i) * (t + 1 - j)) := by ring
     _ = _ := by rw [Nat.sub_add_cancel hw]
-private theorem rational_fee (E M exceptionFee limit a b : ℕ) (hb : 0 < b)
+theorem rational_fee (E M exceptionFee limit a b : ℕ) (hb : 0 < b)
     (h : exceptionFee * b^2 + 5 * E * (a*M)^2 ≤ limit * b^2) :
     (exceptionFee : ℚ) + 5 * ((E : ℚ) * (((a : ℚ) / b) * M)^2) ≤ limit := by
   have hb' : 0 < (b : ℚ) := by exact_mod_cast hb

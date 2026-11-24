@@ -13,42 +13,42 @@ open K1_14 (L)
 open MonicChart (ChartField)
 open NormalizedFiber RetainedSurfaceClass LineEuler Polynomial Algebra
 open scoped Lower6960.CollisionMarked Lower6960.RetainedSurfaceClass Polynomial TensorProduct
-open private Lower6960.LineEuler.chartLocalization from ProximityPrize.SubmissionLower.R6960LineEulerNormalization
+open Lower6960.LineEuler (chartLocalization)
 
 private theorem lineCoordinateUnit
-    (t : Submonoid.powers (Polynomial.X:L[X])) :
-    IsUnit (algebraMap L[X] (FractionRing L[X]) (t:L[X])) := by
+    (t : Submonoid.powers (Polynomial.X:(Polynomial L))) :
+    IsUnit (algebraMap (Polynomial L) (FractionRing (Polynomial L)) (t:(Polynomial L))) := by
   obtain ⟨n,nt⟩ := t.property
   apply IsUnit.mk0
-  apply (map_ne_zero_iff _ (IsFractionRing.injective L[X] (FractionRing L[X]))).mpr
+  apply (map_ne_zero_iff _ (IsFractionRing.injective (Polynomial L) (FractionRing (Polynomial L)))).mpr
   rw [←nt]
   exact pow_ne_zero _ Polynomial.X_ne_zero
 
-@[instance_reducible] def laurentOnFraction (b:Bool) : Algebra (Laurent L) (FractionRing L[X]) :=
-  let : Algebra L[X] (Laurent L) := (chartEmbedding b).toRingHom.toAlgebra
-  let : IsLocalization.Away (Polynomial.X:L[X]) (Laurent L) := Lower6960.LineEuler.chartLocalization b
-  (IsLocalization.lift (M:=Submonoid.powers (Polynomial.X:L[X]))
-    (g:=algebraMap L[X] (FractionRing L[X])) lineCoordinateUnit).toAlgebra
+@[instance_reducible] def laurentOnFraction (b:Bool) : Algebra (Laurent L) (FractionRing (Polynomial L)) :=
+  let : Algebra (Polynomial L) (Laurent L) := (chartEmbedding b).toRingHom.toAlgebra
+  let : IsLocalization.Away (Polynomial.X:(Polynomial L)) (Laurent L) := Lower6960.LineEuler.chartLocalization b
+  (IsLocalization.lift (M:=Submonoid.powers (Polynomial.X:(Polynomial L)))
+    (g:=algebraMap (Polynomial L) (FractionRing (Polynomial L))) lineCoordinateUnit).toAlgebra
 
-theorem laurentOnFraction_scalar (b:Bool) (a:L[X]) :
-    let : Algebra (Laurent L) (FractionRing L[X]) := laurentOnFraction b
-    algebraMap (Laurent L) (FractionRing L[X]) (chartEmbedding b a)=
-      algebraMap L[X] (FractionRing L[X]) a := by
-  let : Algebra L[X] (Laurent L) := (chartEmbedding b).toRingHom.toAlgebra
-  let : IsLocalization.Away (Polynomial.X:L[X]) (Laurent L) := Lower6960.LineEuler.chartLocalization b
-  change IsLocalization.lift (M:=Submonoid.powers (Polynomial.X:L[X])) lineCoordinateUnit
-    (algebraMap L[X] (Laurent L) a)=_
+theorem laurentOnFraction_scalar (b:Bool) (a:(Polynomial L)) :
+    let : Algebra (Laurent L) (FractionRing (Polynomial L)) := laurentOnFraction b
+    algebraMap (Laurent L) (FractionRing (Polynomial L)) (chartEmbedding b a)=
+      algebraMap (Polynomial L) (FractionRing (Polynomial L)) a := by
+  let : Algebra (Polynomial L) (Laurent L) := (chartEmbedding b).toRingHom.toAlgebra
+  let : IsLocalization.Away (Polynomial.X:(Polynomial L)) (Laurent L) := Lower6960.LineEuler.chartLocalization b
+  change IsLocalization.lift (M:=Submonoid.powers (Polynomial.X:(Polynomial L))) lineCoordinateUnit
+    (algebraMap (Polynomial L) (Laurent L) a)=_
   exact IsLocalization.lift_eq _ _
 
-@[instance_reducible] def lineOnLaurentFraction (b:Bool) : Algebra L[X] (FractionRing (Laurent L)) :=
+@[instance_reducible] def lineOnLaurentFraction (b:Bool) : Algebra (Polynomial L) (FractionRing (Laurent L)) :=
   ((algebraMap (Laurent L) (FractionRing (Laurent L))).comp (chartEmbedding b).toRingHom).toAlgebra
 
 /-- The two generic line fields embed into the same Laurent fraction
 field. The inverse chart uses the inverse Laurent coordinate. -/
 def chartFractionToLaurent (b:Bool) :
-    let : Algebra L[X] (FractionRing (Laurent L)) := lineOnLaurentFraction b
-    FractionRing L[X] ≃ₐ[L[X]] FractionRing (Laurent L) := by
-  let R := L[X]
+    let : Algebra (Polynomial L) (FractionRing (Laurent L)) := lineOnLaurentFraction b
+    FractionRing (Polynomial L) ≃ₐ[(Polynomial L)] FractionRing (Laurent L) := by
+  let R := (Polynomial L)
   let Λ := Laurent L
   let K := FractionRing R
   let F := FractionRing Λ
@@ -83,10 +83,10 @@ def axisGenericData (b:Bool) (z:L) (nz:z≠0) :
     let : Algebra (Plane L) E := axisPlaneAlgebra b
     let φ : Fiber E z→+*Axis E true z := (axisFibreData (E:=E) b z nz).val
     { e : FibreGeneric (E:=E) z ≃+* AxisGeneric (E:=E) z //
-      (∀ v:Fiber E z,e (1 ⊗ₜ[L[X]] v)=1 ⊗ₜ[Laurent L] φ v) ∧
-      ∀ r:FractionRing L[X],e (r ⊗ₜ[L[X]] 1)=chartFractionToLaurent b r ⊗ₜ[Laurent L] 1 } := by
+      (∀ v:Fiber E z,e (1 ⊗ₜ[(Polynomial L)] v)=1 ⊗ₜ[Laurent L] φ v) ∧
+      ∀ r:FractionRing (Polynomial L),e (r ⊗ₜ[(Polynomial L)] 1)=chartFractionToLaurent b r ⊗ₜ[Laurent L] 1 } := by
   let : Algebra (Plane L) E := axisPlaneAlgebra b
-  let R := L[X]
+  let R := (Polynomial L)
   let Λ := Laurent L
   let K := FractionRing R
   let F := FractionRing Λ

@@ -10,12 +10,12 @@ noncomputable section
 open Polynomial Finset ProximityPrize.Benchmark
 open P1 (K I node )
 open HighCore82258 (agreement)
-open private occupancy from ProximityPrize.SubmissionLower.Fast055
-structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
+open K1_14_6 (occupancy)
+structure FixedWord (w : I → K) (T : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop where
   distinct : Set.InjOn s (T : Set K)
   degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
   hits : ∀ γ ∈ T, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
-open private incidence_arithmetic from ProximityPrize.SubmissionLower.PortHighBase
+open P0_10 (incidence_arithmetic)
 end
 end HighCore82258Upper
 end
@@ -40,7 +40,7 @@ structure Input where
   labels : Finset K
   family : AnchoredFamily model labels
   shift_out : model.shift ∉ labels
-  block : L[X]
+  block : (Polynomial L)
   chart : AdjacentChart model family block
   marks : Finset K
   marks_sub : marks ⊆ labels
@@ -64,21 +64,21 @@ structure Input where
 abbrev Input.w (J : Input) : ℕ := J.model.overhead.toNat
 abbrev Input.ell (J : Input) : ℕ := quotientOrder J.w
 abbrev Input.e (J : Input) : ℕ := J.f.natDegree
-def Input.secondBlock (J : Input) : L[X] := J.block.map (frobenius L p)
-def Input.blockProduct (J : Input) : L[X] := J.block * J.secondBlock
+def Input.secondBlock (J : Input) : (Polynomial L) := J.block.map (frobenius L p)
+def Input.blockProduct (J : Input) : (Polynomial L) := J.block * J.secondBlock
 abbrev SeedConstants := MvPolynomial (Fin 2) L
-def residueData (_J : Input) (i : Fin 2) (g : K[X]) : SeedConstants[X] :=
+def residueData (_J : Input) (i : Fin 2) (g : (Polynomial K)) : (Polynomial SeedConstants) :=
   ((liftPoly g).map (if i = 0 then RingHom.id L else frobenius L p)).map MvPolynomial.C
-def blockAt (J : Input) (i : Fin 2) : L[X] :=
+def blockAt (J : Input) (i : Fin 2) : (Polynomial L) :=
   if i = 0 then J.block else J.secondBlock
-def residueDenominator (J : Input) (i : Fin 2) : SeedConstants[X] :=
+def residueDenominator (J : Input) (i : Fin 2) : (Polynomial SeedConstants) :=
   residueData J i (J.model.factor * J.model.A₀) +
     C (MvPolynomial.X i) * residueData J i (J.model.factor * J.model.A₁)
 def evalSeedConstants (z : K) : SeedConstants →+* L :=
   MvPolynomial.eval ![algebraMap K L z, (algebraMap K L z)^p]
 structure ResidueLift (J : Input) where
   denominator : SeedConstants
-  numerator : SeedConstants[X]
+  numerator : (Polynomial SeedConstants)
   denominator_ne : denominator ≠ 0
   denominator_degree : denominator.totalDegree ≤ 2 * J.w
   numerator_degree : ∀ j, (numerator.coeff j).totalDegree ≤ 2 * J.w
@@ -88,16 +88,16 @@ structure ResidueLift (J : Input) where
       C (MvPolynomial.X i * denominator) * residueData J i J.model.Q
   unit_at_marks : ∀ γ ∈ J.labels, evalSeedConstants (J.model.label γ) denominator ≠ 0
 def constantAbscissa : L →+* FX :=
-  (algebraMap L[X] FX).comp Polynomial.C
+  (algebraMap (Polynomial L) FX).comp Polynomial.C
 def liftSeeds : SeedConstants →+* Seeds := MvPolynomial.map constantAbscissa
 def seedBiform : SeedConstants →+* Biform :=
   (MvPolynomial.rename (R := FX) (some : Fin 2 → Option (Fin 2))).toRingHom.comp liftSeeds
-def center : FX := algebraMap L[X] FX Polynomial.X
-def liftTaylor (P : SeedConstants[X]) (i : ℕ) : Biform :=
+def center : FX := algebraMap (Polynomial L) FX Polynomial.X
+def liftTaylor (P : (Polynomial SeedConstants)) (i : ℕ) : Biform :=
   (Polynomial.taylor (MvPolynomial.C center) (P.map seedBiform)).coeff i
 def inverseBlockCoeff (J : Input) (i : ℕ) : FX :=
   (i.factorial : FX)⁻¹ *
-    (Dx^[i]) ((algebraMap L[X] FX J.blockProduct)⁻¹)
+    (Dx^[i]) ((algebraMap (Polynomial L) FX J.blockProduct)⁻¹)
 def ordinateTaylorNum (f : Equation) (r : ℕ) : ℕ → Biform
   | 0 => separant (flatten f) ^ (2*r-1) * MvPolynomial.X none
   | i + 1 => MvPolynomial.C (((i+1).factorial : FX)⁻¹) *
@@ -111,7 +111,7 @@ def quotientDenominator (J : Input) (B : ResidueLift J) (r : ℕ) : Biform :=
 def cutoff (J : Input) (B : ResidueLift J) : Equation :=
   MvPolynomial.optionEquivLeft FX (Fin 2) (quotientNumerator J B (J.ell+1))
 abbrev SeedField := FractionRing Seeds
-def generic (q : Equation) : SeedField[X] := q.map (algebraMap Seeds SeedField)
+def generic (q : Equation) : (Polynomial SeedField) := q.map (algebraMap Seeds SeedField)
 def rootOn (J : Input) (q : Equation) (γ : K) : Prop :=
   atMark q (J.model.label γ) (J.family.scalar γ) = 0
 structure Factors (J : Input) (B : ResidueLift J) where
@@ -164,7 +164,7 @@ def genericPoint (y : SeedClosure) : Biform →+* SeedClosure :=
   (eval₂RingHom intoSeedClosure y).comp (MvPolynomial.optionEquivLeft FX (Fin 2)).toRingHom
 def liftConstantSeeds : SeedConstants →+* SeedClosure :=
   intoSeedClosure.comp liftSeeds
-def reconstructed (J : Input) (B : ResidueLift J) (y : SeedClosure) : SeedClosure[X] :=
+def reconstructed (J : Input) (B : ResidueLift J) (y : SeedClosure) : (Polynomial SeedClosure) :=
   let ζ := intoSeedClosure (MvPolynomial.C center)
   let ev := genericPoint y
   C ((liftConstantSeeds B.denominator)⁻¹) * B.numerator.map liftConstantSeeds +
@@ -248,7 +248,7 @@ open K1_14 (FX Equation Seeds atX graphEval seedEmbedding)
 open K1_14_6_1 (Dx partialX flatten)
 open Polynomial (eval₂RingHom)
 abbrev JetRing := Polynomial Equation
-instance jetCommRing : CommRing JetRing := @Polynomial.commRing Equation inferInstance
+instance jetCommRing : CommRing JetRing := @AddMonoidAlgebra.commRing Equation ℕ inferInstance _
 abbrev Degree := ℕ × ℕ × ℕ
 def nefDegree (h t s : ℕ) : Degree := (h + 2*t, t, s)
 abbrev CoxVar := Fin 2 ⊕ (Fin 2 ⊕ Fin 3)
@@ -642,7 +642,7 @@ open HighCore82258Upper_3 (JetRing rootInJet tangentEquation graphIdeal )
 open HighCore82258Upper_3_1 (jetSeparant coefficientDerivative jetCoeffDerivative velocity
   secondAlongVelocity velocityNumerator embed_separant)
 local notation "unwrap" => MvPolynomial.optionEquivLeft FX (Fin 2)
-private theorem dx_nat (n : ℕ) : Dx (n : FX) = 0 := by
+theorem dx_nat (n : ℕ) : Dx (n : FX) = 0 := by
   have h : Dx 1 = 0 := by
     have h₁ := Dx_mul 1 1
     simp only [mul_one, one_mul] at h₁
@@ -655,7 +655,7 @@ private theorem partial_mul (p q : Biform) :
   intro m
   simp only [coeff_partialX, AddMonoidAlgebra.coeff_add, Finsupp.add_apply,
     MvPolynomial.coeff_mul, map_sum, Dx_mul, Finset.sum_add_distrib]
-private theorem coeffDiff_mul (p q : Equation) :
+theorem coeffDiff_mul (p q : Equation) :
     coefficientDerivative (p * q) =
       p * coefficientDerivative q + coefficientDerivative p * q := by
   unfold coefficientDerivative
@@ -664,14 +664,14 @@ private theorem coeffDiff_mul (p q : Equation) :
   simp only [AlgEquiv.apply_symm_apply]
 private theorem coeffDiff_zero : coefficientDerivative 0 = 0 := by
   simp [coefficientDerivative]
-private theorem coeffDiff_add (p q : Equation) :
+theorem coeffDiff_add (p q : Equation) :
     coefficientDerivative (p + q) = coefficientDerivative p + coefficientDerivative q := by
   simp only [coefficientDerivative, map_add]
-private theorem coeff_coeffDiff (p : Equation) (i : ℕ) (m : Fin 2 →₀ ℕ) :
+theorem coeff_coeffDiff (p : Equation) (i : ℕ) (m : Fin 2 →₀ ℕ) :
     ((coefficientDerivative p).coeff i).coeff m = Dx ((p.coeff i).coeff m) := by
   rw [coefficientDerivative, MvPolynomial.optionEquivLeft_coeff_coeff, coeff_partialX,
     ← MvPolynomial.optionEquivLeft_coeff_coeff FX, AlgEquiv.apply_symm_apply]
-private theorem coeffDiff_one : coefficientDerivative 1 = 0 := by
+theorem coeffDiff_one : coefficientDerivative 1 = 0 := by
   classical
   have h : Dx 1 = 0 := by simpa only [Nat.cast_one] using dx_nat 1
   apply Polynomial.ext
@@ -680,7 +680,7 @@ private theorem coeffDiff_one : coefficientDerivative 1 = 0 := by
   intro m
   by_cases hi : i = 0 <;> by_cases hm : (0 : Fin 2 →₀ ℕ) = m <;>
     simp [coeff_coeffDiff, Polynomial.coeff_one, MvPolynomial.coeff_one, hi, hm, h]
-private theorem coeffDiff_derivative (p : Equation) :
+theorem coeffDiff_derivative (p : Equation) :
     coefficientDerivative p.derivative = (coefficientDerivative p).derivative := by
   apply Polynomial.ext
   intro i
@@ -690,7 +690,7 @@ private theorem coeffDiff_derivative (p : Equation) :
     rw [show (i : Seeds)+1 = (↑(i+1 : ℕ) : Seeds) from (Nat.cast_succ i).symm,
       ← map_natCast (MvPolynomial.C : FX →+* Seeds), mul_comm, MvPolynomial.coeff_C_mul]
   simp only [coeff_coeffDiff, Polynomial.coeff_derivative, h, Dx_mul, dx_nat, zero_mul, add_zero]
-private theorem coeff_lift {d : Equation → Equation} (h0 : d 0 = 0) (p : JetRing) (i : ℕ) :
+theorem coeff_lift {d : Equation → Equation} (h0 : d 0 = 0) (p : JetRing) (i : ℕ) :
     (jetCoeffDerivative d p).coeff i = d (p.coeff i) := by
   rw [jetCoeffDerivative, Polynomial.sum_def, Polynomial.finsetSum_coeff]
   rw [Finset.sum_eq_single i]
@@ -728,7 +728,7 @@ private theorem lift_X {d : Equation → Equation} (h0 : d 0 = 0) (h1 : d 1 = 0)
   by_cases hi : 1 = i <;> simp [velocity, coeff_lift h0, Polynomial.coeff_X, hi, h0, h1]
 private def slope (f : Equation) : JetRing :=
   Polynomial.C (coefficientDerivative f.derivative) + velocity * Polynomial.C f.derivative.derivative
-private def flow (f : Equation) : JetRing →+ JetRing where
+def flow (f : Equation) : JetRing →+ JetRing where
   toFun p :=
     jetSeparant f * (jetCoeffDerivative coefficientDerivative p +
       velocity * jetCoeffDerivative Polynomial.derivative p) -
@@ -740,30 +740,30 @@ private def flow (f : Equation) : JetRing →+ JetRing where
       lift_add Polynomial.derivative_zero (fun a b : Equation => map_add Polynomial.derivative a b),
       map_add]
     ring
-private theorem flow_mul (f : Equation) (p q : JetRing) :
+theorem flow_mul (f : Equation) (p q : JetRing) :
     flow f (p * q) = p * flow f q + flow f p * q := by
   simp only [flow, AddMonoidHom.coe_mk, ZeroHom.coe_mk, Polynomial.derivative_mul,
     lift_mul coeffDiff_zero coeffDiff_add coeffDiff_mul,
     lift_mul Polynomial.derivative_zero (fun a b : Equation => map_add Polynomial.derivative a b)
       (fun a b => Polynomial.derivative_mul.trans (add_comm _ _))]
   ring
-private theorem flow_C (f q : Equation) :
+theorem flow_C (f q : Equation) :
     flow f (Polynomial.C q) =
       jetSeparant f * (Polynomial.C (coefficientDerivative q) + velocity * Polynomial.C q.derivative) := by
   simp [flow, lift_C coeffDiff_zero, lift_C Polynomial.derivative_zero]
-private theorem flow_X (f : Equation) : flow f velocity = -secondAlongVelocity f := by
+theorem flow_X (f : Equation) : flow f velocity = -secondAlongVelocity f := by
   change jetSeparant f * (jetCoeffDerivative coefficientDerivative Polynomial.X +
     velocity * jetCoeffDerivative Polynomial.derivative Polynomial.X) -
     secondAlongVelocity f * Polynomial.derivative Polynomial.X = _
   rw [lift_X coeffDiff_zero coeffDiff_one, lift_X Polynomial.derivative_zero
     Polynomial.derivative_one, Polynomial.derivative_X]
   ring
-private theorem flow_tangentEquation (f : Equation) : flow f (tangentEquation f) = 0 := by
+theorem flow_tangentEquation (f : Equation) : flow f (tangentEquation f) = 0 := by
   change flow f (Polynomial.C (coefficientDerivative f) + velocity * jetSeparant f) = 0
   rw [map_add, flow_mul, flow_X, flow_C, flow_C, ← coeffDiff_derivative]
   unfold secondAlongVelocity
   ring
-private theorem flow_sep (f : Equation) :
+theorem flow_sep (f : Equation) :
     flow f (jetSeparant f) = jetSeparant f * slope f :=
   flow_C f f.derivative
 private theorem flow_sep_pow (f : Equation) (k : ℕ) :
@@ -776,7 +776,7 @@ private theorem flow_sep_pow (f : Equation) (k : ℕ) :
   | succ k ih =>
     rw [pow_succ, flow_mul, flow_sep, ih, Nat.cast_succ]
     ring
-private def tangentIdeal (f : Equation) : Ideal JetRing := Ideal.span {tangentEquation f}
+def tangentIdeal (f : Equation) : Ideal JetRing := Ideal.span {tangentEquation f}
 private abbrev image (f : Equation) := Ideal.Quotient.mk (tangentIdeal f)
 private theorem flow_congr (f : Equation) {p q : JetRing}
     (h : image f p = image f q) : image f (flow f p) = image f (flow f q) := by
@@ -817,7 +817,7 @@ private theorem velocity_next (f : Equation) (k : ℕ) :
     velocityNumerator f (k+1) =
       flow f (velocityNumerator f k) - (k : JetRing) * slope f * velocityNumerator f k := rfl
 set_option maxHeartbeats 800000 in
-private theorem comparison (f : Equation) (k : ℕ) :
+theorem comparison (f : Equation) (k : ℕ) :
     image f (jetSeparant f ^ (k+1) * velocityNumerator f k) = image f (oldNum f k) := by
   induction k with
   | zero =>
@@ -848,17 +848,16 @@ noncomputable section
 open Polynomial Module
 open K1_14 (L)
 open HighCore82258Upper (SeedConstants)
-open private K1_14_1_1.quotientBasis K1_14_1_1.mulMatrix K1_14_1_1.mulMatrix_entry mulMatrix_specialize
-  mulMatrix_det_ne_zero from ProximityPrize.SubmissionLower.Fast065
-abbrev liftConstants (g : L[X]) : SeedConstants[X] := g.map MvPolynomial.C
-private lemma eval_constants (z : Fin 2 → L) (g : L[X]) :
+open K1_14_1_1 (quotientBasis mulMatrix mulMatrix_entry mulMatrix_specialize mulMatrix_det_ne_zero)
+abbrev liftConstants (g : (Polynomial L)) : (Polynomial SeedConstants) := g.map MvPolynomial.C
+private lemma eval_constants (z : Fin 2 → L) (g : (Polynomial L)) :
     (liftConstants g).map (MvPolynomial.eval z) = g := by
   have h : (MvPolynomial.eval z).comp MvPolynomial.C = RingHom.id L :=
     RingHom.ext fun c => MvPolynomial.eval_C c
   rw [map_map, h, map_id]
-structure BlockContribution (h : ℕ) (b e A B Q : L[X]) (i : Fin 2) where
+structure BlockContribution (h : ℕ) (b e A B Q : (Polynomial L)) (i : Fin 2) where
   den : SeedConstants
-  num : SeedConstants[X]
+  num : (Polynomial SeedConstants)
   den_ne : den ≠ 0
   den_degree : den.totalDegree ≤ h
   num_degree : ∀ j, (num.coeff j).totalDegree ≤ h
@@ -908,7 +907,7 @@ open K1_14 (L FX atX liftPoly seedEmbedding)
 open K1_14_6 (Biform rootPoint)
 open K1_14_6_1 (Dx Dx_mul derivativeAt flatten separant cleared markEval)
 open scoped BigOperators
-open private rationalJet rationalJet_incl from ProximityPrize.SubmissionLower.Fast055
+open K1_14_6_1 (rationalJet rationalJet_incl)
 end
 end HighCore82258Upper_2
 end
@@ -1274,17 +1273,17 @@ open Polynomial Finset
 open HighCore82258Upper
 open K1_14 (Seeds Equation)
 def coeffDeriv {F : Type} [CommRing F] (δ : Derivation ℤ F F) :
-    Derivation ℤ F[X] F[X] :=
+    Derivation ℤ (Polynomial F) (Polynomial F) :=
   letI : Differential F := ⟨δ⟩
   Differential.mapCoeffs
 @[simp] theorem coeff_coeffDeriv {F : Type} [CommRing F] (δ : Derivation ℤ F F)
-    (P : F[X]) (i : ℕ) : (coeffDeriv δ P).coeff i = δ (P.coeff i) := rfl
+    (P : (Polynomial F)) (i : ℕ) : (coeffDeriv δ P).coeff i = δ (P.coeff i) := rfl
 @[simp] theorem coeffDeriv_C {F : Type} [CommRing F] (δ : Derivation ℤ F F)
     (x : F) : coeffDeriv δ (C x) = C (δ x) := by
   let : Differential F := ⟨δ⟩
   exact Differential.mapCoeffs_C x
 @[simp] theorem coeffDeriv_X {F : Type} [CommRing F] (δ : Derivation ℤ F F) :
-    coeffDeriv δ (Polynomial.X : F[X]) = 0 := by
+    coeffDeriv δ (Polynomial.X : (Polynomial F)) = 0 := by
   let : Differential F := ⟨δ⟩
   exact Differential.mapCoeffs_X (A := F)
 end
@@ -1332,8 +1331,8 @@ open K1_14 (L FX Seeds Equation)
 open K1_14_6_1 (Dx Dx_mul)
 open HighCore82258Upper (SeedConstants SeedField center constantAbscissa liftSeeds generic)
 open HighCore82258Upper_4 (SplitField coeffDx  seedMap)
-open private rationalJet rationalJet_incl from ProximityPrize.SubmissionLower.Fast055
-open private lift_derivation from ProximityPrize.SubmissionLower.Fast073
+open K1_14_6_1 (rationalJet rationalJet_incl)
+open K1_13_6_3_1_2 (lift_derivation)
 end
 end HighCore82258Upper_4_1
 end
@@ -1345,7 +1344,7 @@ open Polynomial Finset HighCore82258Upper HighCore82258Upper_4
 open K1_14 (FX Seeds Equation)
 open K1_14_6 (Biform)
 open K1_14_6_1 (Dx flatten separant partialX cleared tangent)
-open private K1_14_6_1.partialX_C K1_14_6_1.partialX_mul_X from ProximityPrize.SubmissionLower.Fast055
+open K1_14_6_1 (partialX_C partialX_mul_X)
 end
 end HighCore82258Upper_4_2
 end

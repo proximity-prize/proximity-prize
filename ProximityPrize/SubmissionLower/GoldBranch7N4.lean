@@ -53,7 +53,7 @@ open Finset
 open K1_14 (Shape shapeSum slots)
 open P3 (agreement)
 open P3_7 (Bank debit jointGain)
-open private rise_of_convex from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (rise_of_convex)
 theorem width_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
     (↑(s.m * agreement + j - q * (131071-h) - 2*h*t : ℕ) : ℤ) =
       max 0 (width s h q j t) := by
@@ -131,7 +131,7 @@ open Finset
 open K1_14 (Shape shapeSum slots triangle)
 open P3 (agreement)
 open P3_7 (jointGain)
-open private slots_anti sum_range_guard diagonal from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (slots_anti sum_range_guard diagonal)
 def phase (s : Shape) (h E v d : ℕ) : ℤ :=
   ∑ t ∈ range (s.J + orderEnd s E v), ∑ a ∈ Ico (t-s.J) (min t (orderEnd s E v-1)+1),
     (slots s.U ((a+d)*v) : ℤ) *
@@ -234,7 +234,7 @@ namespace P3_7_4
 open Finset
 open P3 (agreement)
 open K1_14 (Shape)
-open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
+open K1_14_2_1 (twice_sum_linear)
 export P1_7_6 (lt_linearEnd)
 private theorem width_eq_cast (s : Shape) (h q j t : ℕ) (hh : h ≤ 131071) :
     width s h q j t = (↑(s.m*agreement+j : ℕ) : ℤ) -
@@ -332,7 +332,7 @@ open P3 (agreement)
 open K1_14 (Shape slots triangle)
 open P3_7 (debit)
 open P1_7_6 (intervalProduct_eq)
-open private lt_seedEnd yStart_eq seedQuad_eq sum_clipped from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (lt_seedEnd yStart_eq seedQuad_eq sum_clipped)
 private theorem widthOrigin_eq (s : Shape) (h t a q : ℕ) (hh : h ≤ 131071) (ha : a ≤ t) :
     width s h q (t-a) t = widthOrigin s h t - a - ((131071-h : ℕ) : ℤ)*q := by
   simp only [width, widthOrigin, Nat.cast_sub hh, Nat.cast_sub ha, Nat.cast_ofNat]
@@ -443,7 +443,7 @@ open K1_14 (Shape)
 open P3 (agreement)
 open P1_7_6 (intervalProduct_eq)
 open P1_7_6_4 (Core corePrefix diagonalCore)
-open private lt_seedEnd from ProximityPrize.SubmissionLower.UpperBranch6
+open P1_7_6 (lt_seedEnd)
 def bankCore (s : Shape) (h E v d k : ℕ) : Core :=
   let D : ℤ := (131071-h : ℕ)
   let p : ℤ := (E-1 : ℕ)
@@ -548,7 +548,7 @@ open Finset
 open K1_14 (Shape)
 open P3 (agreement)
 open P0_10_5 (Row scan)
-open private scan_sum from ProximityPrize.SubmissionLower.PortHighBase
+open P0_10_5 (scan_sum)
 def boundary (s : Shape) (h n i : ℕ) : ℕ :=
   if i = 0 then 0
   else linearEnd ((131071-h)*(s.B+1-i)) (2*h) (s.m*agreement) n

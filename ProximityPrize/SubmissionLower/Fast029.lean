@@ -29,7 +29,7 @@ def bufferedAt (w : ℤ) (r : ℕ) (s : Shape) : ℕ :=
 def UsesSeed (G : Jet) : Prop :=
   ∃ j i, 0 < ((G.coeff j).coeff i).totalDegree
 abbrev ODE := Polynomial (Polynomial FX)
-def fixedAt (G : ODE) (S : K[X]) : FX :=
+def fixedAt (G : ODE) (S : (Polynomial K)) : FX :=
   G.eval₂ (evalRingHom (atX S)) (atX S.derivative)
 def FixedEquation {u del} {M : AnchorModel u del} {Γ} (F : AnchoredFamily M Γ)
     (T : Finset K) (B J : ℕ) : Prop :=
@@ -59,9 +59,9 @@ def rootIncl : RootAmbient →+* Ambient :=
   (MvPolynomial.rename (Fin.castLE (by decide : 3 ≤ 4))).toRingHom
 def toRoot : Equation →+* RootAmbient := eval₂RingHom rootSeeds (MvPolynomial.X 2)
 def toJet : Jet →+* Ambient := eval₂RingHom (rootIncl.comp toRoot) (MvPolynomial.X 3)
-def rootMarkHom (z : K) (S : K[X]) : RootAmbient →+* FX :=
+def rootMarkHom (z : K) (S : (Polynomial K)) : RootAmbient →+* FX :=
   MvPolynomial.eval ![seedEmbedding z, (seedEmbedding z)^p, atX S]
-def jetMarkHom (z : K) (S : K[X]) : Ambient →+* FX :=
+def jetMarkHom (z : K) (S : (Polynomial K)) : Ambient →+* FX :=
   MvPolynomial.eval ![seedEmbedding z, (seedEmbedding z)^p, atX S, atX S.derivative]
 private theorem eval_root (a b y : FX) (f : Equation) :
     MvPolynomial.eval ![a,b,y] (toRoot f) = f.eval₂ (MvPolynomial.eval ![a,b]) y := by
@@ -85,10 +85,10 @@ private theorem eval_incl (a b y v : FX) (f : RootAmbient) :
     funext i
     fin_cases i <;> rfl
   rw [hvec]
-theorem eval_rootIncl_toRoot (z : K) (S : K[X]) (f : Equation) :
+theorem eval_rootIncl_toRoot (z : K) (S : (Polynomial K)) (f : Equation) :
     jetMarkHom z S (rootIncl (toRoot f)) = atMark f z S :=
   (eval_incl (seedEmbedding z) _ _ _ (toRoot f)).trans (eval_root (seedEmbedding z) _ _ f)
-theorem eval_toJet (z : K) (S : K[X]) (P : Jet) :
+theorem eval_toJet (z : K) (S : (Polynomial K)) (P : Jet) :
     jetMarkHom z S (toJet P) = jetAt P z S := by
   have h : (jetMarkHom z S).comp (rootIncl.comp toRoot) =
       eval₂RingHom (graphEval z) (atX S) := by
@@ -98,9 +98,9 @@ theorem eval_toJet (z : K) (S : K[X]) (P : Jet) :
   change jetMarkHom z S (P.eval₂ (rootIncl.comp toRoot) (MvPolynomial.X 3)) = _
   rw [Polynomial.hom_eval₂, h, hv]
   rfl
-def OnJet (I : Ideal Ambient) (z : K) (S : K[X]) : Prop :=
+def OnJet (I : Ideal Ambient) (z : K) (S : (Polynomial K)) : Prop :=
   I ≤ RingHom.ker (jetMarkHom z S)
-def OnRoot (I : Ideal RootAmbient) (z : K) (S : K[X]) : Prop :=
+def OnRoot (I : Ideal RootAmbient) (z : K) (S : (Polynomial K)) : Prop :=
   I ≤ RingHom.ker (rootMarkHom z S)
 abbrev SeedField := FractionRing Seeds
 def generic (i : Fin 2) : SeedField :=
@@ -133,8 +133,8 @@ def SmallRootCurve (I : Ideal RootAmbient) (g H : ℕ) : Prop :=
   I.IsPrime ∧
     ∃ C₀ : MvPolynomial (Fin 2) L, Irreducible C₀ ∧
       I.comap rootSeeds =
-        Ideal.span {MvPolynomial.map
-          ((algebraMap L[X] FX).comp (Polynomial.C : L →+* L[X])) C₀} ∧
+        Ideal.span {(MvPolynomial.map
+          ((algebraMap (Polynomial L) FX).comp (Polynomial.C : L →+* (Polynomial L))) C₀)} ∧
       Module.Finite SeedField (RootSeedSection I) ∧
       Module.finrank SeedField (RootSeedSection I) = C₀.totalDegree * g ∧
       Module.Finite SeedField (RootYSection I) ∧
@@ -224,7 +224,7 @@ theorem exists_layered (P : Jet) (hP : P ≠ 0) (V : Submodule FX Jet)
     ∃ Q ∈ V, Q ≠ 0 ∧
       ∀ G : Jet, Irreducible G → G ∣ P → 0 < G.natDegree → UsesSeed G → ¬ G ∣ Q := by
   classical
-  let : Infinite FX := Infinite.of_injective _ (IsFractionRing.injective L[X] FX)
+  let : Infinite FX := Infinite.of_injective _ (IsFractionRing.injective (Polynomial L) FX)
   let I := {H : Jet // H ∈ factors P}
   let : Finite I := Set.finite_coe_iff.mpr (factors P).finite_toSet
   let tests : Option I → Submodule FX V := fun k =>
@@ -278,7 +278,7 @@ abbrev JetPlane := Polynomial (Polynomial FX)
 abbrev Surface := PrimeSpectrum Jet
 def fixedEmbedding : JetPlane →+* Jet :=
   Polynomial.mapRingHom (Polynomial.mapRingHom MvPolynomial.C)
-def fixedAt (G : JetPlane) (S : K[X]) : FX :=
+def fixedAt (G : JetPlane) (S : (Polynomial K)) : FX :=
   G.eval₂ (evalRingHom (atX S)) (atX S.derivative)
 def MarkOn {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
     (q : Surface) (γ : K) : Prop :=
@@ -345,16 +345,16 @@ def fibrePoint (y v : SeedClosure) : Ideal FibreJet :=
     Polynomial.X (R := Polynomial SeedClosure) - C (C v)}
 def OrderAt (q : Surface) (P : Jet) (m : ℕ) : Prop :=
   ∀ y v, OnSeedFibre q y v → fibreRow P ∈ fibrePoint y v ^ m
-abbrev ClearedSeeds := MvPolynomial (Fin 2) L[X]
+abbrev ClearedSeeds := MvPolynomial (Fin 2) (Polynomial L)
 abbrev ClearedEquation := Polynomial ClearedSeeds
 def liftEquation : ClearedEquation →+* Equation :=
-  Polynomial.mapRingHom (MvPolynomial.map (algebraMap L[X] FX))
+  Polynomial.mapRingHom (MvPolynomial.map (algebraMap (Polynomial L) FX))
 def clearedDx (g : ClearedEquation) : ClearedEquation :=
   g.sum fun j a => monomial j (∑ e ∈ MvPolynomial.support a, MvPolynomial.monomial e (AddMonoidAlgebra.coeff a e).derivative)
 def ordinaryCutter (g : ClearedEquation) : Jet :=
   C (liftEquation (clearedDx g)) + X * C (liftEquation g.derivative)
-def IsClearing (f : Equation) (g : ClearedEquation) (a : L[X]) : Prop :=
-  a ≠ 0 ∧ liftEquation g = C (MvPolynomial.C (algebraMap L[X] FX a)) * f
+def IsClearing (f : Equation) (g : ClearedEquation) (a : (Polynomial L)) : Prop :=
+  a ≠ 0 ∧ liftEquation g = C (MvPolynomial.C (algebraMap (Polynomial L) FX a)) * f
 def Compatible (P Q : Jet) (q : Surface) : Prop :=
   ∀ f : Equation, Irreducible f → 0 < f.natDegree → C f ∣ P → C f ∣ Q →
     C f ∈ q.asIdeal → ∀ g a, IsClearing f g a → ordinaryCutter g ∈ q.asIdeal
@@ -483,8 +483,8 @@ def sectionJetLine : SectionAmbient :=
   MvPolynomial.X 2 + MvPolynomial.C (sliceParameter 1) * MvPolynomial.X 3 -
     MvPolynomial.C (sliceParameter 3)
 abbrev OverOrdinate (I : Ideal Ambient) :=
-  CoordinateRing (I.map sectionBase ⊔ Ideal.span {sectionSeedLine, MvPolynomial.X 2 -
-    MvPolynomial.C (sliceParameter 3)})
+  CoordinateRing (I.map sectionBase ⊔ Ideal.span {sectionSeedLine, (MvPolynomial.X 2 -
+    MvPolynomial.C (sliceParameter 3))})
 abbrev OverMixed (I : Ideal Ambient) :=
   CoordinateRing (I.map sectionBase ⊔ Ideal.span {sectionSeedLine, sectionJetLine})
 def ordinateIncl : Polynomial FX →+* Ambient :=
@@ -569,7 +569,7 @@ namespace K1_14_2_2
 noncomputable section
 open K1 K1_14 K1_14_2 Polynomial
 open scoped Classical
-theorem eval_fixed (z : K) (S : K[X]) (G : ODE) :
+theorem eval_fixed (z : K) (S : (Polynomial K)) (G : ODE) :
     jetMarkHom z S (toJet (fixedIncl G)) = fixedAt G S := by
   rw [eval_toJet]
   change (G.map (Polynomial.mapRingHom MvPolynomial.C)).eval₂
@@ -638,9 +638,9 @@ structure ProperPair (P Q : Jet) : Prop where
   left_ne : P ≠ 0
   right_ne : Q ≠ 0
   no_common : ∀ D : Jet, Irreducible D → D ∣ P → ¬ D ∣ Q
-def markEval (z : K) (S : K[X]) : Jet →+* FX :=
+def markEval (z : K) (S : (Polynomial K)) : Jet →+* FX :=
   eval₂RingHom (eval₂RingHom (graphEval z) (atX S)) (atX S.derivative)
-def AtSurface (q : Surface) (z : K) (S : K[X]) : Prop :=
+def AtSurface (q : Surface) (z : K) (S : (Polynomial K)) : Prop :=
   q.asIdeal ≤ RingHom.ker (markEval z S)
 structure PreparedPair (P Q : Jet) where
   seedContent : Seeds
@@ -707,7 +707,7 @@ theorem seed_count {T : Finset K} {label : K → K} (hinj : Set.InjOn label (T :
     (p := fun γ => graphEval (label γ) C.curve = 0)]
   exact Nat.add_le_add hzero hother
 theorem scalar_atX_injective : Function.Injective atX :=
-  (IsFractionRing.injective L[X] FX).comp
+  (IsFractionRing.injective (Polynomial L) FX).comp
     (Polynomial.map_injective (algebraMap K L) (algebraMap K L).injective)
 theorem label_injective {u del} (M : AnchorModel u del) : Function.Injective M.label :=
   fun _ _ h => sub_left_inj.mp h

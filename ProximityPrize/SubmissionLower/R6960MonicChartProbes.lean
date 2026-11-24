@@ -17,19 +17,19 @@ open ChartSections (Chart)
 open MonicFourChartDescent (baseChart chartCoordinate constants scalarCoordinate)
 open RetainedCompression (Curve ordinate view)
 open scoped Polynomial Lower6960.MonicChart
-open private Lower6960.MonicChart.root_finrank from ProximityPrize.SubmissionLower.R6960MonicChartFrobenius
+open Lower6960.MonicChart (root_finrank)
 
 private def generators (s : Chart) : Set ChartField :=
   Set.range constants ∪ {chartCoordinate s.1 RatFunc.X, chartCoordinate s.2 scalarCoordinate}
 
-private abbrev scalarX : Scalar := algebraMap L[X] Scalar (Polynomial.X (R:=L))
+private abbrev scalarX : Scalar := algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L))
 
-private abbrev scalarConstants : L →+* Scalar := (algebraMap L[X] Scalar).comp Polynomial.C
+private abbrev scalarConstants : L →+* Scalar := (algebraMap (Polynomial L) Scalar).comp Polynomial.C
 
-private def scalarEval (inverse : Bool) : L[X] →+* Scalar :=
+private def scalarEval (inverse : Bool) : (Polynomial L) →+* Scalar :=
   Polynomial.eval₂RingHom scalarConstants (if inverse then scalarX⁻¹ else scalarX)
 
-private def abscissaEval (inverse : Bool) : Scalar[X] →+* ChartField :=
+private def abscissaEval (inverse : Bool) : (Polynomial Scalar) →+* ChartField :=
   Polynomial.eval₂RingHom RatFunc.C (chartCoordinate inverse RatFunc.X)
 
 /-- Evaluate the two polynomial variables independently in the chosen
@@ -37,13 +37,13 @@ abscissa and scalar coordinates of the actual chart. -/
 def planeMap (s : Chart) : Plane L →+* ChartField :=
   (abscissaEval s.1).comp (Polynomial.mapRingHom (scalarEval s.2))
 
-private theorem scalarEval_finite : scalarEval false = algebraMap L[X] Scalar := by
+private theorem scalarEval_finite : scalarEval false = algebraMap (Polynomial L) Scalar := by
   apply Polynomial.ringHom_ext
   · intro c
     exact eval₂_C _ _
   · exact eval₂_X _ _
 
-private theorem abscissaEval_finite : abscissaEval false = algebraMap Scalar[X] ChartField := by
+private theorem abscissaEval_finite : abscissaEval false = algebraMap (Polynomial Scalar) ChartField := by
   apply Polynomial.ringHom_ext
   · intro c
     exact (eval₂_C _ _).trans (RatFunc.algebraMap_C c).symm
@@ -54,7 +54,7 @@ private theorem scalarEval_injective (s : Bool) : Function.Injective (scalarEval
   have trans : Transcendental L scalarX := transcendental_iff_injective.mpr (by
     change Function.Injective (scalarEval false)
     rw [scalarEval_finite]
-    exact IsFractionRing.injective L[X] Scalar)
+    exact IsFractionRing.injective (Polynomial L) Scalar)
   cases s with
   | false => exact transcendental_iff_injective.mp trans
   | true =>
@@ -70,7 +70,7 @@ private theorem abscissaEval_injective (s : Bool) : Function.Injective (abscissa
 theorem planeMap_injective (s : Chart) : Function.Injective (planeMap s) :=
   (abscissaEval_injective s.1).comp (Polynomial.map_injective _ (scalarEval_injective s.2))
 
-private theorem planeMap_finite : planeMap (false,false) = algebraMap (Plane L) ChartField := by
+theorem planeMap_finite : planeMap (false,false) = algebraMap (Plane L) ChartField := by
   rw [planeMap,abscissaEval_finite,scalarEval_finite]
   rfl
 
@@ -80,8 +80,8 @@ private theorem planeMap_finite : planeMap (false,false) = algebraMap (Plane L) 
   exact (eval₂_C _ _).trans (congrArg RatFunc.C (eval₂_C _ _))
 
 @[simp] theorem planeMap_abscissa (s : Chart) :
-    planeMap s (Polynomial.X (R:=L[X])) = chartCoordinate s.1 RatFunc.X := by
-  change abscissaEval s.1 (Polynomial.map (scalarEval s.2) (Polynomial.X (R:=L[X]))) = _
+    planeMap s (Polynomial.X (R:=(Polynomial L))) = chartCoordinate s.1 RatFunc.X := by
+  change abscissaEval s.1 (Polynomial.map (scalarEval s.2) (Polynomial.X (R:=(Polynomial L)))) = _
   rw [Polynomial.map_X]
   exact eval₂_X _ _
 
@@ -93,8 +93,8 @@ private theorem planeMap_finite : planeMap (false,false) = algebraMap (Plane L) 
   cases s.2 <;> simp [chartCoordinate,scalarCoordinate,map_inv₀]
 
 private theorem image_polynomial {R F : Type*} [CommRing R] [CommRing F]
-    (j : R[X] →+* F) (S : Subring F) (coeffs : ∀ c,j (C c)∈S)
-    (var : j (Polynomial.X (R:=R))∈S) (q : R[X]) : j q∈S := by
+    (j : (Polynomial R) →+* F) (S : Subring F) (coeffs : ∀ c,j (C c)∈S)
+    (var : j (Polynomial.X (R:=R))∈S) (q : (Polynomial R)) : j q∈S := by
   induction q using Polynomial.induction_on' with
   | add p q hp hq => exact map_add j p q ▸ S.add_mem hp hq
   | monomial n c =>
@@ -178,15 +178,15 @@ variable {E : Type*} [Field E] [Algebra ChartField E]
 
 /-- The small ordinate degree gives separability on the actual root field. -/
 theorem actual_separable
-    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0) :
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     Algebra.IsSeparable ChartField E := by
   classical
   let : FiniteDimensional ChartField E := basis.finite
-  let : Algebra Scalar[X] E := ((algebraMap ChartField E).comp (algebraMap Scalar[X] ChartField)).toAlgebra
-  let : IsScalarTower Scalar[X] ChartField E :=
-    IsScalarTower.of_algebraMap_eq (R:=Scalar[X]) (S:=ChartField) (A:=E) fun _=>rfl
+  let : Algebra (Polynomial Scalar) E := ((algebraMap ChartField E).comp (algebraMap (Polynomial Scalar) ChartField)).toAlgebra
+  let : IsScalarTower (Polynomial Scalar) ChartField E :=
+    IsScalarTower.of_algebraMap_eq (R:=(Polynomial Scalar)) (S:=ChartField) (A:=E) fun _=>rfl
   have root_in_tower : aeval basis.gen (RetainedLinear.toSeed (view f))=0 := by
     rw [aeval_map_algebraMap] at root
     exact root
@@ -203,9 +203,9 @@ theorem actual_separable
 
 /-- The trace is in the same rational field on all four actual charts. -/
 theorem actual_integral_iff_finite_traces
-    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0) :
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     ∃ probes : Chart → Finset E, ∀ s (x : E), IsIntegral (baseChart s) x ↔
       ∀ d∈probes s, Algebra.trace ChartField E (d*x) ∈ baseChart s := by
   classical

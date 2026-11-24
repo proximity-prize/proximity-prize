@@ -12,22 +12,22 @@ set_option maxHeartbeats 1600000
 namespace Lower6960.MarkedEvaluation
 open LineEuler Horner LaurentPolynomial Polynomial Module Matrix Algebra
 open scoped Polynomial Matrix BigOperators Lower6960.Horner
-open private Lower6960.LineEuler.chartLattice Lower6960.LineEuler.chartLattice_iff from ProximityPrize.SubmissionLower.R6960LineEulerFree
-open private Lower6960.Horner.finite_chart_algebra from ProximityPrize.SubmissionLower.R6960HornerNative
+open Lower6960.LineEuler (chartLattice chartLattice_iff)
+open Lower6960.Horner (finite_chart_algebra)
 variable {k E J:Type} [Field k] [Field E] [Algebra (RatFunc k) E] [Fintype J] [DecidableEq J]
 local notation "jF" => algebraMap (RatFunc k) E
 local notation "Tr" => torusOrder (k:=k) (E:=E)
 local notation "Ord" => chartOrder (k:=k) (E:=E)
 
-private theorem chart_range (s:Bool) (b:Basis J k[X] (Ord s)) (v:J→Laurent k) :
+private theorem chart_range (s:Bool) (b:Basis J (Polynomial k) (Ord s)) (v:J→Laurent k) :
     v∈Lower6960.LineEuler.chartLattice s ↔ ∃ x:Ord s, (localBasis s b).equivFun (chartOrderMap s x)=v := by
   rw [Lower6960.LineEuler.chartLattice_iff];constructor
   · rintro ⟨p,hp⟩;refine ⟨b.equivFun.symm p,funext fun i=>?_⟩
     rw [Basis.equivFun_apply,localBasis_repr,←Basis.equivFun_apply,LinearEquiv.apply_symm_apply,hp]
   · rintro ⟨x,rfl⟩;exact ⟨b.equivFun x,fun i=>by rw [Basis.equivFun_apply,Basis.equivFun_apply,localBasis_repr]⟩
 
-variable (bf:Basis J k[X] (chartOrder (k:=k) (E:=E) false)) (bi:Basis J k[X] (chartOrder (k:=k) (E:=E) true))
-def decode (bf:Basis J k[X] (chartOrder (k:=k) (E:=E) false)) (v:J→Laurent k):E:=
+variable (bf:Basis J (Polynomial k) (chartOrder (k:=k) (E:=E) false)) (bi:Basis J (Polynomial k) (chartOrder (k:=k) (E:=E) true))
+def decode (bf:Basis J (Polynomial k) (chartOrder (k:=k) (E:=E) false)) (v:J→Laurent k):E:=
   ((localBasis (k:=k) (E:=E) false bf).equivFun.symm v).val
 theorem decode_injective : Function.Injective (decode bf) := Subtype.val_injective.comp (localBasis false bf).equivFun.symm.injective
 
@@ -75,21 +75,21 @@ theorem decode_infinity (a:ℤ) (v:J→Laurent k) :
 
 theorem negative_section_zero [DecidableEq (RatFunc k)] [FiniteDimensional (RatFunc k) E]
     (v:H0 (negativeTwist (normalizedTransition bf bi))) : v=0 := by
-  letI : Algebra k[X] E := ((algebraMap (RatFunc k) E).comp (algebraMap k[X] (RatFunc k))).toAlgebra
-  letI : IsScalarTower k[X] (RatFunc k) E := IsScalarTower.of_algebraMap_eq (fun _=>rfl)
+  letI : Algebra (Polynomial k) E := ((algebraMap (RatFunc k) E).comp (algebraMap (Polynomial k) (RatFunc k))).toAlgebra
+  letI : IsScalarTower (Polynomial k) (RatFunc k) E := IsScalarTower.of_algebraMap_eq (fun _=>rfl)
   let V:=SheetNorm.Infinity k
   letI : Algebra V E:=((algebraMap (RatFunc k) E).comp V.subtype).toAlgebra
   letI : IsScalarTower V (RatFunc k) E:=IsScalarTower.of_algebraMap_eq (fun _=>rfl)
   have fin:decode bf v.val∈Ord false := (decode_finite bf _).mp v.property.1
   have inf:= (decode_infinity bf bi (-1) v.val).mp v.property.2
   simp only [neg_neg,zpow_one] at inf
-  have ifin:IsIntegral k[X] (decode bf v.val) := by
+  have ifin:IsIntegral (Polynomial k) (decode bf v.val) := by
     obtain ⟨p,mon,eq⟩:=fin
     refine ⟨p,mon,?_⟩
-    change p.eval₂ ((algebraMap (RatFunc k) E).comp (algebraMap k[X] (RatFunc k))) _=0
+    change p.eval₂ ((algebraMap (RatFunc k) E).comp (algebraMap (Polynomial k) (RatFunc k))) _=0
     change p.eval₂ ((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom) _=0 at eq
     exact (show ((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom)=
-        ((algebraMap (RatFunc k) E).comp (algebraMap k[X] (RatFunc k))) from
+        ((algebraMap (RatFunc k) E).comp (algebraMap (Polynomial k) (RatFunc k))) from
       RingHom.ext (fun r=>congrArg (algebraMap (RatFunc k) E) (RingHom.congr_fun Horner.rationalLaurent_finite r))) ▸ eq
   have iinf:IsIntegral V (jF RatFunc.X*decode bf v.val) := by
     obtain ⟨p,mon,root⟩:=inf
@@ -104,6 +104,7 @@ theorem negative_section_zero [DecidableEq (RatFunc k)] [FiniteDimensional (RatF
   apply Subtype.ext;apply decode_injective bf
   simpa [decode] using zero
 
+set_option synthInstance.maxHeartbeats 200000 in
 theorem normalized_rank [DecidableEq (RatFunc k)] [FiniteDimensional (RatFunc k) E]
     (s:ℕ) (deg:(normalizedTransition bf bi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ)) :
     finrank k (H0 (twist ((s:ℤ)-1) (normalizedTransition bf bi)))+s=Fintype.card J*s := by

@@ -6,7 +6,7 @@ namespace AnchorPivot82180
 open K1_13 (Geom)
 open K1_13_1_1 (Form bandSpace backShift targetOrder valueForm)
 open MvPolynomial
-open private poly_band poly_order encoded_degree from ProximityPrize.SubmissionLower.AnchorPivot82180
+open AnchorPivot82180 (poly_band poly_order encoded_degree)
 
 def src0 : List Term := [(1,⟨1,0,0,0⟩), (-1,⟨0,1,0,0⟩)]
 private def dst0 : List Term := [(-1,⟨0,0,1,0⟩), (1,⟨0,0,0,1⟩), (1,⟨1,0,0,0⟩)]

@@ -17,9 +17,9 @@ open Polynomial P64Found
 
 variable {F : Type*} [Field F]
 
-noncomputable local instance : CommRing (Polynomial F) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial F)) := Polynomial.commRing
-noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := Polynomial.commRing
+noncomputable local instance : CommRing (Polynomial F) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial F)) := AddMonoidAlgebra.commRing
+noncomputable local instance : CommRing (Polynomial (Polynomial (Polynomial F))) := AddMonoidAlgebra.commRing
 
 local notation "Tri" => Polynomial (Polynomial (Polynomial F))
 
@@ -79,7 +79,7 @@ lemma not_U_dvd (S : Tri)
     (hS : S.map (Polynomial.constantCoeff (R := Polynomial F)) ≠ 0) : ¬ U ∣ S := by
   intro hd
   apply hS
-  ext b : 1
+  refine Polynomial.ext_iff.2 fun b => ?_
   have hb := (Polynomial.C_dvd_iff_dvd_coeff _ S).mp hd b
   have hz := Polynomial.X_dvd_iff.mp hb
   simpa using hz

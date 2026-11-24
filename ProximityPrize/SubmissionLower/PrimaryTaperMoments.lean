@@ -12,7 +12,7 @@ open TaperBudget (cap)
 open Finset
 open scoped BigOperators
 
-open private scaled_denominator polyDen denominator_of_neg from ProximityPrize.SubmissionLower.Fast022
+open K1_13_2_3 (scaled_denominator polyDen denominator_of_neg)
 
 /-- Twenty-four times the sum of the denominator counts at indices strictly below `n`. -/
 def denPrefix (n : ℤ) : ℤ :=
@@ -57,7 +57,7 @@ private theorem shift_succ (n a : ℤ) :
     denPrefix ((n+1)-a) = denPrefix (n-a) + 24 * denominator (n-a) := by
   rw [show n+1-a = (n-a)+1 by ring, denPrefix_succ]
 
-private def basePrefix (d u : ℤ) : ℤ :=
+def basePrefix (d u : ℤ) : ℤ :=
   denPrefix u - denPrefix (u-(d+1)) - denPrefix (u-(d+2)) - denPrefix (u-(d+3)) +
   denPrefix (u-(2*d+3)) + denPrefix (u-(2*d+4)) + denPrefix (u-(2*d+5)) -
   denPrefix (u-(3*d+6))

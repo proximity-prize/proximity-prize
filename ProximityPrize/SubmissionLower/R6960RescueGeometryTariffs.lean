@@ -28,7 +28,7 @@ private abbrev agreement : ℕ := 179827
 private abbrev blockLength : ℕ := 262144
 abbrev endpointDegree : ℕ := 164632
 
-structure FixedWord (w : I → K) (U : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
+structure FixedWord (w : I → K) (U : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop where
   distinct : Set.InjOn s (U : Set K)
   degree : ∀ γ ∈ U, (s γ).natDegree ≤ d
   hits : ∀ γ ∈ U, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
@@ -79,7 +79,7 @@ theorem section_incidence {w U s d} (hw : FixedWord w U s d) (D : ℕ)
     _ = _ := by rw [sum_const, smul_eq_mul, hnodes]
 private def rho (s : ℕ) : ℚ :=
   ((blockLength - s : ℕ) : ℚ) / ((agreement - s : ℕ) : ℚ)
-private abbrev density : ℚ := (blockLength : ℚ) / agreement
+abbrev density : ℚ := (blockLength : ℚ) / agreement
 private theorem weights {s d : ℕ} (hs : s ≤ d) (hd : d < agreement)
     (haux : rho d ≤ density * d) :
     rho s ≤ rho d ∧ rho s * (max 1 (d-s) : ℕ) ≤ density * d := by
@@ -241,7 +241,7 @@ theorem curve_tariff {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
       add_le_add le_rfl (add_le_add le_rfl hgQ)
     _ = curveUnit g*H+g := by rw [taylorPower_cast hg]; unfold curveUnit; ring
 
-theorem section_bound {w : I → K} {T : Finset K} {s : K → K[X]} {d a v : ℕ}
+theorem section_bound {w : I → K} {T : Finset K} {s : K → (Polynomial K)} {d a v : ℕ}
     (hw : FixedWord w T s d) (f : Row 2) (hf : Irreducible f) (hfpos : 0 < f.degreeOf 1)
     (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) (ha : 0 < a) (hv : 0 < v)
     (i : I) (hmiss : ∃ γ ∈ T, (s γ).eval (node i) ≠ w i)
@@ -347,10 +347,10 @@ theorem fixed_bound {w T s d B J} (hw : FixedWord w T s d) (guard : ODEGuard B J
 private theorem word_subset {w T s d} (hw : FixedWord w T s d) {U : Finset K}
     (hU : U ⊆ T) : FixedWord w U s d :=
   ⟨hw.distinct.mono hU, fun γ hγ => hw.degree γ (hU hγ), fun γ hγ => hw.hits γ (hU hγ)⟩
-private def siteRatio (m : ℕ) : ℚ :=
+def siteRatio (m : ℕ) : ℚ :=
   ((blockLength - m : ℕ) : ℚ) / ((agreement - m : ℕ) : ℚ)
-private def persistentTotal (d B : ℕ) : ℚ := siteRatio d + 2 * density * d * (B-1 : ℕ)
-private def persistentTop (d B J : ℕ) : ℚ :=
+def persistentTotal (d B : ℕ) : ℚ := siteRatio d + 2 * density * d * (B-1 : ℕ)
+def persistentTop (d B J : ℕ) : ℚ :=
   min (persistentTotal d B) (density * d * (2*J-1 : ℕ))
 private theorem persistentTotal_nonneg (d B : ℕ) : 0 ≤ persistentTotal d B := by
   unfold persistentTotal siteRatio

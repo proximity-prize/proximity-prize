@@ -7,7 +7,7 @@ noncomputable section
 open Polynomial K1_14 K1_14_1 K1_14_1_7
 open K1 (I)
 open scoped BigOperators
-open private centerCoeff centerCoeff_eval from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1 (centerCoeff centerCoeff_eval)
 
 def rectShaped {F : Type} [Field F] (U : Fin 2 → ℕ) (P : TrueSource F) : Prop :=
   ∀ j i a e, sourceCoeff P j i a e ≠ 0 → ∀ z, e z ≤ U z
@@ -95,8 +95,7 @@ theorem axisExponent_injective (U : Fin 2 → ℕ) : Function.Injective (axisExp
   apply Fin.ext
   simpa using congrArg (fun e : Fin 2 →₀ ℕ => e z) h
 
-open private trueWidth lt_trueWidth_iff trueWidth_eq_add seedWeight_eq Exponents monomialAt
-  coeffAt_monomialAt from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1_5 (trueWidth lt_trueWidth_iff trueWidth_eq_add seedWeight_eq Exponents monomialAt coeffAt_monomialAt)
 
 private abbrev RectIndex (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ) :=
   Σ q : Fin (s.B + 1), Σ j : Fin (min q.val s.J + 1),

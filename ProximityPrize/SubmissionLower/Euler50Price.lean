@@ -18,7 +18,7 @@ def ActiveFits (f : Row 4) (K : ℕ) : Prop :=
 
 
 
-structure Messages (w : I → K) (Γ : Finset K) (s : K → K[X]) : Prop where
+structure Messages (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)) : Prop where
   distinct : Set.InjOn s (Γ : Set K)
   degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ physicalDegree
   hits : ∀ γ ∈ Γ, ∃ T : Finset I, agreement ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i

@@ -12,17 +12,17 @@ open Polynomial Matrix Module LineEuler LaurentPolynomial
 open scoped Polynomial Matrix BigOperators
 
 variable {k U V M ι : Type*} [Field k] [CommRing U] [CommRing V] [CommRing M]
-  [Algebra k[X] U] [Algebra k[X] V] [Algebra (Laurent k) M] [Fintype ι] [DecidableEq ι]
+  [Algebra (Polynomial k) U] [Algebra (Polynomial k) V] [Algebra (Laurent k) M] [Fintype ι] [DecidableEq ι]
 
 /-- The trace of the selected finite-free algebra specializes on its
 actual common Laurent chart, including for a proper suborder. -/
-theorem free_trace_matrix_on_torus (s : Bool) (b : Basis ι k[X] U)
+theorem free_trace_matrix_on_torus (s : Bool) (b : Basis ι (Polynomial k) U)
     (f : ChartMap (k:=k) s U M) (loc : IsChartLocalization s f)
     (r : U→+*M) (agree : ∀ x,f x=r x) :
-    (Algebra.traceMatrix k[X] b).map (chartEmbedding s (k:=k))=
+    (Algebra.traceMatrix (Polynomial k) b).map (chartEmbedding s (k:=k))=
       Algebra.traceMatrix (Laurent k) (localFreeBasis s b f loc) := by
   let B := localFreeBasis s b f loc
-  have tr (x : U) : chartEmbedding s (Algebra.trace k[X] U x)=Algebra.trace (Laurent k) M (r x) := by
+  have tr (x : U) : chartEmbedding s (Algebra.trace (Polynomial k) U x)=Algebra.trace (Laurent k) M (r x) := by
     rw [Algebra.trace_eq_matrix_trace b,Algebra.trace_eq_matrix_trace B]
     unfold Matrix.trace
     rw [map_sum]
@@ -39,7 +39,7 @@ theorem free_trace_matrix_on_torus (s : Bool) (b : Basis ι k[X] U)
   exact tr (b i*b j)
 
 section Both
-variable (bf : Basis ι k[X] U) (bi : Basis ι k[X] V)
+variable (bf : Basis ι (Polynomial k) U) (bi : Basis ι (Polynomial k) V)
   (ff : ChartMap (k:=k) false U M) (fi : ChartMap (k:=k) true V M)
   (lf : IsChartLocalization false ff) (li : IsChartLocalization true fi)
 
@@ -65,12 +65,12 @@ private theorem free_expansion (i : ι) :
 both normalized lines and reduced free suborders. -/
 theorem free_trace_transition (r0 : U→+*M) (r1 : V→+*M)
     (h0 : ∀ x,ff x=r0 x) (h1 : ∀ x,fi x=r1 x) :
-    invert ((Algebra.traceMatrix k[X] bi).det.toLaurent)=
-      (freeTransition bf bi ff fi lf li).det^2*(Algebra.traceMatrix k[X] bf).det.toLaurent := by
+    invert ((Algebra.traceMatrix (Polynomial k) bi).det.toLaurent)=
+      (freeTransition bf bi ff fi lf li).det^2*(Algebra.traceMatrix (Polynomial k) bf).det.toLaurent := by
   let G := freeTransition bf bi ff fi lf li
   let tr := Algebra.traceForm (Laurent k) M
-  let X := Algebra.traceMatrix k[X] bf
-  let Y := Algebra.traceMatrix k[X] bi
+  let X := Algebra.traceMatrix (Polynomial k) bf
+  let Y := Algebra.traceMatrix (Polynomial k) bi
   let D := Algebra.traceMatrix (Laurent k) (localFreeBasis false bf ff lf)
   let N := Algebra.traceMatrix (Laurent k) (localFreeBasis true bi fi li)
   have change : N=G.transpose*D*G := by

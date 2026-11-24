@@ -13,7 +13,7 @@ open K1_14 (L FX Seeds Equation Jet Shape Band Banks liftPoly graphEval atX
 open K1_14_3 (Surface Parent NoMovingCommon Compatible RowCaps ProjectedProduct)
 open scoped BigOperators
 def AdjacentChart {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
-    (H : L[X]) : Prop :=
+    (H : (Polynomial L)) : Prop :=
   let σ := frobenius L p
   let H' := H.map σ
   H.Monic ∧ H.natDegree = M.overhead.toNat ∧ H ∣ liftPoly M.E ∧
@@ -120,8 +120,8 @@ open Finset Polynomial
 open P0 (agreement)
 open K1_14 (FX Jet Equation shapeSum slots triangle SeedBound)
 open K1_14_4 (gradeWidth seedDegree seedDegree_le_iff seedDegree_pow )
-open private shapeSum_swap gradeWidth_card position_sum from ProximityPrize.SubmissionLower.Fast072
-open private gradeMap mem_filtered finrank_le_grades from ProximityPrize.SubmissionLower.Fast069
+open K1_14_4 (shapeSum_swap gradeWidth_card position_sum)
+open K1_14_4 (gradeMap mem_filtered finrank_le_grades)
 private def gradeCapacity (w : ℤ) (W j : ℕ) : ℕ :=
   let b := band w
   gradeWidth (131071 - w.toNat) b.jetBound W j *
@@ -179,15 +179,15 @@ namespace P0_10
 noncomputable section
 open Polynomial Finset ProximityPrize.Benchmark
 open P0 (K I node agreement)
-open private occupancy from ProximityPrize.SubmissionLower.Fast055
-structure FixedWord (w : I → K) (T : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
+open K1_14_6 (occupancy)
+structure FixedWord (w : I → K) (T : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop where
   distinct : Set.InjOn s (T : Set K)
   degree : ∀ γ ∈ T, (s γ).natDegree ≤ d
   hits : ∀ γ ∈ T, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
 theorem FixedWord.mono {w T s d} (h : FixedWord w T s d) {U : Finset K} (hU : U ⊆ T) :
     FixedWord w U s d :=
   ⟨h.distinct.mono hU, fun γ hγ => h.degree γ (hU hγ), fun γ hγ => h.hits γ (hU hγ)⟩
-private theorem incidence_arithmetic (errors m x gap cap : ℕ)
+theorem incidence_arithmetic (errors m x gap cap : ℕ)
     (hm : 0 < m) (hg : 0 < gap) (hx : gap ≤ x) (he : 0 < errors)
     (hsecond : (m*x)^2 ≤ (x+errors) * (m * (x + (m-1)*(x-gap))))
     (hfirst : m*x ≤ (x+errors)*cap) :
@@ -314,8 +314,8 @@ noncomputable section
 open Finset MvPolynomial
 open P0 (K I node agreement)
 open K1_14_6 (LinearCover LinearRing ClosedField mixedDegree)
-open private card_le_sum_cover curve_degree_nat LinearCover.slice LinearCover.section
-  LinearCover.cut_data LinearCover.zero_dim_count from ProximityPrize.SubmissionLower.Fast055
+open K1_14_6 (card_le_sum_cover curve_degree_nat)
+open K1_14_6.LinearCover (slice «section» cut_data zero_dim_count)
 open scoped BigOperators Polynomial
 private theorem curve_count {T s d e b w} (C : LinearCover T s d e b)
     {U : Finset K} (hU : U ⊆ T) (hword : FixedWord w U s d) (hd : d < agreement)
@@ -379,7 +379,7 @@ open P0_10 (AdjacentChart)
 open K1_14 (L liftPoly)
 open K1_14_1 Polynomial
 open scoped Polynomial
-open private blockContribution from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1_1 (blockContribution)
 set_option maxHeartbeats 800000 in
 theorem crt_lift {h : ℕ} (D : PoleData h) : Nonempty (CRTLift D) := by
   choose d N hN using blockContribution D
@@ -398,10 +398,10 @@ open K1_14 (L Shape Jet liftPoly jetAt shapeSum)
 open K1_14_1 K1_14_1_5 Polynomial
 open K1_14_1_2 (span_vanish composed composed_degree specialized_poles composed_contact)
 open scoped Polynomial BigOperators
-open private finrank_ambient trueWidth trueWidth_eq_add from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1_5 (finrank_ambient trueWidth trueWidth_eq_add)
 private theorem zero_of_poles_and_hits {h A : ℕ} {D : PoleData h}
     (hnode : ∀ i k, (D.block i).eval (nodeL k) ≠ 0)
-    {s : Shape} {W : ℕ} {Q : L[X]}
+    {s : Shape} {W : ℕ} {Q : (Polynomial L)}
     (hdeg : Q.natDegree ≤ W+(s.B+s.J)*(2*h))
     (hpole : poleProduct D ^ (s.B+s.J) ∣ Q)
     (hits : Finset I) (hcard : A ≤ hits.card)
@@ -429,7 +429,7 @@ private theorem zero_of_poles_and_hits {h A : ℕ} {D : PoleData h}
   exact hTne hh
 theorem contact_vanish {h A : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I → L)
     (hnode : ∀ i k, (D.block i).eval (nodeL k) ≠ 0)
-    (z : K) (S : K[X]) (hres : MarkResidues D z S)
+    (z : K) (S : (Polynomial K)) (hres : MarkResidues D z S)
     (hdeg : (liftPoly S).natDegree ≤ 131071+h)
     (hits : Finset I) (hcard : A ≤ hits.card)
     (hhits : ∀ k ∈ hits, (liftPoly S).eval (nodeL k) = word k)
@@ -470,10 +470,8 @@ open K1_14_1 Polynomial
 open K1_14_1_4 (Bounded forward_apply rawBlock_degree quotient_positions rawOrdinate rawVelocity
   substitute_C substitute_X)
 open scoped Polynomial BigOperators
-open private bounded_mono bounded_add bounded_sum bounded_mul bounded_jetConstant
-  bounded_y bounded_v bounded_pow crt_degree ambient_degree from ProximityPrize.SubmissionLower.Fast065
-open private rawPosition specialized_center specialized_leading specialized doubleMap
-  from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1_4 (bounded_mono bounded_add bounded_sum bounded_mul bounded_jetConstant bounded_y bounded_v bounded_pow crt_degree ambient_degree)
+open K1_14_1_4 (rawPosition specialized_center specialized_leading specialized doubleMap)
 private theorem forward_bounded {h} (hpos : 0 < h) (hh : h ≤ 131070) {D : PoleData h} (Crt : CRTLift D)
     {s W P} (hp : P ∈ ambient h s W) :
     Bounded (131071-h) (131071-h-1) (W+(s.B+s.J)*(2*h)) (forward Crt P) := by
@@ -561,8 +559,8 @@ open K1 (I)
 open K1_14 (L FX Shape Jet shapeSum triangle seedHasse)
 open K1_14_1 K1_14_1_3 Polynomial
 open scoped Polynomial BigOperators
-open private Low.mk localSpan generators K1_14_1_6.nodeMap localSpan_finrank from ProximityPrize.SubmissionLower.Fast065
-open private evaluatedHasse evaluatedHasse_eq centerEval_clear from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1_6 (Low localSpan generators nodeMap localSpan_finrank)
+open K1_14_1_3 (evaluatedHasse evaluatedHasse_eq centerEval_clear)
 theorem physical_bound (h : ℕ) (word : I → L) (s : Shape) (W : ℕ) :
     Module.finrank L (ambient h s W) ≤
       physicalDebit s + Module.finrank L (contacted h word s W) := by
@@ -619,9 +617,9 @@ theorem evaluated_shift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : I �
       have he : centerEval (cleared D i r Q) ∈ target :=
         Submodule.subset_span ⟨cleared D i r Q, hmem, rfl⟩
       rw [centerEval_clear] at he
-      have hn : algebraMap L[X] FX (D.block i ^ (2*r)) ≠ 0 := by
-        rw [← map_zero (algebraMap L[X] FX)]
-        exact (IsFractionRing.injective L[X] FX).ne (pow_ne_zero (2*r) (D.monic i).ne_zero)
+      have hn : algebraMap (Polynomial L) FX (D.block i ^ (2*r)) ≠ 0 := by
+        rw [← map_zero (algebraMap (Polynomial L) FX)]
+        exact (IsFractionRing.injective (Polynomial L) FX).ne (pow_ne_zero (2*r) (D.monic i).ne_zero)
       exact (target.smul_mem_iff hn).mp he)
   rw [← evaluatedHasse_eq]
   exact hsub hP
@@ -635,8 +633,8 @@ namespace P0_10_1_1
 noncomputable section
 open K1_14 K1_14_1 K1_14_1_7 K1_14_1_7_3 Polynomial
 open scoped BigOperators Polynomial
-open private generic_den generic_centre from ProximityPrize.SubmissionLower.Fast065
-private theorem regular_deformation {h : ℕ} (hh : 0 < h) (hp : h < K1.p)
+open K1_14_1_7_3 (generic_den generic_centre)
+theorem regular_deformation {h : ℕ} (hh : 0 < h) (hp : h < K1.p)
     (D : PoleData h) (Crt : CRTLift D) : Nonempty (RegularDeformation D Crt) := by
   let B : ∀ i, BlockLift D Crt i := blockLift hh D Crt
   let den := (B 0).den * (B 1).den
@@ -665,7 +663,7 @@ namespace P0_10_5
 open K1_14 (Shape slots shapeSum sourceDebit)
 open Finset
 open scoped BigOperators
-open private  shape_sum_flip  from ProximityPrize.SubmissionLower.Fast063
+open K1_14_5 (shape_sum_flip)
 def cut (s : Shape) (v lo t : ℕ) : ℕ :=
   min (s.B + 1)
     ((s.m * P0.agreement + (t - min t (s.U / v)) - 2 * lo * t - 1) / (131071 - lo) + 1)
@@ -727,7 +725,7 @@ private theorem scan_add (f : ℕ → Row) (a n m : ℕ) :
 theorem joinRows {f : ℕ → Row} (a n m : ℕ) (x y : Row) {z : Row}
     (hx : scan f a n = x) (hy : scan f (a+n) m = y) (hz : x.add y = z) :
     scan f a (n+m) = z := by rw [scan_add, hx, hy, hz]
-private theorem scan_sum (f : ℕ → Row) (a n : ℕ) (slope : Bool) :
+theorem scan_sum (f : ℕ → Row) (a n : ℕ) (slope : Bool) :
     (if slope then (scan f a n).slope else (scan f a n).base) =
       ∑ i ∈ range n, if slope then (f (a+i)).slope else (f (a+i)).base := by
   cases slope <;> induction n with
@@ -758,7 +756,7 @@ namespace K1_14_2_2_2_5_1
 noncomputable section
 open K1_14 K1_14_2 K1_14_2_2_2_5
 open K1_14_3_2 (ProperPair)
-private theorem properPair_height {P Q : Jet} (h : ProperPair P Q)
+theorem properPair_height {P Q : Jet} (h : ProperPair P Q)
     (I : Ideal Jet) [I.IsPrime] (hP : P ∈ I) (hQ : Q ∈ I) : 2 ≤ I.height := by
   have hne : I ≠ ⊥ := fun e => h.left_ne (by simpa [e] using hP)
   obtain ⟨D, hD, hp⟩ := Ideal.IsPrime.exists_mem_prime_of_ne_bot ‹I.IsPrime› hne

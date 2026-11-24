@@ -4,7 +4,7 @@ set_option Elab.async false
 set_option autoImplicit true
 section
 namespace K1_13_2_3_5
-open private   unpack from ProximityPrize.SubmissionLower.Numeric5Certificate
+open K1_13_2_3_5 (unpack)
 set_option maxRecDepth 50000
 set_option maxHeartbeats 0
 private def bindNatF (x : Nat) (f : Nat → Nat) : Nat :=
@@ -16,18 +16,18 @@ end
 section
 namespace K1_13_2_3_6
 open K1_13_2 K1_13_2_3 K1_13_2_3_5
-open private      sumFrom from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 end K1_13_2_3_6
 end
 section
 namespace K1_13_2_3_6
 open K1_13_2 K1_13_2_3 K1_13_2_3_5
-open private     sumFrom  from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 end K1_13_2_3_6
 end
 section
 namespace K1_13_2_3_6
-open private     sumFrom from ProximityPrize.SubmissionLower.Numeric6AuxCert
+open K1_13_2_3_6 (sumFrom)
 private theorem gSum_congr {a b : ℕ → ℕ} {j n : ℕ}
     (h : ∀ k < n, a (j+k) = b (j+k)) :
     sumFrom a j n = sumFrom b j n := by
@@ -710,7 +710,7 @@ theorem of_children (h1 : c1) (h2 : c2) (h3 : c3) : K1_13_6_1_4.c3 := by
   have hcycle := h2 J A H hA hH hfin surfaces v hsurfaces
   have hfin' : Module.Finite (PairSectionField A H)
       (SliceJets A H ⧸ Ideal.span {extendCoeffs A H F, extendCoeffs A H G,
-        firstSection A H, secondSection A H}) := by
+        (firstSection A H), secondSection A H}) := by
     rw [← slice_pair_ideal]
     exact hfin
   have hsparse := h3 p q A H hp.1 hq.1 hA.1 hH.1
@@ -953,7 +953,7 @@ set_option maxSynthPendingDepth 8
 set_option maxHeartbeats 1000000
 def c2 : Prop :=
   ∀ (f : Equation), Irreducible f → 0 < f.natDegree → f.natDegree < p →
-    ∃ (g : ClearedEquation) (a : L[X]), IsClearing f g a ∧
+    ∃ (g : ClearedEquation) (a : (Polynomial L)), IsClearing f g a ∧
       ProperPair (C f) (graphCutter g) ∧
       RowCaps (C f) ⟨0, f.natDegree, 0, ordinarySeedDegree f⟩ ∧
       RowCaps (graphCutter g) ⟨0, f.natDegree, 1, ordinarySeedDegree f⟩

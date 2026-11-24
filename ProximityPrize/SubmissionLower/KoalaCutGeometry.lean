@@ -18,16 +18,16 @@ open Polynomial
     The vector returned has enough space left for substitution of the scalar
     polynomial, whose Y-powers consume at most `D` abscissa degrees. -/
 theorem compress_rows {F : Type*} [Field F] (n m p D : ℕ) (hD : D < p)
-    (hdim : m*p < n*(p-D)) (A : Fin m → Fin n → F[X])
+    (hdim : m*p < n*(p-D)) (A : Fin m → Fin n → (Polynomial F))
     (hA : ∀ i j, (A i j).natDegree ≤ D) :
     ∃ w : Fin n → degreeLT F (p-D), w ≠ 0 ∧
-      ∀ i, ∑ j, A i j * (w j : F[X]) = 0 := by
+      ∀ i, ∑ j, A i j * (w j : (Polynomial F)) = 0 := by
   classical
   have hs (w : Fin n → degreeLT F (p-D)) (i : Fin m) :
-      (∑ j, A i j * (w j : F[X])) ∈ degreeLT F p := by
+      (∑ j, A i j * (w j : (Polynomial F))) ∈ degreeLT F p := by
     apply Submodule.sum_mem
     intro j _
-    by_cases hw : (w j : F[X]) = 0
+    by_cases hw : (w j : (Polynomial F)) = 0
     · simp [hw]
     by_cases ha : A i j = 0
     · simp [ha]
@@ -35,11 +35,11 @@ theorem compress_rows {F : Type*} [Field F] (n m p D : ℕ) (hD : D < p)
     apply (natDegree_lt_iff_degree_lt (mul_ne_zero ha hw)).mp
     have h := (natDegree_lt_iff_degree_lt hw).mpr
       (mem_degreeLT.mp (w j).property)
-    have := natDegree_mul_le (p := A i j) (q := (w j : F[X]))
+    have := natDegree_mul_le (p := A i j) (q := (w j : (Polynomial F)))
     have := hA i j
     omega
   let M : (Fin n → degreeLT F (p-D)) →ₗ[F] (Fin m → degreeLT F p) :=
-    { toFun := fun w i => ⟨∑ j, A i j * (w j : F[X]), hs w i⟩
+    { toFun := fun w i => ⟨∑ j, A i j * (w j : (Polynomial F)), hs w i⟩
       map_add' := by
         intro w z
         funext i

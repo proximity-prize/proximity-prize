@@ -16,9 +16,9 @@ open Polynomial Finset MvPolynomial
 open K1_14 (FX Jet Equation Shape SeedBound shapeSum slots triangle)
 open K1_14_3 (RowCaps)
 open K1_14_4 (gradeWidth seedDegree seedDegree_le_iff seedDegree_mul seedDegree_pow)
-open private flatten  from ProximityPrize.SubmissionLower.Fast069
-open private gradeMap mem_filtered finrank_le_grades from ProximityPrize.SubmissionLower.Fast069
-open private shapeSum_swap from ProximityPrize.SubmissionLower.Fast072
+open K1_14_4 (flatten)
+open K1_14_4 (gradeMap mem_filtered finrank_le_grades)
+open K1_14_4 (shapeSum_swap)
 end
 end P1_7_5
 end
@@ -27,8 +27,8 @@ namespace P1_7_5
 open Finset
 open K1_14 (Shape shapeSum slots triangle)
 open P1 (agreement)
-open private slots_antitone sum_slot_drops sum_interval power_threshold from ProximityPrize.SubmissionLower.Fast072
-private theorem position_sum (top step t j U v g : ℕ) (hj : j ≤ t) (hs : 0 < step) :
+open K1_14_4 (slots_antitone sum_slot_drops sum_interval power_threshold)
+theorem position_sum (top step t j U v g : ℕ) (hj : j ≤ t) (hs : 0 < step) :
     (∑ W ∈ range top, if t ≤ W+j then
       kept U v g (1+(top-1-W)/step-j) else 0) +
     ((∑ a ∈ range g, (slots U (a*v) - slots U ((a+1)*v)) * (top+j-t-step*(j+a))) +

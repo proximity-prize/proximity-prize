@@ -60,7 +60,7 @@ theorem integral_from_places (F : Type*) [Field F] [Algebra A F] [IsFractionRing
     have scale : algebraMap A E d*x=ι d • x := by
       simp only [ι,Algebra.smul_def,←IsScalarTower.algebraMap_apply]
     rw [scale,IsIntegrallyClosed.minpoly_smul ((map_ne_zero_iff _ inj).mpr dn) intF] at mp
-    have c:=congrArg (fun g : F[X]=>g.coeff j) mp
+    have c:=congrArg (fun g : (Polynomial F)=>g.coeff j) mp
     simpa only [n,f,scale,coeff_map,coeff_scaleRoots,map_pow,ι] using c.symm
   obtain ⟨g,hg⟩:=lift
   change g.map ι=f at hg

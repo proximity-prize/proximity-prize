@@ -6,14 +6,14 @@ set_option maxHeartbeats 1200000
 namespace Lower6960.BranchCollisions
 open Polynomial Finset
 open ProximityPrize.SubmissionLower.MatrixRootMultiplicity
-open private mulBox from ProximityPrize.SubmissionLower.R6960QuadraticProjection
+open CurvatureSquares (mulBox)
 open scoped Polynomial BigOperators
 variable {K : Type} [Field K] [DecidableEq K]
 
 omit [DecidableEq K] in
 /-- A common factor gives one independent Sylvester kernel vector per
 abscissa degree. The derivative may become identically zero on a fibre. -/
-theorem divisor_corank {f g d : K[X]} {m n : ℕ}
+theorem divisor_corank {f g d : (Polynomial K)} {m n : ℕ}
     (hf : f≠0) (df : d∣f) (dg : d∣g) (fm : f.natDegree≤m) (gn : g.natDegree≤n) :
     d.natDegree≤m+n-(sylvester f g m n).rank := by
   obtain ⟨a,fa⟩ := df
@@ -34,13 +34,13 @@ theorem divisor_corank {f g d : K[X]} {m n : ℕ}
   have ker (u : degreeLT K d.natDegree) : B u∈LinearMap.ker S := by
     apply LinearMap.mem_ker.mpr
     apply Subtype.ext
-    change f*(-b*(u:K[X]))+g*(a*(u:K[X]))=0
+    change f*(-b*(u:(Polynomial K)))+g*(a*(u:(Polynomial K)))=0
     rw [fa,gb]; ring
   let L := B.codRestrict (LinearMap.ker S) ker
   have inj : Function.Injective L := by
     intro x y eq
     apply Subtype.ext
-    exact mul_left_cancel₀ an (congrArg (fun v : LinearMap.ker S=>(v.val.1 : K[X])) eq)
+    exact mul_left_cancel₀ an (congrArg (fun v : LinearMap.ker S=>(v.val.1 : (Polynomial K))) eq)
   let := Module.Finite.of_basis (degreeLT.basis K m)
   let := Module.Finite.of_basis (degreeLT.basis K n)
   have h := LinearMap.finrank_le_finrank_of_injective (f:=L) inj
@@ -57,10 +57,10 @@ theorem divisor_corank {f g d : K[X]} {m n : ℕ}
 
 /-- Count roots of the stratum lying at a collision of the whole reduced
 branch polynomial, with their actual multiplicities in the stratum. -/
-def collisionMass (f branch : K[X]) (points : Finset K) : ℕ :=
+def collisionMass (f branch : (Polynomial K)) (points : Finset K) : ℕ :=
   ∑ x ∈ points, if 2≤branch.rootMultiplicity x then f.rootMultiplicity x else 0
 
-theorem collision_le_twice_gcd {f branch : K[X]} (nonzero : branch≠0)
+theorem collision_le_twice_gcd {f branch : (Polynomial K)} (nonzero : branch≠0)
     (divisor : f∣branch) (points : Finset K) :
     collisionMass f branch points ≤ 2*(gcd f branch.derivative).natDegree := by
   have fn : f≠0 := fun z=>nonzero (zero_dvd_iff.mp (z ▸ divisor))
@@ -72,8 +72,8 @@ theorem collision_le_twice_gcd {f branch : K[X]} (nonzero : branch≠0)
   intro x _
   split_ifs with hx
   · let k := min (f.rootMultiplicity x) (branch.rootMultiplicity x-1)
-    have kf : ((Polynomial.X : K[X])-C x)^k∣f := (le_rootMultiplicity_iff fn).mp (min_le_left ..)
-    have kb : ((Polynomial.X : K[X])-C x)^k∣branch.derivative :=
+    have kf : ((Polynomial.X : (Polynomial K))-C x)^k∣f := (le_rootMultiplicity_iff fn).mp (min_le_left ..)
+    have kb : ((Polynomial.X : (Polynomial K))-C x)^k∣branch.derivative :=
       (pow_dvd_pow _ (min_le_right ..)).trans
         (pow_sub_one_dvd_derivative_of_pow_dvd (branch.pow_rootMultiplicity_dvd x))
     have lower : k≤(gcd f branch.derivative).rootMultiplicity x :=
@@ -85,7 +85,7 @@ theorem collision_le_twice_gcd {f branch : K[X]} (nonzero : branch≠0)
   · omega
 
 /-- A nonzero stratum resultant charges all special fibres at once. -/
-theorem stratum {F B : Polynomial K[X]} (divisor : F∣B)
+theorem stratum {F B : Polynomial (Polynomial K)} (divisor : F∣B)
     (T : Finset K) (places : K→Finset K)
     (good : ∀z∈T,B.map (evalRingHom z)≠0)
     (sep : F.resultant B.derivative F.natDegree (B.natDegree-1)≠0)
@@ -112,23 +112,23 @@ theorem stratum {F B : Polynomial K[X]} (divisor : F∣B)
   rw [←mul_sum] at total
   have cor := sum_sylvester_coranks_le_resultant_natDegree F B.derivative F.natDegree (B.natDegree-1) T sep
   have fee := natDegree_resultant_le_of_coeff_natDegree_le F B.derivative F.natDegree (B.natDegree-1) u v fu
-    (fun j=>by rw [coeff_derivative,mul_comm,show ((j:K[X])+1)=C ((j:K)+1) by simp]
+    (fun j=>by rw [coeff_derivative,mul_comm,show ((j:(Polynomial K))+1)=C ((j:K)+1) by simp]
                exact (natDegree_C_mul_le ..).trans (bv _))
   exact total.trans (Nat.mul_le_mul_left 2 (cor.trans fee))
 
 #print axioms stratum
 
 omit [DecidableEq K] in
-private theorem nonzero_resultant {F B : Polynomial K[X]} (dvd : F∣B)
-    (sep : (B.map (algebraMap K[X] (FractionRing K[X]))).Separable) :
+private theorem nonzero_resultant {F B : Polynomial (Polynomial K)} (dvd : F∣B)
+    (sep : (B.map (algebraMap (Polynomial K) (FractionRing (Polynomial K)))).Separable) :
     F.resultant B.derivative F.natDegree (B.natDegree-1)≠0 := by
-  let a:=algebraMap K[X] (FractionRing K[X])
+  let a:=algebraMap (Polynomial K) (FractionRing (Polynomial K))
   have inj : Function.Injective a := IsFractionRing.injective _ _
-  have hf : F.map a≠0 := fun hz=>sep.ne_zero (zero_dvd_iff.mp (hz ▸ map_dvd (mapRingHom a) dvd))
+  have hf : F.map a≠0 := fun hz=>sep.ne_zero (zero_dvd_iff.mp (hz ▸ Polynomial.map_dvd a dvd))
   have cop : IsCoprime (F.map a) (B.derivative.map a) := by
     rw [←derivative_map]
     exact (show IsCoprime (B.map a) (B.map a).derivative from sep).of_isCoprime_of_dvd_left
-      (map_dvd (mapRingHom a) dvd)
+      (Polynomial.map_dvd a dvd)
   have actual := resultant_ne_zero (F.map a) (B.derivative.map a) cop
   have bound := natDegree_derivative_le B
   have padded : (F.map a).resultant (B.derivative.map a) F.natDegree (B.natDegree-1) ≠ 0 := by
@@ -142,9 +142,9 @@ private theorem nonzero_resultant {F B : Polynomial K[X]} (dvd : F∣B)
 /-- Weighted collisions of the distinct branch strata, measured before
 dividing by two in the discriminant-index formula. The two budgets are the
 weighted abscissa and scalar degrees of the branch divisor. -/
-theorem weighted {ι : Type*} [Fintype ι] (F : ι→Polynomial K[X]) (w : ι→ℕ)
-    (positive : ∀ i, 0<w i) (B : Polynomial K[X]) (prod : B=∏i,F i)
-    (sep : (B.map (algebraMap K[X] (FractionRing K[X]))).Separable)
+theorem weighted {ι : Type*} [Fintype ι] (F : ι→Polynomial (Polynomial K)) (w : ι→ℕ)
+    (positive : ∀ i, 0<w i) (B : Polynomial (Polynomial K)) (prod : B=∏i,F i)
+    (sep : (B.map (algebraMap (Polynomial K) (FractionRing (Polynomial K)))).Separable)
     (T : Finset K) (places : K→Finset K) (good : ∀ z∈T,B.map (evalRingHom z)≠0)
     {s t : ℕ} (xcap : (∑ i,w i*(F i).natDegree)≤2*s)
     (zcap : (∑ i,w i*CurvatureSquares.height (F i))≤2*t) :
@@ -183,10 +183,10 @@ theorem weighted {ι : Type*} [Fintype ι] (F : ι→Polynomial K[X]) (w : ι→
 omit [DecidableEq K] in
 /-- The branch-degree guard of the paper excludes every inseparable
 abscissa factor, so there is no separate generic resultant hypothesis. -/
-theorem tame_separable (p : ℕ) [CharP (FractionRing K[X]) p]
-    {B : Polynomial K[X]} (sf : Squarefree B) (small : B.natDegree<p) :
-    (B.map (algebraMap K[X] (FractionRing K[X]))).Separable := by
-  let a:=algebraMap K[X] (FractionRing K[X])
+theorem tame_separable (p : ℕ) [CharP (FractionRing (Polynomial K)) p]
+    {B : Polynomial (Polynomial K)} (sf : Squarefree B) (small : B.natDegree<p) :
+    (B.map (algebraMap (Polynomial K) (FractionRing (Polynomial K)))).Separable := by
+  let a:=algebraMap (Polynomial K) (FractionRing (Polynomial K))
   have inj : Function.Injective a := IsFractionRing.injective _ _
   apply CurvatureSquares.separable_kernel B sf
   intro q _ div pos

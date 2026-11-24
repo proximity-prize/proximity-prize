@@ -78,9 +78,9 @@ abbrev Four (R : Type) [CommRing R] := Polynomial (Polynomial (MvPolynomial (Fin
 def scalar {R : Type} [CommRing R] : R →+* Four R := C.comp (C.comp MvPolynomial.C)
 def seedVar {R : Type} [CommRing R] (i : Fin 2) : Four R := C (C (MvPolynomial.X i))
 def yVar {R : Type} [CommRing R] : Four R :=
-  Polynomial.C (R := (MvPolynomial (Fin 2) R)[X]) (Polynomial.X (R := MvPolynomial (Fin 2) R))
+  Polynomial.C (R := (Polynomial (MvPolynomial (Fin 2) R))) (Polynomial.X (R := MvPolynomial (Fin 2) R))
 def vVar {R : Type} [CommRing R] : Four R :=
-  Polynomial.X (R := (MvPolynomial (Fin 2) R)[X])
+  Polynomial.X (R := (Polynomial (MvPolynomial (Fin 2) R)))
 def evaluate {R T : Type} [CommRing R] [CommRing T] (a : R →+* T)
     (t : Fin 2 → T) (y v : T) : Four R →+* T :=
   eval₂RingHom (eval₂RingHom (MvPolynomial.eval₂Hom a t) y) v

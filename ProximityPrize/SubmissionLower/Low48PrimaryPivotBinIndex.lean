@@ -15,7 +15,7 @@ def indexFiber (j : ℕ) : Finset Column :=
 
 attribute [local irreducible] Finset.univ
 
-private theorem mem_indexFiber {j : ℕ} {col : Column} :
+theorem mem_indexFiber {j : ℕ} {col : Column} :
     col ∈ indexFiber j ↔ (columnPoint col).index = j := by
   simp only [indexFiber,mem_filter,mem_univ,true_and]
 

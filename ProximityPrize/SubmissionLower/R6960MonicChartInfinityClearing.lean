@@ -23,8 +23,8 @@ private def scaleBasis {F E : Type*} [Field F] [Field E] [Algebra F E]
 section Infinity
 
 variable {K E : Type*} [Field K] [Infinite K] [DecidableEq (RatFunc K)]
-    [Field E] [Algebra (RatFunc K) E] [Algebra K[X] E]
-    [IsScalarTower K[X] (RatFunc K) E]
+    [Field E] [Algebra (RatFunc K) E] [Algebra (Polynomial K) E]
+    [IsScalarTower (Polynomial K) (RatFunc K) E]
     [Algebra (Infinity K) E] [IsScalarTower (Infinity K) (RatFunc K) E]
     [Algebra.IsSeparable (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
     [Differential (Infinity K)] [Differential E] [DifferentialAlgebra (Infinity K) E]
@@ -32,10 +32,10 @@ variable {K E : Type*} [Field K] [Infinite K] [DecidableEq (RatFunc K)]
 local notation "S" => Infinity K
 local notation "F" => RatFunc K
 
-private theorem primitive_unit_infty (p : K[X][X]) (prim : p.IsPrimitive) :
+private theorem primitive_unit_infty (p : (Polynomial (Polynomial K))) (prim : p.IsPrimitive) :
     ∃ i, IsUnit ((p.map (inftyRingEval K)).coeff i) := by
   by_contra! no
-  have dvd : C (Polynomial.X : K[X])∣p := by
+  have dvd : C (Polynomial.X : (Polynomial K))∣p := by
     apply (C_dvd_iff_dvd_coeff ..).mpr
     intro j
     apply X_dvd_iff.mpr
@@ -46,13 +46,13 @@ private theorem primitive_unit_infty (p : K[X][X]) (prim : p.IsPrimitive) :
 /-- The weighted infinity chart controls derivatives by its own padded
 resultant. Primitive part is taken before choosing the monic chart, and
 its content factor is returned to the resultant. -/
-theorem clears_homogeneous_infinity (b : PowerBasis F E) (f : K[X][X]) (H d : ℕ)
+theorem clears_homogeneous_infinity (b : PowerBasis F E) (f : (Polynomial (Polynomial K))) (H d : ℕ)
     (e2 : 2≤f.natDegree) (dim : f.natDegree=b.dim)
     (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H)
     (root : aeval b.gen f=0) (x : E) (hx : IsIntegral S x) :
     IsIntegral S (algebraMap S E ((inftyRingEval K (paddedRes (weightedInfinity f H d)))^2)*x′) := by
   classical
-  letI : NormalizedGCDMonoid K[X] := Classical.choice inferInstance
+  letI : NormalizedGCDMonoid (Polynomial K) := Classical.choice inferInstance
   let e := f.natDegree
   let t := ((RatFunc.X : F)⁻¹)
   let a := t^d
@@ -82,10 +82,10 @@ theorem clears_homogeneous_infinity (b : PowerBasis F E) (f : K[X][X]) (H d : �
     rfl
   have rroot : aeval v.gen r=0 := by
     rw [← aeval_map_algebraMap F,mapped_r,infinity_field f H d weights,map_mul]
-    have baseRoot : aeval b.gen (f.map (algebraMap K[X] F))=0 := by
+    have baseRoot : aeval b.gen (f.map (algebraMap (Polynomial K) F))=0 := by
       rw [aeval_map_algebraMap]
       exact root
-    have newRoot : aeval v.gen ((f.map (algebraMap K[X] F)).scaleRoots a)=0 := by
+    have newRoot : aeval v.gen ((f.map (algebraMap (Polynomial K) F)).scaleRoots a)=0 := by
       rw [vg]
       exact scaleRoots_eval₂_eq_zero (algebraMap F E) baseRoot
     rw [newRoot,mul_zero]

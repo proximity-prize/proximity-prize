@@ -12,11 +12,10 @@ open K1_13 (Shape shape)
 open K1_13_8 (Valid zeroShape)
 open Low6960Retained (Box combined)
 open Final50FatReserve (degreeCap)
-open private P3_6_8.shapeSum P3_6_8.shapeSum_empty P3_6_8.shapeSum_valid_or_empty
-  from ProximityPrize.SubmissionLower.GoldBranch6N8
+open P3_6_8 (shapeSum shapeSum_empty shapeSum_valid_or_empty)
 open scoped Classical BigOperators
 
-private theorem degree_bound {r : Shape} (hr : Valid r) (hx : Box r) :
+theorem degree_bound {r : Shape} (hr : Valid r) (hx : Box r) :
     r.b ≤ degreeCap r.j := by
   have hjl : 3≤r.j := (Nat.mul_le_mul_left 3 hr.1).trans hr.2.1
   have hju := hx.2.1
@@ -30,7 +29,7 @@ private theorem degree_bound {r : Shape} (hr : Valid r) (hx : Box r) :
 
 /-- The retained factors selected by the actual primary bank spend the
 finite charge for their exact total width, before the positive-order allocation. -/
-theorem Inventory.retained_charge {Γ : Finset K} {s : K→K[X]} (d : Inventory Γ s) :
+theorem Inventory.retained_charge {Γ : Finset K} {s : K→(Polynomial K)} (d : Inventory Γ s) :
     let r := combined (fun i=>shape (d.factor i)) d.zeros
     (∑ i∈d.zeros,fatPrice (shape (d.factor i))) ≤ retainedTariff r.b r.j r.t := by
   let q i := shape (d.factor i)

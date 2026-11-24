@@ -11,7 +11,7 @@ open K1_13_6 (genericCoeffs)
 open K1_13_6_2 (GeoJets5)
 open K1_13_6_2_2 (generic5 rawGraph denominator padded)
 open K1_13_6_2_4 (Exponent)
-open private support_bounds topWeight fifthWeight from ProximityPrize.SubmissionLower.Fast074
+open K1_13_6_2_2_1 (support_bounds topWeight fifthWeight)
 noncomputable section
 
 def graph (p : Shape) : Cap := (⟨max p.b (p.j + 1), p.j + 1, p.t + 1⟩, 1)

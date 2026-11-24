@@ -19,7 +19,7 @@ open K1_14 (L FX Seeds Equation Shape Jet Banks SeedBound liftPoly graphEval atX
 open K1_14_1
 open P1_7_1 (groupedPoleMoment nodeRows telescope)
 open scoped BigOperators Polynomial
-open private pole_bound from ProximityPrize.SubmissionLower.UpperBranch1
+open P1_7_1 (pole_bound)
 
 
 

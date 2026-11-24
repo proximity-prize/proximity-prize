@@ -14,14 +14,8 @@ open MonicChart (ChartField)
 open NormalizedFiber RetainedRestrictionTorus RetainedSurfaceClass MonicFourChartDescent
 open Polynomial Module CollisionTame LineEuler
 open scoped Polynomial Lower6960.MonicChartProbes
-open private Lower6960.CollisionMarked.outerPlane Lower6960.CollisionMarked.outerField
-  Lower6960.CollisionMarked.outer_X Lower6960.CollisionMarked.outer_CC Lower6960.CollisionMarked.outer_CX
-  Lower6960.CollisionMarked.outerField_fraction
-  from ProximityPrize.SubmissionLower.R6960CollisionMarkedPlaneOverlap
-open private Lower6960.CollisionTame.genericFinite_on_plane Lower6960.CollisionTame.genericFinite_fraction
-  Lower6960.CollisionTame.genericLaurent_finite Lower6960.CollisionTame.genericLaurent_inverse
-  Lower6960.CollisionTame.genericInverse_fractions Lower6960.CollisionTame.genericInverse
-  Lower6960.CollisionTame.coeffDenominators from ProximityPrize.SubmissionLower.R6960CollisionTameCoefficientLine
+open Lower6960.CollisionMarked (outerPlane outerField outer_X outer_CC outer_CX outerField_fraction)
+open Lower6960.CollisionTame (genericFinite_on_plane genericFinite_fraction genericLaurent_finite genericLaurent_inverse genericInverse_fractions genericInverse coeffDenominators)
 
 attribute [local instance] Polynomial.algebra Polynomial.isLocalization
 
@@ -36,7 +30,7 @@ private theorem genericPlaneField_apply (j:Bool) (p:Plane L) :
       Lower6960.CollisionMarked.outerField j false p :=
   IsFractionRing.ringEquivOfRingEquiv_algebraMap _ _
 
-private def lineEmbedding (j b:Bool) : GenericLine L→+*ChartField :=
+def lineEmbedding (j b:Bool) : GenericLine L→+*ChartField :=
   (genericPlaneField j).toRingHom.comp ((genericLaurent L).comp (chartEmbedding b).toRingHom)
 
 private theorem lineEmbedding_fraction (j b:Bool) :
@@ -60,7 +54,7 @@ private theorem lineEmbedding_fraction (j b:Bool) :
 
 /-- Localizing the fixed coefficients of either original plane chart
 gives the corresponding actual generic polynomial chart. -/
-private theorem lineEmbedding_on_plane (j b:Bool) (p:Plane L) :
+theorem lineEmbedding_on_plane (j b:Bool) (p:Plane L) :
     lineEmbedding j b (algebraMap (Plane L) (GenericLine L) p)=
       Lower6960.CollisionMarked.outerField j b p := by
   let A := Plane L
@@ -90,17 +84,17 @@ private theorem lineEmbedding_on_plane (j b:Bool) (p:Plane L) :
           · exact (Lower6960.CollisionMarked.outer_CX j false).trans
               (Lower6960.CollisionMarked.outer_CX j true).symm
         change genericPlaneField j (Lower6960.CollisionTame.genericInverse L
-          ((C a : A).map (algebraMap L[X] (GenericCoefficients L))))=_
+          ((C a : A).map (algebraMap (Polynomial L) (GenericCoefficients L))))=_
         rw [map_C]
-        change genericPlaneField j ((C (algebraMap L[X] (GenericCoefficients L) a)).eval₂
+        change genericPlaneField j ((C (algebraMap (Polynomial L) (GenericCoefficients L) a)).eval₂
           ((genericFinite L).comp C) ((genericFinite L Polynomial.X)⁻¹))=_
         rw [eval₂_C]
-        change genericPlaneField j (genericFinite L (C (algebraMap L[X] (GenericCoefficients L) a)))=_
-        rw [show C (algebraMap L[X] (GenericCoefficients L) a)=algebraMap A R (C a) from
-          (map_C (algebraMap L[X] (GenericCoefficients L))).symm]
+        change genericPlaneField j (genericFinite L (C (algebraMap (Polynomial L) (GenericCoefficients L) a)))=_
+        rw [show C (algebraMap (Polynomial L) (GenericCoefficients L) a)=algebraMap A R (C a) from
+          (map_C (algebraMap (Polynomial L) (GenericCoefficients L))).symm]
         rw [Lower6960.CollisionTame.genericFinite_on_plane,genericPlaneField_apply,scalar]
       · change genericPlaneField j (Lower6960.CollisionTame.genericInverse L
-          ((Polynomial.X:A).map (algebraMap L[X] (GenericCoefficients L))))=_
+          ((Polynomial.X:A).map (algebraMap (Polynomial L) (GenericCoefficients L))))=_
         rw [map_X]
         change genericPlaneField j (Polynomial.X.eval₂ ((genericFinite L).comp C)
           ((genericFinite L Polynomial.X)⁻¹))=_
@@ -154,7 +148,7 @@ theorem generic_line_trace_associated (j b:Bool) (δ:Plane L)
     ∀ a : Basis (Fin (finrank ChartField E)) (GenericLine L)
         (chartOrder (k:=GenericCoefficients L) (E:=E) b),
       Associated (Algebra.traceMatrix (GenericLine L) a).det
-        ((Bivariate.swap δ).map (algebraMap L[X] (GenericCoefficients L))) := by
+        ((Bivariate.swap δ).map (algebraMap (Polynomial L) (GenericCoefficients L))) := by
   let A := Plane L
   let B := A
   let F := FractionRing A

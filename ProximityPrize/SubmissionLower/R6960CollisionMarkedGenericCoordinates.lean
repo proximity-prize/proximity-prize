@@ -15,12 +15,9 @@ open MonicFourChartDescent RetainedRestrictionTorus
 open MarkedEvaluation (swapBase swap_x swap_z swap_constant)
 open Polynomial CollisionTame LineEuler
 open scoped Polynomial
-open private Lower6960.LineEuler.chartLocalization from ProximityPrize.SubmissionLower.R6960LineEulerNormalization
-open private Lower6960.CollisionMarked.lineEmbedding Lower6960.CollisionMarked.lineEmbedding_on_plane
-  from ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericFrames
-open private Lower6960.CollisionMarked.outerField Lower6960.CollisionMarked.outer_CC
-  Lower6960.CollisionMarked.outer_X Lower6960.CollisionMarked.outer_CX
-  from ProximityPrize.SubmissionLower.R6960CollisionMarkedPlaneOverlap
+open Lower6960.LineEuler (chartLocalization)
+open Lower6960.CollisionMarked (lineEmbedding lineEmbedding_on_plane)
+open Lower6960.CollisionMarked (outerField outer_CC outer_X outer_CX)
 
 private def orientField (j:Bool) : ChartField→+*ChartField :=
   if j then RingHom.id _ else swapBase.toRingHom
@@ -44,7 +41,7 @@ private theorem orient_line (j:Bool) : orientField j RatFunc.X=coordinate (!j) :
 private theorem embedding_coefficients (j:Bool) :
     (Lower6960.CollisionMarked.lineEmbedding j false).comp Polynomial.C=
       (orientField j).comp RatFunc.C := by
-  let U := L[X]
+  let U := (Polynomial L)
   let A := PlaneRing L
   let R := GenericLine L
   let d := algebraMap U Scalar
@@ -85,17 +82,17 @@ theorem genericLaurent_coordinates (j:Bool) :
     change (Lower6960.CollisionMarked.lineEmbedding j false) (Polynomial.C r)=
       orientField j (Horner.rationalLaurent (chartEmbedding false (Polynomial.C r)))
     rw [show Horner.rationalLaurent (chartEmbedding false (Polynomial.C r))=
-      algebraMap Scalar[X] ChartField (Polynomial.C r) from
+      algebraMap (Polynomial Scalar) ChartField (Polynomial.C r) from
         DFunLike.congr_fun Horner.rationalLaurent_finite _,RatFunc.algebraMap_C]
     exact DFunLike.congr_fun (embedding_coefficients j) r
   · change (Lower6960.CollisionMarked.lineEmbedding j false) (Polynomial.X:A)=
       orientField j (Horner.rationalLaurent (chartEmbedding false (Polynomial.X:A)))
     rw [show Horner.rationalLaurent (chartEmbedding false (Polynomial.X:A))=
-      algebraMap Scalar[X] ChartField Polynomial.X from
+      algebraMap (Polynomial Scalar) ChartField Polynomial.X from
         DFunLike.congr_fun Horner.rationalLaurent_finite _,RatFunc.algebraMap_X,orient_line]
     have hx := Lower6960.CollisionMarked.lineEmbedding_on_plane j false (Polynomial.X:PlaneRing L)
     change Lower6960.CollisionMarked.lineEmbedding j false
-      ((Polynomial.X:PlaneRing L).map (algebraMap L[X] Scalar))=_ at hx
+      ((Polynomial.X:PlaneRing L).map (algebraMap (Polynomial L) Scalar))=_ at hx
     rw [map_X,Lower6960.CollisionMarked.outer_X] at hx
     exact hx
 

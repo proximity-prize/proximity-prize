@@ -10,20 +10,20 @@ open Module Matrix Algebra Polynomial Finset
 open scoped Polynomial Matrix BigOperators
 variable {k K E I J:Type} [Field k] [Field K] [DecidableEq (RatFunc K)] [Field E]
   [Algebra (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
-  [Algebra K[X] E] [IsScalarTower K[X] (RatFunc K) E]
+  [Algebra (Polynomial K) E] [IsScalarTower (Polynomial K) (RatFunc K) E]
   [Algebra (SheetNorm.Infinity K) E] [IsScalarTower (SheetNorm.Infinity K) (RatFunc K) E]
   [Fintype I] [DecidableEq I] [Fintype J]
 local notation "ι" => algebraMap (RatFunc K) E
-local notation "basePoly" => algebraMap K[X] (RatFunc K)
+local notation "basePoly" => algebraMap (Polynomial K) (RatFunc K)
 
-def polePolynomial (T:Finset K) : K[X] := ∏ z∈T,(Polynomial.X-C z)
+def polePolynomial (T:Finset K) : (Polynomial K) := ∏ z∈T,(Polynomial.X-C z)
 theorem polePolynomial_monic (T:Finset K) : (polePolynomial T).Monic :=
   Polynomial.monic_prod_of_monic _ _ (fun z _=>monic_X_sub_C z)
 theorem polePolynomial_degree (T:Finset K) : (polePolynomial T).natDegree=T.card := by
   rw [polePolynomial,Polynomial.natDegree_prod _ _ (fun z _=>X_sub_C_ne_zero z)]
   simp
 
-private theorem leading_unit (P:K[X]) (nz:P≠0) :
+theorem leading_unit (P:(Polynomial K)) (nz:P≠0) :
     let u:=basePoly P/(RatFunc.X^P.natDegree)
     u∈SheetNorm.Infinity K ∧ u⁻¹∈SheetNorm.Infinity K := by
   let u:=basePoly P/(RatFunc.X^P.natDegree)
@@ -35,26 +35,26 @@ private theorem leading_unit (P:K[X]) (nz:P≠0) :
   exact ⟨show RatFunc.inftyValuation K u≤1 from val.le,
     show RatFunc.inftyValuation K u⁻¹≤1 from by rw [map_inv₀,val,inv_one]⟩
 
-private theorem integral_infty {u:RatFunc K} (h:u∈SheetNorm.Infinity K) :
+theorem integral_infty {u:RatFunc K} (h:u∈SheetNorm.Infinity K) :
     IsIntegral (SheetNorm.Infinity K) (ι u:E) := by
   have e := isIntegral_algebraMap (A:=E) (x:=(⟨u,h⟩:SheetNorm.Infinity K))
   rw [IsScalarTower.algebraMap_apply (SheetNorm.Infinity K) (RatFunc K) E] at e
   exact e
 
 theorem count_from_original_columns [IsGalois (RatFunc K) E] (inK:k→+*K) (labels:Finset K)
-    (Q:Matrix I J k[X]) (T:Matrix J I k[X]) (pick:I↪J) (pnonzero:(Q.submatrix _root_.id pick).det≠0)
+    (Q:Matrix I J (Polynomial k)) (T:Matrix J I (Polynomial k)) (pick:I↪J) (pnonzero:(Q.submatrix _root_.id pick).det≠0)
     (A:Matrix I J E) (B:Matrix I I E) (det:B.det≠0)
-    (repr : A=B*Q.map ((algebraMap K[X] E).comp (Polynomial.mapRingHom inK)))
-    (generated : B=A*T.map ((algebraMap K[X] E).comp (Polynomial.mapRingHom inK)))
-    (finite:∀i j,IsIntegral K[X] (algebraMap K[X] E (polePolynomial labels)*A i j))
+    (repr : A=B*Q.map ((algebraMap (Polynomial K) E).comp (Polynomial.mapRingHom inK)))
+    (generated : B=A*T.map ((algebraMap (Polynomial K) E).comp (Polynomial.mapRingHom inK)))
+    (finite:∀i j,IsIntegral (Polynomial K) (algebraMap (Polynomial K) E (polePolynomial labels)*A i j))
     (infty:∀i j,IsIntegral (SheetNorm.Infinity K) (A i j))
     (e:ℕ) (ep:0<e)
     (O:K→Type) [∀z,CommRing (O z)] [∀z,IsDomain (O z)] [∀z,IsLocalRing (O z)]
-    (φ:∀z,K[X]→+*O z) (incl:∀z,O z→+*E) (inj:∀z,Function.Injective (incl z))
+    (φ:∀z,(Polynomial K)→+*O z) (incl:∀z,O z→+*E) (inj:∀z,Function.Injective (incl z))
     (base:∀z,(incl z).comp (φ z)=(algebraMap (RatFunc K) E).comp basePoly)
     (π:∀z,O z) (place:∀z∈labels,π z≠0 ∧ IsLocalRing.residue _ (π z)=0 ∧ φ z (Polynomial.X-C z)=π z)
     (localA:∀z,SheetNorm.Aut K E→Matrix I J (O z)) (rows:K→SheetNorm.Aut K E→Finset I)
-    (realize:∀z∈labels,∀g i j,incl z (localA z g i j)=g (algebraMap K[X] E (polePolynomial labels)*A i j))
+    (realize:∀z∈labels,∀g i j,incl z (localA z g i j)=g (algebraMap (Polynomial K) E (polePolynomial labels)*A i j))
     (off:∀z∈labels,∀g,∀i∈rows z g,∀j,π z∣localA z g i j)
     (freq:∀z∈labels,e*(∑g:SheetNorm.Aut K E,(rows z g).card)=
       Fintype.card (SheetNorm.Aut K E)*((e-1)*Fintype.card I)) :
@@ -65,17 +65,17 @@ theorem count_from_original_columns [IsGalois (RatFunc K) E] (inK:k→+*K) (labe
   let P:=q.map inK
   let d:=q.natDegree
   let r:=Fintype.card I
-  let j:=algebraMap K[X] E
+  let j:=algebraMap (Polynomial K) E
   let inc:=j.comp (Polynomial.mapRingHom inK)
   let H:Matrix I I E:=j D • B
   have dn:D≠0 := (polePolynomial_monic labels).ne_zero
   have ji : Function.Injective j := by
-    rw [show j=(algebraMap (RatFunc K) E).comp basePoly from IsScalarTower.algebraMap_eq K[X] (RatFunc K) E]
+    rw [show j=(algebraMap (RatFunc K) E).comp basePoly from IsScalarTower.algebraMap_eq (Polynomial K) (RatFunc K) E]
     exact (algebraMap (RatFunc K) E).injective.comp (IsFractionRing.injective _ _)
   have hn:H.det≠0 := by
     rw [show H.det=(j D)^r*B.det from Matrix.det_smul ..]
     exact mul_ne_zero (pow_ne_zero _ (ji.ne_iff.mpr dn |> fun p=>by simpa using p)) det
-  have fe:IsIntegral K[X] H.det := by
+  have fe:IsIntegral (Polynomial K) H.det := by
     apply IsIntegral.det
     intro u v
     change IsIntegral _ (j D*B u v)
@@ -96,7 +96,7 @@ theorem count_from_original_columns [IsGalois (RatFunc K) E] (inK:k→+*K) (labe
     have ok:=((weight.pow r).mul normalized).mul detInf
     rw [sub] at ok
     rw [show H.det=(j D)^r*B.det from Matrix.det_smul ..]
-    have J (p:K[X]) : ι (basePoly p)=j p := (IsScalarTower.algebraMap_apply K[X] (RatFunc K) E _).symm
+    have J (p:(Polynomial K)) : ι (basePoly p)=j p := (IsScalarTower.algebraMap_apply (Polynomial K) (RatFunc K) E _).symm
     rw [map_inv₀,map_div₀,map_div₀,J P,J D,map_pow,map_pow,pd,polePolynomial_degree] at ok
     have xeq:ι (RatFunc.X^(labels.card*r))=(ι RatFunc.X ^labels.card)^r := by rw [map_pow,pow_mul]
     rw [xeq]

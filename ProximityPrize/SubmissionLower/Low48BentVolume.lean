@@ -9,7 +9,7 @@ open Low48BentCount (sliceFour)
 open K1_13_6 (GeoField)
 open K1_13_6_2 (GeoJets5)
 open K1_13_6_2_4_3 (monomial_hilbert_count)
-open private pairedSum pair evenSlice oddSlice from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_3_1 (pairedSum pair evenSlice oddSlice)
 open scoped BigOperators Pointwise
 noncomputable section
 
@@ -88,7 +88,7 @@ private def coeff4 (b j t h : ℚ) : ℚ :=
     + (20 / 3) * t * h ^ 3
     - 4 * h ^ 4
 
-private def coeff5 (b j t h : ℚ) : ℚ :=
+def coeff5 (b j t h : ℚ) : ℚ :=
   8 * b * j ^ 2 * t * h
     - 8 * b * j ^ 2 * h ^ 2
     - 24 * b * j * t ^ 2 * h
@@ -121,7 +121,7 @@ private theorem sumSlices_eval (b j t h n : ℚ) :
   unfold sumSlices sliceFour pairedSum pair evenSlice oddSlice coeff1 coeff2 coeff3 coeff4 coeff5
   ring
 
-private def latticePolynomial (a : Cap) : ℚ[X] :=
+def latticePolynomial (a : Cap) : (Polynomial ℚ) :=
   let b : ℚ := a.1.b
   let j : ℚ := a.1.j
   let t : ℚ := a.1.t
@@ -132,7 +132,7 @@ private def latticePolynomial (a : Cap) : ℚ[X] :=
     Polynomial.C (coeff2 b j t h) * Polynomial.X ^ 2 +
     Polynomial.C (coeff1 b j t h) * Polynomial.X ^ 1 + Polynomial.C 1
 
-private theorem latticePolynomial_eval (a : Cap) (ha : Chamber a) (n : ℕ) :
+theorem latticePolynomial_eval (a : Cap) (ha : Chamber a) (n : ℕ) :
     (latticePolynomial a).eval (n : ℚ) = ((latticePoints (Scale n a)).ncard : ℚ) := by
   rw [Low48BentCount.card_eq (Scale n a) (chamber_scale ha n), sum_slices]
   simp only [latticePolynomial, Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_pow,

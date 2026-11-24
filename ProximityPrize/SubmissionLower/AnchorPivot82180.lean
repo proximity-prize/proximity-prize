@@ -8,7 +8,7 @@ namespace AnchorPivot82180
 open K1_13 (Geom)
 open K1_13_1_1 (Form bandSpace backShift targetOrder valueForm bandSpace_mul)
 open MvPolynomial
-open private monomial_band capX from ProximityPrize.SubmissionLower.Fast054
+open K1_13_1_1 (monomial_band capX)
 
 structure E where
   a : ℕ
@@ -47,7 +47,7 @@ noncomputable def poly : List Term → Form
   | [] => 0
   | (k,e)::xs => k • mon e + poly xs
 
-private theorem poly_band {d lo hi top : ℕ} (xs : List Term)
+theorem poly_band {d lo hi top : ℕ} (xs : List Term)
     (h : xs.all (fun t => decide (t.2.deg = d ∧ lo ≤ t.2.index ∧ t.2.index ≤ hi ∧ t.2.f ≤ top)) = true) :
     poly xs ∈ bandSpace d lo hi top := by
   induction xs with
@@ -58,7 +58,7 @@ private theorem poly_band {d lo hi top : ℕ} (xs : List Term)
     obtain ⟨hd,hl,hh,ht⟩ := of_decide_eq_true hp
     exact add_mem (zsmul_mem (mono_band hd hl hh ht) _) (ih hr)
 
-private theorem poly_order {o : ℕ} (xs : List Term)
+theorem poly_order {o : ℕ} (xs : List Term)
     (h : xs.all (fun t => decide (o ≤ t.2.order)) = true) :
     poly xs ∈ restrictWeightedOrder targetOrder o := by
   induction xs with
@@ -81,7 +81,7 @@ private theorem encoded_degree_le {b : ℕ} (xs : List Term)
     exact (Polynomial.degree_smul_le _ _).trans ((Polynomial.degree_X_pow_le _).trans
       (WithBot.coe_le_coe.mpr (of_decide_eq_true hp)))
 
-private theorem encoded_degree {e : E} {b : ℕ} (xs : List Term) (h : b < e.key)
+theorem encoded_degree {e : E} {b : ℕ} (xs : List Term) (h : b < e.key)
     (hu : xs.all (fun t => decide (t.2.key ≤ b)) = true) :
     (encode (poly ((1,e)::xs))).degree = (e.key : ℕ) := by
   rw [poly, one_zsmul, map_add, encode_mon, Polynomial.degree_add_eq_left_of_degree_lt, Polynomial.degree_X_pow]

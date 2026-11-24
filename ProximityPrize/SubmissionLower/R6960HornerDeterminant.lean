@@ -28,7 +28,7 @@ private theorem coeff_C_product (c : k) (p : Laurent k) (i : ℤ) :
 reciprocal chart, bound the determinant deficit by the sum of their pole
 orders. This uses the actual determinant, not a bound on individual entries. -/
 theorem determinant_budget (G : Matrix ι ι (Laurent k)) (unit : IsUnit G)
-    (P Q : Matrix ι ι k[X]) (width : ι→ℕ) (independent : P.det≠0)
+    (P Q : Matrix ι ι (Polynomial k)) (width : ι→ℕ) (independent : P.det≠0)
     (join : P.map (Polynomial.toLaurent (R:=k)) = G * (Q.map (infinityEmbedding (k:=k))) *
       Matrix.diagonal (fun i=>T (R:=k) (width i : ℤ))) :
     ∃ d : ℤ, G.det.degree=(d:WithBot ℤ) ∧ -d≤∑ i,(width i : ℤ) := by

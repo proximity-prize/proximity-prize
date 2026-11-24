@@ -7,7 +7,7 @@ set_option maxHeartbeats 1500000
 namespace Low48PrimaryPivot
 open Finset KoalaLinearWindow KoalaPiecewiseTriangle
 open scoped BigOperators
-open private paritySpan widthLine countTree countTree_at from ProximityPrize.SubmissionLower.Low48PrimaryPivotSectionSum
+open Low48PrimaryPivot (paritySpan widthLine countTree countTree_at)
 
 private theorem sum_by_parity (m : ℤ) (f : ℤ → ℤ) :
     (∑ a ∈ Ico (0:ℤ) (m+1), f a) =

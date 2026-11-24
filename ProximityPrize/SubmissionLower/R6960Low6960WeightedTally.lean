@@ -18,10 +18,10 @@ open Low6960SharedTally (Data)
 open Low6960SharedTallyNew (tally)
 open Low6960SharedTallyOld (orderCost auxiliaryCap continuedCap surfaceCap)
 open Low6960SharedPersistent (Persistent)
-open private le_ceil from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
+open Low6960GeometryCut (le_ceil)
 open scoped Polynomial BigOperators ENat
 
-variable {Γ : Finset K} {s : K → K[X]} {f Q : Row 4} {l : ℕ}
+variable {Γ : Finset K} {s : K → (Polynomial K)} {f Q : Row 4} {l : ℕ}
   {S : Set (Ideal GeoJets)}
 
 def weighted (D : Data Γ s f Q l S) (F : Finset (Branch f Q l))
@@ -61,7 +61,7 @@ theorem tilted (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
 def Relevant (f : Row 4) (u : Rate) (order : Ideal GeoJets → ℕ) (P : Ideal GeoJets) : Prop :=
   P.IsPrime ∧ P.height = 2 ∧ toGeneric f ∈ P ∧ order P ≤ u.split
 
-def Cut {Γ : Finset K} {s : K → K[X]} (f : Row 4) (u : Rate)
+def Cut {Γ : Finset K} {s : K → (Polynomial K)} (f : Row 4) (u : Rate)
     (order : Ideal GeoJets → ℕ) : Prop :=
   ∀ (P : Finset (Ideal GeoJets)), (∀ p ∈ P, Persistent Γ s p) →
     (∀ p ∈ P, Relevant f u order p) →

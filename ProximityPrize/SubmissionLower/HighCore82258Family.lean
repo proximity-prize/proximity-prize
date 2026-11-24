@@ -94,7 +94,7 @@ open HighCore82258 (K I node p agreement blockLength AnchorModel AnchoredFamily)
 open K1_14_2_4 (taylorPower ordinateBound)
 open P1_7_3 (persistentNodes hits_persistent section_bounds regular_chart persistent_taylor)
 open Finset Polynomial ProximityPrize.Benchmark
-structure FixedWord (w : I → K) (U : Finset K) (s : K → K[X]) (d : ℕ) : Prop where
+structure FixedWord (w : I → K) (U : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop where
   distinct : Set.InjOn s (U : Set K)
   degree : ∀ γ ∈ U, (s γ).natDegree ≤ d
   hits : ∀ γ ∈ U, ∃ B : Finset I, agreement ≤ B.card ∧ ∀ i ∈ B, (s γ).eval (node i) = w i
@@ -146,7 +146,7 @@ theorem section_incidence {w U s d} (hw : FixedWord w U s d) (D : ℕ)
 private def rho (s : ℕ) : ℚ :=
   ((blockLength - s : ℕ) : ℚ) / ((agreement - s : ℕ) : ℚ)
 private abbrev density : ℚ := (blockLength : ℚ) / agreement
-private theorem weights {s d : ℕ} (hs : s ≤ d) (hd : d < agreement)
+theorem weights {s d : ℕ} (hs : s ≤ d) (hd : d < agreement)
     (haux : rho d ≤ density * d) :
     rho s ≤ rho d ∧ rho s * (max 1 (d-s) : ℕ) ≤ density * d := by
   have hAN : agreement ≤ blockLength := by decide
@@ -181,7 +181,7 @@ private theorem weights {s d : ℕ} (hs : s ≤ d) (hd : d < agreement)
     _ ≤ (blockLength : ℚ) * ((d : ℚ) / agreement) :=
       mul_le_mul (by exact_mod_cast Nat.sub_le blockLength s) hfrac (by positivity) (by positivity)
     _ = density * d := by ring
-private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164514) :
+theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164514) :
     rho d ≤ density * d := by
   have hdA : d < agreement := hh.trans_lt (by decide)
   have hdN : d ≤ blockLength := hh.trans (by decide)
@@ -218,8 +218,8 @@ open scoped BigOperators
 open HighCore82258 (K I node agreement blockLength)
 open K1_14 (FX)
 open K1_14_6 (Biform ClosedField rootPoint)
-open private card_le_sum_cover from ProximityPrize.SubmissionLower.Fast055
-open private eval_extend  from ProximityPrize.SubmissionLower.Fast055
+open K1_14_6 (card_le_sum_cover)
+open K1_14_6_2 (eval_extend)
 end
 end HighCore82258
 end
@@ -260,9 +260,9 @@ open K1_14 (Shape shapeSum Banks Equation FX Jet slots triangle SeedBound)
 open K1_14_3 (RowCaps)
 open K1_14_4 (gradeWidth seedDegree seedDegree_pow)
 open P1_7_5 (kept)
-open private position_sum from ProximityPrize.SubmissionLower.UpperBranch5
-open private shapeSum_swap from ProximityPrize.SubmissionLower.Fast072
-open private finrank_le_grades mem_filtered from ProximityPrize.SubmissionLower.Fast069
+open P1_7_5 (position_sum)
+open K1_14_4 (shapeSum_swap)
+open K1_14_4 (finrank_le_grades mem_filtered)
 end
 end HighCore82258
 end

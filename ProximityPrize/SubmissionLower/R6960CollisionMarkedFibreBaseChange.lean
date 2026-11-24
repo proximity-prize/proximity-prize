@@ -18,24 +18,24 @@ variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
 local instance fibreRing (z : k) : CommRing (Fiber E z) :=
   @Ideal.Quotient.commRing (↥(Order k E)) ((Order k E).toCommRing) (sliceIdeal E z)
 
-/-- The `k[X]` action on the actual quotient of the surface normalization. -/
-scoped instance fibreAlgebra (z : k) : Algebra k[X] (Fiber E z) :=
-  @RingHom.toAlgebra k[X] (Fiber E z) _ (fibreRing (E:=E) z).toCommSemiring (baseMap E z)
+/-- The `(Polynomial k)` action on the actual quotient of the surface normalization. -/
+scoped instance fibreAlgebra (z : k) : Algebra (Polynomial k) (Fiber E z) :=
+  @RingHom.toAlgebra (Polynomial k) (Fiber E z) _ (fibreRing (E:=E) z).toCommSemiring (baseMap E z)
 
 /-- Specialize only the scalar coordinate in the original polynomial plane. -/
-def fibreBase (z : k) : Plane k→+*k[X] := evalRingHom (C z)
+def fibreBase (z : k) : Plane k→+*(Polynomial k) := evalRingHom (C z)
 
-def genericFibreBase (z : k) : Plane k→+*FractionRing k[X] :=
-  (algebraMap k[X] (FractionRing k[X])).comp (fibreBase z)
+def genericFibreBase (z : k) : Plane k→+*FractionRing (Polynomial k) :=
+  (algebraMap (Polynomial k) (FractionRing (Polynomial k))).comp (fibreBase z)
 
 /-- Taking the scalar fibre of the actual plane normalization is the
 same as base-changing its original order by the scalar-coordinate map. -/
 def fibreAsTensor (z : k) :
-    let : Algebra (Plane k) k[X] := (fibreBase z).toAlgebra
-    { e : Fiber E z ≃ₐ[k[X]] (k[X]⊗[Plane k] Order k E) //
-      ∀ x : Order k E,e (quotientMap E z x)=(1:k[X]) ⊗ₜ[Plane k] x } := by
+    let : Algebra (Plane k) (Polynomial k) := (fibreBase z).toAlgebra
+    { e : Fiber E z ≃ₐ[(Polynomial k)] ((Polynomial k)⊗[Plane k] Order k E) //
+      ∀ x : Order k E,e (quotientMap E z x)=(1:(Polynomial k)) ⊗ₜ[Plane k] x } := by
   let A := Plane k
-  let R := k[X]
+  let R := (Polynomial k)
   let B := Order k E
   let : CommRing B := @Subalgebra.toCommRing A E _ _ (inferInstance : Algebra A E) B
   let : Algebra A R := (fibreBase z).toAlgebra
@@ -80,12 +80,12 @@ def fibreAsTensor (z : k) :
 /-- The generic abscissa of the actual specialized surface order, with
 the same reduction map from original integral elements. -/
 def genericFibreAsTensor (z : k) :
-    let : Algebra (Plane k) (FractionRing k[X]) := (genericFibreBase z).toAlgebra
-    { e : ((FractionRing k[X])⊗[k[X]] Fiber E z) ≃ₐ[FractionRing k[X]]
-        ((FractionRing k[X])⊗[Plane k] Order k E) //
-      ∀ x : Order k E,e (1 ⊗ₜ[k[X]] quotientMap E z x)=(1:FractionRing k[X]) ⊗ₜ[Plane k] x } := by
+    let : Algebra (Plane k) (FractionRing (Polynomial k)) := (genericFibreBase z).toAlgebra
+    { e : ((FractionRing (Polynomial k))⊗[(Polynomial k)] Fiber E z) ≃ₐ[FractionRing (Polynomial k)]
+        ((FractionRing (Polynomial k))⊗[Plane k] Order k E) //
+      ∀ x : Order k E,e (1 ⊗ₜ[(Polynomial k)] quotientMap E z x)=(1:FractionRing (Polynomial k)) ⊗ₜ[Plane k] x } := by
   let A := Plane k
-  let R := k[X]
+  let R := (Polynomial k)
   let K := FractionRing R
   let B := Order k E
   let : Algebra A R := (fibreBase z).toAlgebra

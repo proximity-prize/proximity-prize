@@ -25,7 +25,7 @@ def PairOrders (F G : GenericRow) (z : GenericX) (y : Fin 3 → GenericX) : Prop
 structure CommonPair (F G : GenericRow) where
   fixed : Finset GenericRow
   moving : Finset GenericRow
-  pure : GenericX[X]
+  pure : (Polynomial GenericX)
   exponent : GenericRow → ℕ
   left : GenericRow
   right : GenericRow
@@ -57,9 +57,7 @@ noncomputable section
 open K1_13 K1_13_4 MvPolynomial
 open scoped Polynomial BigOperators
 open P0_9_4 (clear_denominators)
-open private inclX_injective coefficientDerivative coeff_coefficientDerivative
-  dotted polynomialPoint eval_dotted eval_map_point degreeOf_le_of_support_subset
-  dotted_weight seed_weight from ProximityPrize.SubmissionLower.PortLow4
+open P0_9_4 (inclX_injective coefficientDerivative coeff_coefficientDerivative dotted polynomialPoint eval_dotted eval_map_point degreeOf_le_of_support_subset dotted_weight seed_weight)
 private theorem small_cast_ne_zero (n : ℕ) (hpos : 0 < n) (hsmall : n ≤ 17) :
     (n : GenericX) ≠ 0 := by
   let : CharP GenericX K1.p := charP_of_injective_ringHom (inclConst.comp embed).injective K1.p
@@ -131,7 +129,7 @@ theorem moving_cutter (f : GenericRow) (hf : Irreducible f)
     (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 17) (htop : f.degreeOf (some 2) = 0) :
     ∃ g : GenericRow, IsRelPrime f g ∧ seedDegree g ≤ seedDegree f ∧
       jetTotal g ≤ jetTotal f ∧ jetIndex g ≤ jetIndex f + 1 ∧
-      ∀ (z : Geom) (S : Geom[X]),
+      ∀ (z : Geom) (S : (Polynomial Geom)),
         eval (atPoint (inclConst z) (trajectory S)) f = 0 →
         eval (atPoint (inclConst z) (trajectory S)) g = 0 := by
   obtain ⟨d, P, hd, hs, hP⟩ := clear_denominators f
@@ -191,7 +189,7 @@ private theorem order_cancel_coeff (A B : GenericRow) (d : ℕ) (hA : A.coeff 0 
     exact fun a ha => h _ a rfl ha
   intro n
   induction n using Nat.strong_induction_on with
-  | h n ih =>
+  | ind n ih =>
     intro a ha hd
     have hab := hAB a (ha.symm ▸ hd)
     rw [MvPolynomial.coeff_mul, Finset.sum_eq_single_of_mem (0, a) (by simp)] at hab
@@ -229,12 +227,12 @@ private theorem mixedOrder_cancel (A B : GenericRow) (z : GenericX) (y : Fin 3 �
     rw [← map_mul]
     by_contra hne
     exact (Nat.not_lt_of_ge (h b (MvPolynomial.mem_support_iff.mpr hne))) hb
-private theorem moving_lower (f : GenericRow)
+theorem moving_lower (f : GenericRow)
     (hf : Irreducible f) (hb : 0 < jetTotal f) (ht : jetTotal f ≤ 17)
     (hu : 0 < seedDegree f) (htop : f.degreeOf (some 2) = 0) :
     ∃ q : Lower, q ≠ 0 ∧ q.totalDegree ≤ 2 * seedDegree f * jetTotal f ∧
       lowerIndex q ≤ (2 * jetIndex f + 1) * seedDegree f ∧
-      ∀ (z : Geom) (S : Geom[X]),
+      ∀ (z : Geom) (S : (Polynomial Geom)),
         MvPolynomial.eval (atPoint (inclConst z) (trajectory S)) f = 0 →
         MvPolynomial.eval (trajectory S) q = 0 := by
   obtain ⟨g, hrel, hgu, hgb, hgj, htraj⟩ := moving_cutter f hf hb ht htop
@@ -249,21 +247,21 @@ private theorem moving_lower (f : GenericRow)
       _ ≤ seedDegree f * jetIndex f + seedDegree f * (jetIndex f + 1) :=
         hind.trans (Nat.add_le_add (Nat.mul_le_mul_right _ hgu) (Nat.mul_le_mul_left _ hgj))
       _ = _ := by ring
-private theorem total_prod {ι : Type*} (s : Finset ι) (q : ι → Lower)
+theorem total_prod {ι : Type*} (s : Finset ι) (q : ι → Lower)
     (hn : ∀ i ∈ s, q i ≠ 0) :
     (∏ i ∈ s, q i).totalDegree = ∑ i ∈ s, (q i).totalDegree := by
   simp only [← MvPolynomial.weightedTotalDegree_one]
   exact MvPolynomial.weightedTotalDegree_prod _ s q hn
-private theorem index_prod {ι : Type*} (s : Finset ι) (q : ι → Lower)
+theorem index_prod {ι : Type*} (s : Finset ι) (q : ι → Lower)
     (hn : ∀ i ∈ s, q i ≠ 0) :
     lowerIndex (∏ i ∈ s, q i) = ∑ i ∈ s, lowerIndex (q i) := by
   simp only [lowerIndex_eq_weighted]
   exact MvPolynomial.weightedTotalDegree_prod _ s q hn
-private theorem eval_prod_factor_ne_zero {ι : Type*} {s : Finset ι} {q : ι → Lower}
+theorem eval_prod_factor_ne_zero {ι : Type*} {s : Finset ι} {q : ι → Lower}
     {y : Fin 3 → GenericX} (hq : MvPolynomial.eval y (∏ i ∈ s, q i) ≠ 0)
     {i : ι} (hi : i ∈ s) : MvPolynomial.eval y (q i) ≠ 0 :=
   (Finset.prod_ne_zero_iff.mp (by simpa only [map_prod] using hq)) i hi
-theorem eliminate_common (Γ : Finset K) (z : K → Geom) (S : K → Geom[X])
+theorem eliminate_common (Γ : Finset K) (z : K → Geom) (S : K → (Polynomial Geom))
     (hzinj : Function.Injective z) {F G : GenericRow} (D : CommonPair F G)
     (hOrders : ∀ γ ∈ Γ, PairOrders F G (inclConst (z γ)) (trajectory (S γ))) :
       ∃ (book : Finset K) (Q : Lower), book.card ≤ 140000 ∧ Q ≠ 0 ∧
@@ -380,12 +378,12 @@ namespace P3_6_4
 open Polynomial
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
-private theorem resultant_taylor_formal {R : Type*} [CommRing R]
-    (F G : R[X]) (z : R) {m n : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n) :
+theorem resultant_taylor_formal {R : Type*} [CommRing R]
+    (F G : (Polynomial R)) (z : R) {m n : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n) :
     resultant (F.taylor z) (G.taylor z) m n = resultant F G m n := by
   obtain ⟨a, rfl⟩ := Nat.exists_eq_add_of_le hF
   obtain ⟨b, rfl⟩ := Nat.exists_eq_add_of_le hG
-  have expand (P Q : R[X]) :
+  have expand (P Q : (Polynomial R)) :
       resultant P Q (P.natDegree + a) (Q.natDegree + b) =
         (-1) ^ ((Q.natDegree + b) * a) * Q.coeff (Q.natDegree + b) ^ a *
           (P.leadingCoeff ^ b * resultant P Q) := by
@@ -405,9 +403,9 @@ private theorem resultant_taylor_formal {R : Type*} [CommRing R]
 private def weight (d i : ℕ) : ℕ := d - 6819 * i
 private def power (w : ℕ) : ℕ := (48913 + w) / 48914
 private theorem coefficient_bound {k : Type*} [CommRing k]
-    (P : k[X][X]) (d e i j : ℕ) (hij : j ≤ i)
+    (P : (Polynomial (Polynomial k))) (d e i j : ℕ) (hij : j ≤ i)
     (hP : ∀ i l : ℕ, 6819 * i + 48914 * l < d → (P.coeff i).coeff l = 0) :
-    (Polynomial.X : k[X]) ^ power (weight (d + e) i - weight e j) ∣ P.coeff (i - j) := by
+    (Polynomial.X : (Polynomial k)) ^ power (weight (d + e) i - weight e j) ∣ P.coeff (i - j) := by
   have hweight : weight (d + e) i ≤ weight e j + weight d (i - j) := by
     unfold weight
     omega
@@ -421,11 +419,11 @@ private theorem coefficient_bound {k : Type*} [CommRing k]
 private def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
   j.addCases (fun j : Fin m => weight firstOrder j) (fun j : Fin n => weight secondOrder j)
 private theorem sylvester_entry {k : Type*} [CommRing k]
-    (F G : k[X][X]) (m n : ℕ)
+    (F G : (Polynomial (Polynomial k))) (m n : ℕ)
     (hF : ∀ i l : ℕ, 6819 * i + 48914 * l < firstOrder → (F.coeff i).coeff l = 0)
     (hG : ∀ i l : ℕ, 6819 * i + 48914 * l < secondOrder → (G.coeff i).coeff l = 0)
     (i j : Fin (m + n)) :
-    (Polynomial.X : k[X]) ^ power (weight (firstOrder + secondOrder) i - columnWeight j) ∣
+    (Polynomial.X : (Polynomial k)) ^ power (weight (firstOrder + secondOrder) i - columnWeight j) ∣
       sylvester F G m n i j := by
   induction j using Fin.addCases with
   | left j =>
@@ -440,16 +438,16 @@ private theorem sylvester_entry {k : Type*} [CommRing k]
     · exact coefficient_bound F firstOrder secondOrder i j h.1 hF
     · exact dvd_zero _
 private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
-    (M : Matrix (Fin N) (Fin N) k[X]) (row col : Fin N → ℕ)
-    (hM : ∀ i j, (Polynomial.X : k[X]) ^ power (row i - col j) ∣ M i j)
+    (M : Matrix (Fin N) (Fin N) (Polynomial k)) (row col : Fin N → ℕ)
+    (hM : ∀ i j, (Polynomial.X : (Polynomial k)) ^ power (row i - col j) ∣ M i j)
     (hbudget : (∑ j, col j) + 48914 * D ≤ (∑ i, row i) + 48913) :
-    (Polynomial.X : k[X]) ^ D ∣ M.det := by
+    (Polynomial.X : (Polynomial k)) ^ D ∣ M.det := by
   classical
   rw [Matrix.det_apply']
   apply Finset.dvd_sum
   intro σ _
   let a : Fin N → ℕ := fun j => power (row (σ j) - col j)
-  have hprod : (Polynomial.X : k[X]) ^ (∑ j, a j) ∣ ∏ j, M (σ j) j := by
+  have hprod : (Polynomial.X : (Polynomial k)) ^ (∑ j, a j) ∣ ∏ j, M (σ j) j := by
     rw [← Finset.prod_pow_eq_pow_sum]
     exact Finset.prod_dvd_prod_of_dvd _ _ (fun j _ => hM (σ j) j)
   have hsum : (∑ i, row i) ≤ (∑ j, col j) + 48914 * (∑ j, a j) := by
@@ -504,14 +502,14 @@ private theorem benchmark_budget :
   simp only [columnWeight, Fin.addCases_left, Fin.addCases_right, hF, hG]
   decide
 private theorem resultant_bound
-    (F G : GenericX[X][X]) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
+    (F G : (Polynomial (Polynomial GenericX))) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
     (hFO : ∀ i l : ℕ, 6819 * i + 48914 * l < firstOrder →
       ((F.taylor (C z)).coeff i).coeff l = 0)
     (hGO : ∀ i l : ℕ, 6819 * i + 48914 * l < secondOrder →
       ((G.taylor (C z)).coeff i).coeff l = 0)
     (hbudget : (∑ j : Fin (m + n), columnWeight (m := m) (n := n) j) + 48914 * D ≤
       (∑ i : Fin (m + n), weight (firstOrder + secondOrder) i) + 48913) :
-    (Polynomial.X : GenericX[X]) ^ D ∣ resultant F G m n := by
+    (Polynomial.X : (Polynomial GenericX)) ^ D ∣ resultant F G m n := by
   rw [← resultant_taylor_formal F G (C z) hF hG]
   unfold resultant
   exact det_bound
@@ -519,13 +517,13 @@ private theorem resultant_bound
     (fun i => weight (firstOrder + secondOrder) i)
     (columnWeight (m := m) (n := n))
     (sylvester_entry _ _ m n hFO hGO) hbudget
-theorem line_resultant_order (F G : GenericX[X][X]) (z : GenericX)
+theorem line_resultant_order (F G : (Polynomial (Polynomial GenericX))) (z : GenericX)
     (hF : F.natDegree ≤ 70000) (hG : G.natDegree ≤ 70000)
     (hFO : ∀ i j, 6819 * i + 48914 * j < firstOrder →
       ((F.taylor (Polynomial.C z)).coeff i).coeff j = 0)
     (hGO : ∀ i j, 6819 * i + 48914 * j < secondOrder →
       ((G.taylor (Polynomial.C z)).coeff i).coeff j = 0) :
-    (Polynomial.X : GenericX[X]) ^ 69360 ∣ Polynomial.resultant F G 70000 70000 := by
+    (Polynomial.X : (Polynomial GenericX)) ^ 69360 ∣ Polynomial.resultant F G 70000 70000 := by
   exact resultant_bound F G z (m := 70000) (n := 70000) (D := 69360)
     hF hG hFO hGO benchmark_budget
 end P3_6_4
@@ -537,7 +535,7 @@ open K1_13 Polynomial
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped BigOperators
 set_option maxRecDepth 4000
-private def ray (v : Fin 3 → GenericX) : Lower →+* GenericX[X] :=
+private def ray (v : Fin 3 → GenericX) : Lower →+* (Polynomial GenericX) :=
   MvPolynomial.eval₂Hom C (fun i => C (v i) * Polynomial.X)
 private theorem ray_monomial (v : Fin 3 → GenericX) (a : Fin 3 →₀ ℕ) (c : GenericX) :
     ray v (MvPolynomial.monomial a c) =
@@ -636,9 +634,9 @@ open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necess
 open P0_9_4 (clear_denominators)
 open scoped Polynomial BigOperators
 private theorem inclX_injective : Function.Injective inclX :=
-  IsFractionRing.injective Geom[X] GenericX
-private theorem eval_cleared {Q : Row 3} {R : Lower} {d : Geom[X]}
-    (hQ : MvPolynomial.map inclX Q = MvPolynomial.C (inclX d) * R) (S : Geom[X])
+  IsFractionRing.injective (Polynomial Geom) GenericX
+theorem eval_cleared {Q : Row 3} {R : Lower} {d : (Polynomial Geom)}
+    (hQ : MvPolynomial.map inclX Q = MvPolynomial.C (inclX d) * R) (S : (Polynomial Geom))
     (hR : MvPolynomial.eval (trajectory S) R = 0) : atJet Q S = 0 := by
   have hcomm : inclX (atJet Q S) =
       MvPolynomial.eval (trajectory S) (MvPolynomial.map inclX Q) := by
@@ -646,7 +644,7 @@ private theorem eval_cleared {Q : Row 3} {R : Lower} {d : Geom[X]}
     exact MvPolynomial.eval₂_comp inclX (jet S) Q
   apply inclX_injective
   rw [map_zero, hcomm, hQ, map_mul, hR, mul_zero]
-private theorem map_shift (Q : Row 3) (S : Geom[X]) :
+private theorem map_shift (Q : Row 3) (S : (Polynomial Geom)) :
     MvPolynomial.map inclX (shiftJet Q S) =
       K1_13_4.translate (trajectory S) (MvPolynomial.map inclX Q) := by
   have hc : (MvPolynomial.map (σ := Fin 3) inclX).comp MvPolynomial.C =
@@ -662,9 +660,9 @@ private theorem map_shift (Q : Row 3) (S : Geom[X]) :
   congr 1
   funext i
   simp [trajectory]
-private theorem order_cleared {Q : Row 3} {R : Lower} {d : Geom[X]}
+theorem order_cleared {Q : Row 3} {R : Lower} {d : (Polynomial Geom)}
     (hQ : MvPolynomial.map inclX Q = MvPolynomial.C (inclX d) * R)
-    (S : Geom[X]) {m : ℕ} (hR : LowerOrder R (trajectory S) m) : OrderAt Q S m := by
+    (S : (Polynomial Geom)) {m : ℕ} (hR : LowerOrder R (trajectory S) m) : OrderAt Q S m := by
   have hs : MvPolynomial.map inclX (shiftJet Q S) =
       MvPolynomial.C (inclX d) * K1_13_4.translate (trajectory S) R := by
     rw [map_shift, hQ, map_mul, K1_13_4.translate, MvPolynomial.eval₂Hom_C]
@@ -686,7 +684,7 @@ open K1_13_4 hiding CommonPair
 open K1_13_4_4 (FactorsFor factorProduct)
 open P3_6_4 (CommonPair)
 open scoped Polynomial BigOperators
-open private pureEval pureEval_section pure_degree_le caps_of_dvd from ProximityPrize.SubmissionLower.Fast050
+open K1_13_4_4 (pureEval pureEval_section pure_degree_le caps_of_dvd)
 theorem factor_pair
     (F G : GenericRow) (hF : F ≠ 0) (hG : G ≠ 0)
     (hFCap : Caps firstBox F) (hGCap : Caps secondBox G)
@@ -709,9 +707,9 @@ theorem factor_pair
   let fixed := jetFactors.filter (fun f => seedDegree f = 0)
   let moving := jetFactors.filter (fun f => ¬ seedDegree f = 0)
   let powCount : GenericRow → ℕ := N.count
-  let pure : GenericX[X] := ∏ f ∈ pureFactors, (pureEval f) ^ powCount f
+  let pure : (Polynomial GenericX) := ∏ f ∈ pureFactors, (pureEval f) ^ powCount f
   have hpure : pureSeed pure = ∏ f ∈ pureFactors, f ^ powCount f := by
-    let φ : GenericX[X] →+* GenericRow :=
+    let φ : (Polynomial GenericX) →+* GenericRow :=
       Polynomial.eval₂RingHom MvPolynomial.C (MvPolynomial.X none)
     change φ (∏ f ∈ pureFactors, (pureEval f) ^ powCount f) = _
     rw [map_prod]

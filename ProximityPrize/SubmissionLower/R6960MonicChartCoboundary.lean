@@ -8,8 +8,7 @@ namespace Lower6960.MonicChart
 noncomputable section
 open Polynomial Algebra
 open scoped Polynomial Differential
-open private Lower6960.RetainedCompression.derivative_weighted_add_le
-  from ProximityPrize.SubmissionLower.R6960RetainedCompressionDiscriminant
+open Lower6960.RetainedCompression (derivative_weighted_add_le)
 
 /-- The inverse abscissa has derivative (-X^{-2}) for the abscissa
 derivation. This is the conversion between the two coordinate derivatives. -/
@@ -26,8 +25,8 @@ private theorem derivative_power_zero {E : Type*} [Field E] [Differential E]
 section Inverse
 
 variable {K E : Type*} [Field K] [Infinite K] [DecidableEq (RatFunc K)]
-    [Field E] [Algebra (RatFunc K) E] [Algebra K[X] E]
-    [IsScalarTower K[X] (RatFunc K) E]
+    [Field E] [Algebra (RatFunc K) E] [Algebra (Polynomial K) E]
+    [IsScalarTower (Polynomial K) (RatFunc K) E]
     [Algebra (Infinity K) E] [IsScalarTower (Infinity K) (RatFunc K) E]
     [Algebra.IsSeparable (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
     [Differential (Infinity K)] [Differential E] [DifferentialAlgebra (Infinity K) E]
@@ -37,7 +36,7 @@ local notation "F" => RatFunc K
 
 /-- At infinity the finite resultant loses exactly its unused
 homogenizing width. The remaining factor is a unit of the valuation ring. -/
-theorem clears_inverse_power (b : PowerBasis F E) (f : K[X][X]) (H d : ℕ)
+theorem clears_inverse_power (b : PowerBasis F E) (f : (Polynomial (Polynomial K))) (H d : ℕ)
     (e2 : 2≤f.natDegree) (dim : f.natDegree=b.dim) (tame : (f.natDegree:K)≠0)
     (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H)
     (resBound : (paddedRes f).natDegree≤resultantWidth f.natDegree H d)
@@ -45,7 +44,7 @@ theorem clears_inverse_power (b : PowerBasis F E) (f : K[X][X]) (H d : ℕ)
     IsIntegral S (algebraMap F E (((RatFunc.X : F)⁻¹)^
       (2*(resultantWidth f.natDegree H d-(paddedRes f).natDegree)))*x′) := by
   let r := resultantWidth f.natDegree H d-(paddedRes f).natDegree
-  let t := inftyRingEval K (Polynomial.X : K[X])
+  let t := inftyRingEval K (Polynomial.X : (Polynomial K))
   let u := inftyRingEval K (paddedRes f).reverse
   have co : ((paddedRes f).reverse).coeff 0≠0 := by
     rw [coeff_zero_reverse]
@@ -68,19 +67,19 @@ theorem clears_inverse_power (b : PowerBasis F E) (f : K[X][X]) (H d : ℕ)
 
 section Both
 
-variable [Differential K[X]] [DifferentialAlgebra K[X] E]
+variable [Differential (Polynomial K)] [DifferentialAlgebra (Polynomial K) E]
 
 /-- The Frobenius overlap identity gives one common derivative on the
 finite and infinity coordinates. Together with the checked pole bounds
 it forces that derivative to vanish. -/
-theorem common_coboundary_zero_generic (b : PowerBasis F E) (f : K[X][X]) (H d p : ℕ)
+theorem common_coboundary_zero_generic (b : PowerBasis F E) (f : (Polynomial (Polynomial K))) (H d p : ℕ)
     [CharP E p] (primitive : f.IsPrimitive) (e2 : 2≤f.natDegree) (dim : f.natDegree=b.dim)
     (tame : (f.natDegree:K)≠0)
     (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H)
     (resBound : (paddedRes f).natDegree≤resultantWidth f.natDegree H d)
     (widthRoom : 2*resultantWidth f.natDegree H d<p)
     (nonzero : paddedRes f≠0) (root : aeval b.gen f=0)
-    (x y z : E) (fx : IsIntegral K[X] x) (iy : IsIntegral S y)
+    (x y z : E) (fx : IsIntegral (Polynomial K) x) (iy : IsIntegral S y)
     (overlap : y=(algebraMap F E RatFunc.X)^p*x+z^p) :
     x′=0 := by
   let r := resultantWidth f.natDegree H d-(paddedRes f).natDegree

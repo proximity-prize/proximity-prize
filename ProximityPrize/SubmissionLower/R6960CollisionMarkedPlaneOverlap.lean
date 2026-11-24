@@ -15,38 +15,37 @@ open MonicChart (ChartField)
 open NormalizedFiber RetainedSurfaceClass RetainedRestrictionTorus MonicFourChartDescent
 open CollisionTame Polynomial LaurentPolynomial Module
 open scoped Lower6960.MonicChartProbes Polynomial
-open private Lower6960.RetainedSurfaceClass.oriented_var Lower6960.RetainedSurfaceClass.oriented_line
-  Lower6960.RetainedSurfaceClass.oriented_const from ProximityPrize.SubmissionLower.R6960RetainedAxisCharts
-open private Lower6960.CollisionTame.overlapChart_localizes Lower6960.CollisionTame.overlapChart_fraction from ProximityPrize.SubmissionLower.R6960CollisionTameOverlapDiscriminant
+open Lower6960.RetainedSurfaceClass (oriented_var oriented_line oriented_const)
+open Lower6960.CollisionTame (overlapChart_localizes overlapChart_fraction)
 
-private def outerPlane (j b:Bool) : Plane L≃+*baseChart (reference j b) :=
+def outerPlane (j b:Bool) : Plane L≃+*baseChart (reference j b) :=
   Bivariate.swap.toRingEquiv.trans (oriented j b)
 
-private def outerField (j b:Bool) : Plane L→+*ChartField :=
+def outerField (j b:Bool) : Plane L→+*ChartField :=
   (baseChart (reference j b)).subtype.comp (outerPlane j b).toRingHom
 
 private theorem outerField_injective (j b:Bool) : Function.Injective (outerField j b) :=
   Subtype.val_injective.comp (outerPlane j b).injective
 
-private theorem outer_X (j b:Bool) :
+theorem outer_X (j b:Bool) :
     outerField j b Polynomial.X=chartCoordinate b (coordinate (!j)) := by
   change ((oriented j b (Bivariate.swap Polynomial.X)):ChartField)=_
   rw [Bivariate.swap_Y]
   exact Lower6960.RetainedSurfaceClass.oriented_line j b
 
-private theorem outer_CX (j b:Bool) :
+theorem outer_CX (j b:Bool) :
     outerField j b (Polynomial.C Polynomial.X)=coordinate j := by
   change ((oriented j b (Bivariate.swap (Polynomial.C Polynomial.X))):ChartField)=_
   rw [Bivariate.swap_X]
   exact Lower6960.RetainedSurfaceClass.oriented_var j b
 
-private theorem outer_CC (j b:Bool) (c:L) :
+theorem outer_CC (j b:Bool) (c:L) :
     outerField j b (Polynomial.C (Polynomial.C c))=constants c := by
   change ((oriented j b (Bivariate.swap (Polynomial.C (Polynomial.C c)))):ChartField)=_
   rw [Bivariate.swap_C_C]
   exact Lower6960.RetainedSurfaceClass.oriented_const j b c
 
-private theorem outerField_fraction (j b:Bool) :
+theorem outerField_fraction (j b:Bool) :
     let : Algebra (Plane L) ChartField := (outerField j b).toAlgebra
     IsFractionRing (Plane L) ChartField := by
   let : Algebra (Plane L) ChartField := (outerField j b).toAlgebra

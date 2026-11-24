@@ -18,8 +18,8 @@ open Finset
 open P3 (agreement p)
 open P3_7 (Bank debit)
 open K1_14 (Shape shapeSum triangle)
-open private twice_sum_linear from ProximityPrize.SubmissionLower.Pack_K1_14_2_1Arithmetic
-open private row rising level   tailSum  from ProximityPrize.SubmissionLower.SilverBase
+open K1_14_2_1 (twice_sum_linear)
+open P2_7_2_2 (row rising level tailSum)
 def cut (s : Shape) (r lo mode : ℕ) : ℕ :=
   min (s.B+1) ((cutoffCount lo r s - 1 - (2*lo*mode-1)*s.J) / (131071-lo) + 1)
 private def tailLength (s : Shape) (r lo mode q : ℕ) : ℕ :=

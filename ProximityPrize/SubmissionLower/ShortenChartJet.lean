@@ -6,7 +6,7 @@ namespace ShortenChart
 noncomputable section
 open CJ0 CJ0_3 PolynomialDifferential MvPolynomial
 open scoped BigOperators Polynomial
-open private eval_at_center from ProximityPrize.SubmissionLower.ListProofA
+open CJ0_3 (eval_at_center)
 
 section Affine
 
@@ -161,24 +161,24 @@ theorem inverse_weight (w : Fin 3 → ℕ) (hw : Monotone w)
 
 end Inverse
 
-def derivatives {R : Type*} [CommRing R] (g : R[X]) (i : Fin 3) : R[X] :=
+def derivatives {R : Type*} [CommRing R] (g : (Polynomial R)) (i : Fin 3) : (Polynomial R) :=
   Polynomial.hasseDeriv i.val g
 
-theorem derivatives_affine {R : Type*} [CommRing R] (g L h : R[X]) :
+theorem derivatives_affine {R : Type*} [CommRing R] (g L h : (Polynomial R)) :
     derivatives (g + L * h) = triangular (derivatives g) (derivatives L) (derivatives h) := by
   funext i
   have h₂ : Finset.antidiagonal (2 : ℕ) = {(0, 2), (1, 1), (2, 0)} := by decide
   fin_cases i <;> simp [derivatives, triangular, Polynomial.hasseDeriv_mul, h₂] <;> ring
 
-def transform (g L : K[X]) (G : Equation) : Equation :=
+def transform (g L : (Polynomial K)) (G : Equation) : Equation :=
   (MvPolynomial.optionEquivRight K (Fin 3)).symm
     (affineMap (derivatives g) (derivatives L) (MvPolynomial.optionEquivRight K (Fin 3) G))
 
 private theorem spec_of_flatten {R : Type*} [CommRing R]
-    (Q : MvPolynomial (Fin 3) R[X]) (h : R[X]) :
+    (Q : MvPolynomial (Fin 3) (Polynomial R)) (h : (Polynomial R)) :
     differentialSpecialization ((MvPolynomial.optionEquivRight R (Fin 3)).symm Q) h =
       MvPolynomial.eval (derivatives h) Q := by
-  let x : Option (Fin 3) → R[X] := fun i => i.elim Polynomial.X (derivatives h)
+  let x : Option (Fin 3) → (Polynomial R) := fun i => i.elim Polynomial.X (derivatives h)
   have he : differentialSpecializationHom h = MvPolynomial.aeval x := by
     apply MvPolynomial.algHom_ext
     intro i
@@ -188,47 +188,47 @@ private theorem spec_of_flatten {R : Type*} [CommRing R]
     | some i => exact differentialSpecialization_jet i h
   rw [differentialSpecialization, he, MvPolynomial.aeval_optionEquivRight_symm]
   rw [show x none = Polynomial.X from rfl, Polynomial.aeval_X_left,
-    show (AlgHom.id R R[X]).toRingHom = RingHom.id R[X] from rfl, MvPolynomial.map_id]
+    show (AlgHom.id R (Polynomial R)).toRingHom = RingHom.id (Polynomial R) from rfl, MvPolynomial.map_id]
   rfl
 
-theorem transform_spec (g L h : K[X]) (G : Equation) :
+theorem transform_spec (g L h : (Polynomial K)) (G : Equation) :
     differentialSpecialization (transform g L G) h =
       differentialSpecialization G (g + L * h) := by
   conv_rhs => rw [← (MvPolynomial.optionEquivRight K (Fin 3)).symm_apply_apply G]
   rw [transform, spec_of_flatten, eval_affine, spec_of_flatten, derivatives_affine]
 
-theorem nativeJet_derivatives (g : K[X]) (i : Fin 3) :
+theorem nativeJet_derivatives (g : (Polynomial K)) (i : Fin 3) :
     nativeJet g i = centerMap (derivatives g i) := by
   change (Polynomial.hasseDeriv i.val (g.map embed)).eval center = _
   rw [Polynomial.hasseDeriv_map, eval_at_center]
   rfl
 
-theorem nativeJet_eq (g : K[X]) : nativeJet g = centerMap ∘ derivatives g :=
+theorem nativeJet_eq (g : (Polynomial K)) : nativeJet g = centerMap ∘ derivatives g :=
   funext (nativeJet_derivatives g)
 
-theorem nativeJet_affine (g L h : K[X]) :
+theorem nativeJet_affine (g L h : (Polynomial K)) :
     nativeJet (g + L * h) = triangular (nativeJet g) (nativeJet L) (nativeJet h) := by
   funext i
   simp only [nativeJet_eq, Function.comp_apply, derivatives_affine]
   exact map_triangular centerMap _ _ _ i
 
-theorem nativeJet_zero_ne {L : K[X]} (hL : L ≠ 0) : nativeJet L 0 ≠ 0 := by
+theorem nativeJet_zero_ne {L : (Polynomial K)} (hL : L ≠ 0) : nativeJet L 0 ≠ 0 := by
   rw [nativeJet_derivatives]
   exact map_ne_zero_iff centerMap centerMap_injective |>.mpr (by simpa [derivatives] using hL)
 
-theorem transform_initial (g L : K[X]) (G : Equation) :
+theorem transform_initial (g L : (Polynomial K)) (G : Equation) :
     initial (transform g L G) = affineMap (nativeJet g) (nativeJet L) (initial G) := by
   rw [initial_eq_map, transform, AlgEquiv.apply_symm_apply, map_affine, ← initial_eq_map]
   simp only [nativeJet_eq]
 
-theorem transform_initialSep (g L : K[X]) (G : Equation) :
+theorem transform_initialSep (g L : (Polynomial K)) (G : Equation) :
     initialSep (transform g L G) =
       C (nativeJet L 0) * affineMap (nativeJet g) (nativeJet L) (initialSep G) := by
   rw [show initialSep (transform g L G) = pderiv (Fin.last 2) (initial (transform g L G)) from
     (pderiv_last_initialJetEquation _ _).symm, transform_initial, pderiv_affine,
     show pderiv (Fin.last 2) (initial G) = initialSep G from pderiv_last_initialJetEquation _ _]
 
-theorem transform_weight (g L : K[X]) (G : Equation) (w : Fin 3 → ℕ) (hw : Monotone w) :
+theorem transform_weight (g L : (Polynomial K)) (G : Equation) (w : Fin 3 → ℕ) (hw : Monotone w) :
     (transform g L G).weightedTotalDegree (fun j => j.elim 0 w) ≤
       G.weightedTotalDegree (fun j => j.elim 0 w) := by
   rw [← weightedTotalDegree_optionEquivRight, ← weightedTotalDegree_optionEquivRight]

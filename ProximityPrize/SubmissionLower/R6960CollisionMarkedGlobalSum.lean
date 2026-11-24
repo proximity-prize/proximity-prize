@@ -13,7 +13,7 @@ open Polynomial LaurentPolynomial CollisionTame Finset
 open scoped Polynomial BigOperators
 
 private theorem overlap_degree_one {R:Type} [CommRing R] [IsDomain R]
-    (δf δi:R[X]) (nf:δf≠0) (c:R) (m:ℤ)
+    (δf δi:(Polynomial R)) (nf:δf≠0) (c:R) (m:ℤ)
     (overlap:δf.toLaurent=LaurentPolynomial.C c*T m*invert δi.toLaurent) :
     (δf.natDegree:ℤ)≤m := by
   let n : ℤ := δf.natDegree
@@ -38,7 +38,7 @@ private theorem overlap_degree_one {R:Type} [CommRing R] [IsDomain R]
 principal chart generators. Degree can drop under specialization, so the
 bound is applied to the original polynomial plane. -/
 theorem plane_overlap_degree_caps {k:Type} [Field k]
-    (δf δi:k[X][X]) (nf:δf≠0) (c:k) (cn:c≠0) (m:ℤ)
+    (δf δi:(Polynomial (Polynomial k))) (nf:δf≠0) (c:k) (cn:c≠0) (m:ℤ)
     (overlap:δf.toLaurent=LaurentPolynomial.C (Polynomial.C c)*T m*invert δi.toLaurent) :
     (δf.natDegree:ℤ)≤m ∧ (δi.natDegree:ℤ)≤m := by
   refine ⟨overlap_degree_one δf δi nf (C c) m overlap,?_⟩
@@ -46,7 +46,7 @@ theorem plane_overlap_degree_caps {k:Type} [Field k]
     rintro rfl
     apply nf
     exact Polynomial.toLaurent_injective (by simpa only [map_zero,mul_zero] using overlap)
-  have moved := congrArg (invert (R:=k[X])) overlap
+  have moved := congrArg (invert (R:=(Polynomial k))) overlap
   rw [map_mul,map_mul,invert_C,invert_T,involutive_invert] at moved
   have mirror : δi.toLaurent=LaurentPolynomial.C (Polynomial.C c⁻¹)*T m*invert δf.toLaurent := by
     rw [moved]
@@ -60,10 +60,10 @@ theorem plane_overlap_degree_caps {k:Type} [Field k]
 discriminant overlap. This bounds both original chart degrees by twice
 the measured determinant deficit. -/
 theorem plane_degree_from_line_transition {k:Type} [Field k]
-    (δf δi:k[X][X]) (nf:δf≠0) (c:k) (cn:c≠0) (m:ℤ)
+    (δf δi:(Polynomial (Polynomial k))) (nf:δf≠0) (c:k) (cn:c≠0) (m:ℤ)
     (overlap:δf.toLaurent=LaurentPolynomial.C (Polynomial.C c)*T m*invert δi.toLaurent)
     (z:k) (good:δf.map (evalRingHom z)≠0)
-    (df di:k[X]) (af:Associated df (δf.map (evalRingHom z))) (ai:Associated di (δi.map (evalRingHom z)))
+    (df di:(Polynomial k)) (af:Associated df (δf.map (evalRingHom z))) (ai:Associated di (δi.map (evalRingHom z)))
     (G:LaurentPolynomial k) (unit:IsUnit G) (trace:invert di.toLaurent=G^2*df.toLaurent)
     (s:ℕ) (measure:G.degree=((-(s:ℤ):ℤ):WithBot ℤ)) :
     δf.natDegree≤2*s ∧ δi.natDegree≤2*s := by
@@ -77,10 +77,10 @@ theorem plane_degree_from_line_transition {k:Type} [Field k]
 the weighted collision budget. Generic branch separability follows from
 the measured abscissa cap below the characteristic. -/
 theorem native_index_sum {k:Type} [Field k] [IsAlgClosed k] [DecidableEq k]
-    (p:ℕ) [CharP (FractionRing k[X]) p]
-    (δ:k[X][X]) (nz:δ≠0) (s t:ℕ)
+    (p:ℕ) [CharP (FractionRing (Polynomial k)) p]
+    (δ:(Polynomial (Polynomial k))) (nz:δ≠0) (s t:ℕ)
     (xc:CurvatureSquares.height δ≤2*s) (zc:δ.natDegree≤2*t) (tame:2*s<p)
-    (U:Finset k) (idx:k→k[X])
+    (U:Finset k) (idx:k→(Polynomial k))
     (good:∀z∈U,(branchProduct (Bivariate.swap δ)).map (evalRingHom z)≠0)
     (support:∀z∈U,∀x∈(idx z).roots,
       2≤((branchProduct (Bivariate.swap δ)).map (evalRingHom z)).rootMultiplicity x)

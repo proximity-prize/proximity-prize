@@ -62,7 +62,7 @@ open K1_14_2_2 (Active dual orderOn FixedPart ODECaps fixedOn RowCaps CutCover
   sectionDegree weight dot joinCuts joinCuts_cost sum_dot emptyCut mass)
 open K1_14_2_2_3
 open K1_14_2_2_7
-open private specialize_shiftedWord shift_word from ProximityPrize.SubmissionLower.Fast052
+open K1_14_2_2_3 (specialize_shiftedWord shift_word)
 open scoped BigOperators Classical
 abbrev StageIndex (b : HighCore82258.Band) := Fin (stages b).length
 def pairAt {b h rows} (pairs : HighCore82258.Pairs b h rows) (i : StageIndex b) :
@@ -71,7 +71,7 @@ def pairAt {b h rows} (pairs : HighCore82258.Pairs b h rows) (i : StageIndex b) 
 structure FixedRows {b h rows} (pairs : HighCore82258.Pairs b h rows) (i : StageIndex b) where
   free : FixedPart (pairAt pairs i).free (stageAt b i).free.shape
   moving : FixedPart (pairAt pairs i).moving (stageAt b i).moving.shape
-private theorem envelope_caps {s : Stage} {P : Jet}
+theorem envelope_caps {s : Stage} {P : Jet}
     (hb : s.free.shape.J ≤ s.free.shape.B) (hc : s.moving.shape.J ≤ s.moving.shape.B)
     (hP : RowCaps P s.free.shape ∨ RowCaps P s.moving.shape) : RowCaps P (envelope s) := by
   have ha : s.free.shape.B ≤ (envelope s).B :=

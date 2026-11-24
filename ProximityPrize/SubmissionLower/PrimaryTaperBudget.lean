@@ -41,9 +41,8 @@ def sumRange (f : ℕ → ℕ) : ℕ → ℕ
 
 
 open K1_13_2_3_7 (fastCum signedKernel)
-open private chart oldCount_eq kernel_eq residual_eq  
-  from ProximityPrize.SubmissionLower.Fast060
-open private residualDegree from ProximityPrize.SubmissionLower.PrimaryTaperRank
+open K1_13_2_3_7 (chart oldCount_eq kernel_eq residual_eq)
+open TaperNormalize (residualDegree)
 
 def fastRank (d j : ℕ) (h : ℤ) (p : ℕ) : ℕ :=
   if h < 0 then 0 else
@@ -137,13 +136,13 @@ theorem fastCell_eq {t j : ℕ} (ht : t < 499) (hj : j < 1136) :
 def fastSavings (J : ℕ) : ℕ :=
   sumRange (fun t => sumRange (fastCell t) J) 499
 
-private theorem sumRange_eq (f : ℕ → ℕ) (n : ℕ) :
+theorem sumRange_eq (f : ℕ → ℕ) (n : ℕ) :
     sumRange f n = ∑ k ∈ Finset.range n, f k := by
   induction n with
   | zero => simp [sumRange]
   | succ n ih => rw [sumRange, Finset.sum_range_succ, ih]
 
-private theorem sumRange_fin (f : ℕ → ℕ) (n : ℕ) :
+theorem sumRange_fin (f : ℕ → ℕ) (n : ℕ) :
     sumRange f n = ∑ k : Fin n, f k.val := by
   rw [sumRange_eq, Fin.sum_univ_eq_sum_range]
 
@@ -157,7 +156,7 @@ private def windowEmbed {J : ℕ} (hJ : J ≤ 1136) : Fin 499 × Fin J ↪ Block
       omega
     · exact congrArg (fun i : BlockIndex => i.2.val) h
 
-open private sum_embed_le from ProximityPrize.SubmissionLower.Fast068
+open K1_13_2_3_7 (sum_embed_le)
 
 theorem fastSavings_le {J : ℕ} (hJ : J ≤ 1136) :
     fastSavings J ≤ ∑ i : BlockIndex, tailSaving i := by
@@ -176,8 +175,7 @@ theorem fastSavings_le {J : ℕ} (hJ : J ≤ 1136) :
 
 
 open K1_13_2_3_7 (countParts natKernel)
-open private countParts_eq partValue natKernel_signed
-  from ProximityPrize.SubmissionLower.Fast068
+open K1_13_2_3_7 (countParts_eq partValue natKernel_signed)
 
 def natOld (d j : ℕ) : ℕ :=
   let hi := countParts d 1651
@@ -194,7 +192,7 @@ private theorem old_eq (d j : ℕ) :
   simp only [natOld]
   omega
 
-private def removed (d q : ℕ) : ℕ := (3003 + d - q) / 4
+def removed (d q : ℕ) : ℕ := (3003 + d - q) / 4
 
 private theorem natKernel_eq_for (d q j : ℕ) (hq : 3514 ≤ q) (hj : q + j < 4650)
     (hD : d ≤ 1650) :
@@ -272,14 +270,13 @@ theorem sumChunk_eq_fastSavings (J : ℕ) : sumChunk (rowSum J) 0 499 = fastSavi
   intro j _
   exact natCell_eq _ _
 
-open private combine baseline_budget_on sum_add_pointwise_eq bound_le_baseline savings_parts
-  from ProximityPrize.SubmissionLower.Fast022
+open K1_13_2_3 (combine baseline_budget_on sum_add_pointwise_eq bound_le_baseline savings_parts)
 
-private def fees (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) : ℕ :=
+def fees (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) : ℕ :=
   if i.1.val < 3514 then blockBound i (combine p₁ p₂ p₃ (fun _ => ⟨0,0,0⟩) i).expand
   else min (baseline i) (TaperNormalize.bound (cap i.1.val) i (power i))
 
-private theorem fees_le_baseline (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) :
+theorem fees_le_baseline (p₁ p₂ p₃ : BlockIndex → Powers) (i : BlockIndex) :
     fees p₁ p₂ p₃ i ≤ baseline i := by
   unfold fees
   split
@@ -308,7 +305,7 @@ private theorem saved_on (S : Finset BlockIndex) (p₁ p₂ p₃ : BlockIndex �
   intro i _
   exact saved_pointwise p₁ p₂ p₃ i
 
-private theorem saved_by_fees (p₁ p₂ p₃ : BlockIndex → Powers) :
+theorem saved_by_fees (p₁ p₂ p₃ : BlockIndex → Powers) :
     savingsSum w1 p₁ + savingsSum w2 p₂ + savingsSum w3 p₃ + (∑ i : BlockIndex, tailSaving i) ≤
       ∑ i : BlockIndex, (baseline i - fees p₁ p₂ p₃ i) := by
   have h₀ : savingsSum w4 zeroPowers = 0 := by

@@ -11,7 +11,7 @@ open K1_13 (Geom embed extend Row shape InBox atJet indexDegree jet OnFactor)
 open K1_13_1 (anchorLead anchorLead_ne anchorLead_mul indexDegree_eq eval_anchorLead
   atJet_eq_anchorLead_of_top_zero)
 open scoped BigOperators Polynomial
-open private coeff_flatten anchorLead_term index_bounds from ProximityPrize.SubmissionLower.Fast040
+open K1_13_1 (coeff_flatten anchorLead_term index_bounds)
 
 abbrev activeDegree := Euler50GeoCover.activeDegree
 

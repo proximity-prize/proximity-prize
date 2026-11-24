@@ -189,8 +189,7 @@ theorem certifiedGammaError_le_of_givenSets
           BinaryIRSProfile.totalDimension_div_interleaving] using
           (ProximityGap.mcaError_interleaved_le BinaryIRSProfile.baseCode
             BinaryIRSProfile.interleaving radius
-            (by norm_num [BinaryIRSProfile.interleaving])
-            (by norm_num [radius]) (by norm_num [radius]))
+            (by norm_num [BinaryIRSProfile.interleaving]))
       _ ≤ ENNReal.ofReal ((numerator : ℝ) / Fintype.card Fld) :=
           mcaError_affineLine_le_of_givenSetsBound _ _ _ hgiven
       _ = (numerator : ENNReal) / (Fintype.card Fld : ENNReal) := by

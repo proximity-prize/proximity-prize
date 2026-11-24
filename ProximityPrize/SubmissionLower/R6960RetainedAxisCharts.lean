@@ -12,7 +12,7 @@ open MonicChart (ChartField)
 open MonicFourChartDescent ChartSections MonicChartLaurent MonicChartProbes RetainedRestrictionTorus ChartOverlapTests
 open Module Submodule LinearMap Algebra Polynomial
 open scoped Polynomial Lower6960.RetainedSurfaceClass
-open private Lower6960.RetainedSurfaceClass.chartSpace from ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
+open Lower6960.RetainedSurfaceClass (chartSpace)
 variable (E : Type) [Field E] [Algebra ChartField E]
 
 /-- The orientation places the fixed coordinate outside and the variable along the
@@ -20,28 +20,28 @@ line inside the iterated polynomial ring. The latter may be reciprocal. -/
 def oriented (j b : Bool) : PlaneConstants.Plane L ≃+*baseChart (reference j b) :=
   if j then Bivariate.swap.toRingEquiv.trans (planeEquiv _) else planeEquiv _
 
-private theorem oriented_var (j b : Bool) :
+theorem oriented_var (j b : Bool) :
     ((oriented j b Polynomial.X):ChartField)=coordinate j := by
   cases j <;> change planeMap _ _=_
   · simp [reference,coordinate,chartCoordinate]
   · change planeMap _ (Bivariate.swap Polynomial.X)=_
     rw [Bivariate.swap_Y,planeMap_scalar]; rfl
 
-private theorem oriented_line (j b : Bool) :
+theorem oriented_line (j b : Bool) :
     ((oriented j b (C Polynomial.X)):ChartField)=chartCoordinate b (coordinate (!j)) := by
   cases j <;> change planeMap _ _=_
   · rw [planeMap_scalar]; rfl
   · change planeMap _ (Bivariate.swap (C Polynomial.X))=_
     rw [Bivariate.swap_X,planeMap_abscissa]; rfl
 
-private theorem oriented_const (j b : Bool) (r:L) :
+theorem oriented_const (j b : Bool) (r:L) :
     ((oriented j b (C (C r))):ChartField)=constants r := by
   cases j <;> change planeMap _ _=_
   · exact planeMap_constants ..
   · change planeMap _ (Bivariate.swap (C (C r)))=_
     rw [Bivariate.swap_C_C,planeMap_constants]
 
-def along (j b:Bool) : L[X]→+* Tor E :=
+def along (j b:Bool) : (Polynomial L)→+* Tor E :=
   let x:=chartCoordinate b (coordinate (!j))
   let t : Tor E:=⟨algebraMap ChartField E x,
     isIntegral_algebraMap (x:=(⟨x,torus_coordinate (!j) b⟩:torus))⟩
@@ -51,10 +51,10 @@ def intoTorus (s:Chart) : integralClosure (baseChart s) E →+* Tor E :=
   Subring.inclusion (show (integralClosure (baseChart s) E).toSubring≤(Tor E).toSubring
     from fun _ h=>order_mono (base_torus s) h)
 
-private def embedBase (s:Chart) : baseChart s→+*Tor E :=
+def embedBase (s:Chart) : baseChart s→+*Tor E :=
   (intoTorus E s).comp (algebraMap (baseChart s) (integralClosure (baseChart s) E))
 
-private theorem finite_along (j b:Bool) (P:L[X]) :
+theorem finite_along (j b:Bool) (P:(Polynomial L)) :
     embedBase E (reference j b) (oriented j b (C P))=along E j b P := by
   let h:=(embedBase E (reference j b)).comp ((oriented j b).toRingHom.comp C)
   have eq : h=along E j b := Polynomial.ringHom_ext
@@ -70,7 +70,7 @@ private theorem finite_along (j b:Bool) (P:L[X]) :
       simp [along,eval₂RingHom])
   exact DFunLike.congr_fun eq P
 
-def polyMap (j:Bool) (c:L) (b:Bool) : L[X]→+*Axis E j c :=
+def polyMap (j:Bool) (c:L) (b:Bool) : (Polynomial L)→+*Axis E j c :=
   (Ideal.Quotient.mk (axisIdeal E j c)).comp (along E j b)
 
 private theorem eval_fixed (j:Bool) (c:L) (b:Bool) (P:PlaneConstants.Plane L) :
@@ -99,9 +99,9 @@ private theorem eval_fixed (j:Bool) (c:L) (b:Bool) (P:PlaneConstants.Plane L) :
   exact DFunLike.congr_fun eq P
 
 def polyImage (j:Bool) (c:L) (b:Bool) :
-    letI : Module L[X] (Axis E j c) := Module.compHom _ (polyMap E j c b)
-    Submodule L[X] (Axis E j c) := by
-  letI : Module L[X] (Axis E j c) := Module.compHom _ (polyMap E j c b)
+    letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (polyMap E j c b)
+    Submodule (Polynomial L) (Axis E j c) := by
+  letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (polyMap E j c b)
   refine { carrier := (chartImage E j c b : Set _)
            zero_mem' := (chartImage E j c b).zero_mem
            add_mem' := (chartImage E j c b).add_mem
@@ -117,19 +117,19 @@ def polyImage (j:Bool) (c:L) (b:Bool) :
 module over the ordinary polynomial ring of the line. -/
 theorem chart_finite [FiniteDimensional ChartField E] [Algebra.IsSeparable ChartField E]
     (j:Bool) (c:L) (b:Bool) :
-    letI : Module L[X] (Axis E j c) := Module.compHom _ (polyMap E j c b)
-    Module.Finite L[X] (polyImage E j c b) := by
+    letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (polyMap E j c b)
+    Module.Finite (Polynomial L) (polyImage E j c b) := by
   classical
-  letI : Module L[X] (Axis E j c) := Module.compHom _ (polyMap E j c b)
+  letI : Module (Polynomial L) (Axis E j c) := Module.compHom _ (polyMap E j c b)
   let s:=reference j b
   let A:=baseChart s
   let O:=integralClosure A E
   have fin := IsIntegralClosure.finite A ChartField E O
   obtain ⟨G,gen⟩:=fin.1
-  let V : Submodule L[X] (Axis E j c) := polyImage E j c b
-  let : Module L[X] V := V.module
+  let V : Submodule (Polynomial L) (Axis E j c) := polyImage E j c b
+  let : Module (Polynomial L) V := V.module
   let f (a:O):V:=⟨red E j c (intoTorus E s a),⟨_,a.property,rfl⟩⟩
-  let h: Submodule L[X] V := Submodule.span L[X] ((G.image f : Finset V):Set V)
+  let h: Submodule (Polynomial L) V := Submodule.span (Polynomial L) ((G.image f : Finset V):Set V)
   refine ⟨⟨G.image f,top_unique (fun v _ => ?_)⟩⟩
   suffices covers : ∀ w:O, w∈Submodule.span A (G:Set O) → f w∈h by
     obtain ⟨u,hu,eq⟩:=v.property

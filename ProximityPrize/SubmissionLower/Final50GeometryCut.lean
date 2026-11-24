@@ -11,7 +11,7 @@ open P3 (K)
 open Final50Price (SmallFactor physicalDegree primaryBox primaryCutoff taylorLength TrueWeightLE)
 open K1_13 (Geom Row Shape shape extend InBox OnFactor OrderAt chart mixed32)
 open K1_13_6 (HighChart toGeneric markIdeal separant jetNumerator divisorIdeal cycleLength)
-structure CutInput (Γ : Finset K) (s : K → K[X]) (f Q : Row 4) (l : ℕ) : Prop where
+structure CutInput (Γ : Finset K) (s : K → (Polynomial K)) (f Q : Row 4) (l : ℕ) : Prop where
   distinct : Set.InjOn s (Γ : Set K)
   degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ physicalDegree
   small : SmallFactor f
@@ -49,8 +49,8 @@ open K1_13_6_1_3 (tangent_box anchor_fits derivative_fits)
 open Final50Price (SmallFactor primaryBox)
 open Final50GeometryCut (CutInput)
 open P0_9_6_1 (SurfaceCut canonicalChart)
-open private lowHasse chart_cut derivative_proper box_charge box_cutter_charge from ProximityPrize.SubmissionLower.PortLow6
-open private topAt topAt_coeff eval_topAt topView_separant from ProximityPrize.SubmissionLower.Fast056
+open P0_9_6_1 (lowHasse chart_cut derivative_proper box_charge box_cutter_charge)
+open K1_13_7_1 (topAt topAt_coeff eval_topAt topView_separant)
 
 end
 end Final50GeometryCut_1
@@ -67,8 +67,7 @@ open Final50Price (SmallFactor primaryBox taylorLength)
 open Final50GeometryCut (auxCurves32 auxPoints32)
 open P0_9_6_1 (SurfaceCut)
 open scoped BigOperators
-open private proper_divisor additive_sections weighted_pair full_chart full_plus
-  chamber_scale full_scale supported_charge sum_biUnion_bound toGeneric_ne_zero from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_1_1 (proper_divisor additive_sections weighted_pair full_chart full_plus chamber_scale full_scale supported_charge sum_biUnion_bound toGeneric_ne_zero)
 end
 end Final50GeometryCut_1
 end
@@ -85,7 +84,7 @@ open K1_13_6_1_5 (coordinate_cut)
 open K1_13_7 (RegularAt)
 open K1_13_7_1 (Chamber GeoFits derivative_in_box shape_chamber toGeneric_fits)
 open P0_9_6_1_2 (exists_value_cut)
-open private count_points count_marks chart_has_simplex from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_1_2 (count_points count_marks chart_has_simplex)
 end
 end Final50GeometryCut_1
 end
@@ -118,17 +117,17 @@ def c1 : Prop :=
 
 
 
-private theorem eval_jetNumerator_zero (g : Row 4) (S : Geom[X])
+private theorem eval_jetNumerator_zero (g : Row 4) (S : (Polynomial Geom))
     (hg : atJet g S = 0) (n : ℕ) (hS : S.natDegree < n) :
     atJet (jetNumerator g n) S = 0 := by
   rw [eval_jetNumerator _ _ hg, iterate_derivative_eq_zero hS, mul_zero]
-theorem eval_membership_tests (g : Row 4) (S : Geom[X])
+theorem eval_membership_tests (g : Row 4) (S : (Polynomial Geom))
     (hg : atJet g S = 0) (hS : S.natDegree ≤ 133484) :
     atJet (membershipTest g) S = 0 ∧ atJet (nextTest g) S = 0 :=
   ⟨eval_jetNumerator_zero g S hg taylorLength (Nat.lt_succ_of_le hS),
     eval_jetNumerator_zero g S hg (taylorLength + 1)
       ((Nat.lt_succ_of_le hS).trans (Nat.lt_succ_self _))⟩
-private def chargedPrice (x : Shape) (l scale budget : ℕ) : ℕ :=
+def chargedPrice (x : Shape) (l scale budget : ℕ) : ℕ :=
   ceilDiv (ceilDiv budget scale +
     ceilDiv ((82258 + 2 * 46402) * membershipDegree x) 46402) l +
   2 * (133484 * x.b * primaryBox.b) +
@@ -214,7 +213,7 @@ def Chart4 {f Q l} (b : Branch f Q l) : Prop :=
   Box4 (chart (taylorLength + 1) p) b.member ∧
     Box4 (chart (taylorLength + 2) p) b.next ∧
     ∀ x a : K, ∃ D, Box4 (chart (taylorLength + 2) p) D ∧
-      ∀ S : K[X], S.natDegree ≤ physicalDegree → b.Contains (actualPoint (extend S)) →
+      ∀ S : (Polynomial K), S.natDegree ≤ physicalDegree → b.Contains (actualPoint (extend S)) →
         (MvPolynomial.eval (actualPoint (extend S)) D = 0 ↔ S.eval x = a)
 end
 end Final50GeometryCut_2
@@ -230,7 +229,7 @@ open K1_13_1 (indexDegree_eq)
 open K1_13_6 (GeoJets GenericField GeoField genericCoeffs toGeneric separant)
 open K1_13_6_2 (JetPoint GeoJets5 actualPoint)
 open scoped BigOperators
-private theorem eval_actualPoint (S : Geom[X]) (P : Row 4) :
+theorem eval_actualPoint (S : (Polynomial Geom)) (P : Row 4) :
     MvPolynomial.eval (actualPoint S) (toGeneric P) = genericCoeffs (atJet P S) := by
   rw [toGeneric, MvPolynomial.eval_map]
   change MvPolynomial.eval₂ genericCoeffs (⇑genericCoeffs ∘ jet S) P = _
@@ -240,15 +239,15 @@ namespace Branch
 variable {f Q : Row 4} {l : ℕ}
 theorem next_proper (b : Branch f Q l) (h : b.Simple) : b.next ∉ b.curve :=
   b.terminal.resolve_left (fun hne => hne h)
-theorem g_actual (b : Branch f Q l) {S : Geom[X]}
+theorem g_actual (b : Branch f Q l) {S : (Polynomial Geom)}
     (h : b.Contains (actualPoint S)) : atJet b.g S = 0 :=
   K1_13_6_1.mem_markIdeal.mp
     (h.1 ((le_trans le_sup_left b.divisor.le) (b.chart.2.1 b.r le_rfl)))
-theorem regular_actual (b : Branch f Q l) {S : Geom[X]}
+theorem regular_actual (b : Branch f Q l) {S : (Polynomial Geom)}
     (h : b.Contains (actualPoint S)) : atJet (separant b.g) S ≠ 0 := by
   intro hz
   exact h.2 (by rw [Branch.sigma, eval_actualPoint, hz, map_zero])
-theorem next_actual (b : Branch f Q l) {S : Geom[X]} (h : b.Contains (actualPoint S))
+theorem next_actual (b : Branch f Q l) {S : (Polynomial Geom)} (h : b.Contains (actualPoint S))
     (hd : S.natDegree ≤ physicalDegree) : MvPolynomial.eval (actualPoint S) b.next = 0 := by
   rw [next, eval_actualPoint, (eval_membership_tests _ _ (b.g_actual h) hd).2, map_zero]
 end Branch
@@ -291,7 +290,7 @@ private structure TaylorChart where
   numerator : TaylorIndex → GeoJets
 private def TaylorChart.Fits (C : TaylorChart) (h : Shape) : Prop :=
   GeoFits C.denom h ∧ ∀ i, GeoFits (C.numerator i) h
-private def TaylorChart.Recovers (C : TaylorChart) (S : Geom[X]) : Prop :=
+private def TaylorChart.Recovers (C : TaylorChart) (S : (Polynomial Geom)) : Prop :=
   evalGeneric S C.denom ≠ 0 ∧
     ∀ i, evalGeneric S (C.numerator i) =
       evalGeneric S C.denom * genericCoeffs (hasseDeriv i.val S)
@@ -358,21 +357,21 @@ private theorem chart_fits {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {p : 
   · intro i
     exact three_weights hg hp ht (fun w Δ d₀ _ hs hw hwB hB =>
       numerator_bound hL w Δ d₀ hs hw hwB hB i)
-private theorem ordinary_eq_hasse (S : Geom[X]) (n : ℕ) :
+private theorem ordinary_eq_hasse (S : (Polynomial Geom)) (n : ℕ) :
     derivative^[n] S = Polynomial.C (n.factorial : Geom) * hasseDeriv n S := by
   ext m
   rw [coeff_iterate_derivative, Polynomial.coeff_C_mul, hasseDeriv_coeff,
     Nat.descFactorial_eq_factorial_mul_choose]
   simp only [nsmul_eq_mul, Nat.cast_mul, mul_assoc]
-private theorem eval_generic (S : Geom[X]) (P : Row 4) :
+private theorem eval_generic (S : (Polynomial Geom)) (P : Row 4) :
     evalGeneric S (toGeneric P) = genericCoeffs (atJet P S) :=
   (MvPolynomial.map_eval genericCoeffs (jet S) P).symm
 private theorem generic_injective : Function.Injective genericCoeffs :=
-  (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective Geom[X] GenericField)
-private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {S : Geom[X]}
+  (algebraMap GenericField GeoField).injective.comp (IsFractionRing.injective (Polynomial Geom) GenericField)
+private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {S : (Polynomial Geom)}
     (hg : atJet g S = 0) (hr : atJet (separant g) S ≠ 0) : (taylorChart L g).Recovers S := by
   have hden : atJet (denominator L g) S = atJet (separant g) S ^ (2 * L) :=
-    map_pow (MvPolynomial.eval (jet S : Fin 4 → Geom[X])) _ _
+    map_pow (MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))) _ _
   constructor
   · change evalGeneric S (toGeneric (denominator L g)) ≠ 0
     rw [eval_generic]
@@ -389,7 +388,7 @@ private theorem chart_recovers {L : ℕ} (hL : taylorLength ≤ L) {g : Row 4} {
     · unfold atJet
       rw [map_mul, MvPolynomial.eval_X, mul_comm]
       rfl
-    · let E := MvPolynomial.eval (jet S : Fin 4 → Geom[X])
+    · let E := MvPolynomial.eval (jet S : Fin 4 → (Polynomial Geom))
       change E (_ * (_ ^ _ * _)) = _
       rw [map_mul, map_mul, map_pow, MvPolynomial.eval_C]
       change _ * (atJet (separant g) S ^ (2 * (L - i.val)) *
@@ -410,7 +409,7 @@ private def constants : Geom →+* GeoField :=
   genericCoeffs.comp Polynomial.C
 private def center : GeoField :=
   genericCoeffs Polynomial.X
-private theorem eval_center (S : Geom[X]) : (S.map constants).eval center = genericCoeffs S := by
+private theorem eval_center (S : (Polynomial Geom)) : (S.map constants).eval center = genericCoeffs S := by
   rw [Polynomial.eval_map]
   change eval₂RingHom constants center S = genericCoeffs S
   congr 1
@@ -418,7 +417,7 @@ private theorem eval_center (S : Geom[X]) : (S.map constants).eval center = gene
   · intro a
     simp [constants]
   · simp [center]
-private theorem taylor_sum {S : Geom[X]} (hS : S.natDegree < taylorLength) (x : Geom) :
+private theorem taylor_sum {S : (Polynomial Geom)} (hS : S.natDegree < taylorLength) (x : Geom) :
     (∑ i : TaylorIndex, (constants x - center) ^ i.val * genericCoeffs (hasseDeriv i.val S)) =
       constants (S.eval x) := by
   let T := (S.map constants).taylor center
@@ -435,7 +434,7 @@ private theorem taylor_sum {S : Geom[X]} (hS : S.natDegree < taylorLength) (x : 
   rw [taylor_coeff, hasseDeriv_map, eval_center, mul_comm]
 private def valueForm (x a : Geom) : AffineForm :=
   (-(constants a), fun i => (constants x - center) ^ i.val)
-private theorem eval_value {C : TaylorChart} {S : Geom[X]}
+private theorem eval_value {C : TaylorChart} {S : (Polynomial Geom)}
     (h : C.Recovers S) (hd : S.natDegree < taylorLength) (x a : Geom) :
     evalGeneric S (C.pullback (valueForm x a)) = 0 ↔ S.eval x = a := by
   have evC (c : GeoField) : evalGeneric S (MvPolynomial.C c) = c := MvPolynomial.eval_C _
@@ -500,8 +499,8 @@ open K1_13_6_2_2 (lift4 generic5 rawGraph numerator denominator padded)
 open K1_13_6_2_2_2 (Chart incl S invS S_mul_invS negQuarter q constants W
   graphMap graphMap_lift graphMap_X_last)
 open scoped BigOperators
-open private compare_numerators from ProximityPrize.SubmissionLower.Fast072
-open private support_bounds topWeight fifthWeight box_of_weights from ProximityPrize.SubmissionLower.Fast074
+open K1_13_6_2_2_2 (compare_numerators)
+open K1_13_6_2_2_1 (support_bounds topWeight fifthWeight box_of_weights)
 variable {f Q : Row 4} {l : ℕ}
 @[simp] theorem onGraph_C (b : Branch f Q l) (a : GeoField) :
     b.onGraph (MvPolynomial.C a) = b.localMap (MvPolynomial.C a) := by
@@ -529,8 +528,7 @@ open K1_13_6 (GeoField genericCoeffs toGeneric separant jetNumerator eval_jetNum
 open K1_13_6_2 (JetPoint GeoJets5 actualPoint)
 open K1_13_6_2_2 (lift4 generic5 numerator denominator padded padded_last)
 open scoped BigOperators
-open private ordinary ordinary_eq_hasse const centre taylorScalar factorial_ne_zero
-  box_C_mul box_sum box_sub from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_2 (ordinary ordinary_eq_hasse const centre taylorScalar factorial_ne_zero box_C_mul box_sum box_sub)
 variable {f Q : Row 4} {l : ℕ}
 end
 end Final50GeometryCut_2_1
@@ -575,10 +573,9 @@ open K1_13_6_2_4 (Boxes Chamber Allowed Admissible allowed_coordinate
 open K1_13_6_2_4_3 (volumeProduct sumCap diagonal)
 open MvPolynomial
 open scoped BigOperators
-open private chart_chamber from ProximityPrize.SubmissionLower.Fast054
-open private diagonal_coeff from ProximityPrize.SubmissionLower.Fast054
-open private alt alt_insert alt_empty capDiff five_differences signed4_le
-  from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_4 (chart_chamber)
+open K1_13_6_2_4_3 (diagonal_coeff)
+open K1_13_6_2_4_3 (alt alt_insert alt_empty capDiff five_differences signed4_le)
 end
 end Final50GeometryCut_2_3
 end
@@ -615,9 +612,8 @@ open Final50GeometryCut_2 (Branch)
 open K1_13_6 (GeoField GeoJets partialFlow toGeneric)
 open K1_13_6_2 (GeoJets5)
 open K1_13_6_2_4 (OfDim cylinder oldEmbedding one_le_length sectionIdeal)
-open private K1_13_6_2_4_5.four_ne_zero substituteLast substituteLast_old
-  from ProximityPrize.SubmissionLower.Fast054
-open private dim_after_proper_cut from ProximityPrize.SubmissionLower.Fast072
+open K1_13_6_2_4_5 (four_ne_zero substituteLast substituteLast_old)
+open K1_13_6_2_4_5 (dim_after_proper_cut)
 end
 end Final50GeometryCut_2_3_1
 end
@@ -630,8 +626,8 @@ open K1_13_6 (GeoField GeoJets toGeneric partialFlow divisorIdeal cycleLength)
 open K1_13_6_2 (GeoJets5)
 open K1_13_6_2_3 (localWeight weight_cast weight_pos)
 open K1_13_6_2_4 (OfDim LengthAt sectionIdeal oldEmbedding)
-open private four_ne_zero from ProximityPrize.SubmissionLower.Fast054
-open private length_le_of_surjection dim_after_proper_cut from ProximityPrize.SubmissionLower.Fast072
+open K1_13_6_2_4_5 (four_ne_zero)
+open K1_13_6_2_4_5 (length_le_of_surjection dim_after_proper_cut)
 local notation "memberDiv" b => divisorIdeal (Branch.surface b) (membershipTest (Branch.g b))
 end
 end Final50GeometryCut_2_3_2
@@ -652,7 +648,7 @@ set_option autoImplicit false
 namespace Final50GeometryCut_3
 noncomputable section
 open K1_13 K1_13_6 MvPolynomial
-open private iterate_separant_degree jetNumerator_degree from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_3 (iterate_separant_degree jetNumerator_degree)
 end
 end Final50GeometryCut_3
 end
@@ -664,8 +660,7 @@ open K1_13 K1_13_6
 open K1_13_6_3 (JetIdeal)
 open K1_13_6_3_1
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-open private flat_sepToGeo map_eq_maximal_of_length_one step_in_sep sep_sq_dvd_jet
-  nonvanishing_of_simple_cut stable_of_simple_cut from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_3 (flat_sepToGeo map_eq_maximal_of_length_one step_in_sep sep_sq_dvd_jet nonvanishing_of_simple_cut stable_of_simple_cut)
 end
 end Final50GeometryCut_3
 end
@@ -678,8 +673,8 @@ open K1_13_6_3 (JetIdeal dimension cycleWeight)
 open K1_13_6_3_6 MvPolynomial
 open P0_9_6_3 (CutCycle)
 open scoped BigOperators
-open private P0_9_6_2_3.geometric_regular from ProximityPrize.SubmissionLower.PortLow6
-open private coefficient_budget from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_2_3 (geometric_regular)
+open P0_9_6_3 (coefficient_budget)
 end
 end Final50GeometryCut_3
 end
@@ -689,8 +684,7 @@ namespace Final50GeometryCut_3
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_3 MvPolynomial
 open scoped Polynomial
-open private fresh_prime fresh_birational dim_fresh_of_recovery dim_lt_of_prime_lt
-  from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_3 (fresh_prime fresh_birational dim_fresh_of_recovery dim_lt_of_prime_lt)
 end
 end Final50GeometryCut_3
 end
@@ -703,22 +697,20 @@ open K1 K1_13 K1_13_6 Polynomial MvPolynomial
 open K1_13_6_3
 open Final50Price (primaryBox)
 open P0_9_6_3 (freshImage_injective)
-open private curve_degree markPoint_inj canonical_unique cycleWeight_ge surface_sum
-  from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_3 (curve_degree markPoint_inj canonical_unique cycleWeight_ge surface_sum)
 open scoped BigOperators
 end
 end Final50GeometryCut_3
 end
 section
 set_option autoImplicit false
-set_option maxRecDepth 12000
+set_option maxRecDepth 200000
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 1200000
 namespace Final50GeometryCut_3_1
 noncomputable section
 open K1_13 K1_13_6 K1_13_6_3 K1_13_6_3_2 Polynomial
-open private iterate_zero_of_le differentialTaylor_degree rowAt_eval initial_dividedIterate
-  chartTaylor_toComponent from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_3_1 (iterate_zero_of_le differentialTaylor_degree rowAt_eval initial_dividedIterate chartTaylor_toComponent)
 end
 end Final50GeometryCut_3_1
 end

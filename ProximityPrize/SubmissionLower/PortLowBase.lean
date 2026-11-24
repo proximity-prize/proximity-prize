@@ -18,18 +18,18 @@ abbrev primaryBox : Shape := ⟨4012, 1650, 550⟩
 def TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) : Prop :=
   ∀ m ∈ P.support, (P.coeff m).natDegree +
     m.sum (fun i a => (physicalDegree - i.val) * a) ≤ D
-structure PoleData (Γ : Finset K) (s : K → K[X]) where
-  H : Geom[X]
+structure PoleData (Γ : Finset K) (s : K → (Polynomial K)) where
+  H : (Polynomial Geom)
   monic : H.Monic
   small : 1 ≤ H.natDegree ∧ H.natDegree ≤ P0.lowCutoff.toNat
   nodes : ∀ i, H.eval (embed (node i)) ≠ 0
   degree : ∀ γ ∈ Γ, (s γ).natDegree ≤ k - 1 + H.natDegree
   z : K → Geom
   injective : Function.Injective z
-  c : Geom[X]
-  q : Geom[X]
-  a₀ : Geom[X]
-  a₁ : Geom[X]
+  c : (Polynomial Geom)
+  q : (Polynomial Geom)
+  a₀ : (Polynomial Geom)
+  a₁ : (Polynomial Geom)
   c_unit : IsCoprime c H
   q_unit : IsCoprime q H
   a₀_unit : IsCoprime a₀ H
@@ -65,7 +65,7 @@ noncomputable section
 open K1_13 (Geom)
 open PolynomialDifferential ReedSolomon.HiddenDerivative MvPolynomial
 open scoped BigOperators
-open private exponent_le_of_mem_translation_monomial from ProximityPrize.SubmissionLower.Fast064
+open K1_13_1_1 (exponent_le_of_mem_translation_monomial)
 private def truncateX : DifferentialPolynomial Geom 3 →ₗ[Geom] DifferentialPolynomial Geom 3 :=
   filterSupport (fun u => u none < 90)
 private theorem origin_monomial_zero (u : JetVariable 3 →₀ ℕ) (a : Geom)
@@ -162,10 +162,10 @@ def SourceSpace : Submodule Geom SourcePolynomial :=
   MvPolynomial.restrictSupport Geom sourceExponents
 instance : Module.Finite Geom SourceSpace :=
   MvPolynomial.restrictSupport_finite sourceExponents_finite
-private theorem weight_eq_sum (m : Fin 4 →₀ ℕ) (weight : Fin 4 → ℕ) :
+theorem weight_eq_sum (m : Fin 4 →₀ ℕ) (weight : Fin 4 → ℕ) :
     m.weight weight = m.sum (fun i a => weight i * a) := by
   simp only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm]
-private theorem pointContact {m : ℕ} (x y : Geom) (Q : SourcePolynomial) (S : Geom[X])
+theorem pointContact {m : ℕ} (x y : Geom) (Q : SourcePolynomial) (S : (Polynomial Geom))
     (hS : S.eval x = y) (hQ : SatisfiesLocalConstraints m x y Q) :
     (Polynomial.X - Polynomial.C x) ^ m ∣ differentialSpecialization Q S := by
   exact X_sub_C_pow_dvd_differentialSpecialization_of_contact Q S x y hS hQ
@@ -188,7 +188,7 @@ open K1_13 PolynomialDifferential ReedSolomon.HiddenDerivative
 open K1_13_2 (SourceExponent Local toRow)
 open P0 (I K node)
 open scoped BigOperators
-private theorem high_monomial_vanishes (e : SourceExponent) (c : Geom) (he : 3000 ≤ e none) :
+theorem high_monomial_vanishes (e : SourceExponent) (c : Geom) (he : 3000 ≤ e none) :
     localConstraintAt 3000 0 0 (MvPolynomial.monomial e c) = 0 := by
   change MvPolynomial.weightedTruncation (localContactWeight 3) 3000
     (MvPolynomial.bind₁ (unscaledLocalImage 3 0 0) (MvPolynomial.monomial e c)) = 0
@@ -204,7 +204,7 @@ private theorem high_monomial_vanishes (e : SourceExponent) (c : Geom) (he : 300
     | some j => simp
   · exact (MvPolynomial.monomial_mem_restrictWeightedOrder _ _ _ _).mpr
       (Or.inl (by simpa only [Finsupp.weight_elim_one_zero] using he))
-private theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Geom V]
+theorem map_independent_family {V W : Type*} [AddCommGroup V] [Module Geom V]
     [AddCommGroup W] [Module Geom W] {n : ℕ} (f : V →ₗ[Geom] W)
     (hf : Function.Injective f) (P : W → Prop) (hP : ∀ x, P (f x))
     (hn : n ≤ Module.finrank Geom V) :
@@ -253,11 +253,11 @@ private theorem bankRow_iff {w : I → K} {T : ℕ} {P : Row 4} :
   · rintro ⟨h, hc⟩
     exact ⟨⟨fun m hm => (h m hm).1, fun m hm => (h m hm).2.1, fun m hm => (h m hm).2.2.1⟩,
       fun m hm => (h m hm).2.2.2, hc⟩
-private def jetEval (S : Geom[X]) : Row 4 →ₗ[Geom] Geom[X] :=
+def jetEval (S : (Polynomial Geom)) : Row 4 →ₗ[Geom] (Polynomial Geom) :=
   (MvPolynomial.aeval (jet S)).toLinearMap.restrictScalars Geom
-private theorem jetEval_apply (S : Geom[X]) (P : Row 4) : jetEval S P = atJet P S := by
+theorem jetEval_apply (S : (Polynomial Geom)) (P : Row 4) : jetEval S P = atJet P S := by
   rfl
-private theorem dvd_smul_poly (d P : Geom[X]) (c : Geom) (h : d ∣ P) :
+theorem dvd_smul_poly (d P : (Polynomial Geom)) (c : Geom) (h : d ∣ P) :
     d ∣ c • P := by
   rw [Polynomial.smul_eq_C_mul]
   exact h.mul_left _
@@ -318,12 +318,12 @@ private def bank (w : I → K) (T : ℕ) : Submodule Geom (Row 4) where
       rw [jetEval_apply, jetEval_apply] at h
       rw [h]
       exact dvd_smul_poly _ _ c (hp i S hS)
-private def coefficientArray (T : ℕ) :
+def coefficientArray (T : ℕ) :
     Row 4 →ₗ[Geom] (((Fin 4 → Fin 4013) × Fin (T + 1)) → Geom) :=
   LinearMap.pi fun u =>
     (Polynomial.lcoeff Geom u.2.val).comp
-      ((MvPolynomial.lcoeff Geom[X] (Finsupp.equivFunOnFinite.symm (fun i => (u.1 i).val))
-        : Row 4 →ₗ[Geom[X]] Geom[X]).restrictScalars Geom)
+      ((MvPolynomial.lcoeff (Polynomial Geom) (Finsupp.equivFunOnFinite.symm (fun i => (u.1 i).val))
+        : Row 4 →ₗ[(Polynomial Geom)] (Polynomial Geom)).restrictScalars Geom)
 private instance finiteBank (w : I → K) (T : ℕ) : Module.Finite Geom (bank w T) := by
   classical
   let f : bank w T →ₗ[Geom] (((Fin 4 → Fin 4013) × Fin (T + 1)) → Geom) :=
@@ -358,18 +358,18 @@ private instance finiteBank (w : I → K) (T : ℕ) : Module.Finite Geom (bank w
   have hz := f.map_sub P Q
   rw [h, sub_self] at hz
   exact hzero (P - Q) hz
-private def symbolLinear (x : Geom) : Row 4 →ₗ[Geom] Symbol :=
+def symbolLinear (x : Geom) : Row 4 →ₗ[Geom] Symbol :=
   ({ symbolAt x with
       commutes' := by
         intro a
         change MvPolynomial.map (evalRingHom x) (MvPolynomial.C (Polynomial.C a)) =
           MvPolynomial.C a
         simp } : Row 4 →ₐ[Geom] Symbol).toLinearMap
-private def linearFactor (x : Geom) : Geom[X] := (Polynomial.X : Geom[X]) - Polynomial.C x
-private theorem linearFactor_ne (x : Geom) : linearFactor x ≠ 0 := X_sub_C_ne_zero x
-private theorem linearFactor_degree (x : Geom) : (linearFactor x).natDegree = 1 :=
+def linearFactor (x : Geom) : (Polynomial Geom) := (Polynomial.X : (Polynomial Geom)) - Polynomial.C x
+theorem linearFactor_ne (x : Geom) : linearFactor x ≠ 0 := X_sub_C_ne_zero x
+theorem linearFactor_degree (x : Geom) : (linearFactor x).natDegree = 1 :=
   natDegree_X_sub_C x
-private theorem divide_specialization (P : Row 4) (x : Geom) (hP : symbolAt x P = 0) :
+theorem divide_specialization (P : Row 4) (x : Geom) (hP : symbolAt x P = 0) :
     ∃ Q : Row 4, MvPolynomial.C (linearFactor x) * Q = P := by
   let Q : Row 4 := AddMonoidAlgebra.ofCoeff
     (Finsupp.mapRange.linearMap (divByMonicHom (linearFactor x)) (AddMonoidAlgebra.coeff P))
@@ -382,7 +382,7 @@ private theorem divide_specialization (P : Row 4) (x : Geom) (hP : symbolAt x P 
   rw [MvPolynomial.coeff_C_mul]
   change (linearFactor x) * ((P.coeff m) /ₘ (linearFactor x)) = P.coeff m
   exact mul_divByMonic_eq_iff_isRoot.mpr hroot
-private theorem support_linear_mul (x : Geom) (P : Row 4) :
+theorem support_linear_mul (x : Geom) (P : Row 4) :
     (MvPolynomial.C (linearFactor x) * P).support = P.support := by
   ext m
   rw [MvPolynomial.mem_support_iff, MvPolynomial.mem_support_iff, MvPolynomial.coeff_C_mul]
@@ -400,7 +400,7 @@ open P0_9 ( SmallFactor  TrueWeightLE physicalDegree primaryBox
 open K1_13 (Geom embed extend Row shape InBox OrderAt indexDegree remaining)
 open K1_13_3 (symbolAt symbolIndex cofactor_rank)
 open scoped BigOperators
-private theorem exists_fresh {n : ℕ} (f : Fin n → Row 4) :
+theorem exists_fresh {n : ℕ} (f : Fin n → Row 4) :
     ∃ x : Geom, (∀ i : I, x ≠ embed (node i)) ∧
       ∀ i, (symbolAt x (f i)).support = (f i).support := by
   classical
@@ -421,12 +421,12 @@ private theorem exists_fresh {n : ℕ} (f : Fin n → Row 4) :
       (Polynomial.mem_roots (MvPolynomial.mem_support_iff.mp hm)).mpr heval
     exact hx.2 (Finset.mem_biUnion.mpr
       ⟨i, Finset.mem_univ _, Finset.mem_biUnion.mpr ⟨m, hm, Multiset.mem_toFinset.mpr hroot⟩⟩)
-private theorem specialization_bounds (x : Geom) (P : Row 4)
+theorem specialization_bounds (x : Geom) (P : Row 4)
     (hP : InBox (shape P) primaryBox) :
     (symbolAt x P).totalDegree ≤ 4012 ∧ symbolIndex (symbolAt x P) ≤ 1650 := by
   have h : (symbolAt x P).support ⊆ P.support := MvPolynomial.support_map_subset _ _
   exact ⟨(Finset.sup_mono h).trans hP.1, (Finset.sup_mono h).trans hP.2.1⟩
-private theorem sum_by_layer (W E : ℕ) (hE : 0 < E) (cost : ℕ → ℕ) :
+theorem sum_by_layer (W E : ℕ) (hE : 0 < E) (cost : ℕ → ℕ) :
     (∑ T ∈ Finset.range (W + 1), cost ((W - T) / E)) ≤
       E * ∑ k ∈ Finset.range (1 + W / E), cost k := by
   let S := Finset.range (W + 1)
@@ -472,12 +472,12 @@ open Polynomial
 open P0_9 (SmallFactor  TrueWeightLE physicalDegree primaryBox primaryCutoff)
 open K1_13 (Geom embed extend Row shape InBox OrderAt indexDegree shiftJet jet)
 private abbrev Exponent := Fin 4 →₀ ℕ
-private def translateTop : Row 4 →+* Polynomial (Row 4) :=
+def translateTop : Row 4 →+* Polynomial (Row 4) :=
   MvPolynomial.eval₂Hom (Polynomial.C.comp MvPolynomial.C) fun i =>
     Polynomial.C (MvPolynomial.X i) + if i = 3 then Polynomial.X else 0
-private def topHasse (a : ℕ) (P : Row 4) : Row 4 :=
+def topHasse (a : ℕ) (P : Row 4) : Row 4 :=
   (translateTop P).coeff a
-private theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0) :
+private theorem translate_independent (m : Exponent) (c : (Polynomial Geom)) (hm : m 3 = 0) :
     translateTop (MvPolynomial.monomial m c) = Polynomial.C (MvPolynomial.monomial m c) := by
   rw [translateTop, MvPolynomial.eval₂Hom_monomial, MvPolynomial.monomial_eq, map_mul]
   simp only [RingHom.comp_apply]
@@ -492,18 +492,18 @@ private theorem translate_independent (m : Exponent) (c : Geom[X]) (hm : m 3 = 0
   simp [hne]
 private theorem translate_top_pow_coeff (n a : ℕ) :
     ((Polynomial.C (MvPolynomial.X (3 : Fin 4) : Row 4) + Polynomial.X) ^ n).coeff a =
-      MvPolynomial.C (↑(n.choose a) : Geom[X]) * MvPolynomial.X 3 ^ (n - a) := by
+      MvPolynomial.C (↑(n.choose a) : (Polynomial Geom)) * MvPolynomial.X 3 ^ (n - a) := by
   rw [add_comm, ← Polynomial.taylor_X_pow, Polynomial.taylor_coeff,
     Polynomial.X_pow_eq_monomial, Polynomial.hasseDeriv_monomial]
   simp [Polynomial.eval_monomial]
-private theorem erase_top_add (u : Exponent) :
+theorem erase_top_add (u : Exponent) :
     u.erase 3 + Finsupp.single 3 (u 3) = u := by
   ext i
   by_cases hi : i = 3
   · subst i
     simp
   · simp [Finsupp.erase_ne hi, Finsupp.single_eq_of_ne hi]
-private theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : Geom[X]) :
+private theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : (Polynomial Geom)) :
     topHasse a (MvPolynomial.monomial u c) =
       MvPolynomial.monomial (u.erase 3 + Finsupp.single 3 (u 3 - a)) (↑((u 3).choose a) * c) := by
   have hu : MvPolynomial.monomial u c =
@@ -516,9 +516,9 @@ private theorem topHasse_monomial (a : ℕ) (u : Exponent) (c : Geom[X]) :
     Polynomial.coeff_C_mul, translate_top_pow_coeff, ← mul_assoc]
   rw [mul_comm (MvPolynomial.monomial (u.erase 3) c), MvPolynomial.C_mul_monomial,
     ← MvPolynomial.monomial_add_single]
-private theorem apply_add_top (m : Exponent) (a : ℕ) :
+theorem apply_add_top (m : Exponent) (a : ℕ) :
     (m + Finsupp.single 3 a : Exponent) 3 = m 3 + a := by simp
-private theorem topHasse_coeff (a : ℕ) (P : Row 4) (m : Exponent) :
+theorem topHasse_coeff (a : ℕ) (P : Row 4) (m : Exponent) :
     (topHasse a P).coeff m =
       ↑((m 3 + a).choose a) * P.coeff (m + Finsupp.single 3 a) := by
   classical
@@ -550,21 +550,21 @@ private theorem topHasse_coeff (a : ℕ) (P : Row 4) (m : Exponent) :
     simp only [topHasse, map_add, Polynomial.coeff_add, AddMonoidAlgebra.coeff_add,
       Finsupp.add_apply] at hP hQ ⊢
     rw [hP, hQ, mul_add]
-private theorem source_support {a : ℕ} {P : Row 4} {m : Exponent}
+theorem source_support {a : ℕ} {P : Row 4} {m : Exponent}
     (hm : m ∈ (topHasse a P).support) : m + Finsupp.single 3 a ∈ P.support := by
   rw [MvPolynomial.mem_support_iff, topHasse_coeff] at hm
   exact MvPolynomial.mem_support_iff.mpr (right_ne_zero_of_mul hm)
-private theorem sum_add_top (w : Fin 4 → ℕ) (m : Exponent) (a : ℕ) :
+theorem sum_add_top (w : Fin 4 → ℕ) (m : Exponent) (a : ℕ) :
     (m + Finsupp.single 3 a).sum (fun i k => w i * k) =
       m.sum (fun i k => w i * k) + w 3 * a := by
   rw [Finsupp.sum_add_index' (fun i => Nat.mul_zero (w i)) (fun i b c => Nat.mul_add (w i) b c),
     Finsupp.sum_single_index (h := fun i k => w i * k) (Nat.mul_zero _)]
-private theorem total_add_top (m : Exponent) (a : ℕ) :
+theorem total_add_top (m : Exponent) (a : ℕ) :
     (m + Finsupp.single 3 a).sum (fun _ k => k) = m.sum (fun _ k => k) + a := by
   simpa only [one_mul] using sum_add_top (fun _ => 1) m a
-private def shiftHom (S : Geom[X]) : Row 4 →+* Row 4 :=
+private def shiftHom (S : (Polynomial Geom)) : Row 4 →+* Row 4 :=
   MvPolynomial.eval₂Hom MvPolynomial.C (fun i => MvPolynomial.X i + MvPolynomial.C (jet S i))
-private theorem translate_shift (S : Geom[X]) :
+private theorem translate_shift (S : (Polynomial Geom)) :
     translateTop.comp (shiftHom S) = (Polynomial.mapRingHom (shiftHom S)).comp translateTop := by
   apply MvPolynomial.ringHom_ext
   · intro c
@@ -576,7 +576,7 @@ private theorem translate_shift (S : Geom[X]) :
     · simp only [hi, ite_true, Polynomial.map_X]
       exact add_right_comm _ _ _
     · simp only [hi, ite_false, Polynomial.map_zero, add_zero]
-private theorem topHasse_order (a d : ℕ) (P : Row 4) (S : Geom[X])
+theorem topHasse_order (a d : ℕ) (P : Row 4) (S : (Polynomial Geom))
     (h : OrderAt P S d) : OrderAt (topHasse a P) S (d - a) := by
   have he := RingHom.congr_fun (translate_shift S) P
   change translateTop (shiftJet P S) = (translateTop P).map (shiftHom S) at he
@@ -589,7 +589,7 @@ private theorem topHasse_order (a d : ℕ) (P : Row 4) (S : Geom[X])
   have hd := h _ (source_support hm)
   rw [total_add_top] at hd
   omega
-private theorem topHasse_zero (P : Row 4) : topHasse 0 P = P := by
+theorem topHasse_zero (P : Row 4) : topHasse 0 P = P := by
   ext m
   simp [topHasse_coeff]
 private theorem coeff_X_mul_pow {R : Type*} [CommSemiring R]
@@ -603,7 +603,7 @@ private theorem coeff_X_mul_pow {R : Type*} [CommSemiring R]
       change Polynomial.constantCoeff (V ^ a * W) =
         Polynomial.constantCoeff V ^ a * Polynomial.constantCoeff W
       rw [map_mul, map_pow]
-private theorem exact_hasse_not_dvd {R : Type*} [CommRing R]
+theorem exact_hasse_not_dvd {R : Type*} [CommRing R]
     (T : R →+* Polynomial R) (T0 : ∀ G, (T G).coeff 0 = G)
     (f P : R) (a : ℕ) (hf : Prime f) (hsep : ¬ f ∣ (T f).coeff 1)
     (hdiv : f ^ a ∣ P) (hexact : ¬ f ^ (a + 1) ∣ P) : ¬ f ∣ (T P).coeff a := by

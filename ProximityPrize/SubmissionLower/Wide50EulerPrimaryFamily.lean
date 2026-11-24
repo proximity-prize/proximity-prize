@@ -16,8 +16,8 @@ open PrimaryTaper (nodeMap wordMap row_bounds primaryBox TrueWeightLE JetsBounde
 open TaperColumns
 open KoalaTaperTransfer
 open scoped BigOperators
-open private local_range_finite from ProximityPrize.SubmissionLower.PrimaryTaperFamily
-open private map_independent_family from ProximityPrize.SubmissionLower.PortLowBase
+open PrimaryTaper (local_range_finite)
+open P0_9_2 (map_independent_family)
 
 private theorem rank_at_position {A D : ℕ} (x y : Geom) :
     Module.finrank Geom (LinearMap.range (nodeMap (A:=A) (D:=D) x y)) ≤ KoalaTaperTransfer.localRank := by

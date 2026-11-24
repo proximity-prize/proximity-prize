@@ -21,7 +21,7 @@ variable (F : Type*) [Field F] [Algebra A F] [IsFractionRing A F]
   [Algebra F E] [IsScalarTower A F E] [FiniteDimensional F E] [Algebra.IsSeparable F E]
 
 omit [IsIntegrallyClosed A] [IsNoetherianRing A] in
-private theorem integralClosure_torsionFree (F : Type*) [Field F] [Algebra A F] [IsFractionRing A F]
+theorem integralClosure_torsionFree (F : Type*) [Field F] [Algebra A F] [IsFractionRing A F]
   [Algebra F E] [IsScalarTower A F E] : Module.IsTorsionFree A (integralClosure A E) := by
   have inj : Function.Injective (algebraMap A E) := by
     rw [IsScalarTower.algebraMap_eq A F E]

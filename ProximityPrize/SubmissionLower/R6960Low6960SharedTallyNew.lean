@@ -21,9 +21,9 @@ open Low6960SharedPrice (Rate RateFits coord slope deficit weights surface surfa
 open Low6960SharedTally (Data)
 open MvPolynomial Finset
 open scoped Polynomial BigOperators
-open private minimal_pair mem_of_order from ProximityPrize.SubmissionLower.R6960Low6960SharedChooseCut
+open Low6960SharedChooseCut (minimal_pair mem_of_order)
 
-variable {Γ : Finset K} {s : K→K[X]} {f Q : Row 4} {l : ℕ} {S : Set (Ideal GeoJets)}
+variable {Γ : Finset K} {s : K→(Polynomial K)} {f Q : Row 4} {l : ℕ} {S : Set (Ideal GeoJets)}
 
 def tally (D : Data Γ s f Q l S) (F : Finset (Branch f Q l)) : ℕ :=
   ∑ b∈F,b.weight*(D.points b).card
@@ -120,7 +120,7 @@ private theorem four_count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
   apply Nat.le_of_mul_le_mul_left _ (Nat.mul_pos (by decide : 0<32) hn)
   simpa only [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm] using hh
 
-private theorem tilted_count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
+theorem tilted_count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
     (F : Finset (Branch f Q l)) (hF : F⊆D.branches) (G : Row 4) (hproper : ¬ f∣G)
     (n amount : ℕ) (hn : 0<n) (htilt : Low6960Prices.tiltedFits (shape f))
     (hcut : ∀ b∈F, ∃ h : (intersectionIdeal f G).IsMinimalPrime b.surface,

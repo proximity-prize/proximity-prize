@@ -44,7 +44,7 @@ theorem integral_of_coprime_clearings (K : Type*) [Field K] [Algebra A K] [IsFra
     have eq : algebraMap A E c*v = ι c • v := by
       simp only [ι,Algebra.smul_def,←IsScalarTower.algebraMap_apply]
     rw [eq,IsIntegrallyClosed.minpoly_smul ((map_ne_zero_iff ι inj).mpr cn) vint] at idpoly
-    have d := congrArg (fun q : K[X]=>q.coeff i) idpoly
+    have d := congrArg (fun q : (Polynomial K)=>q.coeff i) idpoly
     simpa only [p,eq,coeff_map,coeff_scaleRoots,map_pow,ι] using d.symm
   have lift : p∈Polynomial.lifts ι := by
     apply (lifts_iff_coeff_lifts _).mpr
@@ -92,7 +92,7 @@ end
 
 section Plane
 variable {k : Type*} [Field k]
-abbrev Plane (k : Type*) [Field k] := Polynomial k[X]
+abbrev Plane (k : Type*) [Field k] := Polynomial (Polynomial k)
 variable (E : Type*) [Field E] [Algebra (Plane k) E]
 abbrev Order (k E : Type*) [Field k] [Field E] [Algebra (Plane k) E] := integralClosure (Plane k) E
 
@@ -106,7 +106,7 @@ def quotientMap (z : k) := @Ideal.Quotient.mk (↥(Order k E)) (Order k E).toRin
 theorem quotientMap_surjective (z : k) : Function.Surjective (quotientMap E z) :=
   fun u=>Ideal.Quotient.mk_surjective u
 
-def baseMap (z : k) : k[X] →+* Fiber E z :=
+def baseMap (z : k) : (Polynomial k) →+* Fiber E z :=
   ((Ideal.Quotient.mk _).comp (algebraMap (Plane k) (Order k E))).comp C
 
 variable [Algebra (FractionRing (Plane k)) E] [IsScalarTower (Plane k) (FractionRing (Plane k)) E]
@@ -114,7 +114,7 @@ variable [Algebra (FractionRing (Plane k)) E] [IsScalarTower (Plane k) (Fraction
 
 /-- Every scalar fibre of the true integral closure is torsion-free over
 the abscissa line, including at a branch collision. -/
-theorem torsion_free (z : k) (q : k[X]) (nz : q≠0) (u : Fiber E z)
+theorem torsion_free (z : k) (q : (Polynomial k)) (nz : q≠0) (u : Fiber E z)
     (zero : baseMap E z q * u=0) : u=0 := by
   obtain ⟨v,rfl⟩ := Ideal.Quotient.mk_surjective u
   let a : Plane k := Polynomial.X-C (C z)
@@ -134,7 +134,7 @@ theorem torsion_free (z : k) (q : k[X]) (nz : q≠0) (u : Fiber E z)
 
 omit [Algebra (FractionRing (Plane k)) E] [IsScalarTower (Plane k) (FractionRing (Plane k)) E]
     [FiniteDimensional (FractionRing (Plane k)) E] in
-private theorem specialize (z : k) (f : Plane k) :
+theorem specialize (z : k) (f : Plane k) :
     Ideal.Quotient.mk (sliceIdeal E z) (algebraMap (Plane k) (Order k E) f) =
       baseMap E z (f.eval (C z)) := by
   apply Ideal.Quotient.eq.mpr
@@ -165,21 +165,21 @@ set_option maxHeartbeats 1400000 in
 Finite generation comes from normalization in a finite separable extension;
 the base coefficients specialize by polynomial division. -/
 theorem finite_free [Algebra.IsSeparable (FractionRing (Plane k)) E] (z : k) :
-    letI : Module k[X] (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
-    Module.Finite k[X] (Fiber E z) ∧ Module.Free k[X] (Fiber E z) := by
+    letI : Module (Polynomial k) (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
+    Module.Finite (Polynomial k) (Fiber E z) ∧ Module.Free (Polynomial k) (Fiber E z) := by
   classical
-  let : Module k[X] (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
+  let : Module (Polynomial k) (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
   have sourceFin : Module.Finite (Plane k) (Order k E) :=
     IsIntegralClosure.finite (Plane k) (FractionRing (Plane k)) E (Order k E)
   let m:=quotientMap E z
-  have fin : Module.Finite k[X] (Fiber E z) :=
-    finite_image (A:=Plane k) (R:=k[X]) (M:=↥(Order k E)) (N:=Fiber E z)
+  have fin : Module.Finite (Polynomial k) (Fiber E z) :=
+    finite_image (A:=Plane k) (R:=(Polynomial k)) (M:=↥(Order k E)) (N:=Fiber E z)
       m.toAddMonoidHom (quotientMap_surjective E z) (fun c=>c.eval (C z)) (by
         intro c v
         rw [Algebra.smul_def c v]
         change m (algebraMap (Plane k) (Order k E) c*v) = baseMap E z (c.eval (C z)) * m v
         rw [map_mul]; exact congrArg (·*m v) (specialize E z c))
-  have tor : Module.IsTorsionFree k[X] (Fiber E z) := by
+  have tor : Module.IsTorsionFree (Polynomial k) (Fiber E z) := by
     apply Module.IsTorsionFree.of_smul_eq_zero
     intro r u eq
     by_cases zero : r=0

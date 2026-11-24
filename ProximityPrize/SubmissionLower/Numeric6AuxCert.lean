@@ -12,7 +12,7 @@ section
 namespace K1_13_2_3_6
 open K1_13_2 K1_13_2_3
 open scoped BigOperators
-private def sumFrom (f : ℕ → ℕ) (j : ℕ) : ℕ → ℕ
+def sumFrom (f : ℕ → ℕ) (j : ℕ) : ℕ → ℕ
   | 0 => 0
   | n + 1 => sumFrom f j n + f (j + n)
 end K1_13_2_3_6

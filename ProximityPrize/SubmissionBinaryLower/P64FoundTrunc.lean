@@ -82,10 +82,10 @@ noncomputable def mono (a b : ℕ) : Polynomial (Polynomial K) := monomial b (mo
 lemma coeff_mono (a b a' b' : ℕ) :
     ((mono (K := K) a b).coeff b').coeff a' = if a = a' ∧ b = b' then 1 else 0 := by
   unfold mono
-  rw [coeff_monomial]
+  rw [coeff_monomial, Finsupp.single_apply]
   split_ifs with h1 h2 h2
-  · rw [coeff_monomial]; simp [h2.1]
-  · rw [coeff_monomial]
+  · rw [coeff_monomial, Finsupp.single_apply]; simp [h2.1]
+  · rw [coeff_monomial, Finsupp.single_apply]
     exact if_neg (fun h => h2 ⟨h, h1⟩)
   · exact absurd h2.2 h1
   · rfl
@@ -114,7 +114,7 @@ theorem exists_mul_sub_one_X_pow_dvd {p : K[X]} (hp : IsUnit (p.coeff 0)) (s : �
     ∃ w : K[X], X ^ s ∣ w * p - 1 := by
   obtain ⟨u, hu⟩ := hp
   have base : X ^ 1 ∣ C (↑u⁻¹ : K) * p - 1 := by
-    rw [pow_one, X_dvd_iff, coeff_sub, coeff_C_mul, coeff_one_zero, ← hu]
+    rw [pow_one, X_dvd_iff, coeff_sub, coeff_C_mul, Polynomial.coeff_one_zero, ← hu]
     simp
   have key : ∀ k : ℕ, ∃ w : K[X], X ^ (2 ^ k) ∣ w * p - 1 := by
     intro k

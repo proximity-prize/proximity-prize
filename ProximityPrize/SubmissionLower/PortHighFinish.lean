@@ -106,16 +106,15 @@ open K1_14_2_2 (Active dual)
 open K1_14_3 (Surface Parent SeedClosure SeedField JetField JetClosure JetPlane seedFibreEval
   seedGeneric jetGeneric fixedEmbedding OrderAt ProjectedProduct)
 open K1_14_2_6 (genericSeedPoint genericJetPoint)
-open private ambientToJet toJet_equiv from ProximityPrize.SubmissionLower.Fast071
-open private fibreHom seedMap jetMap seedPoint jetPoint from ProximityPrize.SubmissionLower.Fast069
-open private seed_chart toJet_C toJet_y toJet_v toJet_seed jetCoordinates fractionCoordinates
-  generic_C generic_Y generic_V seedGeneric_C from ProximityPrize.SubmissionLower.Fast069
+open K1_14_2_2_4_1 (ambientToJet toJet_equiv)
+open K1_14_2_6_1 (fibreHom seedMap jetMap seedPoint jetPoint)
+open K1_14_3R_1 (seed_chart toJet_C toJet_y toJet_v toJet_seed jetCoordinates fractionCoordinates generic_C generic_Y generic_V seedGeneric_C)
 def surfaceOf (I : Ideal Ambient) (hI : I.IsPrime) : Surface :=
   ⟨I.comap toJet, hI.comap _⟩
 private theorem fixed_chart (a b : SeedClosure) :
     (genericJetPoint a b).comp (toJet.comp fixedEmbedding) =
       seedGeneric.comp jetCoordinates.symm.toRingHom := by
-  have hV : ((genericJetPoint a b).comp (toJet.comp fixedEmbedding)) (Polynomial.X (R := FX[X])) =
+  have hV : ((genericJetPoint a b).comp (toJet.comp fixedEmbedding)) (Polynomial.X (R := (Polynomial FX))) =
       (seedGeneric.comp jetCoordinates.symm.toRingHom) Polynomial.X := by
     simp [fixedEmbedding, generic_V, toJet_v, genericJetPoint, seedGeneric, generic]
   apply Polynomial.ringHom_ext' _ hV
@@ -277,13 +276,13 @@ private theorem donor_1_1_1 : K1_14_2_4_1_1.c1 :=
   K1_14_2_4_1_1_1.proof
 private theorem donor_1_1_2 : K1_14_2_4_1_1.c2 :=
   K1_14_2_4_1_1_2.proof
-private theorem donor_1_1 : K1_14_2_4_1.c1 :=
+theorem donor_1_1 : K1_14_2_4_1.c1 :=
   K1_14_2_4_1_1.of_children donor_1_1_1 donor_1_1_2
 private theorem donor_1_2_1 : K1_14_2_4_1_2.c1 :=
   K1_14_2_4_1_2_1.proof
 private theorem donor_1_2_2 : K1_14_2_4_1_2.c2 :=
   K1_14_2_4_1_2_2.proof
-private theorem donor_1_2 : K1_14_2_4_1.c2 :=
+theorem donor_1_2 : K1_14_2_4_1.c2 :=
   K1_14_2_4_1_2.of_children donor_1_2_1 donor_1_2_2
 private theorem donor_1_3_1 : K1_14_2_4_1_3.c1 :=
   K1_14_2_4_1_3_1.proof
@@ -301,7 +300,7 @@ private theorem donor_1_3_3_3 : K1_14_2_4_1_3_3.c3 :=
   K1_14_2_4_1_3_3_3.proof
 private theorem donor_1_3_3 : K1_14_2_4_1_3.c3 :=
   K1_14_2_4_1_3_3.of_children donor_1_3_3_1 donor_1_3_3_2 donor_1_3_3_3
-private theorem donor_1_3 : K1_14_2_4_1.c3 :=
+theorem donor_1_3 : K1_14_2_4_1.c3 :=
   K1_14_2_4_1_3.of_children donor_1_3_1 donor_1_3_2 donor_1_3_3
 private theorem donor_1_4_1 : K1_14_2_4_1_4.c1 :=
   K1_14_2_4_1_4_1.proof
@@ -309,13 +308,13 @@ private theorem donor_1_4_2 : K1_14_2_4_1_4.c2 :=
   K1_14_2_4_1_4_2.proof
 private theorem donor_1_4_3 : K1_14_2_4_1_4.c3 :=
   K1_14_2_4_1_4_3.proof
-private theorem donor_1_4 : K1_14_2_4_1.c4 :=
+theorem donor_1_4 : K1_14_2_4_1.c4 :=
   K1_14_2_4_1_4.of_children donor_1_4_1 donor_1_4_2 donor_1_4_3
 private theorem donor_1_5_1 : K1_14_2_4_1_5.c1 :=
   K1_14_2_4_1_5_1.proof
 private theorem donor_1_5_2 : K1_14_2_4_1_5.c2 :=
   K1_14_2_4_1_5_2.proof
-private theorem donor_1_5 : K1_14_2_4_1.c5 :=
+theorem donor_1_5 : K1_14_2_4_1.c5 :=
   K1_14_2_4_1_5.of_children donor_1_5_1 donor_1_5_2
 private theorem donor_3_1_1 : K1_14_2_4_3_1.c1 :=
   K1_14_2_4_3_1_1.proof
@@ -345,11 +344,11 @@ open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_2 K1_14_3_2 Polynomial
 open K1_14_3 (SeedCover seed_count joinCovers joinCovers_degree joinCovers_points
   joinCovers_covers scalar_atX_injective)
 open scoped BigOperators Classical
-open private K1_14_2_2_2_3.jetEquiv jetEquiv_apply from ProximityPrize.SubmissionLower.Fast051
-open private properPair_height from ProximityPrize.SubmissionLower.PortHighBase
-private theorem section_bound : K1_14_2_2_2.c4 :=
+open K1_14_2_2_2_3 (jetEquiv jetEquiv_apply)
+open K1_14_2_2_2_5_1 (properPair_height)
+theorem section_bound : K1_14_2_2_2.c4 :=
   K1_14_2_2_2_4.of_children K1_14_2_2_2_4_1.proof K1_14_2_2_2_4_2.proof K1_14_2_2_2_4_3.proof
-private theorem seed_projection : K1_14_2_2_2.c6 :=
+theorem seed_projection : K1_14_2_2_2.c6 :=
   K1_14_2_2_2_6.of_children K1_14_2_2_2_6_1.proof K1_14_2_2_2_6_2.proof
 private theorem height_le {I : Ideal Ambient} (hI : I.IsPrime)
     (hdim : ringKrullDim (CoordinateRing I) = 2) : I.height ≤ 2 := by
@@ -367,7 +366,7 @@ private theorem height_le {I : Ideal Ambient} (hI : I.IsPrime)
   rw [hc, ← x.height_eq_orderHeight, hd] at hh
   have hh' : I.height + 2 ≤ (2 : ℕ∞) + 2 := WithBot.coe_le_coe.mp hh
   exact (ENat.add_le_add_iff_right (by simp : (2 : ℕ∞) ≠ ⊤)).mp hh'
-private theorem component_height {P Q : Jet} {I : Ideal Ambient} (hp : ProperPair P Q)
+theorem component_height {P Q : Jet} {I : Ideal Ambient} (hp : ProperPair P Q)
     (hI : I.IsPrime) (hdim : ringKrullDim (CoordinateRing I) = 2)
     (hP : toJet P ∈ I) (hQ : toJet Q ∈ I) : I.height = 2 := by
   let J := I.comap K1_14_2_2_2_3.jetEquiv.toRingHom
@@ -376,7 +375,7 @@ private theorem component_height {P Q : Jet} {I : Ideal Ambient} (hp : ProperPai
   have hQ' : Q ∈ J := by change K1_14_2_2_2_3.jetEquiv Q ∈ I; rwa [jetEquiv_apply]
   exact le_antisymm (height_le hI hdim)
     ((K1_14_2_2_2_3.jetEquiv.height_comap I) ▸ properPair_height hp J hP' hQ')
-private theorem ordinary_cover (f : Equation) (hi : Irreducible f) (hd : 0 < f.natDegree)
+theorem ordinary_cover (f : Equation) (hi : Irreducible f) (hd : 0 < f.natDegree)
     (hp : f.natDegree < p) :
     ∃ S : Finset (Ideal Ambient),
       (∀ I ∈ S, I.IsPrime ∧ ringKrullDim (CoordinateRing I) = 2 ∧ I.height = 2 ∧
@@ -406,8 +405,7 @@ set_option maxHeartbeats 800000
 namespace P0_10R_2
 noncomputable section
 open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_4 Polynomial
-open private factor_caps natDegree_zero_of_factors dvd_of_dvd_residual
-  toJet_equiv ambientToJet from ProximityPrize.SubmissionLower.Fast071
+open K1_14_2_2_4_1 (factor_caps natDegree_zero_of_factors dvd_of_dvd_residual toJet_equiv ambientToJet)
 structure SharedGcd {P Q : Jet} {s t : Shape} (A : FixedPart P s) (B : FixedPart Q t) where
   ordinary : Equation
   left : Jet

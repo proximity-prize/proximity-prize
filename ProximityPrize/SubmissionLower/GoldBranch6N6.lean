@@ -124,8 +124,8 @@ open K1_13_6_2_2 (lift4 generic5 rawGraph numerator denominator padded)
 open K1_13_6_2_2_2 (Chart incl S invS S_mul_invS negQuarter q constants W
   graphMap graphMap_lift graphMap_X_last)
 open scoped BigOperators
-open private compare_numerators from ProximityPrize.SubmissionLower.Fast072
-open private support_bounds topWeight fifthWeight box_of_weights from ProximityPrize.SubmissionLower.Fast074
+open K1_13_6_2_2_2 (compare_numerators)
+open K1_13_6_2_2_1 (support_bounds topWeight fifthWeight box_of_weights)
 variable {f Q : Row 4} {l : ℕ}
 @[simp] theorem onGraph_C (b : Branch f Q l) (a : GeoField) :
     b.onGraph (MvPolynomial.C a) = b.localMap (MvPolynomial.C a) := by
@@ -172,8 +172,8 @@ open K1_13_6 (GeoField GeoJets toGeneric partialFlow divisorIdeal cycleLength)
 open K1_13_6_2 (GeoJets5)
 open K1_13_6_2_3 (localWeight weight_cast weight_pos)
 open K1_13_6_2_4 (OfDim LengthAt sectionIdeal oldEmbedding)
-open private four_ne_zero from ProximityPrize.SubmissionLower.Fast054
-open private length_le_of_surjection dim_after_proper_cut from ProximityPrize.SubmissionLower.Fast072
+open K1_13_6_2_4_5 (four_ne_zero)
+open K1_13_6_2_4_5 (length_le_of_surjection dim_after_proper_cut)
 local notation "memberDiv" b => divisorIdeal (Branch.surface b) (membershipTest (Branch.g b))
 end
 end P3_6_6_2_3_2
@@ -197,8 +197,7 @@ open K1_13 K1_13_6
 open K1_13_6_3 (JetIdeal)
 open K1_13_6_3_1
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-open private flat_sepToGeo map_eq_maximal_of_length_one step_in_sep sep_sq_dvd_jet
-  nonvanishing_of_simple_cut stable_of_simple_cut from ProximityPrize.SubmissionLower.PortLow6
+open P0_9_6_3 (flat_sepToGeo map_eq_maximal_of_length_one step_in_sep sep_sq_dvd_jet nonvanishing_of_simple_cut stable_of_simple_cut)
 end
 end P3_6_6_3
 end
@@ -211,8 +210,7 @@ noncomputable section
 open K1_13 K1_13_6 K1_13_6_3 K1_13_6_3_5 K1_13_6_3_5_3 MvPolynomial
 open scoped Polynomial WithZero
 attribute [local instance] MvPolynomial.gradedAlgebra
-open private tupleHeight_le_of_inclusion finsum_weighted cone_eval_jets jet_zero_nonzero
-  from ProximityPrize.SubmissionLower.Fast053
+open K1_13_6_3_5_3 (tupleHeight_le_of_inclusion finsum_weighted cone_eval_jets jet_zero_nonzero)
 end
 end P3_6_6_3_2
 end

@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.R6960RetainedTwistedRestriction
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -12,7 +13,7 @@ open MonicChart (ChartField)
 open MonicFourChartDescent MonicChartLaurent RetainedRestrictionTorus ChartOverlapTests RetainedSurfaceClass
 open Module Submodule LinearMap Algebra Polynomial
 open scoped Polynomial Lower6960.RetainedSurfaceClass
-open private Lower6960.RetainedSurfaceClass.chartSpace Lower6960.RetainedSurfaceClass.congr_of_eq from ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
+open Lower6960.RetainedSurfaceClass (chartSpace congr_of_eq)
 variable (E:Type) [Field E] [Algebra ChartField E]
 local notation "ι" => algebraMap ChartField E
 
@@ -116,9 +117,9 @@ theorem grow [FiniteDimensional ChartField E] (i:ℕ) (x:L) (nx:x≠0)
 
 open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 
-theorem initial (f:Curve L[X]) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
+theorem initial (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
     (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (basis:PowerBasis ChartField E)
-    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap MonicChart.Scalar[X] ChartField))=0)
+    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) [FiniteDimensional L (Paired E x z)] {b:ℕ}
     (size:finrank L (Paired E x z)≤b) : Budget E 0 b := by
   have spaces:charts E 0=potentials E := by
@@ -137,12 +138,12 @@ theorem initial (f:Curve L[X]) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (
 
 /-- Uniform surface bound for every positive abscissa twist of the same actual
 factor. The degrees s,t are measured on its own two specialized chart orders. -/
-theorem actual_all_twists (f:Curve L[X]) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
+theorem actual_all_twists (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
     (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (basis:PowerBasis ChartField E)
-    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap MonicChart.Scalar[X] ChartField))=0) :
+    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
     ∃ (x z:L) (nx:x≠0) (nz:z≠0) (m n s t:ℕ),
-      ∃ (xf:Basis (Fin m) L[X] (chartImage E false x false)) (xi:Basis (Fin m) L[X] (chartImage E false x true))
-        (zf:Basis (Fin n) L[X] (chartImage E true z false)) (zi:Basis (Fin n) L[X] (chartImage E true z true)),
+      ∃ (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
+        (zf:Basis (Fin n) (Polynomial L) (chartImage E true z false)) (zi:Basis (Fin n) (Polynomial L) (chartImage E true z true)),
         (transition E false x nx xf xi).det.degree=((-(t:ℤ):ℤ):WithBot ℤ) ∧
         (transition E true z nz zf zi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ) ∧
         Nonempty (Basis (Fin (f.degreeOf ordinate)) L (Crossing E x z)) ∧ IsReduced (Crossing E x z) ∧

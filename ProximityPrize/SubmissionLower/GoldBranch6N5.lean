@@ -19,7 +19,7 @@ def mixedBudget : ℕ :=
     taylorLength * mixed3 lowBox graphBox a
 def invariantBudget : ℕ :=
   lowBox.b * (1 + (2 * (taylorLength + 1) - 7) * (lowBox.b - 1))
-structure ProperCover (w : I → K) (Γ : Finset K) (s : K → K[X]) where
+structure ProperCover (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)) where
   isolated : Finset K
   multiple : NodeFamily w Γ s
   invariant : NodeFamily w Γ s
@@ -44,11 +44,11 @@ open scoped BigOperators
 abbrev Coefficients := Fin taylorLength → GeometricX
 abbrev CoefficientIdeal := Ideal (GeoRow taylorLength)
 abbrev CurveIndex (n : ℕ) := Fin n × Ideal (GeoRow 3)
-def coefficientPoint (S : Geom[X]) : Coefficients :=
+def coefficientPoint (S : (Polynomial Geom)) : Coefficients :=
   fun j => algebraMap Geom GeometricX (S.coeff j)
 def oldCut (f : Row 3) : Row 3 := compatibilityNumerator f (taylorLength - 3)
 def oldNext (f : Row 3) : Row 3 := compatibilityNumerator f (taylorLength - 2)
-open private compatibility_degree from ProximityPrize.SubmissionLower.Fast048
+open K1_13_5_4_1 (compatibility_degree)
 def oldCutIdeal (f : Row 3) : Ideal (GeoRow 3) :=
   Ideal.span {genericRow f, genericRow (oldCut f)}
 def properComponents {n : ℕ} (f : Fin n → Row 3) : Finset (CurveIndex n) := by
@@ -80,7 +80,7 @@ structure LiftedChart (f : Row 3) where
   coefficient_box : ∀ i, InLiftedBox (numerator i) (liftedBox taylorLength) (taylorLength - 2)
   cut_represents : RepresentsOnGraph f (oldCut f) cut
   next_represents : RepresentsOnGraph f (oldNext f) next
-  actual : ∀ S : Geom[X], S.natDegree ≤ physicalDegree → RegularAt 2 f S →
+  actual : ∀ S : (Polynomial Geom), S.natDegree ≤ physicalDegree → RegularAt 2 f S →
     atJet (oldCut f) S = 0 ∧ atJet (oldNext f) S = 0 ∧
       reconstruct f numerator (jetPoint S) = coefficientPoint S
 structure MixedSections {n : ℕ} (f : Fin n → Row 3) (T : ∀ i, LiftedChart (f i)) where
@@ -124,12 +124,9 @@ open K1_13_7_1 (weight_const_mul_le weight_X_le)
 open MvPolynomial
 open Polynomial (hasseDeriv)
 open scoped BigOperators Polynomial
-open private mul_bound K1_13_5_4_1_1.partialFlow_bound liftSep_eq liftedStep_bound generic_bound
-  totalWeight indexWeight topWeight heightWeight lift_weight fits fits_lifted
-  from ProximityPrize.SubmissionLower.Fast070
-open private represents from ProximityPrize.SubmissionLower.Fast076
-open private atJet_padJet taylor_coefficients_aux genericCoeff_ne_zero third_atJet_zero
-  actual_zero_of_represents from ProximityPrize.SubmissionLower.Fast048
+open K1_13_5_4_1_1 (mul_bound partialFlow_bound liftSep_eq liftedStep_bound generic_bound totalWeight indexWeight topWeight heightWeight lift_weight fits fits_lifted)
+open K1_13_5_4_1_2 (represents)
+open K1_13_5_4_1 (atJet_padJet taylor_coefficients_aux genericCoeff_ne_zero third_atJet_zero actual_zero_of_represents)
 local notation "W" => weightedTotalDegree
 end
 end P3_6_5_1
@@ -198,8 +195,8 @@ open P3_6_5_1 (oldCut oldCutIdeal properComponents CurveIndex componentLength ne
   oldNext LiftedChart)
 open MvPolynomial RingTheory.Sequence
 open scoped BigOperators Polynomial
-open private quotient_regular_iff graph_dimension from ProximityPrize.SubmissionLower.Fast048
-open private graphPoint_injective from ProximityPrize.SubmissionLower.Fast048
+open K1_13_5_4_2_1 (quotient_regular_iff graph_dimension)
+open K1_13_5_4_2 (graphPoint_injective)
 attribute [local instance] MvPolynomial.algebraMvPolynomial
 end
 end P3_6_5_1_1
@@ -215,7 +212,7 @@ open P3_6_5_1 (LiftedChart oldCutIdeal)
 open K1_13_5_4_2_3 (OpenRing onOpen onOpen_kills onOpen_isUnit onOpen_hom_ext
   openLift openLift_onOpen sep liftedSep)
 open MvPolynomial
-open private three_isUnit graph_coord_unique represents_vanish from ProximityPrize.SubmissionLower.Fast048
+open K1_13_5_4_2_3 (three_isUnit graph_coord_unique represents_vanish)
 def threeCut (f : Row 3) (T : LiftedChart f) : Ideal (GeoRow 4) :=
   graphIdeal f ⊔ Ideal.span {T.cut}
 abbrev OldOpen (f : Row 3) := OpenRing (oldCutIdeal f) (sep f)
@@ -339,8 +336,8 @@ open P3_6 (taylorLength)
 open P3_6_5 (Whole)
 open P3_6_5_1 (oldCut oldNext oldCutIdeal componentLength )
 open Polynomial
-open private flat_rowToGeo rowToGeo_eq tangent_self from ProximityPrize.SubmissionLower.Fast048
-open private generic_cut_regular from ProximityPrize.SubmissionLower.Fast074
+open K1_13_5_4_3_1 (flat_rowToGeo rowToGeo_eq tangent_self)
+open K1_13_5_4_3_3 (generic_cut_regular)
 attribute [local instance] MvPolynomial.algebraMvPolynomial
 end
 end P3_6_5_1_2
@@ -356,9 +353,9 @@ open P3_6 (physicalDegree)
 open MvPolynomial
 open scoped BigOperators Polynomial TensorProduct
 attribute [local instance] MvPolynomial.gradedAlgebra
-open private monic_chart_aux from ProximityPrize.SubmissionLower.Fast064
-open private commonFactor_monic trimmedValue_monic trimmedValue_dvd from ProximityPrize.SubmissionLower.Fast064
-open private eval_divisions from ProximityPrize.SubmissionLower.PortLow5
+open K1_13_5_5_2_1 (monic_chart_aux)
+open K1_13_5_5_2_1 (commonFactor_monic trimmedValue_monic trimmedValue_dvd)
+open P0_9_5_2 (eval_divisions)
 end
 end P3_6_5_2
 end

@@ -11,8 +11,8 @@ open AnchorPivot82180 (E mon poly Term sound_monomial)
 open AnchorPivot82180 (src0 src3 src6 src7 spec0 spec3 spec6 spec7)
 open K1_13_2 K1_13_2_2 MvPolynomial
 open scoped BigOperators
-open private independent from ProximityPrize.SubmissionLower.AnchorPivotRank82180
-open private active_range_le from ProximityPrize.SubmissionLower.Fast068
+open AnchorPivot82180 (independent)
+open K1_13_2_2 (active_range_le)
 
 private def ofExp (e : JetExp) : Triple := ⟨e 1,e 2,e 3⟩
 

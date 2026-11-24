@@ -9,7 +9,7 @@ namespace Low48PrimaryPivot.RawClosed
 open K1_13_2 K1_13_2_3 Finset
 open scoped BigOperators
 open Low48PrimaryPivot.RawReceipt
-open private targetAt columnsAt fastAt rawAt_fast from ProximityPrize.SubmissionLower.Low48PrimaryPivotRawFast
+open Low48PrimaryPivot.RawReceipt (targetAt columnsAt fastAt rawAt_fast)
 
 private def positiveRun (x : ℤ) (d n : ℕ) := if x<0 then 0 else denomRun x d n
 private theorem positiveRun_eq (x : ℤ) (d n : ℕ) (hd : d=1 ∨ d=4) :

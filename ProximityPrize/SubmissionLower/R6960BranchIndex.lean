@@ -8,11 +8,11 @@ open scoped BigOperators Polynomial Matrix
 open BranchCollisions
 variable {K : Type} [Field K] [DecidableEq K]
 
-private theorem mult_pow (p : K[X]) (a : K) (n : ℕ) :
+private theorem mult_pow (p : (Polynomial K)) (a : K) (n : ℕ) :
     (p^n).rootMultiplicity a=n*p.rootMultiplicity a := by
   simp only [←Polynomial.count_roots,roots_pow,Multiset.count_nsmul]
 
-private theorem mult_product {ι : Type*} (F : ι→K[X]) (w : ι→ℕ) (S : Finset ι)
+theorem mult_product {ι : Type*} (F : ι→(Polynomial K)) (w : ι→ℕ) (S : Finset ι)
     (nz : ∀ i∈S,F i≠0) (x : K) :
     (∏ i∈S,(F i)^w i).rootMultiplicity x=∑ i∈S,w i*(F i).rootMultiplicity x := by
   classical
@@ -28,11 +28,11 @@ private theorem mult_product {ι : Type*} (F : ι→K[X]) (w : ι→ℕ) (S : Fi
 actual weighted root collisions. A simple transverse root is excluded by the
 stated support hypothesis on the change of order. -/
 theorem index_degree [IsAlgClosed K] {ι : Type*} [Fintype ι]
-    (F : ι→Polynomial K[X]) (w : ι→ℕ) (positive : ∀ i,0<w i)
-    (B : Polynomial K[X]) (prod : B=∏i,F i)
-    (sep : (B.map (algebraMap K[X] (FractionRing K[X]))).Separable)
+    (F : ι→Polynomial (Polynomial K)) (w : ι→ℕ) (positive : ∀ i,0<w i)
+    (B : Polynomial (Polynomial K)) (prod : B=∏i,F i)
+    (sep : (B.map (algebraMap (Polynomial K) (FractionRing (Polynomial K)))).Separable)
     (T : Finset K) (good : ∀ z∈T,B.map (evalRingHom z)≠0)
-    (idx : K→K[X]) (supported : ∀ z∈T, ∀ x∈(idx z).roots,2≤(B.map (evalRingHom z)).rootMultiplicity x)
+    (idx : K→(Polynomial K)) (supported : ∀ z∈T, ∀ x∈(idx z).roots,2≤(B.map (evalRingHom z)).rootMultiplicity x)
     (disc : ∀ z∈T, idx z^2 ∣ ∏i, ((F i).map (evalRingHom z))^(w i))
     {s t : ℕ} (xcap : (∑ i,w i*(F i).natDegree)≤2*s)
     (zcap : (∑ i,w i*CurvatureSquares.height (F i))≤2*t) :
@@ -73,7 +73,7 @@ theorem index_degree [IsAlgClosed K] {ι : Type*} [Fintype ι]
 omit [DecidableEq K] in
 /-- Changing the integral basis pairs the columns on both sides of the
 trace form; this is the square factor used in the collision count. -/
-theorem index_square {ι : Type*} [DecidableEq ι] [Fintype ι] (A D : Matrix ι ι K[X]) :
+theorem index_square {ι : Type*} [DecidableEq ι] [Fintype ι] (A D : Matrix ι ι (Polynomial K)) :
     D.det^2 ∣ (D.transpose*A*D).det := by
   refine ⟨A.det,?_⟩
   rw [det_mul,det_mul,det_transpose]; ring
@@ -81,8 +81,8 @@ theorem index_square {ι : Type*} [DecidableEq ι] [Fintype ι] (A D : Matrix ι
 omit [DecidableEq K] in
 /-- Multiplying any normalized section, in particular the marked sheet
 idempotent, by the index determinant puts it back in the original order. -/
-theorem clear_section {ι : Type*} [DecidableEq ι] [Fintype ι] (D : Matrix ι ι K[X]) (v : ι→K[X]) :
-    ∃ u : ι→K[X],D.mulVec u=D.det • v := by
+theorem clear_section {ι : Type*} [DecidableEq ι] [Fintype ι] (D : Matrix ι ι (Polynomial K)) (v : ι→(Polynomial K)) :
+    ∃ u : ι→(Polynomial K),D.mulVec u=D.det • v := by
   refine ⟨D.adjugate.mulVec v,?_⟩
   rw [Matrix.mulVec_mulVec,Matrix.mul_adjugate,Matrix.smul_mulVec,Matrix.one_mulVec]
 

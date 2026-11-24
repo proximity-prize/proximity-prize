@@ -15,14 +15,14 @@ variable {k E : Type*} [Field k] [Field E] [Algebra (RatFunc k) E]
 
 /-- Integrality with the indicated coefficient embedding, so the finite
 and reciprocal charts can use different maps from the same polynomial type. -/
-def IntegralOver (ι : k[X] →+* E) (u : E) : Prop := @IsIntegral k[X] E _ _ ι.toAlgebra u
+def IntegralOver (ι : (Polynomial k) →+* E) (u : E) : Prop := @IsIntegral (Polynomial k) E _ _ ι.toAlgebra u
 
-abbrev finiteScalar : k[X] →+* E := (algebraMap (RatFunc k) E).comp (algebraMap k[X] (RatFunc k))
+abbrev finiteScalar : (Polynomial k) →+* E := (algebraMap (RatFunc k) E).comp (algebraMap (Polynomial k) (RatFunc k))
 
-abbrev infinityScalar : k[X] →+* E := (algebraMap (RatFunc k) E).comp (MonicChart.AtInfinity k)
+abbrev infinityScalar : (Polynomial k) →+* E := (algebraMap (RatFunc k) E).comp (MonicChart.AtInfinity k)
 
 private theorem horner_map_scale {A F : Type*} [CommRing A] [Nontrivial A] [CommRing F]
-    (p q : A[X]) (j qj : A→+* F) (s : F)
+    (p q : (Polynomial A)) (j qj : A→+* F) (s : F)
     (scale : ∀ n,qj (q.coeff n)=s*j (p.coeff n)) {d : ℕ} (pos : 0<d) :
     (hornerPolynomial q d).map qj=C s*(hornerPolynomial p d).map j := by
   apply Polynomial.ext
@@ -34,20 +34,20 @@ private theorem horner_map_scale {A F : Type*} [CommRing A] [Nontrivial A] [Comm
     exact scale (d+n)
 
 private theorem eval_scalar {A F : Type*} [CommRing A] [CommRing F] [Algebra F E]
-    (p : A[X]) (j : A→+* F) (y : E) :
+    (p : (Polynomial A)) (j : A→+* F) (y : E) :
     aeval y (p.map j)=p.eval₂ ((algebraMap F E).comp j) y := by
   rw [aeval_def,eval₂_map]
 
 /-- If all scalar coefficient degrees are at most `v`, each Horner
 section has an infinity pole of order at most `v` in the reciprocal
 polynomial chart of the same root field. -/
-theorem scalar_horner_charts (p : k[X][X]) (v : ℕ)
+theorem scalar_horner_charts (p : (Polynomial (Polynomial k))) (v : ℕ)
     (width : ∀ j,(p.coeff j).natDegree≤v) {d : ℕ} (pos : 0<d) (y : E)
-    (root : aeval y (p.map (algebraMap k[X] (RatFunc k)))=0) :
+    (root : aeval y (p.map (algebraMap (Polynomial k) (RatFunc k)))=0) :
     IntegralOver (finiteScalar (k:=k) (E:=E)) (horner finiteScalar p d y) ∧
     IntegralOver (infinityScalar (k:=k) (E:=E))
       ((algebraMap (RatFunc k) E (RatFunc.X⁻¹))^v*horner finiteScalar p d y) := by
-  let j := algebraMap k[X] (RatFunc k)
+  let j := algebraMap (Polynomial k) (RatFunc k)
   let j' := MonicChart.AtInfinity k
   let s : RatFunc k := (RatFunc.X⁻¹)^v
   let q := MonicChart.weightedInfinity p v 0
@@ -64,9 +64,9 @@ theorem scalar_horner_charts (p : k[X][X]) (v : ℕ)
     rw [horner,horner,←eval_scalar _ j',←eval_scalar _ j,
       horner_map_scale p q j j' s scale pos,map_mul,aeval_C]
   refine ⟨?_,?_⟩
-  · let : Algebra k[X] E := (finiteScalar (k:=k) (E:=E)).toAlgebra
+  · let : Algebra (Polynomial k) E := (finiteScalar (k:=k) (E:=E)).toAlgebra
     exact horner_integral p pos y (by rw [eval_scalar p j] at root; exact root)
-  · let : Algebra k[X] E := (infinityScalar (k:=k) (E:=E)).toAlgebra
+  · let : Algebra (Polynomial k) E := (infinityScalar (k:=k) (E:=E)).toAlgebra
     rw [show (algebraMap (RatFunc k) E (RatFunc.X⁻¹))^v=algebraMap (RatFunc k) E s from (map_pow _ _ _).symm,
       ←relation]
     exact horner_integral q pos y qroot
@@ -76,10 +76,10 @@ section Independence
 variable {A F E : Type*} [CommRing A] [Nontrivial A] [Field F] [Field E] [Algebra F E]
 
 /-- The constant section followed by the triangular Horner sections. -/
-def sectionPoly (p : A[X]) (i : Fin p.natDegree) : A[X] :=
+def sectionPoly (p : (Polynomial A)) (i : Fin p.natDegree) : (Polynomial A) :=
   if i.val=0 then 1 else hornerPolynomial p (p.natDegree-i.val+1)
 
-private theorem sectionPoly_degree (p : A[X]) (i : Fin p.natDegree) :
+private theorem sectionPoly_degree (p : (Polynomial A)) (i : Fin p.natDegree) :
     (sectionPoly p i).natDegree=i.val ∧ sectionPoly p i≠0 := by
   by_cases zero : i.val=0
   · simp [sectionPoly,zero]
@@ -113,7 +113,7 @@ private theorem sectionPoly_degree (p : A[X]) (i : Fin p.natDegree) :
 
 /-- The constant plus the `e−1` Horner sections are independent when
 the ordinate has minimal polynomial degree `e` over the rational base. -/
-theorem sections_independent (ι : A→+* F) (inj : Function.Injective ι) (p : A[X])
+theorem sections_independent (ι : A→+* F) (inj : Function.Injective ι) (p : (Polynomial A))
     (y : E) (degree : (minpoly F y).natDegree=p.natDegree) :
     LinearIndependent F (fun i : Fin p.natDegree=>aeval y ((sectionPoly p i).map ι)) := by
   classical
@@ -141,16 +141,16 @@ theorem sections_independent (ι : A→+* F) (inj : Function.Injective ι) (p : 
   have lead : (((sectionPoly p m).map ι).coeff m.val)≠0 := by
     rw [←mapdegree m,coeff_natDegree]
     exact leadingCoeff_ne_zero.mpr ((Polynomial.map_ne_zero_iff inj).mpr (sectionPoly_degree p m).2)
-  have bad := congrArg (fun f : F[X]=>f.coeff m.val) qzero
+  have bad := congrArg (fun f : (Polynomial F)=>f.coeff m.val) qzero
   unfold Q at bad
-  rw [Polynomial.finsetSum_coeff,Finset.sum_eq_single m,coeff_smul,smul_eq_mul,coeff_zero] at bad
+  rw [Polynomial.finsetSum_coeff,Finset.sum_eq_single m,Polynomial.coeff_smul,smul_eq_mul,coeff_zero] at bad
   · exact (mul_ne_zero cm lead) bad
   · intro j _ jm
     by_cases h : g j=0
     · rw [h,zero_smul,coeff_zero]
     · have jle : j≤m := Finset.le_max' S j (Finset.mem_filter.mpr ⟨Finset.mem_univ _,h⟩)
       have jlt : j.val<m.val := lt_of_le_of_ne jle (Fin.val_injective.ne jm)
-      rw [coeff_smul,coeff_eq_zero_of_natDegree_lt (mapdegree j |>.trans_lt jlt),smul_zero]
+      rw [Polynomial.coeff_smul,coeff_eq_zero_of_natDegree_lt (mapdegree j |>.trans_lt jlt),smul_zero]
   · simp
 
 end Independence

@@ -18,8 +18,8 @@ private theorem valuation_reciprocal_pow (n : ℕ) :
   rw [show ((RatFunc.X : RatFunc K)⁻¹)^n=RatFunc.X^(-(n:ℤ)) by rw [zpow_neg,zpow_natCast,inv_pow],
     RatFunc.inftyValuation.X_zpow]
 
-private theorem invert_poly (p : K[X]) :
-    AtInfinity K p=algebraMap K[X] (RatFunc K) p.reverse * ((RatFunc.X : RatFunc K)⁻¹)^p.natDegree := by
+private theorem invert_poly (p : (Polynomial K)) :
+    AtInfinity K p=algebraMap (Polynomial K) (RatFunc K) p.reverse * ((RatFunc.X : RatFunc K)⁻¹)^p.natDegree := by
   have reflect_twice : p.reverse.reflect p.natDegree=p := by
     apply Polynomial.ext
     intro i
@@ -29,17 +29,17 @@ private theorem invert_poly (p : K[X]) :
 
 /-- A polynomial in the inverse abscissa has its expected valuation at
 infinity. In particular a nonzero constant coefficient is a unit test. -/
-theorem val_poly_infinity (p : K[X]) (pn : p≠0) :
+theorem val_poly_infinity (p : (Polynomial K)) (pn : p≠0) :
     RatFunc.inftyValuation K (AtInfinity K p)=WithZero.exp (-(p.natTrailingDegree:ℤ)) := by
   rw [invert_poly,map_mul,valuation_reciprocal_pow]
-  change RatFunc.inftyValuationDef K (algebraMap K[X] (RatFunc K) p.reverse) * _ = _
+  change RatFunc.inftyValuationDef K (algebraMap (Polynomial K) (RatFunc K) p.reverse) * _ = _
   rw [RatFunc.inftyValuation.polynomial _ (reverse_eq_zero.not.mpr pn),←WithZero.exp_add]
   have d := congrArg (fun n : ℕ => (n:ℤ)) (natDegree_eq_reverse_natDegree_add_natTrailingDegree p)
   push_cast at d
   congr 1
   omega
 
-def inftyRingEval (K : Type*) [Field K] [DecidableEq (RatFunc K)] : K[X]→+*Infinity K where
+def inftyRingEval (K : Type*) [Field K] [DecidableEq (RatFunc K)] : (Polynomial K)→+*Infinity K where
   toFun p := ⟨AtInfinity K p,by
     change RatFunc.inftyValuation K (AtInfinity K p)≤1
     by_cases h : p=0
@@ -54,7 +54,7 @@ def inftyRingEval (K : Type*) [Field K] [DecidableEq (RatFunc K)] : K[X]→+*Inf
 theorem inftyRingEval_injective : Function.Injective (inftyRingEval K) :=
   fun a b eq => atInfinity_injective (K:=K) (congrArg Subtype.val eq)
 
-theorem inftyRingEval_isUnit (p : K[X]) (co : p.coeff 0≠0) :
+theorem inftyRingEval_isUnit (p : (Polynomial K)) (co : p.coeff 0≠0) :
     IsUnit (inftyRingEval K p) := by
   let a := inftyRingEval K p
   have pn : p≠0 := fun h=>co (by rw [h,coeff_zero])
@@ -70,20 +70,20 @@ theorem inftyRingEval_isUnit (p : K[X]) (co : p.coeff 0≠0) :
   exact ⟨⟨a,inv,Subtype.ext (mul_inv_cancel₀ an),Subtype.ext (inv_mul_cancel₀ an)⟩,rfl⟩
 
 theorem mapped_X_infty :
-    ((inftyRingEval K (Polynomial.X : K[X])):RatFunc K)=RatFunc.X⁻¹ := by
-  change (AtInfinity K) (Polynomial.X : K[X])=_
+    ((inftyRingEval K (Polynomial.X : (Polynomial K))):RatFunc K)=RatFunc.X⁻¹ := by
+  change (AtInfinity K) (Polynomial.X : (Polynomial K))=_
   exact aeval_X _
 
 /-- The homogeneous resultant has a unit factor times the exact
 remaining inverse-abscissa power. -/
-theorem reflected_local_factor (p : K[X]) (d : ℕ) (fit : p.natDegree≤d) :
+theorem reflected_local_factor (p : (Polynomial K)) (d : ℕ) (fit : p.natDegree≤d) :
     inftyRingEval K (p.reflect d)=
-      (inftyRingEval K (Polynomial.X : K[X]))^(d-p.natDegree)*inftyRingEval K p.reverse := by
+      (inftyRingEval K (Polynomial.X : (Polynomial K)))^(d-p.natDegree)*inftyRingEval K p.reverse := by
   apply Subtype.ext
   change AtInfinity K (p.reflect d) =
-    ((inftyRingEval K (Polynomial.X : K[X])):RatFunc K)^(d-p.natDegree)*AtInfinity K p.reverse
+    ((inftyRingEval K (Polynomial.X : (Polynomial K))):RatFunc K)^(d-p.natDegree)*AtInfinity K p.reverse
   have tail : AtInfinity K p.reverse=
-      algebraMap K[X] (RatFunc K) p*((RatFunc.X : RatFunc K)⁻¹)^p.natDegree :=
+      algebraMap (Polynomial K) (RatFunc K) p*((RatFunc.X : RatFunc K)⁻¹)^p.natDegree :=
     reverse_atInfinity p p.natDegree le_rfl
   have eq : ((RatFunc.X : RatFunc K)⁻¹)^d =
       ((RatFunc.X : RatFunc K)⁻¹)^(d-p.natDegree)*((RatFunc.X : RatFunc K)⁻¹)^p.natDegree := by

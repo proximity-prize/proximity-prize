@@ -13,8 +13,9 @@ open HelperSource (helperBank helperCutoff)
 open DifferentialContact (Native)
 open PrefixRows (Prepared rescueDegrees)
 open FreeSource (bank cutoff reserve)
-open private seedIndex factorial_ne_zero from ProximityPrize.SubmissionLower.Fast069
-open private shiftedWord from ProximityPrize.SubmissionLower.Fast052
+open K1_14_2_6_2 (seedIndex)
+open K1_14_2_4_2 (factorial_ne_zero)
+open K1_14_2_2_3 (shiftedWord)
 open K1_14_2_6_2 (seed_iter coordDeriv)
 
 /-- The helper provides eleven orders before taking its stage-dependent power. -/
@@ -22,7 +23,7 @@ def copies (i : Fin 17) := (reserve i+11)/11
 
 /-- Convert mixed ordinary contact at a mark to the divided seed derivative
 used by the introductory cover. Its factorial is a unit in the mark field. -/
-theorem hasse_at_mark {z : K1.K} {S : K1.K[X]} {P : Jet} {r : ℕ}
+theorem hasse_at_mark {z : K1.K} {S : (Polynomial K1.K)} {P : Jet} {r : ℕ}
     (contact : Native (RingHom.ker (jetMarkHom z S)) (r+1) P)
     (j : Fin 2) (a : ℕ) (within : a≤r) (small : a<K1.p) :
     K1_14.jetAt (K1_14.seedHasse j a P) z S=0 := by
@@ -46,7 +47,7 @@ theorem rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
       (out.exception=1 ∨ rescueDegrees out.exception) ∧
       (∀ i,P i∈evaluated Crt word (bank i).shape (cutoff h i)) ∧
       ∀ (_noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
-        (z : K1.K) (S : K1.K[X]), MarkResidues D z S →
+        (z : K1.K) (S : (Polynomial K1.K)), MarkResidues D z S →
         (liftPoly S).natDegree ≤ 131071+h →
         ∀ hits : Finset K1.I, 179827≤hits.card →
         (∀ i ∈ hits,(liftPoly S).eval (nodeL i)=word i) →

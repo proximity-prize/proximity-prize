@@ -20,9 +20,9 @@ open K1_14_3 (SeedCover joinCovers joinCovers_covers joinCovers_degree joinCover
 open RescueSource (bank reserve cutoff jetCap seedCap)
 open DifferentialContact (Native)
 open scoped Classical
-open private shiftedWord from ProximityPrize.SubmissionLower.Fast052
-open private seed_projection section_bound component_height from ProximityPrize.SubmissionLower.PortHighFinish
-open private irreducible_cut from ProximityPrize.SubmissionLower.UpperBranch4
+open K1_14_2_2_3 (shiftedWord)
+open P0_10R_1 (seed_projection section_bound component_height)
+open P1_7_4_1 (irreducible_cut)
 
 abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33561 u deleted
 abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179827 M Γ
@@ -71,7 +71,7 @@ theorem contact_at_mark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
   rw [word,liftPoly,nodeL,Polynomial.eval_map,Polynomial.eval₂_hom]
   exact congrArg (algebraMap K L) (B.scalar_hits i hit)
 
-theorem zero_of_contact {z : K} {S : K[X]} {P : Jet} {r : ℕ}
+theorem zero_of_contact {z : K} {S : (Polynomial K)} {P : Jet} {r : ℕ}
     (contact : Native (RingHom.ker (jetMarkHom z S)) (r+1) P) : jetAt P z S=0 := by
   have test := contact [] (by simp)
   change toJet P∈RingHom.ker (jetMarkHom z S) at test

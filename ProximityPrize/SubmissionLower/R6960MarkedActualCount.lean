@@ -2,6 +2,7 @@ import ProximityPrize.SubmissionLower.R6960MarkedNativeNorm
 import ProximityPrize.SubmissionLower.R6960MarkedEvaluationLedger
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisFamily
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGlobalSum
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -15,7 +16,7 @@ open MonicChart (ChartField Scalar)
 open CollisionMarked NormalizedFiber RetainedRestrictionTorus RetainedSurfaceClass
 open RetainedTwistedRestriction Polynomial Finset Algebra Module Submodule
 open scoped Polynomial BigOperators Lower6960.MarkedEvaluation Lower6960.RetainedSurfaceClass
-open private Lower6960.RetainedSurfaceClass.finite_along from ProximityPrize.SubmissionLower.R6960RetainedAxisCharts
+open Lower6960.RetainedSurfaceClass (finite_along)
 variable {E:Type} [Field E] [Algebra ChartField E] [FiniteDimensional ChartField E] [Algebra.IsSeparable ChartField E]
 local notation "aE" => algebraMap ChartField E
 
@@ -41,7 +42,7 @@ theorem actual_good_count (p:ℕ) [CharP L p] [CharP Scalar p] [DecidableEq L]
   have one (z:U):=(actual_axis_marked_family (E:=E) p P pn lo hi b dim root z.val (nz _ z.property) (words z)
     (mark _ z.property) (s-1) δf δi nf ni df di (boundary _ z.property))
   choose good d dn square support v indep reg kills using one
-  let index (z:L):L[X]:=if hz:z∈U then d ⟨z,hz⟩ else 1
+  let index (z:L):(Polynomial L):=if hz:z∈U then d ⟨z,hz⟩ else 1
   have sum:=native_index_sum p δf nf s t xc zc tame U index (fun z hz=>good ⟨z,hz⟩)
     (fun z hz=>by rw [show index z=d ⟨z,hz⟩ from dif_pos hz];exact support ⟨z,hz⟩)
     (fun z hz=>by rw [show index z=d ⟨z,hz⟩ from dif_pos hz];exact square ⟨z,hz⟩)

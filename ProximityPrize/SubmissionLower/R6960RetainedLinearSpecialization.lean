@@ -11,14 +11,14 @@ open scoped Polynomial
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E]
 
-private def linearAt (B A : E[X]) : Plane E := C B*Polynomial.X-C A
+private def linearAt (B A : (Polynomial E)) : Plane E := C B*Polynomial.X-C A
 
-private theorem map_linearAt (B A : E[X]) (r : Fn E) (ha : incl E A=incl E B*r) :
+private theorem map_linearAt (B A : (Polynomial E)) (r : Fn E) (ha : incl E A=incl E B*r) :
     (linearAt B A).map (incl E)=C (incl E B)*(Polynomial.X-C r) := by
   simp only [linearAt,Polynomial.map_sub,Polynomial.map_mul,Polynomial.map_C,Polynomial.map_X,
     ha,C_mul,mul_sub]
 
-private theorem mapped_all (B : E[X]) (A : Fn E→E[X]) (s : Multiset (Fn E))
+private theorem mapped_all (B : (Polynomial E)) (A : Fn E→(Polynomial E)) (s : Multiset (Fn E))
     (h : ∀ r∈s,incl E (A r)=incl E B*r) :
     ((s.map (fun r=>linearAt B (A r))).prod).map (incl E)=C ((incl E B)^s.card) *
       (s.map (fun r=>Polynomial.X-C r)).prod := by
@@ -31,7 +31,7 @@ private theorem mapped_all (B : E[X]) (A : Fn E→E[X]) (s : Multiset (Fn E))
       rest,Multiset.card_cons,pow_succ,C_mul]
     ring
 
-private theorem specialized_all (B : E[X]) (A : Fn E→E[X]) (s : Multiset (Fn E)) (x t : E)
+private theorem specialized_all (B : (Polynomial E)) (A : Fn E→(Polynomial E)) (s : Multiset (Fn E)) (x t : E)
     (h : ∀ r∈s,(A r).eval x=B.eval x*t) :
     ((s.map (fun r=>linearAt B (A r))).prod).map (evalRingHom x)=
       C ((B.eval x)^s.card)*(Polynomial.X-C t)^s.card := by
@@ -67,7 +67,7 @@ theorem pure_specialization [IsAlgClosed E] [Algebra.IsAlgebraic F E] {P : Plane
   have d : roots.card=degree := splits.natDegree_eq_card_roots.symm.trans (geometric_deg P)
   obtain ⟨b,hb,numerators⟩ := common_numerators (E:=E) ir pos splits x t hit
   let B := constants (E:=E) b
-  let A (r : Fn E) : E[X] := if h : r∈roots then (numerators r h).choose else 0
+  let A (r : Fn E) : (Polynomial E) := if h : r∈roots then (numerators r h).choose else 0
   have den : B.eval x'≠0 := by rw [eval_constants]; exact (map_ne_zero_iff _ (algebraMap F E).injective).mpr hb
   have both (r : Fn E) (h : r∈roots) :
       incl E (A r)=incl E B*r ∧ (A r).eval x'=B.eval x'*t' := by

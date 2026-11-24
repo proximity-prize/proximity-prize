@@ -49,6 +49,7 @@ lemma center_degree (R : Tri) (P : F[X]) (z : F) (D W : ℕ)
     (hR : wd R D ≤ W) (hP : P.natDegree ≤ D) (a b : ℕ) :
     (degGrading F).mem ((W : ℤ) - a * D) (((center P z R).coeff a).coeff b) := by
   have hc : (((degGrading F).poly 0).poly D).mem W (center P z R) := by
+    rw [center, RingHom.comp_apply]
     apply shift_mem (reorder_degree R D W hR)
     · exact Or.inr (by simp)
     · exact Or.inr (by exact_mod_cast hP)
@@ -66,6 +67,7 @@ lemma derivativeAlong_degree (R : Tri) (P : F[X]) (z : F) (D w : ℕ)
 theorem theta_degree (R H : Tri) (P : F[X]) (z : F) (D w W m : ℕ)
     (hR : wd R D ≤ w) (hH : wd H D ≤ W) (hP : P.natDegree ≤ D) :
     Prof (degGrading F) W (2 * ((w : ℤ) - D)) (theta R P z m H) := by
+  rw [theta, RingHom.comp_apply]
   apply prof_jet (u := D) (v := (w : ℤ) - D)
     (derivativeAlong_degree R P z D w hR hP)
   · intro a b

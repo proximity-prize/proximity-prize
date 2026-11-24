@@ -13,15 +13,15 @@ open scoped Polynomial
 
 variable (k : Type) [Field k]
 
-abbrev OverlapPlane := k[X][X]
-abbrev OverlapLaurent := LaurentPolynomial k[X]
+abbrev OverlapPlane := (Polynomial (Polynomial k))
+abbrev OverlapLaurent := LaurentPolynomial (Polynomial k)
 
 /-- The finite and reciprocal abscissa charts of the overlap, holding the
 scalar chart fixed. -/
 def overlapChart (s : Bool) : OverlapPlane k→+*OverlapLaurent k :=
   if s then invert.toRingEquiv.toRingHom.comp Polynomial.toLaurent else Polynomial.toLaurent
 
-private theorem overlapChart_localizes (s : Bool) :
+theorem overlapChart_localizes (s : Bool) :
     let : Algebra (OverlapPlane k) (OverlapLaurent k) := (overlapChart k s).toAlgebra
     IsLocalization.Away (Polynomial.X : OverlapPlane k) (OverlapLaurent k) := by
   let A := OverlapPlane k
@@ -52,7 +52,7 @@ private theorem overlapChart_localizes (s : Bool) :
       change u*(overlapChart k true (Polynomial.X:A))^n=overlapChart k true p
       rw [←map_pow]
       change u*invert (Polynomial.X^n:A).toLaurent=invert p.toLaurent
-      have h := congrArg (invert (R:=k[X])) eq
+      have h := congrArg (invert (R:=(Polynomial k))) eq
       rw [map_mul,involutive_invert u,invert_T] at h
       simpa only [Polynomial.toLaurent_X_pow,invert_T] using h.symm
   · intro a b eq
@@ -67,7 +67,7 @@ variable (F E : Type*) [Field F] [Field E]
 omit [Field E] [Algebra (OverlapLaurent k) E] [Algebra F E]
   [IsScalarTower (OverlapLaurent k) F E] [FiniteDimensional F E] [Algebra.IsSeparable F E]
   [IsDomain (OverlapLaurent k)] [IsIntegrallyClosed (OverlapLaurent k)] [IsNoetherianRing (OverlapLaurent k)] in
-private theorem overlapChart_fraction (s : Bool) :
+theorem overlapChart_fraction (s : Bool) :
     let : Algebra (OverlapPlane k) F := ((algebraMap (OverlapLaurent k) F).comp (overlapChart k s)).toAlgebra
     IsFractionRing (OverlapPlane k) F := by
   let A := OverlapPlane k

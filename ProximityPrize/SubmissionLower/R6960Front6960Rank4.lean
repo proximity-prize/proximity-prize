@@ -61,9 +61,9 @@ open K1_11_2 (OmitsMessages sWeight tWeight graph PlaneOutput equation equation_
 open K1_11_2_2 (interpolant parameterNode nodeValue parameterNode_interpolant
   parameterNode_nodeValue degreeOf_interpolant_le degreeOf_nodeValue_le seedEval
   seedEval_nodeValue eval_graph nodeWord_combination nodeWord_omits)
-open private degreeOf_le_of_dvd from ProximityPrize.SubmissionLower.Fast072
-open private no_pair_one_one_of_graph native_column_rank from ProximityPrize.SubmissionLower.Fast070
-open private transfer_at from ProximityPrize.SubmissionLower.Fast068
+open K1_11_2_1 (degreeOf_le_of_dvd)
+open K1_11_2 (no_pair_one_one_of_graph native_column_rank)
+open K1_8 (transfer_at)
 private theorem reduced_bounds {u : Words} {T : TwoActive u} {R : Relation T}
     {D : Reduction u T R} {A : IndependentLift R} (B : ReducedPair D A) :
     WedgeBounds T.height B.U B.V := by
@@ -292,17 +292,9 @@ namespace Front6960_4
 open Front6960 Finset
 open P2_4 (Bank)
 open K1_11 (V J)
-open private countRow gradeRow count grade contactRow V_affine rational_fee from ProximityPrize.SubmissionLower.PortFrontA
-open private
-  dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8
-  dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4
-  dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15
-  dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8
-  dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3
-  dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7
-  dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6
-  dims_4_3_5 jets_3_3_5 from ProximityPrize.SubmissionLower.FrontBranch4
-open private dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3 from ProximityPrize.SubmissionLower.SilverBase
+open P0_7 (countRow gradeRow count grade contactRow V_affine rational_fee)
+open P1_4 (dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8 dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4 dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15 dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8 dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3 dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7 dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6 dims_4_3_5 jets_3_3_5)
+open P2_4 (dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3)
 private theorem surplus_of_stats (h H e N lo s t ds dt c g c' g' j : ℕ)
     (hlo : lo ≤ h) (hmax : h ≤ 33561) (hH : H + e = h) (hN : N + e = 262144)
     (hc : count 5 s t = c) (hg : grade 5 s t = g)
@@ -417,8 +409,8 @@ open Front6960 (heightCap)
 open P2_4 (Bank ContactData Multipliers)
 open K1_11 (V J filtered filteredMul filteredMul_injective mem_filteredMul_range_iff
   sourceWeights sourceBounds source_filtered_finrank sourceToJet contactWeight)
-open private exists_kernel_outside from ProximityPrize.SubmissionLower.Fast065
-open private LocalSpace localMultiply local_finrank from ProximityPrize.SubmissionLower.SilverBase
+open K1_11 (exists_kernel_outside)
+open P2_4 (LocalSpace localMultiply local_finrank)
 abbrev Source (F : Type*) [Field F] (b : Bank) :=
   filtered (F := F) (sourceWeights 131071) (sourceBounds weightedCutoff 5 b.s b.t)
 variable {F : Type*} [Field F]
@@ -471,8 +463,9 @@ theorem exists_quotient_source (h e : ℕ) (hmin : originalFloor b ≤ h) (hmax 
     rw [hdimLocal, hdimMult, source_filtered_finrank]
     exact bank_surplus b h H e N hmin hmax hH hN
   let : Module F (∀ i : Fin N, LocalSpace D i) := Pi.module _ _ _
-  obtain ⟨Q, hQ, hnot⟩ := exists_kernel_outside (G := ∀ i : Fin N, LocalSpace D i)
+  have hk := exists_kernel_outside (G := ∀ i : Fin N, LocalSpace D i)
     (LinearMap.pi (nodeMap D)) (LinearMap.range mult) hdim
+  obtain ⟨Q, hQ, hnot⟩ := hk
   exact ⟨Q, (mem_filteredMul_range_iff _ _ _ L D.nonzero hdeg hfit Q).not.mp hnot,
     fun i => localContact D Q i (congrFun hQ i)⟩
 end
@@ -493,8 +486,8 @@ open K1_11 (contactWeight contactDecoderImages decoder_contact_composition conta
   scalarWeightY scalarWeightYS scalarWeightT scalarEliminant
   scalarEliminant_ne_zero polynomialView_source_coefficients clearedEval_weight_bound
   polynomialView scalarEliminant_annihilates)
-open private scalar_total_weight_le from ProximityPrize.SubmissionLower.Fast071
-open private asContactData bank_cancel contact_order_one_mem from ProximityPrize.SubmissionLower.SilverBase
+open K1_11 (scalar_total_weight_le)
+open P2_4 (asContactData bank_cancel contact_order_one_mem)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted} {b : Bank} {H : ℕ}
     (D : ContactInput u P b H)
 private theorem relation_on_support (hH : H ≤ 33561) (Q Q' : Polynomial K)
@@ -597,7 +590,7 @@ open Front6960 MvPolynomial
 open P2_4 (Bank Puncture nodeCut)
 open scoped BigOperators
 open K1_11 (indexedSupport mem_indexedSupport indexedSupport_card)
-open private ncard_inter_filter surface_count_with_terminal from ProximityPrize.SubmissionLower.Fast070
+open K1_11 (ncard_inter_filter surface_count_with_terminal)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted}
   {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
 private theorem chart_agreements (chart : TaylorChart u P F b Λ) (hF : SupportAt F) (γ : K) (hγ : γ ∈ Λ) :
@@ -723,8 +716,7 @@ namespace Front6960_4_1
 noncomputable section
 open Polynomial Matrix FrobeniusLocator ProximityPrize.Benchmark Front6960
 open K1_11_1 (Seeds PlaneField planeSlice planeStack graph rank_graph mulVec_map)
-open private syndrome_degree graph_slice_map graph_stack_map certificate_kernel
-  from ProximityPrize.SubmissionLower.Fast065
+open K1_11_1 (syndrome_degree graph_slice_map graph_stack_map certificate_kernel)
 private theorem first_slice_nullity (u : Words) (T : TwoActive u) :
     GenericLayer.genericNullity
       (Strata.parameterRelation p node (u 0) (u 1) k T.height) = 1 :=
@@ -775,14 +767,14 @@ theorem graph_content (u : Words) (T : TwoActive u) (R : Relation T)
     (Q : Fin 2 × Fin (T.height + 1) → Seeds K)
     (hQ : (planeSlice p node (u 0) (u 1) k T.height).mulVec Q = 0)
     (hgraph : (fun j => graph p (Q j)) ≠ 0) :
-    ∃ c : K[X], c ≠ 0 ∧ ∀ j, graph p (Q j) = c * R.coefficients j := by
+    ∃ c : (Polynomial K), c ≠ 0 ∧ ∀ j, graph p (Q j) = c * R.coefficients j := by
   classical
-  let f := algebraMap K[X] Frac
+  let f := algebraMap (Polynomial K) Frac
   let M := (Strata.parameterRelation p node (u 0) (u 1) k T.height).map f
   let E := fun j => f (R.coefficients j)
   let V := fun j => f (graph p (Q j))
   obtain ⟨a, ha⟩ := (PrimitiveVector.primitive_iff_bezout R.coefficients).mp R.primitive
-  have hinj := IsFractionRing.injective K[X] Frac
+  have hinj := IsFractionRing.injective (Polynomial K) Frac
   have hE : E ≠ 0 := by
     intro he
     have hzero (j : Fin 2 × Fin (T.height + 1)) : R.coefficients j = 0 :=
@@ -835,8 +827,8 @@ open K1_11_1 (Seeds PlaneField planePair planeStack plane_generator shifts_annih
   blockDegree degreeOf_coordinate graph graph_ne_zero seedPositions intoFive intoFive_omitted
   intoFive_height intoFive_seed_degree intoFive_primitive graph_intoFive)
 private theorem graph_pair {F : Type} [Field F] {h : ℕ} (q : ℕ)
-    (Q : Fin 2 × Fin (h + 1) → Seeds F) (a : Fin 2 × Fin (h + 1) → F[X])
-    (c : F[X]) (hQ : ∀ j, graph q (Q j) = c * a j) (b : Fin 2) :
+    (Q : Fin 2 × Fin (h + 1) → Seeds F) (a : Fin 2 × Fin (h + 1) → (Polynomial F))
+    (c : (Polynomial F)) (hQ : ∀ j, graph q (Q j) = c * a j) (b : Fin 2) :
     (planePair Q b).map (graph q).toRingHom =
       Polynomial.C c * Principal.assemble (fun j => a (b, j)) := by
   rw [planePair, Principal.map_assemble]
@@ -929,8 +921,7 @@ open Front6960 MvPolynomial
 open FrobeniusLocator (locator locator_monic)
 open K1_11_2 (graph OmitsMessages)
 open K1_11_2_1 (graph_natDegree)
-open private divide_plane planeLocator degreeOf_le_of_dvd omits_of_dvd native_p_pos
-  seedRelPrime parameter_only from ProximityPrize.SubmissionLower.Fast072
+open K1_11_2_1 (divide_plane planeLocator degreeOf_le_of_dvd omits_of_dvd native_p_pos seedRelPrime parameter_only)
 open Front6960_4 (degree_lt_of_product)
 private theorem seed_degree_lt {h d : ℕ} (hmax : h ≤ heightCap)
     (hd : (L - h) * d ≤ L) : d < p := by

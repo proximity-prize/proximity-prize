@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960MarkedVerticalFunctions
 import Mathlib.Algebra.Polynomial.Basis
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -13,15 +14,15 @@ variable {k E J:Type} [Field k] [Field E] [Algebra (RatFunc k) E] [Algebra k E] 
   [Fintype J] [DecidableEq J] [FiniteDimensional (RatFunc k) E] [DecidableEq (RatFunc k)]
 local notation "Ord" => chartOrder (k:=k) (E:=E)
 
-private theorem global_is_integral (bf:Basis J k[X] (Ord false)) (bi:Basis J k[X] (Ord true))
+private theorem global_is_integral (bf:Basis J (Polynomial k) (Ord false)) (bi:Basis J (Polynomial k) (Ord true))
     {v:E} (f:v∈Ord false) (h:v∈Ord true) : IsIntegral k v := by
   by_contra no
   have tr:Transcendental k v:=fun alg=>no alg.isIntegral
   let G:=twist 0 (normalizedTransition bf bi)
   let N:=finrank k (H0 G)+1
   let powers (n:Fin N):E:=v^n.val
-  have poly:LinearIndependent k (fun n:Fin N=>(Polynomial.X:k[X])^n.val) := by
-    have t:LinearIndependent k (fun a:ℕ=>(Polynomial.X:k[X])^a) :=by
+  have poly:LinearIndependent k (fun n:Fin N=>(Polynomial.X:(Polynomial k))^n.val) := by
+    have t:LinearIndependent k (fun a:ℕ=>(Polynomial.X:(Polynomial k))^a) :=by
       simpa only [Polynomial.coe_basisMonomials,Polynomial.X_pow_eq_monomial] using (Polynomial.basisMonomials k).linearIndependent
     exact t.comp Fin.val Fin.val_injective
   have inds : LinearIndependent k powers := by
@@ -30,20 +31,20 @@ private theorem global_is_integral (bf:Basis J k[X] (Ord false)) (bi:Basis J k[X
   have count:=span_le_global bf bi 0 powers (by
     intro j
     refine ⟨?_,?_⟩
-    · letI : Algebra k[X] E:=((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra
+    · letI : Algebra (Polynomial k) E:=((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra
       exact (Ord false).pow_mem f _
-    · letI : Algebra k[X] E:=((algebraMap (Laurent k) E).comp (chartEmbedding true).toRingHom).toAlgebra
+    · letI : Algebra (Polynomial k) E:=((algebraMap (Laurent k) E).comp (chartEmbedding true).toRingHom).toAlgebra
       rw [neg_zero,zpow_zero,one_mul];exact (Ord true).pow_mem h _)
   rw [finrank_span_eq_card inds,Fintype.card_fin] at count
   exact Nat.not_succ_le_self _ count
 
-private theorem zero_coeff (f:k[X]) : f.toLaurent.coeff (0:ℤ)=f.eval 0 := by
+private theorem zero_coeff (f:(Polynomial k)) : f.toLaurent.coeff (0:ℤ)=f.eval 0 := by
   rw [←Polynomial.coeff_zero_eq_eval_zero,LaurentPolynomial.coeff_toLaurent]
   exact Finsupp.mapDomain_apply_of_injective Nat.castEmbedding.injective _ 0
 
 /-- When the normalized line has determinant degree zero, its degree-e
 function field has e independent functions algebraic over the constants. -/
-theorem constant_frame (bf:Basis J k[X] (Ord false)) (bi:Basis J k[X] (Ord true))
+theorem constant_frame (bf:Basis J (Polynomial k) (Ord false)) (bi:Basis J (Polynomial k) (Ord true))
     (deg:(normalizedTransition bf bi).det.degree=(0:WithBot ℤ)) :
     ∃ w:J→E,LinearIndependent (RatFunc k) w ∧ ∀j,IsIntegral k (w j) := by
   classical
@@ -76,11 +77,11 @@ theorem constant_frame (bf:Basis J k[X] (Ord false)) (bi:Basis J k[X] (Ord true)
   have mn:M.det≠0 := by
     have n:=((Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_cols_iff_isUnit.mp indep)).ne_zero
     intro z;apply n;rw [←show (evalRingHom (0:k)) M.det=(M.map (evalRingHom 0)).det from RingHom.map_det _ _,z,map_zero]
-  let jpoly: k[X]→+*E:=(algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom
+  let jpoly: (Polynomial k)→+*E:=(algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom
   letI := jpoly.toAlgebra
-  letI : IsScalarTower k[X] (RatFunc k) E:=IsScalarTower.of_algebraMap_eq (fun r=>
+  letI : IsScalarTower (Polynomial k) (RatFunc k) E:=IsScalarTower.of_algebraMap_eq (fun r=>
     congrArg (algebraMap (RatFunc k) E) (RingHom.congr_fun Horner.rationalLaurent_finite r))
-  have iu:LinearIndependent k[X] u := by
+  have iu:LinearIndependent (Polynomial k) u := by
     apply Fintype.linearIndependent_iff.mpr
     intro a h i
     have eq:M*ᵥa=0 := by
@@ -90,9 +91,9 @@ theorem constant_frame (bf:Basis J k[X] (Ord false)) (bi:Basis J k[X] (Ord true)
         smul_eq_mul,Finsupp.zero_apply,Matrix.mulVec,dotProduct,M,chartMatrix,mul_comm,Pi.zero_apply] using st
     exact congrFun (Matrix.eq_zero_of_mulVec_eq_zero mn eq) i
   let w (j:J):E:=(u j:E)
-  have iw:LinearIndependent k[X] w:=iu.map' (Ord false).val.toLinearMap
+  have iw:LinearIndependent (Polynomial k) w:=iu.map' (Ord false).val.toLinearMap
     (LinearMap.ker_eq_bot_of_injective Subtype.val_injective)
-  refine ⟨w,(LinearIndependent.iff_fractionRing k[X] (RatFunc k)).mp iw,fun i=>?_⟩
+  refine ⟨w,(LinearIndependent.iff_fractionRing (Polynomial k) (RatFunc k)).mp iw,fun i=>?_⟩
   have g0:twist 0 G=G:=by simp [twist]
   have hi: (B i).val∈transitionLattice (twist 0 G):=g0.symm ▸ (B i).property.2
   apply global_is_integral bf bi (u i).property

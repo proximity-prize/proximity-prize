@@ -16,7 +16,7 @@ variable {A K : Type*} [CommRing A] [Field K]
 
 /-- A separable ordinate quotient has no nilpotents, including when the
 polynomial has more than one irreducible factor. -/
-theorem separable_adjoinRoot_reduced (q : K[X]) (sep : q.Separable) : IsReduced (AdjoinRoot q) := by
+theorem separable_adjoinRoot_reduced (q : (Polynomial K)) (sep : q.Separable) : IsReduced (AdjoinRoot q) := by
   constructor
   intro x h
   induction x using AdjoinRoot.induction_on with
@@ -32,7 +32,7 @@ theorem separable_adjoinRoot_reduced (q : K[X]) (sep : q.Separable) : IsReduced 
 /-- A separable specialized monic equation has nonzero power-basis
 trace discriminant in characteristic larger than its degree, even when
 the quotient is a product. -/
-theorem monic_disc_nonzero_at {f : A[X]} (hf : f.Monic) (j : A→+*K)
+theorem monic_disc_nonzero_at {f : (Polynomial A)} (hf : f.Monic) (j : A→+*K)
     (p : ℕ) [CharP K p] (small : f.natDegree<p) (sep : (f.map j).Separable) :
     j (monicDisc hf)≠0 := by
   let q := f.map j
@@ -72,7 +72,7 @@ variable {A F E K : Type*} [CommRing A] [IsDomain A] [IsIntegrallyClosed A]
 /-- Specialize the original integral closure at the selected field map.
 At a good monic equation it is the full separable ordinate quotient, with
 the ordinate represented by the actual lifted root. -/
-theorem monic_fibre_equiv {f : A[X]} (hf : f.Monic) (γ : E) (root : aeval γ f=0)
+theorem monic_fibre_equiv {f : (Polynomial A)} (hf : f.Monic) (γ : E) (root : aeval γ f=0)
     (b : Basis (Fin f.natDegree) F E) (pow : ∀ i,b i=γ^(i:ℕ))
     (j : A→+*K) (p : ℕ) [CharP K p] (small : f.natDegree<p) (sep : (f.map j).Separable) :
     let : Algebra A K := j.toAlgebra

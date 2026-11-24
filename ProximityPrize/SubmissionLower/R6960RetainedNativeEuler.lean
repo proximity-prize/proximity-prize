@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960RetainedAxisTransition
 import ProximityPrize.SubmissionLower.R6960RetainedAxisPoint
+set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section
 set_option Elab.async false
@@ -18,23 +19,23 @@ abbrev LineObstructions (j:Bool) (c:L) := (Axis E j c) ⧸ (chartImage E j c fal
 
 theorem native_frames [FiniteDimensional ChartField E] [Algebra.IsSeparable ChartField E]
     (j:Bool) (c:L) (nc:c≠0) :
-    ∃ n : ℕ, Nonempty (Basis (Fin n) L[X] (chartImage E j c false)) ∧
-      Nonempty (Basis (Fin n) L[X] (chartImage E j c true)) := by
-  have fin (b:Bool) : Module.Finite L[X] (chartImage E j c b) := chart_finite E j c b
-  have free (b:Bool) : Module.Free L[X] (chartImage E j c b) := chart_free E j c b
-  let bf:=Module.finBasis L[X] (chartImage E j c false)
-  let bi:=Module.finBasis L[X] (chartImage E j c true)
+    ∃ n : ℕ, Nonempty (Basis (Fin n) (Polynomial L) (chartImage E j c false)) ∧
+      Nonempty (Basis (Fin n) (Polynomial L) (chartImage E j c true)) := by
+  have fin (b:Bool) : Module.Finite (Polynomial L) (chartImage E j c b) := chart_finite E j c b
+  have free (b:Bool) : Module.Free (Polynomial L) (chartImage E j c b) := chart_free E j c b
+  let bf:=Module.finBasis (Polynomial L) (chartImage E j c false)
+  let bi:=Module.finBasis (Polynomial L) (chartImage E j c true)
   let U:=localFreeBasis false bf (nativeMap E j c false) (native_localization E j c nc false)
   let V:=localFreeBasis true bi (nativeMap E j c true) (native_localization E j c nc true)
-  have same : finrank L[X] (chartImage E j c true)=finrank L[X] (chartImage E j c false) := by
+  have same : finrank (Polynomial L) (chartImage E j c true)=finrank (Polynomial L) (chartImage E j c false) := by
     simpa only [Fintype.card_fin] using (finrank_eq_card_basis V).symm.trans (finrank_eq_card_basis U)
-  exact ⟨_,⟨bf⟩,⟨Module.finBasisOfFinrankEq L[X] _ same⟩⟩
+  exact ⟨_,⟨bf⟩,⟨Module.finBasisOfFinrankEq (Polynomial L) _ same⟩⟩
 
 /-- Euler's formula on the actual specialized surface order. The determinant is
 computed from its finite and infinity bases, even if the fibre is a proper suborder. -/
 theorem native_euler (j:Bool) (c:L) (nc:c≠0) {n : ℕ}
-    (bf : Basis (Fin n) L[X] (chartImage E j c false))
-    (bi : Basis (Fin n) L[X] (chartImage E j c true)) :
+    (bf : Basis (Fin n) (Polynomial L) (chartImage E j c false))
+    (bi : Basis (Fin n) (Polynomial L) (chartImage E j c true)) :
     let G:=freeTransition bf bi (nativeMap E j c false) (nativeMap E j c true)
       (native_localization E j c nc false) (native_localization E j c nc true)
     FiniteDimensional L (LineGlobals E j c) ∧ FiniteDimensional L (LineObstructions E j c) ∧

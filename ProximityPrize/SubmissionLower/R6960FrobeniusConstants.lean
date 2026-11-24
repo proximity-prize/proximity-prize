@@ -35,12 +35,12 @@ theorem coefficients_constant {F E : Type*} [Field F] [Field E] [Algebra F E]
     rw [degree]
     change f.leadingCoeff′=0
     rw [mon.leadingCoeff]; exact Differential.deriv.map_one_eq_zero
-  exact congrArg (fun q : F[X]=>q.coeff j) zero
+  exact congrArg (fun q : (Polynomial F)=>q.coeff j) zero
 
 /-- In a degree below the characteristic a root of a polynomial defined
 over the Frobenius image is itself in that image. -/
 theorem root_of_coefficients {E : Type*} [Field E] (p : ℕ) [Fact p.Prime] [CharP E p]
-    (f : E[X]) (nonzero : f≠0) (degree : f.natDegree<p) (x : E) (root : f.eval x=0)
+    (f : (Polynomial E)) (nonzero : f≠0) (degree : f.natDegree<p) (x : E) (root : f.eval x=0)
     (coefficients : ∀ i,∃ r:E,r^p=f.coeff i) : ∃ y:E,y^p=x := by
   classical
   have lifts : f∈Polynomial.lifts (frobenius E p) := (lifts_iff_coeff_lifts _).mpr coefficients

@@ -26,7 +26,7 @@ lemma coeff_eval_scaled (p : B[X]) (a : B) (k : ℕ) :
   | add p q hp hq => simp [hp, hq, add_mul]
   | monomial n c =>
       simp only [eval₂_monomial, mul_pow, ← map_pow,
-        PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow, coeff_monomial]
+        PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow, coeff_monomial, Finsupp.single_apply]
       by_cases h : n = k
       · subst k; simp
       · simp [h, Ne.symm h]

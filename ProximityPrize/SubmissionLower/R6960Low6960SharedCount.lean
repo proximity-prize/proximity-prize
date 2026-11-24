@@ -20,16 +20,16 @@ open Low6960GeometryCut_2 (Branch)
 open Low6960SharedPrice (Rate RateFits slope coord)
 open Low6960SharedTally (Data hasBranch)
 open Low6960SharedTallyNew (tally)
-open private tilted_count from ProximityPrize.SubmissionLower.R6960Low6960SharedTallyNew
+open Low6960SharedTallyNew (tilted_count)
 open Low6960SharedTallyOld (orderCost auxiliaryCap continuedCap surfaceCap)
 open Low6960SharedPersistent (Persistent)
 open Finset
 open scoped Polynomial BigOperators
 attribute [local instance] Classical.propDecidable
-open private continued_bound le_ceil from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
-open private eval_actualPoint genericCoeffs_injective from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
+open Low6960GeometryCut (continued_bound le_ceil)
+open Low6960GeometryCut_2 (eval_actualPoint genericCoeffs_injective)
 
-private theorem shape_valid {f : Row 4} (hf : SmallFactor f) : K1_13_8.Valid (shape f) := by
+theorem shape_valid {f : Row 4} (hf : SmallFactor f) : K1_13_8.Valid (shape f) := by
   refine ⟨hf.2.1,(K1_13_7_1.shape_chamber f).2,?_⟩
   change K1_13.indexDegree f ≤ 3*f.totalDegree
   rw [K1_13_1.indexDegree_eq]
@@ -125,7 +125,7 @@ private theorem count_low {w Γ s f Q l}
     (shape_valid input.small) hbox (fun b hb=>hcut _ (memP b hb))
 
 /-- A proper cut of all persistent surfaces of the indicated anchor order. -/
-def TiltedCut {Γ : Finset K} {s : K → K[X]} (f : Row 4) (u : Rate) : Prop :=
+def TiltedCut {Γ : Finset K} {s : K → (Polynomial K)} (f : Row 4) (u : Rate) : Prop :=
   ∀ (P : Finset (Ideal GeoJets)), (∀ p ∈ P, Persistent Γ s p) →
     (∀ p ∈ P, Low6960SharedChooseCut.SuitableSurface f u.split p) →
     ∃ (n : ℕ) (G : Row 4), 0 < n ∧ (¬ f ∣ G) ∧

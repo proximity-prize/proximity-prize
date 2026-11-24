@@ -20,7 +20,7 @@ theorem unit_monomial (f : Laurent k) (h : IsUnit f) :
   obtain ⟨u,rfl⟩ := h
   obtain ⟨n,a,ea⟩ := LaurentPolynomial.exists_T_pow (u:Laurent k)
   obtain ⟨m,b,eb⟩ := LaurentPolynomial.exists_T_pow (↑u⁻¹:Laurent k)
-  have product : a*b=(Polynomial.X : k[X])^(n+m) := by
+  have product : a*b=(Polynomial.X : (Polynomial k))^(n+m) := by
     apply Polynomial.toLaurent_injective
     rw [map_mul,ea,eb,Polynomial.toLaurent_X_pow]
     rw [mul_mul_mul_comm,Units.mul_inv,one_mul,←T_add]
@@ -28,12 +28,12 @@ theorem unit_monomial (f : Laurent k) (h : IsUnit f) :
     rfl
   obtain ⟨j,_,h⟩ := (dvd_prime_pow (Polynomial.prime_X (R:=k)) (n+m)).mp (show a∣_ from ⟨b,product.symm⟩)
   obtain ⟨v,hv⟩ := h.symm
-  let c := (v:k[X]).coeff 0
-  have vC : (v:k[X])=Polynomial.C c := eq_C_of_natDegree_eq_zero (natDegree_coe_units v)
+  let c := (v:(Polynomial k)).coeff 0
+  have vC : (v:(Polynomial k))=Polynomial.C c := eq_C_of_natDegree_eq_zero (natDegree_coe_units v)
   have cn : c≠0 := by
     intro z
     exact v.ne_zero (by rw [vC,z,map_zero])
-  have aa : a=(Polynomial.X : k[X])^j*Polynomial.C c := by
+  have aa : a=(Polynomial.X : (Polynomial k))^j*Polynomial.C c := by
     rw [vC] at hv
     exact hv.symm
   refine ⟨c,(j:ℤ)-n,cn,?_⟩
@@ -49,7 +49,7 @@ variable [Fintype ι]
 /-- A single shift clears the abscissa end of every matrix entry and
 expresses the transition as a polynomial matrix on the infinity chart. -/
 theorem clear_transition (G : Matrix ι ι (Laurent k)) :
-    ∃ (N : ℕ) (A : Matrix ι ι k[X]), G=(T (R:=k) (N:ℤ)) • A.map (infinityEmbedding (k:=k)) := by
+    ∃ (N : ℕ) (A : Matrix ι ι (Polynomial k)), G=(T (R:=k) (N:ℤ)) • A.map (infinityEmbedding (k:=k)) := by
   classical
   let N := Finset.univ.sup fun i : ι=>Finset.univ.sup fun j : ι=>(G i j).coeff.support.sup Int.toNat
   have bound (i j : ι) {m : ℤ} (hm : m∈(G i j).coeff.support) : m≤(N:ℤ) := by
@@ -60,7 +60,7 @@ theorem clear_transition (G : Matrix ι ι (Laurent k)) :
         (Finset.mem_univ i)
     have d := a.trans (b.trans c)
     omega
-  have fit (i j : ι) : ∃ p : k[X],shiftPolynomial N p=G i j := by
+  have fit (i j : ι) : ∃ p : (Polynomial k),shiftPolynomial N p=G i j := by
     change G i j∈LinearMap.range (shiftPolynomial N)
     rw [range_shiftPolynomial]
     exact AddMonoidAlgebra.mem_supported.mpr (fun _ hm=>bound i j hm)
@@ -75,7 +75,7 @@ variable [DecidableEq ι]
 /-- The infinity-chart determinant computation tracks the sign of the
 transition degree. The cleared matrix loses one shifted exponent per row. -/
 theorem transition_degree (G : Matrix ι ι (Laurent k)) (unit : IsUnit G)
-    (N : ℕ) (A : Matrix ι ι k[X]) (clear : G=(T (R:=k) (N:ℤ)) • A.map (infinityEmbedding (k:=k))) :
+    (N : ℕ) (A : Matrix ι ι (Polynomial k)) (clear : G=(T (R:=k) (N:ℤ)) • A.map (infinityEmbedding (k:=k))) :
     A.det≠0 ∧ ∃ d : ℤ, G.det.degree=(d:WithBot ℤ) ∧
       d=(Fintype.card ι:ℤ)*(N:ℤ)-(A.det.natDegree:ℤ) := by
   let M : ℤ := (Fintype.card ι:ℤ)*(N:ℤ)

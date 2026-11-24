@@ -64,8 +64,8 @@ lemma coeff_swap (p : Polynomial (Polynomial F)) (a b : ℕ) :
       | add p q hp hq => simp_all
       | monomial m c =>
           rw [Polynomial.Bivariate.swap_monomial_monomial]
-          simp only [coeff_monomial]
-          split_ifs <;> simp_all [coeff_monomial]
+          simp only [coeff_monomial, Finsupp.single_apply]
+          split_ifs <;> simp_all [coeff_monomial, Finsupp.single_apply]
 
 lemma eval_swap (p : Polynomial (Polynomial F)) (z : F) :
     (Polynomial.Bivariate.swap p).eval (Polynomial.C z) =
@@ -120,12 +120,12 @@ lemma theta_eq_curveEval (R H : Tri) (P : F[X]) (z : F) (m : ℕ) :
     theta R P z m H = P64C6Res.curveEval
       (PowerSeries.C P + flow (center P z R) (derivativeAlong R P z) m)
       (Polynomial.C z) ((derivativeAlong R P z) ^ 2) (reorder H) := by
-  change Ev _ _ (shiftHom _ _ (reorder H)) = _
-  rw [Ev_shift]
+  rw [theta, RingHom.comp_apply, center, RingHom.comp_apply, jet, RingHom.comp_apply, Ev_shift]
   simp only [P64C6Res.curveEval, parameter, add_comm]
 
 lemma theta_self (R : Tri) (P : F[X]) (z : F) (m : ℕ) (hR : triEval R z P = 0) :
     (PowerSeries.X : PowerSeries (F[X])) ^ (m + 1) ∣ theta R P z m R := by
+  rw [theta, RingHom.comp_apply]
   apply X_pow_dvd_jet_self
   · rwa [center_coeff_zero]
   · exact center_coeff_one R P z

@@ -21,8 +21,7 @@ open K1_14_2 (Ambient OnJet SeedField RootSeedSection)
 open K1_14_2_2 (CutCover CurveGeometry)
 open K1_14_2_3 (SeedSlice seedImage rootImage constantCoefficients DefinedOverConstants seedLength
   yLength)
-open private on_root on_seed moving_graph_count seed_graph_count equal_image_degree
-  union_card_le from ProximityPrize.SubmissionLower.Fast062
+open K1_14_2_3 (on_root on_seed moving_graph_count seed_graph_count equal_image_degree union_card_le)
 open scoped BigOperators Classical
 private theorem projected_curve : K1_14_2_3.c2 :=
   K1_14_2_3_2.of_children K1_14_2_3_2_1.proof K1_14_2_3_2_2.proof
@@ -264,7 +263,7 @@ open K1_14_2_2 (RowCaps FixedPart mass sectionDegree sum_union_le)
 open K1_14_2_2_2 (ordinaryBudget)
 open K1_14_3 (NoMovingCommon)
 open scoped BigOperators Classical
-open private irreducible_cut terminal_piece from ProximityPrize.SubmissionLower.UpperBranch4
+open P1_7_4_1 (irreducible_cut terminal_piece)
 private theorem intro_components {b : HighCore82258.Band} (sched : ScheduleOK b)
     {P Q : Jet} (hQ : Q ≠ 0) (hnc : NoMovingCommon P Q)
     (hQc : RowCaps Q (stageAt b 0).moving.shape) (later : ℕ → Jet)
@@ -384,7 +383,7 @@ open K1_14 K1_14_2 K1_14_2_2 K1_14_2_2_2 K1_14_3_2 Polynomial
 open K1_14_3 (SeedCover joinCovers joinCovers_degree joinCovers_points joinCovers_covers)
 open scoped BigOperators Classical
 open P1_7_4_1 (strip)
-open private seed_projection from ProximityPrize.SubmissionLower.PortHighFinish
+open P0_10R_1 (seed_projection)
 end
 end HighCore82258_3_1
 end
@@ -400,7 +399,7 @@ open P1_7_4_3 (mix cast_mixed short_cut)
 open K1_13 (Row extend)
 open K1_13_5 (RegularAt)
 open K1_14_3_6 (power totalCap topCap)
-open private weights rho_at_endpoint from ProximityPrize.SubmissionLower.HighCore82258Family
+open HighCore82258 (weights rho_at_endpoint)
 open HighCore82258PrefixHelpers (section_bound )
 private theorem word_subset {w T s d} (hw : FixedWord w T s d) {U : Finset K}
     (hU : U ⊆ T) : FixedWord w U s d :=

@@ -9,42 +9,42 @@ namespace Lower6960.LineEuler
 noncomputable section
 open Polynomial LaurentPolynomial Module
 open scoped Polynomial BigOperators Matrix
-open private Lower6960.LineEuler.chartLocalization from ProximityPrize.SubmissionLower.R6960LineEulerNormalization
+open Lower6960.LineEuler (chartLocalization)
 
 variable {k ι M U V : Type*} [Field k]
   [AddCommGroup M] [Module (Laurent k) M]
-  [AddCommGroup U] [Module k[X] U] [AddCommGroup V] [Module k[X] V]
+  [AddCommGroup U] [Module (Polynomial k) U] [AddCommGroup V] [Module (Polynomial k) V]
 
 /-- The scalar action on the Laurent module uses the indicated polynomial
 chart. The module can come from a proper suborder after specialization. -/
-abbrev ChartMap (s : Bool) (U M : Type*) [AddCommGroup U] [Module k[X] U]
+abbrev ChartMap (s : Bool) (U M : Type*) [AddCommGroup U] [Module (Polynomial k) U]
     [AddCommGroup M] [Module (Laurent k) M] :=
-  letI : Module k[X] M := Module.compHom M (chartEmbedding (k:=k) s).toRingHom
-  U→ₗ[k[X]] M
+  letI : Module (Polynomial k) M := Module.compHom M (chartEmbedding (k:=k) s).toRingHom
+  U→ₗ[(Polynomial k)] M
 
 /-- The common module is obtained by inverting the chart variable in the
 source polynomial module. -/
 def IsChartLocalization (s : Bool) (f : ChartMap (k:=k) s U M) : Prop :=
-  let : Module k[X] M := Module.compHom M (chartEmbedding (k:=k) s).toRingHom
-  IsLocalizedModule (Submonoid.powers (Polynomial.X : k[X])) f
+  let : Module (Polynomial k) M := Module.compHom M (chartEmbedding (k:=k) s).toRingHom
+  IsLocalizedModule (Submonoid.powers (Polynomial.X : (Polynomial k))) f
 
 /-- An injective chart map with explicit denominator clearings realizes
 localization at the chart coordinate. -/
 theorem isChartLocalization_of_clearing (s : Bool) (f : ChartMap (k:=k) s U M)
     (inj : Function.Injective f)
-    (clearing : ∀ v : M,∃ (n : ℕ) (u : U), (chartEmbedding s (Polynomial.X : k[X]))^n • v=f u) :
+    (clearing : ∀ v : M,∃ (n : ℕ) (u : U), (chartEmbedding s (Polynomial.X : (Polynomial k)))^n • v=f u) :
     IsChartLocalization s f := by
-  let : Algebra k[X] (Laurent k) := (chartEmbedding (k:=k) s).toRingHom.toAlgebra
-  let : Module k[X] M := Module.compHom M (chartEmbedding (k:=k) s).toRingHom
-  let powers := Submonoid.powers (Polynomial.X : k[X])
+  let : Algebra (Polynomial k) (Laurent k) := (chartEmbedding (k:=k) s).toRingHom.toAlgebra
+  let : Module (Polynomial k) M := Module.compHom M (chartEmbedding (k:=k) s).toRingHom
+  let powers := Submonoid.powers (Polynomial.X : (Polynomial k))
   let : IsLocalization powers (Laurent k) := Lower6960.LineEuler.chartLocalization (k:=k) s
   change IsLocalizedModule powers f
   constructor
   · intro a
     obtain ⟨u,hu⟩ := IsLocalization.map_units (Laurent k) a
     rw [Module.End.isUnit_iff]
-    change Function.Bijective (fun v : M=>chartEmbedding s (a:k[X]) • v)
-    change (u:Laurent k)=chartEmbedding s (a:k[X]) at hu
+    change Function.Bijective (fun v : M=>chartEmbedding s (a:(Polynomial k)) • v)
+    change (u:Laurent k)=chartEmbedding s (a:(Polynomial k)) at hu
     rw [←hu]
     refine ⟨?_,?_⟩
     · intro x y eq
@@ -56,24 +56,24 @@ theorem isChartLocalization_of_clearing (s : Bool) (f : ChartMap (k:=k) s U M)
       rw [←mul_smul,Units.mul_inv,one_smul]
   · intro v
     obtain ⟨n,u,eq⟩ := clearing v
-    exact ⟨⟨u,⟨(Polynomial.X:k[X])^n,n,rfl⟩⟩,by
-      change chartEmbedding s ((Polynomial.X:k[X])^n) • v=f u
+    exact ⟨⟨u,⟨(Polynomial.X:(Polynomial k))^n,n,rfl⟩⟩,by
+      change chartEmbedding s ((Polynomial.X:(Polynomial k))^n) • v=f u
       rw [map_pow,eq]⟩
   · intro x y eq
     exact ⟨1,by rw [inj eq]⟩
 
-private def localFreeData (s : Bool) (b : Basis ι k[X] U) (f : ChartMap (k:=k) s U M)
+private def localFreeData (s : Bool) (b : Basis ι (Polynomial k) U) (f : ChartMap (k:=k) s U M)
     (loc : IsChartLocalization s f) :
     {B : Basis ι (Laurent k) M // (∀ i,B i=f (b i)) ∧
       ∀ u i,B.repr (f u) i=chartEmbedding s (b.repr u i)} := by
-  let : Algebra k[X] (Laurent k) := (chartEmbedding (k:=k) s).toRingHom.toAlgebra
-  let : Module k[X] M := Module.compHom M (chartEmbedding (k:=k) s).toRingHom
-  let : IsScalarTower k[X] (Laurent k) M := ⟨fun p r v=>by
+  let : Algebra (Polynomial k) (Laurent k) := (chartEmbedding (k:=k) s).toRingHom.toAlgebra
+  let : Module (Polynomial k) M := Module.compHom M (chartEmbedding (k:=k) s).toRingHom
+  let : IsScalarTower (Polynomial k) (Laurent k) M := ⟨fun p r v=>by
     change (chartEmbedding s p*r) • v=chartEmbedding s p • (r • v)
     exact mul_smul _ _ _⟩
-  let : IsLocalization.Away (Polynomial.X : k[X]) (Laurent k) :=
+  let : IsLocalization.Away (Polynomial.X : (Polynomial k)) (Laurent k) :=
     Lower6960.LineEuler.chartLocalization (k:=k) s
-  let powers := Submonoid.powers (Polynomial.X : k[X])
+  let powers := Submonoid.powers (Polynomial.X : (Polynomial k))
   let : IsLocalizedModule powers f := loc
   refine ⟨b.ofIsLocalizedModule (Laurent k) powers f,?_,?_⟩
   · intro i
@@ -82,23 +82,23 @@ private def localFreeData (s : Bool) (b : Basis ι k[X] U) (f : ChartMap (k:=k) 
     exact b.ofIsLocalizedModule_repr_apply (Laurent k) powers f u i
 
 /-- A polynomial basis extends to the given common Laurent module. -/
-def localFreeBasis (s : Bool) (b : Basis ι k[X] U) (f : ChartMap (k:=k) s U M)
+def localFreeBasis (s : Bool) (b : Basis ι (Polynomial k) U) (f : ChartMap (k:=k) s U M)
     (loc : IsChartLocalization s f) : Basis ι (Laurent k) M := (localFreeData s b f loc).1
 
-@[simp] theorem localFreeBasis_apply (s : Bool) (b : Basis ι k[X] U) (f : ChartMap (k:=k) s U M)
+@[simp] theorem localFreeBasis_apply (s : Bool) (b : Basis ι (Polynomial k) U) (f : ChartMap (k:=k) s U M)
     (loc : IsChartLocalization s f) (i : ι) : localFreeBasis s b f loc i=f (b i) :=
   (localFreeData s b f loc).2.1 i
 
-@[simp] theorem localFreeBasis_repr (s : Bool) (b : Basis ι k[X] U) (f : ChartMap (k:=k) s U M)
+@[simp] theorem localFreeBasis_repr (s : Bool) (b : Basis ι (Polynomial k) U) (f : ChartMap (k:=k) s U M)
     (loc : IsChartLocalization s f) (u : U) (i : ι) :
     (localFreeBasis s b f loc).repr (f u) i=chartEmbedding s (b.repr u i) :=
   (localFreeData s b f loc).2.2 u i
 
-private def chartLattice (s : Bool) : Submodule k (ι→Laurent k) :=
+def chartLattice (s : Bool) : Submodule k (ι→Laurent k) :=
   if s then upperLattice k ι 0 else finiteLattice k ι
 
-private theorem chartLattice_iff (s : Bool) (v : ι→Laurent k) : v∈chartLattice s ↔
-    ∃ q : ι→k[X],∀ i,chartEmbedding s (q i)=v i := by
+theorem chartLattice_iff (s : Bool) (v : ι→Laurent k) : v∈chartLattice s ↔
+    ∃ q : ι→(Polynomial k),∀ i,chartEmbedding s (q i)=v i := by
   cases s with
   | false => exact mem_finiteLattice v
   | true =>
@@ -110,7 +110,7 @@ private theorem chartLattice_iff (s : Bool) (v : ι→Laurent k) : v∈chartLatt
     · rintro ⟨q,hq⟩
       exact ⟨q,funext fun i=>by simpa [chartEmbedding] using hq i⟩
 
-private theorem coordinate_image [Finite ι] (s : Bool) (b : Basis ι k[X] U)
+private theorem coordinate_image [Finite ι] (s : Bool) (b : Basis ι (Polynomial k) U)
     (f : ChartMap (k:=k) s U M) (loc : IsChartLocalization s f) (v : M) :
     (localFreeBasis s b f loc).equivFun v∈chartLattice s ↔ ∃ u : U,f u=v := by
   rw [chartLattice_iff]
@@ -125,7 +125,7 @@ private theorem coordinate_image [Finite ι] (s : Bool) (b : Basis ι k[X] U)
 variable [Fintype ι] [DecidableEq ι]
 
 section Both
-variable (bf : Basis ι k[X] U) (bi : Basis ι k[X] V)
+variable (bf : Basis ι (Polynomial k) U) (bi : Basis ι (Polynomial k) V)
     (ff : ChartMap (k:=k) false U M) (fi : ChartMap (k:=k) true V M)
     (lf : IsChartLocalization false ff) (li : IsChartLocalization true fi)
 

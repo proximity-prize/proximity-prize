@@ -1,6 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedPlaneOverlap
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedLineTrace
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGlobalSum
+set_option synthInstance.maxHeartbeats 200000
 
 set_option Elab.async false
 set_option maxRecDepth 18000
@@ -16,14 +17,14 @@ open NormalizedFiber RetainedSurfaceClass RetainedRestrictionTorus LineEuler Col
 open Polynomial LaurentPolynomial Module Algebra Matrix Finset
 open scoped Lower6960.CollisionMarked Lower6960.RetainedSurfaceClass Polynomial Matrix
 
-private theorem laurent_nat_coeff {k:Type} [CommRing k] (P:k[X]) (n:ℕ) :
+private theorem laurent_nat_coeff {k:Type} [CommRing k] (P:(Polynomial k)) (n:ℕ) :
     P.toLaurent.coeff (n:ℤ)=P.coeff n := by
   rw [LaurentPolynomial.coeff_toLaurent]
   exact Finsupp.mapDomain_apply_of_injective Nat.castEmbedding.injective _ _
 
 /-- The abscissa overlap unit has scalar degree zero. Reflecting its
 coefficient sequence therefore cannot increase the seed degree. -/
-theorem plane_overlap_height_le {k:Type} [Field k] (A B:k[X][X]) (an:A≠0)
+theorem plane_overlap_height_le {k:Type} [Field k] (A B:(Polynomial (Polynomial k))) (an:A≠0)
     (u:k) (un:u≠0) (m:ℤ)
     (glue : A.toLaurent=LaurentPolynomial.C (Polynomial.C u)*T m*invert B.toLaurent) :
     CurvatureSquares.height B≤CurvatureSquares.height A := by
@@ -32,7 +33,7 @@ theorem plane_overlap_height_le {k:Type} [Field k] (A B:k[X][X]) (an:A≠0)
     by_cases h : (n:ℤ)≤m
     · let j := (m-(n:ℤ)).toNat
       have js : (j:ℤ)=m-(n:ℤ) := Int.toNat_of_nonneg (sub_nonneg.mpr h)
-      have r := congrArg (fun P:LaurentPolynomial k[X]=>P.coeff (j:ℤ)) glue
+      have r := congrArg (fun P:LaurentPolynomial (Polynomial k)=>P.coeff (j:ℤ)) glue
       rw [laurent_nat_coeff,←single_eq_C_mul_T,
         AddMonoidAlgebra.coeff_single_mul_eq_mul_coeff ((j:ℤ)-m) (by intro v _; omega),
         invert_apply,show -((j:ℤ)-m)=(n:ℤ) by omega,laurent_nat_coeff] at r
@@ -81,8 +82,8 @@ the native surface budget. -/
 theorem original_line_degree_cap (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
     [IsReduced (Crossing E x z)] [FiniteDimensional L (Crossing E x z)]
     (p:ℕ) [CharP L p] (small:finrank L (Crossing E x z)<p) {n:ℕ}
-    (bf:Basis (Fin n) L[X] (chartImage E j (atCoord j x z) false))
-    (bi:Basis (Fin n) L[X] (chartImage E j (atCoord j x z) true))
+    (bf:Basis (Fin n) (Polynomial L) (chartImage E j (atCoord j x z) false))
+    (bi:Basis (Fin n) (Polynomial L) (chartImage E j (atCoord j x z) true))
     (s:ℕ) (measure:(transition E j (atCoord j x z) (by cases j <;> assumption) bf bi).det.degree=
       ((-(s:ℤ):ℤ):WithBot ℤ))
     (δf δi:Plane L) (nf:δf≠0)
@@ -93,10 +94,10 @@ theorem original_line_degree_cap (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
       LaurentPolynomial.C (Polynomial.C u)*T (2*(s:ℤ))*invert (Bivariate.swap δi).toLaurent := by
   let c := atCoord j x z
   have nc : c≠0 := by cases j <;> assumption
-  let : Algebra L[X] (lineChartRing (E:=E) j false c) := lineChartAlgebra j false c nc
-  let : Algebra L[X] (lineChartRing (E:=E) j true c) := lineChartAlgebra j true c nc
-  let f := (traceMatrix L[X] (bf.map (lineChartLinearEquiv (E:=E) j false c nc))).det
-  let i := (traceMatrix L[X] (bi.map (lineChartLinearEquiv (E:=E) j true c nc))).det
+  let : Algebra (Polynomial L) (lineChartRing (E:=E) j false c) := lineChartAlgebra j false c nc
+  let : Algebra (Polynomial L) (lineChartRing (E:=E) j true c) := lineChartAlgebra j true c nc
+  let f := (traceMatrix (Polynomial L) (bf.map (lineChartLinearEquiv (E:=E) j false c nc))).det
+  let i := (traceMatrix (Polynomial L) (bi.map (lineChartLinearEquiv (E:=E) j true c nc))).det
   let A := Bivariate.swap δf
   let B := Bivariate.swap δi
   have an : A≠0 := (map_ne_zero_iff Bivariate.swap.toRingHom Bivariate.swap.injective).mpr nf
@@ -128,10 +129,10 @@ bidegree and the one reciprocal exceptional-seed polynomial. -/
 theorem actual_measured_discriminants (x z:L) (nx:x≠0) (nz:z≠0)
     [IsReduced (Crossing E x z)] [FiniteDimensional L (Crossing E x z)]
     (p:ℕ) [CharP L p] (small:finrank L (Crossing E x z)<p)
-    {m n:ℕ} (xf:Basis (Fin m) L[X] (chartImage E false x false))
-    (xi:Basis (Fin m) L[X] (chartImage E false x true))
-    (zf:Basis (Fin n) L[X] (chartImage E true z false))
-    (zi:Basis (Fin n) L[X] (chartImage E true z true))
+    {m n:ℕ} (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false))
+    (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
+    (zf:Basis (Fin n) (Polynomial L) (chartImage E true z false))
+    (zi:Basis (Fin n) (Polynomial L) (chartImage E true z true))
     (s t:ℕ)
     (ds:(transition E true z nz zf zi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ))
     (dt:(transition E false x nx xf xi).det.degree=((-(t:ℤ):ℤ):WithBot ℤ)) :

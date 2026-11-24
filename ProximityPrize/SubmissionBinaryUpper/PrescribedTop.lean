@@ -547,9 +547,10 @@ theorem epsilon_lt_carrier_fraction :
     have hq : 0 < Fintype.card FF := Fintype.card_pos
     have hN : 0 < Fintype.card Carrier := lt_trans (by positivity) carrier_large
     omega
-  have h := nnreal_fraction_lt _ _ _ (by positivity) hdenNat carrier_density_nat
-  rw [Nat.cast_pow] at h
-  exact h
+  have h := nnreal_fraction_lt (Fintype.card FF) (Fintype.card Carrier) (2 ^ 128)
+    (by positivity) hdenNat carrier_density_nat
+  rw [Nat.cast_pow, Nat.cast_ofNat] at h
+  assumption
 
 /-- For every radius in the certified band, the quantitative collision image
 already has density strictly above `2^-128`. -/

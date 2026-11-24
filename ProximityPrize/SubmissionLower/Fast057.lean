@@ -1,4 +1,5 @@
 import ProximityPrize.SubmissionLower.Fast051
+import ProximityPrize.SubmissionLower.RingHomShortcuts
 import ProximityPrize.SubmissionLower.Fast052
 import ProximityPrize.SubmissionLower.Fast053
 set_option Elab.async false
@@ -841,7 +842,7 @@ theorem finite_function_field {k A : Type} [Field k] [CommRing A] [IsDomain A] [
 private theorem polynomial_relation {k A : Type} [Field k] [CommRing A] [IsDomain A] [Algebra k A]
     {ι : Type} [Fintype ι] {f : A} (hf : f ≠ 0) (b : ι → A)
     (hb : LinearIndependent k (fun i => Ideal.Quotient.mk (Ideal.span {f}) (b i)))
-    (P : ι → k[X]) (hP : (∑ i, aeval f (P i) * b i) = 0) : ∀ i, P i = 0 := by
+    (P : ι → (Polynomial k)) (hP : (∑ i, aeval f (P i) * b i) = 0) : ∀ i, P i = 0 := by
   classical
   by_contra hn
   push Not at hn
@@ -1162,7 +1163,7 @@ open scoped Polynomial WithZero
 private theorem eval₂_value_one {k K : Type} [Field k] [Field K]
     (v : Valuation K ℤᵐ⁰) (ι : k →+* K) (hι : ∀ c, v (ι c) ≤ 1)
     {r t : K} (ht : v t ≤ 1) (hrt : v (r - t) < 1)
-    (p : k[X]) (hp : v (p.eval₂ ι t) = 1) :
+    (p : (Polynomial k)) (hp : v (p.eval₂ ι t) = 1) :
     v (p.eval₂ ι r) = 1 := by
   let O := v.valuationSubring
   have hr : v r ≤ 1 := by
@@ -1192,7 +1193,7 @@ private theorem eval₂_value_one {k K : Type} [Field k] [Field K]
 private theorem no_pole_of_polynomial_values {k A : Type} [Field k] [CommRing A]
     [IsDomain A] [Algebra k A] [Algebra.FiniteType k A]
     (hdim : ringKrullDim A = 1) (v : Valuation (FractionRing A) ℤᵐ⁰)
-    (r y : FractionRing A) (hpoly : ∀ p : k[X], p ≠ 0 → v (aeval r p) = 1) :
+    (r y : FractionRing A) (hpoly : ∀ p : (Polynomial k), p ≠ 0 → v (aeval r p) = 1) :
     v y ≤ 1 := by
   have hr : Transcendental k r := by
     rintro ⟨p, hp, hzero⟩
@@ -1298,7 +1299,7 @@ private theorem second_seed_value_le_of_pole (hprime : D.IsPrime)
     by_cases hc : algebraMap k F c = 0
     · simp [hc]
     · exact (w.trivial _ hc).le
-  have hTpoly (p : k[X]) (hp : p ≠ 0) : w.val (p.eval₂ ι t) = 1 := by
+  have hTpoly (p : (Polynomial k)) (hp : p ≠ 0) : w.val (p.eval₂ ι t) = 1 := by
     let j : Polynomial k →+* K :=
       (algebraMap F K).comp (algebraMap (Polynomial k) F)
     have hj : j.comp Polynomial.C = ι := by
@@ -1314,7 +1315,7 @@ private theorem second_seed_value_le_of_pole (hprime : D.IsPrime)
     rw [← heval]
     exact w.trivial _ (fun hz => hp ((IsFractionRing.injective (Polynomial k) F)
       (hz.trans (map_zero _).symm)))
-  have hpoly (p : k[X]) (hp : p ≠ 0) : (w.val.comap e) (aeval r p) = 1 := by
+  have hpoly (p : (Polynomial k)) (hp : p ≠ 0) : (w.val.comap e) (aeval r p) = 1 := by
     change w.val (e (p.eval₂ (algebraMap k L) r)) = 1
     rw [Polynomial.hom_eval₂, heC]
     exact eval₂_value_one w.val ι hι htv hclose p (hTpoly p hp)
@@ -1370,10 +1371,10 @@ private def rawRow : Jet →+* Raw :=
     (MvPolynomial.eval₂Hom (MvPolynomial.C.comp MvPolynomial.C) (MvPolynomial.X ∘ some))
     (MvPolynomial.C (MvPolynomial.X 1) - MvPolynomial.C (MvPolynomial.X 0) * MvPolynomial.X none))
     (MvPolynomial.X none)
-private def toRaw : Jet[X] →+* Raw :=
+private def toRaw : (Polynomial Jet) →+* Raw :=
   eval₂RingHom rawRow (MvPolynomial.C (MvPolynomial.X 0))
 attribute [local instance] MvPolynomial.algebraMvPolynomial
-local instance : Algebra Jet[X] CurveAmbient :=
+local instance : Algebra (Polynomial Jet) CurveAmbient :=
   ((algebraMap Raw CurveAmbient).comp toRaw).toAlgebra
 end
 end K1_14_3R_3_2_1
@@ -1397,26 +1398,26 @@ instance placeResidueAlgebra (p : CurvePlace k F) : Algebra k (PlaceResidue p) :
 def placeWeight (p : CurvePlace k F) : ℕ :=
   Module.finrank k (PlaceResidue p)
 @[instance_reducible]
-def chartAlgebra (u : F) : Algebra k[X] F :=
+def chartAlgebra (u : F) : Algebra (Polynomial k) F :=
   (Polynomial.aeval u).toRingHom.toAlgebra
 abbrev inverseChart (x : F) :=
   letI := chartAlgebra (k := k) x⁻¹
-  integralClosure k[X] F
+  integralClosure (Polynomial k) F
 def weightedPoleDegree (x : F) : ℕ :=
   ∑ᶠ p : CurvePlace k F, placeWeight p * poleOrder p.value x
-theorem pencilAlgebra_polynomial (P : k[X]) :
+theorem pencilAlgebra_polynomial (P : (Polynomial k)) :
     letI := K1_14_3R_3_1.pencilAlgebra k (F := F)
-    algebraMap (RatFunc k) (RatFunc F) (algebraMap k[X] (RatFunc k) P) =
-      algebraMap F[X] (RatFunc F) (P.map (algebraMap k F)) := by
+    algebraMap (RatFunc k) (RatFunc F) (algebraMap (Polynomial k) (RatFunc k) P) =
+      algebraMap (Polynomial F) (RatFunc F) (P.map (algebraMap k F)) := by
   let f := Polynomial.mapRingHom (algebraMap k F)
-  let hf : k[X]⁰ ≤ F[X]⁰.comap f :=
+  let hf : (Polynomial k)⁰ ≤ (Polynomial F)⁰.comap f :=
     nonZeroDivisors_le_comap_nonZeroDivisors_of_injective _
       (Polynomial.map_injective _ (algebraMap k F).injective)
-  change RatFunc.map f hf (algebraMap k[X] _ P) = algebraMap F[X] _ (f P)
+  change RatFunc.map f hf (algebraMap (Polynomial k) _ P) = algebraMap (Polynomial F) _ (f P)
   simpa only [map_one, div_one] using RatFunc.map_apply_div f hf P 1
 def GaussAt [Algebra (RatFunc k) (RatFunc F)]
     (p : CurvePlace k F) (q : CurvePlace (RatFunc k) (RatFunc F)) : Prop :=
-  ∀ P : F[X], q.value (algebraMap F[X] (RatFunc F) P) =
+  ∀ P : (Polynomial F), q.value (algebraMap (Polynomial F) (RatFunc F) P) =
     P.support.sup (fun i => p.value (P.coeff i))
 end
 end K1_14_3R_3_1_3
@@ -1430,10 +1431,10 @@ noncomputable section
 open Polynomial IntermediateField
 open scoped nonZeroDivisors
 variable {k F : Type} [Field k] [Field F] [Algebra k F]
-abbrev origin (k : Type) [Field k] : Ideal k[X] := Ideal.span {Polynomial.X}
+abbrev origin (k : Type) [Field k] : Ideal (Polynomial k) := Ideal.span {Polynomial.X}
 instance origin_maximal : (origin k).IsMaximal :=
   PrincipalIdealRing.isMaximal_of_irreducible irreducible_X
-def originQuotient : (k[X] ⧸ origin k) ≃ₐ[k] k := by
+def originQuotient : ((Polynomial k) ⧸ origin k) ≃ₐ[k] k := by
   rw [show origin k = Ideal.span {Polynomial.X - C (0 : k)} by simp]
   exact quotientSpanXSubCAlgEquiv 0
 abbrev chartField (u : F) := IntermediateField.adjoin k ({u} : Set F)
@@ -1445,45 +1446,45 @@ theorem chartField_inv (x : F) : chartField (k := k) x⁻¹ = chartField (k := k
     simpa only [inv_inv] using
       (chartField (k := k) x⁻¹).inv_mem (mem_adjoin_simple_self k x⁻¹)
 section Chart
-variable [Algebra k[X] F] [IsScalarTower k k[X] F]
-def coordinate (k : Type) [Field k] (F : Type) [Field F] [Algebra k[X] F] : F :=
-  algebraMap k[X] F Polynomial.X
-abbrev Normalization (k : Type) [Field k] (F : Type) [Field F] [Algebra k[X] F] :=
-  integralClosure k[X] F
-private theorem chart_aeval (f : k[X]) : algebraMap k[X] F f = aeval (coordinate k F) f := by
-  have h : IsScalarTower.toAlgHom k k[X] F = aeval (coordinate k F) :=
+variable [Algebra (Polynomial k) F] [IsScalarTower k (Polynomial k) F]
+def coordinate (k : Type) [Field k] (F : Type) [Field F] [Algebra (Polynomial k) F] : F :=
+  algebraMap (Polynomial k) F Polynomial.X
+abbrev Normalization (k : Type) [Field k] (F : Type) [Field F] [Algebra (Polynomial k) F] :=
+  integralClosure (Polynomial k) F
+private theorem chart_aeval (f : (Polynomial k)) : algebraMap (Polynomial k) F f = aeval (coordinate k F) f := by
+  have h : IsScalarTower.toAlgHom k (Polynomial k) F = aeval (coordinate k F) :=
     Polynomial.algHom_ext (by simp [coordinate])
   exact DFunLike.congr_fun h f
 private theorem chart_injective (h : Transcendental k (coordinate k F)) :
-    Function.Injective (algebraMap k[X] F) := by
+    Function.Injective (algebraMap (Polynomial k) F) := by
   intro p q hpq
   apply (transcendental_iff_injective.mp h)
   rwa [← chart_aeval (F := F) p, ← chart_aeval (F := F) q]
 theorem normalization_torsionFree (h : Transcendental k (coordinate k F)) :
-    Module.IsTorsionFree k[X] (Normalization k F) := by
-  have : Module.IsTorsionFree k[X] F :=
+    Module.IsTorsionFree (Polynomial k) (Normalization k F) := by
+  have : Module.IsTorsionFree (Polynomial k) F :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr (chart_injective h)
-  exact IsIntegralClosure.isTorsionFree k[X] F
-local instance chartFieldAlgebra : Algebra k[X] (chartField (k := k) (coordinate k F)) :=
+  exact IsIntegralClosure.isTorsionFree (Polynomial k) F
+local instance chartFieldAlgebra : Algebra (Polynomial k) (chartField (k := k) (coordinate k F)) :=
   (aeval (AdjoinSimple.gen k (coordinate k F))).toRingHom.toAlgebra
-local instance chartFieldTower : IsScalarTower k[X] (chartField (k := k) (coordinate k F)) F :=
+local instance chartFieldTower : IsScalarTower (Polynomial k) (chartField (k := k) (coordinate k F)) F :=
   IsScalarTower.of_algebraMap_eq fun f => by
     rw [chart_aeval (F := F) f]
     exact aeval_algHom_apply (chartField (k := k) (coordinate k F)).val
       (AdjoinSimple.gen k (coordinate k F)) f
 private theorem chartField_isFractionRing (h : Transcendental k (coordinate k F)) :
-    IsFractionRing k[X] (chartField (k := k) (coordinate k F)) := by
+    IsFractionRing (Polynomial k) (chartField (k := k) (coordinate k F)) := by
   let K := chartField (k := k) (coordinate k F)
-  have : FaithfulSMul k[X] K := (faithfulSMul_iff_algebraMap_injective k[X] K).mpr
+  have : FaithfulSMul (Polynomial k) K := (faithfulSMul_iff_algebraMap_injective (Polynomial k) K).mpr
     (fun _ _ e => chart_injective h (by
-      rw [IsScalarTower.algebraMap_eq k[X] K F]
+      rw [IsScalarTower.algebraMap_eq (Polynomial k) K F]
       exact congrArg (algebraMap K F) e))
   apply IsFractionRing.of_field
   intro z
   obtain ⟨p, q, hpq⟩ := (mem_adjoin_simple_iff k (z : F)).mp z.property
   refine ⟨p, q, (algebraMap K F).injective ?_⟩
-  rw [map_div₀, ← IsScalarTower.algebraMap_apply k[X] K F,
-    ← IsScalarTower.algebraMap_apply k[X] K F, chart_aeval (F := F) p, chart_aeval (F := F) q]
+  rw [map_div₀, ← IsScalarTower.algebraMap_apply (Polynomial k) K F,
+    ← IsScalarTower.algebraMap_apply (Polynomial k) K F, chart_aeval (F := F) p, chart_aeval (F := F) q]
   exact hpq
 theorem normalization_fraction (h : Transcendental k (coordinate k F))
     [FiniteDimensional (chartField (k := k) (coordinate k F)) F] :
@@ -1493,27 +1494,27 @@ theorem normalization_fraction (h : Transcendental k (coordinate k F))
     (chartField (k := k) (coordinate k F)) F
 theorem normalization_dedekind (h : Transcendental k (coordinate k F))
     [FiniteDimensional (chartField (k := k) (coordinate k F)) F]
-    [Module.Finite k[X] (Normalization k F)] :
+    [Module.Finite (Polynomial k) (Normalization k F)] :
     IsDedekindDomain (Normalization k F) := by
   let B := Normalization k F
   have := chartField_isFractionRing h
   exact
-    { isNoetherianRing_iff.mpr (isNoetherian_of_tower k[X] (show IsNoetherian k[X] B from inferInstance)),
-      Ring.DimensionLEOne.of_isIntegral k[X] B,
+    { isNoetherianRing_iff.mpr (isNoetherian_of_tower (Polynomial k) (show IsNoetherian (Polynomial k) B from inferInstance)),
+      Ring.DimensionLEOne.of_isIntegral (Polynomial k) B,
       integralClosure.isIntegrallyClosedOfFiniteExtension
         (chartField (k := k) (coordinate k F)) with }
 theorem normalization_rank (h : Transcendental k (coordinate k F))
     [FiniteDimensional (chartField (k := k) (coordinate k F)) F]
-    [Module.Finite k[X] (Normalization k F)] :
-    Module.finrank k[X] (Normalization k F) =
+    [Module.Finite (Polynomial k) (Normalization k F)] :
+    Module.finrank (Polynomial k) (Normalization k F) =
       Module.finrank (chartField (k := k) (coordinate k F)) F := by
   let K := chartField (k := k) (coordinate k F)
   let B := Normalization k F
-  have : IsFractionRing k[X] K := chartField_isFractionRing h
-  have : Module.IsTorsionFree k[X] B := normalization_torsionFree h
-  have : IsLocalization (Algebra.algebraMapSubmonoid B k[X]⁰) F :=
-    IsIntegralClosure.isLocalization k[X] K F B
-  let b := Module.Basis.localizationLocalization K k[X]⁰ F (Module.Free.chooseBasis k[X] B)
+  have : IsFractionRing (Polynomial k) K := chartField_isFractionRing h
+  have : Module.IsTorsionFree (Polynomial k) B := normalization_torsionFree h
+  have : IsLocalization (Algebra.algebraMapSubmonoid B (Polynomial k)⁰) F :=
+    IsIntegralClosure.isLocalization (Polynomial k) K F B
+  let b := Module.Basis.localizationLocalization K (Polynomial k)⁰ F (Module.Free.chooseBasis (Polynomial k) B)
   rw [Module.finrank_eq_card_chooseBasisIndex, Module.finrank_eq_card_basis b]
 end Chart
 end
@@ -1841,9 +1842,9 @@ open K1_13_6_3_5_3 (CurvePlace)
 open K1_14_3R_3_1 (pencilAlgebra)
 open scoped Polynomial WithZero nonZeroDivisors
 variable {k F : Type} [Field k] [Field F] [Algebra k F]
-private def gaussValue (w : Valuation F ℤᵐ⁰) (P : F[X]) : ℤᵐ⁰ :=
+private def gaussValue (w : Valuation F ℤᵐ⁰) (P : (Polynomial F)) : ℤᵐ⁰ :=
   P.support.sup (fun n => w (P.coeff n))
-private theorem coeff_le_gauss (w : Valuation F ℤᵐ⁰) (P : F[X]) (n : ℕ) :
+private theorem coeff_le_gauss (w : Valuation F ℤᵐ⁰) (P : (Polynomial F)) (n : ℕ) :
     w (P.coeff n) ≤ gaussValue w P := by
   by_cases hn : P.coeff n = 0
   · simp [hn]
@@ -1854,13 +1855,13 @@ private theorem gaussValue_C (w : Valuation F ℤᵐ⁰) (a : F) :
   by_cases ha : a = 0
   · simp [ha, gaussValue]
   · simp [gaussValue, Polynomial.support_C ha]
-private theorem gaussValue_ne_zero (w : Valuation F ℤᵐ⁰) {P : F[X]} (hp : P ≠ 0) :
+private theorem gaussValue_ne_zero (w : Valuation F ℤᵐ⁰) {P : (Polynomial F)} (hp : P ≠ 0) :
     gaussValue w P ≠ 0 := by
   obtain ⟨n, hn⟩ := Polynomial.support_nonempty.mpr hp
   have hv : 0 < w (P.coeff n) :=
     WithZero.pos_iff_ne_zero.mpr (w.zero_iff.not.mpr (Polynomial.mem_support_iff.mp hn))
   exact (hv.trans_le (coeff_le_gauss w P n)).ne'
-private theorem exists_min_gauss (w : Valuation F ℤᵐ⁰) (P : F[X]) (hp : P ≠ 0) :
+private theorem exists_min_gauss (w : Valuation F ℤᵐ⁰) (P : (Polynomial F)) (hp : P ≠ 0) :
     ∃ i, w (P.coeff i) = gaussValue w P ∧
       ∀ n < i, w (P.coeff n) < gaussValue w P := by
   classical
@@ -1870,7 +1871,7 @@ private theorem exists_min_gauss (w : Valuation F ℤᵐ⁰) (P : F[X]) (hp : P 
   have hex : ∃ n, w (P.coeff n) = gaussValue w P := ⟨i, hi.symm⟩
   exact ⟨Nat.find hex, Nat.find_spec hex, fun n hn =>
     lt_of_le_of_ne (coeff_le_gauss w P n) (Nat.find_min hex hn)⟩
-private theorem gaussValue_mul (w : Valuation F ℤᵐ⁰) (P Q : F[X]) :
+private theorem gaussValue_mul (w : Valuation F ℤᵐ⁰) (P Q : (Polynomial F)) :
     gaussValue w (P * Q) = gaussValue w P * gaussValue w Q := by
   apply le_antisymm
   · apply Finset.sup_le
@@ -1908,7 +1909,7 @@ private theorem gaussValue_mul (w : Valuation F ℤᵐ⁰) (P Q : F[X]) :
         (mul_lt_mul_of_pos_left (hj_min _ h) hvp)
   rw [← hdominant]
   exact coeff_le_gauss w (P * Q) (i + j)
-private def gaussPolynomial (w : Valuation F ℤᵐ⁰) : Valuation F[X] ℤᵐ⁰ where
+private def gaussPolynomial (w : Valuation F ℤᵐ⁰) : Valuation (Polynomial F) ℤᵐ⁰ where
   toFun := gaussValue w
   map_zero' := by simp [gaussValue]
   map_one' := by simpa using gaussValue_C w 1
@@ -1919,12 +1920,12 @@ private def gaussPolynomial (w : Valuation F ℤᵐ⁰) : Valuation F[X] ℤᵐ�
     rw [Polynomial.coeff_add]
     exact (w.map_add _ _).trans (max_le_max (coeff_le_gauss w P n) (coeff_le_gauss w Q n))
 private def gaussRational (w : Valuation F ℤᵐ⁰) : Valuation (RatFunc F) ℤᵐ⁰ :=
-  (gaussPolynomial w).extendToLocalization (S := F[X]⁰)
+  (gaussPolynomial w).extendToLocalization (S := (Polynomial F)⁰)
     (fun _ h => gaussValue_ne_zero w (nonZeroDivisors.ne_zero h)) (RatFunc F)
-private theorem gaussRational_polynomial (w : Valuation F ℤᵐ⁰) (P : F[X]) :
-    gaussRational w (algebraMap F[X] (RatFunc F) P) = gaussValue w P :=
+private theorem gaussRational_polynomial (w : Valuation F ℤᵐ⁰) (P : (Polynomial F)) :
+    gaussRational w (algebraMap (Polynomial F) (RatFunc F) P) = gaussValue w P :=
   Valuation.extendToLocalization_apply_map_apply _ _ _ _
-private theorem gaussValue_map (p : CurvePlace k F) (P : k[X]) (hp : P ≠ 0) :
+private theorem gaussValue_map (p : CurvePlace k F) (P : (Polynomial k)) (hp : P ≠ 0) :
     gaussValue p.value (P.map (algebraMap k F)) = 1 := by
   have hmap : P.map (algebraMap k F) ≠ 0 := fun h =>
     hp ((Polynomial.map_injective _ (algebraMap k F).injective) (by simpa using h))
@@ -2004,21 +2005,21 @@ private theorem normalized_eq {v w : Valuation F ℤᵐ⁰}
     rw [he v ha, exp_log ((v.ne_zero_iff).mpr hz)]
   exact hvz.trans ((he v ha).trans ((he w haw).symm.trans (h.eq_iff.mp hvz).symm))
 section Fibre
-variable [Algebra k[X] F] [IsScalarTower k k[X] F]
-abbrev OriginPrimes (k F : Type) [Field k] [Field F] [Algebra k[X] F] :=
+variable [Algebra (Polynomial k) F] [IsScalarTower k (Polynomial k) F]
+abbrev OriginPrimes (k F : Type) [Field k] [Field F] [Algebra (Polynomial k) F] :=
   (origin k).primesOver (Normalization k F)
 abbrev PolePlaces (k F : Type) [Field k] [Field F] [Algebra k F] (x : F) :=
   {p : CurvePlace k F // poleOrder p.value x ≠ 0}
 private theorem chart_mem (p : CurvePlace k F) (hu : p.value (coordinate k F) < 1)
-    (f : k[X]) : algebraMap k[X] F f ∈ p.value.valuationSubring := by
+    (f : (Polynomial k)) : algebraMap (Polynomial k) F f ∈ p.value.valuationSubring := by
   let u : p.value.valuationSubring := ⟨coordinate k F, hu.le⟩
-  let g : k[X] →+* p.value.valuationSubring := eval₂RingHom (placeConstants p) u
-  have hg : p.value.valuationSubring.toSubring.subtype.comp g = algebraMap k[X] F := by
+  let g : (Polynomial k) →+* p.value.valuationSubring := eval₂RingHom (placeConstants p) u
+  have hg : p.value.valuationSubring.toSubring.subtype.comp g = algebraMap (Polynomial k) F := by
     apply Polynomial.ringHom_ext
     · intro a
-      change ((g (C a) : p.value.valuationSubring) : F) = algebraMap k[X] F (C a)
+      change ((g (C a) : p.value.valuationSubring) : F) = algebraMap (Polynomial k) F (C a)
       rw [show g (C a) = placeConstants p a from eval₂_C _ _]
-      exact IsScalarTower.algebraMap_apply k k[X] F a
+      exact IsScalarTower.algebraMap_apply k (Polynomial k) F a
     · change ((g Polynomial.X : p.value.valuationSubring) : F) = coordinate k F
       rw [show g Polynomial.X = u from eval₂_X _ _]
   rw [← hg]
@@ -2031,7 +2032,7 @@ private def normalizationToPlace (p : CurvePlace k F) (hu : p.value (coordinate 
     (isIntegrallyClosed_iff_isIntegrallyClosedIn F).mp
       (inferInstanceAs (IsIntegrallyClosed p.value.valuationSubring))
   let h := Subring.integralClosure_le_iff.mpr (chart_mem p hu)
-  (integralClosure k[X] F).val.toRingHom.codRestrict V (fun b => h b.property)
+  (integralClosure (Polynomial k) F).val.toRingHom.codRestrict V (fun b => h b.property)
 private def center (p : CurvePlace k F) (hu : p.value (coordinate k F) < 1) :
     Ideal (Normalization k F) :=
   (IsLocalRing.maximalIdeal p.value.valuationSubring).comap (normalizationToPlace p hu)
@@ -2042,10 +2043,10 @@ private def centerPrime (p : CurvePlace k F) (hu : p.value (coordinate k F) < 1)
     OriginPrimes k F := by
   let Q := center p hu
   have hQ : Q.IsPrime := Ideal.IsPrime.comap _
-  have hX : algebraMap k[X] (Normalization k F) Polynomial.X ∈ Q :=
+  have hX : algebraMap (Polynomial k) (Normalization k F) Polynomial.X ∈ Q :=
     (mem_center p hu _).mpr hu
-  have hle : origin k ≤ Q.under k[X] := (Ideal.span_singleton_le_iff_mem _).mpr hX
-  have hproper : Q.under k[X] ≠ ⊤ := (Ideal.IsPrime.comap (algebraMap k[X] _) (K := Q)).ne_top
+  have hle : origin k ≤ Q.under (Polynomial k) := (Ideal.span_singleton_le_iff_mem _).mpr hX
+  have hproper : Q.under (Polynomial k) ≠ ⊤ := (Ideal.IsPrime.comap (algebraMap (Polynomial k) _) (K := Q)).ne_top
   exact ⟨Q, hQ, ⟨(origin_maximal (k := k)).eq_of_le hproper hle⟩⟩
 variable [IsDedekindDomain (Normalization k F)] [IsFractionRing (Normalization k F) F]
 def primeAtOrigin (hcoord : coordinate k F ≠ 0) (P : OriginPrimes k F) :
@@ -2058,23 +2059,23 @@ def primeAtOrigin (hcoord : coordinate k F ≠ 0) (P : OriginPrimes k F) :
     intro h
     rw [h, Ideal.mem_bot] at hX
     apply hcoord
-    rw [coordinate, IsScalarTower.algebraMap_apply k[X] (Normalization k F) F, hX, map_zero]
+    rw [coordinate, IsScalarTower.algebraMap_apply (Polynomial k) (Normalization k F) F, hX, map_zero]
 private def primePlace (hcoord : coordinate k F ≠ 0) (P : OriginPrimes k F) : CurvePlace k F where
   value := (primeAtOrigin hcoord P).valuation F
   normalized := (primeAtOrigin hcoord P).valuation_surjective F
   on_constants a ha := by
     let B := Normalization k F
-    rw [IsScalarTower.algebraMap_apply k k[X] F,
-      IsScalarTower.algebraMap_apply k[X] B F]
+    rw [IsScalarTower.algebraMap_apply k (Polynomial k) F,
+      IsScalarTower.algebraMap_apply (Polynomial k) B F]
     apply (primeAtOrigin hcoord P).valuation_eq_one_iff_notMem.mpr
     have : P.val.IsPrime := P.property.1
     exact P.val.notMem_of_isUnit
-      (((isUnit_iff_ne_zero.mpr ha).map (algebraMap k k[X])).map (algebraMap k[X] B))
+      (((isUnit_iff_ne_zero.mpr ha).map (algebraMap k (Polynomial k))).map (algebraMap (Polynomial k) B))
 private theorem primePlace_small (hcoord : coordinate k F ≠ 0) (P : OriginPrimes k F) :
     (primePlace hcoord P).value (coordinate k F) < 1 := by
   have : P.val.LiesOver (origin k) := P.property.2
-  change (primeAtOrigin hcoord P).valuation F (algebraMap k[X] F Polynomial.X) < 1
-  rw [IsScalarTower.algebraMap_apply k[X] (Normalization k F) F]
+  change (primeAtOrigin hcoord P).valuation F (algebraMap (Polynomial k) F Polynomial.X) < 1
+  rw [IsScalarTower.algebraMap_apply (Polynomial k) (Normalization k F) F]
   exact ((primeAtOrigin hcoord P).valuation_lt_one_iff_mem _).mpr
     ((P.val.mem_of_liesOver (origin k) Polynomial.X).mp (Ideal.subset_span (by simp)))
 private theorem center_valuation (hcoord : coordinate k F ≠ 0) (p : CurvePlace k F)
@@ -2124,18 +2125,18 @@ theorem primePole_bijective (x : F) (hx : x ≠ 0) (hu : coordinate k F = x⁻¹
     rfl
 theorem primePole_order (x : F) (hx : x ≠ 0) (hu : coordinate k F = x⁻¹)
     (P : OriginPrimes k F) :
-    poleOrder (primePole x hx hu P).val.value x = P.val.ramificationIdx k[X] := by
+    poleOrder (primePole x hx hu P).val.value x = P.val.ramificationIdx (Polynomial k) := by
   let hcoord : coordinate k F ≠ 0 := hu ▸ inv_ne_zero hx
   let Q := primeAtOrigin hcoord P
   let B := Normalization k F
-  let b := algebraMap k[X] B Polynomial.X
+  let b := algebraMap (Polynomial k) B Polynomial.X
   have hb : b ≠ 0 := by
     intro hb
     apply hcoord
-    rw [coordinate, IsScalarTower.algebraMap_apply k[X] B F]
+    rw [coordinate, IsScalarTower.algebraMap_apply (Polynomial k) B F]
     change algebraMap B F b = 0
     rw [hb, map_zero]
-  have hspan : (origin k).map (algebraMap k[X] B) = Ideal.span {b} := by
+  have hspan : (origin k).map (algebraMap (Polynomial k) B) = Ideal.span {b} := by
     rw [origin, Ideal.map_span, Set.image_singleton]
   have : P.val.IsPrime := P.property.1
   have : P.val.LiesOver (origin k) := P.property.2
@@ -2145,7 +2146,7 @@ theorem primePole_order (x : F) (hx : x ≠ 0) (hu : coordinate k F = x⁻¹)
   rw [hspan] at he
   change poleOrder (Q.valuation F) x = _
   have hx' : x = (algebraMap B F b)⁻¹ := by
-    rw [← IsScalarTower.algebraMap_apply k[X] B F, ← coordinate, hu, inv_inv]
+    rw [← IsScalarTower.algebraMap_apply (Polynomial k) B F, ← coordinate, hu, inv_inv]
   rw [hx', poleOrder, map_inv₀, Q.valuation_of_algebraMap, Q.intValuation_eq_exp_neg_multiplicity hb]
   simp only [log_inv, log_exp, neg_neg, Int.toNat_natCast]
   change multiplicity P.val (Ideal.span {b}) = _
@@ -2207,17 +2208,17 @@ private theorem curve_of_trdeg [Algebra.EssFiniteType k F] (h : trdeg k F = 1) :
   have : Algebra.EssFiniteType E F := Algebra.EssFiniteType.of_comp k E F
   exact ⟨t, ht, Algebra.finite_of_essFiniteType_of_isAlgebraic⟩
 private theorem ratFunc_trdeg (E : Type) [Field E] : trdeg E (RatFunc E) = 1 := by
-  have : Algebra.IsAlgebraic E[X] (RatFunc E) :=
-    IsLocalization.isAlgebraic _ E[X]⁰
-  have : FaithfulSMul E[X] (RatFunc E) :=
+  have : Algebra.IsAlgebraic (Polynomial E) (RatFunc E) :=
+    IsLocalization.isAlgebraic _ (Polynomial E)⁰
+  have : FaithfulSMul (Polynomial E) (RatFunc E) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (IsFractionRing.injective _ _)
-  simpa [Polynomial.trdeg_of_isDomain, trdeg_eq_zero (R := E[X]) (A := RatFunc E)] using
-    (trdeg_add_eq (A := RatFunc E) E E[X]).symm
+  simpa [Polynomial.trdeg_of_isDomain, trdeg_eq_zero (R := (Polynomial E)) (A := RatFunc E)] using
+    (trdeg_add_eq (A := RatFunc E) E (Polynomial E)).symm
 private theorem ratFunc_essFiniteType (E : Type) [Field E] :
     Algebra.EssFiniteType E (RatFunc E) := by
-  let : Algebra.EssFiniteType E[X] (RatFunc E) :=
-    Algebra.EssFiniteType.of_isLocalization (RatFunc E) E[X]⁰
-  exact Algebra.EssFiniteType.comp E E[X] (RatFunc E)
+  let : Algebra.EssFiniteType (Polynomial E) (RatFunc E) :=
+    Algebra.EssFiniteType.of_isLocalization (RatFunc E) (Polynomial E)⁰
+  exact Algebra.EssFiniteType.comp E (Polynomial E) (RatFunc E)
 attribute [local instance] Polynomial.algebra
 theorem pencil_curve_field (h : CurveField k F) :
     letI := pencilAlgebra k (F := F)
@@ -2225,12 +2226,12 @@ theorem pencil_curve_field (h : CurveField k F) :
   let : Algebra (RatFunc k) (RatFunc F) := pencilAlgebra k (F := F)
   have : IsScalarTower k (RatFunc k) (RatFunc F) :=
     IsScalarTower.of_algebraMap_eq fun a => by
-      simp only [IsScalarTower.algebraMap_apply k k[X] (RatFunc k),
+      simp only [IsScalarTower.algebraMap_apply k (Polynomial k) (RatFunc k),
         IsScalarTower.algebraMap_apply k F (RatFunc F),
-        IsScalarTower.algebraMap_apply F F[X] (RatFunc F),
+        IsScalarTower.algebraMap_apply F (Polynomial F) (RatFunc F),
         pencilAlgebra_polynomial]
-      change algebraMap F[X] (RatFunc F) (Polynomial.C (algebraMap k F a)) =
-        algebraMap F[X] (RatFunc F) ((Polynomial.C a).map (algebraMap k F))
+      change algebraMap (Polynomial F) (RatFunc F) (Polynomial.C (algebraMap k F a)) =
+        algebraMap (Polynomial F) (RatFunc F) ((Polynomial.C a).map (algebraMap k F))
       rw [Polynomial.map_C]
   have htr := curve_trdeg h
   obtain ⟨t, _, hfin⟩ := h
@@ -2266,11 +2267,11 @@ def c1 : Prop :=
   ∀ (k F : Type) [Field k] [Field F] [Algebra k F] (t x : F),
     SeparatingParameter k t → Transcendental k x →
     FiniteDimensional (IntermediateField.adjoin k {x}) F ∧
-      Module.Finite k[X] (inverseChart (k := k) x)
+      Module.Finite (Polynomial k) (inverseChart (k := k) x)
 def c2 : Prop :=
   ∀ (k F : Type) [Field k] [Field F] [Algebra k F] (x : F),
     Transcendental k x → FiniteDimensional (IntermediateField.adjoin k {x}) F →
-    Module.Finite k[X] (inverseChart (k := k) x) →
+    Module.Finite (Polynomial k) (inverseChart (k := k) x) →
     (fun p : CurvePlace k F => poleOrder p.value x).HasFiniteSupport ∧
       (∀ p : CurvePlace k F, poleOrder p.value x ≠ 0 →
         FiniteDimensional k (PlaceResidue p)) ∧
@@ -2317,8 +2318,8 @@ private def pencil (y v : F) : RatFunc F := RatFunc.C y + RatFunc.X * RatFunc.C 
 private theorem gauss_pencil {p : CurvePlace k F} {q : CurvePlace (RatFunc k) (RatFunc F)}
     (h : GaussAt p q) (y v : F) :
     poleOrder q.value (pencil y v) = max (poleOrder p.value y) (poleOrder p.value v) := by
-  let P : F[X] := Polynomial.C y + Polynomial.X * Polynomial.C v
-  have hP : algebraMap F[X] (RatFunc F) P = pencil y v := by
+  let P : (Polynomial F) := Polynomial.C y + Polynomial.X * Polynomial.C v
+  have hP : algebraMap (Polynomial F) (RatFunc F) P = pencil y v := by
     simp only [P, pencil, map_add, map_mul, RatFunc.algebraMap_C, RatFunc.algebraMap_X]
   have hc0 : P.coeff 0 = y := by simp [P]
   have hc1 : P.coeff 1 = v := by simp [P]
@@ -2479,8 +2480,8 @@ private theorem localized_beforeIdeal (H : Ideal (Ambient k)) (g h : Ambient k) 
         (algebraMap (Ambient (Parameters k)) (Ambient (PlaneField k))) = fibreIdeal H g h := by
   rw [beforeIdeal, Ideal.map_sup, Ideal.map_map, Ideal.map_span, Set.image_singleton]
   change H.map ((MvPolynomial.map (algebraMap (Parameters k) (PlaneField k))).comp beforeBase) ⊔
-      Ideal.span {MvPolynomial.map (algebraMap (Parameters k) (PlaneField k))
-        (fibreEquation MvPolynomial.C (MvPolynomial.X 0) (MvPolynomial.X 1) g h)} = _
+      Ideal.span {(MvPolynomial.map (algebraMap (Parameters k) (PlaneField k))
+        (fibreEquation MvPolynomial.C (MvPolynomial.X 0) (MvPolynomial.X 1) g h))} = _
   rw [fibreIdeal]
   have hcomp : (MvPolynomial.map (algebraMap (Parameters k) (PlaneField k))).comp beforeBase =
       genericBase k := by
@@ -2572,7 +2573,7 @@ private theorem seedSubstitution_injective : Function.Injective seedSubstitution
       simp [seedSubstitution, specializeSlope]
     · intro i
       fin_cases i <;> simp [seedSubstitution, specializeSlope]
-  exact Function.LeftInverse.injective (RingHom.congr_fun h)
+  exact Function.LeftInverse.injective (g := specializeSlope) (fun x => RingHom.congr_fun h x)
 private def seedsToField : Seeds →+* E :=
   (algebraMap B E).comp ((Polynomial.mapRingHom (algebraMap Seeds SeedField)).comp seedSubstitution)
 private def seedCoefficients : SeedField →+* E :=
@@ -2869,12 +2870,12 @@ private theorem pencilAlgebra_eq :
     pencilAlgebra k (F := F) = (inferInstance : Algebra (RatFunc k) (RatFunc F)) := by
   apply Algebra.algebra_ext
   intro f
-  have hpoly (P : k[X]) :
+  have hpoly (P : (Polynomial k)) :
       @algebraMap (RatFunc k) (RatFunc F) _ _ (pencilAlgebra k (F := F))
-        (algebraMap k[X] (RatFunc k) P) =
-      algebraMap (RatFunc k) (RatFunc F) (algebraMap k[X] (RatFunc k) P) := by
-    rw [pencilAlgebra_polynomial, ← IsScalarTower.algebraMap_apply k[X] (RatFunc k)
-      (RatFunc F), IsScalarTower.algebraMap_apply k[X] F[X] (RatFunc F)]
+        (algebraMap (Polynomial k) (RatFunc k) P) =
+      algebraMap (RatFunc k) (RatFunc F) (algebraMap (Polynomial k) (RatFunc k) P) := by
+    rw [pencilAlgebra_polynomial, ← IsScalarTower.algebraMap_apply (Polynomial k) (RatFunc k)
+      (RatFunc F), IsScalarTower.algebraMap_apply (Polynomial k) (Polynomial F) (RatFunc F)]
     rfl
   induction f using RatFunc.induction_on with
   | _ P Q hQ =>
@@ -2909,8 +2910,8 @@ private def pencil (y v : F) : RatFunc F := RatFunc.C y + RatFunc.X * RatFunc.C 
 private theorem gauss_pencil {p : CurvePlace k F} {q : CurvePlace (RatFunc k) (RatFunc F)}
     (h : GaussAt p q) (y v : F) :
     poleOrder q.value (pencil y v) = max (poleOrder p.value y) (poleOrder p.value v) := by
-  let P : F[X] := Polynomial.C y + Polynomial.X * Polynomial.C v
-  have hP : algebraMap F[X] (RatFunc F) P = pencil y v := by
+  let P : (Polynomial F) := Polynomial.C y + Polynomial.X * Polynomial.C v
+  have hP : algebraMap (Polynomial F) (RatFunc F) P = pencil y v := by
     simp only [P, pencil, map_add, map_mul, RatFunc.algebraMap_C, RatFunc.algebraMap_X]
   have hc0 : P.coeff 0 = y := by simp [P]
   have hc1 : P.coeff 1 = v := by simp [P]
@@ -3069,14 +3070,14 @@ open scoped RatFunc in
 private theorem finrank_eq_of_rational_model {K E G : Type}
     [Field K] [Field E] [Field G] [Algebra K E] [Algebra (RatFunc K) G]
     [FiniteDimensional K E] (f : RatFunc E →+* G) (hf : Function.Surjective f)
-    (h : ∀ P : K[X], f (algebraMap E[X] (RatFunc E) (P.map (algebraMap K E))) =
-      algebraMap (RatFunc K) G (algebraMap K[X] (RatFunc K) P)) :
+    (h : ∀ P : (Polynomial K), f (algebraMap (Polynomial E) (RatFunc E) (P.map (algebraMap K E))) =
+      algebraMap (RatFunc K) G (algebraMap (Polynomial K) (RatFunc K) P)) :
     Module.finrank (RatFunc K) G = Module.finrank K E := by
-  have hP (P : K[X]) :
-      f (algebraMap (RatFunc K) (RatFunc E) (algebraMap K[X] (RatFunc K) P)) =
-        algebraMap (RatFunc K) G (algebraMap K[X] (RatFunc K) P) := by
-    rw [← IsScalarTower.algebraMap_apply K[X] (RatFunc K) (RatFunc E),
-      IsScalarTower.algebraMap_apply K[X] E[X] (RatFunc E)]
+  have hP (P : (Polynomial K)) :
+      f (algebraMap (RatFunc K) (RatFunc E) (algebraMap (Polynomial K) (RatFunc K) P)) =
+        algebraMap (RatFunc K) G (algebraMap (Polynomial K) (RatFunc K) P) := by
+    rw [← IsScalarTower.algebraMap_apply (Polynomial K) (RatFunc K) (RatFunc E),
+      IsScalarTower.algebraMap_apply (Polynomial K) (Polynomial E) (RatFunc E)]
     exact h P
   have hcomm (a : RatFunc K) :
       f (algebraMap (RatFunc K) (RatFunc E) a) = algebraMap (RatFunc K) G a := by
@@ -3089,7 +3090,7 @@ variable {k F : Type} [Field k] [Field F] [Algebra k F]
 variable {p : CurvePlace k F}
 local notation "Oₚ" => p.value.valuationSubring
 local notation "ι" => p.value.valuationSubring.toSubring.subtype
-local notation "j" => algebraMap F[X] (RatFunc F)
+local notation "j" => algebraMap (Polynomial F) (RatFunc F)
 section ResidueMap
 variable [Algebra (RatFunc k) (RatFunc F)]
 variable {q : CurvePlace (RatFunc k) (RatFunc F)}
@@ -3099,21 +3100,21 @@ private theorem gauss_C (h : GaussAt p q) (a : F) :
   obtain rfl | ha := eq_or_ne a 0
   · simp
   · simpa [Polynomial.support_C ha] using h (Polynomial.C a)
-private theorem integral_iff (h : GaussAt p q) (P : F[X]) :
+private theorem integral_iff (h : GaussAt p q) (P : (Polynomial F)) :
     q.value (j P) ≤ 1 ↔ ∀ n, p.value (P.coeff n) ≤ 1 := by
   rw [h P, Finset.sup_le_iff]
   refine ⟨fun hP n => ?_, fun hP n _ => hP n⟩
   by_cases hn : P.coeff n = 0
   · simp [hn]
   · exact hP n (Polynomial.mem_support_iff.mpr hn)
-private theorem small_iff (h : GaussAt p q) (P : F[X]) :
+private theorem small_iff (h : GaussAt p q) (P : (Polynomial F)) :
     q.value (j P) < 1 ↔ ∀ n, p.value (P.coeff n) < 1 := by
   rw [h P, Finset.sup_lt_iff (show (⊥ : ℤᵐ⁰) < 1 from zero_lt_one)]
   refine ⟨fun hP n => ?_, fun hP n _ => hP n⟩
   by_cases hn : P.coeff n = 0
   · simp [hn]
   · exact hP n (Polynomial.mem_support_iff.mpr hn)
-private def integralPolynomial (h : GaussAt p q) : Oₚ[X] →+* O_q :=
+private def integralPolynomial (h : GaussAt p q) : (Polynomial Oₚ) →+* O_q :=
   ((j).comp (Polynomial.mapRingHom ι)).codRestrict (O_q).toSubring
     (fun P => by
       change q.value (j (P.map ι)) ≤ 1
@@ -3121,9 +3122,9 @@ private def integralPolynomial (h : GaussAt p q) : Oₚ[X] →+* O_q :=
       intro n
       rw [Polynomial.coeff_map]
       exact (P.coeff n).property)
-private theorem integralPolynomial_value (h : GaussAt p q) (P : Oₚ[X]) :
+private theorem integralPolynomial_value (h : GaussAt p q) (P : (Polynomial Oₚ)) :
     (integralPolynomial h P : RatFunc F) = j (P.map ι) := rfl
-private theorem residue_polynomial_eq_zero (h : GaussAt p q) (P : Oₚ[X]) :
+private theorem residue_polynomial_eq_zero (h : GaussAt p q) (P : (Polynomial Oₚ)) :
     IsLocalRing.residue O_q (integralPolynomial h P) = 0 ↔
       P.map (IsLocalRing.residue Oₚ) = 0 := by
   rw [IsLocalRing.residue_eq_zero_iff, q.value.mem_maximalIdeal_iff,
@@ -3141,10 +3142,10 @@ private def residueConstant (h : GaussAt p q) : PlaceResidue p →+* PlaceResidu
 private theorem residueConstant_apply (h : GaussAt p q) (a : Oₚ) :
     residueConstant h (IsLocalRing.residue Oₚ a) =
       IsLocalRing.residue O_q (integralPolynomial h (Polynomial.C a)) := rfl
-private def residuePolynomial (h : GaussAt p q) : (PlaceResidue p)[X] →+* PlaceResidue q :=
+private def residuePolynomial (h : GaussAt p q) : (Polynomial (PlaceResidue p)) →+* PlaceResidue q :=
   Polynomial.eval₂RingHom (residueConstant h)
     (IsLocalRing.residue O_q (integralPolynomial h Polynomial.X))
-private theorem residuePolynomial_apply (h : GaussAt p q) (P : Oₚ[X]) :
+private theorem residuePolynomial_apply (h : GaussAt p q) (P : (Polynomial Oₚ)) :
     residuePolynomial h (P.map (IsLocalRing.residue Oₚ)) =
       IsLocalRing.residue O_q (integralPolynomial h P) := by
   have heq : (residuePolynomial h).comp (Polynomial.mapRingHom (IsLocalRing.residue Oₚ)) =
@@ -3166,16 +3167,16 @@ private theorem residuePolynomial_injective (h : GaussAt p q) :
   exact (residue_polynomial_eq_zero h P).mp hP
 private def residueRational (h : GaussAt p q) : RatFunc (PlaceResidue p) →+* PlaceResidue q :=
   IsFractionRing.lift (residuePolynomial_injective h)
-private theorem residueRational_polynomial (h : GaussAt p q) (P : Oₚ[X]) :
+private theorem residueRational_polynomial (h : GaussAt p q) (P : (Polynomial Oₚ)) :
     residueRational h
-      (algebraMap (PlaceResidue p)[X] (RatFunc (PlaceResidue p))
+      (algebraMap (Polynomial (PlaceResidue p)) (RatFunc (PlaceResidue p))
         (P.map (IsLocalRing.residue Oₚ))) =
       IsLocalRing.residue O_q (integralPolynomial h P) :=
   (IsFractionRing.lift_algebraMap (residuePolynomial_injective h) _).trans
     (residuePolynomial_apply h P)
-private theorem integralPolynomial_lift (h : GaussAt p q) {P : F[X]}
+private theorem integralPolynomial_lift (h : GaussAt p q) {P : (Polynomial F)}
     (hP : q.value (j P) ≤ 1) :
-    ∃ A : Oₚ[X], (integralPolynomial h A : RatFunc F) = j P := by
+    ∃ A : (Polynomial Oₚ), (integralPolynomial h A : RatFunc F) = j P := by
   have hrange : P ∈ (Polynomial.mapRingHom ι).range := by
     apply (Polynomial.mem_map_range _).mpr
     intro n
@@ -3186,13 +3187,13 @@ private theorem residueRational_surjective (h : GaussAt p q) :
     Function.Surjective (residueRational h) := by
   intro z
   obtain ⟨z, rfl⟩ := IsLocalRing.residue_surjective z
-  obtain ⟨P, Q, hQ, hz⟩ : ∃ P Q : F[X], Q ≠ 0 ∧ (z : RatFunc F) = j P / j Q := by
+  obtain ⟨P, Q, hQ, hz⟩ : ∃ P Q : (Polynomial F), Q ≠ 0 ∧ (z : RatFunc F) = j P / j Q := by
     induction (z : RatFunc F) using RatFunc.induction_on with
     | _ P Q hQ => exact ⟨P, Q, hQ, rfl⟩
   have hjQ : j Q ≠ 0 := RatFunc.algebraMap_ne_zero hQ
   have hvQ : q.value (j Q) ≠ 0 := q.value.zero_iff.not.mpr hjQ
   obtain ⟨a, ha⟩ := p.normalized (q.value (j Q))
-  let D : F[X] := Polynomial.C a⁻¹
+  let D : (Polynomial F) := Polynomial.C a⁻¹
   have hvD : q.value (j D) = (q.value (j Q))⁻¹ := by
     rw [show j D = RatFunc.C a⁻¹ from RatFunc.algebraMap_C _, gauss_C h, map_inv₀, ha]
   have hQ' : q.value (j (D * Q)) = 1 := by
@@ -3211,19 +3212,19 @@ private theorem residueRational_surjective (h : GaussAt p q) :
   have hden : IsLocalRing.residue O_q (integralPolynomial h B) ≠ 0 := by
     rw [ne_eq, IsLocalRing.residue_eq_zero_iff, q.value.mem_maximalIdeal_iff, hB, hQ']
     exact lt_irrefl 1
-  refine ⟨algebraMap (PlaceResidue p)[X] (RatFunc (PlaceResidue p))
+  refine ⟨algebraMap (Polynomial (PlaceResidue p)) (RatFunc (PlaceResidue p))
       (A.map (IsLocalRing.residue Oₚ)) /
-    algebraMap (PlaceResidue p)[X] (RatFunc (PlaceResidue p))
+    algebraMap (Polynomial (PlaceResidue p)) (RatFunc (PlaceResidue p))
       (B.map (IsLocalRing.residue Oₚ)), ?_⟩
   rw [map_div₀, residueRational_polynomial, residueRational_polynomial, div_eq_iff hden]
   exact (congrArg (IsLocalRing.residue O_q) hmul).symm.trans (map_mul _ _ _)
 end ResidueMap
-private theorem residueRational_base_polynomial (P : k[X]) :
+private theorem residueRational_base_polynomial (P : (Polynomial k)) :
     letI := pencilAlgebra k (F := F)
     ∀ (q : CurvePlace (RatFunc k) (RatFunc F)) (h : GaussAt p q),
-      residueRational h (algebraMap (PlaceResidue p)[X] (RatFunc (PlaceResidue p))
+      residueRational h (algebraMap (Polynomial (PlaceResidue p)) (RatFunc (PlaceResidue p))
         (P.map (algebraMap k (PlaceResidue p)))) =
-        algebraMap (RatFunc k) (PlaceResidue q) (algebraMap k[X] (RatFunc k) P) := by
+        algebraMap (RatFunc k) (PlaceResidue q) (algebraMap (Polynomial k) (RatFunc k) P) := by
   let := pencilAlgebra k (F := F)
   intro q h
   have hred : P.map (algebraMap k (PlaceResidue p)) =
@@ -3233,11 +3234,11 @@ private theorem residueRational_base_polynomial (P : k[X]) :
   change IsLocalRing.residue q.value.valuationSubring
     (integralPolynomial h (P.map (placeConstants p))) =
     IsLocalRing.residue q.value.valuationSubring
-      (placeConstants q (algebraMap k[X] (RatFunc k) P))
+      (placeConstants q (algebraMap (Polynomial k) (RatFunc k) P))
   congr 1
   apply Subtype.ext
   change j ((P.map (placeConstants p)).map ι) =
-    algebraMap (RatFunc k) (RatFunc F) (algebraMap k[X] (RatFunc k) P)
+    algebraMap (RatFunc k) (RatFunc F) (algebraMap (Polynomial k) (RatFunc k) P)
   rw [Polynomial.map_map, pencilAlgebra_polynomial]
   rfl
 theorem proof : K1_14_3R_3_1_3.c4 := by
@@ -3309,19 +3310,19 @@ theorem adjoin_inv (x : F) :
       (IntermediateField.adjoin k ({x⁻¹} : Set F)).inv_mem (mem_adjoin_simple_self k x⁻¹)
 @[instance_reducible]
 noncomputable def fractionChartAlgebra (u : F) (hu : Transcendental k u) :
-    Algebra k[X] (IntermediateField.adjoin k {u}) :=
+    Algebra (Polynomial k) (IntermediateField.adjoin k {u}) :=
   ((algebraMap (Algebra.adjoin k {u}) (IntermediateField.adjoin k {u})).comp
     (Polynomial.algEquivOfTranscendental k u hu).toRingHom).toAlgebra
 theorem fraction_chart {u : F} (hu : Transcendental k u) :
     let K := IntermediateField.adjoin k {u}
-    letI : Algebra k[X] F := chartAlgebra u
-    letI : Algebra k[X] K := fractionChartAlgebra u hu
-    IsFractionRing k[X] K ∧ IsScalarTower k[X] K F := by
+    letI : Algebra (Polynomial k) F := chartAlgebra u
+    letI : Algebra (Polynomial k) K := fractionChartAlgebra u hu
+    IsFractionRing (Polynomial k) K ∧ IsScalarTower (Polynomial k) K F := by
   let R := Algebra.adjoin k ({u} : Set F)
   let K := IntermediateField.adjoin k ({u} : Set F)
   let e := Polynomial.algEquivOfTranscendental k u hu
-  let : Algebra k[X] F := chartAlgebra u
-  let : Algebra k[X] K := fractionChartAlgebra u hu
+  let : Algebra (Polynomial k) F := chartAlgebra u
+  let : Algebra (Polynomial k) K := fractionChartAlgebra u hu
   constructor
   · exact (IsFractionRing.isFractionRing_iff_of_base_ringEquiv (S := K) e.symm.toRingEquiv).mp
       (inferInstance : IsFractionRing R K)
@@ -3342,15 +3343,15 @@ theorem proof : K1_14_3R_3_1_3.c1 := by
   refine ⟨hfin, ?_⟩
   have hxi : Transcendental k x⁻¹ := fun h => hx (IsAlgebraic.inv_iff.mp h)
   let K := IntermediateField.adjoin k ({x⁻¹} : Set F)
-  let : Algebra k[X] F := chartAlgebra x⁻¹
-  let : Algebra k[X] K := fractionChartAlgebra x⁻¹ hxi
-  have : IsFractionRing k[X] K := (fraction_chart hxi).1
-  have : IsScalarTower k[X] K F := (fraction_chart hxi).2
+  let : Algebra (Polynomial k) F := chartAlgebra x⁻¹
+  let : Algebra (Polynomial k) K := fractionChartAlgebra x⁻¹ hxi
+  have : IsFractionRing (Polynomial k) K := (fraction_chart hxi).1
+  have : IsScalarTower (Polynomial k) K F := (fraction_chart hxi).2
   have : FiniteDimensional K F := by
     change Module.Finite (IntermediateField.adjoin k ({x⁻¹} : Set F)) F
     rw [adjoin_inv]
     exact hfin
-  exact finite_normalization k[X] K F (polynomial_frobenius_lattices k)
+  exact finite_normalization (Polynomial k) K F (polynomial_frobenius_lattices k)
 end K1_14_3R_3_1_3_1
 end
 section

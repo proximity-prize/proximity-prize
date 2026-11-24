@@ -19,8 +19,8 @@ open Low6960WeightedCut (order)
 open Low6960SharedRational
 open MvPolynomial
 open scoped ENat Polynomial
-open private contact_clear proper_after_clear frac_map from ProximityPrize.SubmissionLower.R6960Low6960FractionContact
-open private valuation_factorization from ProximityPrize.SubmissionLower.R6960Low6960SharedChooseCut
+open Low6960FractionContact (contact_clear proper_after_clear frac_map)
+open Low6960SharedChooseCut (valuation_factorization)
 
 def castBox (z : FeeBox) : Shape := ⟨z.1,z.2.1,z.2.2⟩
 
@@ -90,19 +90,19 @@ theorem adic {f : Row 4} {p : Envelope} {u : Rate} {r a : ℕ}
   obtain ⟨dh, H, hdh, _, hH⟩ := clear_denominators h
   let C' := MvPolynomial.C dh*C
   let H' := MvPolynomial.C dc*H
-  let k := algebraMap Geom[X] GenericField dc * algebraMap Geom[X] GenericField dh
+  let k := algebraMap (Polynomial Geom) GenericField dc * algebraMap (Polynomial Geom) GenericField dh
   have h0 : k ≠ 0 := mul_ne_zero
-    ((map_ne_zero_iff _ (IsFractionRing.injective Geom[X] GenericField)).mpr hdc)
-    ((map_ne_zero_iff _ (IsFractionRing.injective Geom[X] GenericField)).mpr hdh)
+    ((map_ne_zero_iff _ (IsFractionRing.injective (Polynomial Geom) GenericField)).mpr hdc)
+    ((map_ne_zero_iff _ (IsFractionRing.injective (Polynomial Geom) GenericField)).mpr hdh)
   have hC' : toFraction C' = MvPolynomial.C k*c := calc
-    _ = MvPolynomial.C (algebraMap Geom[X] GenericField dh) * toFraction C := by
+    _ = MvPolynomial.C (algebraMap (Polynomial Geom) GenericField dh) * toFraction C := by
       simp only [C', frac_map, map_mul, MvPolynomial.map_C]
-    _ = _ := by simp only [hC, ← mul_assoc, ← map_mul, k, mul_comm (algebraMap Geom[X] GenericField dh)]
+    _ = _ := by simp only [hC, ← mul_assoc, ← map_mul, k, mul_comm (algebraMap (Polynomial Geom) GenericField dh)]
   have hH' : toFraction H' = MvPolynomial.C k*h := calc
-    _ = MvPolynomial.C (algebraMap Geom[X] GenericField dc) * toFraction H := by
+    _ = MvPolynomial.C (algebraMap (Polynomial Geom) GenericField dc) * toFraction H := by
       simp only [H', frac_map, map_mul, MvPolynomial.map_C]
     _ = _ := by simp only [hH, ← mul_assoc, ← map_mul, k]
-  let φ : Row 4 →+* FractionJet := MvPolynomial.map (algebraMap Geom[X] GenericField)
+  let φ : Row 4 →+* FractionJet := MvPolynomial.map (algebraMap (Polynomial Geom) GenericField)
   have hQ : toFraction (f^a*(C'+f*H')) = MvPolynomial.C k*v := calc
     φ (f^a*(C'+f*H')) = (φ f)^a*(φ C'+φ f*φ H') := by simp only [map_mul, map_pow, map_add]
     _ = _ := by

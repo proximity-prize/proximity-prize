@@ -11,7 +11,7 @@ open scoped BigOperators Polynomial
 /-- Distinct integral roots cannot coalesce at a squarefree specialization. This
 works over the local order directly, without a chosen uniformizer. -/
 theorem distinct_residues {R k I:Type*} [CommRing R] [IsDomain R] [Field k]
-    (ρ:R→+*k) (q:R[X]) (sep:(q.map ρ).Separable) (y:I→R) (inj:Function.Injective y)
+    (ρ:R→+*k) (q:(Polynomial R)) (sep:(q.map ρ).Separable) (y:I→R) (inj:Function.Injective y)
     (root:∀i,q.eval (y i)=0) : Function.Injective (fun i=>ρ (y i)) := by
   intro i j eq
   by_contra ne
@@ -47,7 +47,7 @@ to prove a whole base-parameter factor in every entry of each such row. -/
 theorem actual_unmarked_rows {J U:Type*} [Fintype J] [DecidableEq J] (e:ℕ)
     (y:J→E) (degree:∀j,(minpoly F (y j)).natDegree=e)
     {O:Type*} [CommRing O] [IsDomain O] [IsLocalRing O] (incl:O→+*E) (inj:Function.Injective incl)
-    (q:J→O[X]) (sep:∀j,((q j).map (IsLocalRing.residue O)).Separable)
+    (q:J→(Polynomial O)) (sep:∀j,((q j).map (IsLocalRing.residue O)).Separable)
     (lift:∀ j, MulAction.orbit G (y j)→O) (value:∀j i,incl (lift j i)=i.val)
     (root:∀j i,(q j).eval (lift j i)=0) (word:J→O)
     (π:O) (A:G→Matrix J U O)

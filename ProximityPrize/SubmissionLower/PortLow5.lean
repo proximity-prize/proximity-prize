@@ -16,7 +16,7 @@ def mixedBudget : ℕ :=
     taylorLength * mixed3 lowBox graphBox a
 def invariantBudget : ℕ :=
   lowBox.b * (1 + (2 * (taylorLength + 1) - 7) * (lowBox.b - 1))
-structure ProperCover (w : I → K) (Γ : Finset K) (s : K → K[X]) where
+structure ProperCover (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)) where
   isolated : Finset K
   multiple : NodeFamily w Γ s
   invariant : NodeFamily w Γ s
@@ -34,10 +34,10 @@ noncomputable section
 open K1_13_5_4 (GeometricX)
 open MvPolynomial
 open scoped BigOperators
-private def restrictVariables {k : Type*} [Field k] {m n : ℕ} :
+def restrictVariables {k : Type*} [Field k] {m n : ℕ} :
     Fin n → MvPolynomial (Fin m) k :=
   fun i => if hi : i.val < m then MvPolynomial.X ⟨i.val, hi⟩ else 0
-private theorem restrict_rename {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n)
+theorem restrict_rename {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n)
     (p : MvPolynomial (Fin m) k) :
     MvPolynomial.aeval restrictVariables (rename (Fin.castLE h) p) = p := by
   have he : (MvPolynomial.aeval restrictVariables).comp (rename (R := k) (Fin.castLE h)) =
@@ -46,7 +46,7 @@ private theorem restrict_rename {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n)
     intro i
     simp [restrictVariables, i.isLt]
   exact DFunLike.congr_fun he p
-private theorem padded_hilbert {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n)
+theorem padded_hilbert {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n)
     (Q : Ideal (MvPolynomial (Fin m) k)) :
     affineHilbertPolynomial (Q.comap (MvPolynomial.aeval (R := k)
       (restrictVariables : Fin n → MvPolynomial (Fin m) k))) = affineHilbertPolynomial Q := by
@@ -87,7 +87,7 @@ private theorem padded_hilbert {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n)
       (by simpa only [one_mul] using affineHilbertFunction_le_of_injective g hg hgX d)
   change (affineHilbertFunction Q d : ℚ) = (affineHilbertFunction P d : ℚ)
   exact_mod_cast heq
-private theorem sum_monomial_eq_of_tail_zero {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n)
+theorem sum_monomial_eq_of_tail_zero {k : Type*} [Field k] {m n : ℕ} (h : m ≤ n)
     (b : Fin n → k) (hb : ∀ i, m ≤ i.val → b i = 0) :
     (∑ i : Fin n, Polynomial.monomial i.val (b i)) =
       ∑ i : Fin m, Polynomial.monomial i.val (b (Fin.castLE h i)) := by
@@ -115,18 +115,16 @@ open K1_13_5 (RegularAt separant compatibilityNumerator)
 open K1_13_5_5 K1_13_5_5_1
 open P0_9 (taylorLength physicalDegree TrueWeightLE anchorCutoff)
 open scoped Polynomial
-open private evalRow coeffValue jetValue existsDerivation deriv_poly deriv_jet
-  evalNumerator iterate_value from ProximityPrize.SubmissionLower.Fast071
-open private reconstruct mapCoeffs_trajectory eq_zero_of_constant_coeffs
-  from ProximityPrize.SubmissionLower.Fast071
+open K1_13_5_5_1_2 (evalRow coeffValue jetValue existsDerivation deriv_poly deriv_jet evalNumerator iterate_value)
+open K1_13_5_5_1_3 (reconstruct mapCoeffs_trajectory eq_zero_of_constant_coeffs)
 private theorem reconstruct_solution {F : Type} [Field F] [CharP F K1.p]
     (D : Derivation ℕ F F) (L : ℕ) (hL : 3 ≤ L) (hchar : L < K1.p)
     (f : Row 3) (k : Geom →+* F) (x : F) (y : Fin 3 → F)
     (hx : D x = 1) (hk : ∀ a, D (k a) = 0)
     (hy₀ : D (y 0) = y 1) (hy₁ : D (y 1) = 2 * y 2)
     (hcut : ((D : F → F)^[L]) (y 0) = 0) (hzero : rowAt k x y f = 0)
-    (hweight : ∀ U : F[X], U.natDegree < L → (trajectory k U f).natDegree < K1.p) :
-    ∃ U : F[X], U.natDegree < L ∧ trajectory k U f = 0 ∧ jetAt x U = y := by
+    (hweight : ∀ U : (Polynomial F), U.natDegree < L → (trajectory k U f).natDegree < K1.p) :
+    ∃ U : (Polynomial F), U.natDegree < L ∧ trajectory k U f = 0 ∧ jetAt x U = y := by
   let _ : Differential F :=
     ⟨Derivation.mk' D.toLinearMap.toAddMonoidHom.toIntLinearMap (fun a b => D.leibniz a b)⟩
   obtain ⟨U, hU, hc, hinit⟩ := reconstruct hL hchar x y hx hy₀ hy₁ hcut
@@ -134,13 +132,13 @@ private theorem reconstruct_solution {F : Type} [Field F] [CharP F K1.p]
     rwa [eval_trajectory, hinit]
   exact ⟨U, hU, eq_zero_of_constant_coeffs _ hx _ (hweight U hU)
     (mapCoeffs_trajectory _ hk hc f) hroot, hinit⟩
-private theorem chart_trajectory (f : Row 3) [(chartIdeal f).IsPrime]
+theorem chart_trajectory (f : Row 3) [(chartIdeal f).IsPrime]
     (L : ℕ) (hL : 3 ≤ L) (hchar : L < K1.p)
     (hs : freshRow (separant f) ∉ chartIdeal f)
-    (hweight : ∀ U : (ChartField f)[X], U.natDegree < L →
+    (hweight : ∀ U : (Polynomial (ChartField f)), U.natDegree < L →
       (trajectory (chartConstants f) U f).natDegree < K1.p)
     (hwhole : f ∣ compatibilityNumerator f (L - 3)) :
-    ∃ U : (ChartField f)[X], U.natDegree < L ∧
+    ∃ U : (Polynomial (ChartField f)), U.natDegree < L ∧
       trajectory (chartConstants f) U f = 0 ∧ jetAt (chartCenter f) U = chartJets f := by
   let e := onChart f
   let π : FreshJetRing →+* ChartRing f := Ideal.Quotient.mk (chartIdeal f)
@@ -193,17 +191,17 @@ open P0_9 (physicalDegree)
 open MvPolynomial
 open scoped BigOperators Polynomial TensorProduct
 attribute [local instance] MvPolynomial.gradedAlgebra
-open private monic_chart_aux from ProximityPrize.SubmissionLower.Fast064
-open private commonFactor_monic trimmedValue_monic trimmedValue_dvd from ProximityPrize.SubmissionLower.Fast064
+open K1_13_5_5_2_1 (monic_chart_aux)
+open K1_13_5_5_2_1 (commonFactor_monic trimmedValue_monic trimmedValue_dvd)
 private theorem square_dvd_trimmed_pow {A : Type} [CommRing A] [IsDomain A]
-    {f : A[X]} (s : Factorization f) {d : ℕ} (hf : f.natDegree ≤ d) (hd : 2 ≤ d) :
+    {f : (Polynomial A)} (s : Factorization f) {d : ℕ} (hf : f.natDegree ≤ d) (hd : 2 ≤ d) :
     f ^ 2 ∣ (trimmedValue s) ^ d := by
   classical
   have hdegree : (∑ i, s.multiplicity i * (s.factor i).natDegree) = f.natDegree := by
     conv_rhs => rw [s.product_eq]
     rw [Polynomial.natDegree_prod_of_monic Finset.univ _ (fun i _ => (s.monic i).pow _)]
     simp only [Polynomial.natDegree_pow]
-  refine (dvd_of_eq (congrArg (fun g : A[X] => g ^ 2) s.product_eq)).trans ?_
+  refine (dvd_of_eq (congrArg (fun g : (Polynomial A) => g ^ 2) s.product_eq)).trans ?_
   rw [trimmedValue, ← Finset.prod_pow, ← Finset.prod_pow]
   apply Finset.prod_dvd_prod_of_dvd
   intro i _
@@ -225,8 +223,8 @@ private theorem square_dvd_trimmed_pow {A : Type} [CommRing A] [IsDomain A]
     simpa only [Nat.mul_comm] using Nat.mul_le_mul_left (s.multiplicity i) hd
   · rw [min_eq_right (by omega)]
     exact (Nat.mul_le_mul_right 2 hmi).trans_eq (Nat.mul_comm d 2)
-private theorem eval_divisions {A B : Type} [CommRing A] [IsDomain A] [CommRing B]
-    (e : A[X] →+* B) {f : A[X]} (s : Factorization f) {d : ℕ}
+theorem eval_divisions {A B : Type} [CommRing A] [IsDomain A] [CommRing B]
+    (e : (Polynomial A) →+* B) {f : (Polynomial A)} (s : Factorization f) {d : ℕ}
     (hf : f.natDegree ≤ d) (hd : 2 ≤ d) :
     e (trimmedValue s) ∣ e f ∧ e f ^ 2 ∣ e (trimmedValue s) ^ d :=
   ⟨map_dvd e (trimmedValue_dvd s),

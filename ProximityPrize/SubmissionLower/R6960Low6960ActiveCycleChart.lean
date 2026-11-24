@@ -18,8 +18,7 @@ open K1_13_6_2 (GeoJets5 actualPoint)
 open K1_13_6_2_2 (generic5 rawGraph numerator denominator padded padded_last)
 open Low6960GeometryCut_2 (Branch branch_box)
 open MvPolynomial
-open private valuePolynomial value_section numerator_associated
-  from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
+open Low6960GeometryCut_2_1 (valuePolynomial value_section numerator_associated)
 
 private theorem scalar_section {R : Family} {i : Fin 5} {D : GeoJets5}
     (h : Section R i D) (c : GeoField) : Section R i (MvPolynomial.C c * D) := by
@@ -45,7 +44,7 @@ def Chart {f Q : Row 4} {l : ℕ} (R : Family) (b : Branch f Q l) : Prop :=
       Section R 3 E ∧ Associated (b.onGraph E) (b.localMap b.member) ∧
       Section R 4 H ∧ Associated (b.onGraph H) (b.localMap b.next) ∧
       ∀ x a : K, ∃ D, Section R 4 D ∧
-        ∀ S : K[X], S.natDegree ≤ physicalDegree → ∀ h : b.Contains (actualPoint (extend S)),
+        ∀ S : (Polynomial K), S.natDegree ≤ physicalDegree → ∀ h : b.Contains (actualPoint (extend S)),
           (b.liftedEval (actualPoint (extend S)) h D = 0 ↔ S.eval x = a)
 
 private theorem recover {f Q : Row 4} {l : ℕ} {R : Family} (b : Branch f Q l)

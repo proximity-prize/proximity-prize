@@ -15,7 +15,7 @@ open scoped Polynomial TensorProduct
 
 variable {k : Type} [Field k] [DecidableEq k]
 
-theorem branch_squarefree (P:k[X][X]) : Squarefree (branchProduct P) := by
+theorem branch_squarefree (P:(Polynomial (Polynomial k))) : Squarefree (branchProduct P) := by
   let S := branchFactors P
   have eq : branchProduct P=S.val.prod := by
     calc branchProduct P = ∏ i∈S,i := Finset.prod_coe_sort S id
@@ -32,14 +32,14 @@ theorem branch_squarefree (P:k[X][X]) : Squarefree (branchProduct P) := by
   rw [norm]
   exact S.nodup
 
-theorem branch_dvd (P:k[X][X]) (nz:P≠0) : branchProduct P∣P := by
+theorem branch_dvd (P:(Polynomial (Polynomial k))) (nz:P≠0) : branchProduct P∣P := by
   apply Dvd.dvd.trans _ (branch_weighted_product P nz).dvd
   apply Finset.prod_dvd_prod_of_dvd
   intro i _
   exact dvd_pow_self _ (branch_weight_pos P i).ne'
 
 private theorem map_trailing {A B:Type*} [Semiring A] [Semiring B] [Nontrivial B]
-    (j:A→+*B) (p:A[X]) (keep:j p.trailingCoeff≠0) :
+    (j:A→+*B) (p:(Polynomial A)) (keep:j p.trailingCoeff≠0) :
     p.map j≠0 ∧ (p.map j).natTrailingDegree=p.natTrailingDegree := by
   have c : (p.map j).coeff p.natTrailingDegree≠0 := by
     rw [coeff_map]
@@ -80,7 +80,7 @@ theorem boundary_seed_polynomial (δ : Plane k) (nz : δ≠0) :
   refine ⟨good,?_⟩
   rw [rootMultiplicity_eq_natTrailingDegree',tr]
   by_contra! large
-  have div : (Polynomial.X:k[X][X])^2∣B :=
+  have div : (Polynomial.X:(Polynomial (Polynomial k)))^2∣B :=
     X_pow_dvd_iff.mpr fun i hi=>coeff_eq_zero_of_lt_natTrailingDegree (hi.trans_le large)
   exact (irreducible_X.not_isUnit) ((branch_squarefree P) _ (by simpa only [pow_two] using div))
 

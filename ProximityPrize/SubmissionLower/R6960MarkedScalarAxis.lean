@@ -13,13 +13,13 @@ open MonicFourChartDescent (scalarCoordinate constants baseChart chartCoordinate
 open MonicChartProbes (planeMap)
 open Polynomial
 open scoped Polynomial Lower6960.MonicChart
-open private Lower6960.MonicChartProbes.planeMap_finite from ProximityPrize.SubmissionLower.R6960MonicChartProbes
+open Lower6960.MonicChartProbes (planeMap_finite)
 
 def swapBase : ChartField≃+*ChartField :=
   letI := MonicChart.plane_fractionRing
   IsFractionRing.ringEquivOfRingEquiv (K:=ChartField) (L:=ChartField) (Bivariate.swap (R:=L)).toRingEquiv
 
-private theorem swap_plane (p:PlaneConstants.Plane L) :
+theorem swap_plane (p:PlaneConstants.Plane L) :
     swapBase (planeMap (false,false) p)=planeMap (false,false) (Bivariate.swap p) := by
   letI:=MonicChart.plane_fractionRing
   rw [Lower6960.MonicChartProbes.planeMap_finite]
@@ -34,7 +34,7 @@ theorem swap_z : swapBase scalarCoordinate=RatFunc.X := by
 theorem swap_constant (c:L) : swapBase (constants c)=constants c := by
   simpa only [Bivariate.swap_C_C,MonicChartProbes.planeMap_constants] using swap_plane (C (C c))
 
-def inner : L→+*Scalar := (algebraMap L[X] Scalar).comp C
+def inner : L→+*Scalar := (algebraMap (Polynomial L) Scalar).comp C
 def rowBase (c:L) : ChartField≃+*ChartField := (translateField ChartField (inner c)).trans swapBase
 
 private theorem translate_const (c:L) (r:Scalar) : translateField ChartField (inner c) (RatFunc.C r)=RatFunc.C r := by
@@ -45,23 +45,23 @@ theorem row_abscissa (c:L) : rowBase c RatFunc.X=scalarCoordinate+constants c :=
   rw [←RatFunc.algebraMap_X,translate_polynomial,taylor_X,map_add,RatFunc.algebraMap_X,RatFunc.algebraMap_C,map_add,swap_x]
   exact congrArg (scalarCoordinate+·) (swap_constant c)
 theorem row_parameter (c:L) : rowBase c scalarCoordinate=RatFunc.X := by
-  change swapBase (translateField ChartField (inner c) (RatFunc.C _))=_
+  change swapBase (translateField ChartField (inner c) (RatFunc.C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L)))))=_
   rw [translate_const]; exact swap_z
 theorem row_constant (c a:L) : rowBase c (constants a)=constants a := by
-  change swapBase (translateField ChartField (inner c) (RatFunc.C _))=_
+  change swapBase (translateField ChartField (inner c) (RatFunc.C (algebraMap (Polynomial L) Scalar (C a))))=_
   rw [translate_const]; exact swap_constant a
 
 /-- In the scalar orientation, the physical abscissa and every translated
 abscissa are constants. A finite scalar chart therefore remains polynomial,
 and the scalar infinity chart remains integral at infinity. -/
 theorem finite_base (c:L) {a:ChartField} (h:a∈baseChart (false,false)) :
-    rowBase c a ∈ (algebraMap Scalar[X] ChartField).range := by
-  have le : baseChart (false,false)≤(algebraMap Scalar[X] ChartField).range.comap (rowBase c).toRingHom := by
+    rowBase c a ∈ (algebraMap (Polynomial Scalar) ChartField).range := by
+  have le : baseChart (false,false)≤(algebraMap (Polynomial Scalar) ChartField).range.comap (rowBase c).toRingHom := by
     apply Subring.closure_le.mpr
     rintro _ (⟨r,rfl⟩ | eq | eq)
     · exact ⟨C (inner r),(RatFunc.algebraMap_C _).trans (row_constant c r).symm⟩
     · change _=chartCoordinate false RatFunc.X at eq;subst_vars
-      refine ⟨C ((algebraMap L[X] Scalar) Polynomial.X+inner c),?_⟩
+      refine ⟨C ((algebraMap (Polynomial L) Scalar) Polynomial.X+inner c),?_⟩
       rw [RatFunc.algebraMap_C,map_add]
       exact (row_abscissa c).symm
     · change _=chartCoordinate false scalarCoordinate at eq;subst_vars
@@ -75,27 +75,27 @@ theorem infinity_base (c:L) [DecidableEq ChartField] {a:ChartField} (h:a∈baseC
     rintro _ (⟨r,rfl⟩ | eq | eq)
     · exact ⟨MonicChart.inftyRingEval Scalar (C (inner r)),(aeval_C _ _).trans (row_constant c r).symm⟩
     · change _=chartCoordinate false RatFunc.X at eq;subst_vars
-      refine ⟨MonicChart.inftyRingEval Scalar (C ((algebraMap L[X] Scalar) Polynomial.X+inner c)),?_⟩
+      refine ⟨MonicChart.inftyRingEval Scalar (C ((algebraMap (Polynomial L) Scalar) Polynomial.X+inner c)),?_⟩
       change MonicChart.AtInfinity Scalar (C _) = rowBase c RatFunc.X
-      rw [show MonicChart.AtInfinity Scalar (C ((algebraMap L[X] Scalar) Polynomial.X+inner c))=
-        RatFunc.C ((algebraMap L[X] Scalar) Polynomial.X+inner c) from aeval_C _ _,map_add,row_abscissa];rfl
+      rw [show MonicChart.AtInfinity Scalar (C ((algebraMap (Polynomial L) Scalar) Polynomial.X+inner c))=
+        RatFunc.C ((algebraMap (Polynomial L) Scalar) Polynomial.X+inner c) from aeval_C _ _,map_add,row_abscissa];rfl
     · change _=chartCoordinate true scalarCoordinate at eq;subst_vars
       refine ⟨MonicChart.inftyRingEval Scalar Polynomial.X,?_⟩
       change _=rowBase c scalarCoordinate⁻¹
       rw [map_inv₀,row_parameter];exact MonicChart.mapped_X_infty
   exact le h
 
-theorem row_seed_polynomial (c:L) (p:L[X]) :
-    rowBase c (RatFunc.C (algebraMap L[X] Scalar p))=
-      algebraMap Scalar[X] ChartField (p.map inner) := by
-  let f: L[X]→+*ChartField := (rowBase c).toRingHom.comp (RatFunc.C.comp (algebraMap L[X] Scalar))
-  let g: L[X]→+*ChartField := (algebraMap Scalar[X] ChartField).comp (Polynomial.mapRingHom inner)
+theorem row_seed_polynomial (c:L) (p:(Polynomial L)) :
+    rowBase c (RatFunc.C (algebraMap (Polynomial L) Scalar p))=
+      algebraMap (Polynomial Scalar) ChartField (p.map inner) := by
+  let f: (Polynomial L)→+*ChartField := (rowBase c).toRingHom.comp (RatFunc.C.comp (algebraMap (Polynomial L) Scalar))
+  let g: (Polynomial L)→+*ChartField := (algebraMap (Polynomial Scalar) ChartField).comp (Polynomial.mapRingHom inner)
   have eq : f=g := by
     apply Polynomial.ringHom_ext
     · intro a
-      change rowBase c (constants a)=algebraMap Scalar[X] ChartField ((C a).map inner)
+      change rowBase c (constants a)=algebraMap (Polynomial Scalar) ChartField ((C a).map inner)
       rw [row_constant,Polynomial.map_C,RatFunc.algebraMap_C];rfl
-    · change rowBase c scalarCoordinate=algebraMap Scalar[X] ChartField ((Polynomial.X:L[X]).map inner)
+    · change rowBase c scalarCoordinate=algebraMap (Polynomial Scalar) ChartField ((Polynomial.X:(Polynomial L)).map inner)
       rw [row_parameter,Polynomial.map_X,RatFunc.algebraMap_X]
   exact DFunLike.congr_fun eq p
 

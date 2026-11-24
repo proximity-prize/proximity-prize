@@ -136,7 +136,7 @@ private def slicesEquiv (a : Cap) (c : ℕ) (ha : Fits a c) : missing a c ≃ Sl
       omega
 
 
-open private sum_affine sum_pair from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_3_1 (sum_affine sum_pair)
 
 private theorem middle_sum (r : ℕ) :
     (∑ z ∈ range (r/2+1), ((r-2*z+1 : ℕ) : ℚ)) =

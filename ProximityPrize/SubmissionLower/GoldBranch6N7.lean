@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.GoldBranch6N5
 import ProximityPrize.SubmissionLower.GoldBranch6N6
+set_option maxRecDepth 200000
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -34,7 +35,7 @@ structure FatTaylor (f : Row 4) where
   test_iff : ∀ (surface : Ideal GeoJets), surface.IsPrime → toGeneric f ∈ surface →
     toGeneric (separant f) ∉ surface →
     (toGeneric test ∈ surface ↔ toGeneric (P3_6_6.membershipTest f) ∈ surface)
-  recovers : ∀ (L : Type) [Field L] [Algebra Geom L] (S : L[X]),
+  recovers : ∀ (L : Type) [Field L] [Algebra Geom L] (S : (Polynomial L)),
     S.natDegree ≤ physicalDegree → evalTrajectory f S = 0 →
     evalTrajectory (separant f) S ≠ 0 →
     evalTrajectory denom S ≠ 0 ∧ evalTrajectory test S = 0 ∧
@@ -49,9 +50,9 @@ open Polynomial MvPolynomial K1_13 K1_13_6
 open K1_13_7_2_2 (stride raw topLinear denominator numerator hasseNumerator)
 open K1_13_7_1 (weight_const_mul_le top_le_index shape_chamber Chamber)
 open K1_13_1 (indexDegree_eq)
-open private raw_false raw_true_compare from ProximityPrize.SubmissionLower.Fast070
-open private raw_bound sep_pow_bound from ProximityPrize.SubmissionLower.Fast070
-open private specializes topLinear_regular from ProximityPrize.SubmissionLower.Fast070
+open K1_13_7_2_2 (raw_false raw_true_compare)
+open K1_13_7_2_2 (raw_bound sep_pow_bound)
+open K1_13_7_2_2 (specializes topLinear_regular)
 local notation "W" => MvPolynomial.weightedTotalDegree
 end
 end P3_6_7_2
@@ -65,10 +66,9 @@ noncomputable section
 open Polynomial K1_13 K1_13_6 K1_13_6_3 K1_13_7
 open K1_13_7_2_4 K1_13_7_2_4_2
 open P3_6 (physicalDegree )
-open private intDerivation coeffDeriv coeffDeriv_zero_of_shift zero_of_stationary_eval
-  rowTrajectory rowTrajectory_stationary eval_chartTrajectory from ProximityPrize.SubmissionLower.Fast066
-open private sum_monomial_eq_of_coeffs from ProximityPrize.SubmissionLower.Fast066
-open private trajectory_at_component component_ne_zero from ProximityPrize.SubmissionLower.Fast066
+open K1_13_7_2_4_2 (intDerivation coeffDeriv coeffDeriv_zero_of_shift zero_of_stationary_eval rowTrajectory rowTrajectory_stationary eval_chartTrajectory)
+open K1_13_7_2_4 (sum_monomial_eq_of_coeffs)
+open K1_13_7_2_4 (trajectory_at_component component_ne_zero)
 end
 end P3_6_7_2_2
 end
@@ -92,13 +92,13 @@ open Polynomial MvPolynomial K1 K1_13 K1_13_6 K1_13_7 K1_13_7_1 K1_13_7_5
 open K1_13_1 (indexDegree_eq)
 open P3_6 (physicalDegree)
 section
-open private K1_13_7_5_2.denominator from ProximityPrize.SubmissionLower.Fast072
-open private numerator P0_9_7_3_1.numerator_bound denominator_bound P0_9_7_3_1.coefficients_recover from ProximityPrize.SubmissionLower.PortLow7
+open K1_13_7_5_2 (denominator)
+open P0_9_7_3_1 (numerator numerator_bound denominator_bound coefficients_recover)
 local notation "W" => MvPolynomial.weightedTotalDegree
 end
 section
-open private K1_13_7_1.denominator from ProximityPrize.SubmissionLower.Fast059
-open private coefficientNumerator coefficients_fit P0_9_7_3_2.coefficients_recover from ProximityPrize.SubmissionLower.PortLow7
+open K1_13_7_1 (denominator)
+open P0_9_7_3_2 (coefficientNumerator coefficients_fit coefficients_recover)
 end
 end
 end P3_6_7_3

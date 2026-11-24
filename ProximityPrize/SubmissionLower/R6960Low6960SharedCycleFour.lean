@@ -13,7 +13,7 @@ open K1_13_6_2_3 (ChamberBox dimension capCoeff polarize mixedDegree localWeight
   chart_box generic_box regular_cut cut_dimension dimension_bot pair_regular intersection_eq
   surface_dimension weight_cast weight_pos point_injective point_prime point_degree point_proper_section)
 open scoped BigOperators
-open private surface_slice_sum ambient_degree from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
+open Low6960GeometryCut_2_2 (surface_slice_sum ambient_degree)
 
 theorem bound_with_cut (h1 : K1_13_6_2_3.c1)
     (h2 : K1_13_6_2_3.c2) (h3 : K1_13_6_2_3.c3)

@@ -24,10 +24,8 @@ open K1_13_6_2_4_1 (positiveDiagonal)
 open MvPolynomial
 open scoped BigOperators Pointwise
 
-open private eval_surjective pointIdeal_injective point_component exists_coordinate_cut
-  from ProximityPrize.SubmissionLower.Fast054
-open private liftedPoint eval_liftedPoint liftedPoint_old liftedPoint_mem
-  from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
+open K1_13_6_2_4 (eval_surjective pointIdeal_injective point_component exists_coordinate_cut)
+open Low6960GeometryCut_2_3 (liftedPoint eval_liftedPoint liftedPoint_old liftedPoint_mem)
 
 def Section (R : Family) (i : Fin 5) (D : GeoJets5) : Prop :=
   ∀ m ∈ D.support, m ∈ R i
@@ -48,7 +46,7 @@ theorem Doubled.double_coordinates {R B : Family} (hB : Doubled R B) (v : Fin 5)
     ∃ i, Finsupp.single v 1 ∈ B i :=
   ⟨4, hB.raw_mem (hB.last_coordinate v)⟩
 
-private theorem square_support {R B : Family} (hB : Doubled R B) {i : Fin 5} {D : GeoJets5}
+theorem square_support {R B : Family} (hB : Doubled R B) {i : Fin 5} {D : GeoJets5}
     (hD : Section R i D) : ∀ m ∈ (D ^ 2).support, m ∈ B i := by
   classical
   intro m hm
@@ -126,7 +124,7 @@ def Slice {f Q : Row 4} {l : ℕ} (R : Family) (b : Branch f Q l) (T : Finset Je
   T.card ≤ 1 ∨ ∃ D, Section R 4 D ∧ b.onGraph D ∉ b.localCurve ∧
     ∀ p ∈ T, ∀ h : b.Contains p, b.liftedEval p h D = 0
 
-private theorem bound_marks {f Q : Row 4} {l : ℕ} {R B : Family} [∀ i, Finite (B i)]
+theorem bound_marks {f Q : Row 4} {l : ℕ} {R B : Family} [∀ i, Finite (B i)]
     (hB : Doubled R B) (b : Branch f Q l) (T : Finset JetPoint)
     (hT : ∀ y ∈ T, b.Contains y) (hSlice : Slice R b T)
     (hprime : (graphLift b b.curve).IsPrime) (hdim : OfDim (graphLift b b.curve) 1) :

@@ -118,7 +118,7 @@ theorem localized_fibre_frame (S : Submonoid A) [IsLocalization S R]
 end Localization
 
 section Actual
-open private Lower6960.NormalizedFiber.specialize from ProximityPrize.SubmissionLower.R6960NormalizedFiber
+open Lower6960.NormalizedFiber (specialize)
 open Polynomial NormalizedFiber
 variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
   [Algebra (FractionRing (Plane k)) E] [IsScalarTower (Plane k) (FractionRing (Plane k)) E]
@@ -127,19 +127,19 @@ variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
 /-- The actual normalized scalar fibre gives lifted polynomial coordinates
 with one determinant-trick denominator, nonzero everywhere on the fibre. -/
 theorem scalar_fibre_frame (z : k) :
-    let : Module k[X] (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
-    ∃ (n : ℕ) (b : Basis (Fin n) k[X] (Fiber E z)) (u : Fin n→Order k E) (g : Plane k)
+    let : Module (Polynomial k) (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
+    ∃ (n : ℕ) (b : Basis (Fin n) (Polynomial k) (Fiber E z)) (u : Fin n→Order k E) (g : Plane k)
       (f : (Fin n→Plane k) →ₗ[Plane k] Order k E),
       (∀ i,quotientMap E z (u i)=b i) ∧ (∀ t,f t=∑ i,t i • u i) ∧
       Function.Injective f ∧ g.eval (C z)=1 ∧ ∀ x : Order k E,∃ t,f t=g • x := by
   classical
-  let : Module k[X] (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
+  let : Module (Polynomial k) (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
   obtain ⟨fin,free⟩ := NormalizedFiber.finite_free E z
-  let b := Module.finBasis k[X] (Fiber E z)
+  let b := Module.finBasis (Polynomial k) (Fiber E z)
   let A := Plane k
   let M := Order k E
   let a : A := Polynomial.X-C (C z)
-  let j : A→+*k[X] := evalRingHom (C z)
+  let j : A→+*(Polynomial k) := evalRingHom (C z)
   have an : a≠0 := X_sub_C_ne_zero _
   have onto : Function.Surjective j := fun q=>⟨C q,eval_C⟩
   have jker (p : A) : j p=0 ↔ a∣p := by
@@ -178,7 +178,7 @@ theorem scalar_fibre_away_basis (z : k) :
       g.eval (C z)=1 ∧
       ∀ i,b i=LocalizedModule.mkLinearMap (Submonoid.powers g) (Order k E) (u i) := by
   classical
-  let : Module k[X] (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
+  let : Module (Polynomial k) (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
   obtain ⟨n,_,u,g,f,_,sum,inj,one,clear⟩ := scalar_fibre_frame (E:=E) z
   let A := Plane k
   let B := Order k E
@@ -219,13 +219,13 @@ theorem scalar_fibre_frames (z : k) :
     let A := Plane k
     let F := FractionRing A
     let ι := Fin (finrank F E)
-    let : Module k[X] (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
-    ∃ (b : Basis ι k[X] (Fiber E z)) (bf : Basis ι F E)
+    let : Module (Polynomial k) (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
+    ∃ (b : Basis ι (Polynomial k) (Fiber E z)) (bf : Basis ι F E)
       (u : ι→Order k E) (g : A),
       (∀ i,quotientMap E z (u i)=b i) ∧ (∀ i,bf i=(u i:E)) ∧
       g.eval (C z)=1 ∧ ∀ x : Order k E,∃ t : ι→A,(∑ i,t i • u i)=g • x := by
   classical
-  let : Module k[X] (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
+  let : Module (Polynomial k) (Fiber E z) := Module.compHom (Fiber E z) (baseMap E z)
   obtain ⟨n,b,u,g,f,red,sum,inj,one,clear⟩ := scalar_fibre_frame (E:=E) z
   let A := Plane k
   let F := FractionRing A

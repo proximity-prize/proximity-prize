@@ -9,9 +9,9 @@ namespace ScalarCutCapacity
 noncomputable section
 open CJ0 CJ0_4 MvPolynomial Finset
 open scoped BigOperators Polynomial
-open private valueCut valueCut_eval valueCut_degree curve_capacity openEval
-  openEval_localize openEval_chartMap from ProximityPrize.SubmissionLower.ListProofA
-open private curve_degree_nat from ProximityPrize.SubmissionLower.Fast055
+open CJ0 (valueCut valueCut_eval valueCut_degree curve_capacity)
+open CJ0_4 (openEval openEval_localize openEval_chartMap)
+open K1_14_6 (curve_degree_nat)
 
 private def pullback (T : Chart 2) (x a : K) : InitialRing 2 :=
   (∑ j : Fin k, C (embed x ^ j.val) * T.numerator j) - C (embed a) * T.denominator
@@ -124,8 +124,8 @@ private theorem component_target (T : Chart 2) (x a : K)
   exact ⟨P,Ideal.mem_minimalPrimesFinset.mpr hP,fun y hy q hq => hPJ hq _ hy⟩
 
 /-- Bound the agreeing subset of a proper evaluation section of a surface chart. -/
-theorem cutCap {A w} {V : Finset K[X]} (T : Chart 2) (hT : ChartOK T)
-    (hA : AgreementOK A) (hV : (V : Set K[X]) ⊆ close A w)
+theorem cutCap {A w} {V : Finset (Polynomial K)} (T : Chart 2) (hT : ChartOK T)
+    (hA : AgreementOK A) (hV : (V : Set (Polynomial K)) ⊆ close A w)
     (hcover : ∀ f∈V, coeffPoint f ∈ T.imageSet)
     (i : Node) (hmiss : ∃ f∈V, f.eval (node i) ≠ w i)
     (a : ℕ) (hden : T.denominator.totalDegree ≤ a) (hnum : ∀ j, (T.numerator j).totalDegree ≤ a) :

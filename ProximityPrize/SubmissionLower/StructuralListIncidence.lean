@@ -5,23 +5,23 @@ set_option Elab.async false
 namespace StructuralList
 
 open CJ0 Finset Polynomial
-open private occupancy from ProximityPrize.SubmissionLower.Fast055
+open K1_14_6 (occupancy)
 
 noncomputable section
 
 /-- Positions at which every polynomial in the finite family agrees with the word. -/
-def commonSites (w : Node → K) (T : Finset K[X]) : Finset Node :=
+def commonSites (w : Node → K) (T : Finset (Polynomial K)) : Finset Node :=
   univ.filter fun i => ∀ f ∈ T, f.eval (node i) = w i
 
-theorem mem_commonSites {w : Node → K} {T : Finset K[X]} {i : Node} :
+theorem mem_commonSites {w : Node → K} {T : Finset (Polynomial K)} {i : Node} :
     i ∈ commonSites w T ↔ ∀ f ∈ T, f.eval (node i) = w i := by
   simp [commonSites]
 
-theorem commonSites_card_le {A w} {T : Finset K[X]}
-    (hT : (T : Set K[X]) ⊆ close A w) (hsize : 1 < T.card) :
+theorem commonSites_card_le {A w} {T : Finset (Polynomial K)}
+    (hT : (T : Set (Polynomial K)) ⊆ close A w) (hsize : 1 < T.card) :
     (commonSites w T).card ≤ N := by
   obtain ⟨f, hf, g, hg, hfg⟩ := one_lt_card.mp hsize
-  have hdeg {P : K[X]} (hP : P ∈ T) : P.natDegree ≤ N := by
+  have hdeg {P : (Polynomial K)} (hP : P ∈ T) : P.natDegree ≤ N := by
     by_cases hz : P = 0
     · simp [hz, N]
     · exact Nat.le_of_lt_succ ((Polynomial.natDegree_lt_iff_degree_lt hz).2 (hT hP).1)
@@ -32,8 +32,8 @@ theorem commonSites_card_le {A w} {T : Finset K[X]}
   change (f-g).eval (node i) = 0
   rw [eval_sub, mem_commonSites.mp hi f hf, mem_commonSites.mp hi g hg, sub_self]
 
-theorem firstMoment {A w} {T : Finset K[X]}
-    (hT : (T : Set K[X]) ⊆ close A w) (hS : (commonSites w T).card ≤ A)
+theorem firstMoment {A w} {T : Finset (Polynomial K)}
+    (hT : (T : Set (Polynomial K)) ⊆ close A w) (hS : (commonSites w T).card ≤ A)
     (cap : ℚ) (hcap : ∀ i ∉ commonSites w T,
       ((T.filter fun f => f.eval (node i) = w i).card : ℚ) ≤ cap) :
     ((A - (commonSites w T).card : ℕ) : ℚ) * T.card ≤
@@ -41,11 +41,11 @@ theorem firstMoment {A w} {T : Finset K[X]}
   classical
   let S := commonSites w T
   let candidates := (univ : Finset Node) \ S
-  let hits := fun f : K[X] => univ.filter fun i : Node => f.eval (node i) = w i
+  let hits := fun f : (Polynomial K) => univ.filter fun i : Node => f.eval (node i) = w i
   let occ := fun i : Node => (T.filter fun f => f.eval (node i) = w i).card
   have hcard : candidates.card = n - S.card := by
     rw [card_sdiff_of_subset (subset_univ _), card_univ, ProximityPrize.Benchmark.IRSProfile.card_index]
-  have hnew (f : K[X]) (hf : f ∈ T) : A - S.card ≤ (hits f \ S).card := by
+  have hnew (f : (Polynomial K)) (hf : f ∈ T) : A - S.card ≤ (hits f \ S).card := by
     have hsub : S ⊆ hits f := fun i hi => mem_filter.mpr ⟨mem_univ _, mem_commonSites.mp hi f hf⟩
     exact (Nat.sub_le_sub_right (hT hf).2 _).trans_eq (card_sdiff_of_subset hsub).symm
   have hsum : ∑ i ∈ candidates, occ i = ∑ f ∈ T, (hits f \ S).card := by

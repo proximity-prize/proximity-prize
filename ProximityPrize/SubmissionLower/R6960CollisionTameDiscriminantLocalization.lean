@@ -17,11 +17,11 @@ variable {A R F E : Type*} [CommRing A] [IsDomain A] [IsIntegrallyClosed A] [IsN
   [IsScalarTower A R F] [IsScalarTower A R E] [IsScalarTower A F E] [IsScalarTower R F E]
   [IsFractionRing A F] [IsFractionRing R F] [FiniteDimensional F E] [Algebra.IsSeparable F E]
 
-private def integralsIncl : integralClosure A E→+*integralClosure R E :=
+def integralsIncl : integralClosure A E→+*integralClosure R E :=
   Subring.inclusion (show (integralClosure A E).toSubring≤(integralClosure R E).toSubring
     from fun _ h=>(show IsIntegral A _ from h).tower_top)
 
-private theorem gram_map {ι : Type*} (u : ι→integralClosure A E) :
+theorem gram_map {ι : Type*} (u : ι→integralClosure A E) :
     (tupleGram (integralTraceForm (A:=A) (E:=E) F) u).map (algebraMap A R) =
       tupleGram (integralTraceForm (A:=R) (E:=E) F) (fun i=>integralsIncl (R:=R) (u i)) := by
   apply Matrix.ext

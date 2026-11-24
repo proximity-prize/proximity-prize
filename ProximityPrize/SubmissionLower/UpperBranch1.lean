@@ -34,9 +34,9 @@ open K1 (I)
 open K1_14 (L FX Shape)
 open K1_14_1 Polynomial
 open scoped Polynomial BigOperators
-open private leading_forward from ProximityPrize.SubmissionLower.Fast065
-open private boundaryMap boundary_rank_le strict_of_ker ker_step_le from ProximityPrize.SubmissionLower.Fast065
-private theorem zero_of_strict_cutoff {h} (hhi : h ≤ 131070) {D : PoleData h}
+open K1_14_1_8 (leading_forward)
+open K1_14_1_8 (boundaryMap boundary_rank_le strict_of_ker ker_step_le)
+theorem zero_of_strict_cutoff {h} (hhi : h ≤ 131070) {D : PoleData h}
     (Crt : CRTLift D) (s : Shape) (P : Source) (hp : P ∈ poleSpace Crt s)
     (hs : ∀ j i a e, coeffAt P j i a e ≠ 0 →
       a+(i+j)*(131071+h) < (s.B+s.J)*(2*h)+j) : P = 0 := by
@@ -114,12 +114,12 @@ open K1_14 (L FX Shape liftPoly triangle)
 open K1_14_1 K1_14_1_7 K1_14_1_7_3
 open P1 (K I)
 open scoped BigOperators Polynomial
-open private poleTest_of_local from ProximityPrize.SubmissionLower.Fast065
-open private regular_deformation from ProximityPrize.SubmissionLower.PortHighBase
+open K1_14_1_7 (poleTest_of_local)
+open P0_10_1_1 (regular_deformation)
 def c1 : Prop :=
   ∀ (F : Type) [Field F] [CharP F K1.p] (s : Shape),
     s.B < K1.p →
-    ∀ (H : F[X]) (lift : (SeedFrac F)[X])
+    ∀ (H : (Polynomial F)) (lift : (Polynomial (SeedFrac F)))
       (α : F) (side : Fin 2) (a b c : F),
       H.eval α = 0 → H.derivative.eval α ≠ 0 → b ≠ 0 →
       lift.eval (algebraMap F (SeedFrac F) α) = residue side a b c →
@@ -153,7 +153,7 @@ private theorem scalarRow_card_le {h : ℕ} (s : Shape)
       ring
 private theorem simple_rank_le (hlocal : c1)
     {F ι : Type} [Field F] [CharP F K1.p] [Fintype ι] {h : ℕ}
-    {H : F[X]} {lift : (SeedFrac F)[X]}
+    {H : (Polynomial F)} {lift : (Polynomial (SeedFrac F))}
     (G : SimplePoles h H lift) (s : Shape) (hs : s.B < K1.p) (P : ι → TrueSource F)
     (hP : ∀ k, Shaped s (P k)) {n : ℕ} (M : Matrix (Fin n) ι F)
     (hM : ∀ v, M.mulVec v = 0 ↔ PoleTest s H lift (Fintype.linearCombination F P v)) :
@@ -190,7 +190,7 @@ private theorem simple_rank_le (hlocal : c1)
   have hm := M.mulVecLin.finrank_range_add_finrank_ker
   unfold Matrix.rank
   omega
-private theorem pole_bound (hlocal : c1) {h : ℕ} (hpos : 0 < h) (hchar : h < K1.p)
+theorem pole_bound (hlocal : c1) {h : ℕ} (hpos : 0 < h) (hchar : h < K1.p)
     {D : PoleData h} (Crt : CRTLift D) (word : I → L) (s : Shape) (hs : s.B < K1.p) (W : ℕ) :
     Module.finrank L (contacted h word s W) ≤
       poleCredit h s + 2*h*(s.U+1)*groupedPoleMoment s.B s.J +
@@ -286,17 +286,17 @@ def poleMatrix {R : Type} [CommSemiring R] (s : Shape) (t : Offset s) (z : R) :
 def input {F : Type} [Field F] (α : F) {s : Shape} {t : Offset s} (u : Column s t) :
     TrueSource F →ₗ[F] Seed F :=
   inputTaylorCoeff α (columnJet u) (u.1.val - columnJet u) (columnOrder u)
-abbrev OneSeedFrac (F : Type) [Field F] := FractionRing F[X]
+abbrev OneSeedFrac (F : Type) [Field F] := FractionRing (Polynomial F)
 def oneResidue {F : Type} [Field F] (a b c : F) : OneSeedFrac F :=
-  let z := algebraMap F[X] (OneSeedFrac F) Polynomial.X
+  let z := algebraMap (Polynomial F) (OneSeedFrac F) Polynomial.X
   algebraMap F (OneSeedFrac F) a * z /
     (algebraMap F (OneSeedFrac F) b + algebraMap F (OneSeedFrac F) c * z)
 def BoundedMinors {F ι κ : Type} [Field F] [Fintype ι] [DecidableEq ι]
     (M : Matrix ι κ (OneSeedFrac F)) (D : ℕ) : Prop :=
   (∃ e : ι ↪ κ, (M.submatrix id e).det ≠ 0) ∧
   ∃ scale : OneSeedFrac F, scale ≠ 0 ∧
-    ∀ e : ι ↪ κ, ∃ g : F[X], g.natDegree ≤ D ∧
-      algebraMap F[X] (OneSeedFrac F) g = scale * (M.submatrix id e).det
+    ∀ e : ι ↪ κ, ∃ g : (Polynomial F), g.natDegree ≤ D ∧
+      algebraMap (Polynomial F) (OneSeedFrac F) g = scale * (M.submatrix id e).det
 end
 end P1_7_1_1
 end
@@ -602,17 +602,17 @@ theorem bounded_pole_minors (F : Type) [Field F] (s : Shape) (t : Offset s) (a b
     (hb : b ≠ 0) :
     BoundedMinors (poleMatrix s t (oneResidue a b c)) (offsetMoment s.B s.J t.val) := by
   let δ := offsetMoment s.B s.J t.val
-  let N : F[X] := C a * Polynomial.X
-  let D : F[X] := C b + C c * Polynomial.X
-  let f := algebraMap F[X] (OneSeedFrac F)
+  let N : (Polynomial F) := C a * Polynomial.X
+  let D : (Polynomial F) := C b + C c * Polynomial.X
+  let f := algebraMap (Polynomial F) (OneSeedFrac F)
   have hc (u : F) : f (C u) = algebraMap F (OneSeedFrac F) u :=
-    (IsScalarTower.algebraMap_apply F F[X] (OneSeedFrac F) u).symm
+    (IsScalarTower.algebraMap_apply F (Polynomial F) (OneSeedFrac F) u).symm
   have hD : D ≠ 0 := by
     intro hz
     apply hb
-    simpa [D] using congrArg (fun p : F[X] => p.coeff 0) hz
+    simpa [D] using congrArg (fun p : (Polynomial F) => p.coeff 0) hz
   have hDf : f D ≠ 0 := by
-    simpa only [f, map_zero] using (IsFractionRing.injective F[X] (OneSeedFrac F)).ne hD
+    simpa only [f, map_zero] using (IsFractionRing.injective (Polynomial F) (OneSeedFrac F)).ne hD
   have hz : oneResidue a b c = f N / f D := by
     simp only [oneResidue, N, D, map_mul, map_add, hc]
     rfl
@@ -674,23 +674,23 @@ open K1_14 (Shape)
 open K1_14_1 (otherBlock)
 open K1_14_1_7 K1_14_1_7_2
 open scoped BigOperators Matrix Polynomial
-open private taylor_seed_degree seedWeight_add window_sum from ProximityPrize.SubmissionLower.Fast065
-private def seedMap (F : Type) [Field F] (side : Fin 2) : F[X] →+* SeedFrac F :=
+open K1_14_1_7_2 (taylor_seed_degree seedWeight_add window_sum)
+private def seedMap (F : Type) [Field F] (side : Fin 2) : (Polynomial F) →+* SeedFrac F :=
   (algebraMap (Seed F) (SeedFrac F)).comp (Polynomial.toMvPolynomial side).toRingHom
 private def fractionSeedMap (F : Type) [Field F] (side : Fin 2) :
     OneSeedFrac F →+* SeedFrac F :=
   IsFractionRing.lift (g := seedMap F side)
     ((IsFractionRing.injective (Seed F) (SeedFrac F)).comp
       (Polynomial.toMvPolynomial_injective side))
-private theorem fractionSeedMap_polynomial {F : Type} [Field F] (side : Fin 2) (g : F[X]) :
-    fractionSeedMap F side (algebraMap F[X] (OneSeedFrac F) g) =
+private theorem fractionSeedMap_polynomial {F : Type} [Field F] (side : Fin 2) (g : (Polynomial F)) :
+    fractionSeedMap F side (algebraMap (Polynomial F) (OneSeedFrac F) g) =
       algebraMap (Seed F) (SeedFrac F) (g.toMvPolynomial side) := by
   rw [fractionSeedMap, IsFractionRing.lift_algebraMap]
   rfl
 private theorem fractionSeedMap_scalar {F : Type} [Field F] (side : Fin 2) (a : F) :
     fractionSeedMap F side (algebraMap F (OneSeedFrac F) a) =
       algebraMap F (SeedFrac F) a := by
-  rw [IsScalarTower.algebraMap_apply F F[X] (OneSeedFrac F), fractionSeedMap_polynomial]
+  rw [IsScalarTower.algebraMap_apply F (Polynomial F) (OneSeedFrac F), fractionSeedMap_polynomial]
   change algebraMap (Seed F) (SeedFrac F) ((Polynomial.C a).toMvPolynomial side) = _
   rw [Polynomial.toMvPolynomial_C]
   exact (IsScalarTower.algebraMap_apply F (Seed F) (SeedFrac F) a).symm
@@ -699,13 +699,13 @@ private theorem fractionSeedMap_residue {F : Type} [Field F] (side : Fin 2) (a b
   simp only [oneResidue, residue, map_div₀, map_add, map_mul, fractionSeedMap_scalar,
     fractionSeedMap_polynomial, Polynomial.toMvPolynomial_X]
 def polynomialTest {F : Type} [Field F] {s : Shape} {t : Offset s}
-    (α : F) (side : Fin 2) (v : Column s t → F[X]) : TrueSource F →ₗ[F] Seed F :=
+    (α : F) (side : Fin 2) (v : Column s t → (Polynomial F)) : TrueSource F →ₗ[F] Seed F :=
   ∑ u, (v u).toMvPolynomial side • input α u
-private theorem polynomialTest_apply {F : Type} [Field F] {s : Shape} {t : Offset s}
-    (α : F) (side : Fin 2) (v : Column s t → F[X]) (P : TrueSource F) :
+theorem polynomialTest_apply {F : Type} [Field F] {s : Shape} {t : Offset s}
+    (α : F) (side : Fin 2) (v : Column s t → (Polynomial F)) (P : TrueSource F) :
     polynomialTest α side v P = ∑ u, (v u).toMvPolynomial side * input α u P := by
   simp only [polynomialTest, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
-private theorem side_degrees {F : Type} [Field F] (side : Fin 2) (p : F[X]) :
+theorem side_degrees {F : Type} [Field F] (side : Fin 2) (p : (Polynomial F)) :
     (p.toMvPolynomial side).degreeOf (otherBlock side) ≤ 0 ∧
     (p.toMvPolynomial side).totalDegree ≤ p.natDegree := by
   classical
@@ -728,7 +728,7 @@ private theorem side_degrees {F : Type} [Field F] (side : Fin 2) (p : F[X]) :
     exact ((MvPolynomial.totalDegree_pow (MvPolynomial.X (R := F) side) k).trans
       (by simp)).trans (Polynomial.le_natDegree_of_mem_supp k hk)
 theorem polynomialTest_window {F : Type} [Field F] {s : Shape} {t : Offset s}
-    (α : F) (side : Fin 2) (v : Column s t → F[X]) {d : ℕ}
+    (α : F) (side : Fin 2) (v : Column s t → (Polynomial F)) {d : ℕ}
     (hd : ∀ u, (v u).natDegree ≤ d) {P : TrueSource F} (hP : Shaped s P) :
     SeedWindow s.U d side (polynomialTest α side v P) := by
   rw [polynomialTest_apply]
@@ -752,9 +752,9 @@ theorem polynomialTest_window {F : Type} [Field F] {s : Shape} {t : Offset s}
   exact (show K1_14_1.seedWeight e ≤ _ from MvPolynomial.le_totalDegree hMem).trans htotal
 theorem polynomialTests_to_poleMatrix {F : Type} [Field F] {s : Shape} (t : Offset s)
     (α : F) (side : Fin 2) (a b c : F) (P : TrueSource F)
-    (Q : Matrix (Pivot s t) (Column s t) F[X])
+    (Q : Matrix (Pivot s t) (Column s t) (Polynomial F))
     (L : Matrix (Pivot s t) (Pivot s t) (OneSeedFrac F))
-    (hL : poleMatrix s t (oneResidue a b c) = L * Q.map (algebraMap F[X] (OneSeedFrac F)))
+    (hL : poleMatrix s t (oneResidue a b c) = L * Q.map (algebraMap (Polynomial F) (OneSeedFrac F)))
     (hz : ∀ r, polynomialTest α side (Q r) P = 0) :
     poleMatrix s t (residue side a b c) *ᵥ
       (fun u => algebraMap (Seed F) (SeedFrac F) (input α u P)) = 0 := by
@@ -766,7 +766,7 @@ theorem polynomialTests_to_poleMatrix {F : Type} [Field F] {s : Shape} (t : Offs
     simp only [Matrix.map_apply, poleMatrix, f, apply_ite, map_zero, map_mul, map_natCast,
       map_pow, fractionSeedMap_residue]
     split_ifs <;> rfl
-  have hQ : (Q.map (algebraMap F[X] (OneSeedFrac F))).map f = Q' := by
+  have hQ : (Q.map (algebraMap (Polynomial F) (OneSeedFrac F))).map f = Q' := by
     ext r u
     exact fractionSeedMap_polynomial side (Q r u)
   have hV : Q' *ᵥ V = 0 := by
@@ -804,8 +804,8 @@ def c1 : Prop :=
 def c2 : Prop :=
   ∀ (F ι κ : Type) [Field F] [Fintype ι] [DecidableEq ι] [Fintype κ]
     (M : Matrix ι κ (OneSeedFrac F)) (D : ℕ), BoundedMinors M D →
-    ∃ (Q : Matrix ι κ F[X]) (L : Matrix ι ι (OneSeedFrac F)) (d : ι → ℕ),
-      M = L * Q.map (algebraMap F[X] (OneSeedFrac F)) ∧
+    ∃ (Q : Matrix ι κ (Polynomial F)) (L : Matrix ι ι (OneSeedFrac F)) (d : ι → ℕ),
+      M = L * Q.map (algebraMap (Polynomial F) (OneSeedFrac F)) ∧
       (∀ r u, (Q r u).natDegree ≤ d r) ∧ (∑ r, d r) ≤ D
 theorem of_children (hLocal : c1) (hBasis : c2) :
     P1_7_1.c1 := by
@@ -848,7 +848,7 @@ open K1_14 (Shape)
 open K1_14_1_7 K1_14_1_7_2 P1_7_1_1
 open P1_7_1 (columnCount pivotCount)
 open scoped BigOperators Matrix Polynomial
-open private coeff_zeroGrade from ProximityPrize.SubmissionLower.Fast065
+open K1_14_1_7_1 (coeff_zeroGrade)
 private abbrev JetIndex (s : Shape) (t : Offset s) (q : Grade s) :=
   Fin (columnCount s.B s.J t.val q.val)
 private theorem sum_embedding {A D M : Type} [Fintype A] [Fintype D] [AddCommMonoid M]
@@ -1049,16 +1049,16 @@ open Polynomial Matrix
 open scoped Polynomial BigOperators
 variable {F ι κ : Type} [Field F] [Fintype ι] [DecidableEq ι] [Fintype κ]
 local notation "K" => P1_7_1_1.OneSeedFrac F
-local notation "φ" => algebraMap F[X] K
+local notation "φ" => algebraMap (Polynomial F) K
 private theorem clear_denominators (M : Matrix ι κ K) (e : ι ↪ κ)
     (he : (M.submatrix id e).det ≠ 0) :
-    ∃ (A : Matrix ι κ F[X]) (b : K), b ≠ 0 ∧ A.map φ = b • M ∧
+    ∃ (A : Matrix ι κ (Polynomial F)) (b : K), b ≠ 0 ∧ A.map φ = b • M ∧
       (A.submatrix id e).det ≠ 0 := by
   classical
   obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finite
-    (nonZeroDivisors F[X]) (fun p : ι × κ => M p.1 p.2)
+    (nonZeroDivisors (Polynomial F)) (fun p : ι × κ => M p.1 p.2)
   choose a ha using hb
-  let A : Matrix ι κ F[X] := fun i j => a (i, j)
+  let A : Matrix ι κ (Polynomial F) := fun i j => a (i, j)
   have hmap : A.map φ = φ b • M := by
     apply Matrix.ext
     intro i j
@@ -1066,7 +1066,7 @@ private theorem clear_denominators (M : Matrix ι κ K) (e : ι ↪ κ)
     simpa only [Algebra.smul_def] using ha (i, j)
   have hb0 : φ b ≠ 0 :=
     fun h => (nonZeroDivisors.ne_zero b.property)
-      (IsFractionRing.injective F[X] K (h.trans (map_zero φ).symm))
+      (IsFractionRing.injective (Polynomial F) K (h.trans (map_zero φ).symm))
   refine ⟨A, φ b, hb0, hmap, ?_⟩
   intro h
   have hdet : φ (A.submatrix id e).det = (φ b • M.submatrix id e).det := by
@@ -1076,7 +1076,7 @@ private theorem clear_denominators (M : Matrix ι κ K) (e : ι ↪ κ)
   exact (mul_ne_zero (pow_ne_zero _ hb0) he) hdet.symm
 theorem exists_split_rows (M : Matrix ι κ K)
     (hM : ∃ e : ι ↪ κ, (M.submatrix id e).det ≠ 0) :
-    ∃ (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (L : Matrix ι ι K),
+    ∃ (Q : Matrix ι κ (Polynomial F)) (T : Matrix κ ι (Polynomial F)) (L : Matrix ι ι K),
       Q * T = 1 ∧ M = L * Q.map φ := by
   classical
   obtain ⟨e, he⟩ := hM
@@ -1086,17 +1086,17 @@ theorem exists_split_rows (M : Matrix ι κ K)
     intro x y hxy
     apply Matrix.vecMul_injective_iff.mpr (Matrix.linearIndependent_rows_of_det_ne_zero hminor)
     exact funext fun j => congrFun hxy (e j)
-  have hN : Module.finrank F[X] N = Fintype.card ι := by
+  have hN : Module.finrank (Polynomial F) N = Fintype.card ι := by
     rw [LinearMap.finrank_range_of_inj hAi, Module.finrank_pi]
-  obtain ⟨n, S⟩ := N.smithNormalForm (Pi.basisFun F[X] κ)
+  obtain ⟨n, S⟩ := N.smithNormalForm (Pi.basisFun (Polynomial F) κ)
   let re : ι ≃ Fin n := Fintype.equivOfCardEq (by
     rw [← Module.finrank_eq_card_basis S.bN, hN])
-  let Q : Matrix ι κ F[X] := fun i => S.bM (S.f (re i))
-  let T : Matrix κ ι F[X] := fun j i => S.bM.coord (S.f (re i)) (Pi.single j 1)
+  let Q : Matrix ι κ (Polynomial F) := fun i => S.bM (S.f (re i))
+  let T : Matrix κ ι (Polynomial F) := fun j i => S.bM.coord (S.f (re i)) (Pi.single j 1)
   have hQT : Q * T = 1 := by
     apply Matrix.ext
     intro i j
-    have hsum : (∑ k : κ, Q i k • (Pi.single k 1 : κ → F[X])) = Q i := by
+    have hsum : (∑ k : κ, Q i k • (Pi.single k 1 : κ → (Polynomial F))) = Q i := by
       funext k
       simp [Finset.sum_apply, Pi.smul_apply, Pi.single_apply, mul_ite]
     have hcoord := congrArg (S.bM.coord (S.f (re j))) hsum
@@ -1109,19 +1109,19 @@ theorem exists_split_rows (M : Matrix ι κ K)
   have hrow (i : ι) : A i ∈ N := by
     refine ⟨Pi.single i 1, ?_⟩
     exact Matrix.single_one_vecMul i A
-  let W : Matrix ι ι F[X] := fun i j => S.bN.repr ⟨A i, hrow i⟩ (re j) * S.a (re j)
+  let W : Matrix ι ι (Polynomial F) := fun i j => S.bN.repr ⟨A i, hrow i⟩ (re j) * S.a (re j)
   have hW : W * Q = A := by
     apply Matrix.ext
     intro i j
     have hsum := S.bN.sum_repr ⟨A i, hrow i⟩
-    let l : N →ₗ[F[X]] F[X] := (LinearMap.proj j).comp N.subtype
+    let l : N →ₗ[(Polynomial F)] (Polynomial F) := (LinearMap.proj j).comp N.subtype
     have hc := congrArg l hsum
     rw [Matrix.mul_apply, ← Equiv.sum_comp re.symm]
     simpa only [l, map_sum, map_smul, LinearMap.comp_apply, LinearMap.proj_apply,
       Submodule.subtype_apply, W, Q, S.snf, Equiv.apply_symm_apply, ← mul_assoc,
       Pi.smul_apply, smul_eq_mul] using hc
   refine ⟨Q, T, b⁻¹ • W.map φ, hQT, ?_⟩
-  have h := congrArg (fun B : Matrix ι κ F[X] => B.map φ) hW
+  have h := congrArg (fun B : Matrix ι κ (Polynomial F) => B.map φ) hW
   rw [Matrix.map_mul, hA] at h
   rw [Matrix.smul_mul, h, smul_smul, inv_mul_cancel₀ hb, one_smul]
 end
@@ -1136,20 +1136,20 @@ open Polynomial Matrix
 open scoped Polynomial BigOperators
 variable {F ι κ : Type} [Field F] [Fintype ι] [DecidableEq ι] [Fintype κ]
 local notation "K" => P1_7_1_1.OneSeedFrac F
-local notation "φ" => algebraMap F[X] K
-def leadingRows (Q : Matrix ι κ F[X]) (d : ι → ℕ) : Matrix ι κ F :=
+local notation "φ" => algebraMap (Polynomial F) K
+def leadingRows (Q : Matrix ι κ (Polynomial F)) (d : ι → ℕ) : Matrix ι κ F :=
   fun i j => (Q i j).coeff (d i)
 omit [Fintype ι] in
-private theorem no_zero_row {Q : Matrix ι κ F[X]} {T : Matrix κ ι F[X]}
+private theorem no_zero_row {Q : Matrix ι κ (Polynomial F)} {T : Matrix κ ι (Polynomial F)}
     (h : Q * T = 1) (p : ι) : Q p ≠ 0 := by
   intro hp
   have hpp := congrFun (congrFun h p) p
   rw [Matrix.mul_apply, hp] at hpp
   simp at hpp
-private theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d : ι → ℕ)
+private theorem reduce_step (Q : Matrix ι κ (Polynomial F)) (T : Matrix κ ι (Polynomial F)) (d : ι → ℕ)
     (hQT : Q * T = 1) (hdeg : ∀ r u, (Q r u).natDegree ≤ d r)
     (hbad : ¬ LinearIndependent F (leadingRows Q d).row) :
-    ∃ (E : Matrix ι ι F[X]) (d' : ι → ℕ), IsUnit E.det ∧
+    ∃ (E : Matrix ι ι (Polynomial F)) (d' : ι → ℕ), IsUnit E.det ∧
       (∀ r u, ((E * Q) r u).natDegree ≤ d' r) ∧ (∑ r, d' r) < ∑ r, d r := by
   classical
   rw [Fintype.linearIndependent_iff] at hbad
@@ -1161,17 +1161,17 @@ private theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d :
   have hap : a p ≠ 0 := (Finset.mem_filter.mp hp).2
   have hle (r : ι) (hr : a r ≠ 0) : d r ≤ d p :=
     hmax r (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hr⟩)
-  let c (r : ι) : F[X] := C (a r) * (Polynomial.X (R := F)) ^ (d p - d r)
-  let E := (1 : Matrix ι ι F[X]).updateRow p c
+  let c (r : ι) : (Polynomial F) := C (a r) * (Polynomial.X (R := F)) ^ (d p - d r)
+  let E := (1 : Matrix ι ι (Polynomial F)).updateRow p c
   have hc : c p = C (a p) := by simp [c]
   have hE : IsUnit E.det := by
-    have hrow : (∑ k, c k • (1 : Matrix ι ι F[X]) k) = c := by
+    have hrow : (∑ k, c k • (1 : Matrix ι ι (Polynomial F)) k) = c := by
       rw [← Matrix.vecMul_eq_sum, Matrix.vecMul_one]
-    change IsUnit ((1 : Matrix ι ι F[X]).updateRow p c).det
+    change IsUnit ((1 : Matrix ι ι (Polynomial F)).updateRow p c).det
     rw [← hrow, Matrix.det_updateRow_sum, Matrix.det_one, smul_eq_mul, mul_one, hc]
     exact (isUnit_iff_ne_zero.mpr hap).map C
   have hform : E * Q = Q.updateRow p (∑ r, c r • Q r) := by
-    change (1 : Matrix ι ι F[X]).updateRow p c * Q = _
+    change (1 : Matrix ι ι (Polynomial F)).updateRow p c * Q = _
     rw [Matrix.updateRow_mul, Matrix.one_mul, Matrix.vecMul_eq_sum]
   have hbound (u : κ) : ((E * Q) p u).natDegree ≤ d p := by
     rw [hform, Matrix.updateRow_self, Finset.sum_apply]
@@ -1234,14 +1234,14 @@ private theorem reduce_step (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (d :
       · simp [d', Function.update_of_ne hr]
     · exact ⟨p, Finset.mem_univ p, by simpa [d'] using Nat.sub_lt hpos (by decide : 0 < 1)⟩
 theorem exists_reduced_rows (M : Matrix ι κ K)
-    (hM : ∃ (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (L : Matrix ι ι K),
+    (hM : ∃ (Q : Matrix ι κ (Polynomial F)) (T : Matrix κ ι (Polynomial F)) (L : Matrix ι ι K),
       Q * T = 1 ∧ M = L * Q.map φ) :
-    ∃ (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (L : Matrix ι ι K) (d : ι → ℕ),
+    ∃ (Q : Matrix ι κ (Polynomial F)) (T : Matrix κ ι (Polynomial F)) (L : Matrix ι ι K) (d : ι → ℕ),
       Q * T = 1 ∧ M = L * Q.map φ ∧
       (∀ r u, (Q r u).natDegree ≤ d r) ∧ LinearIndependent F (leadingRows Q d).row := by
   classical
   let P (n : ℕ) :=
-    ∃ (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (L : Matrix ι ι K) (d : ι → ℕ),
+    ∃ (Q : Matrix ι κ (Polynomial F)) (T : Matrix κ ι (Polynomial F)) (L : Matrix ι ι K) (d : ι → ℕ),
       Q * T = 1 ∧ M = L * Q.map φ ∧ (∀ r u, (Q r u).natDegree ≤ d r) ∧ (∑ r, d r) = n
   have hP : ∃ n, P n := by
     obtain ⟨Q, T, L, hQT, hL⟩ := hM
@@ -1273,9 +1273,9 @@ open Polynomial Matrix
 open scoped Polynomial BigOperators
 variable {F ι κ : Type} [Field F] [Fintype ι] [DecidableEq ι] [Fintype κ]
 local notation "K" => P1_7_1_1.OneSeedFrac F
-local notation "φ" => algebraMap F[X] K
+local notation "φ" => algebraMap (Polynomial F) K
 omit [Fintype ι] in
-private theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι → ℕ)
+private theorem coeff_weighted_prod {s : Finset ι} (p : ι → (Polynomial F)) (d : ι → ℕ)
     (h : ∀ i ∈ s, (p i).natDegree ≤ d i) :
     (∏ i ∈ s, p i).coeff (∑ i ∈ s, d i) = ∏ i ∈ s, (p i).coeff (d i) := by
   induction s using Finset.induction_on with
@@ -1286,7 +1286,7 @@ private theorem coeff_weighted_prod {s : Finset ι} (p : ι → F[X]) (d : ι �
     · exact congrArg ((p i).coeff (d i) * ·) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
     · exact (Polynomial.natDegree_prod_le _ _).trans
         (Finset.sum_le_sum fun j hj => h j (Finset.mem_insert_of_mem hj))
-private theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F B.row) :
+theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F B.row) :
     ∃ e : ι ↪ κ, (B.submatrix id e).det ≠ 0 := by
   classical
   have hr : B.rank = Fintype.card ι := by
@@ -1301,7 +1301,7 @@ private theorem exists_full_minor (B : Matrix ι κ F) (hB : LinearIndependent F
   have hli' : LinearIndependent F (B.submatrix id e).col := hli.comp u u.injective
   exact ⟨e, ((Matrix.isUnit_iff_isUnit_det _).mp
     (Matrix.linearIndependent_cols_iff_isUnit.mp hli')).ne_zero⟩
-theorem exists_minor_of_degree_sum (Q : Matrix ι κ F[X]) (d : ι → ℕ)
+theorem exists_minor_of_degree_sum (Q : Matrix ι κ (Polynomial F)) (d : ι → ℕ)
     (hdeg : ∀ r u, (Q r u).natDegree ≤ d r)
     (hlead : LinearIndependent F (leadingRows Q d).row) :
     ∃ e : ι ↪ κ, (Q.submatrix id e).det ≠ 0 ∧ (∑ r, d r) ≤ (Q.submatrix id e).det.natDegree := by
@@ -1312,7 +1312,7 @@ theorem exists_minor_of_degree_sum (Q : Matrix ι κ F[X]) (d : ι → ℕ)
       Matrix.det_apply', Matrix.det_apply', Polynomial.finsetSum_coeff]
     apply Finset.sum_congr rfl
     intro σ _
-    rw [← map_intCast (C : F →+* F[X]), Polynomial.coeff_C_mul]
+    rw [← map_intCast (C : F →+* (Polynomial F)), Polynomial.coeff_C_mul]
     simp only [Matrix.transpose_apply, Matrix.submatrix_apply, id_eq, leadingRows]
     rw [coeff_weighted_prod _ d (fun i _ => hdeg i (e (σ i)))]
   have hne : (Q.submatrix id e).det.coeff (∑ r, d r) ≠ 0 := hcoeff.trans_ne he
@@ -1332,10 +1332,10 @@ private theorem det_rectangular_mul {R : Type} [CommRing R]
       intro f _
       simp only [Matrix.det_apply', Finset.mul_sum, Matrix.submatrix_apply, id_eq,
         Finset.prod_mul_distrib, mul_comm, mul_assoc]
-private theorem scale_polynomial (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X])
+private theorem scale_polynomial (Q : Matrix ι κ (Polynomial F)) (T : Matrix κ ι (Polynomial F))
     (hQT : Q * T = 1) (t : K)
-    (h : ∀ f : ι → κ, ∃ g : F[X], φ g = t * φ (Q.submatrix id f).det) :
-    ∃ g : F[X], φ g = t := by
+    (h : ∀ f : ι → κ, ∃ g : (Polynomial F), φ g = t * φ (Q.submatrix id f).det) :
+    ∃ g : (Polynomial F), φ g = t := by
   classical
   choose g hg using h
   refine ⟨∑ f : ι → κ, (∏ j, T (f j) j) * g f, ?_⟩
@@ -1350,7 +1350,7 @@ private theorem scale_polynomial (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X])
       exact Finset.sum_congr rfl fun f _ => mul_left_comm _ _ _
     _ = t := by rw [← he, mul_one]
 theorem minor_degree_le (M : Matrix ι κ K) (D : ℕ)
-    (Q : Matrix ι κ F[X]) (T : Matrix κ ι F[X]) (L : Matrix ι ι K)
+    (Q : Matrix ι κ (Polynomial F)) (T : Matrix κ ι (Polynomial F)) (L : Matrix ι ι K)
     (hQT : Q * T = 1) (hM : M = L * Q.map φ) (hb : P1_7_1_1.BoundedMinors M D)
     (e : ι ↪ κ) (he : (Q.submatrix id e).det ≠ 0) :
     (Q.submatrix id e).det.natDegree ≤ D := by
@@ -1364,7 +1364,7 @@ theorem minor_degree_le (M : Matrix ι κ K) (D : ℕ)
   have hL : L.det ≠ 0 := by
     intro hz
     exact he₀ (by rw [hdet, hz, zero_mul])
-  have hall (f : ι → κ) : ∃ g : F[X], φ g = (scale * L.det) * φ (Q.submatrix id f).det := by
+  have hall (f : ι → κ) : ∃ g : (Polynomial F), φ g = (scale * L.det) * φ (Q.submatrix id f).det := by
     by_cases hf : Function.Injective f
     · let e' : ι ↪ κ := ⟨f, hf⟩
       obtain ⟨g, _, hg⟩ := hminors e'
@@ -1381,7 +1381,7 @@ theorem minor_degree_le (M : Matrix ι κ K) (D : ℕ)
     exact (mul_ne_zero hscale hL) (by rw [← hp, hz, map_zero])
   obtain ⟨g, hg, hge⟩ := hminors e
   have hmul : g = p * (Q.submatrix id e).det := by
-    apply IsFractionRing.injective F[X] K
+    apply IsFractionRing.injective (Polynomial F) K
     rw [hge, hdet, map_mul, hp, mul_assoc]
   rw [hmul, Polynomial.natDegree_mul hp0 he] at hg
   exact (Nat.le_add_left _ _).trans hg
@@ -1406,7 +1406,7 @@ open Finset
 open K1_14 (Shape shapeSum)
 open P1_7_1 (nodeRows)
 open scoped BigOperators
-open private shape_sum_flip from ProximityPrize.SubmissionLower.Fast063
+open K1_14_5 (shape_sum_flip)
 private def atNode (m J q j : ℕ) : ℕ := m + min q J - (q + 2*j)
 private def twiceGrade (k i : ℕ) : ℕ :=
   k*(k+1) + (6*k+2)*i + 8*i*i
@@ -1560,14 +1560,14 @@ private theorem count_sum (n : ℕ) :
   induction n with
   | zero => simp
   | succ n ih => rw [sum_range_succ, Nat.mul_add, ih]; ring
-private theorem sum_after (f : ℕ → ℕ) (N s : ℕ) (hz : ∀ q < s, f q = 0) :
+theorem sum_after (f : ℕ → ℕ) (N s : ℕ) (hz : ∀ q < s, f q = 0) :
     (∑ q ∈ range N, f q) = ∑ i ∈ range (N-s), f (s+i) := by
   by_cases h : s ≤ N
   · conv_lhs => rw [← Nat.add_sub_of_le h, sum_range_add]
     rw [sum_eq_zero (fun q hq => hz q (mem_range.mp hq)), zero_add]
   · rw [Nat.sub_eq_zero_of_le (by omega : N ≤ s), sum_range_zero]
     exact sum_eq_zero fun q hq => hz q (by have := mem_range.mp hq; omega)
-private theorem ramp_count (N a : ℕ) :
+theorem ramp_count (N a : ℕ) :
     6 * (∑ q ∈ range N, ramp a q) = rampCount6 N a := by
   rw [sum_after (ramp a) N a (fun q hq => by unfold ramp; omega)]
   unfold rampCount6
@@ -1640,7 +1640,7 @@ private theorem pivot_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     simp only [← Nat.mul_add, pivot_row]
   simp only [sum_add_distrib] at heq
   omega
-private theorem column_volume (B J t : ℕ) (f stat : ℕ → ℕ)
+theorem column_volume (B J t : ℕ) (f stat : ℕ → ℕ)
     (hs : ∀ a, stat a = 6 * (∑ q ∈ range (B+1), f q * ramp a q)) :
     6 * (∑ q ∈ range (B+1), f q * columnCount B J t q) = columnVolume6 B J t stat := by
   unfold columnVolume6

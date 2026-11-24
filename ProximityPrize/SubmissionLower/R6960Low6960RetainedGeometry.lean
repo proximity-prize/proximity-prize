@@ -12,8 +12,8 @@ open P3 (K I)
 open K1_13 (Row Shape InBox shape mixed32 chart)
 open Low6960Prices (Messages tiltedFits tiltedSurface taylorLength)
 open Low6960GeometryCut (CutInput MixedBound)
-open private chargedPrice assemble_charge continued_bound from ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
-open private Low6960ActiveCycle.mixed from ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleMixed
+open Low6960GeometryCut (chargedPrice assemble_charge continued_bound)
+open Low6960ActiveCycle (mixed)
 open scoped Polynomial BigOperators
 
 /-- The accepted physical charge with an arbitrary mixed surface budget. -/
@@ -22,7 +22,7 @@ def cutPrice (x : Shape) (l scale surface : ℕ) := chargedPrice x l scale surfa
 def fourSurface (p q : Shape) :=
   mixed32 p q (chart (taylorLength+1) p) (chart (taylorLength+2) p)
 
-variable {w : I → K} {Γ : Finset K} {s : K → K[X]} {f Q : Row 4} {l : ℕ}
+variable {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} {f Q : Row 4} {l : ℕ}
 
 theorem smaller_tilted (hm : Messages w Γ s) (input : CutInput Γ s f Q l)
     (q : Shape) (hQ : InBox (shape Q) q) (hq : Low48BentLattice.Chamber (q,0))

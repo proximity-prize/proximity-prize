@@ -16,9 +16,9 @@ open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 open scoped Polynomial
 
 /-- The constants and the two coordinates in the actual rational field. -/
-def constants : L →+* ChartField := RatFunc.C.comp ((algebraMap L[X] Scalar).comp C)
+def constants : L →+* ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
 
-def scalarCoordinate : ChartField := RatFunc.C (algebraMap L[X] Scalar (Polynomial.X (R:=L)))
+def scalarCoordinate : ChartField := RatFunc.C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L)))
 
 def chartCoordinate (infinity : Bool) (x : ChartField) : ChartField :=
   if infinity then x⁻¹ else x
@@ -44,25 +44,25 @@ variable {E : Type*} [Field E] [Algebra ChartField E]
 def Correction (a b : ℕ) (u : Chart → E) (c : E) : Prop :=
   ∀ s, IsIntegral (baseChart s) (algebraMap ChartField E (frame a b s)*(u s-c))
 
-private theorem finite_inclusion :
-    baseChart (false,false) ≤ (algebraMap Scalar[X] ChartField).range := by
+theorem finite_inclusion :
+    baseChart (false,false) ≤ (algebraMap (Polynomial Scalar) ChartField).range := by
   apply Subring.closure_le.mpr
   intro x hx
   simp only [Set.mem_union,Set.mem_range,Set.mem_insert_iff,Set.mem_singleton_iff] at hx
   rcases hx with ⟨c,rfl⟩ | rfl | rfl
-  · exact ⟨C (algebraMap L[X] Scalar (C c)),RatFunc.algebraMap_C _⟩
+  · exact ⟨C (algebraMap (Polynomial L) Scalar (C c)),RatFunc.algebraMap_C _⟩
   · exact ⟨Polynomial.X,RatFunc.algebraMap_X⟩
-  · exact ⟨C (algebraMap L[X] Scalar (Polynomial.X (R:=L))),RatFunc.algebraMap_C _⟩
+  · exact ⟨C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L))),RatFunc.algebraMap_C _⟩
 
-private theorem infinity_inclusion [DecidableEq ChartField] :
+theorem infinity_inclusion [DecidableEq ChartField] :
     baseChart (true,false) ≤ (algebraMap (Infinity Scalar) ChartField).range := by
   apply Subring.closure_le.mpr
   intro x hx
   simp only [Set.mem_union,Set.mem_range,Set.mem_insert_iff,Set.mem_singleton_iff] at hx
   rcases hx with ⟨c,rfl⟩ | rfl | rfl
-  · exact ⟨MonicChart.inftyRingEval Scalar (C (algebraMap L[X] Scalar (C c))),aeval_C _ _⟩
+  · exact ⟨MonicChart.inftyRingEval Scalar (C (algebraMap (Polynomial L) Scalar (C c))),aeval_C _ _⟩
   · exact ⟨MonicChart.inftyRingEval Scalar Polynomial.X,MonicChart.mapped_X_infty⟩
-  · exact ⟨MonicChart.inftyRingEval Scalar (C (algebraMap L[X] Scalar (Polynomial.X (R:=L)))),
+  · exact ⟨MonicChart.inftyRingEval Scalar (C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L)))),
       aeval_C _ _⟩
 
 /-- Integrality persists under passage from a base chart to a larger ring
@@ -86,17 +86,17 @@ theorem integral_of_inclusion (s : Chart) {R : Type*} [CommRing R] [Algebra R Ch
 /-- A correction on the four actual charts for the Frobenius powers of the
 potentials descends to a single correction over all four charts. Its
 p-th power is the original correction in the same root field. -/
-theorem descend (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+theorem descend (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (a b : ℕ) (ha : 0<a) (u : Chart → E) (c : E)
     (h : Correction (a*K1.p) (b*K1.p) (fun s=>u s ^ K1.p) c) :
     ∃ d : E, d^K1.p=c ∧ Correction a b u d := by
   classical
-  let : Algebra Scalar[X] E := ((algebraMap ChartField E).comp (algebraMap Scalar[X] ChartField)).toAlgebra
-  let : IsScalarTower Scalar[X] ChartField E :=
-    IsScalarTower.of_algebraMap_eq (R:=Scalar[X]) (S:=ChartField) (A:=E) fun _=>rfl
+  let : Algebra (Polynomial Scalar) E := ((algebraMap ChartField E).comp (algebraMap (Polynomial Scalar) ChartField)).toAlgebra
+  let : IsScalarTower (Polynomial Scalar) ChartField E :=
+    IsScalarTower.of_algebraMap_eq (R:=(Polynomial Scalar)) (S:=ChartField) (A:=E) fun _=>rfl
   let : Algebra (Infinity Scalar) E :=
     ((algebraMap ChartField E).comp (algebraMap (Infinity Scalar) ChartField)).toAlgebra
   let : IsScalarTower (Infinity Scalar) ChartField E :=
@@ -111,7 +111,7 @@ theorem descend (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordin
     (map_ne_zero_iff _ (algebraMap ChartField E).injective).mpr RatFunc.X_ne_zero
   let x := u (false,false)^p-c
   let y := Xval^p*(u (true,false)^p-c)
-  have finite : IsIntegral Scalar[X] x := by
+  have finite : IsIntegral (Polynomial Scalar) x := by
     apply integral_of_inclusion (false,false) (IsFractionRing.injective _ _) finite_inclusion
     simpa only [frame,Bool.false_eq_true,ite_false,one_pow,one_mul,map_one] using h (false,false)
   have infinity_high : IsIntegral (Infinity Scalar) (Xval^(a*p)*(u (true,false)^p-c)) := by
@@ -154,10 +154,10 @@ theorem descend (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordin
 
 /-- Descend an arbitrarily iterated Frobenius correction, preserving the
 same correction across all four actual chart rings on each step. -/
-theorem descend_iterate (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem descend_iterate (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (a b : ℕ) (ha : 0<a) (u : Chart → E) (n : ℕ) (c : E)
     (h : Correction (a*K1.p^n) (b*K1.p^n) (fun s=>u s ^ (K1.p^n)) c) :
     ∃ d : E, d^(K1.p^n)=c ∧ Correction a b u d := by

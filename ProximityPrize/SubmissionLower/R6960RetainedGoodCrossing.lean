@@ -60,9 +60,9 @@ open MonicFourChartDescent (baseChart)
 open MonicChartProbes (planeEquiv)
 open scoped Lower6960.MonicChartProbes
 open RetainedCompression (Curve ordinate view)
-open private Lower6960.MonicChart.root_finrank from ProximityPrize.SubmissionLower.R6960MonicChartFrobenius
+open Lower6960.MonicChart (root_finrank)
 
-private theorem away_coordinate (P : L[X]) (pn : P≠0) :
+private theorem away_coordinate (P : (Polynomial L)) (pn : P≠0) :
     ∃ a:L, a≠0 ∧ P.eval a≠0 := by
   classical
   obtain ⟨a,ha⟩:=Infinite.exists_notMem_finset (insert 0 P.roots.toFinset)
@@ -72,9 +72,9 @@ private theorem away_coordinate (P : L[X]) (pn : P≠0) :
 /-- Choose a transverse crossing at finite nonzero coordinates. The normalized point
 fibre and the generic points of both lines are reduced, of the original ordinate rank. -/
 theorem actual_good_lines {E : Type} [Field E] [Algebra ChartField E]
-    (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap Scalar[X] ChartField))=0) :
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     let A:=baseChart (false,false)
     let eqv:= (planeEquiv (false,false)).symm.toRingHom
     ∃ x z:L, x≠0 ∧ z≠0 ∧ ∀ (k : Type) [Field k] (φ : A →+* k),
@@ -86,9 +86,9 @@ theorem actual_good_lines {E : Type} [Field E] [Algebra ChartField E]
   let A:=baseChart (false,false)
   let : FiniteDimensional ChartField E := basis.finite
   have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi basis root
-  let : Algebra Scalar[X] E := ((algebraMap ChartField E).comp (algebraMap Scalar[X] ChartField)).toAlgebra
-  let : IsScalarTower Scalar[X] ChartField E := IsScalarTower.of_algebraMap_eq
-    (R:=Scalar[X]) (S:=ChartField) (A:=E) fun _=>rfl
+  let : Algebra (Polynomial Scalar) E := ((algebraMap ChartField E).comp (algebraMap (Polynomial Scalar) ChartField)).toAlgebra
+  let : IsScalarTower (Polynomial Scalar) ChartField E := IsScalarTower.of_algebraMap_eq
+    (R:=(Polynomial Scalar)) (S:=ChartField) (A:=E) fun _=>rfl
   have deg : finrank ChartField E=f.degreeOf ordinate := Lower6960.MonicChart.root_finrank f ir lo basis
     (by rw [aeval_map_algebraMap] at root; exact root)
   obtain ⟨g,nz,openSet⟩:=good_open A ChartField E
@@ -98,7 +98,7 @@ theorem actual_good_lines {E : Type} [Field E] [Algebra ChartField E]
   let Q := P.map (evalRingHom z)
   have qn : Q≠0 := by
     intro zero
-    have van:=congrArg (fun h:L[X]=>h.coeff P.natDegree) zero
+    have van:=congrArg (fun h:(Polynomial L)=>h.coeff P.natDegree) zero
     exact goodZ (by simpa only [Q,coeff_map,coeff_natDegree,coeff_zero,coe_evalRingHom] using van)
   obtain ⟨x,xn,goodX⟩:=away_coordinate Q qn
   refine ⟨x,z,xn,zn,fun k _ φ le => ?_⟩

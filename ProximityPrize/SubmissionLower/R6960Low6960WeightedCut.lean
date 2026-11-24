@@ -13,8 +13,8 @@ open K1_13_6 (GeoJets toGeneric separant)
 open K1_13_6_1_2 (VanishesTo)
 open Low6960SharedPrice (Rate Surface surface surfaceScale weights coord)
 open KoalaFarBridge (separant_box separant_proper power_charge cut_proper)
-open private weighted_pow weight_coord from ProximityPrize.SubmissionLower.R6960Low6960SharedChooseCut
-open private shape_valid from ProximityPrize.SubmissionLower.R6960Low6960SharedCount
+open Low6960SharedChooseCut (weighted_pow weight_coord)
+open Low6960SharedCount (shape_valid)
 open scoped ENat
 
 def order (f : Row 4) (cap : ℕ) (P : Ideal GeoJets) : ℕ :=

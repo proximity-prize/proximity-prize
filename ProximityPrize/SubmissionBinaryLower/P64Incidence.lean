@@ -186,7 +186,7 @@ theorem evalXAt_eq_of_full {R : Polynomial (Polynomial (Polynomial F))} (hirr : 
     simp only [E', natDegree_comp, natDegree_X_add_C, mul_one]
     exact natDegree_map_le
   have hE' : E' = C (E'.coeff h) * (Polynomial.X : Polynomial (Polynomial F)) ^ h := by
-    ext b : 1
+    refine Polynomial.ext_iff.2 fun b => ?_
     rw [coeff_C_mul_X_pow]
     split_ifs with hb
     · rw [hb]
@@ -268,7 +268,7 @@ noncomputable def dXPoly (f : Polynomial (Polynomial A)) : Polynomial (Polynomia
 @[simp] theorem coeff_dXPoly (f : Polynomial (Polynomial A)) (j : ℕ) :
     (dXPoly f).coeff j = Polynomial.derivative (f.coeff j) := by
   classical
-  simp only [dXPoly, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial]
+  simp only [dXPoly, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finsupp.single_apply]
   by_cases hj : j ∈ f.support
   · rw [Finset.sum_eq_single j]
     · simp
@@ -292,7 +292,7 @@ theorem natDegree_dXPoly_le (f : Polynomial (Polynomial A)) :
 theorem dXPoly_map {B : Type*} [CommRing B] (φ : A →+* B) (f : Polynomial (Polynomial A)) :
     (dXPoly f).map (Polynomial.mapRingHom φ) =
       dXPoly (f.map (Polynomial.mapRingHom φ)) := by
-  ext1 j
+  refine Polynomial.ext_iff.2 fun j => ?_
   simp [Polynomial.coeff_map, Polynomial.derivative_map]
 
 /-- Chain rule along an inseparable polynomial: if `∂f/∂Y = 0` then

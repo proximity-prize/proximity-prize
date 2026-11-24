@@ -16,7 +16,7 @@ local notation "ι" => algebraMap ChartField E
 def Matched (x z : L) (u v:E) : Prop := ∃ a b:E,IsIntegral torus a ∧ IsIntegral torus b ∧
   u-v=ι (divisor false x)*a+ι (divisor true z)*b
 
-private theorem frame_integral (s : Chart) (j : Bool) :
+theorem frame_integral (s : Chart) (j : Bool) :
     IsIntegral torus (ι (localFrame s j) : E) ∧ IsIntegral torus (ι (localFrame s j)⁻¹ : E) := by
   have p:=torus_frame s j
   exact ⟨isIntegral_algebraMap (x:=(⟨_,p.1⟩:torus)),isIntegral_algebraMap (x:=(⟨_,p.2⟩:torus))⟩
@@ -107,10 +107,10 @@ private theorem lift_axis (j : Bool) (c:L) (nc:c≠0) (u:Chart→E) (v:Bool→E)
 
 /-- Only two transition differences and one crossing value are needed to detect an
 untwisted obstruction on the original four normalized charts. -/
-theorem split_of_paired_data (f : Curve L[X]) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+theorem split_of_paired_data (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap MonicChart.Scalar[X] ChartField))=0)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) (u:Chart→E)
     (reg : ∀ s t, IsIntegral (overlapRing s t) (u s-u t)) (v w:Bool→E)
     (dv : LineData false x u v) (dw : LineData true z u w) (joined : Matched x z (v false) (w false)) :

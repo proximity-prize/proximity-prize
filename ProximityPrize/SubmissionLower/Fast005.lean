@@ -297,7 +297,7 @@ def weight (x : ι → F) (i : ι) : F :=
 def syndrome (x : ι → F) (u : ι → F) (j : ℕ) : F :=
   ∑ i, weight x i * u i * x i ^ j
 theorem weighted_eval_sum_zero (x : ι → F) (hx : Function.Injective x)
-    (q : F[X]) (hq : q.degree < (Fintype.card ι - 1 : ℕ)) :
+    (q : (Polynomial F)) (hq : q.degree < (Fintype.card ι - 1 : ℕ)) :
     ∑ i, weight x i * q.eval (x i) = 0 := by
   have hlt : q.degree < (Fintype.card ι : ℕ) :=
     hq.trans_le (by exact_mod_cast Nat.sub_le (Fintype.card ι) 1)
@@ -306,10 +306,10 @@ theorem weighted_eval_sum_zero (x : ι → F) (hx : Function.Injective x)
   rw [Finset.card_univ, Polynomial.coeff_eq_zero_of_degree_lt hq] at h
   simpa [weight, div_eq_mul_inv, mul_comm] using h.symm
 def hankel (x : ι → F) (u v : ι → F) (L t : ℕ) :
-    Matrix (Fin L) (Fin (t + 1)) F[X] :=
+    Matrix (Fin L) (Fin (t + 1)) (Polynomial F) :=
   fun i j => C (syndrome x u (i.val + j.val)) +
     X * C (syndrome x v (i.val + j.val))
-def locator (x : ι → F) (S : Finset ι) : F[X] :=
+def locator (x : ι → F) (S : Finset ι) : (Polynomial F) :=
   ∏ i ∈ S, (X - C (x i))
 theorem locator_monic (x : ι → F) (S : Finset ι) : (locator x S).Monic :=
   Polynomial.monic_prod_of_monic S _ (fun _ _ => monic_X_sub_C _)
@@ -321,13 +321,13 @@ theorem locator_eval_zero (x : ι → F) (S : Finset ι) (i : ι) (hi : i ∈ S)
     (locator x S).eval (x i) = 0 := by
   simp only [locator, eval_prod, eval_sub, eval_X, eval_C]
   exact Finset.prod_eq_zero hi (sub_self _)
-theorem sum_coeff_eval (E : F[X]) (t : ℕ) (hE : E.natDegree ≤ t) (a : F) :
+theorem sum_coeff_eval (E : (Polynomial F)) (t : ℕ) (hE : E.natDegree ≤ t) (a : F) :
     (∑ j : Fin (t + 1), E.coeff j.val * a ^ j.val) = E.eval a := by
   rw [Fin.sum_univ_eq_sum_range (fun j => E.coeff j * a ^ j) (t + 1)]
   exact (Polynomial.eval_eq_sum_range' (by omega) a).symm
 theorem hankel_annihilates (x : ι → F) (hx : Function.Injective x)
     (u v : ι → F) (γ : F) (k L t : ℕ) (hsize : k + L + t ≤ Fintype.card ι)
-    (P E : F[X]) (hP : P.degree < k) (hE : E.natDegree ≤ t)
+    (P E : (Polynomial F)) (hP : P.degree < k) (hE : E.natDegree ≤ t)
     (hagree : ∀ a, E.eval (x a) * (u a + γ * v a) = E.eval (x a) * P.eval (x a)) :
     (fun i j => ((hankel x u v L t) i j).eval γ) *ᵥ
       (fun j : Fin (t + 1) => E.coeff j.val) = 0 := by
@@ -358,7 +358,7 @@ theorem hankel_annihilates (x : ι → F) (hx : Function.Injective x)
     have hpn : P.natDegree < k := (Polynomial.natDegree_lt_iff_degree_lt hp0).mpr hP
     have hn : (E * P * X ^ i.val).natDegree ≤ t + P.natDegree + i.val := by
       calc
-        _ ≤ (E * P).natDegree + (X ^ i.val : F[X]).natDegree := natDegree_mul_le
+        _ ≤ (E * P).natDegree + (X ^ i.val : (Polynomial F)).natDegree := natDegree_mul_le
         _ ≤ (E.natDegree + P.natDegree) + i.val := by
           simpa using Nat.add_le_add_right (natDegree_mul_le (p := E) (q := P)) i.val
         _ ≤ t + P.natDegree + i.val := by omega
@@ -389,14 +389,14 @@ theorem locator_map_frobenius (x : ι → F) (hfixed : ∀ i, x i ^ p = x i)
     (S : Finset ι) : (locator x S).map (frobenius F p) = locator x S := by
   simp [locator, Polynomial.map_prod, hfixed, frobenius_def]
 def stacked (x : ι → F) (u v : ι → F) (L t : ℕ) :
-    Matrix (Fin 2 × Fin L) (Fin (t + 1)) F[X] :=
+    Matrix (Fin 2 × Fin L) (Fin (t + 1)) (Polynomial F) :=
   fun i j => if i.1 = 0 then hankel x u v L t i.2 j else
     C ((syndrome x u (i.2.val + j.val)) ^ p) +
       X ^ p * C ((syndrome x v (i.2.val + j.val)) ^ p)
 theorem locator_annihilates_stacked (x : ι → F) (hx : Function.Injective x)
     (hfixed : ∀ i, x i ^ p = x i) (u v : ι → F) (γ : F)
     (k L t : ℕ) (hsize : k + L + t ≤ Fintype.card ι)
-    (P : F[X]) (hP : P.degree < k) (S : Finset ι) (hS : S.card ≤ t)
+    (P : (Polynomial F)) (hP : P.degree < k) (S : Finset ι) (hS : S.card ≤ t)
     (hagree : ∀ a, a ∉ S → u a + γ * v a = P.eval (x a)) :
     (fun i j => ((stacked p x u v L t) i j).eval γ) *ᵥ
       (fun j : Fin (t + 1) => (locator x S).coeff j.val) = 0 := by
@@ -410,7 +410,7 @@ theorem locator_annihilates_stacked (x : ι → F) (hx : Function.Injective x)
   have hfirst := hankel_annihilates x hx u v γ k L t hsize P (locator x S) hP hE ha
   have hcoeff : ∀ j, frobenius F p ((locator x S).coeff j) = (locator x S).coeff j := by
     intro j
-    have hc := congrArg (fun q : F[X] => q.coeff j) (locator_map_frobenius p x hfixed S)
+    have hc := congrArg (fun q : (Polynomial F) => q.coeff j) (locator_map_frobenius p x hfixed S)
     simpa only [Polynomial.coeff_map] using hc
   funext i
   rcases i with ⟨b, i⟩
@@ -432,13 +432,13 @@ open scoped BigOperators
 variable {F ι : Type*} [Field F] [Fintype ι] [DecidableEq ι]
 local instance decidableFullRank (P : Prop) : Decidable P := Classical.propDecidable P
 def Decodable (x : ι → F) (u v : ι → F) (k t : ℕ) (γ : F) : Prop :=
-  ∃ P : F[X], P.degree < k ∧
+  ∃ P : (Polynomial F), P.degree < k ∧
     (Finset.univ.filter (fun i => u i + γ * v i ≠ P.eval (x i))).card ≤ t
 def minorPolynomial {row col : Type*} [Fintype col] [DecidableEq col]
-    (M : Matrix row col F[X]) (rows : col → row) : F[X] :=
+    (M : Matrix row col (Polynomial F)) (rows : col → row) : (Polynomial F) :=
   Matrix.det (fun i j => M (rows i) j)
 theorem det_eval_eq {col : Type*} [Fintype col] [DecidableEq col]
-    (M : Matrix col col F[X]) (γ : F) :
+    (M : Matrix col col (Polynomial F)) (γ : F) :
     M.det.eval γ = Matrix.det (fun i j => (M i j).eval γ) :=
   (Polynomial.evalRingHom γ).map_det M
 variable (p : ℕ) [ExpChar F p]
@@ -478,7 +478,7 @@ open scoped BigOperators
 variable {F : Type*} [Field F]
 local instance decidableMinorDegree (P : Prop) : Decidable P := Classical.propDecidable P
 theorem natDegree_det_le_row_sum {c : Type*} [Fintype c] [DecidableEq c]
-    (M : Matrix c c F[X]) (d : c → ℕ) (hM : ∀ i j, (M i j).natDegree ≤ d i) :
+    (M : Matrix c c (Polynomial F)) (d : c → ℕ) (hM : ∀ i j, (M i j).natDegree ≤ d i) :
     M.det.natDegree ≤ ∑ i, d i := by
   rw [Matrix.det_apply]
   apply Polynomial.natDegree_sum_le_of_forall_le
@@ -576,7 +576,7 @@ variable {row : Type*}
 end Field
 section Polynomial
 variable {F : Type*} [Field F]
-theorem vector_natDegree_le (A : Matrix c c F[X]) (b : c → F[X])
+theorem vector_natDegree_le (A : Matrix c c (Polynomial F)) (b : c → (Polynomial F))
     (d : c → ℕ) (hA : ∀ i j, (A i j).natDegree ≤ d i)
     (hb : ∀ i, (b i).natDegree ≤ d i) (j : Option c) :
     (vector A b j).natDegree ≤ ∑ i, d i := by
@@ -660,19 +660,19 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F K row col : Type*} [Field F] [Field K] [Fintype col] [DecidableEq col]
-structure RowBasis (φ : F[X] →+* K) (M : Matrix row col F[X]) (r : ℕ) where
+structure RowBasis (φ : (Polynomial F) →+* K) (M : Matrix row col (Polynomial F)) (r : ℕ) where
   rows : Fin r → row
   cols : Fin r → col
   minor_ne : (M.submatrix rows cols).det ≠ 0
   spans : ∀ i, ∃ a : Fin r → K, ∀ j,
     φ (M i j) = ∑ q, a q * φ (M (rows q) j)
-def pivot {r : ℕ} {φ : F[X] →+* K} {M : Matrix row col F[X]}
-    (B : RowBasis φ M r) : Matrix (Fin r) (Fin r) F[X] := M.submatrix B.rows B.cols
-def rowCoefficients {r : ℕ} {φ : F[X] →+* K} {M : Matrix row col F[X]}
-    (B : RowBasis φ M r) (i : row) : Fin r → F[X] :=
+def pivot {r : ℕ} {φ : (Polynomial F) →+* K} {M : Matrix row col (Polynomial F)}
+    (B : RowBasis φ M r) : Matrix (Fin r) (Fin r) (Polynomial F) := M.submatrix B.rows B.cols
+def rowCoefficients {r : ℕ} {φ : (Polynomial F) →+* K} {M : Matrix row col (Polynomial F)}
+    (B : RowBasis φ M r) (i : row) : Fin r → (Polynomial F) :=
   (pivot B).transpose.cramer (fun q => M i (B.cols q))
-theorem row_relation (φ : F[X] →+* K) (hφ : Function.Injective φ)
-    (M : Matrix row col F[X]) (r : ℕ) (B : RowBasis φ M r) (i : row) (j : col) :
+theorem row_relation (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
+    (M : Matrix row col (Polynomial F)) (r : ℕ) (B : RowBasis φ M r) (i : row) (j : col) :
     (pivot B).det * M i j = ∑ q, rowCoefficients B i q * M (B.rows q) j := by
   obtain ⟨a, ha⟩ := B.spans i
   let A := (pivot B).map φ
@@ -700,8 +700,8 @@ theorem row_relation (φ : F[X] →+* K) (hφ : Function.Injective φ)
   apply Finset.sum_congr rfl
   intro q hq
   ring
-theorem kernel_eq_selected (φ : F[X] →+* K) (hφ : Function.Injective φ)
-    (M : Matrix row col F[X]) (r : ℕ) (B : RowBasis φ M r)
+theorem kernel_eq_selected (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
+    (M : Matrix row col (Polynomial F)) (r : ℕ) (B : RowBasis φ M r)
     (γ : F) (hγ : (pivot B).det.eval γ ≠ 0) (v : col → F) :
     (M.map (evalRingHom γ)).mulVec v = 0 ↔
       ((M.submatrix B.rows id).map (evalRingHom γ)).mulVec v = 0 := by
@@ -734,7 +734,7 @@ theorem kernel_eq_selected (φ : F[X] →+* K) (hφ : Function.Injective φ)
         intro j hj
         ring
       _ = 0 := by rw [hz, mul_zero]
-theorem exists_rowBasis [Fintype row] (φ : F[X] →+* K) (M : Matrix row col F[X])
+theorem exists_rowBasis [Fintype row] (φ : (Polynomial F) →+* K) (M : Matrix row col (Polynomial F))
     (r : ℕ) (hr : (M.map φ).rank = r) : Nonempty (RowBasis φ M r) := by
   classical
   let N := M.map φ
@@ -793,8 +793,8 @@ theorem exists_rowBasis [Fintype row] (φ : F[X] →+* K) (M : Matrix row col F[
     have h := congrFun hv j
     simpa only [N, Matrix.row, Matrix.map_apply, Finset.sum_apply,
       Pi.smul_apply, smul_eq_mul] using h.symm
-theorem rank_specializes [Fintype row] (φ : F[X] →+* K) (hφ : Function.Injective φ)
-    (M : Matrix row col F[X]) (r : ℕ) (B : RowBasis φ M r)
+theorem rank_specializes [Fintype row] (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
+    (M : Matrix row col (Polynomial F)) (r : ℕ) (B : RowBasis φ M r)
     (γ : F) (hγ : (pivot B).det.eval γ ≠ 0) :
     (M.map (evalRingHom γ)).rank = r := by
   let N := M.map (evalRingHom γ)
@@ -826,8 +826,8 @@ theorem rank_specializes [Fintype row] (φ : F[X] →+* K) (hφ : Function.Injec
   rw [hker] at hN
   rw [hTrank] at hT
   omega
-theorem constant_kernel_eq_normal [Fintype row] (φ : F[X] →+* K) (hφ : Function.Injective φ)
-    (M : Matrix row col F[X]) (r : ℕ) (B : RowBasis φ M r)
+theorem constant_kernel_eq_normal [Fintype row] (φ : (Polynomial F) →+* K) (hφ : Function.Injective φ)
+    (M : Matrix row col (Polynomial F)) (r : ℕ) (B : RowBasis φ M r)
     (V : Submodule F (col → F)) (hV : Module.finrank F V = Fintype.card col - r)
     (hsub : ∀ γ v, v ∈ V → (M.map (evalRingHom γ)).mulVec v = 0)
     (γ : F) (hγ : (pivot B).det.eval γ ≠ 0) :
@@ -842,7 +842,7 @@ theorem constant_kernel_eq_normal [Fintype row] (φ : F[X] →+* K) (hφ : Funct
   · intro v hv
     exact hsub γ v hv
   · rw [hV, hdim]
-theorem minor_degree_le (φ : F[X] →+* K) (M : Matrix row col F[X]) (r : ℕ)
+theorem minor_degree_le (φ : (Polynomial F) →+* K) (M : Matrix row col (Polynomial F)) (r : ℕ)
     (B : RowBasis φ M r) (d : row → ℕ) (hdeg : ∀ i j, (M i j).natDegree ≤ d i) :
     (pivot B).det.natDegree ≤ ∑ q, d (B.rows q) := by
   exact FrobeniusLocator.natDegree_det_le_row_sum _ _
@@ -954,8 +954,8 @@ theorem raw_spans (M : Matrix row col K) (rows : Fin r → row) (cols : Fin r �
 end Field
 section Polynomial
 variable {F K row col : Type*} [Field F] [Field K] [Fintype col] [DecidableEq col]
-variable {φ : F[X] →+* K} {M : Matrix row col F[X]} {r : ℕ}
-def vector (B : NormalFiber.RowBasis φ M r) (j : col) : col → F[X] :=
+variable {φ : (Polynomial F) →+* K} {M : Matrix row col (Polynomial F)} {r : ℕ}
+def vector (B : NormalFiber.RowBasis φ M r) (j : col) : col → (Polynomial F) :=
   rawVector M B.rows B.cols j
 theorem generic_kernel_eq_selected (B : NormalFiber.RowBasis φ M r) (v : col → K) :
     (M.map φ).mulVec v = 0 ↔ ((M.submatrix B.rows id).map φ).mulVec v = 0 := by
@@ -1068,7 +1068,7 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F K row col : Type*} [Field F] [Field K] [Fintype col] [DecidableEq col]
-variable {φ : F[X] →+* K} {M : Matrix row col F[X]} {r : ℕ}
+variable {φ : (Polynomial F) →+* K} {M : Matrix row col (Polynomial F)} {r : ℕ}
 theorem rows_injective (B : RowBasis φ M r) : Function.Injective B.rows := by
   intro i j hij
   by_contra hne
@@ -1087,7 +1087,7 @@ open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F K row col : Type*} [Field F] [Field K]
   [Fintype row] [Fintype col] [DecidableEq col]
-theorem exists_rowBasis_containing (φ : F[X] →+* K) (M : Matrix row col F[X])
+theorem exists_rowBasis_containing (φ : (Polynomial F) →+* K) (M : Matrix row col (Polynomial F))
     (r : ℕ) (hr : (M.map φ).rank = r) (S : Set row)
     (hS : LinearIndepOn K (M.map φ).row S) :
     ∃ B : RowBasis φ M r, S ⊆ Set.range B.rows := by
@@ -1224,7 +1224,7 @@ open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F K row col : Type*} [Field F] [Field K]
   [Fintype row] [DecidableEq row] [Fintype col] [DecidableEq col]
-variable {φ : F[X] →+* K} {M : Matrix row col F[X]} {r : ℕ}
+variable {φ : (Polynomial F) →+* K} {M : Matrix row col (Polynomial F)} {r : ℕ}
 theorem selected_two_level_sum (B : RowBasis φ M r) (S : Finset row)
     (hS : (S : Set row) ⊆ Set.range B.rows) (p : ℕ) :
     (∑ q, if B.rows q ∈ S then 1 else p) = S.card + p * (r - S.card) := by
@@ -1246,7 +1246,7 @@ theorem selected_two_level_sum (B : RowBasis φ M r) (S : Finset row)
   rw [Finset.sum_ite]
   simp only [Finset.sum_const, smul_eq_mul, Nat.mul_one, hc, hn]
   simp [Nat.mul_comm]
-theorem exists_rowBasis_two_level (φ : F[X] →+* K) (M : Matrix row col F[X])
+theorem exists_rowBasis_two_level (φ : (Polynomial F) →+* K) (M : Matrix row col (Polynomial F))
     (r : ℕ) (hr : (M.map φ).rank = r) (S : Finset row)
     (hS : LinearIndepOn K (M.map φ).row (S : Set row)) (p : ℕ)
     (hdeg : ∀ i j, (M i j).natDegree ≤ if i ∈ S then 1 else p) :
@@ -1293,8 +1293,8 @@ theorem ordinarySet_card (L : ℕ) : (ordinarySet L).card = L := by
     · intro j hj
       exact ⟨(0,j), by simp [ordinarySet], rfl⟩
   simpa using heq
-theorem exists_stacked_basis (φ : F[X] →+* K) (L s p : ℕ)
-    (M : Matrix (Fin 2 × Fin L) col F[X]) (hr : (M.map φ).rank = s)
+theorem exists_stacked_basis (φ : (Polynomial F) →+* K) (L s p : ℕ)
+    (M : Matrix (Fin 2 × Fin L) col (Polynomial F)) (hr : (M.map φ).rank = s)
     (hfirst : LinearIndependent K (fun i => (M.map φ).row (ordinaryRows L i)))
     (hdeg : ∀ i j, (M i j).natDegree ≤ if i.1 = 0 then 1 else p) :
     ∃ B : RowBasis φ M s,
@@ -1316,8 +1316,8 @@ theorem exists_stacked_basis (φ : F[X] →+* K) (L s p : ℕ)
   · simpa only [ordinarySet, Finset.mem_filter, Finset.mem_univ, true_and,
       ordinarySet_card] using hledger
   · exact hminor
-theorem first_rows_independent_of_rank (φ : F[X] →+* K) (L : ℕ)
-    (M : Matrix (Fin 2 × Fin L) col F[X])
+theorem first_rows_independent_of_rank (φ : (Polynomial F) →+* K) (L : ℕ)
+    (M : Matrix (Fin 2 × Fin L) col (Polynomial F))
     (hfirst : ((M.map φ).submatrix (ordinaryRows L) id).rank = L) :
     LinearIndependent K (fun i => (M.map φ).row (ordinaryRows L i)) := by
   have hli : LinearIndependent K ((M.map φ).submatrix (ordinaryRows L) id).row := by
@@ -1335,31 +1335,31 @@ open Polynomial Finset
 open scoped BigOperators
 local instance decidablePrincipal (P : Prop) : Decidable P := Classical.propDecidable P
 variable {F ι : Type*} [Field F] [Fintype ι] [DecidableEq ι]
-def specialize {d : ℕ} (v : Fin (d + 1) → F[X]) (γ : F) : F[X] :=
+def specialize {d : ℕ} (v : Fin (d + 1) → (Polynomial F)) (γ : F) : (Polynomial F) :=
   ∑ j, C ((v j).eval γ) * X ^ j.val
-def nodePolynomial {d : ℕ} (v : Fin (d + 1) → F[X]) (x : F) : F[X] :=
+def nodePolynomial {d : ℕ} (v : Fin (d + 1) → (Polynomial F)) (x : F) : (Polynomial F) :=
   ∑ j, C (x ^ j.val) * v j
-theorem nodePolynomial_eval {d : ℕ} (v : Fin (d + 1) → F[X]) (x γ : F) :
+theorem nodePolynomial_eval {d : ℕ} (v : Fin (d + 1) → (Polynomial F)) (x γ : F) :
     (nodePolynomial v x).eval γ = (specialize v γ).eval x := by
   simp only [nodePolynomial, specialize, eval_finsetSum, eval_mul, eval_C, eval_pow, eval_X]
   apply Finset.sum_congr rfl
   intro j _
   ring
-theorem nodePolynomial_natDegree_le {d B : ℕ} (v : Fin (d + 1) → F[X])
+theorem nodePolynomial_natDegree_le {d B : ℕ} (v : Fin (d + 1) → (Polynomial F))
     (hv : ∀ j, (v j).natDegree ≤ B) (x : F) :
     (nodePolynomial v x).natDegree ≤ B := by
   apply Polynomial.natDegree_sum_le_of_forall_le
   intro j _
   exact (Polynomial.natDegree_C_mul_le _ _).trans (hv j)
-theorem specialize_natDegree_le {d : ℕ} (v : Fin (d+1) → F[X]) (γ : F) :
+theorem specialize_natDegree_le {d : ℕ} (v : Fin (d+1) → (Polynomial F)) (γ : F) :
     (specialize v γ).natDegree ≤ d := by
   apply Polynomial.natDegree_sum_le_of_forall_le
   intro j _
-  have h := Polynomial.natDegree_C_mul_le ((v j).eval γ) (X ^ j.val : F[X])
+  have h := Polynomial.natDegree_C_mul_le ((v j).eval γ) (X ^ j.val : (Polynomial F))
   simp only [natDegree_X_pow] at h
   exact h.trans (by omega)
-theorem principal_incidence_count (x : ι → F) (V : F → F[X])
-    (q : ι → F[X]) (p d : ℕ) (hd : 0 < d)
+theorem principal_incidence_count (x : ι → F) (V : F → (Polynomial F))
+    (q : ι → (Polynomial F)) (p d : ℕ) (hd : 0 < d)
     (hq : ∀ i, q i ≠ 0) (hdeg : ∀ i, (q i).natDegree ≤ p * d)
     (heval : ∀ i γ, (q i).eval γ = (V γ).eval (x i))
     (Γ : Finset F)
@@ -1394,11 +1394,11 @@ theorem principal_incidence_count (x : ι → F) (V : F → F[X])
       _ = _ := by simp
   rw [hswap] at hleft
   nlinarith
-theorem principal_kernel_count (x : ι → F) (V : F → F[X])
-    (q : ι → F[X]) (p d δ : ℕ) (hd : 0 < d)
+theorem principal_kernel_count (x : ι → F) (V : F → (Polynomial F))
+    (q : ι → (Polynomial F)) (p d δ : ℕ) (hd : 0 < d)
     (hq : ∀ i, q i ≠ 0) (hdeg : ∀ i, (q i).natDegree ≤ p * d)
     (heval : ∀ i γ, (q i).eval γ = (V γ).eval (x i))
-    (Δ : F[X]) (hΔ : Δ ≠ 0) (hΔdeg : Δ.natDegree ≤ δ)
+    (Δ : (Polynomial F)) (hΔ : Δ ≠ 0) (hΔdeg : Δ.natDegree ≤ δ)
     (Γ : Finset F)
     (hroots : ∀ γ ∈ Γ, Δ.eval γ ≠ 0 → d ≤ (Finset.univ.filter
       (fun i => (V γ).eval (x i) = 0)).card) :
@@ -1430,12 +1430,12 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F col : Type*} [Field F] [Fintype col]
-def IsPrimitive (P : col → F[X]) : Prop := Ideal.span (Set.range P) = ⊤
-theorem primitive_iff_bezout (P : col → F[X]) :
-    IsPrimitive P ↔ ∃ a : col → F[X], ∑ i, a i * P i = 1 := by
+def IsPrimitive (P : col → (Polynomial F)) : Prop := Ideal.span (Set.range P) = ⊤
+theorem primitive_iff_bezout (P : col → (Polynomial F)) :
+    IsPrimitive P ↔ ∃ a : col → (Polynomial F), ∑ i, a i * P i = 1 := by
   rw [IsPrimitive, Ideal.eq_top_iff_one, Ideal.mem_span_range_iff_exists_fun]
-theorem exists_normalization (P : col → F[X]) (hP : P ≠ 0) :
-    ∃ (g : F[X]) (Q : col → F[X]), g ≠ 0 ∧
+theorem exists_normalization (P : col → (Polynomial F)) (hP : P ≠ 0) :
+    ∃ (g : (Polynomial F)) (Q : col → (Polynomial F)), g ≠ 0 ∧
       (∀ i, P i = g * Q i) ∧ IsPrimitive Q := by
   classical
   let I := Ideal.span (Set.range P)
@@ -1448,7 +1448,7 @@ theorem exists_normalization (P : col → F[X]) (hP : P ≠ 0) :
     have hm : P i ∈ I := Ideal.subset_span (Set.mem_range_self i)
     rw [hI] at hm
     exact hm
-  have hdiv : ∀ i, ∃ q : F[X], P i = g * q := by
+  have hdiv : ∀ i, ∃ q : (Polynomial F), P i = g * q := by
     intro i
     have hm : P i ∈ I := Ideal.subset_span (Set.mem_range_self i)
     obtain ⟨q, hq⟩ := (Submodule.IsPrincipal.mem_iff_eq_smul_generator I).mp hm
@@ -1468,7 +1468,7 @@ theorem exists_normalization (P : col → F[X]) (hP : P ≠ 0) :
         ring
       _ = g := ha
   exact mul_left_cancel₀ hg heq
-theorem eval_ne_zero (P : col → F[X]) (hP : IsPrimitive P) (γ : F) :
+theorem eval_ne_zero (P : col → (Polynomial F)) (hP : IsPrimitive P) (γ : F) :
     (fun i => (P i).eval γ) ≠ 0 := by
   obtain ⟨a, ha⟩ := (primitive_iff_bezout P).mp hP
   intro hzero
@@ -1477,12 +1477,12 @@ theorem eval_ne_zero (P : col → F[X]) (hP : IsPrimitive P) (γ : F) :
   have hz : ∀ i, (P i).eval γ = 0 := fun i => congrFun hzero i
   simp only [hz, mul_zero, Finset.sum_const_zero] at heval
   exact zero_ne_one heval
-theorem exists_eval_ne_zero (P : col → F[X]) (hP : IsPrimitive P) (γ : F) :
+theorem exists_eval_ne_zero (P : col → (Polynomial F)) (hP : IsPrimitive P) (γ : F) :
     ∃ i, (P i).eval γ ≠ 0 := by
   by_contra h
   push_neg at h
   exact eval_ne_zero P hP γ (funext h)
-theorem normalization_natDegree_le (P Q : col → F[X]) (g : F[X]) (hg : g ≠ 0)
+theorem normalization_natDegree_le (P Q : col → (Polynomial F)) (g : (Polynomial F)) (hg : g ≠ 0)
     (hPQ : ∀ i, P i = g * Q i) (i : col) :
     (Q i).natDegree ≤ (P i).natDegree := by
   by_cases hQ : Q i = 0
@@ -1490,7 +1490,7 @@ theorem normalization_natDegree_le (P Q : col → F[X]) (g : F[X]) (hg : g ≠ 0
   · rw [hPQ i, Polynomial.natDegree_mul hg hQ]
     omega
 theorem normalization_preserves_kernel {row : Type*} [DecidableEq col]
-    (M : Matrix row col F[X]) (P Q : col → F[X]) (g : F[X]) (hg : g ≠ 0)
+    (M : Matrix row col (Polynomial F)) (P Q : col → (Polynomial F)) (g : (Polynomial F)) (hg : g ≠ 0)
     (hPQ : ∀ i, P i = g * Q i) (hM : M.mulVec P = 0) :
     M.mulVec Q = 0 := by
   have heq : P = g • Q := by
@@ -1511,13 +1511,13 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F K row col : Type*} [Field F] [Field K] [Fintype col] [DecidableEq col]
-variable {φ : F[X] →+* K} {M : Matrix row col F[X]} {r : ℕ}
+variable {φ : (Polynomial F) →+* K} {M : Matrix row col (Polynomial F)} {r : ℕ}
 theorem vector_free_coordinate (B : NormalFiber.RowBasis φ M r) (j c : col)
     (hc : c ∉ Set.range B.cols) :
     vector B j c = if j = c then (NormalFiber.pivot B).det else 0 := by
   rw [vector, rawVector_apply]
   simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Matrix.mulVec, dotProduct]
-  have hzero : ∀ q, inclusion B.cols c q = (0 : F[X]) := by
+  have hzero : ∀ q, inclusion B.cols c q = (0 : (Polynomial F)) := by
     intro q
     have hq : B.cols q ≠ c := fun h => hc ⟨q, h⟩
     simp [inclusion, hq]
@@ -1535,19 +1535,19 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F row col : Type*} [Field F] [Fintype row] [Fintype col] [DecidableEq col]
-abbrev GenericField (F : Type*) [Field F] := FractionRing F[X]
-def genericRank (M : Matrix row col F[X]) : ℕ :=
-  (M.map (algebraMap F[X] (GenericField F))).rank
-def genericNullity (M : Matrix row col F[X]) : ℕ :=
+abbrev GenericField (F : Type*) [Field F] := FractionRing (Polynomial F)
+def genericRank (M : Matrix row col (Polynomial F)) : ℕ :=
+  (M.map (algebraMap (Polynomial F) (GenericField F))).rank
+def genericNullity (M : Matrix row col (Polynomial F)) : ℕ :=
   Module.finrank (GenericField F)
-    (LinearMap.ker (M.map (algebraMap F[X] (GenericField F))).mulVecLin)
-theorem rank_add_nullity (M : Matrix row col F[X]) :
+    (LinearMap.ker (M.map (algebraMap (Polynomial F) (GenericField F))).mulVecLin)
+theorem rank_add_nullity (M : Matrix row col (Polynomial F)) :
     genericRank M + genericNullity M = Fintype.card col := by
   simpa only [genericRank, genericNullity, Matrix.rank, Module.finrank_fintype_fun_eq_card] using
     LinearMap.finrank_range_add_finrank_ker
-      (M.map (algebraMap F[X] (GenericField F))).mulVecLin
-theorem exists_generic_basis (M : Matrix row col F[X]) :
-    Nonempty (NormalFiber.RowBasis (algebraMap F[X] (GenericField F)) M (genericRank M)) :=
+      (M.map (algebraMap (Polynomial F) (GenericField F))).mulVecLin
+theorem exists_generic_basis (M : Matrix row col (Polynomial F)) :
+    Nonempty (NormalFiber.RowBasis (algebraMap (Polynomial F) (GenericField F)) M (genericRank M)) :=
   NormalFiber.exists_rowBasis _ M _ rfl
 end
 end FrobeniusLocator.GenericLayer
@@ -1568,9 +1568,9 @@ theorem locator_eval_zero_iff (x : ι → F) (hx : Function.Injective x)
 theorem locator_mul_sdiff (x : ι → F) (H S : Finset ι) (hHS : H ⊆ S) :
     locator x H * locator x (S \ H) = locator x S := by
   simpa only [locator, mul_comm] using
-    (Finset.prod_sdiff (f := fun i => (X-C (x i) : F[X])) hHS)
+    (Finset.prod_sdiff (f := fun i => (X-C (x i) : (Polynomial F))) hHS)
 theorem remove_fixed_factor (x : ι → F) (hx : Function.Injective x)
-    (H S : Finset ι) (V Q : F[X])
+    (H S : Finset ι) (V Q : (Polynomial F))
     (hfactor : locator x S = locator x H * V * Q) :
     V ∣ locator x (S \ H) ∧ ∀ i, V.eval (x i) = 0 → i ∉ H := by
   have hHS : H ⊆ S := by
@@ -1586,7 +1586,7 @@ theorem remove_fixed_factor (x : ι → F) (hx : Function.Injective x)
   have hz : (locator x (S \ H)).eval (x i) = 0 := by
     rw [hcancel, eval_mul, hi, zero_mul]
   exact (Finset.mem_sdiff.mp ((locator_eval_zero_iff x hx _ i).mp hz)).2
-theorem roots_outside_fixed_card (x : ι → F) (H : Finset ι) (V : F[X])
+theorem roots_outside_fixed_card (x : ι → F) (H : Finset ι) (V : (Polynomial F))
     (havoid : ∀ i, V.eval (x i) = 0 → i ∉ H) :
     (Finset.univ.filter (fun i : {i // i ∉ H} => V.eval (x i.val) = 0)).card =
       (Finset.univ.filter (fun i => V.eval (x i) = 0)).card := by
@@ -1609,7 +1609,7 @@ theorem locator_roots (x : ι → F) (S : Finset ι) :
 theorem locator_splits (x : ι → F) (S : Finset ι) : (locator x S).Splits := by
   exact Polynomial.Splits.prod (fun i _ => Polynomial.Splits.X_sub_C (x i))
 theorem divisor_domain_roots (x : ι → F) (hx : Function.Injective x)
-    (S : Finset ι) (V : F[X]) (hV : V ∣ locator x S) :
+    (S : Finset ι) (V : (Polynomial F)) (hV : V ∣ locator x S) :
     V.natDegree = (Finset.univ.filter (fun i => V.eval (x i) = 0)).card := by
   classical
   have hE0 := (locator_monic x S).ne_zero
@@ -1639,7 +1639,7 @@ theorem divisor_domain_roots (x : ι → F) (hx : Function.Injective x)
     _ = ((Finset.univ.filter (fun i => V.eval (x i) = 0)).image x).card :=
       congrArg Finset.card himage.symm
     _ = _ := Finset.card_image_of_injective _ hx
-theorem full_degree_of_factorization (H V Q : F[X]) (h d q : ℕ)
+theorem full_degree_of_factorization (H V Q : (Polynomial F)) (h d q : ℕ)
     (hH : H.natDegree = h) (hV : V.natDegree ≤ d) (hQ : Q.natDegree ≤ q)
     (htotal : (H * V * Q).natDegree = h + d + q) : V.natDegree = d := by
   have htotal_le : (H * V * Q).natDegree ≤ h + V.natDegree + q := by
@@ -1668,11 +1668,11 @@ theorem exists_frobenius_basis (p : ℕ) [ExpChar F p] (x u v : ι → F)
     (L t r : ℕ)
     (hr : genericRank (stacked p x u v L t) = t+1-r)
     (hfirst : genericRank (hankel x u v L t) = L) :
-    ∃ B : NormalFiber.RowBasis (algebraMap F[X] (GenericField F))
+    ∃ B : NormalFiber.RowBasis (algebraMap (Polynomial F) (GenericField F))
         (stacked p x u v L t) (t+1-r),
       (∑ q, if (B.rows q).1 = 0 then 1 else p) = L + p * (t+1-r-L) ∧
       (NormalFiber.pivot B).det.natDegree ≤ L + p * (t+1-r-L) := by
-  let φ := algebraMap F[X] (GenericField F)
+  let φ := algebraMap (Polynomial F) (GenericField F)
   have hfirst' : (((stacked p x u v L t).map φ).submatrix
       (NormalFiber.ordinaryRows L) id).rank = L := by
     have heq : ((stacked p x u v L t).map φ).submatrix
@@ -1695,11 +1695,11 @@ open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F K row col : Type*} [Field F] [Field K] [Fintype row]
   [Fintype col] [DecidableEq col]
-variable {φ : F[X] →+* K} {M : Matrix row col F[X]} {r : ℕ}
+variable {φ : (Polynomial F) →+* K} {M : Matrix row col (Polynomial F)} {r : ℕ}
 theorem exists_primitive_line (B : NormalFiber.RowBasis φ M r)
     (hφ : Function.Injective φ) (hnull : r + 1 = Fintype.card col)
     (d : row → ℕ) (hdeg : ∀ i j, (M i j).natDegree ≤ d i) :
-    ∃ Q : col → F[X], PrimitiveVector.IsPrimitive Q ∧ M.mulVec Q = 0 ∧
+    ∃ Q : col → (Polynomial F), PrimitiveVector.IsPrimitive Q ∧ M.mulVec Q = 0 ∧
       (∀ c, (Q c).natDegree ≤ ∑ q, d (B.rows q)) ∧
       ∀ (γ : F), (NormalFiber.pivot B).det.eval γ ≠ 0 →
         ∀ v : col → F, (M.map (evalRingHom γ)).mulVec v = 0 →
@@ -1750,7 +1750,7 @@ noncomputable section
 open Polynomial Finset
 variable {F ι : Type*} [Field F] [Fintype ι] [DecidableEq ι]
 def ExtendsOn (x : ι → F) (w : ι → F) (k : ℕ) (S : Finset ι) : Prop :=
-  ∃ P : F[X], P.degree < k ∧ ∀ i ∈ S, P.eval (x i) = w i
+  ∃ P : (Polynomial F), P.degree < k ∧ ∀ i ∈ S, P.eval (x i) = w i
 theorem trim_nonextendable (x : ι → F) (hx : Function.Injective x)
     (w : ι → F) (k A : ℕ) (hkA : k < A) (S : Finset ι)
     (hAS : A ≤ S.card) (hbad : ¬ ExtendsOn x w k S) :
@@ -1793,7 +1793,7 @@ theorem trim_nonjoint (x : ι → F) (hx : Function.Injective x)
     exact ⟨T, hTS, hTcard, fun h => hTbad h.1⟩
 theorem exact_A_bad_witness (x : ι → F) (hx : Function.Injective x)
     (u v : ι → F) (γ : F) (k A : ℕ) (hkA : k < A) (S : Finset ι)
-    (hAS : A ≤ S.card) (P : F[X]) (hP : P.degree < k)
+    (hAS : A ≤ S.card) (P : (Polynomial F)) (hP : P.degree < k)
     (hfold : ∀ i ∈ S, P.eval (x i) = u i + γ * v i)
     (hbad : ¬ (ExtendsOn x u k S ∧ ExtendsOn x v k S)) :
     ∃ T : Finset ι, T ⊆ S ∧ T.card = A ∧ P.degree < k ∧
@@ -1811,7 +1811,7 @@ noncomputable section
 open Polynomial Finset
 open scoped BigOperators
 variable {F ι : Type*} [Field F] [Fintype ι] [DecidableEq ι]
-def LocatorMoments (x : ι → F) (w : ι → F) (E : F[X]) (L : ℕ) : Prop :=
+def LocatorMoments (x : ι → F) (w : ι → F) (E : (Polynomial F)) (L : ℕ) : Prop :=
   ∀ j < L, ∑ i, weight x i * (E.eval (x i) * w i) * x i ^ j = 0
 theorem extendsOn_of_locator_moments (x : ι → F) (hx : Function.Injective x)
     (w : ι → F) (k L : ℕ) (S : Finset ι)
@@ -1871,7 +1871,7 @@ theorem extendsOn_of_locator_moments (x : ι → F) (hx : Function.Injective x)
   have hQ0 : Q ≠ 0 := mul_ne_zero (mul_ne_zero hE0 hp0) (pow_ne_zero _ X_ne_zero)
   apply (Polynomial.leadingCoeff_ne_zero.mpr hQ0)
   simpa only [Polynomial.leadingCoeff, hQdeg] using hz
-theorem hankel_word_moments (x : ι → F) (w : ι → F) (E : F[X]) (L t : ℕ)
+theorem hankel_word_moments (x : ι → F) (w : ι → F) (E : (Polynomial F)) (L t : ℕ)
     (hE : E.natDegree ≤ t)
     (hrec : ∀ i : Fin L, ∑ j : Fin (t+1),
       syndrome x w (i.val+j.val) * E.coeff j.val = 0) :
@@ -2018,10 +2018,10 @@ set_option maxHeartbeats 1000000
 namespace K1_11
 noncomputable section
 open Polynomial Finset
-def clearedEval {R : Type*} [CommRing R] (B : ℕ) (Q : R[X]) (a b : R) : R :=
+def clearedEval {R : Type*} [CommRing R] (B : ℕ) (Q : (Polynomial R)) (a b : R) : R :=
   ∑ j∈range (B+1),Q.coeff j*a^j*b^(B-j)
 theorem clearedEval_at_root {R : Type*} [CommRing R]
-    (B : ℕ) (Q : R[X]) (hQ : Q.natDegree≤B) (a b y : R) (hy : b*y=a) :
+    (B : ℕ) (Q : (Polynomial R)) (hQ : Q.natDegree≤B) (a b y : R) (hy : b*y=a) :
     clearedEval B Q a b=b^B*Q.eval y := by
   rw [eval_eq_sum_range' (show Q.natDegree<B+1 by omega),mul_sum]
   unfold clearedEval
@@ -2034,11 +2034,11 @@ theorem clearedEval_at_root {R : Type*} [CommRing R]
     Q.coeff j*(b^j*y^j)*b^(B-j) = Q.coeff j*y^j*(b^j*b^(B-j)) := by ring
     _ = b^B*(Q.coeff j*y^j) := by rw [hb]; ring
 theorem clearedEval_zero_of_root {R : Type*} [CommRing R]
-    (B : ℕ) (Q : R[X]) (hQ : Q.natDegree≤B) (a b y : R)
+    (B : ℕ) (Q : (Polynomial R)) (hQ : Q.natDegree≤B) (a b y : R)
     (hy : b*y=a) (hroot : Q.eval y=0) : clearedEval B Q a b=0 := by
   rw [clearedEval_at_root B Q hQ a b y hy,hroot,mul_zero]
 theorem clearedEval_ne_zero_field {K : Type*} [Field K]
-    (B : ℕ) (Q : K[X]) (hQ : Q.natDegree≤B) (a b : K) (hb : b≠0)
+    (B : ℕ) (Q : (Polynomial K)) (hQ : Q.natDegree≤B) (a b : K) (hb : b≠0)
     (hnot : ¬ (C b*X-C a) ∣ Q) : clearedEval B Q a b≠0 := by
   have heq : C b*X-C a=C b*(X-C (a/b)) := by
     rw [mul_sub,← C_mul]
@@ -2049,17 +2049,17 @@ theorem clearedEval_ne_zero_field {K : Type*} [Field K]
     apply hnot
     rw [heq]
     have hd : (X-C (a/b))∣Q := (dvd_iff_isRoot).mpr hz
-    have hu : C b ∣ (1 : K[X]) := (isUnit_C.mpr (isUnit_iff_ne_zero.mpr hb)).dvd
+    have hu : C b ∣ (1 : (Polynomial K)) := (isUnit_C.mpr (isUnit_iff_ne_zero.mpr hb)).dvd
     simpa using mul_dvd_mul hu hd
   rw [clearedEval_at_root B Q hQ a b (a/b) (by field_simp)]
   exact mul_ne_zero (pow_ne_zero B hb) hroot
 theorem map_clearedEval {R S : Type*} [CommRing R] [CommRing S]
-    (f : R →+* S) (B : ℕ) (Q : R[X]) (a b : R) :
+    (f : R →+* S) (B : ℕ) (Q : (Polynomial R)) (a b : R) :
     f (clearedEval B Q a b)=clearedEval B (Q.map f) (f a) (f b) := by
   simp [clearedEval]
 theorem clearedEval_ne_zero {R K : Type*} [CommRing R] [IsDomain R]
     [IsGCDMonoid R] [Field K] [Algebra R K] [IsFractionRing R K]
-    (B : ℕ) (Q : R[X]) (hQ : Q.natDegree≤B) (a b : R) (hb : b≠0)
+    (B : ℕ) (Q : (Polynomial R)) (hQ : Q.natDegree≤B) (a b : R) (hb : b≠0)
     (hprimitive : (C b*X-C a).IsPrimitive) (hnot : ¬ (C b*X-C a)∣Q) :
     clearedEval B Q a b≠0 := by
   have hmap : ¬ (C (algebraMap R K b)*X-C (algebraMap R K a))∣Q.map (algebraMap R K) := by
@@ -2081,7 +2081,7 @@ namespace K1_11_3
 noncomputable section
 open Polynomial
 theorem exists_simple_derivative_at_root {R : Type*} [CommRing R] [IsDomain R]
-    (p B : ℕ) [CharP R p] (f : R[X]) (hf : f≠0) (hdegree : f.natDegree≤B)
+    (p B : ℕ) [CharP R p] (f : (Polynomial R)) (hf : f≠0) (hdegree : f.natDegree≤B)
     (hsmall : B<p) (y : R) (hroot : f.IsRoot y) :
     ∃ j<B,(derivative^[j] f).IsRoot y ∧ ¬(derivative (derivative^[j] f)).IsRoot y := by
   let μ := f.rootMultiplicity y

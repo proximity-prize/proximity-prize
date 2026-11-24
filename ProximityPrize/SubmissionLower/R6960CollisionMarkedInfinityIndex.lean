@@ -23,15 +23,15 @@ local instance infinityFibreRing (z:k) : CommRing (Fiber E z) :=
 /-- The original reciprocal chart specializes to an order whose index
 clears the marked projector and is a unit at abscissa infinity. Each
 bad scalar lies in the first nonzero discriminant coefficient. -/
-theorem boundary_index (p : ℕ) [CharP k p] [CharP (FractionRing k[X]) p]
+theorem boundary_index (p : ℕ) [CharP k p] [CharP (FractionRing (Polynomial k)) p]
     (small : finrank (FractionRing (Plane k)) E<p)
     (δ:Plane k) (nz:δ≠0)
     (principal : normalizationDiscriminant (A:=Plane k) (E:=E) (FractionRing (Plane k))=Ideal.span {δ})
     (z:k) [IsReduced (FibreGeneric (E:=E) z)]
     (keep : (Bivariate.swap δ).trailingCoeff.eval z≠0) :
-    ∃ d:k[X], d.eval 0≠0 ∧
-      ∀ v:FibreGeneric (E:=E) z, IsIntegral k[X] v →
-        ∃ u:Fiber E z,(1 ⊗ₜ[k[X]] u : FibreGeneric (E:=E) z)=algebraMap k[X] (FibreGeneric (E:=E) z) d*v := by
+    ∃ d:(Polynomial k), d.eval 0≠0 ∧
+      ∀ v:FibreGeneric (E:=E) z, IsIntegral (Polynomial k) v →
+        ∃ u:Fiber E z,(1 ⊗ₜ[(Polynomial k)] u : FibreGeneric (E:=E) z)=algebraMap (Polynomial k) (FibreGeneric (E:=E) z) d*v := by
   obtain ⟨_,_,test⟩ := boundary_seed_polynomial δ nz
   obtain ⟨_,small0⟩ := test z keep
   obtain ⟨_,d,dn,_,support,clear⟩ := fibre_index_supported p small z δ nz principal

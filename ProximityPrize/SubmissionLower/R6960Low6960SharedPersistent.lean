@@ -12,7 +12,7 @@ open K1_13_6_1_2 (hassePartial multiOrder VanishesTo hasse_inBox hasse_atJet_eq_
 open MvPolynomial Polynomial
 
 /-- Include every admissible-width row that vanishes at the marked messages. -/
-def vanishing (Γ : Finset K) (s : K → K[X]) : Submodule Geom (Row 4) where
+def vanishing (Γ : Finset K) (s : K → (Polynomial K)) : Submodule Geom (Row 4) where
   carrier := {P | P.totalDegree ≤ 4012 ∧ ∀ γ ∈ Γ, atJet P (extend (s γ)) = 0}
   zero_mem' := ⟨by simp,fun _ _ => by simp [atJet]⟩
   add_mem' := by
@@ -29,11 +29,11 @@ def vanishing (Γ : Finset K) (s : K → K[X]) : Submodule Geom (Row 4) where
     change _ * atJet p (extend (s γ)) = 0
     rw [hp.2 γ hγ,mul_zero]
 
-def Persistent (Γ : Finset K) (s : K → K[X]) (P : Ideal GeoJets) : Prop :=
+def Persistent (Γ : Finset K) (s : K → (Polynomial K)) (P : Ideal GeoJets) : Prop :=
   ∀ R ∈ vanishing Γ s, toGeneric R ∈ P
 
 /-- Select one row for a finite set of nonpersistent surfaces. -/
-theorem common_avoider (Γ : Finset K) (s : K → K[X]) (surfaces : Finset (Ideal GeoJets))
+theorem common_avoider (Γ : Finset K) (s : K → (Polynomial K)) (surfaces : Finset (Ideal GeoJets))
     (hZ : ∀ P ∈ surfaces, ¬ Persistent Γ s P) :
     ∃ R ∈ vanishing Γ s, ∀ P ∈ surfaces, toGeneric R ∉ P := by
   classical

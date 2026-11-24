@@ -41,7 +41,7 @@ private theorem reciprocal_generates (b : PowerBasis F E) (c : A) :
 
 /-- The reciprocal generator gives a power basis for the original root
 field, with the transformed integral equation as its minimal polynomial. -/
-theorem chart_basis (b : PowerBasis F E) (f : A[X]) (c : A) (u : Aˣ)
+theorem chart_basis (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u : Aˣ)
     (hu : f.eval c=(u:A)) (degree : f.natDegree=b.dim) (root : aeval b.gen f=0) :
     ∃ v : PowerBasis F E, v.gen=reciprocal b c ∧
       IsIntegral A v.gen ∧ minpoly A v.gen=equation f c u := by
@@ -77,7 +77,7 @@ theorem chart_basis (b : PowerBasis F E) (f : A[X]) (c : A) (u : Aˣ)
   rw [← minpoly.isIntegrallyClosed_eq_field_fractions' F integ]
   exact equal.symm
 
-theorem original_equation (b : PowerBasis F E) (f : A[X])
+theorem original_equation (b : PowerBasis F E) (f : (Polynomial A))
     (degree : f.natDegree=b.dim) (positive : 0<f.natDegree) (root : aeval b.gen f=0) :
     f.map (algebraMap A F)=C (algebraMap A F f.leadingCoeff)*minpoly F b.gen := by
   let j := algebraMap A F

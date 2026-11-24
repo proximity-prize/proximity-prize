@@ -72,7 +72,6 @@ theorem lambda_le : Code.Lambda SquaredCode (radius : ℝ) ≤ (listBound : ℕ�
   intro received T hT
   rw [← hn]
   apply Code.finset_card_le_pairwiseJohnson SquaredCode received 1048575 1482911 (by norm_num)
-    (by rw [hn]; norm_num)
   · intro c hc c' hc' hne
     have hd := Code.minDist_le_dist hc hc' hne
     rw [squaredCode_minDist] at hd

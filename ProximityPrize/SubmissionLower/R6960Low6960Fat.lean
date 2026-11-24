@@ -13,7 +13,7 @@ open K1 K1_13
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open P0_9_4 (clear_denominators)
 open scoped Polynomial BigOperators
-open private eval_cleared order_cleared from ProximityPrize.SubmissionLower.GoldBranch6N4
+open P3_6_4 (eval_cleared order_cleared)
 set_option maxRecDepth 2400 in
 /-- Fat equations through height 2,338 at 179,827 agreements. -/
 theorem fat_equations : Equations := by

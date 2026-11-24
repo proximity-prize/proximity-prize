@@ -10,7 +10,7 @@ variable {K A : Type*} [Field K] [CommRing A] [Algebra K A] [FiniteDimensional K
 
 /-- A nonnilpotent element of a finite algebra has a nonzero idempotent
 multiple. Stabilize its powers before choosing the multiplier. -/
-private theorem idempotent_multiple [IsArtinianRing A] (x : A) (nx : ¬IsNilpotent x) :
+theorem idempotent_multiple [IsArtinianRing A] (x : A) (nx : ¬IsNilpotent x) :
     ∃ h : A,(x*h)^2=x*h ∧ x*h≠0 := by
   obtain ⟨n,y,hy⟩ := IsArtinian.exists_pow_succ_smul_dvd x (1:A)
   let r:=x*y

@@ -53,7 +53,7 @@ private theorem hasse_zero (a : Fin 4 →₀ ℕ) :
   rw [← taylor_coeff, map_zero]
   simp
 
-private theorem hasse_C_mul (a : Fin 4 →₀ ℕ) (c : GeoField) (P : GeoJets) :
+theorem hasse_C_mul (a : Fin 4 →₀ ℕ) (c : GeoField) (P : GeoJets) :
     hassePartial a (MvPolynomial.C c * P) = MvPolynomial.C c * hassePartial a P := by
   rw [← taylor_coeff, map_mul]
   have h : taylorHom (MvPolynomial.C c : GeoJets) = MvPolynomial.C (MvPolynomial.C c) := by
@@ -84,7 +84,7 @@ open P3 (I K node)
 open K1_13 (embed)
 open Low6960Order (primaryCutoff layerWidth sourceRank layerNeed requiredOrder)
 open scoped BigOperators
-open private exists_fresh sum_by_layer from ProximityPrize.SubmissionLower.PortLowBase
+open P0_9_3 (exists_fresh sum_by_layer)
 
 theorem bank_layers {w Γ s} (hm : Low6960Prices.Messages w Γ s)
     (surfaces : Finset (Ideal GeoJets)) (hp : ∀ P ∈ surfaces, Persistent Γ s P) :

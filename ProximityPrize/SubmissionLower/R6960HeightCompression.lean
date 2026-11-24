@@ -15,23 +15,23 @@ variable {F : Type*} [Field F] {ι α : Type*} [Fintype ι]
 abbrev Coeffs (F : Type*) [Field F] {ι : Type*} (weight : ι→ℕ) (width : ℕ) :=
   ∀ j,degreeLT F (width-weight j)
 
-def evaluation (A : Matrix α ι F[X]) (weight : ι→ℕ) (width : ℕ) :
-    Coeffs F weight width →ₗ[F] (α→F[X]) where
-  toFun v i := ∑ j,A i j*(v j : F[X])
+def evaluation (A : Matrix α ι (Polynomial F)) (weight : ι→ℕ) (width : ℕ) :
+    Coeffs F weight width →ₗ[F] (α→(Polynomial F)) where
+  toFun v i := ∑ j,A i j*(v j : (Polynomial F))
   map_add' v w := by funext i; simp [mul_add,Finset.sum_add_distrib]
   map_smul' c v := by funext i; simp [Finset.smul_sum]
 
 /-- Each rational kernel direction frees a complete abscissa-width block.
 The individual column weights are charged only once. -/
-theorem weighted_kernel [Finite α] (A : Matrix α ι F[X]) (weight : ι→ℕ) (width : ℕ)
+theorem weighted_kernel [Finite α] (A : Matrix α ι (Polynomial F)) (weight : ι→ℕ) (width : ℕ)
     (col : ∀ i j,(A i j).natDegree≤weight j) (k : ℕ)
-    (ker : k≤Module.finrank (FractionRing F[X])
-      (LinearMap.ker (A.map (algebraMap F[X] (FractionRing F[X]))).mulVecLin)) :
+    (ker : k≤Module.finrank (FractionRing (Polynomial F))
+      (LinearMap.ker (A.map (algebraMap (Polynomial F) (FractionRing (Polynomial F)))).mulVecLin)) :
     (∑ j : ι, (width-weight j)) ≤ (Fintype.card ι-k)*width+
       Module.finrank F (LinearMap.ker (evaluation A weight width)) := by
   classical
-  let E:=FractionRing F[X]
-  let a:=algebraMap F[X] E
+  let E:=FractionRing (Polynomial F)
+  let a:=algebraMap (Polynomial F) E
   let M:=A.map a
   let R:=Submodule.span E (Set.range M.row)
   let m:=Module.finrank E R
@@ -50,14 +50,14 @@ theorem weighted_kernel [Finite α] (A : Matrix α ι F[X]) (weight : ι→ℕ) 
       (evaluation A weight width v i)∈degreeLT F width := by
     apply Submodule.sum_mem
     intro j _
-    by_cases z : (v j : F[X])=0
+    by_cases z : (v j : (Polynomial F))=0
     · simp [z]
     by_cases c : A i j=0
     · simp [c]
     apply mem_degreeLT.mpr
     apply (natDegree_lt_iff_degree_lt (mul_ne_zero c z)).mp
     have h:= (natDegree_lt_iff_degree_lt z).mpr (mem_degreeLT.mp (v j).property)
-    have u:= (natDegree_mul_le (p:=A i j) (q:=(v j:F[X]))).trans (Nat.add_le_add_right (col i j) _)
+    have u:= (natDegree_mul_le (p:=A i j) (q:=(v j:(Polynomial F)))).trans (Nat.add_le_add_right (col i j) _)
     omega
   let small : Coeffs F weight width →ₗ[F] (Fin m → degreeLT F width) :=
     LinearMap.pi fun i => (((LinearMap.proj (row i)).comp (evaluation A weight width)).codRestrict
@@ -67,14 +67,14 @@ theorem weighted_kernel [Finite α] (A : Matrix α ι F[X]) (weight : ι→ℕ) 
     simp only [LinearMap.mem_ker]
     constructor
     · intro hv
-      let ev : ι→E:=fun j=>a (v j : F[X])
+      let ev : ι→E:=fun j=>a (v j : (Polynomial F))
       have hb (i : Fin m) : B i ⬝ᵥ ev=0 := by
         rw [←hrow i]
-        have h:=congrArg (fun g : Fin m → degreeLT F width => (g i : F[X])) hv
-        change (∑ j,A (row i) j*(v j : F[X]))=0 at h
+        have h:=congrArg (fun g : Fin m → degreeLT F width => (g i : (Polynomial F))) hv
+        change (∑ j,A (row i) j*(v j : (Polynomial F)))=0 at h
         simpa [ev,M,Matrix.row,dotProduct] using congrArg a h
       funext i
-      apply IsFractionRing.injective F[X] E
+      apply IsFractionRing.injective (Polynomial F) E
       have hi : M.row i∈Submodule.span E (Set.range B) := by
         rw [span]; exact Submodule.subset_span ⟨i,rfl⟩
       have zero : M.row i ⬝ᵥ ev=0 := by

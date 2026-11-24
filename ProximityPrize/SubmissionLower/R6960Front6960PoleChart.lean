@@ -14,7 +14,7 @@ open RescueGeometry (Model Family)
 open scoped Polynomial
 
 private def AdjacentChart {u del} (M : Model u del) {Γ} (F : Family M Γ)
-    (H : L[X]) : Prop :=
+    (H : (Polynomial L)) : Prop :=
   let σ := frobenius L p
   let H' := H.map σ
   H.Monic ∧ H.natDegree = M.overhead.toNat ∧ H ∣ liftPoly M.E ∧
@@ -83,7 +83,7 @@ private theorem adjacent_chart {u del} (M : Model u del) {Γ} (F : Family M Γ) 
     simpa only [Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C, hfix,
       σ, frobenius_def] using (Polynomial.map_dvd σ hres)
 private theorem chart_poles {u del} (M : Model u del) {Γ} (F : Family M Γ)
-    (H : L[X]) (hH : AdjacentChart M F H) :
+    (H : (Polynomial L)) (hH : AdjacentChart M F H) :
     ∃ D : PoleData M.overhead.toNat,
       K1_14_1.poleProduct D = H * H.map (frobenius L p) ∧
       (∀ i k, (D.block i).eval (nodeL k) ≠ 0) ∧
@@ -99,9 +99,9 @@ private theorem chart_poles {u del} (M : Model u del) {Γ} (F : Family M Γ)
     simpa [Q, A, liftPoly, mul_assoc, σ, Polynomial.map_mul] using hdet'
   let D : PoleData M.overhead.toNat :=
     ⟨![H, H.map σ], ![Q, Q.map σ], ![A, A.map σ], ![B, B.map σ],
-      fun i => by fin_cases i <;> first | exact hm | exact hm',
-      fun i => by fin_cases i <;> first | exact hd | exact hd',
-      hcop, fun i => by fin_cases i <;> first | exact hdet0 | exact hdet1⟩
+      fun i => by fin_cases i; exacts [hm, hm'],
+      fun i => by fin_cases i; exacts [hd, hd'],
+      hcop, fun i => by fin_cases i; exacts [hdet0, hdet1]⟩
   refine ⟨D, rfl, ?_, ?_⟩
   · intro i k
     fin_cases i

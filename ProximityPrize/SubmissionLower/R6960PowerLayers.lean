@@ -12,7 +12,7 @@ open K1_14_2_2_2_1 (jetDegree seedDegree jetDegree_le seedDegree_le jetDegree_mu
 open P1_7_4_1 (factorDegree factorDegree_pow factorDegree_add)
 open Polynomial Finset
 open scoped BigOperators Classical
-open private seed_finrank from ProximityPrize.SubmissionLower.Fast073
+open K1_14_2_1_2 (seed_finrank)
 
 /-- All rows at a lower cutoff contain the same power if the buffered rows
 have a common seeded divisor. The divisor may be different for each bank. -/
@@ -100,7 +100,7 @@ theorem quotient_rank (s : Shape) (h W : ℕ) (V : Submodule FX Jet) (F : Jet)
       refine ⟨mem_product.mpr ⟨mem_range.mpr (by omega),mem_range.mpr (by dsimp [j]; omega)⟩,?_,?_,?_⟩
       · omega
       · dsimp [j]; omega
-      · dsimp [i,j]; simpa only [Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using l
+      · dsimp [i,j]; linarith
     have witness := congrArg (fun f : S→T => ((f ⟨(i,j),mem⟩ : T) : Seeds)) z
     exact coeff witness
   have inj : Function.Injective proj := by

@@ -45,7 +45,7 @@ def axisScaledOrdinate (P:CurvatureSquares.Ordinate) (pn:projectedRaw P≠0) (g:
     (axisPlaneOrder false (scaledRoot (projectedRaw P) g pn root))
 
 /-- The matching word value uses the same scaling on each marked fibre. -/
-def axisScaledWord (P:CurvatureSquares.Ordinate) (z:L) (S:L[X]) : Tor E :=
+def axisScaledWord (P:CurvatureSquares.Ordinate) (z:L) (S:(Polynomial L)) : Tor E :=
   along E true false ((projectedRaw P).leadingCoeff.eval (C z)*S)
 
 /-- The actual marked word in the generic abscissa fibre admits its
@@ -53,12 +53,12 @@ unique nonzero projector in the common axis. The common fibre algebra
 is reduced, and the original torus ordinate acts on its marked sheet
 by the actual scaled word. -/
 theorem actual_axis_projector [FiniteDimensional ChartField E] (p:ℕ)
-    [CharP (FractionRing L[X]) p]
+    [CharP (FractionRing (Polynomial L)) p]
     (P:CurvatureSquares.Ordinate) (pn:projectedRaw P≠0)
     (large:2≤P.natDegree) (small:P.natDegree<p)
     (b:PowerBasis ChartField E) (dim:b.dim=P.natDegree)
     (root : let : Algebra (Plane L) E := axisPlaneAlgebra false; aeval b.gen (projectedRaw P)=0)
-    (z:L) (nz:z≠0) (S:L[X]) (mark:RetainedCompression.MarkedFiber P z S) :
+    (z:L) (nz:z≠0) (S:(Polynomial L)) (mark:RetainedCompression.MarkedFiber P z S) :
     ∃ η:AxisGeneric (E:=E) z, IsReduced (AxisGeneric (E:=E) z) ∧ η^2=η ∧ η≠0 ∧
       axisToGeneric (E:=E) z (red E true z
         (axisScaledOrdinate P pn b.gen root-axisScaledWord P z S))*η=0 := by
@@ -88,14 +88,14 @@ theorem actual_axis_projector [FiniteDimensional ChartField E] (p:ℕ)
   let y := (projectedRaw P).leadingCoeff.eval (C z)*S
   let U := Axis E true z
   let V := FibreGeneric (E:=E) z
-  let K := FractionRing L[X]
+  let K := FractionRing (Polynomial L)
   let a := scaledRoot (projectedRaw P) b.gen pn root
   let φ := axisFibreData (E:=E) false z nz
   have wordVal : genericFibreBase z (projectedRaw P).leadingCoeff*RetainedCompression.incl S=
-      algebraMap L[X] K y := by
+      algebraMap (Polynomial L) K y := by
     rw [map_mul]
     rfl
-  have kills' : ((1 ⊗ₜ[L[X]] quotientMap E z a : V)-algebraMap L[X] V y)*
+  have kills' : ((1 ⊗ₜ[(Polynomial L)] quotientMap E z a : V)-algebraMap (Polynomial L) V y)*
       e (AdjoinRoot.mk q H)=0 := by
     rw [wordVal] at kills
     exact kills

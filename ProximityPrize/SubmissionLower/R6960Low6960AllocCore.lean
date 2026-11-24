@@ -16,9 +16,9 @@ open Final50PriceLayer (availableMass fastLayer layerTerm)
 open Final50FatReserve (degreeCap)
 open Low6960Retained (Box)
 open Lower6960.Low (retainedTariff need layerCount)
-open private degree_bound from ProximityPrize.SubmissionLower.R6960Low6960Width
-open private check check_sum mass_eq from ProximityPrize.SubmissionLower.Final50PriceMass
-open private P3_6_8_1.sumBelow from ProximityPrize.SubmissionLower.GoldBranch6N8
+open Lower6960.Low (degree_bound)
+open Final50PriceMass (check check_sum mass_eq)
+open P3_6_8_1 (sumBelow)
 open scoped BigOperators Classical
 
 abbrev Band := Fin 15

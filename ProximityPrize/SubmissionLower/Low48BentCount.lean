@@ -7,8 +7,7 @@ open Finset
 open Low48BentLattice
 open K1_13_6_2_4 (Exponent)
 open scoped BigOperators
-open private slice slice_count evenSlice oddSlice sum_pair pairedSum paired_sum
-  from ProximityPrize.SubmissionLower.Fast054
+open K1_13_6_2_3_1 (slice slice_count evenSlice oddSlice sum_pair pairedSum paired_sum)
 noncomputable section
 
 private def Slices (a : Cap) :=

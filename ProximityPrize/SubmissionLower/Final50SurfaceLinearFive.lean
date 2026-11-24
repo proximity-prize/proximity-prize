@@ -19,7 +19,7 @@ private def cube (F : ℤ → ℤ → ℤ → ℤ → ℤ) (p q r s t : BentCap)
     let x := boxes.foldl addBent (⟨0,0,0⟩, 0)
     acc + (-1 : ℤ) ^ (5 - boxes.length) * F x.1.b x.1.j x.1.t x.2) 0)
 
-private def signedFive := cube bentIntegral
+def signedFive := cube bentIntegral
 
 private theorem cube_add (F G : ℤ → ℤ → ℤ → ℤ → ℤ) (p q r s t : BentCap) :
     cube (fun b j t h => F b j t h + G b j t h) p q r s t =
@@ -521,7 +521,7 @@ private theorem cube_BJJTH (q : Shape) (p r s t : BentCap) :
   ring
 
 /-- Coefficients of the cutter coordinates in the signed difference. -/
-private def coeffB (p r s t : BentCap) : ℤ :=
+def coeffB (p r s t : BentCap) : ℤ :=
   960 * (p.1.j : ℤ) * (r.1.j : ℤ) * (s.1.t : ℤ) * (t.2 : ℤ)
   + 960 * (p.1.j : ℤ) * (r.1.j : ℤ) * (s.2 : ℤ) * (t.1.t : ℤ)
   - 1920 * (p.1.j : ℤ) * (r.1.j : ℤ) * (s.2 : ℤ) * (t.2 : ℤ)
@@ -584,7 +584,7 @@ private def coeffB (p r s t : BentCap) : ℤ :=
   + 3840 * (p.2 : ℤ) * (r.2 : ℤ) * (s.2 : ℤ) * (t.1.t : ℤ)
   - 23040 * (p.2 : ℤ) * (r.2 : ℤ) * (s.2 : ℤ) * (t.2 : ℤ)
 
-private def coeffJ (p r s t : BentCap) : ℤ :=
+def coeffJ (p r s t : BentCap) : ℤ :=
   960 * (p.1.b : ℤ) * (r.1.j : ℤ) * (s.1.t : ℤ) * (t.2 : ℤ)
   + 960 * (p.1.b : ℤ) * (r.1.j : ℤ) * (s.2 : ℤ) * (t.1.t : ℤ)
   - 1920 * (p.1.b : ℤ) * (r.1.j : ℤ) * (s.2 : ℤ) * (t.2 : ℤ)
@@ -711,7 +711,7 @@ private def coeffJ (p r s t : BentCap) : ℤ :=
   - 1920 * (p.2 : ℤ) * (r.2 : ℤ) * (s.2 : ℤ) * (t.1.t : ℤ)
   + 23040 * (p.2 : ℤ) * (r.2 : ℤ) * (s.2 : ℤ) * (t.2 : ℤ)
 
-private def coeffT (p r s t : BentCap) : ℤ :=
+def coeffT (p r s t : BentCap) : ℤ :=
   960 * (p.1.b : ℤ) * (r.1.j : ℤ) * (s.1.j : ℤ) * (t.2 : ℤ)
   - 2880 * (p.1.b : ℤ) * (r.1.j : ℤ) * (s.1.t : ℤ) * (t.2 : ℤ)
   + 960 * (p.1.b : ℤ) * (r.1.j : ℤ) * (s.2 : ℤ) * (t.1.j : ℤ)
@@ -864,7 +864,7 @@ private theorem integral_factored (b j t h : ℤ) : bentIntegral b j t h =
   unfold bentIntegral
   ring
 
-private theorem signed_five_coeffs (q : Shape) (p r s t : BentCap) :
+theorem signed_five_coeffs (q : Shape) (p r s t : BentCap) :
     signedFive p (q,0) r s t = coeffB p r s t*q.b +
       coeffJ p r s t*q.j + coeffT p r s t*q.t := by
   change cube (fun b j t h => bentIntegral b j t h) p (q,0) r s t = _
@@ -873,7 +873,7 @@ private theorem signed_five_coeffs (q : Shape) (p r s t : BentCap) :
     cube_BJJHH,cube_BJJTH,coeffB,coeffJ,coeffT]
   ring
 
-private theorem signed_five_linear (q : Shape) (p r s t : BentCap) :
+theorem signed_five_linear (q : Shape) (p r s t : BentCap) :
     signedFive p (q,0) r s t = signedFive p (⟨1,0,0⟩,0) r s t*q.b +
       signedFive p (⟨0,1,0⟩,0) r s t*q.j + signedFive p (⟨0,0,1⟩,0) r s t*q.t := by
   simp only [signed_five_coeffs,Nat.cast_zero,Nat.cast_one,mul_zero,mul_one,zero_add,add_zero]
@@ -889,7 +889,7 @@ private theorem chamber_coords (p : BentCap) (hp : Chamber p) :
 /- The signed coefficients are positive combinations of the four independent
 chamber coordinates of the other slots. The shape of the cutter is arbitrary. -/
 set_option maxHeartbeats 2200000 in
-private theorem signed_five_nonneg (q : Shape) (p r s t : BentCap)
+theorem signed_five_nonneg (q : Shape) (p r s t : BentCap)
     (hp : Chamber p) (hr : Chamber r) (hs : Chamber s) (ht : Chamber t) :
     0 ≤ signedFive p (q,0) r s t := by
   obtain ⟨hBp,hJp,hTp⟩ := chamber_coords p hp

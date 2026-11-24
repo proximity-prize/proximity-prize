@@ -21,7 +21,7 @@ theorem laurent_unit_over_domain (f : LaurentPolynomial R) (unit : IsUnit f) :
   obtain ⟨u,rfl⟩ := unit
   obtain ⟨n,a,ea⟩ := LaurentPolynomial.exists_T_pow (u:LaurentPolynomial R)
   obtain ⟨l,b,eb⟩ := LaurentPolynomial.exists_T_pow (↑u⁻¹:LaurentPolynomial R)
-  have ab : a*b=(Polynomial.X : R[X])^(n+l) := by
+  have ab : a*b=(Polynomial.X : (Polynomial R))^(n+l) := by
     apply Polynomial.toLaurent_injective
     rw [map_mul,ea,eb,Polynomial.toLaurent_X_pow,mul_mul_mul_comm,Units.mul_inv,one_mul,←T_add]
     push_cast
@@ -29,7 +29,7 @@ theorem laurent_unit_over_domain (f : LaurentPolynomial R) (unit : IsUnit f) :
   obtain ⟨j,_,assoc⟩ := (dvd_prime_pow (Polynomial.prime_X (R:=R)) (n+l)).mp (show a∣_ from ⟨b,ab.symm⟩)
   obtain ⟨v,hv⟩ := assoc.symm
   obtain ⟨c,cu,cv⟩ := Polynomial.isUnit_iff.mp v.isUnit
-  have aa : a=(Polynomial.X : R[X])^j*Polynomial.C c := by rw [cv,hv]
+  have aa : a=(Polynomial.X : (Polynomial R))^j*Polynomial.C c := by rw [cv,hv]
   refine ⟨c,(j:ℤ)-n,cu,?_⟩
   have shifted : (u:LaurentPolynomial R)*T (n:ℤ)=LaurentPolynomial.C c*T (j:ℤ) := by
     rw [←ea,aa,map_mul,Polynomial.toLaurent_X_pow,Polynomial.toLaurent_C,mul_comm]
@@ -68,7 +68,7 @@ def laurentCoefficients (f : R→+*S) : LaurentPolynomial R→+*LaurentPolynomia
     change (T (-1):LaurentPolynomial S)^(n+1)=T (-(↑(n+1):ℤ))
     rw [T_pow,mul_neg_one]
 
-@[simp] theorem laurentCoefficients_polynomial (f : R→+*S) (p : R[X]) :
+@[simp] theorem laurentCoefficients_polynomial (f : R→+*S) (p : (Polynomial R)) :
     laurentCoefficients f p.toLaurent=(p.map f).toLaurent := by
   have eq : (laurentCoefficients f).comp Polynomial.toLaurent=
       Polynomial.toLaurent.comp (Polynomial.mapRingHom f) := by
@@ -80,7 +80,7 @@ def laurentCoefficients (f : R→+*S) : LaurentPolynomial R→+*LaurentPolynomia
         Polynomial.map_X,laurentCoefficients_T]
   exact RingHom.congr_fun eq p
 
-@[simp] theorem laurentCoefficients_inverse (f : R→+*S) (p : R[X]) :
+@[simp] theorem laurentCoefficients_inverse (f : R→+*S) (p : (Polynomial R)) :
     laurentCoefficients f (invert p.toLaurent)=invert ((p.map f).toLaurent) := by
   let v := (invert (R:=S)).toRingEquiv.toRingHom
   let u := (invert (R:=R)).toRingEquiv.toRingHom
@@ -102,20 +102,20 @@ variable {k K : Type*} [Field k] [Field K]
 
 /-- Two actual principal generators on adjacent plane charts differ on
 the overlap by a constant in the ground field and one abscissa exponent. -/
-theorem plane_overlap_unit (δfin δinf : k[X][X])
-    (glue : (Ideal.span {δfin.toLaurent} : Ideal (LaurentPolynomial k[X]))=
+theorem plane_overlap_unit (δfin δinf : (Polynomial (Polynomial k)))
+    (glue : (Ideal.span {δfin.toLaurent} : Ideal (LaurentPolynomial (Polynomial k)))=
       Ideal.span {invert δinf.toLaurent}) :
     ∃ (c : k) (m : ℤ),c≠0 ∧
       δfin.toLaurent=LaurentPolynomial.C (Polynomial.C c)*T m*invert δinf.toLaurent := by
   have assoc : Associated (invert δinf.toLaurent) δfin.toLaurent :=
     Ideal.span_singleton_eq_span_singleton.mp glue.symm
   obtain ⟨u,hu⟩ := assoc
-  obtain ⟨a,m,au,eq⟩ := laurent_unit_over_domain (u:LaurentPolynomial k[X]) u.isUnit
+  obtain ⟨a,m,au,eq⟩ := laurent_unit_over_domain (u:LaurentPolynomial (Polynomial k)) u.isUnit
   obtain ⟨c,cu,hc⟩ := Polynomial.isUnit_iff.mp au
   refine ⟨c,m,cu.ne_zero,?_⟩
   rw [←hu,eq,←hc,mul_comm]
 
-private theorem associated_constant {u v : K[X]} (h : Associated u v) :
+private theorem associated_constant {u v : (Polynomial K)} (h : Associated u v) :
     ∃ c : K, c≠0 ∧ u=Polynomial.C c*v := by
   obtain ⟨x,hx⟩ := h.symm
   obtain ⟨c,cu,eq⟩ := Polynomial.isUnit_iff.mp x.isUnit
@@ -124,10 +124,10 @@ private theorem associated_constant {u v : K[X]} (h : Associated u v) :
 /-- The same overlap unit fixes the determinant exponent after every
 coefficient specialization where the normalized discriminant is nonzero.
 The orientation is `δfin = c·t^m·δinf(t⁻¹)`. -/
-theorem overlap_transition_exponent (δfin δinf : k[X][X]) (c : k) (cn : c≠0) (m : ℤ)
+theorem overlap_transition_exponent (δfin δinf : (Polynomial (Polynomial k))) (c : k) (cn : c≠0) (m : ℤ)
     (glue : δfin.toLaurent=LaurentPolynomial.C (Polynomial.C c)*T m*invert δinf.toLaurent)
-    (spec : k[X]→+*K) (nonzero : δfin.map spec≠0)
-    (finDisc infDisc : K[X]) (hf : Associated finDisc (δfin.map spec))
+    (spec : (Polynomial k)→+*K) (nonzero : δfin.map spec≠0)
+    (finDisc infDisc : (Polynomial K)) (hf : Associated finDisc (δfin.map spec))
     (hi : Associated infDisc (δinf.map spec))
     (G : LaurentPolynomial K) (gUnit : IsUnit G)
     (trace : invert infDisc.toLaurent=G^2*finDisc.toLaurent) :
