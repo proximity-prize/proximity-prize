@@ -1,28 +1,21 @@
-import ProximityPrize.SubmissionLower.HighCore82258Data
+import ProximityPrize.SubmissionLower.FrontCore82258Model
 import ProximityPrize.SubmissionLower.HighCore82258TerminalArithmetic
-import ProximityPrize.SubmissionLower.KoalaRectCharge
-
-/-! The finite rectangle computation specializes the repository’s KoalaRectArithmetic
-and its two width-sum lemmas from HighCore82258TerminalArithmetic to agreement 179827.
-The original challenge-specific algorithms and proofs are by their respective authors. -/
+import ProximityPrize.SubmissionLower.KoalaRectPosition
 set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
-
 section
 namespace Lower6960.TerminalArithmetic
-abbrev agreement : ℕ := 179827
+abbrev agreement : ℕ := 179818
 open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset
 open K1_14 (Shape)
 open HighCore82258 (Bank)
 open P1_7_6 (linearEnd Quad prefixProduct intervalProduct yStart)
-
 structure RectArgs where
   U : Fin 2 → ℕ
   order : Fin 2 → ℕ
-
 abbrev RectArgs.slots (v : RectArgs) (r : ℕ) := KoalaRect.rectSlots v.U v.order r
 def RectArgs.Fits (v : RectArgs) (r : ℕ) : Prop :=
   r * v.order 0 ≤ v.U 0 ∧ r * v.order 1 ≤ v.U 1
@@ -34,29 +27,23 @@ theorem slots_eq_zero (v : RectArgs) (a : ℕ) (ha : ¬ v.Fits a) : v.slots a = 
     rw [Nat.sub_eq_zero_of_le h₁, mul_zero]
   · have h₀' : v.U 0 + 1 ≤ a * v.order 0 := by omega
     rw [Nat.sub_eq_zero_of_le h₀', zero_mul]
-
 def seedEnd (s : Shape) (v : RectArgs) (d R : ℕ) : ℕ :=
   P1_7_6.seedEnd {s with U := v.U 1} (v.order 1) d
     (P1_7_6.seedEnd {s with U := v.U 0} (v.order 0) d R)
-
 open P1_7_6 (lt_seedEnd) in
 theorem lt_rectEnd (s : Shape) (v : RectArgs) (d R a : ℕ) :
     a < seedEnd s v d R ↔ a < R ∧ v.Fits (a+d) := by
   unfold seedEnd RectArgs.Fits
   rw [lt_seedEnd, lt_seedEnd]
   tauto
-
 def orderEnd (s : Shape) (E : ℕ) (v : RectArgs) : ℕ :=
   seedEnd s v 0 (s.B/E+1)
-
 theorem orderEnd_pos (s : Shape) (E : ℕ) (v : RectArgs) : 0 < orderEnd s E v :=
   (lt_rectEnd s v 0 (s.B/E+1) 0).mpr ⟨Nat.succ_pos _, by simp [RectArgs.Fits]⟩
-
 def seedQuad (_ : Shape) (v : RectArgs) (d : ℕ) : Quad :=
   let x : ℤ := (v.U 0 : ℤ) + 1 - d * (v.order 0 : ℤ)
   let y : ℤ := (v.U 1 : ℤ) + 1 - d * (v.order 1 : ℤ)
   Quad.ofLines (2*x) (-2*(v.order 0 : ℤ)) y (-(v.order 1 : ℤ))
-
 theorem seedQuad_eq (s : Shape) (v : RectArgs) (d a : ℕ) (ha : v.Fits (a+d)) :
     (seedQuad s v d).eval a = 2*(v.slots (a+d) : ℤ) := by
   have h₀ : (a+d)*v.order 0 ≤ v.U 0 + 1 := ha.1.trans (Nat.le_succ _)
@@ -64,10 +51,8 @@ theorem seedQuad_eq (s : Shape) (v : RectArgs) (d a : ℕ) (ha : v.Fits (a+d)) :
   simp only [seedQuad, Quad.eval_ofLines, RectArgs.slots, KoalaRect.rectSlots, Nat.cast_mul,
     Nat.cast_sub h₀, Nat.cast_sub h₁, Nat.cast_add, Nat.cast_one]
   ring
-
 def scaledDebit (v : RectArgs) (N P h : ℕ) : ℤ :=
   240*(KoalaRect.rectDebit h N P v.U : ℤ)
-
 def width (s : Shape) (h q j t : ℕ) : ℤ :=
   (s.m*agreement : ℕ)+(j : ℤ)-(131071-(h : ℤ))*q-2*(h : ℤ)*t
 def surplus (h : ℕ) (b : Bank) (E : ℕ) (v : RectArgs) : ℤ :=
@@ -729,11 +714,9 @@ theorem certify {s : Shape} {N P h E : ℕ} {v : RectArgs} {n last count : ℕ}
     hn hc hJ hb hbNext parts.scan_eq hl hr hp hd
 end Lower6960.TerminalArithmetic
 end
-
 namespace Lower6960.TerminalArithmetic
 open HighCore82258 (Bank)
 open KoalaRect (rectGain rectDebit)
-
 theorem strict_of_checks {lo h E : ℕ} {b : Bank} {v : RectArgs}
     (hl : lo ≤ h) (hh : h < 131071) (hf : lo+1 ≤ 131071)
     (hj : b.shape.J ≤ 131071 - (lo+1)) (he : 0 < E)
@@ -743,7 +726,5 @@ theorem strict_of_checks {lo h E : ℕ} {b : Bank} {v : RectArgs}
   rw [blockSurplus_eq b lo E v (by omega) (by omega) he,
     blockSurplus_eq b (lo+1) E v hf hj he] at hc
   exact strict_of_first_difference hl hh (by omega) (by omega)
-
 #print axioms strict_of_checks
-
 end Lower6960.TerminalArithmetic

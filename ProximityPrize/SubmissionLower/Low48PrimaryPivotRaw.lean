@@ -22,7 +22,26 @@ import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part4
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part5
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part6
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part7
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part8
+
+-- merged module Low48PrimaryPivotRawWindow3Part8
+section Merged_Low48PrimaryPivotRawWindow3Part8
+
+set_option Elab.async false
+set_option maxHeartbeats 0
+set_option maxRecDepth 100000
+
+namespace Low48PrimaryPivot.RawReceipt
+open K1_13_2_3
+
+theorem raw3At407 : rawChunk w3 407 2 = 24696165031 :=
+  (Low48PrimaryPivot.RawClosed.rawChunk_closed w3 407 2 (by decide) (by decide) (by decide) (by decide)).trans (by decide +kernel)
+
+end Low48PrimaryPivot.RawReceipt
+
+end Merged_Low48PrimaryPivotRawWindow3Part8
+
+-- merged module Low48PrimaryPivotRaw
+section Merged_Low48PrimaryPivotRaw
 
 set_option autoImplicit false
 set_option Elab.async false
@@ -127,3 +146,5 @@ theorem rawWindow_w3 : rawWindow w3 = 4498062550540 :=
 #print axioms rawWindow_w2
 #print axioms rawWindow_w3
 end Low48PrimaryPivot
+
+end Merged_Low48PrimaryPivotRaw

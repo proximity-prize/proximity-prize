@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleChart
+import ProximityPrize.SubmissionLower.R6960Low6960SharedBentCaps
 import ProximityPrize.SubmissionLower.R6960Low6960ActiveCyclePrice
 
 set_option autoImplicit false

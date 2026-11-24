@@ -23,7 +23,7 @@ def receipt : Receipt 0 where
   orders := orders
   covers := by
     intro a ha box
-    change 0+a.b≤132 ∧ 0+a.j≤55 ∧ 0+a.t≤14 at box
+    change 0+a.b≤136 ∧ 0+a.j≤57 ∧ 0+a.t≤14 at box
     have pos := ha.1
     have cases : a.t=1 ∨ a.t=2 ∨ a.t=3 ∨ a.t=4 ∨ a.t=5 ∨ a.t=6 ∨ a.t=7 ∨ a.t=8 ∨ a.t=9 ∨ a.t=10 ∨ a.t=11 ∨ a.t=12 ∨ a.t=13 ∨ a.t=14 := by omega
     rcases cases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 | h11 | h12 | h13 | h14

@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6960RescueSource
+import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt0
 
 set_option Elab.async false
 set_option maxHeartbeats 4000000
@@ -9,7 +9,7 @@ open P1_7 (Bank debit)
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 open HelperSource (WidthGuard)
 
-def largestBank : Bank := ⟨⟨9071,12604,2749,270175⟩,22490098892800000,695862530200649⟩
+def largestBank : Bank := ⟨⟨9071,12604,2749,270589⟩,22490098892800000,695862530200649⟩
 
 private theorem moment_12604_2749_part0 :
     blockEstimate 12604 2749 2749 128 = 4475130400 := by decide +kernel
@@ -611,461 +611,461 @@ private theorem moment_12604_2749_join118 :
 
 theorem moment_12604_2749 : momentEstimate 12604 2749 = 695862530200649 := moment_12604_2749_join118
 
-private theorem largest_checked_2339_0_part0 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 0 128 = 102844953080961922692989889600 := by decide +kernel
-private theorem largest_checked_2339_0_part1 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 128 128 = 96590064632771545638865169472 := by decide +kernel
-private theorem largest_checked_2339_0_part2 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 256 128 = 90459756361871091055107648576 := by decide +kernel
-private theorem largest_checked_2339_0_part3 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 384 128 = 84455801871133411463475817536 := by decide +kernel
-private theorem largest_checked_2339_0_part4 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 512 128 = 78579967086098067976895310912 := by decide +kernel
-private theorem largest_checked_2339_0_part5 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 640 128 = 72834010264443271129028258880 := by decide +kernel
-private theorem largest_checked_2339_0_part6 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 768 128 = 67219682005457821703842638912 := by decide +kernel
-private theorem largest_checked_2339_0_part7 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 896 128 = 61738725259513051565181627456 := by decide +kernel
-private theorem largest_checked_2339_0_part8 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1024 128 = 56392875337534764486332951616 := by decide +kernel
-private theorem largest_checked_2339_0_part9 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1152 128 = 51183859920475176979598240832 := by decide +kernel
-private theorem largest_checked_2339_0_part10 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1280 128 = 46113399068784859125862378560 := by decide +kernel
-private theorem largest_checked_2339_0_part11 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1408 128 = 41183205231884675404162853952 := by decide +kernel
-private theorem largest_checked_2339_0_part12 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1536 128 = 36394983257637725521259113536 := by decide +kernel
-private theorem largest_checked_2339_0_part13 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1664 128 = 31750430401821285241201912896 := by decide +kernel
-private theorem largest_checked_2339_0_part14 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1792 128 = 27251236337598747214902668352 := by decide +kernel
-private theorem largest_checked_2339_0_part15 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1920 128 = 22899083164991561809702808640 := by decide +kernel
-private theorem largest_checked_2339_0_part16 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2048 128 = 18695645420351177938943126592 := by decide +kernel
-private theorem largest_checked_2339_0_part17 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2176 128 = 14642590085830983891533130816 := by decide +kernel
-private theorem largest_checked_2339_0_part18 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2304 128 = 10741576598858248161520397376 := by decide +kernel
-private theorem largest_checked_2339_0_part19 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2432 128 = 6994256861606060277659921472 := by decide +kernel
-private theorem largest_checked_2339_0_part20 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2560 128 = 3402275250465271632983469120 := by decide +kernel
-private theorem largest_checked_2339_0_part21 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2688 62 = 403340381964505279216502496 := by decide +kernel
-private theorem largest_checked_2339_0_join0 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 0 256 = 199435017713733468331855059072 :=
-  phaseBlock_append largest_checked_2339_0_part0 largest_checked_2339_0_part1 rfl rfl rfl
-private theorem largest_checked_2339_0_join1 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 384 256 = 163035768957231479440371128448 :=
-  phaseBlock_append largest_checked_2339_0_part3 largest_checked_2339_0_part4 rfl rfl rfl
-private theorem largest_checked_2339_0_join2 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 256 384 = 253495525319102570495478777024 :=
-  phaseBlock_append largest_checked_2339_0_part2 largest_checked_2339_0_join1 rfl rfl rfl
-private theorem largest_checked_2339_0_join3 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 0 640 = 452930543032836038827333836096 :=
-  phaseBlock_append largest_checked_2339_0_join0 largest_checked_2339_0_join2 rfl rfl rfl
-private theorem largest_checked_2339_0_join4 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 768 256 = 128958407264970873269024266368 :=
-  phaseBlock_append largest_checked_2339_0_part6 largest_checked_2339_0_part7 rfl rfl rfl
-private theorem largest_checked_2339_0_join5 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 640 384 = 201792417529414144398052525248 :=
-  phaseBlock_append largest_checked_2339_0_part5 largest_checked_2339_0_join4 rfl rfl rfl
-private theorem largest_checked_2339_0_join6 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1152 256 = 97297258989260036105460619392 :=
-  phaseBlock_append largest_checked_2339_0_part9 largest_checked_2339_0_part10 rfl rfl rfl
-private theorem largest_checked_2339_0_join7 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1024 384 = 153690134326794800591793571008 :=
-  phaseBlock_append largest_checked_2339_0_part8 largest_checked_2339_0_join6 rfl rfl rfl
-private theorem largest_checked_2339_0_join8 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 640 768 = 355482551856208944989846096256 :=
-  phaseBlock_append largest_checked_2339_0_join5 largest_checked_2339_0_join7 rfl rfl rfl
-private theorem largest_checked_2339_0_join9 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 0 1408 = 808413094889044983817179932352 :=
-  phaseBlock_append largest_checked_2339_0_join3 largest_checked_2339_0_join8 rfl rfl rfl
-private theorem largest_checked_2339_0_join10 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1408 256 = 77578188489522400925421967488 :=
-  phaseBlock_append largest_checked_2339_0_part11 largest_checked_2339_0_part12 rfl rfl rfl
-private theorem largest_checked_2339_0_join11 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1792 256 = 50150319502590309024605476992 :=
-  phaseBlock_append largest_checked_2339_0_part14 largest_checked_2339_0_part15 rfl rfl rfl
-private theorem largest_checked_2339_0_join12 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1664 384 = 81900749904411594265807389888 :=
-  phaseBlock_append largest_checked_2339_0_part13 largest_checked_2339_0_join11 rfl rfl rfl
-private theorem largest_checked_2339_0_join13 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1408 640 = 159478938393933995191229357376 :=
-  phaseBlock_append largest_checked_2339_0_join10 largest_checked_2339_0_join12 rfl rfl rfl
-private theorem largest_checked_2339_0_join14 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2176 256 = 25384166684689232053053528192 :=
-  phaseBlock_append largest_checked_2339_0_part17 largest_checked_2339_0_part18 rfl rfl rfl
-private theorem largest_checked_2339_0_join15 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2048 384 = 44079812105040409991996654784 :=
-  phaseBlock_append largest_checked_2339_0_part16 largest_checked_2339_0_join14 rfl rfl rfl
-private theorem largest_checked_2339_0_join16 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2560 190 = 3805615632429776912199971616 :=
-  phaseBlock_append largest_checked_2339_0_part20 largest_checked_2339_0_part21 rfl rfl rfl
-private theorem largest_checked_2339_0_join17 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2432 318 = 10799872494035837189859893088 :=
-  phaseBlock_append largest_checked_2339_0_part19 largest_checked_2339_0_join16 rfl rfl rfl
-private theorem largest_checked_2339_0_join18 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 2048 702 = 54879684599076247181856547872 :=
-  phaseBlock_append largest_checked_2339_0_join15 largest_checked_2339_0_join17 rfl rfl rfl
-private theorem largest_checked_2339_0_join19 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 1408 1342 = 214358622993010242373085905248 :=
-  phaseBlock_append largest_checked_2339_0_join13 largest_checked_2339_0_join18 rfl rfl rfl
-private theorem largest_checked_2339_0_join20 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 0) 0 2750 = 1022771717882055226190265837600 :=
-  phaseBlock_append largest_checked_2339_0_join9 largest_checked_2339_0_join19 rfl rfl rfl
+private theorem largest_checked_2359_0_part0 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 0 128 = 103167551928182495703010935520 := by decide +kernel
+private theorem largest_checked_2359_0_part1 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 128 128 = 96892405627359115651330200288 := by decide +kernel
+private theorem largest_checked_2359_0_part2 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 256 128 = 90742317591220127522680414944 := by decide +kernel
+private theorem largest_checked_2359_0_part3 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 384 128 = 84719063154705543077676741344 := by decide +kernel
+private theorem largest_checked_2359_0_part4 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 512 128 = 78824409978315206517389116128 := by decide +kernel
+private theorem largest_checked_2359_0_part5 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 640 128 = 73060118057563143126867186400 := by decide +kernel
+private theorem largest_checked_2359_0_part6 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 768 128 = 67427939732431907918665245408 := by decide +kernel
+private theorem largest_checked_2359_0_part7 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 896 128 = 61929619696826934276367168224 := by decide +kernel
+private theorem largest_checked_2359_0_part8 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1024 128 = 56566895008030882598111347424 := by decide +kernel
+private theorem largest_checked_2359_0_part9 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1152 128 = 51341495096157988940115628768 := by decide +kernel
+private theorem largest_checked_2359_0_part10 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1280 128 = 46255141773608413660202246880 := by decide +kernel
+private theorem largest_checked_2359_0_part11 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1408 128 = 41309549244522590061322760928 := by decide +kernel
+private theorem largest_checked_2359_0_part12 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1536 128 = 36506424114235573035082990304 := by decide +kernel
+private theorem largest_checked_2359_0_part13 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1664 128 = 31847465398731387705267950304 := by decide +kernel
+private theorem largest_checked_2359_0_part14 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1792 128 = 27334364534097378071366787808 := by decide +kernel
+private theorem largest_checked_2359_0_part15 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1920 128 = 22968805385978555652097716960 := by decide +kernel
+private theorem largest_checked_2359_0_part16 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2048 128 = 18752464259031948128932954848 := by decide +kernel
+private theorem largest_checked_2359_0_part17 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2176 128 = 14687009906380947989623657184 := by decide +kernel
+private theorem largest_checked_2359_0_part18 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2304 128 = 10774103539069661171724853984 := by decide +kernel
+private theorem largest_checked_2359_0_part19 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2432 128 = 7015398835517255706120385248 := by decide +kernel
+private theorem largest_checked_2359_0_part20 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2560 128 = 3412541950972310360547836640 := by decide +kernel
+private theorem largest_checked_2359_0_part21 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2688 62 = 404555887926766847014698864 := by decide +kernel
+private theorem largest_checked_2359_0_join0 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 0 256 = 200059957555541611354341135808 :=
+  phaseBlock_append largest_checked_2359_0_part0 largest_checked_2359_0_part1 rfl rfl rfl
+private theorem largest_checked_2359_0_join1 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 384 256 = 163543473133020749595065857472 :=
+  phaseBlock_append largest_checked_2359_0_part3 largest_checked_2359_0_part4 rfl rfl rfl
+private theorem largest_checked_2359_0_join2 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 256 384 = 254285790724240877117746272416 :=
+  phaseBlock_append largest_checked_2359_0_part2 largest_checked_2359_0_join1 rfl rfl rfl
+private theorem largest_checked_2359_0_join3 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 0 640 = 454345748279782488472087408224 :=
+  phaseBlock_append largest_checked_2359_0_join0 largest_checked_2359_0_join2 rfl rfl rfl
+private theorem largest_checked_2359_0_join4 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 768 256 = 129357559429258842195032413632 :=
+  phaseBlock_append largest_checked_2359_0_part6 largest_checked_2359_0_part7 rfl rfl rfl
+private theorem largest_checked_2359_0_join5 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 640 384 = 202417677486821985321899600032 :=
+  phaseBlock_append largest_checked_2359_0_part5 largest_checked_2359_0_join4 rfl rfl rfl
+private theorem largest_checked_2359_0_join6 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1152 256 = 97596636869766402600317875648 :=
+  phaseBlock_append largest_checked_2359_0_part9 largest_checked_2359_0_part10 rfl rfl rfl
+private theorem largest_checked_2359_0_join7 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1024 384 = 154163531877797285198429223072 :=
+  phaseBlock_append largest_checked_2359_0_part8 largest_checked_2359_0_join6 rfl rfl rfl
+private theorem largest_checked_2359_0_join8 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 640 768 = 356581209364619270520328823104 :=
+  phaseBlock_append largest_checked_2359_0_join5 largest_checked_2359_0_join7 rfl rfl rfl
+private theorem largest_checked_2359_0_join9 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 0 1408 = 810926957644401758992416231328 :=
+  phaseBlock_append largest_checked_2359_0_join3 largest_checked_2359_0_join8 rfl rfl rfl
+private theorem largest_checked_2359_0_join10 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1408 256 = 77815973358758163096405751232 :=
+  phaseBlock_append largest_checked_2359_0_part11 largest_checked_2359_0_part12 rfl rfl rfl
+private theorem largest_checked_2359_0_join11 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1792 256 = 50303169920075933723464504768 :=
+  phaseBlock_append largest_checked_2359_0_part14 largest_checked_2359_0_part15 rfl rfl rfl
+private theorem largest_checked_2359_0_join12 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1664 384 = 82150635318807321428732455072 :=
+  phaseBlock_append largest_checked_2359_0_part13 largest_checked_2359_0_join11 rfl rfl rfl
+private theorem largest_checked_2359_0_join13 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1408 640 = 159966608677565484525138206304 :=
+  phaseBlock_append largest_checked_2359_0_join10 largest_checked_2359_0_join12 rfl rfl rfl
+private theorem largest_checked_2359_0_join14 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2176 256 = 25461113445450609161348511168 :=
+  phaseBlock_append largest_checked_2359_0_part17 largest_checked_2359_0_part18 rfl rfl rfl
+private theorem largest_checked_2359_0_join15 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2048 384 = 44213577704482557290281466016 :=
+  phaseBlock_append largest_checked_2359_0_part16 largest_checked_2359_0_join14 rfl rfl rfl
+private theorem largest_checked_2359_0_join16 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2560 190 = 3817097838899077207562535504 :=
+  phaseBlock_append largest_checked_2359_0_part20 largest_checked_2359_0_part21 rfl rfl rfl
+private theorem largest_checked_2359_0_join17 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2432 318 = 10832496674416332913682920752 :=
+  phaseBlock_append largest_checked_2359_0_part19 largest_checked_2359_0_join16 rfl rfl rfl
+private theorem largest_checked_2359_0_join18 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 2048 702 = 55046074378898890203964386768 :=
+  phaseBlock_append largest_checked_2359_0_join15 largest_checked_2359_0_join17 rfl rfl rfl
+private theorem largest_checked_2359_0_join19 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 1408 1342 = 215012683056464374729102593072 :=
+  phaseBlock_append largest_checked_2359_0_join13 largest_checked_2359_0_join18 rfl rfl rfl
+private theorem largest_checked_2359_0_join20 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 0) 0 2750 = 1025939640700866133721518824400 :=
+  phaseBlock_append largest_checked_2359_0_join9 largest_checked_2359_0_join19 rfl rfl rfl
 
-private theorem largest_checked_2339_0 : fastPhase largestBank.shape 179827 2339 103 1 1 1 0 = 1022771717882055226190265837600 :=
-  phase_of_block (n := 2750) (by decide +kernel) largest_checked_2339_0_join20
+private theorem largest_checked_2359_0 : fastPhase largestBank.shape 179818 2359 103 1 1 1 0 = 1025939640700866133721518824400 :=
+  phase_of_block (n := 2750) (by decide +kernel) largest_checked_2359_0_join20
 
-private theorem largest_checked_2339_1_part0 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 0 128 = 102796261675577196617653621632 := by decide +kernel
-private theorem largest_checked_2339_1_part1 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 128 128 = 96542297180718893193095263104 := by decide +kernel
-private theorem largest_checked_2339_1_part2 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 256 128 = 90412927900410188420354560896 := by decide +kernel
-private theorem largest_checked_2339_1_part3 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 384 128 = 84409927374402562406512391040 := by decide +kernel
-private theorem largest_checked_2339_1_part4 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 512 128 = 78535061465191096614957323136 := by decide +kernel
-private theorem largest_checked_2339_1_part5 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 640 128 = 72790088367486414694954972032 := by decide +kernel
-private theorem largest_checked_2339_1_part6 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 768 128 = 67176758617686623311217349504 := by decide +kernel
-private theorem largest_checked_2339_1_part7 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 896 128 = 61696815103349252973472215936 := by decide +kernel
-private theorem largest_checked_2339_1_part8 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1024 128 = 56351993072663198866032432000 := by decide +kernel
-private theorem largest_checked_2339_1_part9 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1152 128 = 51144020143920661677365310336 := by decide +kernel
-private theorem largest_checked_2339_1_part10 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1280 128 = 46074616314989088429661967232 := by decide +kernel
-private theorem largest_checked_2339_1_part11 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1408 128 = 41145493972783113308406674304 := by decide +kernel
-private theorem largest_checked_2339_1_part12 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1536 128 = 36358357902736498491946210176 := by decide +kernel
-private theorem largest_checked_2339_1_part13 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1664 128 = 31714905298274074981059212160 := by decide +kernel
-private theorem largest_checked_2339_1_part14 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1792 128 = 27216825770283683428525527936 := by decide +kernel
-private theorem largest_checked_2339_1_part15 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1920 128 = 22865801356588114968695567232 := by decide +kernel
-private theorem largest_checked_2339_1_part16 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2048 128 = 18663506531417052047059653504 := by decide +kernel
-private theorem largest_checked_2339_1_part17 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2176 128 = 14611608214879009249817375616 := by decide +kernel
-private theorem largest_checked_2339_1_part18 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2304 128 = 10711765782433274133446939520 := by decide +kernel
-private theorem largest_checked_2339_1_part19 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2432 128 = 6965631074361848054274519936 := by decide +kernel
-private theorem largest_checked_2339_1_part20 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2560 128 = 3374848405241386998043612032 := by decide +kernel
-private theorem largest_checked_2339_1_part21 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2688 62 = 390490645911208279335715536 := by decide +kernel
-private theorem largest_checked_2339_1_join0 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 0 256 = 199338558856296089810748884736 :=
-  phaseBlock_append largest_checked_2339_1_part0 largest_checked_2339_1_part1 rfl rfl rfl
-private theorem largest_checked_2339_1_join1 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 384 256 = 162944988839593659021469714176 :=
-  phaseBlock_append largest_checked_2339_1_part3 largest_checked_2339_1_part4 rfl rfl rfl
-private theorem largest_checked_2339_1_join2 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 256 384 = 253357916740003847441824275072 :=
-  phaseBlock_append largest_checked_2339_1_part2 largest_checked_2339_1_join1 rfl rfl rfl
-private theorem largest_checked_2339_1_join3 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 0 640 = 452696475596299937252573159808 :=
-  phaseBlock_append largest_checked_2339_1_join0 largest_checked_2339_1_join2 rfl rfl rfl
-private theorem largest_checked_2339_1_join4 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 768 256 = 128873573721035876284689565440 :=
-  phaseBlock_append largest_checked_2339_1_part6 largest_checked_2339_1_part7 rfl rfl rfl
-private theorem largest_checked_2339_1_join5 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 640 384 = 201663662088522290979644537472 :=
-  phaseBlock_append largest_checked_2339_1_part5 largest_checked_2339_1_join4 rfl rfl rfl
-private theorem largest_checked_2339_1_join6 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1152 256 = 97218636458909750107027277568 :=
-  phaseBlock_append largest_checked_2339_1_part9 largest_checked_2339_1_part10 rfl rfl rfl
-private theorem largest_checked_2339_1_join7 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1024 384 = 153570629531572948973059709568 :=
-  phaseBlock_append largest_checked_2339_1_part8 largest_checked_2339_1_join6 rfl rfl rfl
-private theorem largest_checked_2339_1_join8 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 640 768 = 355234291620095239952704247040 :=
-  phaseBlock_append largest_checked_2339_1_join5 largest_checked_2339_1_join7 rfl rfl rfl
-private theorem largest_checked_2339_1_join9 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 0 1408 = 807930767216395177205277406848 :=
-  phaseBlock_append largest_checked_2339_1_join3 largest_checked_2339_1_join8 rfl rfl rfl
-private theorem largest_checked_2339_1_join10 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1408 256 = 77503851875519611800352884480 :=
-  phaseBlock_append largest_checked_2339_1_part11 largest_checked_2339_1_part12 rfl rfl rfl
-private theorem largest_checked_2339_1_join11 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1792 256 = 50082627126871798397221095168 :=
-  phaseBlock_append largest_checked_2339_1_part14 largest_checked_2339_1_part15 rfl rfl rfl
-private theorem largest_checked_2339_1_join12 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1664 384 = 81797532425145873378280307328 :=
-  phaseBlock_append largest_checked_2339_1_part13 largest_checked_2339_1_join11 rfl rfl rfl
-private theorem largest_checked_2339_1_join13 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1408 640 = 159301384300665485178633191808 :=
-  phaseBlock_append largest_checked_2339_1_join10 largest_checked_2339_1_join12 rfl rfl rfl
-private theorem largest_checked_2339_1_join14 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2176 256 = 25323373997312283383264315136 :=
-  phaseBlock_append largest_checked_2339_1_part17 largest_checked_2339_1_part18 rfl rfl rfl
-private theorem largest_checked_2339_1_join15 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2048 384 = 43986880528729335430323968640 :=
-  phaseBlock_append largest_checked_2339_1_part16 largest_checked_2339_1_join14 rfl rfl rfl
-private theorem largest_checked_2339_1_join16 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2560 190 = 3765339051152595277379327568 :=
-  phaseBlock_append largest_checked_2339_1_part20 largest_checked_2339_1_part21 rfl rfl rfl
-private theorem largest_checked_2339_1_join17 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2432 318 = 10730970125514443331653847504 :=
-  phaseBlock_append largest_checked_2339_1_part19 largest_checked_2339_1_join16 rfl rfl rfl
-private theorem largest_checked_2339_1_join18 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 2048 702 = 54717850654243778761977816144 :=
-  phaseBlock_append largest_checked_2339_1_join15 largest_checked_2339_1_join17 rfl rfl rfl
-private theorem largest_checked_2339_1_join19 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 1408 1342 = 214019234954909263940611007952 :=
-  phaseBlock_append largest_checked_2339_1_join13 largest_checked_2339_1_join18 rfl rfl rfl
-private theorem largest_checked_2339_1_join20 :
-    phaseBlock (fastLayer largestBank.shape 179827 2339 103 1 1 1 1) 0 2750 = 1021950002171304441145888414800 :=
-  phaseBlock_append largest_checked_2339_1_join9 largest_checked_2339_1_join19 rfl rfl rfl
+private theorem largest_checked_2359_1_part0 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 0 128 = 103118708015766234236559727072 := by decide +kernel
+private theorem largest_checked_2359_1_part1 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 128 128 = 96844488903377610339670026720 := by decide +kernel
+private theorem largest_checked_2359_1_part2 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 256 128 = 90695343119738550672438147552 := by decide +kernel
+private theorem largest_checked_2359_1_part3 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 384 128 = 84673045936659092351328881120 := by decide +kernel
+private theorem largest_checked_2359_1_part4 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 512 128 = 78779364951585884998460496352 := by decide +kernel
+private theorem largest_checked_2359_1_part5 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 640 128 = 73016060097056539385129675232 := by decide +kernel
+private theorem largest_checked_2359_1_part6 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 768 128 = 67384883650153976075336448480 := by decide +kernel
+private theorem largest_checked_2359_1_part7 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 896 128 = 61887580241960774069309131232 := by decide +kernel
+private theorem largest_checked_2359_1_part8 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1024 128 = 56525886867013519447029258720 := by decide +kernel
+private theorem largest_checked_2359_1_part9 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1152 128 = 51301532892757154011756521952 := by decide +kernel
+private theorem largest_checked_2359_1_part10 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1280 128 = 46216240068999323933553703392 := by decide +kernel
+private theorem largest_checked_2359_1_part11 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1408 128 = 41271722537364728392811612640 := by decide +kernel
+private theorem largest_checked_2359_1_part12 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1536 128 = 36469686840749468223774022112 := by decide +kernel
+private theorem largest_checked_2359_1_part13 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1664 128 = 31811831932775394558062602720 := by decide +kernel
+private theorem largest_checked_2359_1_part14 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1792 128 = 27299849187244457468201859552 := by decide +kernel
+private theorem largest_checked_2359_1_part15 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1920 128 = 22935422407593054611144067552 := by decide +kernel
+private theorem largest_checked_2359_1_part16 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2048 128 = 18720227836346379871794207200 := by decide +kernel
+private theorem largest_checked_2359_1_part17 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2176 128 = 14655934164572772006534900192 := by decide +kernel
+private theorem largest_checked_2359_1_part18 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2304 128 = 10744202541338063286751345120 := by decide +kernel
+private theorem largest_checked_2359_1_part19 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2432 128 = 6986686583159928142356253152 := by decide +kernel
+private theorem largest_checked_2359_1_part20 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2560 128 = 3385032383462231805314783712 := by decide +kernel
+private theorem largest_checked_2359_1_part21 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2688 62 = 391667436727647411779906574 := by decide +kernel
+private theorem largest_checked_2359_1_join0 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 0 256 = 199963196919143844576229753792 :=
+  phaseBlock_append largest_checked_2359_1_part0 largest_checked_2359_1_part1 rfl rfl rfl
+private theorem largest_checked_2359_1_join1 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 384 256 = 163452410888244977349789377472 :=
+  phaseBlock_append largest_checked_2359_1_part3 largest_checked_2359_1_part4 rfl rfl rfl
+private theorem largest_checked_2359_1_join2 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 256 384 = 254147754007983528022227525024 :=
+  phaseBlock_append largest_checked_2359_1_part2 largest_checked_2359_1_join1 rfl rfl rfl
+private theorem largest_checked_2359_1_join3 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 0 640 = 454110950927127372598457278816 :=
+  phaseBlock_append largest_checked_2359_1_join0 largest_checked_2359_1_join2 rfl rfl rfl
+private theorem largest_checked_2359_1_join4 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 768 256 = 129272463892114750144645579712 :=
+  phaseBlock_append largest_checked_2359_1_part6 largest_checked_2359_1_part7 rfl rfl rfl
+private theorem largest_checked_2359_1_join5 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 640 384 = 202288523989171289529775254944 :=
+  phaseBlock_append largest_checked_2359_1_part5 largest_checked_2359_1_join4 rfl rfl rfl
+private theorem largest_checked_2359_1_join6 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1152 256 = 97517772961756477945310225344 :=
+  phaseBlock_append largest_checked_2359_1_part9 largest_checked_2359_1_part10 rfl rfl rfl
+private theorem largest_checked_2359_1_join7 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1024 384 = 154043659828769997392339484064 :=
+  phaseBlock_append largest_checked_2359_1_part8 largest_checked_2359_1_join6 rfl rfl rfl
+private theorem largest_checked_2359_1_join8 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 640 768 = 356332183817941286922114739008 :=
+  phaseBlock_append largest_checked_2359_1_join5 largest_checked_2359_1_join7 rfl rfl rfl
+private theorem largest_checked_2359_1_join9 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 0 1408 = 810443134745068659520572017824 :=
+  phaseBlock_append largest_checked_2359_1_join3 largest_checked_2359_1_join8 rfl rfl rfl
+private theorem largest_checked_2359_1_join10 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1408 256 = 77741409378114196616585634752 :=
+  phaseBlock_append largest_checked_2359_1_part11 largest_checked_2359_1_part12 rfl rfl rfl
+private theorem largest_checked_2359_1_join11 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1792 256 = 50235271594837512079345927104 :=
+  phaseBlock_append largest_checked_2359_1_part14 largest_checked_2359_1_part15 rfl rfl rfl
+private theorem largest_checked_2359_1_join12 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1664 384 = 82047103527612906637408529824 :=
+  phaseBlock_append largest_checked_2359_1_part13 largest_checked_2359_1_join11 rfl rfl rfl
+private theorem largest_checked_2359_1_join13 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1408 640 = 159788512905727103253994164576 :=
+  phaseBlock_append largest_checked_2359_1_join10 largest_checked_2359_1_join12 rfl rfl rfl
+private theorem largest_checked_2359_1_join14 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2176 256 = 25400136705910835293286245312 :=
+  phaseBlock_append largest_checked_2359_1_part17 largest_checked_2359_1_part18 rfl rfl rfl
+private theorem largest_checked_2359_1_join15 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2048 384 = 44120364542257215165080452512 :=
+  phaseBlock_append largest_checked_2359_1_part16 largest_checked_2359_1_join14 rfl rfl rfl
+private theorem largest_checked_2359_1_join16 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2560 190 = 3776699820189879217094690286 :=
+  phaseBlock_append largest_checked_2359_1_part20 largest_checked_2359_1_part21 rfl rfl rfl
+private theorem largest_checked_2359_1_join17 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2432 318 = 10763386403349807359450943438 :=
+  phaseBlock_append largest_checked_2359_1_part19 largest_checked_2359_1_join16 rfl rfl rfl
+private theorem largest_checked_2359_1_join18 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 2048 702 = 54883750945607022524531395950 :=
+  phaseBlock_append largest_checked_2359_1_join15 largest_checked_2359_1_join17 rfl rfl rfl
+private theorem largest_checked_2359_1_join19 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 1408 1342 = 214672263851334125778525560526 :=
+  phaseBlock_append largest_checked_2359_1_join13 largest_checked_2359_1_join18 rfl rfl rfl
+private theorem largest_checked_2359_1_join20 :
+    phaseBlock (fastLayer largestBank.shape 179818 2359 103 1 1 1 1) 0 2750 = 1025115398596402785299097578350 :=
+  phaseBlock_append largest_checked_2359_1_join9 largest_checked_2359_1_join19 rfl rfl rfl
 
-private theorem largest_checked_2339_1 : fastPhase largestBank.shape 179827 2339 103 1 1 1 1 = 1021950002171304441145888414800 :=
-  phase_of_block (n := 2750) (by decide +kernel) largest_checked_2339_1_join20
+private theorem largest_checked_2359_1 : fastPhase largestBank.shape 179818 2359 103 1 1 1 1 = 1025115398596402785299097578350 :=
+  phase_of_block (n := 2750) (by decide +kernel) largest_checked_2359_1_join20
 
-private theorem largest_checked_2340_0_part0 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 0 128 = 102845877173179163587775643200 := by decide +kernel
-private theorem largest_checked_2340_0_part1 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 128 128 = 96590891366730677729095646784 := by decide +kernel
-private theorem largest_checked_2340_0_part2 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 256 128 = 90460492406356687174498827840 := by decide +kernel
-private theorem largest_checked_2340_0_part3 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 384 128 = 84456453681050246547318013504 := by decide +kernel
-private theorem largest_checked_2340_0_part4 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 512 128 = 78580540903229878017608138304 := by decide +kernel
-private theorem largest_checked_2340_0_part5 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 640 128 = 72834512118210632522413375040 := by decide +kernel
-private theorem largest_checked_2340_0_part6 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 768 128 = 67220117713675150986034265664 := by decide +kernel
-private theorem largest_checked_2340_0_part7 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 896 128 = 61739100429144725540294852160 := by decide +kernel
-private theorem largest_checked_2340_0_part8 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1024 128 = 56393195365450360744809807424 := by decide +kernel
-private theorem largest_checked_2340_0_part9 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1152 128 = 51184129994203834807251566144 := by decide +kernel
-private theorem largest_checked_2340_0_part10 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1280 128 = 46113624167268760803617455680 := by decide +kernel
-private theorem largest_checked_2340_0_part11 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1408 128 = 41183390126231647898496826944 := by decide +kernel
-private theorem largest_checked_2340_0_part12 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1536 128 = 36395132511872962565338185280 := by decide +kernel
-private theorem largest_checked_2340_0_part13 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1664 128 = 31750548373638189806716321344 := by decide +kernel
-private theorem largest_checked_2340_0_part14 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1792 128 = 27251327179108894374599441984 := by decide +kernel
-private theorem largest_checked_2340_0_part15 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1920 128 = 22899150823473781990616301120 := by decide +kernel
-private theorem largest_checked_2340_0_part16 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2048 128 = 18695693638999760566323330624 := by decide +kernel
-private theorem largest_checked_2340_0_part17 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2176 128 = 14642622404503001423471771200 := by decide +kernel
-private theorem largest_checked_2340_0_part18 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2304 128 = 10741596354820000514274803264 := by decide +kernel
-private theorem largest_checked_2340_0_part19 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2432 128 = 6994267190278639641674677824 := by decide +kernel
-private theorem largest_checked_2340_0_part20 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2560 128 = 3402279086169247679609847360 := by decide +kernel
-private theorem largest_checked_2340_0_part21 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2688 62 = 403340727273849479019760512 := by decide +kernel
-private theorem largest_checked_2340_0_join0 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 0 256 = 199436768539909841316871289984 :=
-  phaseBlock_append largest_checked_2340_0_part0 largest_checked_2340_0_part1 rfl rfl rfl
-private theorem largest_checked_2340_0_join1 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 384 256 = 163036994584280124564926151808 :=
-  phaseBlock_append largest_checked_2340_0_part3 largest_checked_2340_0_part4 rfl rfl rfl
-private theorem largest_checked_2340_0_join2 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 256 384 = 253497486990636811739424979648 :=
-  phaseBlock_append largest_checked_2340_0_part2 largest_checked_2340_0_join1 rfl rfl rfl
-private theorem largest_checked_2340_0_join3 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 0 640 = 452934255530546653056296269632 :=
-  phaseBlock_append largest_checked_2340_0_join0 largest_checked_2340_0_join2 rfl rfl rfl
-private theorem largest_checked_2340_0_join4 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 768 256 = 128959218142819876526329117824 :=
-  phaseBlock_append largest_checked_2340_0_part6 largest_checked_2340_0_part7 rfl rfl rfl
-private theorem largest_checked_2340_0_join5 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 640 384 = 201793730261030509048742492864 :=
-  phaseBlock_append largest_checked_2340_0_part5 largest_checked_2340_0_join4 rfl rfl rfl
-private theorem largest_checked_2340_0_join6 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1152 256 = 97297754161472595610869021824 :=
-  phaseBlock_append largest_checked_2340_0_part9 largest_checked_2340_0_part10 rfl rfl rfl
-private theorem largest_checked_2340_0_join7 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1024 384 = 153690949526922956355678829248 :=
-  phaseBlock_append largest_checked_2340_0_part8 largest_checked_2340_0_join6 rfl rfl rfl
-private theorem largest_checked_2340_0_join8 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 640 768 = 355484679787953465404421322112 :=
-  phaseBlock_append largest_checked_2340_0_join5 largest_checked_2340_0_join7 rfl rfl rfl
-private theorem largest_checked_2340_0_join9 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 0 1408 = 808418935318500118460717591744 :=
-  phaseBlock_append largest_checked_2340_0_join3 largest_checked_2340_0_join8 rfl rfl rfl
-private theorem largest_checked_2340_0_join10 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1408 256 = 77578522638104610463835012224 :=
-  phaseBlock_append largest_checked_2340_0_part11 largest_checked_2340_0_part12 rfl rfl rfl
-private theorem largest_checked_2340_0_join11 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1792 256 = 50150478002582676365215743104 :=
-  phaseBlock_append largest_checked_2340_0_part14 largest_checked_2340_0_part15 rfl rfl rfl
-private theorem largest_checked_2340_0_join12 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1664 384 = 81901026376220866171932064448 :=
-  phaseBlock_append largest_checked_2340_0_part13 largest_checked_2340_0_join11 rfl rfl rfl
-private theorem largest_checked_2340_0_join13 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1408 640 = 159479549014325476635767076672 :=
-  phaseBlock_append largest_checked_2340_0_join10 largest_checked_2340_0_join12 rfl rfl rfl
-private theorem largest_checked_2340_0_join14 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2176 256 = 25384218759323001937746574464 :=
-  phaseBlock_append largest_checked_2340_0_part17 largest_checked_2340_0_part18 rfl rfl rfl
-private theorem largest_checked_2340_0_join15 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2048 384 = 44079912398322762504069905088 :=
-  phaseBlock_append largest_checked_2340_0_part16 largest_checked_2340_0_join14 rfl rfl rfl
-private theorem largest_checked_2340_0_join16 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2560 190 = 3805619813443097158629607872 :=
-  phaseBlock_append largest_checked_2340_0_part20 largest_checked_2340_0_part21 rfl rfl rfl
-private theorem largest_checked_2340_0_join17 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2432 318 = 10799887003721736800304285696 :=
-  phaseBlock_append largest_checked_2340_0_part19 largest_checked_2340_0_join16 rfl rfl rfl
-private theorem largest_checked_2340_0_join18 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 2048 702 = 54879799402044499304374190784 :=
-  phaseBlock_append largest_checked_2340_0_join15 largest_checked_2340_0_join17 rfl rfl rfl
-private theorem largest_checked_2340_0_join19 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 1408 1342 = 214359348416369975940141267456 :=
-  phaseBlock_append largest_checked_2340_0_join13 largest_checked_2340_0_join18 rfl rfl rfl
-private theorem largest_checked_2340_0_join20 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 0) 0 2750 = 1022778283734870094400858859200 :=
-  phaseBlock_append largest_checked_2340_0_join9 largest_checked_2340_0_join19 rfl rfl rfl
+private theorem largest_checked_2360_0_part0 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 0 128 = 103168478855255663956096737504 := by decide +kernel
+private theorem largest_checked_2360_0_part1 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 128 128 = 96893234898709183738854879456 := by decide +kernel
+private theorem largest_checked_2360_0_part2 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 256 128 = 90743055895826708966149390560 := by decide +kernel
+private theorem largest_checked_2360_0_part3 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 384 128 = 84719716967040165383947964640 := by decide +kernel
+private theorem largest_checked_2360_0_part4 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 512 128 = 78824985559101208128762781920 := by decide +kernel
+private theorem largest_checked_2360_0_part5 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 640 128 = 73060621454534690761873223904 := by decide +kernel
+private theorem largest_checked_2360_0_part6 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 768 128 = 67428376781092134303548588256 := by decide +kernel
+private theorem largest_checked_2360_0_part7 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 896 128 = 61929996021205196267270803680 := by decide +kernel
+private theorem largest_checked_2360_0_part8 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1024 128 = 56567216021439139693957144800 := by decide +kernel
+private theorem largest_checked_2360_0_part9 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1152 128 = 51341766001946302186182947040 := by decide +kernel
+private theorem largest_checked_2360_0_part10 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1280 128 = 46255367565919564942404321504 := by decide +kernel
+private theorem largest_checked_2360_0_part11 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1408 128 = 41309734709045821791180869856 := by decide +kernel
+private theorem largest_checked_2360_0_part12 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1536 128 = 36506573828959448225398399200 := by decide +kernel
+private theorem largest_checked_2360_0_part13 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1664 128 = 31847583734695770436491636960 := by decide +kernel
+private theorem largest_checked_2360_0_part14 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1792 128 = 27334455656144534348666945760 := by decide +kernel
+private theorem largest_checked_2360_0_part15 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1920 128 = 22968873253503374653125038304 := by decide +kernel
+private theorem largest_checked_2360_0_part16 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2048 128 = 18752512626731283842283692256 := by decide +kernel
+private theorem largest_checked_2360_0_part17 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2176 128 = 14687042325002081244000465120 := by decide +kernel
+private theorem largest_checked_2360_0_part18 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2304 128 = 10774123356157882055795409120 := by decide +kernel
+private theorem largest_checked_2360_0_part19 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2432 128 = 7015409196162566379073786080 := by decide +kernel
+private theorem largest_checked_2360_0_part20 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2560 128 = 3412545798555248253348782304 := by decide +kernel
+private theorem largest_checked_2360_0_part21 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2688 62 = 404556234305907921289009776 := by decide +kernel
+private theorem largest_checked_2360_0_join0 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 0 256 = 200061713753964847694951616960 :=
+  phaseBlock_append largest_checked_2360_0_part0 largest_checked_2360_0_part1 rfl rfl rfl
+private theorem largest_checked_2360_0_join1 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 384 256 = 163544702526141373512710746560 :=
+  phaseBlock_append largest_checked_2360_0_part3 largest_checked_2360_0_part4 rfl rfl rfl
+private theorem largest_checked_2360_0_join2 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 256 384 = 254287758421968082478860137120 :=
+  phaseBlock_append largest_checked_2360_0_part2 largest_checked_2360_0_join1 rfl rfl rfl
+private theorem largest_checked_2360_0_join3 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 0 640 = 454349472175932930173811754080 :=
+  phaseBlock_append largest_checked_2360_0_join0 largest_checked_2360_0_join2 rfl rfl rfl
+private theorem largest_checked_2360_0_join4 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 768 256 = 129358372802297330570819391936 :=
+  phaseBlock_append largest_checked_2360_0_part6 largest_checked_2360_0_part7 rfl rfl rfl
+private theorem largest_checked_2360_0_join5 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 640 384 = 202418994256832021332692615840 :=
+  phaseBlock_append largest_checked_2360_0_part5 largest_checked_2360_0_join4 rfl rfl rfl
+private theorem largest_checked_2360_0_join6 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1152 256 = 97597133567865867128587268544 :=
+  phaseBlock_append largest_checked_2360_0_part9 largest_checked_2360_0_part10 rfl rfl rfl
+private theorem largest_checked_2360_0_join7 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1024 384 = 154164349589305006822544413344 :=
+  phaseBlock_append largest_checked_2360_0_part8 largest_checked_2360_0_join6 rfl rfl rfl
+private theorem largest_checked_2360_0_join8 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 640 768 = 356583343846137028155237029184 :=
+  phaseBlock_append largest_checked_2360_0_join5 largest_checked_2360_0_join7 rfl rfl rfl
+private theorem largest_checked_2360_0_join9 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 0 1408 = 810932816022069958329048783264 :=
+  phaseBlock_append largest_checked_2360_0_join3 largest_checked_2360_0_join8 rfl rfl rfl
+private theorem largest_checked_2360_0_join10 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1408 256 = 77816308538005270016579269056 :=
+  phaseBlock_append largest_checked_2360_0_part11 largest_checked_2360_0_part12 rfl rfl rfl
+private theorem largest_checked_2360_0_join11 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1792 256 = 50303328909647909001791984064 :=
+  phaseBlock_append largest_checked_2360_0_part14 largest_checked_2360_0_part15 rfl rfl rfl
+private theorem largest_checked_2360_0_join12 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1664 384 = 82150912644343679438283621024 :=
+  phaseBlock_append largest_checked_2360_0_part13 largest_checked_2360_0_join11 rfl rfl rfl
+private theorem largest_checked_2360_0_join13 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1408 640 = 159967221182348949454862890080 :=
+  phaseBlock_append largest_checked_2360_0_join10 largest_checked_2360_0_join12 rfl rfl rfl
+private theorem largest_checked_2360_0_join14 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2176 256 = 25461165681159963299795874240 :=
+  phaseBlock_append largest_checked_2360_0_part17 largest_checked_2360_0_part18 rfl rfl rfl
+private theorem largest_checked_2360_0_join15 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2048 384 = 44213678307891247142079566496 :=
+  phaseBlock_append largest_checked_2360_0_part16 largest_checked_2360_0_join14 rfl rfl rfl
+private theorem largest_checked_2360_0_join16 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2560 190 = 3817102032861156174637792080 :=
+  phaseBlock_append largest_checked_2360_0_part20 largest_checked_2360_0_part21 rfl rfl rfl
+private theorem largest_checked_2360_0_join17 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2432 318 = 10832511229023722553711578160 :=
+  phaseBlock_append largest_checked_2360_0_part19 largest_checked_2360_0_join16 rfl rfl rfl
+private theorem largest_checked_2360_0_join18 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 2048 702 = 55046189536914969695791144656 :=
+  phaseBlock_append largest_checked_2360_0_join15 largest_checked_2360_0_join17 rfl rfl rfl
+private theorem largest_checked_2360_0_join19 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 1408 1342 = 215013410719263919150654034736 :=
+  phaseBlock_append largest_checked_2360_0_join13 largest_checked_2360_0_join18 rfl rfl rfl
+private theorem largest_checked_2360_0_join20 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 0) 0 2750 = 1025946226741333877479702818000 :=
+  phaseBlock_append largest_checked_2360_0_join9 largest_checked_2360_0_join19 rfl rfl rfl
 
-private theorem largest_checked_2340_0 : fastPhase largestBank.shape 179827 2340 103 1 1 1 0 = 1022778283734870094400858859200 :=
-  phase_of_block (n := 2750) (by decide +kernel) largest_checked_2340_0_join20
+private theorem largest_checked_2360_0 : fastPhase largestBank.shape 179818 2360 103 1 1 1 0 = 1025946226741333877479702818000 :=
+  phase_of_block (n := 2750) (by decide +kernel) largest_checked_2360_0_join20
 
-private theorem largest_checked_2340_1_part0 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 0 128 = 102797185260036713460612517760 := by decide +kernel
-private theorem largest_checked_2340_1_part1 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 128 128 = 96543123441708487292047388544 := by decide +kernel
-private theorem largest_checked_2340_1_part2 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 256 128 = 90413663505532733054999662464 := by decide +kernel
-private theorem largest_checked_2340_1_part3 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 384 128 = 84410578777385736469428645760 := by decide +kernel
-private theorem largest_checked_2340_1_part4 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 512 128 = 78535634906646137932159209344 := by decide +kernel
-private theorem largest_checked_2340_1_part5 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 640 128 = 72790589875665993737148919680 := by decide +kernel
-private theorem largest_checked_2340_1_part6 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 768 128 = 67177194009241837295755169664 := by decide +kernel
-private theorem largest_checked_2340_1_part7 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 896 128 = 61697189984085740357002309504 := by decide +kernel
-private theorem largest_checked_2340_1_part8 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1024 128 = 56352312838296374227848777600 := by decide +kernel
-private theorem largest_checked_2340_1_part9 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1152 128 = 51144289980830070993454231424 := by decide +kernel
-private theorem largest_checked_2340_1_part10 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1280 128 = 46074841200971884737446678400 := by decide +kernel
-private theorem largest_checked_2340_1_part11 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1408 128 = 41145678677806652762189606784 := by decide +kernel
-private theorem largest_checked_2340_1_part12 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1536 128 = 36358506989690056809049116544 := by decide +kernel
-private theorem largest_checked_2340_1_part13 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1664 128 = 31715023123719684278661050240 := by decide +kernel
-private theorem largest_checked_2340_1_part14 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1792 128 = 27216916485206089451198123904 := by decide +kernel
-private theorem largest_checked_2340_1_part15 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1920 128 = 22865868907143854706637057920 := by decide +kernel
-private theorem largest_checked_2340_1_part16 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2048 128 = 18663554659682651745025707904 := by decide +kernel
-private theorem largest_checked_2340_1_part17 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2176 128 = 14611640459598302806750195584 := by decide +kernel
-private theorem largest_checked_2340_1_part18 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2304 128 = 10711785479763841892802039680 := by decide +kernel
-private theorem largest_checked_2340_1_part19 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2432 128 = 6965641358620575985045286784 := by decide +kernel
-private theorem largest_checked_2340_1_part20 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2560 128 = 3374852209649146266483642240 := by decide +kernel
-private theorem largest_checked_2340_1_part21 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2688 62 = 390490980450976784807255472 := by decide +kernel
-private theorem largest_checked_2340_1_join0 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 0 256 = 199340308701745200752659906304 :=
-  phaseBlock_append largest_checked_2340_1_part0 largest_checked_2340_1_part1 rfl rfl rfl
-private theorem largest_checked_2340_1_join1 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 384 256 = 162946213684031874401587855104 :=
-  phaseBlock_append largest_checked_2340_1_part3 largest_checked_2340_1_part4 rfl rfl rfl
-private theorem largest_checked_2340_1_join2 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 256 384 = 253359877189564607456587517568 :=
-  phaseBlock_append largest_checked_2340_1_part2 largest_checked_2340_1_join1 rfl rfl rfl
-private theorem largest_checked_2340_1_join3 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 0 640 = 452700185891309808209247423872 :=
-  phaseBlock_append largest_checked_2340_1_join0 largest_checked_2340_1_join2 rfl rfl rfl
-private theorem largest_checked_2340_1_join4 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 768 256 = 128874383993327577652757479168 :=
-  phaseBlock_append largest_checked_2340_1_part6 largest_checked_2340_1_part7 rfl rfl rfl
-private theorem largest_checked_2340_1_join5 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 640 384 = 201664973868993571389906398848 :=
-  phaseBlock_append largest_checked_2340_1_part5 largest_checked_2340_1_join4 rfl rfl rfl
-private theorem largest_checked_2340_1_join6 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1152 256 = 97219131181801955730900909824 :=
-  phaseBlock_append largest_checked_2340_1_part9 largest_checked_2340_1_part10 rfl rfl rfl
-private theorem largest_checked_2340_1_join7 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1024 384 = 153571444020098329958749687424 :=
-  phaseBlock_append largest_checked_2340_1_part8 largest_checked_2340_1_join6 rfl rfl rfl
-private theorem largest_checked_2340_1_join8 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 640 768 = 355236417889091901348656086272 :=
-  phaseBlock_append largest_checked_2340_1_join5 largest_checked_2340_1_join7 rfl rfl rfl
-private theorem largest_checked_2340_1_join9 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 0 1408 = 807936603780401709557903510144 :=
-  phaseBlock_append largest_checked_2340_1_join3 largest_checked_2340_1_join8 rfl rfl rfl
-private theorem largest_checked_2340_1_join10 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1408 256 = 77504185667496709571238723328 :=
-  phaseBlock_append largest_checked_2340_1_part11 largest_checked_2340_1_part12 rfl rfl rfl
-private theorem largest_checked_2340_1_join11 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1792 256 = 50082785392349944157835181824 :=
-  phaseBlock_append largest_checked_2340_1_part14 largest_checked_2340_1_part15 rfl rfl rfl
-private theorem largest_checked_2340_1_join12 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1664 384 = 81797808516069628436496232064 :=
-  phaseBlock_append largest_checked_2340_1_part13 largest_checked_2340_1_join11 rfl rfl rfl
-private theorem largest_checked_2340_1_join13 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1408 640 = 159301994183566338007734955392 :=
-  phaseBlock_append largest_checked_2340_1_join10 largest_checked_2340_1_join12 rfl rfl rfl
-private theorem largest_checked_2340_1_join14 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2176 256 = 25323425939362144699552235264 :=
-  phaseBlock_append largest_checked_2340_1_part17 largest_checked_2340_1_part18 rfl rfl rfl
-private theorem largest_checked_2340_1_join15 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2048 384 = 43986980599044796444577943168 :=
-  phaseBlock_append largest_checked_2340_1_part16 largest_checked_2340_1_join14 rfl rfl rfl
-private theorem largest_checked_2340_1_join16 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2560 190 = 3765343190100123051290897712 :=
-  phaseBlock_append largest_checked_2340_1_part20 largest_checked_2340_1_part21 rfl rfl rfl
-private theorem largest_checked_2340_1_join17 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2432 318 = 10730984548720699036336184496 :=
-  phaseBlock_append largest_checked_2340_1_part19 largest_checked_2340_1_join16 rfl rfl rfl
-private theorem largest_checked_2340_1_join18 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 2048 702 = 54717965147765495480914127664 :=
-  phaseBlock_append largest_checked_2340_1_join15 largest_checked_2340_1_join17 rfl rfl rfl
-private theorem largest_checked_2340_1_join19 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 1408 1342 = 214019959331331833488649083056 :=
-  phaseBlock_append largest_checked_2340_1_join13 largest_checked_2340_1_join18 rfl rfl rfl
-private theorem largest_checked_2340_1_join20 :
-    phaseBlock (fastLayer largestBank.shape 179827 2340 103 1 1 1 1) 0 2750 = 1021956563111733543046552593200 :=
-  phaseBlock_append largest_checked_2340_1_join9 largest_checked_2340_1_join19 rfl rfl rfl
+private theorem largest_checked_2360_1_part0 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 0 128 = 103119634433534514960580038240 := by decide +kernel
+private theorem largest_checked_2360_1_part1 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 128 128 = 96845317700315912008409931360 := by decide +kernel
+private theorem largest_checked_2360_1_part2 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 256 128 = 90696080983641333177076575840 := by decide +kernel
+private theorem largest_checked_2360_1_part3 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 384 128 = 84673699340817339969902673504 := by decide +kernel
+private theorem largest_checked_2360_1_part4 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 512 128 = 78779940155546997710957022816 := by decide +kernel
+private theorem largest_checked_2360_1_part5 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 640 128 = 73016563147383344579277233760 := by decide +kernel
+private theorem largest_checked_2360_1_part6 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 768 128 = 67385320381182860643092442720 := by decide +kernel
+private theorem largest_checked_2360_1_part7 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 896 128 = 61887956276558936894046027360 := by decide +kernel
+private theorem largest_checked_2360_1_part8 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1024 128 = 56526207617335344281418321504 := by decide +kernel
+private theorem largest_checked_2360_1_part9 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1152 128 = 51301803560999702746349330016 := by decide +kernel
+private theorem largest_checked_2360_1_part10 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1280 128 = 46216465648156950256061443680 := by decide +kernel
+private theorem largest_checked_2360_1_part11 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1408 128 = 41271907811982811838082154080 := by decide +kernel
+private theorem largest_checked_2360_1_part12 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1536 128 = 36469836387677268614466768480 := by decide +kernel
+private theorem largest_checked_2360_1_part13 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1664 128 = 31811950121918026836021124704 := by decide +kernel
+private theorem largest_checked_2360_1_part14 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1792 128 = 27299940182313986916524306016 := by decide +kernel
+private theorem largest_checked_2360_1_part15 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1920 128 = 22935490166858712466951356000 := by decide +kernel
+private theorem largest_checked_2360_1_part16 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2048 128 = 18720276113383899329695993440 := by decide +kernel
+private theorem largest_checked_2360_1_part17 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2176 128 = 14655966509012844612793327200 := by decide +kernel
+private theorem largest_checked_2360_1_part18 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2304 128 = 10744222299613915724142571104 := by decide +kernel
+private theorem largest_checked_2360_1_part19 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2432 128 = 6986696899254019405729758816 := by decide +kernel
+private theorem largest_checked_2360_1_part20 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2560 128 = 3385036199652070767850458720 := by decide +kernel
+private theorem largest_checked_2360_1_part21 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2688 62 = 391667772303850436340472890 := by decide +kernel
+private theorem largest_checked_2360_1_join0 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 0 256 = 199964952133850426968989969600 :=
+  phaseBlock_append largest_checked_2360_1_part0 largest_checked_2360_1_part1 rfl rfl rfl
+private theorem largest_checked_2360_1_join1 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 384 256 = 163453639496364337680859696320 :=
+  phaseBlock_append largest_checked_2360_1_part3 largest_checked_2360_1_part4 rfl rfl rfl
+private theorem largest_checked_2360_1_join2 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 256 384 = 254149720480005670857936272160 :=
+  phaseBlock_append largest_checked_2360_1_part2 largest_checked_2360_1_join1 rfl rfl rfl
+private theorem largest_checked_2360_1_join3 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 0 640 = 454114672613856097826926241760 :=
+  phaseBlock_append largest_checked_2360_1_join0 largest_checked_2360_1_join2 rfl rfl rfl
+private theorem largest_checked_2360_1_join4 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 768 256 = 129273276657741797537138470080 :=
+  phaseBlock_append largest_checked_2360_1_part6 largest_checked_2360_1_part7 rfl rfl rfl
+private theorem largest_checked_2360_1_join5 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 640 384 = 202289839805125142116415703840 :=
+  phaseBlock_append largest_checked_2360_1_part5 largest_checked_2360_1_join4 rfl rfl rfl
+private theorem largest_checked_2360_1_join6 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1152 256 = 97518269209156653002410773696 :=
+  phaseBlock_append largest_checked_2360_1_part9 largest_checked_2360_1_part10 rfl rfl rfl
+private theorem largest_checked_2360_1_join7 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1024 384 = 154044476826491997283829095200 :=
+  phaseBlock_append largest_checked_2360_1_part8 largest_checked_2360_1_join6 rfl rfl rfl
+private theorem largest_checked_2360_1_join8 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 640 768 = 356334316631617139400244799040 :=
+  phaseBlock_append largest_checked_2360_1_join5 largest_checked_2360_1_join7 rfl rfl rfl
+private theorem largest_checked_2360_1_join9 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 0 1408 = 810448989245473237227171040800 :=
+  phaseBlock_append largest_checked_2360_1_join3 largest_checked_2360_1_join8 rfl rfl rfl
+private theorem largest_checked_2360_1_join10 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1408 256 = 77741744199660080452548922560 :=
+  phaseBlock_append largest_checked_2360_1_part11 largest_checked_2360_1_part12 rfl rfl rfl
+private theorem largest_checked_2360_1_join11 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1792 256 = 50235430349172699383475662016 :=
+  phaseBlock_append largest_checked_2360_1_part14 largest_checked_2360_1_part15 rfl rfl rfl
+private theorem largest_checked_2360_1_join12 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1664 384 = 82047380471090726219496786720 :=
+  phaseBlock_append largest_checked_2360_1_part13 largest_checked_2360_1_join11 rfl rfl rfl
+private theorem largest_checked_2360_1_join13 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1408 640 = 159789124670750806672045709280 :=
+  phaseBlock_append largest_checked_2360_1_join10 largest_checked_2360_1_join12 rfl rfl rfl
+private theorem largest_checked_2360_1_join14 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2176 256 = 25400188808626760336935898304 :=
+  phaseBlock_append largest_checked_2360_1_part17 largest_checked_2360_1_part18 rfl rfl rfl
+private theorem largest_checked_2360_1_join15 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2048 384 = 44120464922010659666631891744 :=
+  phaseBlock_append largest_checked_2360_1_part16 largest_checked_2360_1_join14 rfl rfl rfl
+private theorem largest_checked_2360_1_join16 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2560 190 = 3776703971955921204190931610 :=
+  phaseBlock_append largest_checked_2360_1_part20 largest_checked_2360_1_part21 rfl rfl rfl
+private theorem largest_checked_2360_1_join17 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2432 318 = 10763400871209940609920690426 :=
+  phaseBlock_append largest_checked_2360_1_part19 largest_checked_2360_1_join16 rfl rfl rfl
+private theorem largest_checked_2360_1_join18 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 2048 702 = 54883865793220600276552582170 :=
+  phaseBlock_append largest_checked_2360_1_join15 largest_checked_2360_1_join17 rfl rfl rfl
+private theorem largest_checked_2360_1_join19 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 1408 1342 = 214672990463971406948598291450 :=
+  phaseBlock_append largest_checked_2360_1_join13 largest_checked_2360_1_join18 rfl rfl rfl
+private theorem largest_checked_2360_1_join20 :
+    phaseBlock (fastLayer largestBank.shape 179818 2360 103 1 1 1 1) 0 2750 = 1025121979709444644175769332250 :=
+  phaseBlock_append largest_checked_2360_1_join9 largest_checked_2360_1_join19 rfl rfl rfl
 
-private theorem largest_checked_2340_1 : fastPhase largestBank.shape 179827 2340 103 1 1 1 1 = 1021956563111733543046552593200 :=
-  phase_of_block (n := 2750) (by decide +kernel) largest_checked_2340_1_join20
+private theorem largest_checked_2360_1 : fastPhase largestBank.shape 179818 2360 103 1 1 1 1 = 1025121979709444644175769332250 :=
+  phase_of_block (n := 2750) (by decide +kernel) largest_checked_2360_1_join20
 
 theorem largest_checked : Checked largestBank 103 1 1 := by
   refine checked_from_values largestBank 103 1 1
     (P3_7_1.checked largestBank rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_12604_2749)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) largest_checked_2339_0 largest_checked_2339_1 largest_checked_2340_0 largest_checked_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) largest_checked_2359_0 largest_checked_2359_1 largest_checked_2360_0 largest_checked_2360_1 (by decide +kernel) (by decide +kernel)
 
 
 /-- The last stage of the high-jet rectangle, with no numerical premises. -/
 theorem largest_avoids {h : ℕ} {D : K1_14_1.PoleData h} (Crt : K1_14_1.CRTLift D)
-    (word : K1.I → K1_14.L) (lo : 2339≤h) (hi : h≤33561) {G : K1_14.Jet}
+    (word : K1.I → K1_14.L) (lo : 2359≤h) (hi : h≤33579) {G : K1_14.Jet}
     (irr : Irreducible G) (seeded : K1_14_2.UsesSeed G)
     (slope : 1≤G.natDegree) (seed : 1≤K1_14_2_2_2_1.seedDegree G)
     (excess : G.natDegree+1≤K1_14_2_2_2_1.jetDegree G) :

@@ -2,20 +2,16 @@ import Mathlib.RingTheory.DiscreteValuationRing.Basic
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Algebra.BigOperators.Associated
-
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 5100000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionTame
 noncomputable section
 open Matrix Module
 open scoped Matrix BigOperators
-
 variable {A K ι : Type*} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
   [Field K] [Fintype ι] [DecidableEq ι]
-
 private theorem injective_of_one_layer (π : A) (pir : Irreducible π) (M : Matrix ι ι A)
     (one_layer : ∀ w : ι→A, (∀ i,π^2∣(M *ᵥ w) i) → ∀ i,π∣w i) :
     Function.Injective (Matrix.toLin' M) := by
@@ -51,23 +47,17 @@ private theorem injective_of_one_layer (π : A) (pir : Irreducible π) (M : Matr
   simp only [AddValuation.map_mul,AddValuation.map_pow,IsDiscreteValuationRing.addVal_eq_zero_of_unit,
     IsDiscreteValuationRing.addVal_uniformizer pir,nsmul_eq_mul,mul_one,zero_add,ENat.natCast_le_natCast] at c
   omega
-
 private theorem basis_change_unit {A : Type*} [CommRing A]
     (a b : Basis ι A (ι→A)) : IsUnit (LinearMap.toMatrix a b (LinearMap.id (R:=A))) := by
   apply isUnit_iff_exists_inv.mpr
   refine ⟨LinearMap.toMatrix b a LinearMap.id,?_⟩
   rw [←LinearMap.toMatrix_comp b a b,LinearMap.id_comp,LinearMap.toMatrix_id]
-
 omit [DecidableEq ι] in
 private theorem count_zeros [DecidableEq K] (a : ι → K) :
     (∑ i,if a i=0 then (1:ℕ) else 0)=Fintype.card ι-Fintype.card {i // a i≠0} := by
   classical
   rw [Finset.sum_boole,←Fintype.card_subtype]
   simpa only [Nat.cast_id,ne_eq,not_not] using (Fintype.card_subtype_compl (fun i=>a i≠0))
-
-/-- Over a DVR, a matrix whose primitives cannot pair to second order has
-only unit and first-order Smith entries. Its determinant is associated to
-exactly the residue corank power of the uniformizer. -/
 theorem matrix_order_corank (π : A) (pir : Irreducible π) (M : Matrix ι ι A)
     (red : A→+*K) (ker : ∀ x,red x=0 ↔ π∣x)
     (nonunits : ∀ x:A,¬IsUnit x ↔ π∣x)
@@ -159,7 +149,6 @@ theorem matrix_order_corank (π : A) (pir : Irreducible π) (M : Matrix ι ι A)
   have product := Associated.prod Finset.univ _ _ (fun i _=>entries i)
   rw [Finset.prod_pow_eq_pow_sum,count_zeros,←rr] at product
   exact product
-
 #print axioms matrix_order_corank
 end
 end Lower6960.CollisionTame

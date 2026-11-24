@@ -1,5 +1,315 @@
-import ProximityPrize.SubmissionLower.R6960Front6960Charts
-import ProximityPrize.SubmissionLower.R6960Front6960Cases
+import ProximityPrize.SubmissionLower.HighCore82258Pairs
+import ProximityPrize.SubmissionLower.R6960Front6960Rank2
+
+-- merged module R6960Front6960Charts
+section Merged_R6960Front6960Charts
+
+set_option Elab.async false
+set_option autoImplicit false
+
+namespace Front6960_4
+noncomputable section
+open Front6960 MvPolynomial
+open P2_4 (Bank Puncture nodeCut)
+open K1_11 (scalarWeightY scalarWeightYS scalarWeightT scalarWeightTotal scalarImages)
+
+structure Marks (u : Words) (deleted : Finset I) (Γ : Finset K) where
+  mark : ∀ γ ∈ Γ, BadMark u γ
+  survives : ∀ γ (hγ : γ ∈ Γ) i, i ∈ (mark γ hγ).support → i ∉ deleted
+structure Annihilator {u : Words} {deleted : Finset I} {Γ : Finset K}
+    (F : Marks u deleted Γ) (b : Bank) where
+  Q : MvPolynomial (Fin 4) K
+  nonzero : Q ≠ 0
+  degreeY : Q.weightedTotalDegree scalarWeightY ≤ 5
+  degreeS : Q.weightedTotalDegree scalarWeightYS ≤ b.a
+  degreeT : Q.weightedTotalDegree scalarWeightT ≤ b.b
+  degreeTotal : Q.weightedTotalDegree scalarWeightTotal ≤ b.E
+  vanishes : ∀ γ (hγ : γ ∈ Γ),
+    aeval (scalarImages (F.mark γ hγ).decoder γ (γ ^ p)) Q = 0
+structure TaylorChart (u : Words) {deleted : Finset I} (P : Puncture deleted)
+    {Γ : Finset K} (F : Marks u deleted Γ) (b : Bank) (Λ : Finset K) where
+  subset : Λ ⊆ Γ
+  equation : MvPolynomial (Fin 3) Frac
+  equation_ne : equation ≠ 0
+  equation_degree : equation.totalDegree ≤ b.E
+  numerator : Polynomial (MvPolynomial (Fin 3) Frac)
+  numerator_degree : numerator.natDegree ≤ 131071
+  denominator : MvPolynomial (Fin 3) Frac
+  cut_degree : ∀ i, (nodeCut u P numerator denominator i).totalDegree ≤ b.M
+  point : K → Fin 3 → Frac
+  slope : ∀ γ ∈ Λ, point γ 1 = algebraMap K Frac γ
+  on_equation : ∀ γ ∈ Λ, MvPolynomial.eval (point γ) equation = 0
+  regular : ∀ γ ∈ Λ, MvPolynomial.eval (point γ) denominator ≠ 0
+  reconstruction : ∀ γ (hγ : γ ∈ Λ),
+    numerator.map (MvPolynomial.eval (point γ)) =
+      Polynomial.C (MvPolynomial.eval (point γ) denominator) *
+        (F.mark γ (subset hγ)).decoder.map (algebraMap K Frac)
+end
+end Front6960_4
+section
+set_option autoImplicit false
+set_option maxRecDepth 10000
+set_option maxHeartbeats 1800000
+set_option backward.isDefEq.respectTransparency false
+namespace Front6960_4
+noncomputable section
+open Front6960 MvPolynomial
+open P2_4 (Bank Puncture nodeCut)
+open K1_11 (scalarWeightTotal)
+open K1_11_3 (SimpleRoot derivativeChart exists_simple_derivative_at_root)
+open K1_11_3 (exceptions specializeY yView_degree specializeY_eval specializeY_iterate specializeY_derivative)
+open K1_11_3 (centerPoint atCenter atCenter_degree numerator numerator_degree denominator eval_atCenter pderiv_atCenter numerator_eval_degree denominator_degree reconstruct natDegree_le_of_degree_lt_succ derivativeChart_degree)
+theorem assign {u : Words} {deleted : Finset I} {Γ : Finset K}
+    {F : Marks u deleted Γ} {b : Bank} (A : Annihilator F b) :
+    ∃ (exceptional : Finset K) (charts : Fin 5 → Finset K),
+      exceptional.card ≤ b.zeroFee ∧
+      (∀ γ ∈ Γ, γ ∈ exceptional ∨ ∃ j, γ ∈ charts j) ∧
+      ∀ j, ∃ hsub : charts j ⊆ Γ, ∀ γ (hγ : γ ∈ charts j),
+        SimpleRoot (derivativeChart A.Q j) (F.mark γ (hsub hγ)).decoder γ (γ ^ p) := by
+  classical
+  obtain ⟨exceptional, hfee, hex⟩ := exceptions A.Q A.nonzero p b.a b.b (by decide)
+    (by cases b <;> decide) A.degreeS A.degreeT Γ
+  have hassign (γ : K) (hγ : γ ∈ Γ) (hn : γ ∉ exceptional) :
+      ∃ j : Fin 5, SimpleRoot (derivativeChart A.Q j) (F.mark γ hγ).decoder γ (γ ^ p) := by
+    let f := specializeY A.Q γ (γ ^ p)
+    have hdeg : f.natDegree ≤ 5 :=
+      (Polynomial.natDegree_map_le).trans ((yView_degree A.Q).le.trans A.degreeY)
+    have hroot : f.IsRoot (F.mark γ hγ).decoder :=
+      (specializeY_eval A.Q _ γ (γ ^ p)).trans (A.vanishes γ hγ)
+    obtain ⟨j, hj, hz, hnz⟩ := exists_simple_derivative_at_root p 5 f
+      (hex γ hγ hn) hdeg (by decide) _ hroot
+    refine ⟨⟨j,hj⟩, ?_, ?_⟩
+    · rw [← specializeY_eval, specializeY_iterate]
+      exact hz
+    · rw [← specializeY_eval, specializeY_derivative, specializeY_iterate]
+      exact hnz
+  let charts (j : Fin 5) := Γ.filter fun γ =>
+    ∃ hγ : γ ∈ Γ, SimpleRoot (derivativeChart A.Q j) (F.mark γ hγ).decoder γ (γ ^ p)
+  refine ⟨exceptional, charts, hfee, ?_, ?_⟩
+  · intro γ hγ
+    by_cases he : γ ∈ exceptional
+    · exact Or.inl he
+    · obtain ⟨j,hj⟩ := hassign γ hγ he
+      exact Or.inr ⟨j, Finset.mem_filter.mpr ⟨hγ, hγ, hj⟩⟩
+  · intro j
+    refine ⟨fun _ hγ => (Finset.mem_filter.mp hγ).1, ?_⟩
+    intro γ hγ
+    obtain ⟨_, h⟩ := (Finset.mem_filter.mp hγ).2
+    exact h
+private theorem build_chart
+    {u : Words} {deleted : Finset I} (P : Puncture deleted)
+    {Γ : Finset K} (F : Marks u deleted Γ) (b : Bank)
+    (Λ : Finset K) (hsub : Λ ⊆ Γ) (hne : Λ.Nonempty)
+    (G : MvPolynomial (Fin 4) K) (hG : G.weightedTotalDegree scalarWeightTotal ≤ b.E)
+    (hroot : ∀ γ (hγ : γ ∈ Λ),
+      SimpleRoot G (F.mark γ (hsub hγ)).decoder γ (γ ^ p)) :
+    Nonempty (TaylorChart u P F b Λ) := by
+  classical
+  let point (γ : K) : Fin 3 → Frac := if h : γ ∈ Λ then
+    centerPoint (F.mark γ (hsub h)).decoder γ (γ ^ p) else fun _ => 0
+  have hpnt (γ : K) (hγ : γ ∈ Λ) :
+      point γ = centerPoint (F.mark γ (hsub hγ)).decoder γ (γ ^ p) := by
+    simp [point, hγ]
+  refine ⟨{
+    subset := hsub
+    equation := atCenter G
+    equation_ne := ?_
+    equation_degree := (atCenter_degree G).trans hG
+    numerator := K1_11_3.numerator G 131071
+    numerator_degree := numerator_degree _ _
+    denominator := K1_11_3.denominator G 131071
+    cut_degree := ?_
+    point := point
+    slope := fun γ hγ => by rw [hpnt γ hγ]; rfl
+    on_equation := fun γ hγ => by rw [hpnt γ hγ, eval_atCenter, (hroot γ hγ).1, map_zero]
+    regular := ?_
+    reconstruction := ?_ }⟩
+  · obtain ⟨γ, hγ⟩ := hne
+    have hn := (hroot γ hγ).2
+    intro hz
+    apply hn
+    apply (IsFractionRing.injective (Polynomial K) Frac)
+    rw [map_zero, ← eval_atCenter, ← pderiv_atCenter, hz, map_zero, map_zero]
+  · intro i
+    unfold nodeCut
+    apply (totalDegree_sub _ _).trans
+    apply max_le
+    · exact numerator_eval_degree K1_11_3_1.proof G 131071 b.E (by cases b <;> decide) hG _
+    · apply (totalDegree_mul _ _).trans
+      have ha : (C (σ := Fin 3) (algebraMap K Frac (u 0 (P.index i))) +
+          MvPolynomial.X 1 * C (algebraMap K Frac (u 1 (P.index i)))).totalDegree ≤ 1 := by
+        exact (totalDegree_add _ _).trans (max_le (by simp)
+          ((totalDegree_mul _ _).trans (by simp)))
+      exact Nat.add_le_add (denominator_degree G 131071 b.E hG) ha
+  · intro γ hγ
+    rw [hpnt γ hγ, K1_11_3.denominator, map_pow, eval_atCenter]
+    exact pow_ne_zero _ (fun h => (hroot γ hγ).2
+      ((IsFractionRing.injective (Polynomial K) Frac) (h.trans (map_zero _).symm)))
+  · intro γ hγ
+    rw [hpnt γ hγ]
+    apply reconstruct K1_11_3_2.proof
+    · exact natDegree_le_of_degree_lt_succ (F.mark γ (hsub hγ)).degree
+    · exact (hroot γ hγ).1
+    · intro n hn
+      have pp := CharP.char_is_prime_of_two_le K p (by decide)
+      intro hz
+      have hn' := pp.dvd_factorial.mp ((CharP.cast_eq_zero_iff K p _).mp hz)
+      exact (not_lt_of_ge (hn'.trans hn)) (by decide)
+theorem chart_cover {u : Words} {deleted : Finset I} (P : Puncture deleted)
+    {Γ : Finset K} {F : Marks u deleted Γ} {b : Bank} (A : Annihilator F b) :
+    ∃ (exceptional : Finset K) (charts : Fin 5 → Finset K),
+      exceptional.card ≤ b.zeroFee ∧
+      (∀ γ ∈ Γ, γ ∈ exceptional ∨ ∃ j, γ ∈ charts j) ∧
+      ∀ j, charts j = ∅ ∨ Nonempty (TaylorChart u P F b (charts j)) := by
+  obtain ⟨exceptional, charts, hfee, hcover, hcharts⟩ := assign A
+  refine ⟨exceptional, charts, hfee, hcover, fun j => ?_⟩
+  rcases (charts j).eq_empty_or_nonempty with he | hn
+  · exact Or.inl he
+  · obtain ⟨hsub, hroot⟩ := hcharts j
+    exact Or.inr (build_chart P F b (charts j) hsub hn (derivativeChart A.Q j)
+      ((derivativeChart_degree A.Q j).trans A.degreeTotal) hroot)
+end
+end Front6960_4
+end
+section
+set_option autoImplicit false
+set_option backward.isDefEq.respectTransparency false
+set_option maxHeartbeats 1500000
+namespace Front6960_4
+noncomputable section
+open Front6960 MvPolynomial
+open P2_4 (Bank Puncture nodeCut)
+open K1_11 (scalarWeightTotal)
+open scoped BigOperators
+open K1_11 (indexedSupport mem_indexedSupport indexedSupport_card nodes_injective)
+open K1_11 (ncard_inter_filter surface_count_with_terminal)
+open K1_11 (seed_eq_of_mismatch)
+variable {u : Words} {deleted : Finset I} {P : Puncture deleted}
+  {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
+theorem mark_degree {u : Words} {γ : K} (M : BadMark u γ) :
+    M.decoder.natDegree ≤ 131071 := by
+  apply Polynomial.natDegree_le_of_degree_le
+  exact Order.le_of_lt_succ (show M.decoder.degree < (131072 : ℕ) from M.degree)
+
+theorem correctOn_mark {u : Words} {deleted : Finset I} (P : Puncture deleted)
+    {γ : K} (M : BadMark u γ) :
+    K1_11.correctOn u P M.decoder (M.decoder.map twist) γ (γ ^ p) (indexedSupport P M.support) := by
+  intro i hi
+  have h := M.hits (P.index i) ((mem_indexedSupport P M.support i).mp hi)
+  refine ⟨h, ?_⟩
+  change (M.decoder.map twist).eval (node (P.index i)) =
+    u 0 (P.index i) ^ p + γ ^ p * u 1 (P.index i) ^ p
+  rw [FrobeniusLocator.Strata.eval_coefficient_map twist M.decoder _
+    (FrobeniusLocator.Native.native_domain_fixed (P.index i)), h]
+  simp only [map_add, map_mul, P0.twist, frobenius_def]
+
+private theorem pencil_bad_count (hsub : Λ ⊆ Γ) (P₀ P₁ : Polynomial K)
+    (h₀ : P₀.degree < (131072 : ℕ)) (h₁ : P₁.degree < (131072 : ℕ))
+    (pencil : ∀ γ (hγ : γ ∈ Λ),
+      (F.mark γ (hsub hγ)).decoder = P₀ + Polynomial.C γ * P₁) :
+    Λ.card ≤ P.N := by
+  classical
+  have mismatch (γ : Λ) :
+      ∃ i : Fin P.N,
+        (P₀.eval (P.nodes i) ≠ u 0 (P.index i) ∨ P₁.eval (P.nodes i) ≠ u 1 (P.index i)) ∧
+        P₀.eval (P.nodes i) + (γ : K) * P₁.eval (P.nodes i) =
+          u 0 (P.index i) + (γ : K) * u 1 (P.index i) := by
+    let M := F.mark γ (hsub γ.property)
+    obtain ⟨idx, hi, hm⟩ :
+        ∃ idx ∈ M.support, P₀.eval (node idx) ≠ u 0 idx ∨ P₁.eval (node idx) ≠ u 1 idx := by
+      by_contra hn
+      push Not at hn
+      exact M.nonjoint ⟨⟨P₀, h₀, fun j hj => (hn j hj).1⟩, ⟨P₁, h₁, fun j hj => (hn j hj).2⟩⟩
+    obtain ⟨i, rfl⟩ := (P.retained idx).mpr (F.survives γ (hsub γ.property) idx hi)
+    refine ⟨i, hm, ?_⟩
+    have hh := M.hits (P.index i) hi
+    change (F.mark (γ : K) (hsub γ.property)).decoder.eval (P.nodes i) = _ at hh
+    simpa only [pencil _ γ.property, Polynomial.eval_add, Polynomial.eval_mul,
+      Polynomial.eval_C] using hh
+  let f : Λ → Fin P.N := fun γ => Classical.choose (mismatch γ)
+  have hf : Function.Injective f := by
+    intro γ δ he
+    apply Subtype.ext
+    obtain ⟨hm, hγ⟩ := Classical.choose_spec (mismatch γ)
+    have hδ := (Classical.choose_spec (mismatch δ)).2
+    change f γ = f δ at he
+    change
+      (P₀.eval (P.nodes (f γ)) ≠ u 0 (P.index (f γ)) ∨
+        P₁.eval (P.nodes (f γ)) ≠ u 1 (P.index (f γ))) at hm
+    change P₀.eval (P.nodes (f γ)) + (γ : K) * P₁.eval (P.nodes (f γ)) =
+      u 0 (P.index (f γ)) + (γ : K) * u 1 (P.index (f γ)) at hγ
+    change P₀.eval (P.nodes (f δ)) + (δ : K) * P₁.eval (P.nodes (f δ)) =
+      u 0 (P.index (f δ)) + (δ : K) * u 1 (P.index (f δ)) at hδ
+    rw [← he] at hδ
+    exact seed_eq_of_mismatch (F := K) hγ hδ hm
+  simpa only [Fintype.card_coe, Fintype.card_fin] using Fintype.card_le_of_injective f hf
+variable (chart : TaylorChart u P F b Λ)
+theorem chart_cut_iff (γ : K) (hγ : γ ∈ Λ) (i : Fin P.N) :
+    MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0 ↔
+      (F.mark γ (chart.subset hγ)).decoder.eval (P.nodes i) =
+        u 0 (P.index i) + γ * u 1 (P.index i) := by
+  let val := MvPolynomial.eval (chart.point γ)
+  let x := algebraMap K Frac (P.nodes i)
+  change val (nodeCut u P chart.numerator chart.denominator i) = 0 ↔ _
+  have heval := Polynomial.eval_map_apply val (C x) (p := chart.numerator)
+  unfold nodeCut
+  change val (chart.numerator.eval (C x) - _) = 0 ↔ _
+  rw [map_sub, ← heval]
+  change (chart.numerator.map val).eval (val (C x)) - _ = 0 ↔ _
+  rw [show val (C x) = x by simp [val], show chart.numerator.map val = _ from chart.reconstruction γ hγ]
+  rw [Polynomial.eval_mul, Polynomial.eval_C, show x = algebraMap K Frac (P.nodes i) from rfl,
+    Polynomial.eval_map_apply, map_mul, map_add, map_mul]
+  simp only [val, eval_C, eval_X, chart.slope γ hγ]
+  rw [← map_mul, ← map_add, sub_eq_zero]
+  constructor
+  · intro h
+    exact (algebraMap K Frac).injective (mul_left_cancel₀ (chart.regular γ hγ) h)
+  · intro h
+    rw [h]
+theorem chart_persistent (J : Ideal (MvPolynomial (Fin 3) Frac)) (W : Finset K) (hW : W ⊆ Λ)
+    (hzero : ∀ γ ∈ W, chart.point γ ∈ zeroLocus Frac J)
+    (hpersist : 131072 ≤ {i | nodeCut u P chart.numerator chart.denominator i ∈ J}.ncard) :
+    W.card ≤ P.N := by
+  classical
+  let keep := Finset.univ.filter fun i => nodeCut u P chart.numerator chart.denominator i ∈ J
+  have hk : 131072 ≤ keep.card := by
+    rw [← Set.ncard_coe_finset]
+    exact hpersist.trans_eq (congrArg Set.ncard (by ext i; simp [keep]))
+  obtain ⟨S, hS, hcard⟩ := Finset.exists_subset_card_eq hk
+  let P₀ := Lagrange.interpolate S P.nodes (fun i => u 0 (P.index i))
+  let P₁ := Lagrange.interpolate S P.nodes (fun i => u 1 (P.index i))
+  have hinj : Set.InjOn P.nodes (S : Set (Fin P.N)) := nodes_injective.injOn
+  have hd₀ : P₀.degree < (131072 : ℕ) := by
+    simpa only [P₀, hcard] using Lagrange.degree_interpolate_lt (fun i => u 0 (P.index i)) hinj
+  have hd₁ : P₁.degree < (131072 : ℕ) := by
+    simpa only [P₁, hcard] using Lagrange.degree_interpolate_lt (fun i => u 1 (P.index i)) hinj
+  apply pencil_bad_count (P := P) (F := F) (fun _ hg => chart.subset (hW hg)) P₀ P₁ hd₀ hd₁
+  intro γ hγ
+  let M := F.mark γ (chart.subset (hW hγ))
+  apply Polynomial.eq_of_degrees_lt_of_eval_index_eq S hinj
+  · rw [hcard]
+    exact Polynomial.degree_le_natDegree.trans_lt
+      (WithBot.coe_lt_coe.mpr (Nat.lt_succ_of_le (mark_degree M)))
+  · rw [hcard]
+    have hm : (Polynomial.C γ * P₁).degree ≤ P₁.degree := by
+      refine (Polynomial.degree_mul_le _ _).trans ?_
+      simpa only [zero_add] using add_le_add_left (Polynomial.degree_C_le (a := γ)) P₁.degree
+    exact (Polynomial.degree_add_le _ _).trans_lt (max_lt hd₀ (hm.trans_lt hd₁))
+  · intro i hi
+    have hcut : nodeCut u P chart.numerator chart.denominator i ∈ J := (Finset.mem_filter.mp (hS hi)).2
+    have hz : MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0 :=
+      hzero γ hγ _ hcut
+    rw [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C]
+    exact (chart_cut_iff chart γ (hW hγ) i).mp hz |>.trans (by
+      rw [Lagrange.eval_interpolate_at_node _ hinj hi, Lagrange.eval_interpolate_at_node _ hinj hi])
+end
+end Front6960_4
+end
+
+end Merged_R6960Front6960Charts
+
+-- merged module R6960Front6960Rank4
+section Merged_R6960Front6960Rank4
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -40,8 +350,8 @@ structure ReducedPair {u : Words} {T : TwoActive u} {R : Relation T}
   graphV : K1_11_2.graph p V = Polynomial.C A.content * D.V
 abbrev weightedCutoff : ℕ := 4 * agreement - 1
 def originalFloor : P2_4.Bank → ℕ
-  | .w22 | .w22Swapped | .w12 | .w21 => 24378
-  | _ => 32504
+  | .w22 | .w22Swapped | .w12 | .w21 => 24373
+  | _ => 32498
 end
 end Front6960_4
 end
@@ -94,11 +404,11 @@ private theorem reduced_boxes {u : Words} {T : TwoActive u} {R : Relation T}
     B.U.degreeOf 3 ≤ 2 ∧ B.U.degreeOf 4 ≤ 3 ∧
       B.V.degreeOf 3 ≤ 3 ∧ B.V.degreeOf 4 ≤ 2 := by
   obtain ⟨hUS, hUT, hVS, hVT⟩ := reduced_bounds B
-  have hh : T.height ≤ 33561 := hH
-  exact ⟨Nat.le_of_lt_succ (degree_lt_of_product _ _ 3 _ hUS (by change _ < (48755 - _) * 3; omega)),
-    Nat.le_of_lt_succ (degree_lt_of_product _ _ 4 _ hUT (by change 48755 < (48755 - _) * 4; omega)),
-    Nat.le_of_lt_succ (degree_lt_of_product _ _ 4 _ hVS (by change 48755 < (48755 - _) * 4; omega)),
-    Nat.le_of_lt_succ (degree_lt_of_product _ _ 3 _ hVT (by change _ < (48755 - _) * 3; omega))⟩
+  have hh : T.height ≤ 33579 := hH
+  exact ⟨Nat.le_of_lt_succ (degree_lt_of_product _ _ 3 _ hUS (by change _ < (48746 - _) * 3; omega)),
+    Nat.le_of_lt_succ (degree_lt_of_product _ _ 4 _ hUT (by change 48746 < (48746 - _) * 4; omega)),
+    Nat.le_of_lt_succ (degree_lt_of_product _ _ 4 _ hVS (by change 48746 < (48746 - _) * 4; omega)),
+    Nat.le_of_lt_succ (degree_lt_of_product _ _ 3 _ hVT (by change _ < (48746 - _) * 3; omega))⟩
 private theorem no_pair_one_one {u : Words} {T : TwoActive u} {R : Relation T}
     {D : Reduction u T R} {A : IndependentLift R} (B : ReducedPair D A)
     (hr : columnRank D.U D.V = 4) (hs : sWeight B.U B.V = 1) (ht : tWeight B.U B.V = 1) :
@@ -117,27 +427,27 @@ private theorem actual_bank {u : Words} {T : TwoActive u} {R : Relation T}
       originalFloor bank ≤ T.height := by
   obtain ⟨pUS, pUT, pVS, pVT⟩ := reduced_bounds B
   obtain ⟨bUS, bUT, bVS, bVT⟩ := reduced_boxes B hH
-  have hlo : 24378 ≤ T.height := by
+  have hlo : 24373 ≤ T.height := by
     by_contra! h
     have hs₁ : B.U.degreeOf 3 < 1 :=
-      degree_lt_of_product _ _ 1 _ pUS (by change _ < (48755 - _) * 1; omega)
+      degree_lt_of_product _ _ 1 _ pUS (by change _ < (48746 - _) * 1; omega)
     have hs₂ : B.V.degreeOf 3 < 2 :=
-      degree_lt_of_product _ _ 2 _ pVS (by change 48755 < (48755 - _) * 2; omega)
+      degree_lt_of_product _ _ 2 _ pVS (by change 48746 < (48746 - _) * 2; omega)
     have ht₁ : B.U.degreeOf 4 < 2 :=
-      degree_lt_of_product _ _ 2 _ pUT (by change 48755 < (48755 - _) * 2; omega)
+      degree_lt_of_product _ _ 2 _ pUT (by change 48746 < (48746 - _) * 2; omega)
     have ht₂ : B.V.degreeOf 4 < 1 :=
-      degree_lt_of_product _ _ 1 _ pVT (by change _ < (48755 - _) * 1; omega)
+      degree_lt_of_product _ _ 1 _ pVT (by change _ < (48746 - _) * 1; omega)
     exact no_pair_one_one B hr (by unfold sWeight; omega) (by unfold tWeight; omega)
-  have hhi (hw : sWeight B.U B.V = 3 ∨ tWeight B.U B.V = 3) : 32504 ≤ T.height := by
+  have hhi (hw : sWeight B.U B.V = 3 ∨ tWeight B.U B.V = 3) : 32498 ≤ T.height := by
     by_contra! h
     have hs₁ : B.U.degreeOf 3 < 2 :=
-      degree_lt_of_product _ _ 2 _ pUS (by change _ < (48755 - _) * 2; omega)
+      degree_lt_of_product _ _ 2 _ pUS (by change _ < (48746 - _) * 2; omega)
     have hs₂ : B.V.degreeOf 3 < 3 :=
-      degree_lt_of_product _ _ 3 _ pVS (by change 48755 < (48755 - _) * 3; omega)
+      degree_lt_of_product _ _ 3 _ pVS (by change 48746 < (48746 - _) * 3; omega)
     have ht₁ : B.U.degreeOf 4 < 3 :=
-      degree_lt_of_product _ _ 3 _ pUT (by change 48755 < (48755 - _) * 3; omega)
+      degree_lt_of_product _ _ 3 _ pUT (by change 48746 < (48746 - _) * 3; omega)
     have ht₂ : B.V.degreeOf 4 < 2 :=
-      degree_lt_of_product _ _ 2 _ pVT (by change _ < (48755 - _) * 2; omega)
+      degree_lt_of_product _ _ 2 _ pVT (by change _ < (48746 - _) * 2; omega)
     unfold sWeight tWeight at hw
     omega
   have hs : sWeight B.U B.V = 1 ∨ sWeight B.U B.V = 2 ∨ sWeight B.U B.V = 3 := by
@@ -199,7 +509,7 @@ private theorem plane_output {u : Words} {T : TwoActive u} {R : Relation T}
   have hs : W.degreeOf 3 ≤ sWeight B.U B.V := by simpa [degreeOf_X] using hdeg 3
   have ht : W.degreeOf 4 ≤ tWeight B.U B.V := by simpa [degreeOf_X] using hdeg 4
   have hbound : 131072 + D.height ≤ P.N := by
-    have hh : T.height ≤ 33561 := hH
+    have hh : T.height ≤ 33579 := hH
     have hD := D.height_eq
     have hP := P.size
     omega
@@ -296,26 +606,26 @@ open P0_7 (countRow gradeRow count grade contactRow V_affine rational_fee)
 open P1_4 (dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8 dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4 dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15 dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8 dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3 dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7 dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6 dims_4_3_5 jets_3_3_5)
 open P2_4 (dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3)
 private theorem surplus_of_stats (h H e N lo s t ds dt c g c' g' j : ℕ)
-    (hlo : lo ≤ h) (hmax : h ≤ 33561) (hH : H + e = h) (hN : N + e = 262144)
+    (hlo : lo ≤ h) (hmax : h ≤ 33579) (hH : H + e = h) (hN : N + e = 262144)
     (hc : count 5 s t = c) (hg : grade 5 s t = g)
     (hc' : count 4 (s-ds) (t-dt) = c') (hg' : grade 4 (s-ds) (t-dt) = g')
     (hj : J 4 s t - J 3 (s-ds) (t-dt) = j) (hgain : c' ≤ j)
-    (hmargin : 262144 * j + (588237 - lo) * c' + 131071 * g <
-      719308 * c + 131071 * g') :
-    N * (J 4 s t - J 3 (s-ds) (t-dt)) + V (719307 - 131071 - H) 131071 4 (s-ds) (t-dt)
-      < V 719307 131071 5 s t := by
-  have hv := V_affine 719307 131071 5 s t (by decide)
-  have hv' := V_affine (719307 - 131071 - H) 131071 4 (s-ds) (t-dt) (by omega)
+    (hmargin : 262144 * j + (588201 - lo) * c' + 131071 * g <
+      719272 * c + 131071 * g') :
+    N * (J 4 s t - J 3 (s-ds) (t-dt)) + V (719271 - 131071 - H) 131071 4 (s-ds) (t-dt)
+      < V 719271 131071 5 s t := by
+  have hv := V_affine 719271 131071 5 s t (by decide)
+  have hv' := V_affine (719271 - 131071 - H) 131071 4 (s-ds) (t-dt) (by omega)
   rw [hc, hg] at hv
   rw [hc', hg'] at hv'
-  have hw : 719307 - 131071 - H + 1 ≤ (588237 - lo) + e := by omega
-  have hm : N * j + (719307 - 131071 - H + 1) * c' ≤
-      262144 * j + (588237 - lo) * c' := by
+  have hw : 719271 - 131071 - H + 1 ≤ (588201 - lo) + e := by omega
+  have hm : N * j + (719271 - 131071 - H + 1) * c' ≤
+      262144 * j + (588201 - lo) * c' := by
     calc
-      _ ≤ N * j + ((588237 - lo) + e) * c' :=
+      _ ≤ N * j + ((588201 - lo) + e) * c' :=
         Nat.add_le_add_left (Nat.mul_le_mul_right _ hw) _
-      _ = N * j + e * c' + (588237 - lo) * c' := by ring
-      _ ≤ N * j + e * j + (588237 - lo) * c' :=
+      _ = N * j + e * c' + (588201 - lo) * c' := by ring
+      _ ≤ N * j + e * j + (588201 - lo) * c' :=
         Nat.add_le_add_right (Nat.add_le_add_left (Nat.mul_le_mul_left _ hgain) _) _
       _ = _ := by rw [← Nat.add_mul, hN]
   rw [hj]
@@ -327,53 +637,53 @@ theorem bank_surplus (b : Bank) (h H e N : ℕ) (hlo : originalFloor b ≤ h)
       V weightedCutoff 131071 5 b.s b.t := by
   cases b with
   | w12 =>
-    exact surplus_of_stats h H e N 24378 16 10 1 2 2982 9324 1675 4189 2010
+    exact surplus_of_stats h H e N 24373 16 10 1 2 2982 9324 1675 4189 2010
       hlo hmax hH hN dims_5_16_10.1 dims_5_16_10.2 dims_4_15_8.1 dims_4_15_8.2
       (by rw [jets_4_16_10, jets_3_15_8]) (by decide) (by decide)
   | w13 =>
-    exact surplus_of_stats h H e N 32504 8 7 1 3 952 2814 355 809 855
+    exact surplus_of_stats h H e N 32498 8 7 1 3 952 2814 355 809 855
       hlo hmax hH hN dims_5_8_7.1 dims_5_8_7.2 dims_4_7_4.1 dims_4_7_4.2
       (by rw [jets_4_8_7, jets_3_7_4]) (by decide) (by decide)
   | w21 =>
-    exact surplus_of_stats h H e N 24378 10 16 2 1 2982 9324 1675 4189 2010
+    exact surplus_of_stats h H e N 24373 10 16 2 1 2982 9324 1675 4189 2010
       hlo hmax hH hN dims_5_10_16.1 dims_5_10_16.2 dims_4_8_15.1 dims_4_8_15.2
       (by rw [jets_4_10_16, jets_3_8_15]) (by decide) (by decide)
   | w22 =>
-    exact surplus_of_stats h H e N 24378 11 10 2 2 2002 6174 985 2419 1495
+    exact surplus_of_stats h H e N 24373 11 10 2 2 2002 6174 985 2419 1495
       hlo hmax hH hN dims_5_11_10.1 dims_5_11_10.2 dims_4_9_8.1 dims_4_9_8.2
       (by rw [jets_4_11_10, jets_3_9_8]) (by decide) (by decide)
   | w22Swapped =>
-    exact surplus_of_stats h H e N 24378 10 11 2 2 2002 6174 985 2419 1495
+    exact surplus_of_stats h H e N 24373 10 11 2 2 2002 6174 985 2419 1495
       hlo hmax hH hN dims_5_10_11.1 dims_5_10_11.2 dims_4_8_9.1 dims_4_8_9.2
       (by rw [jets_4_10_11, jets_3_8_9]) (by decide) (by decide)
   | w23 =>
-    exact surplus_of_stats h H e N 32504 8 6 2 3 798 2324 215 459 800
+    exact surplus_of_stats h H e N 32498 8 6 2 3 798 2324 215 459 800
       hlo hmax hH hN dims_5_8_6.1 dims_5_8_6.2 dims_4_6_3.1 dims_4_6_3.2
       (by rw [jets_4_8_6, jets_3_6_3]) (by decide) (by decide)
   | w31 =>
-    exact surplus_of_stats h H e N 32504 7 8 3 1 952 2814 355 809 855
+    exact surplus_of_stats h H e N 32498 7 8 3 1 952 2814 355 809 855
       hlo hmax hH hN dims_5_7_8.1 dims_5_7_8.2 dims_4_4_7.1 dims_4_4_7.2
       (by rw [jets_4_7_8, jets_3_4_7]) (by decide) (by decide)
   | w32 =>
-    exact surplus_of_stats h H e N 32504 6 8 3 2 798 2324 215 459 800
+    exact surplus_of_stats h H e N 32498 6 8 3 2 798 2324 215 459 800
       hlo hmax hH hN dims_5_6_8.1 dims_5_6_8.2 dims_4_3_6.1 dims_4_3_6.2
       (by rw [jets_4_6_8, jets_3_3_6]) (by decide) (by decide)
   | w33 =>
-    exact surplus_of_stats h H e N 32504 6 8 3 3 798 2324 175 364 835
+    exact surplus_of_stats h H e N 32498 6 8 3 3 798 2324 175 364 835
       hlo hmax hH hN dims_5_6_8.1 dims_5_6_8.2 dims_4_3_5.1 dims_4_3_5.2
       (by rw [jets_4_6_8, jets_3_3_5]) (by decide) (by decide)
   | w33Swapped =>
-    exact surplus_of_stats h H e N 32504 8 6 3 3 798 2324 175 364 835
+    exact surplus_of_stats h H e N 32498 8 6 3 3 798 2324 175 364 835
       hlo hmax hH hN dims_5_8_6.1 dims_5_8_6.2 dims_4_5_3.1 dims_4_5_3.2
       (by rw [jets_4_8_6, jets_3_5_3]) (by decide) (by decide)
-def chartRate (b : Bank) : ℚ := (131073 / 48756 : ℚ) * b.M
+def chartRate (b : Bank) : ℚ := (131073 / 48747 : ℚ) * b.M
 def chartFee (b : Bank) : ℚ := b.E * chartRate b ^ 2
 abbrev tariff : ℕ := 250000000000000000
 private theorem priced (E M zeroFee cap : ℕ)
-    (h : zeroFee * 48756^2 + 5 * E * (131073*M)^2 ≤ cap * 48756^2)
+    (h : zeroFee * 48747^2 + 5 * E * (131073*M)^2 ≤ cap * 48747^2)
     (hc : cap ≤ tariff) :
-    (zeroFee : ℚ) + 5 * ((E : ℚ) * ((131073 / 48756 : ℚ) * M)^2) ≤ tariff :=
-  (rational_fee E M zeroFee cap 131073 48756 (by decide) h).trans (by exact_mod_cast hc)
+    (zeroFee : ℚ) + 5 * ((E : ℚ) * ((131073 / 48747 : ℚ) * M)^2) ≤ tariff :=
+  (rational_fee E M zeroFee cap 131073 48747 (by decide) h).trans (by exact_mod_cast hc)
 local notation "fee!" e "," m "," z "," c => priced e m z c (by decide) (by decide)
 theorem bank_fee (b : Bank) : (b.zeroFee : ℚ) + 5 * chartFee b ≤ tariff := by
   cases b with
@@ -389,10 +699,10 @@ theorem bank_fee (b : Bank) : (b.zeroFee : ℚ) + 5 * chartFee b ≤ tariff := b
   | w33Swapped => exact fee! 39, 9961359, 0x7f0000027, 250000000000000000
 theorem bank_rate_ge (b : Bank) : (262144 : ℚ) ≤ chartRate b := by
   have hm : (262144 : ℕ) ≤ b.M := by cases b <;> decide
-  have hr : (1 : ℚ) ≤ 131073 / 48756 := by
-    apply (le_div_iff₀ (by positivity : (0 : ℚ) < 48756)).mpr
+  have hr : (1 : ℚ) ≤ 131073 / 48747 := by
+    apply (le_div_iff₀ (by positivity : (0 : ℚ) < 48747)).mpr
     rw [one_mul]
-    exact_mod_cast (show (48756 : ℕ) ≤ 131073 by decide)
+    exact_mod_cast (show (48747 : ℕ) ≤ 131073 by decide)
   exact (by exact_mod_cast hm : (262144 : ℚ) ≤ b.M).trans
     (by simpa only [one_mul, chartRate] using
       mul_le_mul_of_nonneg_right hr (by positivity : (0 : ℚ) ≤ b.M))
@@ -434,10 +744,10 @@ theorem exists_quotient_source (h e : ℕ) (hmin : originalFloor b ≤ h) (hmax 
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = b.relationBounds H j) :
     ∃ Q : Source F b, ¬ L ∣ Q.val ∧ ∀ i, ∃ R : Multipliers F b,
       D.shifted i Q.val - D.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
-  have hupper : H ≤ 33561 := by
-    have hh : h ≤ 33561 := hmax
+  have hupper : H ≤ 33579 := by
+    have hh : h ≤ 33579 := hmax
     omega
-  have hD : weightedCutoff = 719307 := rfl
+  have hD : weightedCutoff = 719271 := rfl
   have hfit : ∀ i, b.relationBounds H i ≤ sourceBounds weightedCutoff 5 b.s b.t i := by
     intro i
     cases b <;> fin_cases i <;>
@@ -490,7 +800,7 @@ open K1_11 (scalar_total_weight_le)
 open P2_4 (asContactData bank_cancel contact_order_one_mem)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted} {b : Bank} {H : ℕ}
     (D : ContactInput u P b H)
-private theorem relation_on_support (hH : H ≤ 33561) (Q Q' : Polynomial K)
+private theorem relation_on_support (hH : H ≤ 33579) (Q Q' : Polynomial K)
     (hQ : Q.natDegree ≤ 131071) (hQ' : Q'.natDegree ≤ 131071)
     (s t : K) (S : Finset (Fin P.N)) (hS : agreement ≤ S.card) (hc : correctOn u P Q Q' s t S) :
     aeval (decoderImages Q Q' s t) D.L = 0 := by
@@ -506,7 +816,7 @@ private theorem relation_on_support (hH : H ≤ 33561) (Q Q' : Polynomial K)
   · have hdeg : D.L.weightedTotalDegree (sourceWeights 131071 0) ≤ 131071+H :=
       le_of_eq (D.degrees 0)
     have hd := decoder_eval_degree 131071 (131071+H) D.L hdeg Q Q' hQ hQ' s t
-    change 179827 ≤ S.card at hS
+    change 179818 ≤ S.card at hS
     omega
 theorem exists_two_decoder_source (h : ℕ) (hmin : originalFloor b ≤ h) (hmax : h ≤ heightCap)
     (hH : H + deleted.card = h) :
@@ -517,7 +827,7 @@ theorem exists_two_decoder_source (h : ℕ) (hmin : originalFloor b ≤ h) (hmax
   obtain ⟨G, hnot, hnode⟩ := exists_quotient_source (asContactData D) h deleted.card hmin hmax hH P.size D.degrees
   refine ⟨G, hnot, ?_⟩
   intro Q Q' hQ hQ' s t S hS hc
-  have hmax' : h ≤ 33561 := hmax
+  have hmax' : h ≤ 33579 := hmax
   have hrel := relation_on_support D (by omega) Q Q' hQ hQ' s t S hS hc
   apply eq_zero_of_many_contacts S P.nodes nodes_injective 4
   · intro i hi
@@ -526,8 +836,8 @@ theorem exists_two_decoder_source (h : ℕ) (hmin : originalFloor b ≤ h) (hmax
       (hc i hi).1 (hc i hi).2 hrel hR
   · have hd := decoder_eval_degree 131071 weightedCutoff G.val
       ((mem_filtered _ _ _).mp G.property 0) Q Q' hQ hQ' s t
-    change _ ≤ 719307 at hd
-    change 179827 ≤ S.card at hS
+    change _ ≤ 719271 at hd
+    change 179818 ≤ S.card at hS
     omega
 def SupportAt {u : Words} {deleted : Finset I} {Γ : Finset K} (F : Marks u deleted Γ) : Prop :=
   ∀ γ (hγ : γ ∈ Γ), agreement ≤ (F.mark γ hγ).support.card
@@ -572,7 +882,7 @@ theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture delete
   have hd' : (M.decoder.map twist).natDegree ≤ 131071 :=
     Polynomial.natDegree_map_le.trans hd
   have hcorrect := correctOn_mark P M
-  have hmax' : h ≤ 33561 := hmax
+  have hmax' : h ≤ 33579 := hmax
   have hrel := relation_on_support C (by omega) _ _ hd hd' γ (γ ^ p) S hS hcorrect
   exact scalarEliminant_annihilates weightedCutoff 131071 5 b.s b.t G.val C.L G.property
     C.numerator C.denominator C.linear _ _ γ (γ^p) hrel
@@ -594,7 +904,7 @@ open K1_11 (ncard_inter_filter surface_count_with_terminal)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted}
   {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
 private theorem chart_agreements (chart : TaylorChart u P F b Λ) (hF : SupportAt F) (γ : K) (hγ : γ ∈ Λ) :
-    179827 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
+    179818 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
   let M := F.mark γ (chart.subset hγ)
   have hsub : (indexedSupport P M.support : Set (Fin P.N)) ⊆
       {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0} := by
@@ -621,17 +931,17 @@ theorem chart_count {u : Words} {deleted : Finset I} {P : Puncture deleted}
   have hcard : S.card = Λ.card := Finset.card_image_of_injOn hinj
   let cuts := nodeCut u P chart.numerator chart.denominator
   have hratio (m : ℕ) (hm : m < 131072) :
-      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((179827 - m : ℕ) : ℚ) := by
-    have hnat : (P.N - m) * 48756 ≤ 131073 * (179827 - m) := by omega
-    have hrat : ((P.N - m : ℕ) : ℚ) * 48756 ≤ 131073 * ((179827 - m : ℕ) : ℚ) := by
+      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((179818 - m : ℕ) : ℚ) := by
+    have hnat : (P.N - m) * 48747 ≤ 131073 * (179818 - m) := by omega
+    have hrat : ((P.N - m : ℕ) : ℚ) * 48747 ≤ 131073 * ((179818 - m : ℕ) : ℚ) := by
       exact_mod_cast hnat
-    have hh : ((P.N - m : ℕ) : ℚ) ≤ (131073/48756 : ℚ) * ((179827 - m : ℕ) : ℚ) := by
+    have hh : ((P.N - m : ℕ) : ℚ) ≤ (131073/48747 : ℚ) * ((179818 - m : ℕ) : ℚ) := by
       linarith
     rw [Fintype.card_fin, Nat.cast_mul]
     exact (mul_le_mul_of_nonneg_right hh (by positivity : 0 ≤ (b.M : ℚ))).trans_eq (by dsimp [R, chartRate]; ring)
   rw [← hcard]
   refine surface_count_with_terminal chart.equation chart.denominator chart.equation_ne cuts
-    (L := 131072) (A := 179827) (by decide) chart.equation_degree chart.cut_degree hR hratio S
+    (L := 131072) (A := 179818) (by decide) chart.equation_degree chart.cut_degree hR hratio S
     (fun x hx => ?_) (fun x hx => ?_) (fun J hJ => ?_)
   · obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hx
     exact ⟨chart.on_equation γ hγ, chart.regular γ hγ⟩
@@ -925,9 +1235,9 @@ open K1_11_2_1 (divide_plane planeLocator degreeOf_le_of_dvd omits_of_dvd native
 open Front6960_4 (degree_lt_of_product)
 private theorem seed_degree_lt {h d : ℕ} (hmax : h ≤ heightCap)
     (hd : (L - h) * d ≤ L) : d < p := by
-  have hh : h ≤ 33561 := hmax
+  have hh : h ≤ 33579 := hmax
   have hd' : d < 4 := degree_lt_of_product _ _ 4 _ hd (by
-    change 48755 < (48755 - h) * 4
+    change 48746 < (48746 - h) * 4
     omega)
   exact hd'.trans_le (by change 4 ≤ 2130706433; decide)
 private theorem reduced_relPrime {u : Words} {T : TwoActive u} {R : Relation T}
@@ -957,8 +1267,8 @@ private theorem reduced_relPrime {u : Words} {T : TwoActive u} {R : Relation T}
     (rename (![3, 4] : Fin 2 → Fin 5))
 theorem proof : Front6960_4.c2 := by
   intro u T R D hmax A
-  have hhcap : T.height ≤ 33561 := hmax
-  have hh : T.height ≤ L := hhcap.trans (by decide : 33561 ≤ 48755)
+  have hhcap : T.height ≤ 33579 := hmax
+  have hh : T.height ≤ L := hhcap.trans (by decide : 33579 ≤ 48746)
   have hASU := seed_degree_lt hmax (A.bounds.1.trans hh)
   have hASV := seed_degree_lt hmax A.bounds.2.2.1
   obtain ⟨U, hfU, hU, hgU⟩ := divide_plane (fixedNodes R) A.U D.U A.content D.U_ne
@@ -987,3 +1297,5 @@ theorem proof : Front6960_4.c2 := by
 end
 end Front6960_4_2
 end
+
+end Merged_R6960Front6960Rank4

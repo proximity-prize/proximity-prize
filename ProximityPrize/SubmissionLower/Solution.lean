@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960MarkedProtocol
+import ProximityPrize.SubmissionLower.Gate61Table
 
-theorem ProximityPrize.Benchmark.candidate :
-    ProximityPrize.Benchmark.ProtocolClaim 6960 2896307141608434067 9223372036854653175 :=
-  Lower6960.MarkedEvaluation.protocol_6960
+theorem ProximityPrize.Benchmark.candidate : ProximityPrize.Benchmark.ProtocolClaim 6961 2896623800957216602 9223372036854599207 :=
+  Lower6960.MarkedEvaluation.candidate_of_gates Gate61Fin.gates
 
 #print axioms ProximityPrize.Benchmark.candidate

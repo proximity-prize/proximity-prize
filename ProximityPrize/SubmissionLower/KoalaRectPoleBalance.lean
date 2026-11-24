@@ -18,7 +18,6 @@ def Balanced {F : Type} [Field F] {h : ℕ} {H : (Polynomial F)} {lift : (Polyno
     (G : SimplePoles h H lift) : Prop :=
   ∃ e : Fin (2*h) ≃ Fin 2 × Fin h, ∀ t, G.side t = (e t).1
 
-set_option maxHeartbeats 8000000 in
 private theorem balanced_simple_poles {h : ℕ} (hlo : 0 < h) (hhi : h < K1.p) (D : PoleData h)
     (lift : (Polynomial (SeedFrac GenericField)))
     (hcentre : ∀ i α, (genericBlock D i).eval α = 0 →
@@ -99,6 +98,12 @@ private theorem balanced_simple_poles {h : ℕ} (hlo : 0 < h) (hhi : h < K1.p) (
       change (genericBlock D 0).eval (root t) ≠ 0 at ho
       rw [he, mul_zero, zero_add]
       exact mul_ne_zero ho hn
+  have hfac : H = ∏ t, (Polynomial.X - C (root t)) := by
+    have h2 : ∏ t, ((Polynomial.X : Polynomial GenericField) - C (root t)) =
+        ∏ p : Fin 2 × Fin h, ((Polynomial.X : Polynomial GenericField) - C (α p.1 p.2)) :=
+      Fintype.prod_equiv index _ _ (fun t => rfl)
+    rw [h2, Fintype.prod_prod_type, Fin.prod_univ_two, hblocks, hprod 0, hprod 1]
+    try rfl
   let G : SimplePoles h H lift := {
     root := root
     side := side
@@ -106,10 +111,7 @@ private theorem balanced_simple_poles {h : ℕ} (hlo : 0 < h) (hhi : h < K1.p) (
     b := fun t => ((D.constant (side t)).map constGeneric).eval (root t)
     c := fun t => ((D.slope (side t)).map constGeneric).eval (root t)
     distinct := hinj
-    factorization := by
-      change H = ∏ t, (Polynomial.X - C (α (index t).1 (index t).2))
-      rw [index.prod_comp (fun p => Polynomial.X - C (α p.1 p.2)),
-        Fintype.prod_prod_type, Fin.prod_univ_two, hblocks, ← hprod 0, ← hprod 1]
+    factorization := hfac
     vanishes := hvan
     simple := hsimple
     b_ne := fun t => constant_eval_ne_zero hlo D (side t) (hroot (side t) (index t).2)

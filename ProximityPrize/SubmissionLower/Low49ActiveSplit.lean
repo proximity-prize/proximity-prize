@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Low48BentLattice
+import ProximityPrize.SubmissionLower.Low48BentSupport
 
 set_option autoImplicit false
 set_option maxHeartbeats 1200000

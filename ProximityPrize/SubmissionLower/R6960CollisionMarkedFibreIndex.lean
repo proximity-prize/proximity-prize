@@ -1,26 +1,18 @@
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedFibreNormalization
 import ProximityPrize.SubmissionLower.R6960CollisionTameDiscriminant
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 2200000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionMarked
 noncomputable section
 open Algebra Module Matrix Polynomial CollisionTame
 open scoped Matrix Polynomial BigOperators
-
 variable {A K B V : Type*} [CommRing A] [IsDomain A] [IsPrincipalIdealRing A]
   [Field K] [Algebra A K] [IsFractionRing A K]
   [CommRing B] [Algebra A B] [CommRing V] [IsReduced V] [Algebra A V]
   [Algebra K V] [IsScalarTower A K V] [FiniteDimensional K V]
-
-/-- A genuine finite free order in the reduced generic fibre has a
-comparison determinant against its normalization. The determinant clears
-every integral element, including the word idempotent, back into the
-original order. -/
 theorem reduced_fibre_index {I : Type*} [Fintype I] [DecidableEq I]
     (p : ℕ) [CharP K p] (small : finrank K V<p)
     (φ : B→ₐ[A]V) (b : Basis I A B)
@@ -126,14 +118,10 @@ theorem reduced_fibre_index {I : Type*} [Fintype I] [DecidableEq I]
   rw [Subalgebra.coe_smul] at h
   change φ u = (D.det:A) • v at h
   simpa only [Algebra.smul_def] using h
-
 omit [IsPrincipalIdealRing A] [IsReduced V] in
-/-- The marked projector is always integral over the base, independently
-of whether it belongs to the original order. -/
 theorem idempotent_integral (v : V) (idem : v^2=v) : IsIntegral A v := by
   refine ⟨Polynomial.X^2-Polynomial.X,monic_X_pow_sub (by rw [degree_X]; norm_num),?_⟩
   simp [idem]
-
 #print axioms reduced_fibre_index
 end
 end Lower6960.CollisionMarked

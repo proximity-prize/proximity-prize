@@ -1,13 +1,50 @@
-import ProximityPrize.SubmissionLower.Final50Price
 import ProximityPrize.SubmissionLower.Wide50EulerPrimaryFamily
-import ProximityPrize.SubmissionLower.PrimaryTaperActive
+import ProximityPrize.SubmissionLower.Final50Price
 
+-- merged module PrimaryTaperActive
+section Merged_PrimaryTaperActive
+
+set_option Elab.async false
+
+namespace PrimaryTaperActive
+
+open K1_13 (Row)
+open K1_13_2_2 (gradeWeight)
+open MvPolynomial
+open TaperColumns (jetExponents)
+open TaperBudget (cap)
+
+def Fits (P : Row 4) (n : ℕ) : Prop :=
+  ∀ m ∈ P.support, m 0 + 2*m 1 + 2*m 2 + 2*m 3 ≤ n
+
+theorem of_jets {P : Row 4} (h : ∀ m ∈ P.support, m ∈ jetExponents) :
+    Fits P 5163 := by
+  intro m hm
+  have hz := h m hm
+  let q := m.weight gradeWeight
+  change q ≤ 4012 ∧ m.weight K1_13_2_2.oldWeight ≤ 1650 ∧ m 1 + m 2 + m 3 ≤ cap q at hz
+  have hq : q = m 0 + m 1 + m 2 + m 3 := by
+    simp [q, Finsupp.weight_eq_sum, Fin.sum_univ_four, gradeWeight, smul_eq_mul]
+  obtain ⟨hqmax, _, hd⟩ := hz
+  unfold cap at hd
+  split at hd <;> omega
+
+
+
+
+
+#print axioms of_jets
+end PrimaryTaperActive
+
+end Merged_PrimaryTaperActive
+
+-- merged module Final50Order
+section Merged_Final50Order
 set_option Elab.async false
 namespace Final50Order
 noncomputable section
 open K1_13 (Geom Row shape InBox Contact)
 open P3 (I K)
-
 abbrev TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) := Final50Price.TrueWeightLE P D
 abbrev physicalDegree := Final50Price.physicalDegree
 abbrev agreement := Final50Price.agreement
@@ -19,21 +56,14 @@ abbrev layerNeed := Final50Price.layerNeed
 abbrev Messages := Final50Price.Messages
 abbrev ProperCut := Final50Price.ProperCut
 abbrev LayerBudget := @Final50Price.LayerBudget
-
-/-- Exact dimension supplied by the compact source and the uniform node rank cap. -/
 theorem sourceRank_eq : sourceRank = 993533597967758343 := by decide
-
-/-- The number of layers guaranteed by the stronger compact certificate. -/
 theorem certified_layers : sourceRank / layerWidth + 1 = 21410054907182 := by decide
-
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
     ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧
       PrimaryTaper.JetsBounded (e i) ∧ Contact w (e i)
-
 end
 end Final50Order
-
 section
 namespace Final50OrderProof
 noncomputable section
@@ -312,7 +342,6 @@ theorem order_of_contact (w : I → K) (P : Row 4) {T : ℕ} (hT : T ≤ primary
       Nat.add_le_add_left (Nat.mul_le_mul_left layerWidth hj') T
     _ ≤ T + (primaryCutoff - T) := Nat.add_le_add_left hq T
     _ = primaryCutoff := Nat.add_sub_of_le hT
-
 theorem proof : Final50OrderProof.c1 := by
   intro w T P hT hP S hS hits
   obtain ⟨H, hH, hhits⟩ := hits
@@ -656,10 +685,8 @@ noncomputable section
 open K1_13 (Row shape)
 open P3 (K)
 open scoped Polynomial
-
 export Final50OrderProof (BankRow requiredOrder)
 export Final50OrderProof_1 (order_of_contact)
-
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
     (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2413) :
     Messages M.word Γ F.scalar := by
@@ -673,8 +700,6 @@ theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
   · intro γ hγ
     let m := F.mark γ hγ
     exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
-
-/-- Compatible proper cuts for a family of distinct irreducible factors. -/
 theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
     (hm : Messages w Γ s) (hr : PrimaryRank w)
     (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
@@ -685,15 +710,10 @@ theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
   Final50OrderProof.of_children Final50OrderProof_1.proof
     Final50OrderProof_2.proof Final50OrderProof_3.proof
     hm hr hirr hpos htop hdiff
-
-/-- Supply the compact primary bank at height 2413. -/
 theorem primary_rank (w : P3.I → K) : PrimaryRank w :=
   Wide50EulerPrimary.primary_family agreement physicalDegree (by decide) (by decide)
     (by decide) w (n := sourceRank) le_rfl
-
-/-- A common evaluation point gives an independent symbol family at each cutoff. -/
 theorem symbol_families : Final50OrderProof.c3 := Final50OrderProof_3.proof
-
 theorem proper_layers {w Γ s n} {f : Fin n → Row 4}
     (hm : Messages w Γ s)
     (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
@@ -702,6 +722,7 @@ theorem proper_layers {w Γ s n} {f : Fin n → Row 4}
     ∃ l : Fin n → ℕ, LayerBudget (fun i => shape (f i)) l ∧
       ∀ i, 0 < l i → ProperCut (f i) Γ s (l i) :=
   proper_layers_of_rank hm (primary_rank w) hirr hpos htop hdiff
-
 end
 end Final50Order
+
+end Merged_Final50Order

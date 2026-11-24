@@ -1,6 +1,229 @@
+import ProximityPrize.SubmissionLower.AnchorPivotRank82180
+import ProximityPrize.SubmissionLower.AnchorNinth82190
 import ProximityPrize.SubmissionLower.Final50AnchorSpace
-import ProximityPrize.SubmissionLower.Final50RankCore
 import ProximityPrize.SubmissionLower.Fast063
+
+-- merged module AnchorBlock82190
+section Merged_AnchorBlock82190
+set_option Elab.async false
+set_option maxHeartbeats 1800000
+set_option backward.isDefEq.respectTransparency false
+namespace AnchorBlock82190
+open K1_13 K1_13_1_1 MvPolynomial
+open SoundnessAnchor (Powers)
+noncomputable section
+
+
+
+
+end
+end AnchorBlock82190
+
+end Merged_AnchorBlock82190
+
+-- merged module RankRows82190
+section Merged_RankRows82190
+
+set_option Elab.async false
+set_option maxRecDepth 6000
+set_option maxHeartbeats 1200000
+
+namespace RankRows82190
+open AnchorPivot82180 (Data Sound E encode mon sound_monomial monoData sound_one)
+open AnchorPivot82190 (allData allPoly all_ok)
+open K1_13 (Geom)
+open K1_13_1_1 (Form bandSpace backShift targetOrder orderCutoff bandCount bandSpace_finite finrank_bandSpace)
+open MvPolynomial
+open scoped BigOperators
+
+abbrev Factor := Fin 9 × ℕ
+def measure : List Factor → Data
+  | [] => Data.unit
+  | (i,k)::xs => ((allData i).times k).plus (measure xs)
+noncomputable def product : List Factor → Form
+  | [] => 1
+  | (i,k)::xs => allPoly i^k * product xs
+theorem product_ok (xs : List Factor) : Sound (measure xs) (product xs) := by
+  induction xs with
+  | nil => exact sound_one
+  | cons t ts ih => exact ((all_ok t.1).pow t.2).mul ih
+
+structure Row where
+  tag : ℕ
+  index : ℕ
+  ord : ℕ
+  e : E
+  factors : List Factor
+  deriving DecidableEq
+def Row.bounds (r : Row) := (monoData r.e).plus (measure r.factors)
+noncomputable def Row.form (r : Row) := mon r.e * product r.factors
+theorem Row.sound (r : Row) : Sound r.bounds r.form :=
+  (sound_monomial r.e).mul (product_ok r.factors)
+
+
+theorem band_mono {d a b : ℕ} {l h l' h' : ℤ} (hl : l' ≤ l) (hh : h ≤ h') (ht : a ≤ b) :
+    bandSpace d l h a ≤ bandSpace d l' h' b := by
+  intro p hp
+  apply (MvPolynomial.mem_restrictSupport_iff Geom).mpr
+  intro e he
+  obtain ⟨hd,hlo,hhi,hf⟩ := (MvPolynomial.mem_restrictSupport_iff Geom).mp hp he
+  exact ⟨hd,hl.trans hlo,hhi.trans hh,hf.trans ht⟩
+
+
+open AnchorPivot82180 (independent)
+
+
+end RankRows82190
+
+end Merged_RankRows82190
+
+-- merged module Final50RankCore
+section Merged_Final50RankCore
+
+namespace Final50RankCore
+open K1_13 (Geom)
+open K1_13_1_1 (Form bandSpace bandCount backShift targetOrder bandSpace_finite finrank_bandSpace)
+open AnchorPivot82180 (encode)
+open MvPolynomial
+open scoped BigOperators
+open RankRows82190 (band_mono)
+open AnchorPivot82180 (independent)
+
+abbrev Row := RankRows82190.Row
+
+def orderCutoff (s : ℕ) (g : ℤ) : ℤ := 101 - (s : ℤ) - g
+
+private def accept (s : ℕ) (g : ℤ) (r : Row) : Bool :=
+  decide (-g ≤ (r.index : ℤ) ∧ (orderCutoff s g).toNat ≤ r.ord)
+
+noncomputable def blockAt (d s : ℕ) (g : ℤ) : bandSpace d (-g) 57 14 →ₗ[Geom] Form :=
+  ((weightedTruncation targetOrder (orderCutoff s g).toNat).comp
+    backShift.toLinearMap).domRestrict _
+
+def good (d : ℕ) (r : Row) : Bool :=
+  let x := r.bounds
+  decide (x.deg = d ∧ r.index ≤ x.lo ∧ x.hi ≤ 57 ∧ x.top ≤ 14 ∧ r.ord ≤ x.ord ∧ x.tag = r.tag)
+
+def gradeFee (s : ℕ) (rows : List Row) : ℕ :=
+  (rows.map (fun r => 101 + r.index - (s + r.ord))).sum
+
+def covers (d : ℕ) (rows : List Row) : Prop :=
+  ∀ i : Fin 58, bandCount d (i.val : ℤ) 57 14 ≤
+    (rows.filter (fun r => decide (i.val ≤ r.index))).length
+
+private theorem row_kernel (d s : ℕ) (g : ℤ) (r : Row) (hv : good d r = true)
+    (ha : accept s g r = true) :
+    ∃ w : LinearMap.ker (blockAt d s g), ((w.val : Form) = r.form) ∧
+      (encode (w.val : Form)).degree = (r.tag : ℕ) := by
+  obtain ⟨hd,hl,hh,ht,ho,hk⟩ := of_decide_eq_true hv
+  obtain ⟨hl',ho'⟩ := of_decide_eq_true ha
+  have hb := r.sound.band
+  rw [hd] at hb
+  let w : bandSpace d (-g) 57 14 := ⟨r.form,
+    band_mono (hl'.trans (Int.ofNat_le.mpr hl)) (by exact_mod_cast hh) ht hb⟩
+  have hw : w ∈ LinearMap.ker (blockAt d s g) := by
+    apply (weightedTruncation_eq_zero_iff _ _ _).mpr
+    exact restrictWeightedOrder_anti _ (ho'.trans ho) r.sound.contact
+  exact ⟨⟨w,hw⟩,rfl,r.sound.degree.trans (congrArg (fun n : ℕ => (n : WithBot ℕ)) hk)⟩
+
+
+
+theorem count_bound (rows : List Row) (d s : ℕ) (g : ℤ)
+    (good : ∀ r ∈ rows, good d r = true)
+    (sorted : rows.Pairwise fun a b => a.tag < b.tag) :
+    Module.finrank Geom (LinearMap.range (blockAt d s g)) + (rows.filter (accept s g)).length ≤
+      bandCount d (-g) 57 14 := by
+  classical
+  let use := rows.filter (accept s g)
+  have memb (i : Fin use.length) : use.get i ∈ rows ∧ accept s g (use.get i) = true :=
+    List.mem_filter.mp (List.get_mem use i)
+  have hsort : use.Pairwise (fun a b => a.tag < b.tag) := sorted.sublist (List.filter_sublist ..)
+  have hmono : StrictMono (fun i : Fin use.length => (use.get i).tag) :=
+    fun _ _ h => hsort.rel_get_of_lt h
+  have h (i : Fin use.length) := row_kernel d s g (use.get i) (good _ (memb i).1) (memb i).2
+  let w (i : Fin use.length) := Classical.choose (h i)
+  let embed : LinearMap.ker (blockAt d s g) →ₗ[Geom] Polynomial Geom :=
+    encode.toLinearMap.comp ((bandSpace d (-g) 57 14).subtype.comp (LinearMap.ker (blockAt d s g)).subtype)
+  have hw := independent embed w _ hmono.injective (fun i => (Classical.choose_spec (h i)).2)
+  let : Module.Finite Geom (bandSpace d (-g) 57 14) := bandSpace_finite _ _ _ _
+  have hc := hw.fintype_card_le_finrank
+  have hd := (blockAt d s g).finrank_range_add_finrank_ker
+  rw [finrank_bandSpace] at hd
+  simpa only [Fintype.card_fin] using
+    ((Nat.add_le_add_left hc (Module.finrank Geom (LinearMap.range (blockAt d s g)))).trans_eq hd)
+
+
+private def charge (s : ℕ) (g : ℤ) (r : Row) : ℕ :=
+  if -g ≤ (r.index : ℤ) ∧ r.ord < (orderCutoff s g).toNat then 1 else 0
+
+private theorem filter_split (s : ℕ) (g : ℤ) (rows : List Row) :
+    (rows.filter (fun r => decide (-g ≤ (r.index : ℤ)))).length =
+      (rows.filter (accept s g)).length + (rows.map (charge s g)).sum := by
+  induction rows with
+  | nil => rfl
+  | cons r rows ih =>
+    by_cases hi : -g ≤ (r.index : ℤ) <;> by_cases ho : (orderCutoff s g).toNat ≤ r.ord <;>
+      simp [hi,ho,accept,charge,lt_iff_not_ge,ih,Nat.add_assoc,Nat.add_comm,Nat.add_left_comm]
+
+private theorem coverage_at {d : ℕ} {rows : List Row} (hc : covers d rows)
+    (g : ℤ) (hg : -57 ≤ g) :
+    bandCount d (-g) 57 14 ≤ (rows.filter (fun r => decide (-g ≤ (r.index : ℤ)))).length := by
+  let i : Fin 58 := ⟨(-g).toNat,by omega⟩
+  have hn (c f : ℕ) : max (0 : ℤ) (-g - 2*c - 3*f) =
+      max 0 ((i.val : ℤ) - 2*c - 3*f) := by dsimp [i]; omega
+  have hh : bandCount d (-g) 57 14 = bandCount d (i.val : ℤ) 57 14 := by
+    simp only [bandCount,hn]
+  have he (r : Row) : (-g ≤ (r.index : ℤ)) ↔ (i.val ≤ r.index) := by dsimp [i]; omega
+  simp_rw [hh,he]
+  exact hc i
+
+private theorem charge_offsets (s : ℕ) (r : Row) :
+    (∑ i : Fin 158, charge s ((i.val : ℤ) - 57) r) ≤ 101 + r.index - (s + r.ord) := by
+  rw [Fin.sum_univ_eq_sum_range (fun i : ℕ => charge s ((i : ℤ) - 57) r)]
+  unfold charge
+  rw [Finset.sum_boole]
+  have hs : (Finset.range 158).filter (fun i : ℕ => -((i : ℤ) - 57) ≤ r.index ∧
+      r.ord < (orderCutoff s ((i : ℤ) - 57)).toNat) ⊆
+      Finset.Ico (57 - r.index) (158 - (s + r.ord)) := by
+    intro i hi
+    obtain ⟨_,a,b⟩ := Finset.mem_filter.mp hi
+    unfold orderCutoff at b
+    exact Finset.mem_Ico.mpr ⟨by omega,by omega⟩
+  have h := Finset.card_le_card hs
+  rw [Nat.card_Ico] at h
+  exact h.trans (by omega)
+
+private theorem list_charge_offsets (s : ℕ) (rows : List Row) :
+    (∑ i : Fin 158, (rows.map (charge s ((i.val : ℤ) - 57))).sum) ≤ gradeFee s rows := by
+  induction rows with
+  | nil => simp [gradeFee]
+  | cons r rows ih =>
+    simp only [List.map_cons,List.sum_cons,Finset.sum_add_distrib]
+    exact Nat.add_le_add (charge_offsets s r) ih
+
+/-- Sum the individual rank charges once per pivot across all offsets of one grade. -/
+theorem grade_bound (s d : ℕ) (rows : List Row) (hg : ∀ r ∈ rows, good d r = true)
+    (hs : rows.Pairwise fun a b => a.tag < b.tag) (hc : covers d rows) :
+    (∑ i : Fin 158, Module.finrank Geom (LinearMap.range (blockAt d s ((i.val : ℤ) - 57)))) ≤
+      gradeFee s rows := by
+  apply le_trans (Finset.sum_le_sum (g := fun i : Fin 158 =>
+    (rows.map (charge s ((i.val : ℤ) - 57))).sum) ?_) (list_charge_offsets s rows)
+  intro i _
+  let g := (i.val : ℤ) - 57
+  have h := count_bound rows d s g hg hs
+  have u := coverage_at hc g (by dsimp [g]; omega)
+  rw [filter_split s g rows] at u
+  change Module.finrank Geom (LinearMap.range (blockAt d s g)) ≤ (rows.map (charge s g)).sum
+  omega
+
+#print axioms grade_bound
+
+end Final50RankCore
+
+end Merged_Final50RankCore
+
+-- merged module Final50RankBlocks
+section Merged_Final50RankBlocks
 
 /- Use the homogeneous-block decomposition in K1_13_1_1 with the
    homogenizing degree supplied by the anchor cap. -/
@@ -18,16 +241,16 @@ open K1_13_1_1 (liftJets liftJets_X lift_value liftImage liftPower liftVar lift_
 
 private abbrev Local := LocalPolynomial Geom 3
 private abbrev T : Local := MvPolynomial.X (localT 3)
-private def offset (i : Fin 154) : ℤ := (i : ℕ) - (55 : ℤ)
+private def offset (i : Fin 158) : ℤ := (i : ℕ) - (57 : ℤ)
 
 private abbrev selectedBlock (s : ℕ) (g : ℤ) :=
   Final50RankCore.blockAt (cap s) s g
 
 private def postprocess (s : ℕ) (g : ℤ) : Form →ₗ[Geom] Local :=
-  (projectLowContact 154).comp
-    ((LinearMap.mulLeft Geom (T ^ (g + 55).toNat *
+  (projectLowContact 158).comp
+    ((LinearMap.mulLeft Geom (T ^ (g + 57).toNat *
       (liftJets valueForm) ^ (s - cap s))).comp liftJets.toLinearMap)
-private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -55 ≤ g) {P : Form}
+private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -57 ≤ g) {P : Form}
     (hP : P.IsWeightedHomogeneous (fun _ => (1 : ℕ)) (cap s)) :
     postprocess s g (weightedTruncation targetOrder (Final50RankCore.orderCutoff s g).toNat P) =
       postprocess s g P := by
@@ -51,13 +274,13 @@ private theorem postprocess_truncate (s : ℕ) (g : ℤ) (hg : -55 ≤ g) {P : F
         simp [Nat.mul_add]
       rw [hw, hd]
       exact Nat.add_le_add_left (Nat.le_of_not_lt hl) d
-  have ht : (T ^ (g + 55).toNat) ∈
-      restrictWeightedOrder (localContactWeight 3) ((g + 55).toNat * 1) :=
+  have ht : (T ^ (g + 57).toNat) ∈
+      restrictWeightedOrder (localContactWeight 3) ((g + 57).toNat * 1) :=
     pow_mem_restrictWeightedOrder (X_mem_restrictWeightedOrder _ _ (localContactWeight_T 3).ge) _
   have hf := pow_mem_restrictWeightedOrder lift_value_order (s - d)
   have hh := mul_mem_restrictWeightedOrder (mul_mem_restrictWeightedOrder ht hf)
     (bind₁_mem_restrictWeightedOrder lift_order hH)
-  have hc : 154 ≤ ((g + 55).toNat * 1 + (s-d) * 1) + (d + cutoff) := by
+  have hc : 158 ≤ ((g + 57).toNat * 1 + (s-d) * 1) + (d + cutoff) := by
     have hd : d ≤ s := cap_le_grade s
     dsimp [cutoff, Final50RankCore.orderCutoff]
     omega
@@ -82,9 +305,9 @@ private theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : An
       (trimmed u).degree = cap u.some.degree := by
   have htotal : u.some.degree = u (some 0) + u (some 1) + u (some 2) + u (some 3) := by
     simp [Finsupp.degree_eq_sum, Fin.sum_univ_four]
-  have hj : u (some 1) + u (some 2) + u (some 3) ≤ 55 := by
+  have hj : u (some 1) + u (some 2) + u (some 3) ≤ 57 := by
     have hi := hu.2.1
-    change u.some.weight jetIndex ≤ 55 at hi
+    change u.some.weight jetIndex ≤ 57 at hi
     rw [jet_index_formula] at hi
     simp only [Finsupp.some_apply] at hi
     omega
@@ -100,7 +323,7 @@ private theorem trimmed_value_and_degree (u : JetVariable 3 →₀ ℕ) (hu : An
   omega
 private theorem trimmed_mem_band (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) :
     BandExponent (cap u.some.degree) (-((u none : ℤ) - u.some.weight jetIndex))
-      55 14 (trimmed u) := by
+      57 14 (trimmed u) := by
   refine ⟨(trimmed_value_and_degree u hu).2, ?_, ?_, ?_⟩
   · rw [trimmed_id]
     omega
@@ -120,14 +343,14 @@ private theorem backShift_hom (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligibl
   · exact value_hom
   · exact isWeightedHomogeneous_X _ _ _
 private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : AnchorEligible u) (a : Geom) :
-    T ^ 55 * unscaledLocalSubstitution 3 0 0 (monomial u a) =
-      T ^ (((u none : ℤ) - u.some.weight jetIndex) + 55).toNat *
+    T ^ 57 * unscaledLocalSubstitution 3 0 0 (monomial u a) =
+      T ^ (((u none : ℤ) - u.some.weight jetIndex) + 57).toNat *
         (liftJets valueForm) ^ (u.some.degree - cap u.some.degree) *
         liftJets (backShift (monomial (trimmed u) a)) := by
   have hi := hu.2.1
-  change u.some.weight jetIndex ≤ 55 at hi
-  let r := (((u none : ℤ) - u.some.weight jetIndex) + 55).toNat
-  have ht : r + u.some.weight jetIndex = u none + 55 := by dsimp [r]; omega
+  change u.some.weight jetIndex ≤ 57 at hi
+  let r := (((u none : ℤ) - u.some.weight jetIndex) + 57).toNat
+  have ht : r + u.some.weight jetIndex = u none + 57 := by dsimp [r]; omega
   rw [jet_index_formula] at ht
   simp only [Finsupp.some_apply] at ht
   have hv := (trimmed_value_and_degree u hu).1
@@ -146,12 +369,12 @@ private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : Anchor
     trimmed_other u 1 (by decide), trimmed_other u 2 (by decide), trimmed_other u 3 (by decide),
     liftJets_X]
   have hpow : T ^ r * T ^ u (some 1) * (T ^ 2) ^ u (some 2) * (T ^ 3) ^ u (some 3) =
-      T ^ (u none + 55) := by
+      T ^ (u none + 57) := by
     rw [← pow_mul, ← pow_mul, ← pow_add, ← pow_add, ← pow_add]
     congr 1
     omega
   calc
-    _ = T ^ (u none + 55) * MvPolynomial.C a * liftJets valueForm ^ u (some 0) *
+    _ = T ^ (u none + 57) * MvPolynomial.C a * liftJets valueForm ^ u (some 0) *
         MvPolynomial.X (localY (0 : Fin 3)) ^ u (some 1) *
         MvPolynomial.X (localY (1 : Fin 3)) ^ u (some 2) *
         MvPolynomial.X (localY (2 : Fin 3)) ^ u (some 3) := by rw [pow_add]; ring
@@ -160,20 +383,20 @@ private theorem shifted_substitution (u : JetVariable 3 →₀ ℕ) (hu : Anchor
       simp [liftImage, liftPower, liftVar, mul_pow]
       ring
 private theorem shift_projection (P : Local) :
-    T ^ 55 * projectLowContact 99 P = projectLowContact 154 (T ^ 55 * P) := by
+    T ^ 57 * projectLowContact 101 P = projectLowContact 158 (T ^ 57 * P) := by
   induction P using MvPolynomial.induction_on' with
   | monomial e a =>
-      have hmul : T ^ 55 * monomial e a = monomial (Finsupp.single (localT 3) 55 + e) a := by
+      have hmul : T ^ 57 * monomial e a = monomial (Finsupp.single (localT 3) 57 + e) a := by
         rw [MvPolynomial.X_pow_eq_monomial, monomial_mul_monomial, one_mul]
       rw [project_monomial, hmul, project_monomial]
-      have ho : localContactOrder 3 (Finsupp.single (localT 3) 55 + e) =
-          55 + localContactOrder 3 e := by
+      have ho : localContactOrder 3 (Finsupp.single (localT 3) 57 + e) =
+          57 + localContactOrder 3 e := by
         simp [localContactOrder, Finsupp.weight_single]
-      have hlt : localContactOrder 3 (Finsupp.single (localT 3) 55 + e) < 154 ↔
-          localContactOrder 3 e < 99 := by rw [ho]; omega
-      by_cases he : localContactOrder 3 e < 99
+      have hlt : localContactOrder 3 (Finsupp.single (localT 3) 57 + e) < 158 ↔
+          localContactOrder 3 e < 101 := by rw [ho]; omega
+      by_cases he : localContactOrder 3 e < 101
       · simp [he, hlt.mpr he, hmul]
-      · have hnot : ¬ localContactOrder 3 (Finsupp.single (localT 3) 55 + e) < 154 :=
+      · have hnot : ¬ localContactOrder 3 (Finsupp.single (localT 3) 57 + e) < 158 :=
           fun h => he (hlt.mp h)
         simp [he, hnot]
   | add P Q hP hQ => simp only [map_add, mul_add, hP, hQ]
@@ -181,20 +404,20 @@ private theorem shifted_constraint_monomial (u : JetVariable 3 →₀ ℕ) (hu :
     (a : Geom) :
     let s := u.some.degree
     let g := (u none : ℤ) - u.some.weight jetIndex
-    T ^ 55 * localConstraintAt 99 0 0 (monomial u a) =
+    T ^ 57 * localConstraintAt 101 0 0 (monomial u a) =
       postprocess s g (selectedBlock s g ⟨monomial (trimmed u) a,
         (monomial_mem_restrictSupport (R := Geom)).mpr (Or.inl (trimmed_mem_band u hu))⟩) := by
   dsimp only [localConstraintAt, LinearMap.comp_apply, AlgHom.toLinearMap_apply]
   rw [shift_projection, shifted_substitution u hu]
   have hi := hu.2.1
-  change u.some.weight jetIndex ≤ 55 at hi
+  change u.some.weight jetIndex ≤ 57 at hi
   let s := u.some.degree
   let g : ℤ := (u none : ℤ) - u.some.weight jetIndex
   let P := backShift (monomial (trimmed u) a)
   change postprocess s g P = postprocess s g
     (weightedTruncation targetOrder (Final50RankCore.orderCutoff s g).toNat P)
   exact (postprocess_truncate s g (by dsimp [g]; omega) (backShift_hom u hu a)).symm
-private theorem selected_zero (s : ℕ) (g : ℤ) (h : 99 - (s : ℤ) ≤ g) :
+private theorem selected_zero (s : ℕ) (g : ℤ) (h : 101 - (s : ℤ) ≤ g) :
     selectedBlock s g = 0 := by
   apply LinearMap.ext
   intro q
@@ -202,13 +425,13 @@ private theorem selected_zero (s : ℕ) (g : ℤ) (h : 99 - (s : ℤ) ≤ g) :
   have hcut : (Final50RankCore.orderCutoff s g).toNat = 0 := by unfold Final50RankCore.orderCutoff; omega
   rw [hcut, weightedTruncation_eq_zero_iff, restrictWeightedOrder_zero]
   trivial
-private abbrev Block := Fin 133 × Fin 154
+private abbrev Block := Fin 137 × Fin 158
 private abbrev Image (b : Block) := LinearMap.range (selectedBlock b.1 (offset b.2))
 private def assemble : (∀ b : Block, Image b) →ₗ[Geom] Local :=
   merge (fun b => postprocess b.1 (offset b.2))
 private theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
     (hs : (b.1 : ℕ) = s) (hg : offset b.2 = g)
-    (q : bandSpace (cap s) (-g) 55 14) :
+    (q : bandSpace (cap s) (-g) 57 14) :
     postprocess s g (selectedBlock s g q) ∈ LinearMap.range assemble := by
   subst s
   subst g
@@ -216,31 +439,31 @@ private theorem postprocess_mem_assemble (b : Block) (s : ℕ) (g : ℤ)
   exact ⟨Pi.single b v, merge_single (fun j : Block => postprocess j.1 (offset j.2)) b v⟩
 private theorem shifted_monomial_mem_assemble (u : JetVariable 3 →₀ ℕ)
     (hu : AnchorEligible u) (a : Geom) :
-    T ^ 55 * localConstraintAt 99 0 0 (monomial u a) ∈ LinearMap.range assemble := by
+    T ^ 57 * localConstraintAt 101 0 0 (monomial u a) ∈ LinearMap.range assemble := by
   classical
   let s := u.some.degree
   let g : ℤ := (u none : ℤ) - u.some.weight jetIndex
-  let q : bandSpace (cap s) (-g) 55 14 :=
+  let q : bandSpace (cap s) (-g) 57 14 :=
     ⟨monomial (trimmed u) a, (monomial_mem_restrictSupport (R := Geom)).mpr (Or.inl (trimmed_mem_band u hu))⟩
-  have hmono : T ^ 55 * localConstraintAt 99 0 0 (monomial u a) =
+  have hmono : T ^ 57 * localConstraintAt 101 0 0 (monomial u a) =
       postprocess s g (selectedBlock s g q) := shifted_constraint_monomial u hu a
   rw [hmono]
-  by_cases hg : g < 99
+  by_cases hg : g < 101
   · have hJ := hu.2.1
-    change u.some.weight jetIndex ≤ 55 at hJ
-    have hs : s < 133 := by exact Nat.lt_succ_of_le hu.1
-    have hr : (g + 55).toNat < 154 := by dsimp [g] at *; omega
-    let b : Block := (⟨s, hs⟩, ⟨(g + 55).toNat, hr⟩)
+    change u.some.weight jetIndex ≤ 57 at hJ
+    have hs : s < 137 := by exact Nat.lt_succ_of_le hu.1
+    have hr : (g + 57).toNat < 158 := by dsimp [g] at *; omega
+    let b : Block := (⟨s, hs⟩, ⟨(g + 57).toNat, hr⟩)
     have ho : offset b.2 = g := by dsimp [b, offset, g]; omega
     exact postprocess_mem_assemble b s g rfl ho q
   · rw [selected_zero s g (by omega), LinearMap.zero_apply, map_zero]
     exact Submodule.zero_mem _
 theorem origin_le_blocks :
     Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) ≤
-      ∑ s : Fin 133, ∑ r : Fin 154,
-        Module.finrank Geom (LinearMap.range (Final50RankCore.blockAt (cap s) s ((r : ℕ) - (55 : ℤ)))) := by
+      ∑ s : Fin 137, ∑ r : Fin 158,
+        Module.finrank Geom (LinearMap.range (Final50RankCore.blockAt (cap s) s ((r : ℕ) - (57 : ℤ)))) := by
   classical
-  let shift := LinearMap.mulLeft Geom (T ^ 55)
+  let shift := LinearMap.mulLeft Geom (T ^ 57)
   have hshift : Function.Injective shift :=
     fun _ _ h => mul_left_cancel₀ (pow_ne_zero _ (MvPolynomial.X_ne_zero _)) h
   let shifted := shift.comp (anchorLocal 0 0)
@@ -250,11 +473,11 @@ theorem origin_le_blocks :
     exact (Submodule.equivMapOfInjective shift hshift _).finrank_eq.symm
   have hsub : LinearMap.range shifted ≤ LinearMap.range assemble := by
     rintro _ ⟨Q, rfl⟩
-    change shift (localConstraintAt 99 0 0 (Q : DifferentialPolynomial Geom 3)) ∈ _
+    change shift (localConstraintAt 101 0 0 (Q : DifferentialPolynomial Geom 3)) ∈ _
     rw [(Q : DifferentialPolynomial Geom 3).as_sum, map_sum, map_sum]
     exact Submodule.sum_mem _ fun u hu => shifted_monomial_mem_assemble u (Q.property hu) _
   have (b : Block) : Module.Finite Geom (Image b) := by
-    have : Module.Finite Geom (bandSpace (cap b.1) (-offset b.2) 55 14) :=
+    have : Module.Finite Geom (bandSpace (cap b.1) (-offset b.2) 57 14) :=
       restrictSupport_finite ((Finsupp.finite_of_degree_le _).subset fun _ he =>
         Nat.le_of_eq he.1)
     infer_instance
@@ -270,3 +493,5 @@ theorem origin_le_blocks :
 
 end
 end Final50RankBlocks
+
+end Merged_Final50RankBlocks

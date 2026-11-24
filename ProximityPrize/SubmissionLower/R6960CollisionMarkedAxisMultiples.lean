@@ -1,5 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedCommonAxis
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedTwoChart
+set_option synthInstance.maxHeartbeats 200000
 
 set_option Elab.async false
 set_option maxRecDepth 18000

@@ -24,8 +24,8 @@ import Mathlib.RingTheory.RingHom.Unramified
 import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
 import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.Fast042
-import ProximityPrize.SubmissionLower.Pack_K1_14_2_1Split
-import ProximityPrize.SubmissionLower.Pack_K1_14_2_2Split
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2_7Proof
+import ProximityPrize.SubmissionLower.Fast049
 import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
 set_option Elab.async false
 set_option autoImplicit true

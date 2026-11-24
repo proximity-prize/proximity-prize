@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.StructuralListDefs
+import ProximityPrize.SubmissionLower.StructuralListPrice
 
 set_option Elab.async false
 

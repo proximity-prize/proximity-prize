@@ -1,22 +1,16 @@
 import ProximityPrize.SubmissionLower.R6960CollisionTameDiscriminant
-import ProximityPrize.SubmissionLower.R6960LineEulerNormalization
+import ProximityPrize.SubmissionLower.R6960LineEulerFree
 import Mathlib.RingTheory.Trace.Basic
-
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 5200000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionTame
 noncomputable section
 open Polynomial Matrix LaurentPolynomial LineEuler Module
 open scoped Polynomial Matrix BigOperators
-
 variable {k E ι : Type*} [Field k] [Field E] [Algebra (Laurent k) E]
   [Fintype ι] [DecidableEq ι]
-
-/-- Multiplication matrices in the local polynomial frame transport to
-multiplication matrices in the common Laurent frame. -/
 theorem trace_matrix_on_torus (s : Bool) (b : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) s)) :
     (Algebra.traceMatrix (Polynomial k) b).map (chartEmbedding s (k:=k))=
       Algebra.traceMatrix (Laurent k) (localBasis s b) := by
@@ -35,7 +29,6 @@ theorem trace_matrix_on_torus (s : Bool) (b : Basis ι (Polynomial k) (chartOrde
   intro i j
   simp only [Matrix.map_apply,Algebra.traceMatrix_apply,Algebra.traceForm_apply,localBasis_apply,←map_mul]
   exact tr (b i*b j)
-
 private theorem transition_expansion
     (bf : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) false))
     (bi : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) true)) (i : ι) :
@@ -55,9 +48,6 @@ private theorem transition_expansion
   rw [show (∑ j,normalizedTransition bf bi j i • fin j)=(∑ j,fin.equivFun (inf i) j • fin j)
     from Finset.sum_congr rfl (fun j _=>congrArg (· • fin j) (repr j))]
   exact (fin.equivFun_symm_apply (fin.equivFun (inf i))).symm.trans (fin.equivFun.symm_apply_apply (inf i))
-
-/-- The actual normalized trace determinants transform by the square of
-its Laurent transition determinant. -/
 theorem normalized_trace_transition
     (bf : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) false))
     (bi : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) true)) :
@@ -86,10 +76,6 @@ theorem normalized_trace_transition
   change infinityEmbedding Z.det=G.det^2*X.det.toLaurent
   rw [←infDet,change,det_mul,det_mul,det_transpose,finDet]
   ring
-
-/-- The finite normalized discriminant, written in its free polynomial
-basis, has degree at most twice the determinant deficit of the actual
-transition. The missing degree is allowed at infinity. -/
 theorem normalized_line_discriminant_degree
     (bf : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) false))
     (bi : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) true))
@@ -122,7 +108,6 @@ theorem normalized_line_discriminant_degree
   have z := AddMonoidAlgebra.mem_supported'.mp supported _ neg
   rw [product,←single_eq_C,AddMonoidAlgebra.coeff_single_zero_mul,coeff_shift,add_sub_cancel_right] at z
   exact mul_ne_zero (pow_ne_zero 2 cn) alive z
-
 #print axioms trace_matrix_on_torus
 #print axioms normalized_trace_transition
 #print axioms normalized_line_discriminant_degree

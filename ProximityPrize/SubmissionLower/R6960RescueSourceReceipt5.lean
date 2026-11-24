@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6960RescueSourceSchedule
+import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt0
 
 set_option Elab.async false
 set_option maxHeartbeats 4000000
@@ -1459,2193 +1459,2193 @@ private theorem moment_9203_2007_join86 :
 
 theorem moment_9203_2007 : momentEstimate 9203 2007 = 197823002949183 := moment_9203_2007_join86
 
-private theorem receipt_0_13_2339_0_part0 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 0 128 = 21563985072628579927393483200 := by decide +kernel
-private theorem receipt_0_13_2339_0_part1 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 128 128 = 18720667898534456938888436160 := by decide +kernel
-private theorem receipt_0_13_2339_0_part2 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 256 128 = 16010638009381444968835807680 := by decide +kernel
-private theorem receipt_0_13_2339_0_part3 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 384 128 = 13430675138186218890234878400 := by decide +kernel
-private theorem receipt_0_13_2339_0_part4 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 512 128 = 10977566900393470776208013760 := by decide +kernel
-private theorem receipt_0_13_2339_0_part5 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 640 128 = 8648108787597082778888149440 := by decide +kernel
-private theorem receipt_0_13_2339_0_part6 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 768 128 = 6439104862707844204113120342 := by decide +kernel
-private theorem receipt_0_13_2339_0_part7 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 896 128 = 4347370406420599644957892608 := by decide +kernel
-private theorem receipt_0_13_2339_0_part8 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 1024 128 = 2369718964630508532240826482 := by decide +kernel
-private theorem receipt_0_13_2339_0_part9 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 1152 99 = 546940996810341822414650070 := by decide +kernel
-private theorem receipt_0_13_2339_0_join0 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 0 256 = 40284652971163036866281919360 :=
-  phaseBlock_append receipt_0_13_2339_0_part0 receipt_0_13_2339_0_part1 rfl rfl rfl
-private theorem receipt_0_13_2339_0_join1 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 384 256 = 24408242038579689666442892160 :=
-  phaseBlock_append receipt_0_13_2339_0_part3 receipt_0_13_2339_0_part4 rfl rfl rfl
-private theorem receipt_0_13_2339_0_join2 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 256 384 = 40418880047961134635278699840 :=
-  phaseBlock_append receipt_0_13_2339_0_part2 receipt_0_13_2339_0_join1 rfl rfl rfl
-private theorem receipt_0_13_2339_0_join3 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 0 640 = 80703533019124171501560619200 :=
-  phaseBlock_append receipt_0_13_2339_0_join0 receipt_0_13_2339_0_join2 rfl rfl rfl
-private theorem receipt_0_13_2339_0_join4 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 640 256 = 15087213650304926983001269782 :=
-  phaseBlock_append receipt_0_13_2339_0_part5 receipt_0_13_2339_0_part6 rfl rfl rfl
-private theorem receipt_0_13_2339_0_join5 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 1024 227 = 2916659961440850354655476552 :=
-  phaseBlock_append receipt_0_13_2339_0_part8 receipt_0_13_2339_0_part9 rfl rfl rfl
-private theorem receipt_0_13_2339_0_join6 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 896 355 = 7264030367861449999613369160 :=
-  phaseBlock_append receipt_0_13_2339_0_part7 receipt_0_13_2339_0_join5 rfl rfl rfl
-private theorem receipt_0_13_2339_0_join7 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 640 611 = 22351244018166376982614638942 :=
-  phaseBlock_append receipt_0_13_2339_0_join4 receipt_0_13_2339_0_join6 rfl rfl rfl
-private theorem receipt_0_13_2339_0_join8 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 0) 0 1251 = 103054777037290548484175258142 :=
-  phaseBlock_append receipt_0_13_2339_0_join3 receipt_0_13_2339_0_join7 rfl rfl rfl
+private theorem receipt_0_13_2359_0_part0 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 0 128 = 21492977201547188888012112480 := by decide +kernel
+private theorem receipt_0_13_2359_0_part1 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 128 128 = 18658777832640935923781104224 := by decide +kernel
+private theorem receipt_0_13_2359_0_part2 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 256 128 = 15957491851217647710496629344 := by decide +kernel
+private theorem receipt_0_13_2359_0_part3 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 384 128 = 13385907185669639030399947360 := by decide +kernel
+private theorem receipt_0_13_2359_0_part4 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 512 128 = 10940819639310752769006862944 := by decide +kernel
+private theorem receipt_0_13_2359_0_part5 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 640 128 = 8619032884093134747484107360 := by decide +kernel
+private theorem receipt_0_13_2359_0_part6 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 768 128 = 6417358960496063987841826409 := by decide +kernel
+private theorem receipt_0_13_2359_0_part7 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 896 128 = 4332621250562907083956067817 := by decide +kernel
+private theorem receipt_0_13_2359_0_part8 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 1024 128 = 2361642219077322032939007634 := by decide +kernel
+private theorem receipt_0_13_2359_0_part9 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 1152 99 = 545069393615548047810979461 := by decide +kernel
+private theorem receipt_0_13_2359_0_join0 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 0 256 = 40151755034188124811793216704 :=
+  phaseBlock_append receipt_0_13_2359_0_part0 receipt_0_13_2359_0_part1 rfl rfl rfl
+private theorem receipt_0_13_2359_0_join1 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 384 256 = 24326726824980391799406810304 :=
+  phaseBlock_append receipt_0_13_2359_0_part3 receipt_0_13_2359_0_part4 rfl rfl rfl
+private theorem receipt_0_13_2359_0_join2 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 256 384 = 40284218676198039509903439648 :=
+  phaseBlock_append receipt_0_13_2359_0_part2 receipt_0_13_2359_0_join1 rfl rfl rfl
+private theorem receipt_0_13_2359_0_join3 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 0 640 = 80435973710386164321696656352 :=
+  phaseBlock_append receipt_0_13_2359_0_join0 receipt_0_13_2359_0_join2 rfl rfl rfl
+private theorem receipt_0_13_2359_0_join4 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 640 256 = 15036391844589198735325933769 :=
+  phaseBlock_append receipt_0_13_2359_0_part5 receipt_0_13_2359_0_part6 rfl rfl rfl
+private theorem receipt_0_13_2359_0_join5 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 1024 227 = 2906711612692870080749987095 :=
+  phaseBlock_append receipt_0_13_2359_0_part8 receipt_0_13_2359_0_part9 rfl rfl rfl
+private theorem receipt_0_13_2359_0_join6 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 896 355 = 7239332863255777164706054912 :=
+  phaseBlock_append receipt_0_13_2359_0_part7 receipt_0_13_2359_0_join5 rfl rfl rfl
+private theorem receipt_0_13_2359_0_join7 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 640 611 = 22275724707844975900031988681 :=
+  phaseBlock_append receipt_0_13_2359_0_join4 receipt_0_13_2359_0_join6 rfl rfl rfl
+private theorem receipt_0_13_2359_0_join8 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 0) 0 1251 = 102711698418231140221728645033 :=
+  phaseBlock_append receipt_0_13_2359_0_join3 receipt_0_13_2359_0_join7 rfl rfl rfl
 
-private theorem receipt_0_13_2339_0 : fastPhase (bank 0 13).shape 179827 2339 44 1 0 1 0 = 103054777037290548484175258142 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_0_13_2339_0_join8
+private theorem receipt_0_13_2359_0 : fastPhase (bank 0 13).shape 179818 2359 44 1 0 1 0 = 102711698418231140221728645033 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_0_13_2359_0_join8
 
-private theorem receipt_0_13_2339_1_part0 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 0 128 = 21541538353967797782924409728 := by decide +kernel
-private theorem receipt_0_13_2339_1_part1 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 128 128 = 18699240223016769818252376960 := by decide +kernel
-private theorem receipt_0_13_2339_1_part2 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 256 128 = 15990204992793764845242039168 := by decide +kernel
-private theorem receipt_0_13_2339_1_part3 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 384 128 = 13411212456417043360553040768 := by decide +kernel
-private theorem receipt_0_13_2339_1_part4 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 512 128 = 10959050289384794133220932480 := by decide +kernel
-private theorem receipt_0_13_2339_1_part5 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 640 128 = 8630514043296307083544656768 := by decide +kernel
-private theorem receipt_0_13_2339_1_part6 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 768 128 = 6422407839162005790209642643 := by decide +kernel
-private theorem receipt_0_13_2339_1_part7 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 896 128 = 4331547000735355650337632084 := by decide +kernel
-private theorem receipt_0_13_2339_1_part8 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 1024 128 = 2354745125091854343813740718 := by decide +kernel
-private theorem receipt_0_13_2339_1_part9 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 1152 99 = 535927104885295928491914840 := by decide +kernel
-private theorem receipt_0_13_2339_1_join0 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 0 256 = 40240778576984567601176786688 :=
-  phaseBlock_append receipt_0_13_2339_1_part0 receipt_0_13_2339_1_part1 rfl rfl rfl
-private theorem receipt_0_13_2339_1_join1 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 384 256 = 24370262745801837493773973248 :=
-  phaseBlock_append receipt_0_13_2339_1_part3 receipt_0_13_2339_1_part4 rfl rfl rfl
-private theorem receipt_0_13_2339_1_join2 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 256 384 = 40360467738595602339016012416 :=
-  phaseBlock_append receipt_0_13_2339_1_part2 receipt_0_13_2339_1_join1 rfl rfl rfl
-private theorem receipt_0_13_2339_1_join3 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 0 640 = 80601246315580169940192799104 :=
-  phaseBlock_append receipt_0_13_2339_1_join0 receipt_0_13_2339_1_join2 rfl rfl rfl
-private theorem receipt_0_13_2339_1_join4 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 640 256 = 15052921882458312873754299411 :=
-  phaseBlock_append receipt_0_13_2339_1_part5 receipt_0_13_2339_1_part6 rfl rfl rfl
-private theorem receipt_0_13_2339_1_join5 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 1024 227 = 2890672229977150272305655558 :=
-  phaseBlock_append receipt_0_13_2339_1_part8 receipt_0_13_2339_1_part9 rfl rfl rfl
-private theorem receipt_0_13_2339_1_join6 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 896 355 = 7222219230712505922643287642 :=
-  phaseBlock_append receipt_0_13_2339_1_part7 receipt_0_13_2339_1_join5 rfl rfl rfl
-private theorem receipt_0_13_2339_1_join7 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 640 611 = 22275141113170818796397587053 :=
-  phaseBlock_append receipt_0_13_2339_1_join4 receipt_0_13_2339_1_join6 rfl rfl rfl
-private theorem receipt_0_13_2339_1_join8 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2339 44 1 0 1 1) 0 1251 = 102876387428750988736590386157 :=
-  phaseBlock_append receipt_0_13_2339_1_join3 receipt_0_13_2339_1_join7 rfl rfl rfl
+private theorem receipt_0_13_2359_1_part0 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 0 128 = 21470604691305115296956225248 := by decide +kernel
+private theorem receipt_0_13_2359_1_part1 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 128 128 = 18637421232926801666851325664 := by decide +kernel
+private theorem receipt_0_13_2359_1_part2 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 256 128 = 15937126846102674501817497312 := by decide +kernel
+private theorem receipt_0_13_2359_1_part3 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 384 128 = 13366509519257659970203363040 := by decide +kernel
+private theorem receipt_0_13_2359_1_part4 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 512 128 = 10922365115690097302483752672 := by decide +kernel
+private theorem receipt_0_13_2359_1_part5 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 640 128 = 8601497367288513623636084448 := by decide +kernel
+private theorem receipt_0_13_2359_1_part6 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 768 128 = 6400718373070666584824731173 := by decide +kernel
+private theorem receipt_0_13_2359_1_part7 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 896 128 = 4316851558840720841276678607 := by decide +kernel
+private theorem receipt_0_13_2359_1_part8 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 1024 128 = 2346719438905511335324388889 := by decide +kernel
+private theorem receipt_0_13_2359_1_part9 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 1152 99 = 534093215097607388652767377 := by decide +kernel
+private theorem receipt_0_13_2359_1_join0 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 0 256 = 40108025924231916963807550912 :=
+  phaseBlock_append receipt_0_13_2359_1_part0 receipt_0_13_2359_1_part1 rfl rfl rfl
+private theorem receipt_0_13_2359_1_join1 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 384 256 = 24288874634947757272687115712 :=
+  phaseBlock_append receipt_0_13_2359_1_part3 receipt_0_13_2359_1_part4 rfl rfl rfl
+private theorem receipt_0_13_2359_1_join2 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 256 384 = 40226001481050431774504613024 :=
+  phaseBlock_append receipt_0_13_2359_1_part2 receipt_0_13_2359_1_join1 rfl rfl rfl
+private theorem receipt_0_13_2359_1_join3 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 0 640 = 80334027405282348738312163936 :=
+  phaseBlock_append receipt_0_13_2359_1_join0 receipt_0_13_2359_1_join2 rfl rfl rfl
+private theorem receipt_0_13_2359_1_join4 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 640 256 = 15002215740359180208460815621 :=
+  phaseBlock_append receipt_0_13_2359_1_part5 receipt_0_13_2359_1_part6 rfl rfl rfl
+private theorem receipt_0_13_2359_1_join5 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 1024 227 = 2880812654003118723977156266 :=
+  phaseBlock_append receipt_0_13_2359_1_part8 receipt_0_13_2359_1_part9 rfl rfl rfl
+private theorem receipt_0_13_2359_1_join6 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 896 355 = 7197664212843839565253834873 :=
+  phaseBlock_append receipt_0_13_2359_1_part7 receipt_0_13_2359_1_join5 rfl rfl rfl
+private theorem receipt_0_13_2359_1_join7 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 640 611 = 22199879953203019773714650494 :=
+  phaseBlock_append receipt_0_13_2359_1_join4 receipt_0_13_2359_1_join6 rfl rfl rfl
+private theorem receipt_0_13_2359_1_join8 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2359 44 1 0 1 1) 0 1251 = 102533907358485368512026814430 :=
+  phaseBlock_append receipt_0_13_2359_1_join3 receipt_0_13_2359_1_join7 rfl rfl rfl
 
-private theorem receipt_0_13_2339_1 : fastPhase (bank 0 13).shape 179827 2339 44 1 0 1 1 = 102876387428750988736590386157 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_0_13_2339_1_join8
+private theorem receipt_0_13_2359_1 : fastPhase (bank 0 13).shape 179818 2359 44 1 0 1 1 = 102533907358485368512026814430 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_0_13_2359_1_join8
 
-private theorem receipt_0_13_2340_0_part0 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 0 128 = 21564177171168869678085095808 := by decide +kernel
-private theorem receipt_0_13_2340_0_part1 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 128 128 = 18720824932694028250268410240 := by decide +kernel
-private theorem receipt_0_13_2340_0_part2 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 256 128 = 16010763719951134827434901888 := by decide +kernel
-private theorem receipt_0_13_2340_0_part3 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 384 128 = 13430773154861062855276323200 := by decide +kernel
-private theorem receipt_0_13_2340_0_part4 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 512 128 = 10977640742047696781949026688 := by decide +kernel
-private theorem receipt_0_13_2340_0_part5 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 640 128 = 8648161862558885034635895168 := by decide +kernel
-private theorem receipt_0_13_2340_0_part6 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 768 128 = 6439140449198581068263410774 := by decide +kernel
-private theorem receipt_0_13_2340_0_part7 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 896 128 = 4347391668507492241320146879 := by decide +kernel
-private theorem receipt_0_13_2340_0_part8 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 1024 128 = 2369729027934448114292955514 := by decide +kernel
-private theorem receipt_0_13_2340_0_part9 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 1152 99 = 546943011716170677632480355 := by decide +kernel
-private theorem receipt_0_13_2340_0_join0 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 0 256 = 40285002103862897928353506048 :=
-  phaseBlock_append receipt_0_13_2340_0_part0 receipt_0_13_2340_0_part1 rfl rfl rfl
-private theorem receipt_0_13_2340_0_join1 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 384 256 = 24408413896908759637225349888 :=
-  phaseBlock_append receipt_0_13_2340_0_part3 receipt_0_13_2340_0_part4 rfl rfl rfl
-private theorem receipt_0_13_2340_0_join2 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 256 384 = 40419177616859894464660251776 :=
-  phaseBlock_append receipt_0_13_2340_0_part2 receipt_0_13_2340_0_join1 rfl rfl rfl
-private theorem receipt_0_13_2340_0_join3 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 0 640 = 80704179720722792393013757824 :=
-  phaseBlock_append receipt_0_13_2340_0_join0 receipt_0_13_2340_0_join2 rfl rfl rfl
-private theorem receipt_0_13_2340_0_join4 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 640 256 = 15087302311757466102899305942 :=
-  phaseBlock_append receipt_0_13_2340_0_part5 receipt_0_13_2340_0_part6 rfl rfl rfl
-private theorem receipt_0_13_2340_0_join5 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 1024 227 = 2916672039650618791925435869 :=
-  phaseBlock_append receipt_0_13_2340_0_part8 receipt_0_13_2340_0_part9 rfl rfl rfl
-private theorem receipt_0_13_2340_0_join6 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 896 355 = 7264063708158111033245582748 :=
-  phaseBlock_append receipt_0_13_2340_0_part7 receipt_0_13_2340_0_join5 rfl rfl rfl
-private theorem receipt_0_13_2340_0_join7 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 640 611 = 22351366019915577136144888690 :=
-  phaseBlock_append receipt_0_13_2340_0_join4 receipt_0_13_2340_0_join6 rfl rfl rfl
-private theorem receipt_0_13_2340_0_join8 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 0) 0 1251 = 103055545740638369529158646514 :=
-  phaseBlock_append receipt_0_13_2340_0_join3 receipt_0_13_2340_0_join7 rfl rfl rfl
+private theorem receipt_0_13_2360_0_part0 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 0 128 = 21493168654760370441579645120 := by decide +kernel
+private theorem receipt_0_13_2360_0_part1 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 128 128 = 18658934339095971671405414592 := by decide +kernel
+private theorem receipt_0_13_2360_0_part2 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 256 128 = 15957617139206959264475498688 := by decide +kernel
+private theorem receipt_0_13_2360_0_part3 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 384 128 = 13386004872751233357729810624 := by decide +kernel
+private theorem receipt_0_13_2360_0_part4 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 512 128 = 10940893232582761070788331712 := by decide +kernel
+private theorem receipt_0_13_2360_0_part5 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 640 128 = 8619085780468131436001937600 := by decide +kernel
+private theorem receipt_0_13_2360_0_part6 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 768 128 = 6417394430915807794455468603 := by decide +kernel
+private theorem receipt_0_13_2360_0_part7 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 896 128 = 4332642444937221066953708331 := by decide +kernel
+private theorem receipt_0_13_2360_0_part8 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 1024 128 = 2361652250170165615882529312 := by decide +kernel
+private theorem receipt_0_13_2360_0_part9 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 1152 99 = 545071401984256214085771354 := by decide +kernel
+private theorem receipt_0_13_2360_0_join0 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 0 256 = 40152102993856342112985059712 :=
+  phaseBlock_append receipt_0_13_2360_0_part0 receipt_0_13_2360_0_part1 rfl rfl rfl
+private theorem receipt_0_13_2360_0_join1 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 384 256 = 24326898105333994428518142336 :=
+  phaseBlock_append receipt_0_13_2360_0_part3 receipt_0_13_2360_0_part4 rfl rfl rfl
+private theorem receipt_0_13_2360_0_join2 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 256 384 = 40284515244540953692993641024 :=
+  phaseBlock_append receipt_0_13_2360_0_part2 receipt_0_13_2360_0_join1 rfl rfl rfl
+private theorem receipt_0_13_2360_0_join3 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 0 640 = 80436618238397295805978700736 :=
+  phaseBlock_append receipt_0_13_2360_0_join0 receipt_0_13_2360_0_join2 rfl rfl rfl
+private theorem receipt_0_13_2360_0_join4 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 640 256 = 15036480211383939230457406203 :=
+  phaseBlock_append receipt_0_13_2360_0_part5 receipt_0_13_2360_0_part6 rfl rfl rfl
+private theorem receipt_0_13_2360_0_join5 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 1024 227 = 2906723652154421829968300666 :=
+  phaseBlock_append receipt_0_13_2360_0_part8 receipt_0_13_2360_0_part9 rfl rfl rfl
+private theorem receipt_0_13_2360_0_join6 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 896 355 = 7239366097091642896922008997 :=
+  phaseBlock_append receipt_0_13_2360_0_part7 receipt_0_13_2360_0_join5 rfl rfl rfl
+private theorem receipt_0_13_2360_0_join7 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 640 611 = 22275846308475582127379415200 :=
+  phaseBlock_append receipt_0_13_2360_0_join4 receipt_0_13_2360_0_join6 rfl rfl rfl
+private theorem receipt_0_13_2360_0_join8 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 0) 0 1251 = 102712464546872877933358115936 :=
+  phaseBlock_append receipt_0_13_2360_0_join3 receipt_0_13_2360_0_join7 rfl rfl rfl
 
-private theorem receipt_0_13_2340_0 : fastPhase (bank 0 13).shape 179827 2340 44 1 0 1 0 = 103055545740638369529158646514 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_0_13_2340_0_join8
+private theorem receipt_0_13_2360_0 : fastPhase (bank 0 13).shape 179818 2360 44 1 0 1 0 = 102712464546872877933358115936 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_0_13_2360_0_join8
 
-private theorem receipt_0_13_2340_1_part0 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 0 128 = 21541730288445478837261135488 := by decide +kernel
-private theorem receipt_0_13_2340_1_part1 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 128 128 = 18699397107906773059493023360 := by decide +kernel
-private theorem receipt_0_13_2340_1_part2 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 256 128 = 15990330568361956178911833728 := by decide +kernel
-private theorem receipt_0_13_2340_1_part3 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 384 128 = 13411310351834993403063078528 := by decide +kernel
-private theorem receipt_0_13_2340_1_part4 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 512 128 = 10959124023004770708539633280 := by decide +kernel
-private theorem receipt_0_13_2340_1_part5 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 640 128 = 8630567022926047817543667328 := by decide +kernel
-private theorem receipt_0_13_2340_1_part6 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 768 128 = 6422443342555270211518176492 := by decide +kernel
-private theorem receipt_0_13_2340_1_part7 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 896 128 = 4331568191563993243868252960 := by decide +kernel
-private theorem receipt_0_13_2340_1_part8 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 1024 128 = 2354755128440575691435411145 := by decide +kernel
-private theorem receipt_0_13_2340_1_part9 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 1152 99 = 535929080830425824217801942 := by decide +kernel
-private theorem receipt_0_13_2340_1_join0 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 0 256 = 40241127396352251896754158848 :=
-  phaseBlock_append receipt_0_13_2340_1_part0 receipt_0_13_2340_1_part1 rfl rfl rfl
-private theorem receipt_0_13_2340_1_join1 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 384 256 = 24370434374839764111602711808 :=
-  phaseBlock_append receipt_0_13_2340_1_part3 receipt_0_13_2340_1_part4 rfl rfl rfl
-private theorem receipt_0_13_2340_1_join2 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 256 384 = 40360764943201720290514545536 :=
-  phaseBlock_append receipt_0_13_2340_1_part2 receipt_0_13_2340_1_join1 rfl rfl rfl
-private theorem receipt_0_13_2340_1_join3 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 0 640 = 80601892339553972187268704384 :=
-  phaseBlock_append receipt_0_13_2340_1_join0 receipt_0_13_2340_1_join2 rfl rfl rfl
-private theorem receipt_0_13_2340_1_join4 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 640 256 = 15053010365481318029061843820 :=
-  phaseBlock_append receipt_0_13_2340_1_part5 receipt_0_13_2340_1_part6 rfl rfl rfl
-private theorem receipt_0_13_2340_1_join5 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 1024 227 = 2890684209271001515653213087 :=
-  phaseBlock_append receipt_0_13_2340_1_part8 receipt_0_13_2340_1_part9 rfl rfl rfl
-private theorem receipt_0_13_2340_1_join6 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 896 355 = 7222252400834994759521466047 :=
-  phaseBlock_append receipt_0_13_2340_1_part7 receipt_0_13_2340_1_join5 rfl rfl rfl
-private theorem receipt_0_13_2340_1_join7 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 640 611 = 22275262766316312788583309867 :=
-  phaseBlock_append receipt_0_13_2340_1_join4 receipt_0_13_2340_1_join6 rfl rfl rfl
-private theorem receipt_0_13_2340_1_join8 :
-    phaseBlock (fastLayer (bank 0 13).shape 179827 2340 44 1 0 1 1) 0 1251 = 102877155105870284975852014251 :=
-  phaseBlock_append receipt_0_13_2340_1_join3 receipt_0_13_2340_1_join7 rfl rfl rfl
+private theorem receipt_0_13_2360_1_part0 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 0 128 = 21470795981005198151207531648 := by decide +kernel
+private theorem receipt_0_13_2360_1_part1 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 128 128 = 18637577590612544853873939584 := by decide +kernel
+private theorem receipt_0_13_2360_1_part2 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 256 128 = 15937251999543229543053128832 := by decide +kernel
+private theorem receipt_0_13_2360_1_part3 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 384 128 = 13366607085489267392125965440 := by decide +kernel
+private theorem receipt_0_13_2360_1_part4 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 512 128 = 10922438601290624210334987392 := by decide +kernel
+private theorem receipt_0_13_2360_1_part5 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 640 128 = 8601550168651771372835230848 := by decide +kernel
+private theorem receipt_0_13_2360_1_part6 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 768 128 = 6400753760663159341343174310 := by decide +kernel
+private theorem receipt_0_13_2360_1_part7 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 896 128 = 4316872682183475260760316451 := by decide +kernel
+private theorem receipt_0_13_2360_1_part8 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 1024 128 = 2346729410234481188429031516 := by decide +kernel
+private theorem receipt_0_13_2360_1_part9 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 1152 99 = 534095184631722422643868602 := by decide +kernel
+private theorem receipt_0_13_2360_1_join0 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 0 256 = 40108373571617743005081471232 :=
+  phaseBlock_append receipt_0_13_2360_1_part0 receipt_0_13_2360_1_part1 rfl rfl rfl
+private theorem receipt_0_13_2360_1_join1 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 384 256 = 24289045686779891602460952832 :=
+  phaseBlock_append receipt_0_13_2360_1_part3 receipt_0_13_2360_1_part4 rfl rfl rfl
+private theorem receipt_0_13_2360_1_join2 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 256 384 = 40226297686323121145514081664 :=
+  phaseBlock_append receipt_0_13_2360_1_part2 receipt_0_13_2360_1_join1 rfl rfl rfl
+private theorem receipt_0_13_2360_1_join3 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 0 640 = 80334671257940864150595552896 :=
+  phaseBlock_append receipt_0_13_2360_1_join0 receipt_0_13_2360_1_join2 rfl rfl rfl
+private theorem receipt_0_13_2360_1_join4 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 640 256 = 15002303929314930714178405158 :=
+  phaseBlock_append receipt_0_13_2360_1_part5 receipt_0_13_2360_1_part6 rfl rfl rfl
+private theorem receipt_0_13_2360_1_join5 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 1024 227 = 2880824594866203611072900118 :=
+  phaseBlock_append receipt_0_13_2360_1_part8 receipt_0_13_2360_1_part9 rfl rfl rfl
+private theorem receipt_0_13_2360_1_join6 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 896 355 = 7197697277049678871833216569 :=
+  phaseBlock_append receipt_0_13_2360_1_part7 receipt_0_13_2360_1_join5 rfl rfl rfl
+private theorem receipt_0_13_2360_1_join7 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 640 611 = 22200001206364609586011621727 :=
+  phaseBlock_append receipt_0_13_2360_1_join4 receipt_0_13_2360_1_join6 rfl rfl rfl
+private theorem receipt_0_13_2360_1_join8 :
+    phaseBlock (fastLayer (bank 0 13).shape 179818 2360 44 1 0 1 1) 0 1251 = 102534672464305473736607174623 :=
+  phaseBlock_append receipt_0_13_2360_1_join3 receipt_0_13_2360_1_join7 rfl rfl rfl
 
-private theorem receipt_0_13_2340_1 : fastPhase (bank 0 13).shape 179827 2340 44 1 0 1 1 = 102877155105870284975852014251 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_0_13_2340_1_join8
+private theorem receipt_0_13_2360_1 : fastPhase (bank 0 13).shape 179818 2360 44 1 0 1 1 = 102534672464305473736607174623 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_0_13_2360_1_join8
 
 theorem receipt_0_13 : Checked (bank 0 13) 44 0 1 := by
   refine checked_from_values (bank 0 13) 44 0 1
     (P3_7_1.checked (bank 0 13) rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_5949_1250)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) receipt_0_13_2339_0 receipt_0_13_2339_1 receipt_0_13_2340_0 receipt_0_13_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) receipt_0_13_2359_0 receipt_0_13_2359_1 receipt_0_13_2360_0 receipt_0_13_2360_1 (by decide +kernel) (by decide +kernel)
 
-private theorem receipt_1_13_2339_0_part0 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 0 128 = 19411017083763549805379668800 := by decide +kernel
-private theorem receipt_1_13_2339_0_part1 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 128 128 = 16839452809440054536849746752 := by decide +kernel
-private theorem receipt_1_13_2339_0_part2 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 256 128 = 14391379285067004998116150080 := by decide +kernel
-private theorem receipt_1_13_2339_0_part3 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 384 128 = 12063646198973001375832648512 := by decide +kernel
-private theorem receipt_1_13_2339_0_part4 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 512 128 = 9853118524048166206996859712 := by decide +kernel
-private theorem receipt_1_13_2339_0_part5 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 640 128 = 7756676492628835894500191040 := by decide +kernel
-private theorem receipt_1_13_2339_0_part6 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 768 128 = 5771216199917562331006114335 := by decide +kernel
-private theorem receipt_1_13_2339_0_part7 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 896 128 = 3893651952741782559456433432 := by decide +kernel
-private theorem receipt_1_13_2339_0_part8 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 1024 128 = 2120904647554306412707490135 := by decide +kernel
-private theorem receipt_1_13_2339_0_part9 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 1152 99 = 489220099458474179821008210 := by decide +kernel
-private theorem receipt_1_13_2339_0_join0 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 0 256 = 36250469893203604342229415552 :=
-  phaseBlock_append receipt_1_13_2339_0_part0 receipt_1_13_2339_0_part1 rfl rfl rfl
-private theorem receipt_1_13_2339_0_join1 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 384 256 = 21916764723021167582829508224 :=
-  phaseBlock_append receipt_1_13_2339_0_part3 receipt_1_13_2339_0_part4 rfl rfl rfl
-private theorem receipt_1_13_2339_0_join2 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 256 384 = 36308144008088172580945658304 :=
-  phaseBlock_append receipt_1_13_2339_0_part2 receipt_1_13_2339_0_join1 rfl rfl rfl
-private theorem receipt_1_13_2339_0_join3 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 0 640 = 72558613901291776923175073856 :=
-  phaseBlock_append receipt_1_13_2339_0_join0 receipt_1_13_2339_0_join2 rfl rfl rfl
-private theorem receipt_1_13_2339_0_join4 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 640 256 = 13527892692546398225506305375 :=
-  phaseBlock_append receipt_1_13_2339_0_part5 receipt_1_13_2339_0_part6 rfl rfl rfl
-private theorem receipt_1_13_2339_0_join5 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 1024 227 = 2610124747012780592528498345 :=
-  phaseBlock_append receipt_1_13_2339_0_part8 receipt_1_13_2339_0_part9 rfl rfl rfl
-private theorem receipt_1_13_2339_0_join6 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 896 355 = 6503776699754563151984931777 :=
-  phaseBlock_append receipt_1_13_2339_0_part7 receipt_1_13_2339_0_join5 rfl rfl rfl
-private theorem receipt_1_13_2339_0_join7 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 640 611 = 20031669392300961377491237152 :=
-  phaseBlock_append receipt_1_13_2339_0_join4 receipt_1_13_2339_0_join6 rfl rfl rfl
-private theorem receipt_1_13_2339_0_join8 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 0) 0 1251 = 92590283293592738300666311008 :=
-  phaseBlock_append receipt_1_13_2339_0_join3 receipt_1_13_2339_0_join7 rfl rfl rfl
+private theorem receipt_1_13_2359_0_part0 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 0 128 = 19347107416565934253388382816 := by decide +kernel
+private theorem receipt_1_13_2359_0_part1 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 128 128 = 16783769202907655253728834144 := by decide +kernel
+private theorem receipt_1_13_2359_0_part2 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 256 128 = 14343579786628847339675820640 := by decide +kernel
+private theorem receipt_1_13_2359_0_part3 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 384 128 = 12023396518529095109095002720 := by decide +kernel
+private theorem receipt_1_13_2359_0_part4 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 512 128 = 9820092019896554095471133280 := by decide +kernel
+private theorem receipt_1_13_2359_0_part5 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 640 128 = 7730554157375050097413583456 := by decide +kernel
+private theorem receipt_1_13_2359_0_part6 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 768 128 = 5751686471379349290209269899 := by decide +kernel
+private theorem receipt_1_13_2359_0_part7 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 896 128 = 3880410817777386541303195333 := by decide +kernel
+private theorem receipt_1_13_2359_0_part8 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 1024 128 = 2113656366677851348522279578 := by decide +kernel
+private theorem receipt_1_13_2359_0_part9 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 1152 99 = 487541002734731424656883669 := by decide +kernel
+private theorem receipt_1_13_2359_0_join0 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 0 256 = 36130876619473589507117216960 :=
+  phaseBlock_append receipt_1_13_2359_0_part0 receipt_1_13_2359_0_part1 rfl rfl rfl
+private theorem receipt_1_13_2359_0_join1 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 384 256 = 21843488538425649204566136000 :=
+  phaseBlock_append receipt_1_13_2359_0_part3 receipt_1_13_2359_0_part4 rfl rfl rfl
+private theorem receipt_1_13_2359_0_join2 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 256 384 = 36187068325054496544241956640 :=
+  phaseBlock_append receipt_1_13_2359_0_part2 receipt_1_13_2359_0_join1 rfl rfl rfl
+private theorem receipt_1_13_2359_0_join3 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 0 640 = 72317944944528086051359173600 :=
+  phaseBlock_append receipt_1_13_2359_0_join0 receipt_1_13_2359_0_join2 rfl rfl rfl
+private theorem receipt_1_13_2359_0_join4 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 640 256 = 13482240628754399387622853355 :=
+  phaseBlock_append receipt_1_13_2359_0_part5 receipt_1_13_2359_0_part6 rfl rfl rfl
+private theorem receipt_1_13_2359_0_join5 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 1024 227 = 2601197369412582773179163247 :=
+  phaseBlock_append receipt_1_13_2359_0_part8 receipt_1_13_2359_0_part9 rfl rfl rfl
+private theorem receipt_1_13_2359_0_join6 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 896 355 = 6481608187189969314482358580 :=
+  phaseBlock_append receipt_1_13_2359_0_part7 receipt_1_13_2359_0_join5 rfl rfl rfl
+private theorem receipt_1_13_2359_0_join7 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 640 611 = 19963848815944368702105211935 :=
+  phaseBlock_append receipt_1_13_2359_0_join4 receipt_1_13_2359_0_join6 rfl rfl rfl
+private theorem receipt_1_13_2359_0_join8 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 0) 0 1251 = 92281793760472454753464385535 :=
+  phaseBlock_append receipt_1_13_2359_0_join3 receipt_1_13_2359_0_join7 rfl rfl rfl
 
-private theorem receipt_1_13_2339_0 : fastPhase (bank 1 13).shape 179827 2339 44 1 0 2 0 = 92590283293592738300666311008 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_1_13_2339_0_join8
+private theorem receipt_1_13_2359_0 : fastPhase (bank 1 13).shape 179818 2359 44 1 0 2 0 = 92281793760472454753464385535 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_1_13_2359_0_join8
 
-private theorem receipt_1_13_2339_1_part0 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 0 128 = 19390702455240694410879870848 := by decide +kernel
-private theorem receipt_1_13_2339_1_part1 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 128 128 = 16820083741398706975177467776 := by decide +kernel
-private theorem receipt_1_13_2339_1_part2 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 256 128 = 14372931874735336082686748544 := by decide +kernel
-private theorem receipt_1_13_2339_1_part3 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 384 128 = 12046096660189294167516768128 := by decide +kernel
-private theorem receipt_1_13_2339_1_part4 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 512 128 = 9836443187068460303131715456 := by decide +kernel
-private theorem receipt_1_13_2339_1_part5 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 640 128 = 7740851803934571717900855168 := by decide +kernel
-private theorem receipt_1_13_2339_1_part6 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 768 128 = 5756218720355093768856312614 := by decide +kernel
-private theorem receipt_1_13_2339_1_part7 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 896 128 = 3879458343890426351061862314 := by decide +kernel
-private theorem receipt_1_13_2339_1_part8 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 1024 128 = 2107491678936282355403016699 := by decide +kernel
-private theorem receipt_1_13_2339_1_part9 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 1152 99 = 479366726794488668054153460 := by decide +kernel
-private theorem receipt_1_13_2339_1_join0 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 0 256 = 36210786196639401386057338624 :=
-  phaseBlock_append receipt_1_13_2339_1_part0 receipt_1_13_2339_1_part1 rfl rfl rfl
-private theorem receipt_1_13_2339_1_join1 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 384 256 = 21882539847257754470648483584 :=
-  phaseBlock_append receipt_1_13_2339_1_part3 receipt_1_13_2339_1_part4 rfl rfl rfl
-private theorem receipt_1_13_2339_1_join2 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 256 384 = 36255471721993090553335232128 :=
-  phaseBlock_append receipt_1_13_2339_1_part2 receipt_1_13_2339_1_join1 rfl rfl rfl
-private theorem receipt_1_13_2339_1_join3 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 0 640 = 72466257918632491939392570752 :=
-  phaseBlock_append receipt_1_13_2339_1_join0 receipt_1_13_2339_1_join2 rfl rfl rfl
-private theorem receipt_1_13_2339_1_join4 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 640 256 = 13497070524289665486757167782 :=
-  phaseBlock_append receipt_1_13_2339_1_part5 receipt_1_13_2339_1_part6 rfl rfl rfl
-private theorem receipt_1_13_2339_1_join5 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 1024 227 = 2586858405730771023457170159 :=
-  phaseBlock_append receipt_1_13_2339_1_part8 receipt_1_13_2339_1_part9 rfl rfl rfl
-private theorem receipt_1_13_2339_1_join6 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 896 355 = 6466316749621197374519032473 :=
-  phaseBlock_append receipt_1_13_2339_1_part7 receipt_1_13_2339_1_join5 rfl rfl rfl
-private theorem receipt_1_13_2339_1_join7 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 640 611 = 19963387273910862861276200255 :=
-  phaseBlock_append receipt_1_13_2339_1_join4 receipt_1_13_2339_1_join6 rfl rfl rfl
-private theorem receipt_1_13_2339_1_join8 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2339 44 1 0 2 1) 0 1251 = 92429645192543354800668771007 :=
-  phaseBlock_append receipt_1_13_2339_1_join3 receipt_1_13_2339_1_join7 rfl rfl rfl
+private theorem receipt_1_13_2359_1_part0 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 0 128 = 19326859754352160209345971232 := by decide +kernel
+private theorem receipt_1_13_2359_1_part1 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 128 128 = 16764464236972434324809602080 := by decide +kernel
+private theorem receipt_1_13_2359_1_part2 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 256 128 = 14325193678226666501710586912 := by decide +kernel
+private theorem receipt_1_13_2359_1_part3 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 384 128 = 12005905545394670261055583264 := by decide +kernel
+private theorem receipt_1_13_2359_1_part4 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 512 128 = 9803472576052369894876988448 := by decide +kernel
+private theorem receipt_1_13_2359_1_part5 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 640 128 = 7714782752938899795738465312 := by decide +kernel
+private theorem receipt_1_13_2359_1_part6 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 768 128 = 5736739731159855153559559129 := by decide +kernel
+private theorem receipt_1_13_2359_1_part7 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 896 128 = 3866265467876166632418318483 := by decide +kernel
+private theorem receipt_1_13_2359_1_part8 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 1024 128 = 2100289239581552537259014925 := by decide +kernel
+private theorem receipt_1_13_2359_1_part9 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 1152 99 = 477721467509070040119109083 := by decide +kernel
+private theorem receipt_1_13_2359_1_join0 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 0 256 = 36091323991324594534155573312 :=
+  phaseBlock_append receipt_1_13_2359_1_part0 receipt_1_13_2359_1_part1 rfl rfl rfl
+private theorem receipt_1_13_2359_1_join1 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 384 256 = 21809378121447040155932571712 :=
+  phaseBlock_append receipt_1_13_2359_1_part3 receipt_1_13_2359_1_part4 rfl rfl rfl
+private theorem receipt_1_13_2359_1_join2 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 256 384 = 36134571799673706657643158624 :=
+  phaseBlock_append receipt_1_13_2359_1_part2 receipt_1_13_2359_1_join1 rfl rfl rfl
+private theorem receipt_1_13_2359_1_join3 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 0 640 = 72225895790998301191798731936 :=
+  phaseBlock_append receipt_1_13_2359_1_join0 receipt_1_13_2359_1_join2 rfl rfl rfl
+private theorem receipt_1_13_2359_1_join4 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 640 256 = 13451522484098754949298024441 :=
+  phaseBlock_append receipt_1_13_2359_1_part5 receipt_1_13_2359_1_part6 rfl rfl rfl
+private theorem receipt_1_13_2359_1_join5 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 1024 227 = 2578010707090622577378124008 :=
+  phaseBlock_append receipt_1_13_2359_1_part8 receipt_1_13_2359_1_part9 rfl rfl rfl
+private theorem receipt_1_13_2359_1_join6 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 896 355 = 6444276174966789209796442491 :=
+  phaseBlock_append receipt_1_13_2359_1_part7 receipt_1_13_2359_1_join5 rfl rfl rfl
+private theorem receipt_1_13_2359_1_join7 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 640 611 = 19895798659065544159094466932 :=
+  phaseBlock_append receipt_1_13_2359_1_join4 receipt_1_13_2359_1_join6 rfl rfl rfl
+private theorem receipt_1_13_2359_1_join8 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2359 44 1 0 2 1) 0 1251 = 92121694450063845350893198868 :=
+  phaseBlock_append receipt_1_13_2359_1_join3 receipt_1_13_2359_1_join7 rfl rfl rfl
 
-private theorem receipt_1_13_2339_1 : fastPhase (bank 1 13).shape 179827 2339 44 1 0 2 1 = 92429645192543354800668771007 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_1_13_2339_1_join8
+private theorem receipt_1_13_2359_1 : fastPhase (bank 1 13).shape 179818 2359 44 1 0 2 1 = 92121694450063845350893198868 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_1_13_2359_1_join8
 
-private theorem receipt_1_13_2340_0_part0 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 0 128 = 19411190003606287800521533728 := by decide +kernel
-private theorem receipt_1_13_2340_0_part1 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 128 128 = 16839594063979534875417213216 := by decide +kernel
-private theorem receipt_1_13_2340_0_part2 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 256 128 = 14391492282190516939987732768 := by decide +kernel
-private theorem receipt_1_13_2340_0_part3 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 384 128 = 12063734239519004760626567456 := by decide +kernel
-private theorem receipt_1_13_2340_0_part4 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 512 128 = 9853184802337315438112434464 := by decide +kernel
-private theorem receipt_1_13_2340_0_part5 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 640 128 = 7756724096994124313857014048 := by decide +kernel
-private theorem receipt_1_13_2340_0_part6 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 768 128 = 5771248095459117057980792239 := by decide +kernel
-private theorem receipt_1_13_2340_0_part7 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 896 128 = 3893670995936997076232152947 := by decide +kernel
-private theorem receipt_1_13_2340_0_part8 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 1024 128 = 2120913654319477352067293884 := by decide +kernel
-private theorem receipt_1_13_2340_0_part9 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 1152 99 = 489221901731366760009830373 := by decide +kernel
-private theorem receipt_1_13_2340_0_join0 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 0 256 = 36250784067585822675938746944 :=
-  phaseBlock_append receipt_1_13_2340_0_part0 receipt_1_13_2340_0_part1 rfl rfl rfl
-private theorem receipt_1_13_2340_0_join1 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 384 256 = 21916919041856320198739001920 :=
-  phaseBlock_append receipt_1_13_2340_0_part3 receipt_1_13_2340_0_part4 rfl rfl rfl
-private theorem receipt_1_13_2340_0_join2 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 256 384 = 36308411324046837138726734688 :=
-  phaseBlock_append receipt_1_13_2340_0_part2 receipt_1_13_2340_0_join1 rfl rfl rfl
-private theorem receipt_1_13_2340_0_join3 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 0 640 = 72559195391632659814665481632 :=
-  phaseBlock_append receipt_1_13_2340_0_join0 receipt_1_13_2340_0_join2 rfl rfl rfl
-private theorem receipt_1_13_2340_0_join4 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 640 256 = 13527972192453241371837806287 :=
-  phaseBlock_append receipt_1_13_2340_0_part5 receipt_1_13_2340_0_part6 rfl rfl rfl
-private theorem receipt_1_13_2340_0_join5 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 1024 227 = 2610135556050844112077124257 :=
-  phaseBlock_append receipt_1_13_2340_0_part8 receipt_1_13_2340_0_part9 rfl rfl rfl
-private theorem receipt_1_13_2340_0_join6 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 896 355 = 6503806551987841188309277204 :=
-  phaseBlock_append receipt_1_13_2340_0_part7 receipt_1_13_2340_0_join5 rfl rfl rfl
-private theorem receipt_1_13_2340_0_join7 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 640 611 = 20031778744441082560147083491 :=
-  phaseBlock_append receipt_1_13_2340_0_join4 receipt_1_13_2340_0_join6 rfl rfl rfl
-private theorem receipt_1_13_2340_0_join8 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 0) 0 1251 = 92590974136073742374812565123 :=
-  phaseBlock_append receipt_1_13_2340_0_join3 receipt_1_13_2340_0_join7 rfl rfl rfl
+private theorem receipt_1_13_2360_0_part0 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 0 128 = 19347279755588101095484677504 := by decide +kernel
+private theorem receipt_1_13_2360_0_part1 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 128 128 = 16783909982662635926542818688 := by decide +kernel
+private theorem receipt_1_13_2360_0_part2 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 256 128 = 14343692403686763461750054272 := by decide +kernel
+private theorem receipt_1_13_2360_0_part3 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 384 128 = 12023484262748257347988725120 := by decide +kernel
+private theorem receipt_1_13_2360_0_part4 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 512 128 = 9820158074953623035173854592 := by decide +kernel
+private theorem receipt_1_13_2360_0_part5 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 640 128 = 7730601601294317496456453504 := by decide +kernel
+private theorem receipt_1_13_2360_0_part6 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 768 128 = 5751718262670782645824173117 := by decide +kernel
+private theorem receipt_1_13_2360_0_part7 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 896 128 = 3880429800173688245157143881 := by decide +kernel
+private theorem receipt_1_13_2360_0_part8 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 1024 128 = 2113665344530705780689501463 := by decide +kernel
+private theorem receipt_1_13_2360_0_part9 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 1152 99 = 487542799141903113311547576 := by decide +kernel
+private theorem receipt_1_13_2360_0_join0 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 0 256 = 36131189738250737022027496192 :=
+  phaseBlock_append receipt_1_13_2360_0_part0 receipt_1_13_2360_0_part1 rfl rfl rfl
+private theorem receipt_1_13_2360_0_join1 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 384 256 = 21843642337701880383162579712 :=
+  phaseBlock_append receipt_1_13_2360_0_part3 receipt_1_13_2360_0_part4 rfl rfl rfl
+private theorem receipt_1_13_2360_0_join2 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 256 384 = 36187334741388643844912633984 :=
+  phaseBlock_append receipt_1_13_2360_0_part2 receipt_1_13_2360_0_join1 rfl rfl rfl
+private theorem receipt_1_13_2360_0_join3 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 0 640 = 72318524479639380866940130176 :=
+  phaseBlock_append receipt_1_13_2360_0_join0 receipt_1_13_2360_0_join2 rfl rfl rfl
+private theorem receipt_1_13_2360_0_join4 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 640 256 = 13482319863965100142280626621 :=
+  phaseBlock_append receipt_1_13_2360_0_part5 receipt_1_13_2360_0_part6 rfl rfl rfl
+private theorem receipt_1_13_2360_0_join5 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 1024 227 = 2601208143672608894001049039 :=
+  phaseBlock_append receipt_1_13_2360_0_part8 receipt_1_13_2360_0_part9 rfl rfl rfl
+private theorem receipt_1_13_2360_0_join6 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 896 355 = 6481637943846297139158192920 :=
+  phaseBlock_append receipt_1_13_2360_0_part7 receipt_1_13_2360_0_join5 rfl rfl rfl
+private theorem receipt_1_13_2360_0_join7 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 640 611 = 19963957807811397281438819541 :=
+  phaseBlock_append receipt_1_13_2360_0_join4 receipt_1_13_2360_0_join6 rfl rfl rfl
+private theorem receipt_1_13_2360_0_join8 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 0) 0 1251 = 92282482287450778148378949717 :=
+  phaseBlock_append receipt_1_13_2360_0_join3 receipt_1_13_2360_0_join7 rfl rfl rfl
 
-private theorem receipt_1_13_2340_0 : fastPhase (bank 1 13).shape 179827 2340 44 1 0 2 0 = 92590974136073742374812565123 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_1_13_2340_0_join8
+private theorem receipt_1_13_2360_0 : fastPhase (bank 1 13).shape 179818 2360 44 1 0 2 0 = 92282482287450778148378949717 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_1_13_2360_0_join8
 
-private theorem receipt_1_13_2340_1_part0 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 0 128 = 19390875226429123951662271008 := by decide +kernel
-private theorem receipt_1_13_2340_1_part1 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 128 128 = 16820224860874001002302462496 := by decide +kernel
-private theorem receipt_1_13_2340_1_part2 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 256 128 = 14373044749874896003625953824 := by decide +kernel
-private theorem receipt_1_13_2340_1_part3 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 384 128 = 12046184591324605070241593888 := by decide +kernel
-private theorem receipt_1_13_2340_1_part4 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 512 128 = 9836509368016109717474527776 := by decide +kernel
-private theorem receipt_1_13_2340_1_part5 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 640 128 = 7740899322526388767613917728 := by decide +kernel
-private theorem receipt_1_13_2340_1_part6 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 768 128 = 5756250541239058585261143709 := by decide +kernel
-private theorem receipt_1_13_2340_1_part7 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 896 128 = 3879477323157957717115923995 := by decide +kernel
-private theorem receipt_1_13_2340_1_part8 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 1024 128 = 2107500631992623507609904271 := by decide +kernel
-private theorem receipt_1_13_2340_1_part9 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 1152 99 = 479368494211320542925749185 := by decide +kernel
-private theorem receipt_1_13_2340_1_join0 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 0 256 = 36211100087303124953964733504 :=
-  phaseBlock_append receipt_1_13_2340_1_part0 receipt_1_13_2340_1_part1 rfl rfl rfl
-private theorem receipt_1_13_2340_1_join1 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 384 256 = 21882693959340714787716121664 :=
-  phaseBlock_append receipt_1_13_2340_1_part3 receipt_1_13_2340_1_part4 rfl rfl rfl
-private theorem receipt_1_13_2340_1_join2 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 256 384 = 36255738709215610791342075488 :=
-  phaseBlock_append receipt_1_13_2340_1_part2 receipt_1_13_2340_1_join1 rfl rfl rfl
-private theorem receipt_1_13_2340_1_join3 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 0 640 = 72466838796518735745306808992 :=
-  phaseBlock_append receipt_1_13_2340_1_join0 receipt_1_13_2340_1_join2 rfl rfl rfl
-private theorem receipt_1_13_2340_1_join4 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 640 256 = 13497149863765447352875061437 :=
-  phaseBlock_append receipt_1_13_2340_1_part5 receipt_1_13_2340_1_part6 rfl rfl rfl
-private theorem receipt_1_13_2340_1_join5 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 1024 227 = 2586869126203944050535653456 :=
-  phaseBlock_append receipt_1_13_2340_1_part8 receipt_1_13_2340_1_part9 rfl rfl rfl
-private theorem receipt_1_13_2340_1_join6 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 896 355 = 6466346449361901767651577451 :=
-  phaseBlock_append receipt_1_13_2340_1_part7 receipt_1_13_2340_1_join5 rfl rfl rfl
-private theorem receipt_1_13_2340_1_join7 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 640 611 = 19963496313127349120526638888 :=
-  phaseBlock_append receipt_1_13_2340_1_join4 receipt_1_13_2340_1_join6 rfl rfl rfl
-private theorem receipt_1_13_2340_1_join8 :
-    phaseBlock (fastLayer (bank 1 13).shape 179827 2340 44 1 0 2 1) 0 1251 = 92430335109646084865833447880 :=
-  phaseBlock_append receipt_1_13_2340_1_join3 receipt_1_13_2340_1_join7 rfl rfl rfl
+private theorem receipt_1_13_2360_1_part0 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 0 128 = 19327031945216232596745576192 := by decide +kernel
+private theorem receipt_1_13_2360_1_part1 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 128 128 = 16764604882114670380752756480 := by decide +kernel
+private theorem receipt_1_13_2360_1_part2 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 256 128 = 14325306173708893027659439872 := by decide +kernel
+private theorem receipt_1_13_2360_1_part3 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 384 128 = 12005993180569811488079994624 := by decide +kernel
+private theorem receipt_1_13_2360_1_part4 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 512 128 = 9803538534094603128387886848 := by decide +kernel
+private theorem receipt_1_13_2360_1_part5 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 640 128 = 7714830111372931450918985472 := by decide +kernel
+private theorem receipt_1_13_2360_1_part6 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 768 128 = 5736771448036684223847580218 := by decide +kernel
+private theorem receipt_1_13_2360_1_part7 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 896 128 = 3866284386548493973022300418 := by decide +kernel
+private theorem receipt_1_13_2360_1_part8 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 1024 128 = 2100298163897400686097283500 := by decide +kernel
+private theorem receipt_1_13_2360_1_part9 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 1152 99 = 477723229173346536682584126 := by decide +kernel
+private theorem receipt_1_13_2360_1_join0 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 0 256 = 36091636827330902977498332672 :=
+  phaseBlock_append receipt_1_13_2360_1_part0 receipt_1_13_2360_1_part1 rfl rfl rfl
+private theorem receipt_1_13_2360_1_join1 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 384 256 = 21809531714664414616467881472 :=
+  phaseBlock_append receipt_1_13_2360_1_part3 receipt_1_13_2360_1_part4 rfl rfl rfl
+private theorem receipt_1_13_2360_1_join2 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 256 384 = 36134837888373307644127321344 :=
+  phaseBlock_append receipt_1_13_2360_1_part2 receipt_1_13_2360_1_join1 rfl rfl rfl
+private theorem receipt_1_13_2360_1_join3 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 0 640 = 72226474715704210621625654016 :=
+  phaseBlock_append receipt_1_13_2360_1_join0 receipt_1_13_2360_1_join2 rfl rfl rfl
+private theorem receipt_1_13_2360_1_join4 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 640 256 = 13451601559409615674766565690 :=
+  phaseBlock_append receipt_1_13_2360_1_part5 receipt_1_13_2360_1_part6 rfl rfl rfl
+private theorem receipt_1_13_2360_1_join5 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 1024 227 = 2578021393070747222779867626 :=
+  phaseBlock_append receipt_1_13_2360_1_part8 receipt_1_13_2360_1_part9 rfl rfl rfl
+private theorem receipt_1_13_2360_1_join6 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 896 355 = 6444305779619241195802168044 :=
+  phaseBlock_append receipt_1_13_2360_1_part7 receipt_1_13_2360_1_join5 rfl rfl rfl
+private theorem receipt_1_13_2360_1_join7 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 640 611 = 19895907339028856870568733734 :=
+  phaseBlock_append receipt_1_13_2360_1_join4 receipt_1_13_2360_1_join6 rfl rfl rfl
+private theorem receipt_1_13_2360_1_join8 :
+    phaseBlock (fastLayer (bank 1 13).shape 179818 2360 44 1 0 2 1) 0 1251 = 92122382054733067492194387750 :=
+  phaseBlock_append receipt_1_13_2360_1_join3 receipt_1_13_2360_1_join7 rfl rfl rfl
 
-private theorem receipt_1_13_2340_1 : fastPhase (bank 1 13).shape 179827 2340 44 1 0 2 1 = 92430335109646084865833447880 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_1_13_2340_1_join8
+private theorem receipt_1_13_2360_1 : fastPhase (bank 1 13).shape 179818 2360 44 1 0 2 1 = 92122382054733067492194387750 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_1_13_2360_1_join8
 
 theorem receipt_1_13 : Checked (bank 1 13) 44 0 2 := by
   refine checked_from_values (bank 1 13) 44 0 2
     (P3_7_1.checked (bank 1 13) rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_5949_1250)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) receipt_1_13_2339_0 receipt_1_13_2339_1 receipt_1_13_2340_0 receipt_1_13_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) receipt_1_13_2359_0 receipt_1_13_2359_1 receipt_1_13_2360_0 receipt_1_13_2360_1 (by decide +kernel) (by decide +kernel)
 
-private theorem receipt_2_13_2339_0_part0 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 0 128 = 10404461521802658364234334400 := by decide +kernel
-private theorem receipt_2_13_2339_0_part1 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 128 128 = 8979399536054924029655802048 := by decide +kernel
-private theorem receipt_2_13_2339_0_part2 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 256 128 = 7634163681202243020856344768 := by decide +kernel
-private theorem receipt_2_13_2339_0_part3 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 384 128 = 6366039979151987839372566720 := by decide +kernel
-private theorem receipt_2_13_2339_0_part4 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 512 128 = 5172359651540927556202561728 := by decide +kernel
-private theorem receipt_2_13_2339_0_part5 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 640 128 = 4050498812072698877292699840 := by decide +kernel
-private theorem receipt_2_13_2339_0_part6 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 768 128 = 2997878484762608924735886570 := by decide +kernel
-private theorem receipt_2_13_2339_0_part7 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 896 128 = 2011965515274879410798886436 := by decide +kernel
-private theorem receipt_2_13_2339_0_part8 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 1024 128 = 1090266264271516687705122302 := by decide +kernel
-private theorem receipt_2_13_2339_0_part9 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 1152 99 = 250377020872220887320135930 := by decide +kernel
-private theorem receipt_2_13_2339_0_join0 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 0 256 = 19383861057857582393890136448 :=
-  phaseBlock_append receipt_2_13_2339_0_part0 receipt_2_13_2339_0_part1 rfl rfl rfl
-private theorem receipt_2_13_2339_0_join1 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 384 256 = 11538399630692915395575128448 :=
-  phaseBlock_append receipt_2_13_2339_0_part3 receipt_2_13_2339_0_part4 rfl rfl rfl
-private theorem receipt_2_13_2339_0_join2 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 256 384 = 19172563311895158416431473216 :=
-  phaseBlock_append receipt_2_13_2339_0_part2 receipt_2_13_2339_0_join1 rfl rfl rfl
-private theorem receipt_2_13_2339_0_join3 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 0 640 = 38556424369752740810321609664 :=
-  phaseBlock_append receipt_2_13_2339_0_join0 receipt_2_13_2339_0_join2 rfl rfl rfl
-private theorem receipt_2_13_2339_0_join4 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 640 256 = 7048377296835307802028586410 :=
-  phaseBlock_append receipt_2_13_2339_0_part5 receipt_2_13_2339_0_part6 rfl rfl rfl
-private theorem receipt_2_13_2339_0_join5 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 1024 227 = 1340643285143737575025258232 :=
-  phaseBlock_append receipt_2_13_2339_0_part8 receipt_2_13_2339_0_part9 rfl rfl rfl
-private theorem receipt_2_13_2339_0_join6 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 896 355 = 3352608800418616985824144668 :=
-  phaseBlock_append receipt_2_13_2339_0_part7 receipt_2_13_2339_0_join5 rfl rfl rfl
-private theorem receipt_2_13_2339_0_join7 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 640 611 = 10400986097253924787852731078 :=
-  phaseBlock_append receipt_2_13_2339_0_join4 receipt_2_13_2339_0_join6 rfl rfl rfl
-private theorem receipt_2_13_2339_0_join8 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 0) 0 1251 = 48957410467006665598174340742 :=
-  phaseBlock_append receipt_2_13_2339_0_join3 receipt_2_13_2339_0_join7 rfl rfl rfl
+private theorem receipt_2_13_2359_0_part0 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 0 128 = 10370188400260706875757363040 := by decide +kernel
+private theorem receipt_2_13_2359_0_part1 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 128 128 = 8949614010588341211569467232 := by decide +kernel
+private theorem receipt_2_13_2359_0_part2 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 256 128 = 7608661380924932816714555232 := by decide +kernel
+private theorem receipt_2_13_2359_0_part3 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 384 128 = 6344621743052323062506884960 := by decide +kernel
+private theorem receipt_2_13_2359_0_part4 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 512 128 = 5154831495478289832190000992 := by decide +kernel
+private theorem receipt_2_13_2359_0_part5 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 640 128 = 4036671895558514307379425120 := by decide +kernel
+private theorem receipt_2_13_2359_0_part6 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 768 128 = 2987568986751510661291055477 := by decide +kernel
+private theorem receipt_2_13_2359_0_part7 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 896 128 = 2004994662815334069695339365 := by decide +kernel
+private theorem receipt_2_13_2359_0_part8 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 1024 128 = 1086460679649692194079900184 := by decide +kernel
+private theorem receipt_2_13_2359_0_part9 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 1152 99 = 249497486311792076197897413 := by decide +kernel
+private theorem receipt_2_13_2359_0_join0 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 0 256 = 19319802410849048087326830272 :=
+  phaseBlock_append receipt_2_13_2359_0_part0 receipt_2_13_2359_0_part1 rfl rfl rfl
+private theorem receipt_2_13_2359_0_join1 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 384 256 = 11499453238530612894696885952 :=
+  phaseBlock_append receipt_2_13_2359_0_part3 receipt_2_13_2359_0_part4 rfl rfl rfl
+private theorem receipt_2_13_2359_0_join2 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 256 384 = 19108114619455545711411441184 :=
+  phaseBlock_append receipt_2_13_2359_0_part2 receipt_2_13_2359_0_join1 rfl rfl rfl
+private theorem receipt_2_13_2359_0_join3 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 0 640 = 38427917030304593798738271456 :=
+  phaseBlock_append receipt_2_13_2359_0_join0 receipt_2_13_2359_0_join2 rfl rfl rfl
+private theorem receipt_2_13_2359_0_join4 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 640 256 = 7024240882310024968670480597 :=
+  phaseBlock_append receipt_2_13_2359_0_part5 receipt_2_13_2359_0_part6 rfl rfl rfl
+private theorem receipt_2_13_2359_0_join5 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 1024 227 = 1335958165961484270277797597 :=
+  phaseBlock_append receipt_2_13_2359_0_part8 receipt_2_13_2359_0_part9 rfl rfl rfl
+private theorem receipt_2_13_2359_0_join6 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 896 355 = 3340952828776818339973136962 :=
+  phaseBlock_append receipt_2_13_2359_0_part7 receipt_2_13_2359_0_join5 rfl rfl rfl
+private theorem receipt_2_13_2359_0_join7 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 640 611 = 10365193711086843308643617559 :=
+  phaseBlock_append receipt_2_13_2359_0_join4 receipt_2_13_2359_0_join6 rfl rfl rfl
+private theorem receipt_2_13_2359_0_join8 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 0) 0 1251 = 48793110741391437107381889015 :=
+  phaseBlock_append receipt_2_13_2359_0_join3 receipt_2_13_2359_0_join7 rfl rfl rfl
 
-private theorem receipt_2_13_2339_0 : fastPhase (bank 2 13).shape 179827 2339 44 1 0 7 0 = 48957410467006665598174340742 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_2_13_2339_0_join8
+private theorem receipt_2_13_2359_0 : fastPhase (bank 2 13).shape 179818 2359 44 1 0 7 0 = 48793110741391437107381889015 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_2_13_2359_0_join8
 
-private theorem receipt_2_13_2339_1_part0 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 0 128 = 10393152448308840587953687040 := by decide +kernel
-private theorem receipt_2_13_2339_1_part1 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 128 128 = 8968707237260599353620318720 := by decide +kernel
-private theorem receipt_2_13_2339_1_part2 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 256 128 = 7624067361014495929074240000 := by decide +kernel
-private theorem receipt_2_13_2339_1_part3 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 384 128 = 6356519187564773431629662720 := by decide +kernel
-private theorem receipt_2_13_2339_1_part4 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 512 128 = 5163394282278714088450542080 := by decide +kernel
-private theorem receipt_2_13_2339_1_part5 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 640 128 = 4042069100234110302037363200 := by decide +kernel
-private theorem receipt_2_13_2339_1_part6 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 768 128 = 2989965003585646686472982990 := by decide +kernel
-private theorem receipt_2_13_2339_1_part7 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 896 128 = 2004549166792734549562324626 := by decide +kernel
-private theorem receipt_2_13_2339_1_part8 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 1024 128 = 1083328281104274146805620964 := by decide +kernel
-private theorem receipt_2_13_2339_1_part9 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 1152 99 = 245327297598380722392392160 := by decide +kernel
-private theorem receipt_2_13_2339_1_join0 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 0 256 = 19361859685569439941574005760 :=
-  phaseBlock_append receipt_2_13_2339_1_part0 receipt_2_13_2339_1_part1 rfl rfl rfl
-private theorem receipt_2_13_2339_1_join1 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 384 256 = 11519913469843487520080204800 :=
-  phaseBlock_append receipt_2_13_2339_1_part3 receipt_2_13_2339_1_part4 rfl rfl rfl
-private theorem receipt_2_13_2339_1_join2 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 256 384 = 19143980830857983449154444800 :=
-  phaseBlock_append receipt_2_13_2339_1_part2 receipt_2_13_2339_1_join1 rfl rfl rfl
-private theorem receipt_2_13_2339_1_join3 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 0 640 = 38505840516427423390728450560 :=
-  phaseBlock_append receipt_2_13_2339_1_join0 receipt_2_13_2339_1_join2 rfl rfl rfl
-private theorem receipt_2_13_2339_1_join4 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 640 256 = 7032034103819756988510346190 :=
-  phaseBlock_append receipt_2_13_2339_1_part5 receipt_2_13_2339_1_part6 rfl rfl rfl
-private theorem receipt_2_13_2339_1_join5 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 1024 227 = 1328655578702654869198013124 :=
-  phaseBlock_append receipt_2_13_2339_1_part8 receipt_2_13_2339_1_part9 rfl rfl rfl
-private theorem receipt_2_13_2339_1_join6 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 896 355 = 3333204745495389418760337750 :=
-  phaseBlock_append receipt_2_13_2339_1_part7 receipt_2_13_2339_1_join5 rfl rfl rfl
-private theorem receipt_2_13_2339_1_join7 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 640 611 = 10365238849315146407270683940 :=
-  phaseBlock_append receipt_2_13_2339_1_join4 receipt_2_13_2339_1_join6 rfl rfl rfl
-private theorem receipt_2_13_2339_1_join8 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2339 44 1 0 7 1) 0 1251 = 48871079365742569797999134500 :=
-  phaseBlock_append receipt_2_13_2339_1_join3 receipt_2_13_2339_1_join7 rfl rfl rfl
+private theorem receipt_2_13_2359_1_part0 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 0 128 = 10358915917760986107433298784 := by decide +kernel
+private theorem receipt_2_13_2359_1_part1 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 128 128 = 8938956594159180495556008800 := by decide +kernel
+private theorem receipt_2_13_2359_1_part2 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 256 128 = 7598598278679882539906960224 := by decide +kernel
+private theorem receipt_2_13_2359_1_part3 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 384 128 = 6335132548876675560562539360 := by decide +kernel
+private theorem receipt_2_13_2359_1_part4 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 512 128 = 5145896146671442373259848544 := by decide +kernel
+private theorem receipt_2_13_2359_1_part5 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 640 128 = 4028270670476332075839396704 := by decide +kernel
+private theorem receipt_2_13_2359_1_part6 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 768 128 = 2979682501810607514178008159 := by decide +kernel
+private theorem receipt_2_13_2359_1_part7 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 896 128 = 1997603863262366245065511771 := by decide +kernel
+private theorem receipt_2_13_2359_1_part8 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 1024 128 = 1079546840239548340812765591 := by decide +kernel
+private theorem receipt_2_13_2359_1_part9 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 1152 99 = 244465499535894260966190417 := by decide +kernel
+private theorem receipt_2_13_2359_1_join0 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 0 256 = 19297872511920166602989307584 :=
+  phaseBlock_append receipt_2_13_2359_1_part0 receipt_2_13_2359_1_part1 rfl rfl rfl
+private theorem receipt_2_13_2359_1_join1 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 384 256 = 11481028695548117933822387904 :=
+  phaseBlock_append receipt_2_13_2359_1_part3 receipt_2_13_2359_1_part4 rfl rfl rfl
+private theorem receipt_2_13_2359_1_join2 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 256 384 = 19079626974228000473729348128 :=
+  phaseBlock_append receipt_2_13_2359_1_part2 receipt_2_13_2359_1_join1 rfl rfl rfl
+private theorem receipt_2_13_2359_1_join3 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 0 640 = 38377499486148167076718655712 :=
+  phaseBlock_append receipt_2_13_2359_1_join0 receipt_2_13_2359_1_join2 rfl rfl rfl
+private theorem receipt_2_13_2359_1_join4 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 640 256 = 7007953172286939590017404863 :=
+  phaseBlock_append receipt_2_13_2359_1_part5 receipt_2_13_2359_1_part6 rfl rfl rfl
+private theorem receipt_2_13_2359_1_join5 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 1024 227 = 1324012339775442601778956008 :=
+  phaseBlock_append receipt_2_13_2359_1_part8 receipt_2_13_2359_1_part9 rfl rfl rfl
+private theorem receipt_2_13_2359_1_join6 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 896 355 = 3321616203037808846844467779 :=
+  phaseBlock_append receipt_2_13_2359_1_part7 receipt_2_13_2359_1_join5 rfl rfl rfl
+private theorem receipt_2_13_2359_1_join7 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 640 611 = 10329569375324748436861872642 :=
+  phaseBlock_append receipt_2_13_2359_1_join4 receipt_2_13_2359_1_join6 rfl rfl rfl
+private theorem receipt_2_13_2359_1_join8 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2359 44 1 0 7 1) 0 1251 = 48707068861472915513580528354 :=
+  phaseBlock_append receipt_2_13_2359_1_join3 receipt_2_13_2359_1_join7 rfl rfl rfl
 
-private theorem receipt_2_13_2339_1 : fastPhase (bank 2 13).shape 179827 2339 44 1 0 7 1 = 48871079365742569797999134500 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_2_13_2339_1_join8
+private theorem receipt_2_13_2359_1 : fastPhase (bank 2 13).shape 179818 2359 44 1 0 7 1 = 48707068861472915513580528354 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_2_13_2359_1_join8
 
-private theorem receipt_2_13_2340_0_part0 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 0 128 = 10404554210530499150824277280 := by decide +kernel
-private theorem receipt_2_13_2340_0_part1 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 128 128 = 8979474860091446069992338720 := by decide +kernel
-private theorem receipt_2_13_2340_0_part2 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 256 128 = 7634223624351056802809931040 := by decide +kernel
-private theorem receipt_2_13_2340_0_part3 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 384 128 = 6366086440105352155374359840 := by decide +kernel
-private theorem receipt_2_13_2340_0_part4 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 512 128 = 5172394445410284704314279200 := by decide +kernel
-private theorem receipt_2_13_2340_0_part5 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 640 128 = 4050523671908434648324273440 := by decide +kernel
-private theorem receipt_2_13_2340_0_part6 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 768 128 = 2997895053843287987137663240 := by decide +kernel
-private theorem receipt_2_13_2340_0_part7 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 896 128 = 2011975356032607729205546149 := by decide +kernel
-private theorem receipt_2_13_2340_0_part8 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 1024 128 = 1090270894573998432895880590 := by decide +kernel
-private theorem receipt_2_13_2340_0_part9 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 1152 99 = 250377943285129665268834209 := by decide +kernel
-private theorem receipt_2_13_2340_0_join0 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 0 256 = 19384029070621945220816616000 :=
-  phaseBlock_append receipt_2_13_2340_0_part0 receipt_2_13_2340_0_part1 rfl rfl rfl
-private theorem receipt_2_13_2340_0_join1 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 384 256 = 11538480885515636859688639040 :=
-  phaseBlock_append receipt_2_13_2340_0_part3 receipt_2_13_2340_0_part4 rfl rfl rfl
-private theorem receipt_2_13_2340_0_join2 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 256 384 = 19172704509866693662498570080 :=
-  phaseBlock_append receipt_2_13_2340_0_part2 receipt_2_13_2340_0_join1 rfl rfl rfl
-private theorem receipt_2_13_2340_0_join3 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 0 640 = 38556733580488638883315186080 :=
-  phaseBlock_append receipt_2_13_2340_0_join0 receipt_2_13_2340_0_join2 rfl rfl rfl
-private theorem receipt_2_13_2340_0_join4 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 640 256 = 7048418725751722635461936680 :=
-  phaseBlock_append receipt_2_13_2340_0_part5 receipt_2_13_2340_0_part6 rfl rfl rfl
-private theorem receipt_2_13_2340_0_join5 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 1024 227 = 1340648837859128098164714799 :=
-  phaseBlock_append receipt_2_13_2340_0_part8 receipt_2_13_2340_0_part9 rfl rfl rfl
-private theorem receipt_2_13_2340_0_join6 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 896 355 = 3352624193891735827370260948 :=
-  phaseBlock_append receipt_2_13_2340_0_part7 receipt_2_13_2340_0_join5 rfl rfl rfl
-private theorem receipt_2_13_2340_0_join7 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 640 611 = 10401042919643458462832197628 :=
-  phaseBlock_append receipt_2_13_2340_0_join4 receipt_2_13_2340_0_join6 rfl rfl rfl
-private theorem receipt_2_13_2340_0_join8 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 0) 0 1251 = 48957776500132097346147383708 :=
-  phaseBlock_append receipt_2_13_2340_0_join3 receipt_2_13_2340_0_join7 rfl rfl rfl
+private theorem receipt_2_13_2360_0_part0 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 0 128 = 10370280777508048038763253760 := by decide +kernel
+private theorem receipt_2_13_2360_0_part1 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 128 128 = 8949689080668560384198897664 := by decide +kernel
+private theorem receipt_2_13_2360_0_part2 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 256 128 = 7608721121309881499823673344 := by decide +kernel
+private theorem receipt_2_13_2360_0_part3 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 384 128 = 6344668046328580604990730240 := by decide +kernel
+private theorem receipt_2_13_2360_0_part4 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 512 128 = 5154866170875485864901464064 := by decide +kernel
+private theorem receipt_2_13_2360_0_part5 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 640 128 = 4036696670466875963096002560 := by decide +kernel
+private theorem receipt_2_13_2360_0_part6 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 768 128 = 2987585500765957705993213683 := by decide +kernel
+private theorem receipt_2_13_2360_0_part7 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 896 128 = 2005004471525929989696550689 := by decide +kernel
+private theorem receipt_2_13_2360_0_part8 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 1024 128 = 1086465294751039425751994136 := by decide +kernel
+private theorem receipt_2_13_2360_0_part9 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 1152 99 = 249498405648199871979088608 := by decide +kernel
+private theorem receipt_2_13_2360_0_join0 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 0 256 = 19319969858176608422962151424 :=
+  phaseBlock_append receipt_2_13_2360_0_part0 receipt_2_13_2360_0_part1 rfl rfl rfl
+private theorem receipt_2_13_2360_0_join1 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 384 256 = 11499534217204066469892194304 :=
+  phaseBlock_append receipt_2_13_2360_0_part3 receipt_2_13_2360_0_part4 rfl rfl rfl
+private theorem receipt_2_13_2360_0_join2 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 256 384 = 19108255338513947969715867648 :=
+  phaseBlock_append receipt_2_13_2360_0_part2 receipt_2_13_2360_0_join1 rfl rfl rfl
+private theorem receipt_2_13_2360_0_join3 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 0 640 = 38428225196690556392678019072 :=
+  phaseBlock_append receipt_2_13_2360_0_join0 receipt_2_13_2360_0_join2 rfl rfl rfl
+private theorem receipt_2_13_2360_0_join4 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 640 256 = 7024282171232833669089216243 :=
+  phaseBlock_append receipt_2_13_2360_0_part5 receipt_2_13_2360_0_part6 rfl rfl rfl
+private theorem receipt_2_13_2360_0_join5 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 1024 227 = 1335963700399239297731082744 :=
+  phaseBlock_append receipt_2_13_2360_0_part8 receipt_2_13_2360_0_part9 rfl rfl rfl
+private theorem receipt_2_13_2360_0_join6 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 896 355 = 3340968171925169287427633433 :=
+  phaseBlock_append receipt_2_13_2360_0_part7 receipt_2_13_2360_0_join5 rfl rfl rfl
+private theorem receipt_2_13_2360_0_join7 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 640 611 = 10365250343158002956516849676 :=
+  phaseBlock_append receipt_2_13_2360_0_join4 receipt_2_13_2360_0_join6 rfl rfl rfl
+private theorem receipt_2_13_2360_0_join8 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 0) 0 1251 = 48793475539848559349194868748 :=
+  phaseBlock_append receipt_2_13_2360_0_join3 receipt_2_13_2360_0_join7 rfl rfl rfl
 
-private theorem receipt_2_13_2340_0 : fastPhase (bank 2 13).shape 179827 2340 44 1 0 7 0 = 48957776500132097346147383708 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_2_13_2340_0_join8
+private theorem receipt_2_13_2360_0 : fastPhase (bank 2 13).shape 179818 2360 44 1 0 7 0 = 48793475539848559349194868748 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_2_13_2360_0_join8
 
-private theorem receipt_2_13_2340_1_part0 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 0 128 = 10393245053609909986206049440 := by decide +kernel
-private theorem receipt_2_13_2340_1_part1 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 128 128 = 8968782486219735025986524320 := by decide +kernel
-private theorem receipt_2_13_2340_1_part2 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 256 128 = 7624127237013597452147901600 := by decide +kernel
-private theorem receipt_2_13_2340_1_part3 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 384 128 = 6356565588882869826951132320 := by decide +kernel
-private theorem receipt_2_13_2340_1_part4 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 512 128 = 5163429023622435045743928480 := by decide +kernel
-private theorem receipt_2_13_2340_1_part5 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 640 128 = 4042093914257382188495344800 := by decide +kernel
-private theorem receipt_2_13_2340_1_part6 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 768 128 = 2989981533203167075728896470 := by decide +kernel
-private theorem receipt_2_13_2340_1_part7 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 896 128 = 2004558974113417483100141624 := by decide +kernel
-private theorem receipt_2_13_2340_1_part8 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 1024 128 = 1083332883612738445037190295 := by decide +kernel
-private theorem receipt_2_13_2340_1_part9 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 1152 99 = 245328202145754552552036037 := by decide +kernel
-private theorem receipt_2_13_2340_1_join0 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 0 256 = 19362027539829645012192573760 :=
-  phaseBlock_append receipt_2_13_2340_1_part0 receipt_2_13_2340_1_part1 rfl rfl rfl
-private theorem receipt_2_13_2340_1_join1 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 384 256 = 11519994612505304872695060800 :=
-  phaseBlock_append receipt_2_13_2340_1_part3 receipt_2_13_2340_1_part4 rfl rfl rfl
-private theorem receipt_2_13_2340_1_join2 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 256 384 = 19144121849518902324842962400 :=
-  phaseBlock_append receipt_2_13_2340_1_part2 receipt_2_13_2340_1_join1 rfl rfl rfl
-private theorem receipt_2_13_2340_1_join3 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 0 640 = 38506149389348547337035536160 :=
-  phaseBlock_append receipt_2_13_2340_1_join0 receipt_2_13_2340_1_join2 rfl rfl rfl
-private theorem receipt_2_13_2340_1_join4 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 640 256 = 7032075447460549264224241270 :=
-  phaseBlock_append receipt_2_13_2340_1_part5 receipt_2_13_2340_1_part6 rfl rfl rfl
-private theorem receipt_2_13_2340_1_join5 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 1024 227 = 1328661085758492997589226332 :=
-  phaseBlock_append receipt_2_13_2340_1_part8 receipt_2_13_2340_1_part9 rfl rfl rfl
-private theorem receipt_2_13_2340_1_join6 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 896 355 = 3333220059871910480689367956 :=
-  phaseBlock_append receipt_2_13_2340_1_part7 receipt_2_13_2340_1_join5 rfl rfl rfl
-private theorem receipt_2_13_2340_1_join7 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 640 611 = 10365295507332459744913609226 :=
-  phaseBlock_append receipt_2_13_2340_1_join4 receipt_2_13_2340_1_join6 rfl rfl rfl
-private theorem receipt_2_13_2340_1_join8 :
-    phaseBlock (fastLayer (bank 2 13).shape 179827 2340 44 1 0 7 1) 0 1251 = 48871444896681007081949145386 :=
-  phaseBlock_append receipt_2_13_2340_1_join3 receipt_2_13_2340_1_join7 rfl rfl rfl
+private theorem receipt_2_13_2360_1_part0 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 0 128 = 10359008211853961603268945984 := by decide +kernel
+private theorem receipt_2_13_2360_1_part1 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 128 128 = 8939031589408637174713051200 := by decide +kernel
+private theorem receipt_2_13_2360_1_part2 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 256 128 = 7598657952137054737619855424 := by decide +kernel
+private theorem receipt_2_13_2360_1_part3 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 384 128 = 6335178792715994499420317760 := by decide +kernel
+private theorem receipt_2_13_2360_1_part4 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 512 128 = 5145930769718794619292231744 := by decide +kernel
+private theorem receipt_2_13_2360_1_part5 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 640 128 = 4028295399726542780650711104 := by decide +kernel
+private theorem receipt_2_13_2360_1_part6 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 768 128 = 2979698976491343547429601904 := by decide +kernel
+private theorem receipt_2_13_2360_1_part7 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 896 128 = 1997613638643910691049970809 := by decide +kernel
+private theorem receipt_2_13_2360_1_part8 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 1024 128 = 1079551427637507628582986372 := by decide +kernel
+private theorem receipt_2_13_2360_1_part9 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 1152 99 = 244466401066165705737055860 := by decide +kernel
+private theorem receipt_2_13_2360_1_join0 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 0 256 = 19298039801262598777981997184 :=
+  phaseBlock_append receipt_2_13_2360_1_part0 receipt_2_13_2360_1_part1 rfl rfl rfl
+private theorem receipt_2_13_2360_1_join1 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 384 256 = 11481109562434789118712549504 :=
+  phaseBlock_append receipt_2_13_2360_1_part3 receipt_2_13_2360_1_part4 rfl rfl rfl
+private theorem receipt_2_13_2360_1_join2 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 256 384 = 19079767514571843856332404928 :=
+  phaseBlock_append receipt_2_13_2360_1_part2 receipt_2_13_2360_1_join1 rfl rfl rfl
+private theorem receipt_2_13_2360_1_join3 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 0 640 = 38377807315834442634314402112 :=
+  phaseBlock_append receipt_2_13_2360_1_join0 receipt_2_13_2360_1_join2 rfl rfl rfl
+private theorem receipt_2_13_2360_1_join4 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 640 256 = 7007994376217886328080313008 :=
+  phaseBlock_append receipt_2_13_2360_1_part5 receipt_2_13_2360_1_part6 rfl rfl rfl
+private theorem receipt_2_13_2360_1_join5 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 1024 227 = 1324017828703673334320042232 :=
+  phaseBlock_append receipt_2_13_2360_1_part8 receipt_2_13_2360_1_part9 rfl rfl rfl
+private theorem receipt_2_13_2360_1_join6 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 896 355 = 3321631467347584025370013041 :=
+  phaseBlock_append receipt_2_13_2360_1_part7 receipt_2_13_2360_1_join5 rfl rfl rfl
+private theorem receipt_2_13_2360_1_join7 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 640 611 = 10329625843565470353450326049 :=
+  phaseBlock_append receipt_2_13_2360_1_join4 receipt_2_13_2360_1_join6 rfl rfl rfl
+private theorem receipt_2_13_2360_1_join8 :
+    phaseBlock (fastLayer (bank 2 13).shape 179818 2360 44 1 0 7 1) 0 1251 = 48707433159399912987764728161 :=
+  phaseBlock_append receipt_2_13_2360_1_join3 receipt_2_13_2360_1_join7 rfl rfl rfl
 
-private theorem receipt_2_13_2340_1 : fastPhase (bank 2 13).shape 179827 2340 44 1 0 7 1 = 48871444896681007081949145386 :=
-  phase_of_block (n := 1251) (by decide +kernel) receipt_2_13_2340_1_join8
+private theorem receipt_2_13_2360_1 : fastPhase (bank 2 13).shape 179818 2360 44 1 0 7 1 = 48707433159399912987764728161 :=
+  phase_of_block (n := 1251) (by decide +kernel) receipt_2_13_2360_1_join8
 
 theorem receipt_2_13 : Checked (bank 2 13) 44 0 7 := by
   refine checked_from_values (bank 2 13) 44 0 7
     (P3_7_1.checked (bank 2 13) rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_5949_1250)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) receipt_2_13_2339_0 receipt_2_13_2339_1 receipt_2_13_2340_0 receipt_2_13_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) receipt_2_13_2359_0 receipt_2_13_2359_1 receipt_2_13_2360_0 receipt_2_13_2360_1 (by decide +kernel) (by decide +kernel)
 
-private theorem receipt_3_13_2339_0_part0 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 0 128 = 2384320877103731529953824896 := by decide +kernel
-private theorem receipt_3_13_2339_0_part1 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 128 128 = 2073522329243576649909072000 := by decide +kernel
-private theorem receipt_3_13_2339_0_part2 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 256 128 = 1776442056178347294978347136 := by decide +kernel
-private theorem receipt_3_13_2339_0_part3 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 384 128 = 1493481821838471579301261440 := by decide +kernel
-private theorem receipt_3_13_2339_0_part4 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 512 128 = 1225039733575929731725938816 := by decide +kernel
-private theorem receipt_3_13_2339_0_part5 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 640 128 = 971510251636194925378367616 := by decide +kernel
-private theorem receipt_3_13_2339_0_part6 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 768 128 = 733284198630174107231752320 := by decide +kernel
-private theorem receipt_3_13_2339_0_part7 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 896 128 = 510748769006148827675865216 := by decide +kernel
-private theorem receipt_3_13_2339_0_part8 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 1024 128 = 304287538521716070086398080 := by decide +kernel
-private theorem receipt_3_13_2339_0_part9 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 1152 128 = 114280473715729080394313856 := by decide +kernel
-private theorem receipt_3_13_2339_0_part10 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 1280 18 = 1790635442968616572092294 := by decide +kernel
-private theorem receipt_3_13_2339_0_join0 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 0 256 = 4457843206347308179862896896 :=
-  phaseBlock_append receipt_3_13_2339_0_part0 receipt_3_13_2339_0_part1 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join1 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 384 256 = 2718521555414401311027200256 :=
-  phaseBlock_append receipt_3_13_2339_0_part3 receipt_3_13_2339_0_part4 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join2 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 256 384 = 4494963611592748606005547392 :=
-  phaseBlock_append receipt_3_13_2339_0_part2 receipt_3_13_2339_0_join1 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join3 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 0 640 = 8952806817940056785868444288 :=
-  phaseBlock_append receipt_3_13_2339_0_join0 receipt_3_13_2339_0_join2 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join4 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 768 256 = 1244032967636322934907617536 :=
-  phaseBlock_append receipt_3_13_2339_0_part6 receipt_3_13_2339_0_part7 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join5 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 640 384 = 2215543219272517860285985152 :=
-  phaseBlock_append receipt_3_13_2339_0_part5 receipt_3_13_2339_0_join4 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join6 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 1152 146 = 116071109158697696966406150 :=
-  phaseBlock_append receipt_3_13_2339_0_part9 receipt_3_13_2339_0_part10 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join7 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 1024 274 = 420358647680413767052804230 :=
-  phaseBlock_append receipt_3_13_2339_0_part8 receipt_3_13_2339_0_join6 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join8 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 640 658 = 2635901866952931627338789382 :=
-  phaseBlock_append receipt_3_13_2339_0_join5 receipt_3_13_2339_0_join7 rfl rfl rfl
-private theorem receipt_3_13_2339_0_join9 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 0) 0 1298 = 11588708684892988413207233670 :=
-  phaseBlock_append receipt_3_13_2339_0_join3 receipt_3_13_2339_0_join8 rfl rfl rfl
+private theorem receipt_3_13_2359_0_part0 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 0 128 = 2388729501364004751759068384 := by decide +kernel
+private theorem receipt_3_13_2359_0_part1 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 128 128 = 2077324944143721532855786720 := by decide +kernel
+private theorem receipt_3_13_2359_0_part2 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 256 128 = 1779673556709537959399910624 := by decide +kernel
+private theorem receipt_3_13_2359_0_part3 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 384 128 = 1496176934880251356496936160 := by decide +kernel
+private theorem receipt_3_13_2359_0_part4 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 512 128 = 1227233021698527775326244064 := by decide +kernel
+private theorem receipt_3_13_2359_0_part5 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 640 128 = 973236116885250636666035424 := by decide +kernel
+private theorem receipt_3_13_2359_0_part6 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 768 128 = 734576886293869374418267360 := by decide +kernel
+private theorem receipt_3_13_2359_0_part7 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 896 128 = 511642371364748079133588704 := by decide +kernel
+private theorem receipt_3_13_2359_0_part8 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 1024 128 = 304815998579514141536275680 := by decide +kernel
+private theorem receipt_3_13_2359_0_part9 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 1152 128 = 114477588915406896049167584 := by decide +kernel
+private theorem receipt_3_13_2359_0_part10 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 1280 18 = 1793708541504986703000831 := by decide +kernel
+private theorem receipt_3_13_2359_0_join0 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 0 256 = 4466054445507726284614855104 :=
+  phaseBlock_append receipt_3_13_2359_0_part0 receipt_3_13_2359_0_part1 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join1 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 384 256 = 2723409956578779131823180224 :=
+  phaseBlock_append receipt_3_13_2359_0_part3 receipt_3_13_2359_0_part4 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join2 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 256 384 = 4503083513288317091223090848 :=
+  phaseBlock_append receipt_3_13_2359_0_part2 receipt_3_13_2359_0_join1 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join3 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 0 640 = 8969137958796043375837945952 :=
+  phaseBlock_append receipt_3_13_2359_0_join0 receipt_3_13_2359_0_join2 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join4 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 768 256 = 1246219257658617453551856064 :=
+  phaseBlock_append receipt_3_13_2359_0_part6 receipt_3_13_2359_0_part7 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join5 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 640 384 = 2219455374543868090217891488 :=
+  phaseBlock_append receipt_3_13_2359_0_part5 receipt_3_13_2359_0_join4 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join6 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 1152 146 = 116271297456911882752168415 :=
+  phaseBlock_append receipt_3_13_2359_0_part9 receipt_3_13_2359_0_part10 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join7 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 1024 274 = 421087296036426024288444095 :=
+  phaseBlock_append receipt_3_13_2359_0_part8 receipt_3_13_2359_0_join6 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join8 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 640 658 = 2640542670580294114506335583 :=
+  phaseBlock_append receipt_3_13_2359_0_join5 receipt_3_13_2359_0_join7 rfl rfl rfl
+private theorem receipt_3_13_2359_0_join9 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 0) 0 1298 = 11609680629376337490344281535 :=
+  phaseBlock_append receipt_3_13_2359_0_join3 receipt_3_13_2359_0_join8 rfl rfl rfl
 
-private theorem receipt_3_13_2339_0 : fastPhase (bank 3 13).shape 179827 2339 44 1 1 1 0 = 11588708684892988413207233670 :=
-  phase_of_block (n := 1298) (by decide +kernel) receipt_3_13_2339_0_join9
+private theorem receipt_3_13_2359_0 : fastPhase (bank 3 13).shape 179818 2359 44 1 1 1 0 = 11609680629376337490344281535 :=
+  phase_of_block (n := 1298) (by decide +kernel) receipt_3_13_2359_0_join9
 
-private theorem receipt_3_13_2339_1_part0 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 0 128 = 2381872628065702226072116800 := by decide +kernel
-private theorem receipt_3_13_2339_1_part1 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 128 128 = 2071175256858595936699506240 := by decide +kernel
-private theorem receipt_3_13_2339_1_part2 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 256 128 = 1774199574705637404876709440 := by decide +kernel
-private theorem receipt_3_13_2339_1_part3 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 384 128 = 1491347315453484636338249280 := by decide +kernel
-private theorem receipt_3_13_2339_1_part4 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 512 128 = 1223016556447240516667711040 := by decide +kernel
-private theorem receipt_3_13_2339_1_part5 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 640 128 = 969601728002393640867094080 := by decide +kernel
-private theorem receipt_3_13_2339_1_part6 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 768 128 = 731493622876759142926163520 := by decide +kernel
-private theorem receipt_3_13_2339_1_part7 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 896 128 = 509079405742419525391801920 := by decide +kernel
-private theorem receipt_3_13_2339_1_part8 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 1024 128 = 302742622657665488937360960 := by decide +kernel
-private theorem receipt_3_13_2339_1_part9 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 1152 128 = 112863210538936761932013120 := by decide +kernel
-private theorem receipt_3_13_2339_1_part10 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 1280 18 = 1601752677431564225435040 := by decide +kernel
-private theorem receipt_3_13_2339_1_join0 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 0 256 = 4453047884924298162771623040 :=
-  phaseBlock_append receipt_3_13_2339_1_part0 receipt_3_13_2339_1_part1 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join1 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 384 256 = 2714363871900725153005960320 :=
-  phaseBlock_append receipt_3_13_2339_1_part3 receipt_3_13_2339_1_part4 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join2 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 256 384 = 4488563446606362557882669760 :=
-  phaseBlock_append receipt_3_13_2339_1_part2 receipt_3_13_2339_1_join1 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join3 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 0 640 = 8941611331530660720654292800 :=
-  phaseBlock_append receipt_3_13_2339_1_join0 receipt_3_13_2339_1_join2 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join4 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 768 256 = 1240573028619178668317965440 :=
-  phaseBlock_append receipt_3_13_2339_1_part6 receipt_3_13_2339_1_part7 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join5 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 640 384 = 2210174756621572309185059520 :=
-  phaseBlock_append receipt_3_13_2339_1_part5 receipt_3_13_2339_1_join4 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join6 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 1152 146 = 114464963216368326157448160 :=
-  phaseBlock_append receipt_3_13_2339_1_part9 receipt_3_13_2339_1_part10 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join7 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 1024 274 = 417207585874033815094809120 :=
-  phaseBlock_append receipt_3_13_2339_1_part8 receipt_3_13_2339_1_join6 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join8 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 640 658 = 2627382342495606124279868640 :=
-  phaseBlock_append receipt_3_13_2339_1_join5 receipt_3_13_2339_1_join7 rfl rfl rfl
-private theorem receipt_3_13_2339_1_join9 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2339 44 1 1 1 1) 0 1298 = 11568993674026266844934161440 :=
-  phaseBlock_append receipt_3_13_2339_1_join3 receipt_3_13_2339_1_join8 rfl rfl rfl
+private theorem receipt_3_13_2359_1_part0 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 0 128 = 2386276713303041943480429408 := by decide +kernel
+private theorem receipt_3_13_2359_1_part1 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 128 128 = 2074973560205640320174709600 := by decide +kernel
+private theorem receipt_3_13_2359_1_part2 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 256 128 = 1777426992514797587008047968 := by decide +kernel
+private theorem receipt_3_13_2359_1_part3 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 384 128 = 1494038575981348611436100448 := by decide +kernel
+private theorem receipt_3_13_2359_1_part4 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 512 128 = 1225206223656777052187110240 := by decide +kernel
+private theorem receipt_3_13_2359_1_part5 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 640 128 = 971324205347564002786843488 := by decide +kernel
+private theorem receipt_3_13_2359_1_part6 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 768 128 = 732783157069536635083524960 := by decide +kernel
+private theorem receipt_3_13_2359_1_part7 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 896 128 = 509970090502216842772773728 := by decide +kernel
+private theorem receipt_3_13_2359_1_part8 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 1024 128 = 303268402443169884922538848 := by decide +kernel
+private theorem receipt_3_13_2359_1_part9 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 1152 128 = 113057884262353029498035040 := by decide +kernel
+private theorem receipt_3_13_2359_1_part10 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 1280 18 = 1604501679627994823956812 := by decide +kernel
+private theorem receipt_3_13_2359_1_join0 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 0 256 = 4461250273508682263655139008 :=
+  phaseBlock_append receipt_3_13_2359_1_part0 receipt_3_13_2359_1_part1 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join1 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 384 256 = 2719244799638125663623210688 :=
+  phaseBlock_append receipt_3_13_2359_1_part3 receipt_3_13_2359_1_part4 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join2 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 256 384 = 4496671792152923250631258656 :=
+  phaseBlock_append receipt_3_13_2359_1_part2 receipt_3_13_2359_1_join1 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join3 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 0 640 = 8957922065661605514286397664 :=
+  phaseBlock_append receipt_3_13_2359_1_join0 receipt_3_13_2359_1_join2 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join4 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 768 256 = 1242753247571753477856298688 :=
+  phaseBlock_append receipt_3_13_2359_1_part6 receipt_3_13_2359_1_part7 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join5 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 640 384 = 2214077452919317480643142176 :=
+  phaseBlock_append receipt_3_13_2359_1_part5 receipt_3_13_2359_1_join4 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join6 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 1152 146 = 114662385941981024321991852 :=
+  phaseBlock_append receipt_3_13_2359_1_part9 receipt_3_13_2359_1_part10 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join7 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 1024 274 = 417930788385150909244530700 :=
+  phaseBlock_append receipt_3_13_2359_1_part8 receipt_3_13_2359_1_join6 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join8 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 640 658 = 2632008241304468389887672876 :=
+  phaseBlock_append receipt_3_13_2359_1_join5 receipt_3_13_2359_1_join7 rfl rfl rfl
+private theorem receipt_3_13_2359_1_join9 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2359 44 1 1 1 1) 0 1298 = 11589930306966073904174070540 :=
+  phaseBlock_append receipt_3_13_2359_1_join3 receipt_3_13_2359_1_join8 rfl rfl rfl
 
-private theorem receipt_3_13_2339_1 : fastPhase (bank 3 13).shape 179827 2339 44 1 1 1 1 = 11568993674026266844934161440 :=
-  phase_of_block (n := 1298) (by decide +kernel) receipt_3_13_2339_1_join9
+private theorem receipt_3_13_2359_1 : fastPhase (bank 3 13).shape 179818 2359 44 1 1 1 1 = 11589930306966073904174070540 :=
+  phase_of_block (n := 1298) (by decide +kernel) receipt_3_13_2359_1_join9
 
-private theorem receipt_3_13_2340_0_part0 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 0 128 = 2384341820766547703992186752 := by decide +kernel
-private theorem receipt_3_13_2340_0_part1 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 128 128 = 2073538689103871574249248640 := by decide +kernel
-private theorem receipt_3_13_2340_0_part2 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 256 128 = 1776454512345176547371366272 := by decide +kernel
-private theorem receipt_3_13_2340_0_part3 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 384 128 = 1493491006047903284036654976 := by decide +kernel
-private theorem receipt_3_13_2340_0_part4 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 512 128 = 1225046229552234679111972736 := by decide +kernel
-private theorem receipt_3_13_2340_0_part5 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 640 128 = 971514595452157081920051072 := by decide +kernel
-private theorem receipt_3_13_2340_0_part6 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 768 128 = 733286879066521516506625920 := by decide +kernel
-private theorem receipt_3_13_2340_0_part7 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 896 128 = 510750227910104901907568512 := by decide +kernel
-private theorem receipt_3_13_2340_0_part8 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 1024 128 = 304288171164671272416016256 := by decide +kernel
-private theorem receipt_3_13_2340_0_part9 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 1152 128 = 114280629150032997849503616 := by decide +kernel
-private theorem receipt_3_13_2340_0_part10 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 1280 18 = 1790636940180766332725838 := by decide +kernel
-private theorem receipt_3_13_2340_0_join0 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 0 256 = 4457880509870419278241435392 :=
-  phaseBlock_append receipt_3_13_2340_0_part0 receipt_3_13_2340_0_part1 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join1 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 384 256 = 2718537235600137963148627712 :=
-  phaseBlock_append receipt_3_13_2340_0_part3 receipt_3_13_2340_0_part4 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join2 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 256 384 = 4494991747945314510519993984 :=
-  phaseBlock_append receipt_3_13_2340_0_part2 receipt_3_13_2340_0_join1 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join3 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 0 640 = 8952872257815733788761429376 :=
-  phaseBlock_append receipt_3_13_2340_0_join0 receipt_3_13_2340_0_join2 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join4 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 768 256 = 1244037106976626418414194432 :=
-  phaseBlock_append receipt_3_13_2340_0_part6 receipt_3_13_2340_0_part7 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join5 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 640 384 = 2215551702428783500334245504 :=
-  phaseBlock_append receipt_3_13_2340_0_part5 receipt_3_13_2340_0_join4 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join6 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 1152 146 = 116071266090213764182229454 :=
-  phaseBlock_append receipt_3_13_2340_0_part9 receipt_3_13_2340_0_part10 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join7 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 1024 274 = 420359437254885036598245710 :=
-  phaseBlock_append receipt_3_13_2340_0_part8 receipt_3_13_2340_0_join6 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join8 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 640 658 = 2635911139683668536932491214 :=
-  phaseBlock_append receipt_3_13_2340_0_join5 receipt_3_13_2340_0_join7 rfl rfl rfl
-private theorem receipt_3_13_2340_0_join9 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 0) 0 1298 = 11588783397499402325693920590 :=
-  phaseBlock_append receipt_3_13_2340_0_join3 receipt_3_13_2340_0_join8 rfl rfl rfl
+private theorem receipt_3_13_2360_0_part0 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 0 128 = 2388750482386761583437106720 := by decide +kernel
+private theorem receipt_3_13_2360_0_part1 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 128 128 = 2077341333216175669614591520 := by decide +kernel
+private theorem receipt_3_13_2360_0_part2 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 256 128 = 1779686035140164720271175200 := by decide +kernel
+private theorem receipt_3_13_2360_0_part3 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 384 128 = 1496186135521572866064817696 := by decide +kernel
+private theorem receipt_3_13_2360_0_part4 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 512 128 = 1227239529308619192800579104 := by decide +kernel
+private theorem receipt_3_13_2360_0_part5 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 640 128 = 973240468488366775653334560 := by decide +kernel
+private theorem receipt_3_13_2360_0_part6 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 768 128 = 734579571540191713390489120 := by decide +kernel
+private theorem receipt_3_13_2360_0_part7 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 896 128 = 511643832889252162594692640 := by decide +kernel
+private theorem receipt_3_13_2360_0_part8 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 1024 128 = 304816632359957371886554656 := by decide +kernel
+private theorem receipt_3_13_2360_0_part9 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 1152 128 = 114477744629436716147359264 := by decide +kernel
+private theorem receipt_3_13_2360_0_part10 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 1280 18 = 1793710041413516908296405 := by decide +kernel
+private theorem receipt_3_13_2360_0_join0 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 0 256 = 4466091815602937253051698240 :=
+  phaseBlock_append receipt_3_13_2360_0_part0 receipt_3_13_2360_0_part1 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join1 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 384 256 = 2723425664830192058865396800 :=
+  phaseBlock_append receipt_3_13_2360_0_part3 receipt_3_13_2360_0_part4 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join2 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 256 384 = 4503111699970356779136572000 :=
+  phaseBlock_append receipt_3_13_2360_0_part2 receipt_3_13_2360_0_join1 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join3 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 0 640 = 8969203515573294032188270240 :=
+  phaseBlock_append receipt_3_13_2360_0_join0 receipt_3_13_2360_0_join2 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join4 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 768 256 = 1246223404429443875985181760 :=
+  phaseBlock_append receipt_3_13_2360_0_part6 receipt_3_13_2360_0_part7 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join5 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 640 384 = 2219463872917810651638516320 :=
+  phaseBlock_append receipt_3_13_2360_0_part5 receipt_3_13_2360_0_join4 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join6 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 1152 146 = 116271454670850233055655669 :=
+  phaseBlock_append receipt_3_13_2360_0_part9 receipt_3_13_2360_0_part10 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join7 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 1024 274 = 421088087030807604942210325 :=
+  phaseBlock_append receipt_3_13_2360_0_part8 receipt_3_13_2360_0_join6 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join8 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 640 658 = 2640551959948618256580726645 :=
+  phaseBlock_append receipt_3_13_2360_0_join5 receipt_3_13_2360_0_join7 rfl rfl rfl
+private theorem receipt_3_13_2360_0_join9 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 0) 0 1298 = 11609755475521912288768996885 :=
+  phaseBlock_append receipt_3_13_2360_0_join3 receipt_3_13_2360_0_join8 rfl rfl rfl
 
-private theorem receipt_3_13_2340_0 : fastPhase (bank 3 13).shape 179827 2340 44 1 1 1 0 = 11588783397499402325693920590 :=
-  phase_of_block (n := 1298) (by decide +kernel) receipt_3_13_2340_0_join9
+private theorem receipt_3_13_2360_0 : fastPhase (bank 3 13).shape 179818 2360 44 1 1 1 0 = 11609755475521912288768996885 :=
+  phase_of_block (n := 1298) (by decide +kernel) receipt_3_13_2360_0_join9
 
-private theorem receipt_3_13_2340_1_part0 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 0 128 = 2381893546834039402088370432 := by decide +kernel
-private theorem receipt_3_13_2340_1_part1 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 128 128 = 2071191595431857821470863616 := by decide +kernel
-private theorem receipt_3_13_2340_1_part2 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 256 128 = 1774212012925270276977807616 := by decide +kernel
-private theorem receipt_3_13_2340_1_part3 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 384 128 = 1491356484790139761563529472 := by decide +kernel
-private theorem receipt_3_13_2340_1_part4 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 512 128 = 1223023040361958632514556160 := by decide +kernel
-private theorem receipt_3_13_2340_1_part5 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 640 128 = 969606062306909831716745472 := by decide +kernel
-private theorem receipt_3_13_2340_1_part6 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 768 128 = 731496296092928105922416896 := by decide +kernel
-private theorem receipt_3_13_2340_1_part7 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 896 128 = 509080859460761227017482496 := by decide +kernel
-private theorem receipt_3_13_2340_1_part8 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 1024 128 = 302743251895031212288577792 := by decide +kernel
-private theorem receipt_3_13_2340_1_part9 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 1152 128 = 112863364095295544690192640 := by decide +kernel
-private theorem receipt_3_13_2340_1_part10 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 1280 18 = 1601754018729060022933098 := by decide +kernel
-private theorem receipt_3_13_2340_1_join0 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 0 256 = 4453085142265897223559234048 :=
-  phaseBlock_append receipt_3_13_2340_1_part0 receipt_3_13_2340_1_part1 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join1 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 384 256 = 2714379525152098394078085632 :=
-  phaseBlock_append receipt_3_13_2340_1_part3 receipt_3_13_2340_1_part4 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join2 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 256 384 = 4488591538077368671055893248 :=
-  phaseBlock_append receipt_3_13_2340_1_part2 receipt_3_13_2340_1_join1 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join3 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 0 640 = 8941676680343265894615127296 :=
-  phaseBlock_append receipt_3_13_2340_1_join0 receipt_3_13_2340_1_join2 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join4 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 768 256 = 1240577155553689332939899392 :=
-  phaseBlock_append receipt_3_13_2340_1_part6 receipt_3_13_2340_1_part7 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join5 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 640 384 = 2210183217860599164656644864 :=
-  phaseBlock_append receipt_3_13_2340_1_part5 receipt_3_13_2340_1_join4 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join6 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 1152 146 = 114465118114024604713125738 :=
-  phaseBlock_append receipt_3_13_2340_1_part9 receipt_3_13_2340_1_part10 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join7 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 1024 274 = 417208370009055817001703530 :=
-  phaseBlock_append receipt_3_13_2340_1_part8 receipt_3_13_2340_1_join6 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join8 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 640 658 = 2627391587869654981658348394 :=
-  phaseBlock_append receipt_3_13_2340_1_join5 receipt_3_13_2340_1_join7 rfl rfl rfl
-private theorem receipt_3_13_2340_1_join9 :
-    phaseBlock (fastLayer (bank 3 13).shape 179827 2340 44 1 1 1 1) 0 1298 = 11569068268212920876273475690 :=
-  phaseBlock_append receipt_3_13_2340_1_join3 receipt_3_13_2340_1_join8 rfl rfl rfl
+private theorem receipt_3_13_2360_1_part0 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 0 128 = 2386297669387201350039547680 := by decide +kernel
+private theorem receipt_3_13_2360_1_part1 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 128 128 = 2074989927953277494049586976 := by decide +kernel
+private theorem receipt_3_13_2360_1_part2 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 256 128 = 1777439452966322139506003744 := by decide +kernel
+private theorem receipt_3_13_2360_1_part3 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 384 128 = 1494047761723411314043019040 := by decide +kernel
+private theorem receipt_3_13_2360_1_part4 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 512 128 = 1225212719183770430643564320 := by decide +kernel
+private theorem receipt_3_13_2360_1_part5 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 640 128 = 971328547422243321861996320 := by decide +kernel
+private theorem receipt_3_13_2360_1_part6 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 768 128 = 732785835082761274046811936 := by decide +kernel
+private theorem receipt_3_13_2360_1_part7 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 896 128 = 509971546831812061563363104 := by decide +kernel
+private theorem receipt_3_13_2360_1_part8 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 1024 128 = 303269032811908981016571680 := by decide +kernel
+private theorem receipt_3_13_2360_1_part9 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 1152 128 = 113058038095059885473644320 := by decide +kernel
+private theorem receipt_3_13_2360_1_part10 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 1280 18 = 1604503023341091943504260 := by decide +kernel
+private theorem receipt_3_13_2360_1_join0 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 0 256 = 4461287597340478844089134656 :=
+  phaseBlock_append receipt_3_13_2360_1_part0 receipt_3_13_2360_1_part1 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join1 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 384 256 = 2719260480907181744686583360 :=
+  phaseBlock_append receipt_3_13_2360_1_part3 receipt_3_13_2360_1_part4 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join2 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 256 384 = 4496699933873503884192587104 :=
+  phaseBlock_append receipt_3_13_2360_1_part2 receipt_3_13_2360_1_join1 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join3 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 0 640 = 8957987531213982728281721760 :=
+  phaseBlock_append receipt_3_13_2360_1_join0 receipt_3_13_2360_1_join2 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join4 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 768 256 = 1242757381914573335610175040 :=
+  phaseBlock_append receipt_3_13_2360_1_part6 receipt_3_13_2360_1_part7 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join5 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 640 384 = 2214085929336816657472171360 :=
+  phaseBlock_append receipt_3_13_2360_1_part5 receipt_3_13_2360_1_join4 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join6 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 1152 146 = 114662541118400977417148580 :=
+  phaseBlock_append receipt_3_13_2360_1_part9 receipt_3_13_2360_1_part10 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join7 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 1024 274 = 417931573930309958433720260 :=
+  phaseBlock_append receipt_3_13_2360_1_part8 receipt_3_13_2360_1_join6 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join8 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 640 658 = 2632017503267126615905891620 :=
+  phaseBlock_append receipt_3_13_2360_1_join5 receipt_3_13_2360_1_join7 rfl rfl rfl
+private theorem receipt_3_13_2360_1_join9 :
+    phaseBlock (fastLayer (bank 3 13).shape 179818 2360 44 1 1 1 1) 0 1298 = 11590005034481109344187613380 :=
+  phaseBlock_append receipt_3_13_2360_1_join3 receipt_3_13_2360_1_join8 rfl rfl rfl
 
-private theorem receipt_3_13_2340_1 : fastPhase (bank 3 13).shape 179827 2340 44 1 1 1 1 = 11569068268212920876273475690 :=
-  phase_of_block (n := 1298) (by decide +kernel) receipt_3_13_2340_1_join9
+private theorem receipt_3_13_2360_1 : fastPhase (bank 3 13).shape 179818 2360 44 1 1 1 1 = 11590005034481109344187613380 :=
+  phase_of_block (n := 1298) (by decide +kernel) receipt_3_13_2360_1_join9
 
 theorem receipt_3_13 : Checked (bank 3 13) 44 1 1 := by
   refine checked_from_values (bank 3 13) 44 1 1
     (P3_7_1.checked (bank 3 13) rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_5949_1297)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) receipt_3_13_2339_0 receipt_3_13_2339_1 receipt_3_13_2340_0 receipt_3_13_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) receipt_3_13_2359_0 receipt_3_13_2359_1 receipt_3_13_2360_0 receipt_3_13_2360_1 (by decide +kernel) (by decide +kernel)
 
-private theorem receipt_0_14_2339_0_part0 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 0 128 = 188173045036608620968378906560 := by decide +kernel
-private theorem receipt_0_14_2339_0_part1 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 128 128 = 172239186108789644542726641600 := by decide +kernel
-private theorem receipt_0_14_2339_0_part2 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 256 128 = 156786517564625822414277965760 := by decide +kernel
-private theorem receipt_0_14_2339_0_part3 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 384 128 = 141807598726593450803098015680 := by decide +kernel
-private theorem receipt_0_14_2339_0_part4 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 512 128 = 127295000892537152037728794560 := by decide +kernel
-private theorem receipt_0_14_2339_0_part5 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 640 128 = 113241307329391047434076657600 := by decide +kernel
-private theorem receipt_0_14_2339_0_part6 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 768 128 = 99639113266899930174299797440 := by decide +kernel
-private theorem receipt_0_14_2339_0_part7 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 896 128 = 86481025891340438185695729600 := by decide +kernel
-private theorem receipt_0_14_2339_0_part8 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1024 128 = 73759664339242227019588777920 := by decide +kernel
-private theorem receipt_0_14_2339_0_part9 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1152 128 = 61467659724690105914829283881 := by decide +kernel
-private theorem receipt_0_14_2339_0_part10 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1280 128 = 49597665012628162539132915211 := by decide +kernel
-private theorem receipt_0_14_2339_0_part11 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1408 128 = 38142347265979790835558533088 := by decide +kernel
-private theorem receipt_0_14_2339_0_part12 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1536 128 = 27094353120820770561550942602 := by decide +kernel
-private theorem receipt_0_14_2339_0_part13 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1664 128 = 16446337078964397402119429133 := by decide +kernel
-private theorem receipt_0_14_2339_0_part14 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1792 128 = 6190965564821952656784148860 := by decide +kernel
-private theorem receipt_0_14_2339_0_part15 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1920 15 = 72060459585999257990755632 := by decide +kernel
-private theorem receipt_0_14_2339_0_join0 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 0 256 = 360412231145398265511105548160 :=
-  phaseBlock_append receipt_0_14_2339_0_part0 receipt_0_14_2339_0_part1 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join1 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 256 256 = 298594116291219273217375981440 :=
-  phaseBlock_append receipt_0_14_2339_0_part2 receipt_0_14_2339_0_part3 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join2 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 0 512 = 659006347436617538728481529600 :=
-  phaseBlock_append receipt_0_14_2339_0_join0 receipt_0_14_2339_0_join1 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join3 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 512 256 = 240536308221928199471805452160 :=
-  phaseBlock_append receipt_0_14_2339_0_part4 receipt_0_14_2339_0_part5 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join4 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 768 256 = 186120139158240368359995527040 :=
-  phaseBlock_append receipt_0_14_2339_0_part6 receipt_0_14_2339_0_part7 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join5 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 512 512 = 426656447380168567831800979200 :=
-  phaseBlock_append receipt_0_14_2339_0_join3 receipt_0_14_2339_0_join4 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join6 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 0 1024 = 1085662794816786106560282508800 :=
-  phaseBlock_append receipt_0_14_2339_0_join2 receipt_0_14_2339_0_join5 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join7 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1024 256 = 135227324063932332934418061801 :=
-  phaseBlock_append receipt_0_14_2339_0_part8 receipt_0_14_2339_0_part9 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join8 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1280 256 = 87740012278607953374691448299 :=
-  phaseBlock_append receipt_0_14_2339_0_part10 receipt_0_14_2339_0_part11 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join9 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1024 512 = 222967336342540286309109510100 :=
-  phaseBlock_append receipt_0_14_2339_0_join7 receipt_0_14_2339_0_join8 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join10 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1536 256 = 43540690199785167963670371735 :=
-  phaseBlock_append receipt_0_14_2339_0_part12 receipt_0_14_2339_0_part13 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join11 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1792 143 = 6263026024407951914774904492 :=
-  phaseBlock_append receipt_0_14_2339_0_part14 receipt_0_14_2339_0_part15 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join12 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1536 399 = 49803716224193119878445276227 :=
-  phaseBlock_append receipt_0_14_2339_0_join10 receipt_0_14_2339_0_join11 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join13 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 1024 911 = 272771052566733406187554786327 :=
-  phaseBlock_append receipt_0_14_2339_0_join9 receipt_0_14_2339_0_join12 rfl rfl rfl
-private theorem receipt_0_14_2339_0_join14 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 0) 0 1935 = 1358433847383519512747837295127 :=
-  phaseBlock_append receipt_0_14_2339_0_join6 receipt_0_14_2339_0_join13 rfl rfl rfl
+private theorem receipt_0_14_2359_0_part0 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 0 128 = 188046750371445458019926050848 := by decide +kernel
+private theorem receipt_0_14_2359_0_part1 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 128 128 = 172122232215881481632092444704 := by decide +kernel
+private theorem receipt_0_14_2359_0_part2 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 256 128 = 156678800382563119498779371552 := by decide +kernel
+private theorem receipt_0_14_2359_0_part3 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 384 128 = 141709014374113107831609325600 := by decide +kernel
+private theorem receipt_0_14_2359_0_part4 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 512 128 = 127205445672525906447557969952 := by decide +kernel
+private theorem receipt_0_14_2359_0_part5 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 640 128 = 113160677732884473601330518048 := by decide +kernel
+private theorem receipt_0_14_2359_0_part6 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 768 128 = 99567305977077040817738115104 := by decide +kernel
+private theorem receipt_0_14_2359_0_part7 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 896 128 = 86417937787513887724074219552 := by decide +kernel
+private theorem receipt_0_14_2359_0_part8 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1024 128 = 73705192500844116882490984480 := by decide +kernel
+private theorem receipt_0_14_2359_0_part9 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1152 128 = 61421701401672428622375639072 := by decide +kernel
+private theorem receipt_0_14_2359_0_part10 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1280 128 = 49560115150940743168219642177 := by decide +kernel
+private theorem receipt_0_14_2359_0_part11 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1408 128 = 38113103769695586968142533409 := by decide +kernel
+private theorem receipt_0_14_2359_0_part12 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1536 128 = 27073315904550890293495281863 := by decide +kernel
+private theorem receipt_0_14_2359_0_part13 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1664 128 = 16433405839689445807990096537 := by decide +kernel
+private theorem receipt_0_14_2359_0_part14 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1792 128 = 6186039844288818705479299267 := by decide +kernel
+private theorem receipt_0_14_2359_0_part15 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1920 15 = 72002622137542673345227716 := by decide +kernel
+private theorem receipt_0_14_2359_0_join0 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 0 256 = 360168982587326939652018495552 :=
+  phaseBlock_append receipt_0_14_2359_0_part0 receipt_0_14_2359_0_part1 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join1 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 256 256 = 298387814756676227330388697152 :=
+  phaseBlock_append receipt_0_14_2359_0_part2 receipt_0_14_2359_0_part3 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join2 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 0 512 = 658556797344003166982407192704 :=
+  phaseBlock_append receipt_0_14_2359_0_join0 receipt_0_14_2359_0_join1 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join3 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 512 256 = 240366123405410380048888488000 :=
+  phaseBlock_append receipt_0_14_2359_0_part4 receipt_0_14_2359_0_part5 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join4 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 768 256 = 185985243764590928541812334656 :=
+  phaseBlock_append receipt_0_14_2359_0_part6 receipt_0_14_2359_0_part7 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join5 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 512 512 = 426351367170001308590700822656 :=
+  phaseBlock_append receipt_0_14_2359_0_join3 receipt_0_14_2359_0_join4 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join6 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 0 1024 = 1084908164514004475573108015360 :=
+  phaseBlock_append receipt_0_14_2359_0_join2 receipt_0_14_2359_0_join5 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join7 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1024 256 = 135126893902516545504866623552 :=
+  phaseBlock_append receipt_0_14_2359_0_part8 receipt_0_14_2359_0_part9 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join8 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1280 256 = 87673218920636330136362175586 :=
+  phaseBlock_append receipt_0_14_2359_0_part10 receipt_0_14_2359_0_part11 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join9 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1024 512 = 222800112823152875641228799138 :=
+  phaseBlock_append receipt_0_14_2359_0_join7 receipt_0_14_2359_0_join8 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join10 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1536 256 = 43506721744240336101485378400 :=
+  phaseBlock_append receipt_0_14_2359_0_part12 receipt_0_14_2359_0_part13 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join11 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1792 143 = 6258042466426361378824526983 :=
+  phaseBlock_append receipt_0_14_2359_0_part14 receipt_0_14_2359_0_part15 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join12 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1536 399 = 49764764210666697480309905383 :=
+  phaseBlock_append receipt_0_14_2359_0_join10 receipt_0_14_2359_0_join11 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join13 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 1024 911 = 272564877033819573121538704521 :=
+  phaseBlock_append receipt_0_14_2359_0_join9 receipt_0_14_2359_0_join12 rfl rfl rfl
+private theorem receipt_0_14_2359_0_join14 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 0) 0 1935 = 1357473041547824048694646719881 :=
+  phaseBlock_append receipt_0_14_2359_0_join6 receipt_0_14_2359_0_join13 rfl rfl rfl
 
-private theorem receipt_0_14_2339_0 : fastPhase (bank 0 14).shape 179827 2339 73 1 0 1 0 = 1358433847383519512747837295127 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_0_14_2339_0_join14
+private theorem receipt_0_14_2359_0 : fastPhase (bank 0 14).shape 179818 2359 73 1 0 1 0 = 1357473041547824048694646719881 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_0_14_2359_0_join14
 
-private theorem receipt_0_14_2339_1_part0 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 0 128 = 188048318842103461816522049088 := by decide +kernel
-private theorem receipt_0_14_2339_1_part1 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 128 128 = 172118123203161645128503993920 := by decide +kernel
-private theorem receipt_0_14_2339_1_part2 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 256 128 = 156669061628229346557991929408 := by decide +kernel
-private theorem receipt_0_14_2339_1_part3 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 384 128 = 141693693531080325818949264960 := by decide +kernel
-private theorem receipt_0_14_2339_1_part4 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 512 128 = 127184590300808579806069098048 := by decide +kernel
-private theorem receipt_0_14_2339_1_part5 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 640 128 = 113134335295549515473661699648 := by decide +kernel
-private theorem receipt_0_14_2339_1_part6 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 768 128 = 99535523836201122714541999680 := by decide +kernel
-private theorem receipt_0_14_2339_1_part7 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 896 128 = 86380763200145147238917072448 := by decide +kernel
-private theorem receipt_0_14_2339_1_part8 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1024 128 = 73662672614968263453273622080 := by decide +kernel
-private theorem receipt_0_14_2339_1_part9 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1152 128 = 61373883285712510715925361008 := by decide +kernel
-private theorem receipt_0_14_2339_1_part10 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1280 128 = 49507048250604421140948581911 := by decide +kernel
-private theorem receipt_0_14_2339_1_part11 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1408 128 = 38054834623225081021043455092 := by decide +kernel
-private theorem receipt_0_14_2339_1_part12 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1536 128 = 27009889125267288219191210418 := by decide +kernel
-private theorem receipt_0_14_2339_1_part13 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1664 128 = 16364866349476222412191823295 := by decide +kernel
-private theorem receipt_0_14_2339_1_part14 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1792 128 = 6112432811230835051344041138 := by decide +kernel
-private theorem receipt_0_14_2339_1_part15 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1920 15 = 63047172060730152102531129 := by decide +kernel
-private theorem receipt_0_14_2339_1_join0 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 0 256 = 360166442045265106945026043008 :=
-  phaseBlock_append receipt_0_14_2339_1_part0 receipt_0_14_2339_1_part1 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join1 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 256 256 = 298362755159309672376941194368 :=
-  phaseBlock_append receipt_0_14_2339_1_part2 receipt_0_14_2339_1_part3 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join2 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 0 512 = 658529197204574779321967237376 :=
-  phaseBlock_append receipt_0_14_2339_1_join0 receipt_0_14_2339_1_join1 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join3 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 512 256 = 240318925596358095279730797696 :=
-  phaseBlock_append receipt_0_14_2339_1_part4 receipt_0_14_2339_1_part5 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join4 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 768 256 = 185916287036346269953459072128 :=
-  phaseBlock_append receipt_0_14_2339_1_part6 receipt_0_14_2339_1_part7 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join5 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 512 512 = 426235212632704365233189869824 :=
-  phaseBlock_append receipt_0_14_2339_1_join3 receipt_0_14_2339_1_join4 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join6 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 0 1024 = 1084764409837279144555157107200 :=
-  phaseBlock_append receipt_0_14_2339_1_join2 receipt_0_14_2339_1_join5 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join7 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1024 256 = 135036555900680774169198983088 :=
-  phaseBlock_append receipt_0_14_2339_1_part8 receipt_0_14_2339_1_part9 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join8 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1280 256 = 87561882873829502161992037003 :=
-  phaseBlock_append receipt_0_14_2339_1_part10 receipt_0_14_2339_1_part11 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join9 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1024 512 = 222598438774510276331191020091 :=
-  phaseBlock_append receipt_0_14_2339_1_join7 receipt_0_14_2339_1_join8 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join10 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1536 256 = 43374755474743510631383033713 :=
-  phaseBlock_append receipt_0_14_2339_1_part12 receipt_0_14_2339_1_part13 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join11 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1792 143 = 6175479983291565203446572267 :=
-  phaseBlock_append receipt_0_14_2339_1_part14 receipt_0_14_2339_1_part15 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join12 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1536 399 = 49550235458035075834829605980 :=
-  phaseBlock_append receipt_0_14_2339_1_join10 receipt_0_14_2339_1_join11 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join13 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 1024 911 = 272148674232545352166020626071 :=
-  phaseBlock_append receipt_0_14_2339_1_join9 receipt_0_14_2339_1_join12 rfl rfl rfl
-private theorem receipt_0_14_2339_1_join14 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2339 73 1 0 1 1) 0 1935 = 1356913084069824496721177733271 :=
-  phaseBlock_append receipt_0_14_2339_1_join6 receipt_0_14_2339_1_join13 rfl rfl rfl
+private theorem receipt_0_14_2359_1_part0 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 0 128 = 187922110365034860046236250080 := by decide +kernel
+private theorem receipt_0_14_2359_1_part1 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 128 128 = 172001253709762564805998968800 := by decide +kernel
+private theorem receipt_0_14_2359_1_part2 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 256 128 = 156561427073015626125740675040 := by decide +kernel
+private theorem receipt_0_14_2359_1_part3 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 384 128 = 141595190048726843527973412832 := by decide +kernel
+private theorem receipt_0_14_2359_1_part4 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 512 128 = 127095114210152625099414056928 := by decide +kernel
+private theorem receipt_0_14_2359_1_part5 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 640 128 = 113053783103589762323360694240 := by decide +kernel
+private theorem receipt_0_14_2359_1_part6 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 768 128 = 99463792242092204912069005280 := by decide +kernel
+private theorem receipt_0_14_2359_1_part7 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 896 128 = 86317749099187835639128645600 := by decide +kernel
+private theorem receipt_0_14_2359_1_part8 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1024 128 = 73608273102595245171839627232 := by decide +kernel
+private theorem receipt_0_14_2359_1_part9 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1152 128 = 61327995627940506903588700128 := by decide +kernel
+private theorem receipt_0_14_2359_1_part10 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1280 128 = 49469567413857511761029604476 := by decide +kernel
+private theorem receipt_0_14_2359_1_part11 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1408 128 = 38025658529485167595179295944 := by decide +kernel
+private theorem receipt_0_14_2359_1_part12 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1536 128 = 26988917704094781720252045112 := by decide +kernel
+private theorem receipt_0_14_2359_1_part13 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1664 128 = 16351999312902872402078150001 := by decide +kernel
+private theorem receipt_0_14_2359_1_part14 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1792 128 = 6107569716011356565292776811 := by decide +kernel
+private theorem receipt_0_14_2359_1_part15 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1920 15 = 62996570935108556812686375 := by decide +kernel
+private theorem receipt_0_14_2359_1_join0 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 0 256 = 359923364074797424852235218880 :=
+  phaseBlock_append receipt_0_14_2359_1_part0 receipt_0_14_2359_1_part1 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join1 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 256 256 = 298156617121742469653714087872 :=
+  phaseBlock_append receipt_0_14_2359_1_part2 receipt_0_14_2359_1_part3 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join2 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 0 512 = 658079981196539894505949306752 :=
+  phaseBlock_append receipt_0_14_2359_1_join0 receipt_0_14_2359_1_join1 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join3 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 512 256 = 240148897313742387422774751168 :=
+  phaseBlock_append receipt_0_14_2359_1_part4 receipt_0_14_2359_1_part5 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join4 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 768 256 = 185781541341280040551197650880 :=
+  phaseBlock_append receipt_0_14_2359_1_part6 receipt_0_14_2359_1_part7 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join5 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 512 512 = 425930438655022427973972402048 :=
+  phaseBlock_append receipt_0_14_2359_1_join3 receipt_0_14_2359_1_join4 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join6 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 0 1024 = 1084010419851562322479921708800 :=
+  phaseBlock_append receipt_0_14_2359_1_join2 receipt_0_14_2359_1_join5 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join7 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1024 256 = 134936268730535752075428327360 :=
+  phaseBlock_append receipt_0_14_2359_1_part8 receipt_0_14_2359_1_part9 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join8 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1280 256 = 87495225943342679356208900420 :=
+  phaseBlock_append receipt_0_14_2359_1_part10 receipt_0_14_2359_1_part11 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join9 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1024 512 = 222431494673878431431637227780 :=
+  phaseBlock_append receipt_0_14_2359_1_join7 receipt_0_14_2359_1_join8 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join10 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1536 256 = 43340917016997654122330195113 :=
+  phaseBlock_append receipt_0_14_2359_1_part12 receipt_0_14_2359_1_part13 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join11 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1792 143 = 6170566286946465122105463186 :=
+  phaseBlock_append receipt_0_14_2359_1_part14 receipt_0_14_2359_1_part15 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join12 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1536 399 = 49511483303944119244435658299 :=
+  phaseBlock_append receipt_0_14_2359_1_join10 receipt_0_14_2359_1_join11 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join13 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 1024 911 = 271942977977822550676072886079 :=
+  phaseBlock_append receipt_0_14_2359_1_join9 receipt_0_14_2359_1_join12 rfl rfl rfl
+private theorem receipt_0_14_2359_1_join14 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2359 73 1 0 1 1) 0 1935 = 1355953397829384873155994594879 :=
+  phaseBlock_append receipt_0_14_2359_1_join6 receipt_0_14_2359_1_join13 rfl rfl rfl
 
-private theorem receipt_0_14_2339_1 : fastPhase (bank 0 14).shape 179827 2339 73 1 0 1 1 = 1356913084069824496721177733271 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_0_14_2339_1_join14
+private theorem receipt_0_14_2359_1 : fastPhase (bank 0 14).shape 179818 2359 73 1 0 1 1 = 1355953397829384873155994594879 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_0_14_2359_1_join14
 
-private theorem receipt_0_14_2340_0_part0 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 0 128 = 188174734100960288993097259200 := by decide +kernel
-private theorem receipt_0_14_2340_0_part1 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 128 128 = 172240674813785065533753432256 := by decide +kernel
-private theorem receipt_0_14_2340_0_part2 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 256 128 = 156787819445702079363528628416 := by decide +kernel
-private theorem receipt_0_14_2340_0_part3 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 384 128 = 141808727062563850501822650560 := by decide +kernel
-private theorem receipt_0_14_2340_0_part4 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 512 128 = 127295968706008976994702956736 := by decide +kernel
-private theorem receipt_0_14_2340_0_part5 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 640 128 = 113242127387183087891466590400 := by decide +kernel
-private theorem receipt_0_14_2340_0_part6 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 768 128 = 99639798080459796221202110656 := by decide +kernel
-private theorem receipt_0_14_2340_0_part7 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 896 128 = 86481587717161651969351522496 := by decide +kernel
-private theorem receipt_0_14_2340_0_part8 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1024 128 = 73760115179281095054272207040 := by decide +kernel
-private theorem receipt_0_14_2340_0_part9 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1152 128 = 61468011318822868460505269388 := by decide +kernel
-private theorem receipt_0_14_2340_0_part10 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1280 128 = 49597928606524180363917232954 := by decide +kernel
-private theorem receipt_0_14_2340_0_part11 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1408 128 = 38142534121180311700554677550 := by decide +kernel
-private theorem receipt_0_14_2340_0_part12 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1536 128 = 27094474409317303551105195317 := by decide +kernel
-private theorem receipt_0_14_2340_0_part13 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1664 128 = 16446403693217543916708760575 := by decide +kernel
-private theorem receipt_0_14_2340_0_part14 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1792 128 = 6190988123928261552158190819 := by decide +kernel
-private theorem receipt_0_14_2340_0_part15 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1920 15 = 72060700287505875664463256 := by decide +kernel
-private theorem receipt_0_14_2340_0_join0 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 0 256 = 360415408914745354526850691456 :=
-  phaseBlock_append receipt_0_14_2340_0_part0 receipt_0_14_2340_0_part1 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join1 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 256 256 = 298596546508265929865351278976 :=
-  phaseBlock_append receipt_0_14_2340_0_part2 receipt_0_14_2340_0_part3 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join2 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 0 512 = 659011955423011284392201970432 :=
-  phaseBlock_append receipt_0_14_2340_0_join0 receipt_0_14_2340_0_join1 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join3 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 512 256 = 240538096093192064886169547136 :=
-  phaseBlock_append receipt_0_14_2340_0_part4 receipt_0_14_2340_0_part5 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join4 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 768 256 = 186121385797621448190553633152 :=
-  phaseBlock_append receipt_0_14_2340_0_part6 receipt_0_14_2340_0_part7 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join5 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 512 512 = 426659481890813513076723180288 :=
-  phaseBlock_append receipt_0_14_2340_0_join3 receipt_0_14_2340_0_join4 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join6 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 0 1024 = 1085671437313824797468925150720 :=
-  phaseBlock_append receipt_0_14_2340_0_join2 receipt_0_14_2340_0_join5 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join7 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1024 256 = 135228126498103963514777476428 :=
-  phaseBlock_append receipt_0_14_2340_0_part8 receipt_0_14_2340_0_part9 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join8 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1280 256 = 87740462727704492064471910504 :=
-  phaseBlock_append receipt_0_14_2340_0_part10 receipt_0_14_2340_0_part11 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join9 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1024 512 = 222968589225808455579249386932 :=
-  phaseBlock_append receipt_0_14_2340_0_join7 receipt_0_14_2340_0_join8 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join10 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1536 256 = 43540878102534847467813955892 :=
-  phaseBlock_append receipt_0_14_2340_0_part12 receipt_0_14_2340_0_part13 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join11 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1792 143 = 6263048824215767427822654075 :=
-  phaseBlock_append receipt_0_14_2340_0_part14 receipt_0_14_2340_0_part15 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join12 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1536 399 = 49803926926750614895636609967 :=
-  phaseBlock_append receipt_0_14_2340_0_join10 receipt_0_14_2340_0_join11 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join13 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 1024 911 = 272772516152559070474885996899 :=
-  phaseBlock_append receipt_0_14_2340_0_join9 receipt_0_14_2340_0_join12 rfl rfl rfl
-private theorem receipt_0_14_2340_0_join14 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 0) 0 1935 = 1358443953466383867943811147619 :=
-  phaseBlock_append receipt_0_14_2340_0_join6 receipt_0_14_2340_0_join13 rfl rfl rfl
+private theorem receipt_0_14_2360_0_part0 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 0 128 = 188048438186846201370202008576 := by decide +kernel
+private theorem receipt_0_14_2360_0_part1 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 128 128 = 172123719819842791445912128512 := by decide +kernel
+private theorem receipt_0_14_2360_0_part2 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 256 128 = 156680101300572590566879669248 := by decide +kernel
+private theorem receipt_0_14_2360_0_part3 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 384 128 = 141710141875218041664381373440 := by decide +kernel
+private theorem receipt_0_14_2360_0_part4 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 512 128 = 127206412769750911323194354688 := by decide +kernel
+private theorem receipt_0_14_2360_0_part5 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 640 128 = 113161497183648844711646923776 := by decide +kernel
+private theorem receipt_0_14_2360_0_part6 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 768 128 = 99567990283611920511669414912 := by decide +kernel
+private theorem receipt_0_14_2360_0_part7 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 896 128 = 86418499197279205848845011968 := by decide +kernel
+private theorem receipt_0_14_2360_0_part8 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1024 128 = 73705643006945311222460574720 := by decide +kernel
+private theorem receipt_0_14_2360_0_part9 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1152 128 = 61422052743276945435557465088 := by decide +kernel
+private theorem receipt_0_14_2360_0_part10 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1280 128 = 49560378591846346848179646923 := by decide +kernel
+private theorem receipt_0_14_2360_0_part11 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1408 128 = 38113290519862009528942418170 := by decide +kernel
+private theorem receipt_0_14_2360_0_part12 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1536 128 = 27073437123327769222205217503 := by decide +kernel
+private theorem receipt_0_14_2360_0_part13 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1664 128 = 16433472414363018324281805646 := by decide +kernel
+private theorem receipt_0_14_2360_0_part14 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1792 128 = 6186062390687245585647284351 := by decide +kernel
+private theorem receipt_0_14_2360_0_part15 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1920 15 = 72002862674276253140881296 := by decide +kernel
+private theorem receipt_0_14_2360_0_join0 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 0 256 = 360172158006688992816114137088 :=
+  phaseBlock_append receipt_0_14_2360_0_part0 receipt_0_14_2360_0_part1 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join1 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 256 256 = 298390243175790632231261042688 :=
+  phaseBlock_append receipt_0_14_2360_0_part2 receipt_0_14_2360_0_part3 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join2 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 0 512 = 658562401182479625047375179776 :=
+  phaseBlock_append receipt_0_14_2360_0_join0 receipt_0_14_2360_0_join1 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join3 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 512 256 = 240367909953399756034841278464 :=
+  phaseBlock_append receipt_0_14_2360_0_part4 receipt_0_14_2360_0_part5 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join4 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 768 256 = 185986489480891126360514426880 :=
+  phaseBlock_append receipt_0_14_2360_0_part6 receipt_0_14_2360_0_part7 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join5 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 512 512 = 426354399434290882395355705344 :=
+  phaseBlock_append receipt_0_14_2360_0_join3 receipt_0_14_2360_0_join4 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join6 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 0 1024 = 1084916800616770507442730885120 :=
+  phaseBlock_append receipt_0_14_2360_0_join2 receipt_0_14_2360_0_join5 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join7 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1024 256 = 135127695750222256658018039808 :=
+  phaseBlock_append receipt_0_14_2360_0_part8 receipt_0_14_2360_0_part9 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join8 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1280 256 = 87673669111708356377122065093 :=
+  phaseBlock_append receipt_0_14_2360_0_part10 receipt_0_14_2360_0_part11 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join9 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1024 512 = 222801364861930613035140104901 :=
+  phaseBlock_append receipt_0_14_2360_0_join7 receipt_0_14_2360_0_join8 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join10 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1536 256 = 43506909537690787546487023149 :=
+  phaseBlock_append receipt_0_14_2360_0_part12 receipt_0_14_2360_0_part13 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join11 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1792 143 = 6258065253361521838788165647 :=
+  phaseBlock_append receipt_0_14_2360_0_part14 receipt_0_14_2360_0_part15 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join12 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1536 399 = 49764974791052309385275188796 :=
+  phaseBlock_append receipt_0_14_2360_0_join10 receipt_0_14_2360_0_join11 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join13 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 1024 911 = 272566339652982922420415293697 :=
+  phaseBlock_append receipt_0_14_2360_0_join9 receipt_0_14_2360_0_join12 rfl rfl rfl
+private theorem receipt_0_14_2360_0_join14 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 0) 0 1935 = 1357483140269753429863146178817 :=
+  phaseBlock_append receipt_0_14_2360_0_join6 receipt_0_14_2360_0_join13 rfl rfl rfl
 
-private theorem receipt_0_14_2340_0 : fastPhase (bank 0 14).shape 179827 2340 73 1 0 1 0 = 1358443953466383867943811147619 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_0_14_2340_0_join14
+private theorem receipt_0_14_2360_0 : fastPhase (bank 0 14).shape 179818 2360 73 1 0 1 0 = 1357483140269753429863146178817 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_0_14_2360_0_join14
 
-private theorem receipt_0_14_2340_1_part0 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 0 128 = 188050006989701242153623745536 := by decide +kernel
-private theorem receipt_0_14_2340_1_part1 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 128 128 = 172119611044754164755506099200 := by decide +kernel
-private theorem receipt_0_14_2340_1_part2 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 256 128 = 156670362698041157504614593536 := by decide +kernel
-private theorem receipt_0_14_2340_1_part3 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 384 128 = 141694821106714491781048857600 := by decide +kernel
-private theorem receipt_0_14_2340_1_part4 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 512 128 = 127185557403664426758158939136 := by decide +kernel
-private theorem receipt_0_14_2340_1_part5 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 640 128 = 113135154691240162379107234816 := by decide +kernel
-private theorem receipt_0_14_2340_1_part6 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 768 128 = 99536208034970792333430420480 := by decide +kernel
-private theorem receipt_0_14_2340_1_part7 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 896 128 = 86381324457286257033601381376 := by decide +kernel
-private theorem receipt_0_14_2340_1_part8 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1024 128 = 73663122931238296591591142400 := by decide +kernel
-private theorem receipt_0_14_2340_1_part9 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1152 128 = 61374234399803296689941029773 := by decide +kernel
-private theorem receipt_0_14_2340_1_part10 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1280 128 = 49507311407426707567624613539 := by decide +kernel
-private theorem receipt_0_14_2340_1_part11 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1408 128 = 38055021083314839167596344830 := by decide +kernel
-private theorem receipt_0_14_2340_1_part12 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1536 128 = 27010010059361787255105928641 := by decide +kernel
-private theorem receipt_0_14_2340_1_part13 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1664 128 = 16364932648792773044229202434 := by decide +kernel
-private theorem receipt_0_14_2340_1_part14 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1792 128 = 6112455093633807793412039044 := by decide +kernel
-private theorem receipt_0_14_2340_1_part15 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1920 15 = 63047382779829472870008311 := by decide +kernel
-private theorem receipt_0_14_2340_1_join0 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 0 256 = 360169618034455406909129844736 :=
-  phaseBlock_append receipt_0_14_2340_1_part0 receipt_0_14_2340_1_part1 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join1 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 256 256 = 298365183804755649285663451136 :=
-  phaseBlock_append receipt_0_14_2340_1_part2 receipt_0_14_2340_1_part3 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join2 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 0 512 = 658534801839211056194793295872 :=
-  phaseBlock_append receipt_0_14_2340_1_join0 receipt_0_14_2340_1_join1 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join3 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 512 256 = 240320712094904589137266173952 :=
-  phaseBlock_append receipt_0_14_2340_1_part4 receipt_0_14_2340_1_part5 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join4 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 768 256 = 185917532492257049367031801856 :=
-  phaseBlock_append receipt_0_14_2340_1_part6 receipt_0_14_2340_1_part7 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join5 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 512 512 = 426238244587161638504297975808 :=
-  phaseBlock_append receipt_0_14_2340_1_join3 receipt_0_14_2340_1_join4 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join6 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 0 1024 = 1084773046426372694699091271680 :=
-  phaseBlock_append receipt_0_14_2340_1_join2 receipt_0_14_2340_1_join5 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join7 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1024 256 = 135037357331041593281532172173 :=
-  phaseBlock_append receipt_0_14_2340_1_part8 receipt_0_14_2340_1_part9 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join8 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1280 256 = 87562332490741546735220958369 :=
-  phaseBlock_append receipt_0_14_2340_1_part10 receipt_0_14_2340_1_part11 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join9 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1024 512 = 222599689821783140016753130542 :=
-  phaseBlock_append receipt_0_14_2340_1_join7 receipt_0_14_2340_1_join8 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join10 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1536 256 = 43374942708154560299335131075 :=
-  phaseBlock_append receipt_0_14_2340_1_part12 receipt_0_14_2340_1_part13 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join11 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1792 143 = 6175502476413637266282047355 :=
-  phaseBlock_append receipt_0_14_2340_1_part14 receipt_0_14_2340_1_part15 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join12 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1536 399 = 49550445184568197565617178430 :=
-  phaseBlock_append receipt_0_14_2340_1_join10 receipt_0_14_2340_1_join11 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join13 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 1024 911 = 272150135006351337582370308972 :=
-  phaseBlock_append receipt_0_14_2340_1_join9 receipt_0_14_2340_1_join12 rfl rfl rfl
-private theorem receipt_0_14_2340_1_join14 :
-    phaseBlock (fastLayer (bank 0 14).shape 179827 2340 73 1 0 1 1) 0 1935 = 1356923181432724032281461580652 :=
-  phaseBlock_append receipt_0_14_2340_1_join6 receipt_0_14_2340_1_join13 rfl rfl rfl
+private theorem receipt_0_14_2360_1_part0 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 0 128 = 187923797264357506830440948928 := by decide +kernel
+private theorem receipt_0_14_2360_1_part1 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 128 128 = 172002740450957698529349362880 := by decide +kernel
+private theorem receipt_0_14_2360_1_part2 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 256 128 = 156562727180359174200605500608 := by decide +kernel
+private theorem receipt_0_14_2360_1_part3 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 384 128 = 141596316790056727122637907136 := by decide +kernel
+private theorem receipt_0_14_2360_1_part4 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 512 128 = 127096080597286357880557102272 := by decide +kernel
+private theorem receipt_0_14_2360_1_part5 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 640 128 = 113054601892741829296206406848 := by decide +kernel
+private theorem receipt_0_14_2360_1_part6 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 768 128 = 99464475934291221358212768960 := by decide +kernel
+private theorem receipt_0_14_2360_1_part7 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 896 128 = 86318309940693486152037590208 := by decide +kernel
+private theorem receipt_0_14_2360_1_part8 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1024 128 = 73608723085315002790027551936 := by decide +kernel
+private theorem receipt_0_14_2360_1_part9 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1152 128 = 61328346489846132341465441472 := by decide +kernel
+private theorem receipt_0_14_2360_1_part10 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1280 128 = 49469830417941591865590779593 := by decide +kernel
+private theorem receipt_0_14_2360_1_part11 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1408 128 = 38025844884761866504962616274 := by decide +kernel
+private theorem receipt_0_14_2360_1_part12 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1536 128 = 26989038568671633070544832838 := by decide +kernel
+private theorem receipt_0_14_2360_1_part13 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1664 128 = 16352065572826733949168582068 := by decide +kernel
+private theorem receipt_0_14_2360_1_part14 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1792 128 = 6107591985864214791289291860 := by decide +kernel
+private theorem receipt_0_14_2360_1_part15 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1920 15 = 62996781507095486618112006 := by decide +kernel
+private theorem receipt_0_14_2360_1_join0 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 0 256 = 359926537715315205359790311808 :=
+  phaseBlock_append receipt_0_14_2360_1_part0 receipt_0_14_2360_1_part1 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join1 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 256 256 = 298159043970415901323243407744 :=
+  phaseBlock_append receipt_0_14_2360_1_part2 receipt_0_14_2360_1_part3 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join2 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 0 512 = 658085581685731106683033719552 :=
+  phaseBlock_append receipt_0_14_2360_1_join0 receipt_0_14_2360_1_join1 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join3 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 512 256 = 240150682490028187176763509120 :=
+  phaseBlock_append receipt_0_14_2360_1_part4 receipt_0_14_2360_1_part5 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join4 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 768 256 = 185782785874984707510250359168 :=
+  phaseBlock_append receipt_0_14_2360_1_part6 receipt_0_14_2360_1_part7 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join5 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 512 512 = 425933468365012894687013868288 :=
+  phaseBlock_append receipt_0_14_2360_1_join3 receipt_0_14_2360_1_join4 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join6 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 0 1024 = 1084019050050744001370047587840 :=
+  phaseBlock_append receipt_0_14_2360_1_join2 receipt_0_14_2360_1_join5 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join7 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1024 256 = 134937069575161135131492993408 :=
+  phaseBlock_append receipt_0_14_2360_1_part8 receipt_0_14_2360_1_part9 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join8 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1280 256 = 87495675302703458370553395867 :=
+  phaseBlock_append receipt_0_14_2360_1_part10 receipt_0_14_2360_1_part11 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join9 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1024 512 = 222432744877864593502046389275 :=
+  phaseBlock_append receipt_0_14_2360_1_join7 receipt_0_14_2360_1_join8 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join10 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1536 256 = 43341104141498367019713414906 :=
+  phaseBlock_append receipt_0_14_2360_1_part12 receipt_0_14_2360_1_part13 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join11 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1792 143 = 6170588767371310277907403866 :=
+  phaseBlock_append receipt_0_14_2360_1_part14 receipt_0_14_2360_1_part15 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join12 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1536 399 = 49511692908869677297620818772 :=
+  phaseBlock_append receipt_0_14_2360_1_join10 receipt_0_14_2360_1_join11 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join13 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 1024 911 = 271944437786734270799667208047 :=
+  phaseBlock_append receipt_0_14_2360_1_join9 receipt_0_14_2360_1_join12 rfl rfl rfl
+private theorem receipt_0_14_2360_1_join14 :
+    phaseBlock (fastLayer (bank 0 14).shape 179818 2360 73 1 0 1 1) 0 1935 = 1355963487837478272169714795887 :=
+  phaseBlock_append receipt_0_14_2360_1_join6 receipt_0_14_2360_1_join13 rfl rfl rfl
 
-private theorem receipt_0_14_2340_1 : fastPhase (bank 0 14).shape 179827 2340 73 1 0 1 1 = 1356923181432724032281461580652 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_0_14_2340_1_join14
+private theorem receipt_0_14_2360_1 : fastPhase (bank 0 14).shape 179818 2360 73 1 0 1 1 = 1355963487837478272169714795887 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_0_14_2360_1_join14
 
 theorem receipt_0_14 : Checked (bank 0 14) 73 0 1 := by
   refine checked_from_values (bank 0 14) 73 0 1
     (P3_7_1.checked (bank 0 14) rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_9203_1934)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) receipt_0_14_2339_0 receipt_0_14_2339_1 receipt_0_14_2340_0 receipt_0_14_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) receipt_0_14_2359_0 receipt_0_14_2359_1 receipt_0_14_2360_0 receipt_0_14_2360_1 (by decide +kernel) (by decide +kernel)
 
-private theorem receipt_1_14_2339_0_part0 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 0 128 = 169408035475042285480537989504 := by decide +kernel
-private theorem receipt_1_14_2339_0_part1 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 128 128 = 154989573507030031797622235520 := by decide +kernel
-private theorem receipt_1_14_2339_0_part2 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 256 128 = 141017507478179493669457305984 := by decide +kernel
-private theorem receipt_1_14_2339_0_part3 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 384 128 = 127484535147885220704811278720 := by decide +kernel
-private theorem receipt_1_14_2339_0_part4 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 512 128 = 114383377523769394605922099584 := by decide +kernel
-private theorem receipt_1_14_2339_0_part5 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 640 128 = 101706778836566520684047524224 := by decide +kernel
-private theorem receipt_1_14_2339_0_part6 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 768 128 = 89447506515008119375015059840 := by decide +kernel
-private theorem receipt_1_14_2339_0_part7 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 896 128 = 77598351160707417754771906944 := by decide +kernel
-private theorem receipt_1_14_2339_0_part8 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1024 128 = 66152126523044041054934901120 := by decide +kernel
-private theorem receipt_1_14_2339_0_part9 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1152 128 = 55101669504144800382980137749 := by decide +kernel
-private theorem receipt_1_14_2339_0_part10 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1280 128 = 44439848984985497788263764560 := by decide +kernel
-private theorem receipt_1_14_2339_0_part11 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1408 128 = 34159558844206401154959166554 := by decide +kernel
-private theorem receipt_1_14_2339_0_part12 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1536 128 = 24253687026763549511859074274 := by decide +kernel
-private theorem receipt_1_14_2339_0_part13 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1664 128 = 14715140907533957270172178425 := by decide +kernel
-private theorem receipt_1_14_2339_0_part14 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1792 128 = 5536850909046005142624958134 := by decide +kernel
-private theorem receipt_1_14_2339_0_part15 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1920 15 = 64425955753916501193398382 := by decide +kernel
-private theorem receipt_1_14_2339_0_join0 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 0 256 = 324397608982072317278160225024 :=
-  phaseBlock_append receipt_1_14_2339_0_part0 receipt_1_14_2339_0_part1 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join1 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 256 256 = 268502042626064714374268584704 :=
-  phaseBlock_append receipt_1_14_2339_0_part2 receipt_1_14_2339_0_part3 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join2 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 0 512 = 592899651608137031652428809728 :=
-  phaseBlock_append receipt_1_14_2339_0_join0 receipt_1_14_2339_0_join1 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join3 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 512 256 = 216090156360335915289969623808 :=
-  phaseBlock_append receipt_1_14_2339_0_part4 receipt_1_14_2339_0_part5 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join4 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 768 256 = 167045857675715537129786966784 :=
-  phaseBlock_append receipt_1_14_2339_0_part6 receipt_1_14_2339_0_part7 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join5 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 512 512 = 383136014036051452419756590592 :=
-  phaseBlock_append receipt_1_14_2339_0_join3 receipt_1_14_2339_0_join4 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join6 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 0 1024 = 976035665644188484072185400320 :=
-  phaseBlock_append receipt_1_14_2339_0_join2 receipt_1_14_2339_0_join5 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join7 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1024 256 = 121253796027188841437915038869 :=
-  phaseBlock_append receipt_1_14_2339_0_part8 receipt_1_14_2339_0_part9 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join8 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1280 256 = 78599407829191898943222931114 :=
-  phaseBlock_append receipt_1_14_2339_0_part10 receipt_1_14_2339_0_part11 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join9 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1024 512 = 199853203856380740381137969983 :=
-  phaseBlock_append receipt_1_14_2339_0_join7 receipt_1_14_2339_0_join8 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join10 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1536 256 = 38968827934297506782031252699 :=
-  phaseBlock_append receipt_1_14_2339_0_part12 receipt_1_14_2339_0_part13 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join11 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1792 143 = 5601276864799921643818356516 :=
-  phaseBlock_append receipt_1_14_2339_0_part14 receipt_1_14_2339_0_part15 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join12 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1536 399 = 44570104799097428425849609215 :=
-  phaseBlock_append receipt_1_14_2339_0_join10 receipt_1_14_2339_0_join11 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join13 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 1024 911 = 244423308655478168806987579198 :=
-  phaseBlock_append receipt_1_14_2339_0_join9 receipt_1_14_2339_0_join12 rfl rfl rfl
-private theorem receipt_1_14_2339_0_join14 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 0) 0 1935 = 1220458974299666652879172979518 :=
-  phaseBlock_append receipt_1_14_2339_0_join6 receipt_1_14_2339_0_join13 rfl rfl rfl
+private theorem receipt_1_14_2359_0_part0 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 0 128 = 169294150884966903086545787808 := by decide +kernel
+private theorem receipt_1_14_2359_0_part1 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 128 128 = 154884136572719216629019454368 := by decide +kernel
+private theorem receipt_1_14_2359_0_part2 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 256 128 = 140920421031555347891976010656 := by decide +kernel
+private theorem receipt_1_14_2359_0_part3 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 384 128 = 127395702099403428870982060960 := by decide +kernel
+private theorem receipt_1_14_2359_0_part4 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 512 128 = 114302700870274959082748746656 := by decide +kernel
+private theorem receipt_1_14_2359_0_part5 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 640 128 = 101634161669131904894637271968 := by decide +kernel
+private theorem receipt_1_14_2359_0_part6 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 768 128 = 89382852026753798854164429728 := by decide +kernel
+private theorem receipt_1_14_2359_0_part7 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 896 128 = 77541562654604839018508127136 := by decide +kernel
+private theorem receipt_1_14_2359_0_part8 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1024 128 = 66103107419700988284012911520 := by decide +kernel
+private theorem receipt_1_14_2359_0_part9 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1152 128 = 55060323319477073715695496096 := by decide +kernel
+private theorem receipt_1_14_2359_0_part10 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1280 128 = 44406077117369879387567188286 := by decide +kernel
+private theorem receipt_1_14_2359_0_part11 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1408 128 = 34133265295131748426963223667 := by decide +kernel
+private theorem receipt_1_14_2359_0_part12 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1536 128 = 24234777552661394681499941041 := by decide +kernel
+private theorem receipt_1_14_2359_0_part13 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1664 128 = 14703521027108751562982757243 := by decide +kernel
+private theorem receipt_1_14_2359_0_part14 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1792 128 = 5532425963980114495283847261 := by decide +kernel
+private theorem receipt_1_14_2359_0_part15 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1920 15 = 64374009379587238275486708 := by decide +kernel
+private theorem receipt_1_14_2359_0_join0 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 0 256 = 324178287457686119715565242176 :=
+  phaseBlock_append receipt_1_14_2359_0_part0 receipt_1_14_2359_0_part1 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join1 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 256 256 = 268316123130958776762958071616 :=
+  phaseBlock_append receipt_1_14_2359_0_part2 receipt_1_14_2359_0_part3 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join2 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 0 512 = 592494410588644896478523313792 :=
+  phaseBlock_append receipt_1_14_2359_0_join0 receipt_1_14_2359_0_join1 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join3 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 512 256 = 215936862539406863977386018624 :=
+  phaseBlock_append receipt_1_14_2359_0_part4 receipt_1_14_2359_0_part5 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join4 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 768 256 = 166924414681358637872672556864 :=
+  phaseBlock_append receipt_1_14_2359_0_part6 receipt_1_14_2359_0_part7 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join5 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 512 512 = 382861277220765501850058575488 :=
+  phaseBlock_append receipt_1_14_2359_0_join3 receipt_1_14_2359_0_join4 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join6 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 0 1024 = 975355687809410398328581889280 :=
+  phaseBlock_append receipt_1_14_2359_0_join2 receipt_1_14_2359_0_join5 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join7 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1024 256 = 121163430739178061999708407616 :=
+  phaseBlock_append receipt_1_14_2359_0_part8 receipt_1_14_2359_0_part9 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join8 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1280 256 = 78539342412501627814530411953 :=
+  phaseBlock_append receipt_1_14_2359_0_part10 receipt_1_14_2359_0_part11 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join9 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1024 512 = 199702773151679689814238819569 :=
+  phaseBlock_append receipt_1_14_2359_0_join7 receipt_1_14_2359_0_join8 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join10 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1536 256 = 38938298579770146244482698284 :=
+  phaseBlock_append receipt_1_14_2359_0_part12 receipt_1_14_2359_0_part13 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join11 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1792 143 = 5596799973359701733559333969 :=
+  phaseBlock_append receipt_1_14_2359_0_part14 receipt_1_14_2359_0_part15 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join12 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1536 399 = 44535098553129847978042032253 :=
+  phaseBlock_append receipt_1_14_2359_0_join10 receipt_1_14_2359_0_join11 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join13 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 1024 911 = 244237871704809537792280851822 :=
+  phaseBlock_append receipt_1_14_2359_0_join9 receipt_1_14_2359_0_join12 rfl rfl rfl
+private theorem receipt_1_14_2359_0_join14 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 0) 0 1935 = 1219593559514219936120862741102 :=
+  phaseBlock_append receipt_1_14_2359_0_join6 receipt_1_14_2359_0_join13 rfl rfl rfl
 
-private theorem receipt_1_14_2339_0 : fastPhase (bank 1 14).shape 179827 2339 73 1 0 2 0 = 1220458974299666652879172979518 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_1_14_2339_0_join14
+private theorem receipt_1_14_2359_0 : fastPhase (bank 1 14).shape 179818 2359 73 1 0 2 0 = 1219593559514219936120862741102 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_1_14_2359_0_join14
 
-private theorem receipt_1_14_2339_1_part0 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 0 128 = 169295119836206739351988762176 := by decide +kernel
-private theorem receipt_1_14_2339_1_part1 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 128 128 = 154880060624113947508148573760 := by decide +kernel
-private theorem receipt_1_14_2339_1_part2 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 256 128 = 140911341989147163139888297536 := by decide +kernel
-private theorem receipt_1_14_2339_1_part3 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 384 128 = 127381661868020639360084923968 := by decide +kernel
-private theorem receipt_1_14_2339_1_part4 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 512 128 = 114283741445483905664096597568 := by decide +kernel
-private theorem receipt_1_14_2339_1_part5 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 640 128 = 101610325129206459445312558656 := by decide +kernel
-private theorem receipt_1_14_2339_1_part6 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 768 128 = 89354180524662457510703085120 := by decide +kernel
-private theorem receipt_1_14_2339_1_part7 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 896 128 = 77508098410015407596369434176 := by decide +kernel
-private theorem receipt_1_14_2339_1_part8 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1024 128 = 66064892711002859883093784128 := by decide +kernel
-private theorem receipt_1_14_2339_1_part9 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1152 128 = 55017400505870747944269879858 := by decide +kernel
-private theorem receipt_1_14_2339_1_part10 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1280 128 = 44358490835696671958124693400 := by decide +kernel
-private theorem receipt_1_14_2339_1_part11 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1408 128 = 34081057718832039485466498462 := by decide +kernel
-private theorem receipt_1_14_2339_1_part12 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1536 128 = 24177989271265463243087179836 := by decide +kernel
-private theorem receipt_1_14_2339_1_part13 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1664 128 = 14642193043535807314356286833 := by decide +kernel
-private theorem receipt_1_14_2339_1_part14 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1792 128 = 5466599633715818770932143808 := by decide +kernel
-private theorem receipt_1_14_2339_1_part15 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1920 15 = 56367447553934428472962953 := by decide +kernel
-private theorem receipt_1_14_2339_1_join0 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 0 256 = 324175180460320686860137335936 :=
-  phaseBlock_append receipt_1_14_2339_1_part0 receipt_1_14_2339_1_part1 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join1 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 256 256 = 268293003857167802499973221504 :=
-  phaseBlock_append receipt_1_14_2339_1_part2 receipt_1_14_2339_1_part3 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join2 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 0 512 = 592468184317488489360110557440 :=
-  phaseBlock_append receipt_1_14_2339_1_join0 receipt_1_14_2339_1_join1 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join3 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 512 256 = 215894066574690365109409156224 :=
-  phaseBlock_append receipt_1_14_2339_1_part4 receipt_1_14_2339_1_part5 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join4 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 768 256 = 166862278934677865107072519296 :=
-  phaseBlock_append receipt_1_14_2339_1_part6 receipt_1_14_2339_1_part7 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join5 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 512 512 = 382756345509368230216481675520 :=
-  phaseBlock_append receipt_1_14_2339_1_join3 receipt_1_14_2339_1_join4 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join6 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 0 1024 = 975224529826856719576592232960 :=
-  phaseBlock_append receipt_1_14_2339_1_join2 receipt_1_14_2339_1_join5 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join7 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1024 256 = 121082293216873607827363663986 :=
-  phaseBlock_append receipt_1_14_2339_1_part8 receipt_1_14_2339_1_part9 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join8 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1280 256 = 78439548554528711443591191862 :=
-  phaseBlock_append receipt_1_14_2339_1_part10 receipt_1_14_2339_1_part11 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join9 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1024 512 = 199521841771402319270954855848 :=
-  phaseBlock_append receipt_1_14_2339_1_join7 receipt_1_14_2339_1_join8 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join10 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1536 256 = 38820182314801270557443466669 :=
-  phaseBlock_append receipt_1_14_2339_1_part12 receipt_1_14_2339_1_part13 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join11 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1792 143 = 5522967081269753199405106761 :=
-  phaseBlock_append receipt_1_14_2339_1_part14 receipt_1_14_2339_1_part15 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join12 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1536 399 = 44343149396071023756848573430 :=
-  phaseBlock_append receipt_1_14_2339_1_join10 receipt_1_14_2339_1_join11 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join13 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 1024 911 = 243864991167473343027803429278 :=
-  phaseBlock_append receipt_1_14_2339_1_join9 receipt_1_14_2339_1_join12 rfl rfl rfl
-private theorem receipt_1_14_2339_1_join14 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2339 73 1 0 2 1) 0 1935 = 1219089520994330062604395662238 :=
-  phaseBlock_append receipt_1_14_2339_1_join6 receipt_1_14_2339_1_join13 rfl rfl rfl
+private theorem receipt_1_14_2359_1_part0 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 0 128 = 169181313150702725633851918368 := by decide +kernel
+private theorem receipt_1_14_2359_1_part1 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 128 128 = 154774699952099067057004689440 := by decide +kernel
+private theorem receipt_1_14_2359_1_part2 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 256 128 = 140814330177067741566523959328 := by decide +kernel
+private theorem receipt_1_14_2359_1_part3 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 384 128 = 127292901840881960872910755872 := by decide +kernel
+private theorem receipt_1_14_2359_1_part4 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 512 128 = 114203136214705844043217291296 := by decide +kernel
+private theorem receipt_1_14_2359_1_part5 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 640 128 = 101537777800461516830552487968 := by decide +kernel
+private theorem receipt_1_14_2359_1_part6 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 768 128 = 89289594305696211003587504160 := by decide +kernel
+private theorem receipt_1_14_2359_1_part7 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 896 128 = 77451376618449363676061259808 := by decide +kernel
+private theorem receipt_1_14_2359_1_part8 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1024 128 = 66015938782119716636285962272 := by decide +kernel
+private theorem receipt_1_14_2359_1_part9 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1152 128 = 54976117970332415676652632096 := by decide +kernel
+private theorem receipt_1_14_2359_1_part10 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1280 128 = 44324781110598624307749753593 := by decide +kernel
+private theorem receipt_1_14_2359_1_part11 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1408 128 = 34054824822083561000920760240 := by decide +kernel
+private theorem receipt_1_14_2359_1_part12 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1536 128 = 24159138973073993939288289330 := by decide +kernel
+private theorem receipt_1_14_2359_1_part13 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1664 128 = 14630630876489048948721329073 := by decide +kernel
+private theorem receipt_1_14_2359_1_part14 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1792 128 = 5462230953356481353915175599 := by decide +kernel
+private theorem receipt_1_14_2359_1_part15 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1920 15 = 56322000494077115279016829 := by decide +kernel
+private theorem receipt_1_14_2359_1_join0 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 0 256 = 323956013102801792690856607808 :=
+  phaseBlock_append receipt_1_14_2359_1_part0 receipt_1_14_2359_1_part1 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join1 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 256 256 = 268107232017949702439434715200 :=
+  phaseBlock_append receipt_1_14_2359_1_part2 receipt_1_14_2359_1_part3 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join2 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 0 512 = 592063245120751495130291323008 :=
+  phaseBlock_append receipt_1_14_2359_1_join0 receipt_1_14_2359_1_join1 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join3 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 512 256 = 215740914015167360873769779264 :=
+  phaseBlock_append receipt_1_14_2359_1_part4 receipt_1_14_2359_1_part5 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join4 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 768 256 = 166740970924145574679648763968 :=
+  phaseBlock_append receipt_1_14_2359_1_part6 receipt_1_14_2359_1_part7 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join5 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 512 512 = 382481884939312935553418543232 :=
+  phaseBlock_append receipt_1_14_2359_1_join3 receipt_1_14_2359_1_join4 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join6 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 0 1024 = 974545130060064430683709866240 :=
+  phaseBlock_append receipt_1_14_2359_1_join2 receipt_1_14_2359_1_join5 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join7 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1024 256 = 120992056752452132312938594368 :=
+  phaseBlock_append receipt_1_14_2359_1_part8 receipt_1_14_2359_1_part9 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join8 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1280 256 = 78379605932682185308670513833 :=
+  phaseBlock_append receipt_1_14_2359_1_part10 receipt_1_14_2359_1_part11 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join9 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1024 512 = 199371662685134317621609108201 :=
+  phaseBlock_append receipt_1_14_2359_1_join7 receipt_1_14_2359_1_join8 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join10 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1536 256 = 38789769849563042888009618403 :=
+  phaseBlock_append receipt_1_14_2359_1_part12 receipt_1_14_2359_1_part13 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join11 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1792 143 = 5518552953850558469194192428 :=
+  phaseBlock_append receipt_1_14_2359_1_part14 receipt_1_14_2359_1_part15 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join12 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1536 399 = 44308322803413601357203810831 :=
+  phaseBlock_append receipt_1_14_2359_1_join10 receipt_1_14_2359_1_join11 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join13 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 1024 911 = 243679985488547918978812919032 :=
+  phaseBlock_append receipt_1_14_2359_1_join9 receipt_1_14_2359_1_join12 rfl rfl rfl
+private theorem receipt_1_14_2359_1_join14 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2359 73 1 0 2 1) 0 1935 = 1218225115548612349662522785272 :=
+  phaseBlock_append receipt_1_14_2359_1_join6 receipt_1_14_2359_1_join13 rfl rfl rfl
 
-private theorem receipt_1_14_2339_1 : fastPhase (bank 1 14).shape 179827 2339 73 1 0 2 1 = 1219089520994330062604395662238 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_1_14_2339_1_join14
+private theorem receipt_1_14_2359_1 : fastPhase (bank 1 14).shape 179818 2359 73 1 0 2 1 = 1218225115548612349662522785272 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_1_14_2359_1_join14
 
-private theorem receipt_1_14_2340_0_part0 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 0 128 = 169409556104571933927339200352 := by decide +kernel
-private theorem receipt_1_14_2340_0_part1 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 128 128 = 154990913121508724069487558496 := by decide +kernel
-private theorem receipt_1_14_2340_0_part2 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 256 128 = 141018678422771458368944631648 := by decide +kernel
-private theorem receipt_1_14_2340_0_part3 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 384 128 = 127485549519744397024694476640 := by decide +kernel
-private theorem receipt_1_14_2340_0_part4 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 512 128 = 114384247172847013449309933408 := by decide +kernel
-private theorem receipt_1_14_2340_0_part5 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 640 128 = 101707515366417806175200345952 := by decide +kernel
-private theorem receipt_1_14_2340_0_part6 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 768 128 = 89448121283598110760859283296 := by decide +kernel
-private theorem receipt_1_14_2340_0_part7 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 896 128 = 77598855281215911697112260448 := by decide +kernel
-private theorem receipt_1_14_2340_0_part8 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1024 128 = 66152530864669654313364459360 := by decide +kernel
-private theorem receipt_1_14_2340_0_part9 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1152 128 = 55101984685774607497729830006 := by decide +kernel
-private theorem receipt_1_14_2340_0_part10 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1280 128 = 44440085167657936672715589451 := by decide +kernel
-private theorem receipt_1_14_2340_0_part11 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1408 128 = 34159726188730858211516203734 := by decide +kernel
-private theorem receipt_1_14_2340_0_part12 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1536 128 = 24253795599363834616254458150 := by decide +kernel
-private theorem receipt_1_14_2340_0_part13 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1664 128 = 14715200509998446673011929431 := by decide +kernel
-private theorem receipt_1_14_2340_0_part14 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1792 128 = 5536871084717434429703982948 := by decide +kernel
-private theorem receipt_1_14_2340_0_part15 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1920 15 = 64426170954118212187839921 := by decide +kernel
-private theorem receipt_1_14_2340_0_join0 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 0 256 = 324400469226080657996826758848 :=
-  phaseBlock_append receipt_1_14_2340_0_part0 receipt_1_14_2340_0_part1 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join1 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 256 256 = 268504227942515855393639108288 :=
-  phaseBlock_append receipt_1_14_2340_0_part2 receipt_1_14_2340_0_part3 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join2 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 0 512 = 592904697168596513390465867136 :=
-  phaseBlock_append receipt_1_14_2340_0_join0 receipt_1_14_2340_0_join1 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join3 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 512 256 = 216091762539264819624510279360 :=
-  phaseBlock_append receipt_1_14_2340_0_part4 receipt_1_14_2340_0_part5 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join4 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 768 256 = 167046976564814022457971543744 :=
-  phaseBlock_append receipt_1_14_2340_0_part6 receipt_1_14_2340_0_part7 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join5 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 512 512 = 383138739104078842082481823104 :=
-  phaseBlock_append receipt_1_14_2340_0_join3 receipt_1_14_2340_0_join4 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join6 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 0 1024 = 976043436272675355472947690240 :=
-  phaseBlock_append receipt_1_14_2340_0_join2 receipt_1_14_2340_0_join5 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join7 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1024 256 = 121254515550444261811094289366 :=
-  phaseBlock_append receipt_1_14_2340_0_part8 receipt_1_14_2340_0_part9 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join8 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1280 256 = 78599811356388794884231793185 :=
-  phaseBlock_append receipt_1_14_2340_0_part10 receipt_1_14_2340_0_part11 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join9 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1024 512 = 199854326906833056695326082551 :=
-  phaseBlock_append receipt_1_14_2340_0_join7 receipt_1_14_2340_0_join8 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join10 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1536 256 = 38968996109362281289266387581 :=
-  phaseBlock_append receipt_1_14_2340_0_part12 receipt_1_14_2340_0_part13 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join11 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1792 143 = 5601297255671552641891822869 :=
-  phaseBlock_append receipt_1_14_2340_0_part14 receipt_1_14_2340_0_part15 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join12 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1536 399 = 44570293365033833931158210450 :=
-  phaseBlock_append receipt_1_14_2340_0_join10 receipt_1_14_2340_0_join11 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join13 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 1024 911 = 244424620271866890626484293001 :=
-  phaseBlock_append receipt_1_14_2340_0_join9 receipt_1_14_2340_0_join12 rfl rfl rfl
-private theorem receipt_1_14_2340_0_join14 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 0) 0 1935 = 1220468056544542246099431983241 :=
-  phaseBlock_append receipt_1_14_2340_0_join6 receipt_1_14_2340_0_join13 rfl rfl rfl
+private theorem receipt_1_14_2360_0_part0 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 0 128 = 169295670388438226098533696096 := by decide +kernel
+private theorem receipt_1_14_2360_0_part1 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 128 128 = 154885475194737368354036126304 := by decide +kernel
+private theorem receipt_1_14_2360_0_part2 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 256 128 = 140921591108255118180779303520 := by decide +kernel
+private theorem receipt_1_14_2360_0_part3 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 384 128 = 127396715719080981534045909600 := by decide +kernel
+private theorem receipt_1_14_2360_0_part4 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 512 128 = 114303569874195124388579787360 := by decide +kernel
+private theorem receipt_1_14_2360_0_part5 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 640 128 = 101634897652334592458789245536 := by decide +kernel
+private theorem receipt_1_14_2360_0_part6 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 768 128 = 89383466338859530918950363744 := by decide +kernel
+private theorem receipt_1_14_2360_0_part7 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 896 128 = 77542066400619404123410297440 := by decide +kernel
+private theorem receipt_1_14_2360_0_part8 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1024 128 = 66103511460819215326790582880 := by decide +kernel
+private theorem receipt_1_14_2360_0_part9 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1152 128 = 55060638273885726404190442080 := by decide +kernel
+private theorem receipt_1_14_2360_0_part10 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1280 128 = 44406313162287149301158490825 := by decide +kernel
+private theorem receipt_1_14_2360_0_part11 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1408 128 = 34133432545082051069219404206 := by decide +kernel
+private theorem receipt_1_14_2360_0_part12 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1536 128 = 24234886062502694360709662031 := by decide +kernel
+private theorem receipt_1_14_2360_0_part13 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1664 128 = 14703580593958029923052356001 := by decide +kernel
+private theorem receipt_1_14_2360_0_part14 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1792 128 = 5532446128214724389039381752 := by decide +kernel
+private theorem receipt_1_14_2360_0_part15 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1920 15 = 64374224431682340750268908 := by decide +kernel
+private theorem receipt_1_14_2360_0_join0 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 0 256 = 324181145583175594452569822400 :=
+  phaseBlock_append receipt_1_14_2360_0_part0 receipt_1_14_2360_0_part1 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join1 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 256 256 = 268318306827336099714825213120 :=
+  phaseBlock_append receipt_1_14_2360_0_part2 receipt_1_14_2360_0_part3 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join2 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 0 512 = 592499452410511694167395035520 :=
+  phaseBlock_append receipt_1_14_2360_0_join0 receipt_1_14_2360_0_join1 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join3 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 512 256 = 215938467526529716847369032896 :=
+  phaseBlock_append receipt_1_14_2360_0_part4 receipt_1_14_2360_0_part5 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join4 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 768 256 = 166925532739478935042360661184 :=
+  phaseBlock_append receipt_1_14_2360_0_part6 receipt_1_14_2360_0_part7 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join5 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 512 512 = 382864000266008651889729694080 :=
+  phaseBlock_append receipt_1_14_2360_0_join3 receipt_1_14_2360_0_join4 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join6 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 0 1024 = 975363452676520346057124729600 :=
+  phaseBlock_append receipt_1_14_2360_0_join2 receipt_1_14_2360_0_join5 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join7 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1024 256 = 121164149734704941730981024960 :=
+  phaseBlock_append receipt_1_14_2360_0_part8 receipt_1_14_2360_0_part9 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join8 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1280 256 = 78539745707369200370377895031 :=
+  phaseBlock_append receipt_1_14_2360_0_part10 receipt_1_14_2360_0_part11 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join9 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1024 512 = 199703895442074142101358919991 :=
+  phaseBlock_append receipt_1_14_2360_0_join7 receipt_1_14_2360_0_join8 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join10 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1536 256 = 38938466656460724283762018032 :=
+  phaseBlock_append receipt_1_14_2360_0_part12 receipt_1_14_2360_0_part13 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join11 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1792 143 = 5596820352646406729789650660 :=
+  phaseBlock_append receipt_1_14_2360_0_part14 receipt_1_14_2360_0_part15 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join12 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1536 399 = 44535287009107131013551668692 :=
+  phaseBlock_append receipt_1_14_2360_0_join10 receipt_1_14_2360_0_join11 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join13 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 1024 911 = 244239182451181273114910588683 :=
+  phaseBlock_append receipt_1_14_2360_0_join9 receipt_1_14_2360_0_join12 rfl rfl rfl
+private theorem receipt_1_14_2360_0_join14 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 0) 0 1935 = 1219602635127701619172035318283 :=
+  phaseBlock_append receipt_1_14_2360_0_join6 receipt_1_14_2360_0_join13 rfl rfl rfl
 
-private theorem receipt_1_14_2340_0 : fastPhase (bank 1 14).shape 179827 2340 73 1 0 2 0 = 1220468056544542246099431983241 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_1_14_2340_0_join14
+private theorem receipt_1_14_2360_0 : fastPhase (bank 1 14).shape 179818 2360 73 1 0 2 0 = 1219602635127701619172035318283 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_1_14_2360_0_join14
 
-private theorem receipt_1_14_2340_1_part0 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 0 128 = 169296639634769448475671142368 := by decide +kernel
-private theorem receipt_1_14_2340_1_part1 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 128 128 = 154881399456692814935640133600 := by decide +kernel
-private theorem receipt_1_14_2340_1_part2 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 256 128 = 140912512199725383167443763168 := by decide +kernel
-private theorem receipt_1_14_2340_1_part3 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 384 128 = 127382675552575546477421440992 := by decide +kernel
-private theorem receipt_1_14_2340_1_part4 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 512 128 = 114284610452794550451832414176 := by decide +kernel
-private theorem receipt_1_14_2340_1_part5 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 640 128 = 101611061061660304863103487968 := by decide +kernel
-private theorem receipt_1_14_2340_1_part6 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 768 128 = 89354794739061195576076746720 := by decide +kernel
-private theorem receipt_1_14_2340_1_part7 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 896 128 = 77508602018379896454257274848 := by decide +kernel
-private theorem receipt_1_14_2340_1_part8 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1024 128 = 66065296581377181266060877792 := by decide +kernel
-private theorem receipt_1_14_2340_1_part9 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1152 128 = 55017715256002739758640135544 := by decide +kernel
-private theorem receipt_1_14_2340_1_part10 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1280 128 = 44358726625870172079925196851 := by decide +kernel
-private theorem receipt_1_14_2340_1_part11 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1408 128 = 34081224708881860921020765584 := by decide +kernel
-private theorem receipt_1_14_2340_1_part12 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1536 128 = 24178097526219520808986360464 := by decide +kernel
-private theorem receipt_1_14_2340_1_part13 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1664 128 = 14642252363998895750487881865 := by decide +kernel
-private theorem receipt_1_14_2340_1_part14 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1792 128 = 5466619561859509458661554556 := by decide +kernel
-private theorem receipt_1_14_2340_1_part15 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1920 15 = 56367635947766222639053301 := by decide +kernel
-private theorem receipt_1_14_2340_1_join0 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 0 256 = 324178039091462263411311275968 :=
-  phaseBlock_append receipt_1_14_2340_1_part0 receipt_1_14_2340_1_part1 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join1 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 256 256 = 268295187752300929644865204160 :=
-  phaseBlock_append receipt_1_14_2340_1_part2 receipt_1_14_2340_1_part3 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join2 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 0 512 = 592473226843763193056176480128 :=
-  phaseBlock_append receipt_1_14_2340_1_join0 receipt_1_14_2340_1_join1 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join3 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 512 256 = 215895671514454855314935902144 :=
-  phaseBlock_append receipt_1_14_2340_1_part4 receipt_1_14_2340_1_part5 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join4 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 768 256 = 166863396757441092030334021568 :=
-  phaseBlock_append receipt_1_14_2340_1_part6 receipt_1_14_2340_1_part7 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join5 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 512 512 = 382759068271895947345269923712 :=
-  phaseBlock_append receipt_1_14_2340_1_join3 receipt_1_14_2340_1_join4 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join6 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 0 1024 = 975232295115659140401446403840 :=
-  phaseBlock_append receipt_1_14_2340_1_join2 receipt_1_14_2340_1_join5 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join7 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1024 256 = 121083011837379921024701013336 :=
-  phaseBlock_append receipt_1_14_2340_1_part8 receipt_1_14_2340_1_part9 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join8 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1280 256 = 78439951334752033000945962435 :=
-  phaseBlock_append receipt_1_14_2340_1_part10 receipt_1_14_2340_1_part11 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join9 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1024 512 = 199522963172131954025646975771 :=
-  phaseBlock_append receipt_1_14_2340_1_join7 receipt_1_14_2340_1_join8 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join10 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1536 256 = 38820349890218416559474242329 :=
-  phaseBlock_append receipt_1_14_2340_1_part12 receipt_1_14_2340_1_part13 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join11 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1792 143 = 5522987197807275681300607857 :=
-  phaseBlock_append receipt_1_14_2340_1_part14 receipt_1_14_2340_1_part15 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join12 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1536 399 = 44343337088025692240774850186 :=
-  phaseBlock_append receipt_1_14_2340_1_join10 receipt_1_14_2340_1_join11 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join13 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 1024 911 = 243866300260157646266421825957 :=
-  phaseBlock_append receipt_1_14_2340_1_join9 receipt_1_14_2340_1_join12 rfl rfl rfl
-private theorem receipt_1_14_2340_1_join14 :
-    phaseBlock (fastLayer (bank 1 14).shape 179827 2340 73 1 0 2 1) 0 1935 = 1219098595375816786667868229797 :=
-  phaseBlock_append receipt_1_14_2340_1_join6 receipt_1_14_2340_1_join13 rfl rfl rfl
+private theorem receipt_1_14_2360_1_part0 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 0 128 = 169182831823818490728387286560 := by decide +kernel
+private theorem receipt_1_14_2360_1_part1 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 128 128 = 154776037792793170838400951840 := by decide +kernel
+private theorem receipt_1_14_2360_1_part2 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 256 128 = 140815499520294750917379962400 := by decide +kernel
+private theorem receipt_1_14_2360_1_part3 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 384 128 = 127293914773762244660387382816 := by decide +kernel
+private theorem receipt_1_14_2360_1_part4 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 512 128 = 114204004577332860394673853984 := by decide +kernel
+private theorem receipt_1_14_2360_1_part5 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 640 128 = 101538513186708220799880898080 := by decide +kernel
+private theorem receipt_1_14_2360_1_part6 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 768 128 = 89290208064020582628244223520 := by decide +kernel
+private theorem receipt_1_14_2360_1_part7 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 896 128 = 77451879852699056424797029920 := by decide +kernel
+private theorem receipt_1_14_2360_1_part8 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1024 128 = 66016342352335826247573313056 := by decide +kernel
+private theorem receipt_1_14_2360_1_part9 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1152 128 = 54976432493552369387811169824 := by decide +kernel
+private theorem receipt_1_14_2360_1_part10 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1280 128 = 44325016763244238242047295546 := by decide +kernel
+private theorem receipt_1_14_2360_1_part11 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1408 128 = 34054991717758378631479759518 := by decide +kernel
+private theorem receipt_1_14_2360_1_part12 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1536 128 = 24159247165450994870193943053 := by decide +kernel
+private theorem receipt_1_14_2360_1_part13 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1664 128 = 14630690161505141577566057310 := by decide +kernel
+private theorem receipt_1_14_2360_1_part14 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1792 128 = 5462250870205340698616345025 := by decide +kernel
+private theorem receipt_1_14_2360_1_part15 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1920 15 = 56322188755690581306010638 := by decide +kernel
+private theorem receipt_1_14_2360_1_join0 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 0 256 = 323958869616611661566788238400 :=
+  phaseBlock_append receipt_1_14_2360_1_part0 receipt_1_14_2360_1_part1 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join1 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 256 256 = 268109414294056995577767345216 :=
+  phaseBlock_append receipt_1_14_2360_1_part2 receipt_1_14_2360_1_part3 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join2 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 0 512 = 592068283910668657144555583616 :=
+  phaseBlock_append receipt_1_14_2360_1_join0 receipt_1_14_2360_1_join1 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join3 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 512 256 = 215742517764041081194554752064 :=
+  phaseBlock_append receipt_1_14_2360_1_part4 receipt_1_14_2360_1_part5 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join4 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 768 256 = 166742087916719639053041253440 :=
+  phaseBlock_append receipt_1_14_2360_1_part6 receipt_1_14_2360_1_part7 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join5 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 512 512 = 382484605680760720247596005504 :=
+  phaseBlock_append receipt_1_14_2360_1_join3 receipt_1_14_2360_1_join4 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join6 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 0 1024 = 974552889591429377392151589120 :=
+  phaseBlock_append receipt_1_14_2360_1_join2 receipt_1_14_2360_1_join5 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join7 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1024 256 = 120992774845888195635384482880 :=
+  phaseBlock_append receipt_1_14_2360_1_part8 receipt_1_14_2360_1_part9 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join8 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1280 256 = 78380008481002616873527055064 :=
+  phaseBlock_append receipt_1_14_2360_1_part10 receipt_1_14_2360_1_part11 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join9 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1024 512 = 199372783326890812508911537944 :=
+  phaseBlock_append receipt_1_14_2360_1_join7 receipt_1_14_2360_1_join8 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join10 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1536 256 = 38789937326956136447760000363 :=
+  phaseBlock_append receipt_1_14_2360_1_part12 receipt_1_14_2360_1_part13 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join11 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1792 143 = 5518573058961031279922355663 :=
+  phaseBlock_append receipt_1_14_2360_1_part14 receipt_1_14_2360_1_part15 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join12 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1536 399 = 44308510385917167727682356026 :=
+  phaseBlock_append receipt_1_14_2360_1_join10 receipt_1_14_2360_1_join11 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join13 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 1024 911 = 243681293712807980236593893970 :=
+  phaseBlock_append receipt_1_14_2360_1_join9 receipt_1_14_2360_1_join12 rfl rfl rfl
+private theorem receipt_1_14_2360_1_join14 :
+    phaseBlock (fastLayer (bank 1 14).shape 179818 2360 73 1 0 2 1) 0 1935 = 1218234183304237357628745483090 :=
+  phaseBlock_append receipt_1_14_2360_1_join6 receipt_1_14_2360_1_join13 rfl rfl rfl
 
-private theorem receipt_1_14_2340_1 : fastPhase (bank 1 14).shape 179827 2340 73 1 0 2 1 = 1219098595375816786667868229797 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_1_14_2340_1_join14
+private theorem receipt_1_14_2360_1 : fastPhase (bank 1 14).shape 179818 2360 73 1 0 2 1 = 1218234183304237357628745483090 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_1_14_2360_1_join14
 
 theorem receipt_1_14 : Checked (bank 1 14) 73 0 2 := by
   refine checked_from_values (bank 1 14) 73 0 2
     (P3_7_1.checked (bank 1 14) rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_9203_1934)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) receipt_1_14_2339_0 receipt_1_14_2339_1 receipt_1_14_2340_0 receipt_1_14_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) receipt_1_14_2359_0 receipt_1_14_2359_1 receipt_1_14_2360_0 receipt_1_14_2360_1 (by decide +kernel) (by decide +kernel)
 
-private theorem receipt_2_14_2339_0_part0 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 0 128 = 90900577546896803066449507008 := by decide +kernel
-private theorem receipt_2_14_2339_0_part1 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 128 128 = 82880498002256339967162045120 := by decide +kernel
-private theorem receipt_2_14_2339_0_part2 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 256 128 = 75151275442951405890303914688 := by decide +kernel
-private theorem receipt_2_14_2339_0_part3 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 384 128 = 67706522492627410266719064768 := by decide +kernel
-private theorem receipt_2_14_2339_0_part4 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 512 128 = 60539921018346266891038929600 := by decide +kernel
-private theorem receipt_2_14_2339_0_part5 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 640 128 = 53645221822923864987169215168 := by decide +kernel
-private theorem receipt_2_14_2339_0_part6 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 768 128 = 47016244337267540273776685760 := by decide +kernel
-private theorem receipt_2_14_2339_0_part7 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 896 128 = 40646876312713546029775950528 := by decide +kernel
-private theorem receipt_2_14_2339_0_part8 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1024 128 = 34531073513364524159816250048 := by decide +kernel
-private theorem receipt_2_14_2339_0_part9 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1152 128 = 28662859424055754926411431817 := by decide +kernel
-private theorem receipt_2_14_2339_0_part10 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1280 128 = 23036329527269896243043675476 := by decide +kernel
-private theorem receipt_2_14_2339_0_part11 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1408 128 = 17645647332495447247734933888 := by decide +kernel
-private theorem receipt_2_14_2339_0_part12 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1536 128 = 12485028133752451629991009665 := by decide +kernel
-private theorem receipt_2_14_2339_0_part13 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1664 128 = 7548751986647372537289149376 := by decide +kernel
-private theorem receipt_2_14_2339_0_part14 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1792 128 = 2831165296809753402441042468 := by decide +kernel
-private theorem receipt_2_14_2339_0_part15 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1920 15 = 32864249436056744652892518 := by decide +kernel
-private theorem receipt_2_14_2339_0_join0 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 0 256 = 173781075549153143033611552128 :=
-  phaseBlock_append receipt_2_14_2339_0_part0 receipt_2_14_2339_0_part1 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join1 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 256 256 = 142857797935578816157022979456 :=
-  phaseBlock_append receipt_2_14_2339_0_part2 receipt_2_14_2339_0_part3 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join2 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 0 512 = 316638873484731959190634531584 :=
-  phaseBlock_append receipt_2_14_2339_0_join0 receipt_2_14_2339_0_join1 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join3 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 512 256 = 114185142841270131878208144768 :=
-  phaseBlock_append receipt_2_14_2339_0_part4 receipt_2_14_2339_0_part5 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join4 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 768 256 = 87663120649981086303552636288 :=
-  phaseBlock_append receipt_2_14_2339_0_part6 receipt_2_14_2339_0_part7 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join5 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 512 512 = 201848263491251218181760781056 :=
-  phaseBlock_append receipt_2_14_2339_0_join3 receipt_2_14_2339_0_join4 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join6 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 0 1024 = 518487136975983177372395312640 :=
-  phaseBlock_append receipt_2_14_2339_0_join2 receipt_2_14_2339_0_join5 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join7 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1024 256 = 63193932937420279086227681865 :=
-  phaseBlock_append receipt_2_14_2339_0_part8 receipt_2_14_2339_0_part9 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join8 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1280 256 = 40681976859765343490778609364 :=
-  phaseBlock_append receipt_2_14_2339_0_part10 receipt_2_14_2339_0_part11 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join9 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1024 512 = 103875909797185622577006291229 :=
-  phaseBlock_append receipt_2_14_2339_0_join7 receipt_2_14_2339_0_join8 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join10 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1536 256 = 20033780120399824167280159041 :=
-  phaseBlock_append receipt_2_14_2339_0_part12 receipt_2_14_2339_0_part13 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join11 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1792 143 = 2864029546245810147093934986 :=
-  phaseBlock_append receipt_2_14_2339_0_part14 receipt_2_14_2339_0_part15 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join12 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1536 399 = 22897809666645634314374094027 :=
-  phaseBlock_append receipt_2_14_2339_0_join10 receipt_2_14_2339_0_join11 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join13 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 1024 911 = 126773719463831256891380385256 :=
-  phaseBlock_append receipt_2_14_2339_0_join9 receipt_2_14_2339_0_join12 rfl rfl rfl
-private theorem receipt_2_14_2339_0_join14 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 0) 0 1935 = 645260856439814434263775697896 :=
-  phaseBlock_append receipt_2_14_2339_0_join6 receipt_2_14_2339_0_join13 rfl rfl rfl
+private theorem receipt_2_14_2359_0_part0 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 0 128 = 90838519521199692625970569344 := by decide +kernel
+private theorem receipt_2_14_2359_0_part1 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 128 128 = 82823142698133512213426282624 := by decide +kernel
+private theorem receipt_2_14_2359_0_part2 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 256 128 = 75098556398278357419290828928 := by decide +kernel
+private theorem receipt_2_14_2359_0_part3 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 384 128 = 67658372970121809845200756864 := by decide +kernel
+private theorem receipt_2_14_2359_0_part4 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 512 128 = 60496274030400087813672902784 := by decide +kernel
+private theorem receipt_2_14_2359_0_part5 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 640 128 = 53606010156220013154547081344 := by decide +kernel
+private theorem receipt_2_14_2359_0_part6 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 768 128 = 46981400577180977991428776064 := by decide +kernel
+private theorem receipt_2_14_2359_0_part7 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 896 128 = 40616332867496911528131829888 := by decide +kernel
+private theorem receipt_2_14_2359_0_part8 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1024 128 = 34504762638118246835121135744 := by decide +kernel
+private theorem receipt_2_14_2359_0_part9 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1152 128 = 28640713228853887635955327104 := by decide +kernel
+private theorem receipt_2_14_2359_0_part10 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1280 128 = 23018278850185764549245576303 := by decide +kernel
+private theorem receipt_2_14_2359_0_part11 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1408 128 = 17631624211943080357458485964 := by decide +kernel
+private theorem receipt_2_14_2359_0_part12 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1536 128 = 12474965375482534042584229852 := by decide +kernel
+private theorem receipt_2_14_2359_0_part13 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1664 128 = 7542582148368837665242626114 := by decide +kernel
+private theorem receipt_2_14_2359_0_part14 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1792 128 = 2828820740897602517987250756 := by decide +kernel
+private theorem receipt_2_14_2359_0_part15 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1920 15 = 32836769101845642198160464 := by decide +kernel
+private theorem receipt_2_14_2359_0_join0 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 0 256 = 173661662219333204839396851968 :=
+  phaseBlock_append receipt_2_14_2359_0_part0 receipt_2_14_2359_0_part1 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join1 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 256 256 = 142756929368400167264491585792 :=
+  phaseBlock_append receipt_2_14_2359_0_part2 receipt_2_14_2359_0_part3 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join2 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 0 512 = 316418591587733372103888437760 :=
+  phaseBlock_append receipt_2_14_2359_0_join0 receipt_2_14_2359_0_join1 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join3 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 512 256 = 114102284186620100968219984128 :=
+  phaseBlock_append receipt_2_14_2359_0_part4 receipt_2_14_2359_0_part5 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join4 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 768 256 = 87597733444677889519560605952 :=
+  phaseBlock_append receipt_2_14_2359_0_part6 receipt_2_14_2359_0_part7 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join5 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 512 512 = 201700017631297990487780590080 :=
+  phaseBlock_append receipt_2_14_2359_0_join3 receipt_2_14_2359_0_join4 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join6 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 0 1024 = 518118609219031362591669027840 :=
+  phaseBlock_append receipt_2_14_2359_0_join2 receipt_2_14_2359_0_join5 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join7 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1024 256 = 63145475866972134471076462848 :=
+  phaseBlock_append receipt_2_14_2359_0_part8 receipt_2_14_2359_0_part9 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join8 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1280 256 = 40649903062128844906704062267 :=
+  phaseBlock_append receipt_2_14_2359_0_part10 receipt_2_14_2359_0_part11 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join9 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1024 512 = 103795378929100979377780525115 :=
+  phaseBlock_append receipt_2_14_2359_0_join7 receipt_2_14_2359_0_join8 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join10 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1536 256 = 20017547523851371707826855966 :=
+  phaseBlock_append receipt_2_14_2359_0_part12 receipt_2_14_2359_0_part13 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join11 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1792 143 = 2861657509999448160185411220 :=
+  phaseBlock_append receipt_2_14_2359_0_part14 receipt_2_14_2359_0_part15 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join12 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1536 399 = 22879205033850819868012267186 :=
+  phaseBlock_append receipt_2_14_2359_0_join10 receipt_2_14_2359_0_join11 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join13 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 1024 911 = 126674583962951799245792792301 :=
+  phaseBlock_append receipt_2_14_2359_0_join9 receipt_2_14_2359_0_join12 rfl rfl rfl
+private theorem receipt_2_14_2359_0_join14 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 0) 0 1935 = 644793193181983161837461820141 :=
+  phaseBlock_append receipt_2_14_2359_0_join6 receipt_2_14_2359_0_join13 rfl rfl rfl
 
-private theorem receipt_2_14_2339_0 : fastPhase (bank 2 14).shape 179827 2339 73 1 0 7 0 = 645260856439814434263775697896 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_2_14_2339_0_join14
+private theorem receipt_2_14_2359_0 : fastPhase (bank 2 14).shape 179818 2359 73 1 0 7 0 = 644793193181983161837461820141 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_2_14_2359_0_join14
 
-private theorem receipt_2_14_2339_1_part0 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 0 128 = 90837569613103235535970720320 := by decide +kernel
-private theorem receipt_2_14_2339_1_part1 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 128 128 = 82819724156721542193385077312 := by decide +kernel
-private theorem receipt_2_14_2339_1_part2 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 256 128 = 75092686877638454378544863808 := by decide +kernel
-private theorem receipt_2_14_2339_1_part3 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 384 128 = 67650070929086198362460830272 := by decide +kernel
-private theorem receipt_2_14_2339_1_part4 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 512 128 = 60485558705357147320319466048 := by decide +kernel
-private theorem receipt_2_14_2339_1_part5 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 640 128 = 53592901534141292396969785920 := by decide +kernel
-private theorem receipt_2_14_2339_1_part6 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 768 128 = 46965919368863713772410116672 := by decide +kernel
-private theorem receipt_2_14_2339_1_part7 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 896 128 = 40598500481022051727274883648 := by decide +kernel
-private theorem receipt_2_14_2339_1_part8 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1024 128 = 34484601152523977708321397312 := by decide +kernel
-private theorem receipt_2_14_2339_1_part9 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1152 128 = 28618245383628898067165003403 := by decide +kernel
-private theorem receipt_2_14_2339_1_part10 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1280 128 = 22993529161565044676269908103 := by decide +kernel
-private theorem receipt_2_14_2339_1_part11 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1408 128 = 17604616487856743210450995584 := by decide +kernel
-private theorem receipt_2_14_2339_1_part12 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1536 128 = 12445723163096318804660883888 := by decide +kernel
-private theorem receipt_2_14_2339_1_part13 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1664 128 = 7511129749664281836212613237 := by decide +kernel
-private theorem receipt_2_14_2339_1_part14 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1792 128 = 2795183157641918611302585048 := by decide +kernel
-private theorem receipt_2_14_2339_1_part15 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1920 15 = 28753002079780979088386160 := by decide +kernel
-private theorem receipt_2_14_2339_1_join0 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 0 256 = 173657293769824777729355797632 :=
-  phaseBlock_append receipt_2_14_2339_1_part0 receipt_2_14_2339_1_part1 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join1 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 256 256 = 142742757806724652741005694080 :=
-  phaseBlock_append receipt_2_14_2339_1_part2 receipt_2_14_2339_1_part3 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join2 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 0 512 = 316400051576549430470361491712 :=
-  phaseBlock_append receipt_2_14_2339_1_join0 receipt_2_14_2339_1_join1 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join3 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 512 256 = 114078460239498439717289251968 :=
-  phaseBlock_append receipt_2_14_2339_1_part4 receipt_2_14_2339_1_part5 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join4 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 768 256 = 87564419849885765499685000320 :=
-  phaseBlock_append receipt_2_14_2339_1_part6 receipt_2_14_2339_1_part7 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join5 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 512 512 = 201642880089384205216974252288 :=
-  phaseBlock_append receipt_2_14_2339_1_join3 receipt_2_14_2339_1_join4 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join6 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 0 1024 = 518042931665933635687335744000 :=
-  phaseBlock_append receipt_2_14_2339_1_join2 receipt_2_14_2339_1_join5 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join7 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1024 256 = 63102846536152875775486400715 :=
-  phaseBlock_append receipt_2_14_2339_1_part8 receipt_2_14_2339_1_part9 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join8 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1280 256 = 40598145649421787886720903687 :=
-  phaseBlock_append receipt_2_14_2339_1_part10 receipt_2_14_2339_1_part11 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join9 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1024 512 = 103700992185574663662207304402 :=
-  phaseBlock_append receipt_2_14_2339_1_join7 receipt_2_14_2339_1_join8 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join10 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1536 256 = 19956852912760600640873497125 :=
-  phaseBlock_append receipt_2_14_2339_1_part12 receipt_2_14_2339_1_part13 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join11 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1792 143 = 2823936159721699590390971208 :=
-  phaseBlock_append receipt_2_14_2339_1_part14 receipt_2_14_2339_1_part15 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join12 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1536 399 = 22780789072482300231264468333 :=
-  phaseBlock_append receipt_2_14_2339_1_join10 receipt_2_14_2339_1_join11 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join13 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 1024 911 = 126481781258056963893471772735 :=
-  phaseBlock_append receipt_2_14_2339_1_join9 receipt_2_14_2339_1_join12 rfl rfl rfl
-private theorem receipt_2_14_2339_1_join14 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2339 73 1 0 7 1) 0 1935 = 644524712923990599580807516735 :=
-  phaseBlock_append receipt_2_14_2339_1_join6 receipt_2_14_2339_1_join13 rfl rfl rfl
+private theorem receipt_2_14_2359_1_part0 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 0 128 = 90775554762699803654108443200 := by decide +kernel
+private theorem receipt_2_14_2359_1_part1 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 128 128 = 82762411016321407776652907072 := by decide +kernel
+private theorem receipt_2_14_2359_1_part2 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 256 128 = 75040008993686569461397860928 := by decide +kernel
+private theorem receipt_2_14_2359_1_part3 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 384 128 = 67601961572961192351269032512 := by decide +kernel
+private theorem receipt_2_14_2359_1_part4 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 512 128 = 60441950898202179793803866688 := by decide +kernel
+private theorem receipt_2_14_2359_1_part5 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 640 128 = 53553728071479401627594216000 := by decide +kernel
+private theorem receipt_2_14_2359_1_part6 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 768 128 = 46931112844997660968729031232 := by decide +kernel
+private theorem receipt_2_14_2359_1_part7 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 896 128 = 40567993313218660997237051968 := by decide +kernel
+private theorem receipt_2_14_2359_1_part8 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1024 128 = 34458325604982971743529497152 := by decide +kernel
+private theorem receipt_2_14_2359_1_part9 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1152 128 = 28596133575631996874842755648 := by decide +kernel
+private theorem receipt_2_14_2359_1_part10 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1280 128 = 22975511942553058925193898889 := by decide +kernel
+private theorem receipt_2_14_2359_1_part11 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1408 128 = 17590625906438318559256723382 := by decide +kernel
+private theorem receipt_2_14_2359_1_part12 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1536 128 = 12435692033890515552014086776 := by decide +kernel
+private theorem receipt_2_14_2359_1_part13 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1664 128 = 7504990639380992618618881848 := by decide +kernel
+private theorem receipt_2_14_2359_1_part14 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1792 128 = 2792868437720488506363725012 := by decide +kernel
+private theorem receipt_2_14_2359_1_part15 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1920 15 = 28728960173327517431860840 := by decide +kernel
+private theorem receipt_2_14_2359_1_join0 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 0 256 = 173537965779021211430761350272 :=
+  phaseBlock_append receipt_2_14_2359_1_part0 receipt_2_14_2359_1_part1 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join1 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 256 256 = 142641970566647761812666893440 :=
+  phaseBlock_append receipt_2_14_2359_1_part2 receipt_2_14_2359_1_part3 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join2 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 0 512 = 316179936345668973243428243712 :=
+  phaseBlock_append receipt_2_14_2359_1_join0 receipt_2_14_2359_1_join1 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join3 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 512 256 = 113995678969681581421398082688 :=
+  phaseBlock_append receipt_2_14_2359_1_part4 receipt_2_14_2359_1_part5 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join4 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 768 256 = 87499106158216321965966083200 :=
+  phaseBlock_append receipt_2_14_2359_1_part6 receipt_2_14_2359_1_part7 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join5 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 512 512 = 201494785127897903387364165888 :=
+  phaseBlock_append receipt_2_14_2359_1_join3 receipt_2_14_2359_1_join4 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join6 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 0 1024 = 517674721473566876630792409600 :=
+  phaseBlock_append receipt_2_14_2359_1_join2 receipt_2_14_2359_1_join5 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join7 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1024 256 = 63054459180614968618372252800 :=
+  phaseBlock_append receipt_2_14_2359_1_part8 receipt_2_14_2359_1_part9 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join8 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1280 256 = 40566137848991377484450622271 :=
+  phaseBlock_append receipt_2_14_2359_1_part10 receipt_2_14_2359_1_part11 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join9 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1024 512 = 103620597029606346102822875071 :=
+  phaseBlock_append receipt_2_14_2359_1_join7 receipt_2_14_2359_1_join8 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join10 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1536 256 = 19940682673271508170632968624 :=
+  phaseBlock_append receipt_2_14_2359_1_part12 receipt_2_14_2359_1_part13 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join11 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1792 143 = 2821597397893816023795585852 :=
+  phaseBlock_append receipt_2_14_2359_1_part14 receipt_2_14_2359_1_part15 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join12 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1536 399 = 22762280071165324194428554476 :=
+  phaseBlock_append receipt_2_14_2359_1_join10 receipt_2_14_2359_1_join11 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join13 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 1024 911 = 126382877100771670297251429547 :=
+  phaseBlock_append receipt_2_14_2359_1_join9 receipt_2_14_2359_1_join12 rfl rfl rfl
+private theorem receipt_2_14_2359_1_join14 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2359 73 1 0 7 1) 0 1935 = 644057598574338546928043839147 :=
+  phaseBlock_append receipt_2_14_2359_1_join6 receipt_2_14_2359_1_join13 rfl rfl rfl
 
-private theorem receipt_2_14_2339_1 : fastPhase (bank 2 14).shape 179827 2339 73 1 0 7 1 = 644524712923990599580807516735 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_2_14_2339_1_join14
+private theorem receipt_2_14_2359_1 : fastPhase (bank 2 14).shape 179818 2359 73 1 0 7 1 = 644057598574338546928043839147 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_2_14_2359_1_join14
 
-private theorem receipt_2_14_2340_0_part0 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 0 128 = 90901393491337640866382878176 := by decide +kernel
-private theorem receipt_2_14_2340_0_part1 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 128 128 = 82881214367516189991722730976 := by decide +kernel
-private theorem receipt_2_14_2340_0_part2 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 256 128 = 75151899471983613150623266272 := by decide +kernel
-private theorem receipt_2_14_2340_0_part3 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 384 128 = 67707061228224851787886110176 := by decide +kernel
-private theorem receipt_2_14_2340_0_part4 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 512 128 = 60540381305485140413776844256 := by decide +kernel
-private theorem receipt_2_14_2340_0_part5 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 640 128 = 53645610311096702455559587296 := by decide +kernel
-private theorem receipt_2_14_2340_0_part6 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 768 128 = 47016567482805446109031577056 := by decide +kernel
-private theorem receipt_2_14_2340_0_part7 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 896 128 = 40647140381097660190057752032 := by decide +kernel
-private theorem receipt_2_14_2340_0_part8 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1024 128 = 34531284581526709986105333216 := by decide +kernel
-private theorem receipt_2_14_2340_0_part9 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1152 128 = 28663023378963937465126369074 := by decide +kernel
-private theorem receipt_2_14_2340_0_part10 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1280 128 = 23036451960289715214618252442 := by decide +kernel
-private theorem receipt_2_14_2340_0_part11 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1408 128 = 17645733779055666325122904887 := by decide +kernel
-private theorem receipt_2_14_2340_0_part12 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1536 128 = 12485084025037560444251337716 := by decide +kernel
-private theorem receipt_2_14_2340_0_part13 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1664 128 = 7548782563187729648840450982 := by decide +kernel
-private theorem receipt_2_14_2340_0_part14 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1792 128 = 2831175613554623089312173528 := by decide +kernel
-private theorem receipt_2_14_2340_0_part15 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1920 15 = 32864359211624710236766548 := by decide +kernel
-private theorem receipt_2_14_2340_0_join0 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 0 256 = 173782607858853830858105609152 :=
-  phaseBlock_append receipt_2_14_2340_0_part0 receipt_2_14_2340_0_part1 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join1 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 256 256 = 142858960700208464938509376448 :=
-  phaseBlock_append receipt_2_14_2340_0_part2 receipt_2_14_2340_0_part3 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join2 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 0 512 = 316641568559062295796614985600 :=
-  phaseBlock_append receipt_2_14_2340_0_join0 receipt_2_14_2340_0_join1 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join3 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 512 256 = 114185991616581842869336431552 :=
-  phaseBlock_append receipt_2_14_2340_0_part4 receipt_2_14_2340_0_part5 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join4 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 768 256 = 87663707863903106299089329088 :=
-  phaseBlock_append receipt_2_14_2340_0_part6 receipt_2_14_2340_0_part7 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join5 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 512 512 = 201849699480484949168425760640 :=
-  phaseBlock_append receipt_2_14_2340_0_join3 receipt_2_14_2340_0_join4 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join6 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 0 1024 = 518491268039547244965040746240 :=
-  phaseBlock_append receipt_2_14_2340_0_join2 receipt_2_14_2340_0_join5 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join7 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1024 256 = 63194307960490647451231702290 :=
-  phaseBlock_append receipt_2_14_2340_0_part8 receipt_2_14_2340_0_part9 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join8 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1280 256 = 40682185739345381539741157329 :=
-  phaseBlock_append receipt_2_14_2340_0_part10 receipt_2_14_2340_0_part11 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join9 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1024 512 = 103876493699836028990972859619 :=
-  phaseBlock_append receipt_2_14_2340_0_join7 receipt_2_14_2340_0_join8 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join10 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1536 256 = 20033866588225290093091788698 :=
-  phaseBlock_append receipt_2_14_2340_0_part12 receipt_2_14_2340_0_part13 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join11 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1792 143 = 2864039972766247799548940076 :=
-  phaseBlock_append receipt_2_14_2340_0_part14 receipt_2_14_2340_0_part15 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join12 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1536 399 = 22897906560991537892640728774 :=
-  phaseBlock_append receipt_2_14_2340_0_join10 receipt_2_14_2340_0_join11 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join13 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 1024 911 = 126774400260827566883613588393 :=
-  phaseBlock_append receipt_2_14_2340_0_join9 receipt_2_14_2340_0_join12 rfl rfl rfl
-private theorem receipt_2_14_2340_0_join14 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 0) 0 1935 = 645265668300374811848654334633 :=
-  phaseBlock_append receipt_2_14_2340_0_join6 receipt_2_14_2340_0_join13 rfl rfl rfl
+private theorem receipt_2_14_2360_0_part0 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 0 128 = 90839334852890194806965714400 := by decide +kernel
+private theorem receipt_2_14_2360_0_part1 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 128 128 = 82823858524262072081641516512 := by decide +kernel
+private theorem receipt_2_14_2360_0_part2 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 256 128 = 75099179956654331985979088352 := by decide +kernel
+private theorem receipt_2_14_2360_0_part3 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 384 128 = 67658911298511886323322260960 := by decide +kernel
+private theorem receipt_2_14_2360_0_part4 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 512 128 = 60496733968871321902885666272 := by decide +kernel
+private theorem receipt_2_14_2360_0_part5 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 640 128 = 53606398349472092112245222880 := by decide +kernel
+private theorem receipt_2_14_2360_0_part6 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 768 128 = 46981723476867708489828621792 := by decide +kernel
+private theorem receipt_2_14_2360_0_part7 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 896 128 = 40616596734536932297405812192 := by decide +kernel
+private theorem receipt_2_14_2360_0_part8 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1024 128 = 34504973544994966092579487200 := by decide +kernel
+private theorem receipt_2_14_2360_0_part9 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1152 128 = 28640877061904645301275569632 := by decide +kernel
+private theorem receipt_2_14_2360_0_part10 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1280 128 = 23018401208903953393611025518 := by decide +kernel
+private theorem receipt_2_14_2360_0_part11 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1408 128 = 17631710607490368776012614680 := by decide +kernel
+private theorem receipt_2_14_2360_0_part12 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1536 128 = 12475021232988096299838561444 := by decide +kernel
+private theorem receipt_2_14_2360_0_part13 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1664 128 = 7542612705792217181712655389 := by decide +kernel
+private theorem receipt_2_14_2360_0_part14 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1792 128 = 2828831051495965609601884813 := by decide +kernel
+private theorem receipt_2_14_2360_0_part15 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1920 15 = 32836878798581308330728684 := by decide +kernel
+private theorem receipt_2_14_2360_0_join0 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 0 256 = 173663193377152266888607230912 :=
+  phaseBlock_append receipt_2_14_2360_0_part0 receipt_2_14_2360_0_part1 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join1 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 256 256 = 142758091255166218309301349312 :=
+  phaseBlock_append receipt_2_14_2360_0_part2 receipt_2_14_2360_0_part3 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join2 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 0 512 = 316421284632318485197908580224 :=
+  phaseBlock_append receipt_2_14_2360_0_join0 receipt_2_14_2360_0_join1 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join3 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 512 256 = 114103132318343414015130889152 :=
+  phaseBlock_append receipt_2_14_2360_0_part4 receipt_2_14_2360_0_part5 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join4 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 768 256 = 87598320211404640787234433984 :=
+  phaseBlock_append receipt_2_14_2360_0_part6 receipt_2_14_2360_0_part7 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join5 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 512 512 = 201701452529748054802365323136 :=
+  phaseBlock_append receipt_2_14_2360_0_join3 receipt_2_14_2360_0_join4 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join6 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 0 1024 = 518122737162066540000273903360 :=
+  phaseBlock_append receipt_2_14_2360_0_join2 receipt_2_14_2360_0_join5 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join7 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1024 256 = 63145850606899611393855056832 :=
+  phaseBlock_append receipt_2_14_2360_0_part8 receipt_2_14_2360_0_part9 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join8 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1280 256 = 40650111816394322169623640198 :=
+  phaseBlock_append receipt_2_14_2360_0_part10 receipt_2_14_2360_0_part11 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join9 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1024 512 = 103795962423293933563478697030 :=
+  phaseBlock_append receipt_2_14_2360_0_join7 receipt_2_14_2360_0_join8 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join10 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1536 256 = 20017633938780313481551216833 :=
+  phaseBlock_append receipt_2_14_2360_0_part12 receipt_2_14_2360_0_part13 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join11 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1792 143 = 2861667930294546917932613497 :=
+  phaseBlock_append receipt_2_14_2360_0_part14 receipt_2_14_2360_0_part15 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join12 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1536 399 = 22879301869074860399483830330 :=
+  phaseBlock_append receipt_2_14_2360_0_join10 receipt_2_14_2360_0_join11 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join13 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 1024 911 = 126675264292368793962962527360 :=
+  phaseBlock_append receipt_2_14_2360_0_join9 receipt_2_14_2360_0_join12 rfl rfl rfl
+private theorem receipt_2_14_2360_0_join14 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 0) 0 1935 = 644798001454435333963236430720 :=
+  phaseBlock_append receipt_2_14_2360_0_join6 receipt_2_14_2360_0_join13 rfl rfl rfl
 
-private theorem receipt_2_14_2340_0 : fastPhase (bank 2 14).shape 179827 2340 73 1 0 7 0 = 645265668300374811848654334633 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_2_14_2340_0_join14
+private theorem receipt_2_14_2360_0 : fastPhase (bank 2 14).shape 179818 2360 73 1 0 7 0 = 644798001454435333963236430720 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_2_14_2360_0_join14
 
-private theorem receipt_2_14_2340_1_part0 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 0 128 = 90838385089936268500016823072 := by decide +kernel
-private theorem receipt_2_14_2340_1_part1 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 128 128 = 82820440084735207185838402336 := by decide +kernel
-private theorem receipt_2_14_2340_1_part2 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 256 128 = 75093310498795745720437365536 := by decide +kernel
-private theorem receipt_2_14_2340_1_part3 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 384 128 = 67650609285202620997192862496 := by decide +kernel
-private theorem receipt_2_14_2340_1_part4 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 512 128 = 60486018640444441537503410976 := by decide +kernel
-private theorem receipt_2_14_2340_1_part5 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 640 128 = 53593289696740383342321478432 := by decide +kernel
-private theorem receipt_2_14_2340_1_part6 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 768 128 = 46966242214366885743688063776 := by decide +kernel
-private theorem receipt_2_14_2340_1_part7 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 896 128 = 40598764273984347256267279136 := by decide +kernel
-private theorem receipt_2_14_2340_1_part8 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1024 128 = 34484811968963821428880931616 := by decide +kernel
-private theorem receipt_2_14_2340_1_part9 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1152 128 = 28618409109619132749698708574 := by decide +kernel
-private theorem receipt_2_14_2340_1_part10 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1280 128 = 22993651387788781992137297617 := by decide +kernel
-private theorem receipt_2_14_2340_1_part11 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1408 128 = 17604702748951402282087392758 := by decide +kernel
-private theorem receipt_2_14_2340_1_part12 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1536 128 = 12445778889348213797042308674 := by decide +kernel
-private theorem receipt_2_14_2340_1_part13 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1664 128 = 7511160180722687816096959245 := by decide +kernel
-private theorem receipt_2_14_2340_1_part14 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1792 128 = 2795193347591952097854134014 := by decide +kernel
-private theorem receipt_2_14_2340_1_part15 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1920 15 = 28753098179397403596603632 := by decide +kernel
-private theorem receipt_2_14_2340_1_join0 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 0 256 = 173658825174671475685855225408 :=
-  phaseBlock_append receipt_2_14_2340_1_part0 receipt_2_14_2340_1_part1 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join1 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 256 256 = 142743919783998366717630228032 :=
-  phaseBlock_append receipt_2_14_2340_1_part2 receipt_2_14_2340_1_part3 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join2 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 0 512 = 316402744958669842403485453440 :=
-  phaseBlock_append receipt_2_14_2340_1_join0 receipt_2_14_2340_1_join1 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join3 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 512 256 = 114079308337184824879824889408 :=
-  phaseBlock_append receipt_2_14_2340_1_part4 receipt_2_14_2340_1_part5 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join4 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 768 256 = 87565006488351232999955342912 :=
-  phaseBlock_append receipt_2_14_2340_1_part6 receipt_2_14_2340_1_part7 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join5 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 512 512 = 201644314825536057879780232320 :=
-  phaseBlock_append receipt_2_14_2340_1_join3 receipt_2_14_2340_1_join4 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join6 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 0 1024 = 518047059784205900283265685760 :=
-  phaseBlock_append receipt_2_14_2340_1_join2 receipt_2_14_2340_1_join5 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join7 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1024 256 = 63103221078582954178579640190 :=
-  phaseBlock_append receipt_2_14_2340_1_part8 receipt_2_14_2340_1_part9 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join8 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1280 256 = 40598354136740184274224690375 :=
-  phaseBlock_append receipt_2_14_2340_1_part10 receipt_2_14_2340_1_part11 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join9 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1024 512 = 103701575215323138452804330565 :=
-  phaseBlock_append receipt_2_14_2340_1_join7 receipt_2_14_2340_1_join8 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join10 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1536 256 = 19956939070070901613139267919 :=
-  phaseBlock_append receipt_2_14_2340_1_part12 receipt_2_14_2340_1_part13 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join11 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1792 143 = 2823946445771349501450737646 :=
-  phaseBlock_append receipt_2_14_2340_1_part14 receipt_2_14_2340_1_part15 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join12 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1536 399 = 22780885515842251114590005565 :=
-  phaseBlock_append receipt_2_14_2340_1_join10 receipt_2_14_2340_1_join11 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join13 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 1024 911 = 126482460731165389567394336130 :=
-  phaseBlock_append receipt_2_14_2340_1_join9 receipt_2_14_2340_1_join12 rfl rfl rfl
-private theorem receipt_2_14_2340_1_join14 :
-    phaseBlock (fastLayer (bank 2 14).shape 179827 2340 73 1 0 7 1) 0 1935 = 644529520515371289850660021890 :=
-  phaseBlock_append receipt_2_14_2340_1_join6 receipt_2_14_2340_1_join13 rfl rfl rfl
+private theorem receipt_2_14_2360_1_part0 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 0 128 = 90776369627123346255377446752 := by decide +kernel
+private theorem receipt_2_14_2360_1_part1 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 128 128 = 82763126405523756920281384800 := by decide +kernel
+private theorem receipt_2_14_2360_1_part2 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 256 128 = 75040632144487300979403446112 := by decide +kernel
+private theorem receipt_2_14_2360_1_part3 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 384 128 = 67602499522150186781946111840 := by decide +kernel
+private theorem receipt_2_14_2360_1_part4 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 512 128 = 60442410484882596688881252192 := by decide +kernel
+private theorem receipt_2_14_2360_1_part5 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 640 128 = 53554115939399878645440612192 := by decide +kernel
+private theorem receipt_2_14_2360_1_part6 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 768 128 = 46931435444873737753606297440 := by decide +kernel
+private theorem receipt_2_14_2360_1_part7 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 896 128 = 40568256905043427844601259872 := by decide +kernel
+private theorem receipt_2_14_2360_1_part8 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1024 128 = 34458536260326943051379783520 := by decide +kernel
+private theorem receipt_2_14_2360_1_part9 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1152 128 = 28596297179932209381117970272 := by decide +kernel
+private theorem receipt_2_14_2360_1_part10 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1280 128 = 22975634094598524213698635653 := by decide +kernel
+private theorem receipt_2_14_2360_1_part11 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1408 128 = 17590712116627970953116201822 := by decide +kernel
+private theorem receipt_2_14_2360_1_part12 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1536 128 = 12435747726461151987822724005 := by decide +kernel
+private theorem receipt_2_14_2360_1_part13 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1664 128 = 7505021051412910525427613210 := by decide +kernel
+private theorem receipt_2_14_2360_1_part14 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1792 128 = 2792878621600326335050380171 := by decide +kernel
+private theorem receipt_2_14_2360_1_part15 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1920 15 = 28729056202626078791564604 := by decide +kernel
+private theorem receipt_2_14_2360_1_join0 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 0 256 = 173539496032647103175658831552 :=
+  phaseBlock_append receipt_2_14_2360_1_part0 receipt_2_14_2360_1_part1 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join1 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 256 256 = 142643131666637487761349557952 :=
+  phaseBlock_append receipt_2_14_2360_1_part2 receipt_2_14_2360_1_part3 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join2 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 0 512 = 316182627699284590937008389504 :=
+  phaseBlock_append receipt_2_14_2360_1_join0 receipt_2_14_2360_1_join1 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join3 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 512 256 = 113996526424282475334321864384 :=
+  phaseBlock_append receipt_2_14_2360_1_part4 receipt_2_14_2360_1_part5 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join4 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 768 256 = 87499692349917165598207557312 :=
+  phaseBlock_append receipt_2_14_2360_1_part6 receipt_2_14_2360_1_part7 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join5 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 512 512 = 201496218774199640932529421696 :=
+  phaseBlock_append receipt_2_14_2360_1_join3 receipt_2_14_2360_1_join4 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join6 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 0 1024 = 517678846473484231869537811200 :=
+  phaseBlock_append receipt_2_14_2360_1_join2 receipt_2_14_2360_1_join5 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join7 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1024 256 = 63054833440259152432497753792 :=
+  phaseBlock_append receipt_2_14_2360_1_part8 receipt_2_14_2360_1_part9 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join8 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1280 256 = 40566346211226495166814837475 :=
+  phaseBlock_append receipt_2_14_2360_1_part10 receipt_2_14_2360_1_part11 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join9 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1024 512 = 103621179651485647599312591267 :=
+  phaseBlock_append receipt_2_14_2360_1_join7 receipt_2_14_2360_1_join8 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join10 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1536 256 = 19940768777874062513250337215 :=
+  phaseBlock_append receipt_2_14_2360_1_part12 receipt_2_14_2360_1_part13 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join11 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1792 143 = 2821607677802952413841944775 :=
+  phaseBlock_append receipt_2_14_2360_1_part14 receipt_2_14_2360_1_part15 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join12 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1536 399 = 22762376455677014927092281990 :=
+  phaseBlock_append receipt_2_14_2360_1_join10 receipt_2_14_2360_1_join11 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join13 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 1024 911 = 126383556107162662526404873257 :=
+  phaseBlock_append receipt_2_14_2360_1_join9 receipt_2_14_2360_1_join12 rfl rfl rfl
+private theorem receipt_2_14_2360_1_join14 :
+    phaseBlock (fastLayer (bank 2 14).shape 179818 2360 73 1 0 7 1) 0 1935 = 644062402580646894395942684457 :=
+  phaseBlock_append receipt_2_14_2360_1_join6 receipt_2_14_2360_1_join13 rfl rfl rfl
 
-private theorem receipt_2_14_2340_1 : fastPhase (bank 2 14).shape 179827 2340 73 1 0 7 1 = 644529520515371289850660021890 :=
-  phase_of_block (n := 1935) (by decide +kernel) receipt_2_14_2340_1_join14
+private theorem receipt_2_14_2360_1 : fastPhase (bank 2 14).shape 179818 2360 73 1 0 7 1 = 644062402580646894395942684457 :=
+  phase_of_block (n := 1935) (by decide +kernel) receipt_2_14_2360_1_join14
 
 theorem receipt_2_14 : Checked (bank 2 14) 73 0 7 := by
   refine checked_from_values (bank 2 14) 73 0 7
     (P3_7_1.checked (bank 2 14) rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_9203_1934)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) receipt_2_14_2339_0 receipt_2_14_2339_1 receipt_2_14_2340_0 receipt_2_14_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) receipt_2_14_2359_0 receipt_2_14_2359_1 receipt_2_14_2360_0 receipt_2_14_2360_1 (by decide +kernel) (by decide +kernel)
 
-private theorem receipt_3_14_2339_0_part0 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 0 128 = 21330424901831439610917101376 := by decide +kernel
-private theorem receipt_3_14_2339_0_part1 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 128 128 = 19546953317054718672366477120 := by decide +kernel
-private theorem receipt_3_14_2339_0_part2 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 256 128 = 17812851194365842261727321920 := by decide +kernel
-private theorem receipt_3_14_2339_0_part3 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 384 128 = 16129072156085524759857733440 := by decide +kernel
-private theorem receipt_3_14_2339_0_part4 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 512 128 = 14496564194140908175543443264 := by decide +kernel
-private theorem receipt_3_14_2339_0_part5 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 640 128 = 12916269679537502975067168576 := by decide +kernel
-private theorem receipt_3_14_2339_0_part6 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 768 128 = 11389125371831128911777963840 := by decide +kernel
-private theorem receipt_3_14_2339_0_part7 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 896 128 = 9916062428599855855660572480 := by decide +kernel
-private theorem receipt_3_14_2339_0_part8 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1024 128 = 8498006414915944622904778560 := by decide +kernel
-private theorem receipt_3_14_2339_0_part9 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1152 128 = 7135877312817787805474758464 := by decide +kernel
-private theorem receipt_3_14_2339_0_part10 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1280 128 = 5830589530781850600678432576 := by decide +kernel
-private theorem receipt_3_14_2339_0_part11 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1408 128 = 4583051913194611640736816960 := by decide +kernel
-private theorem receipt_3_14_2339_0_part12 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1536 128 = 3394167749824503822353375040 := by decide +kernel
-private theorem receipt_3_14_2339_0_part13 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1664 128 = 2264834785293855136283369280 := by decide +kernel
-private theorem receipt_3_14_2339_0_part14 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1792 128 = 1195945228550829496903212864 := by decide +kernel
-private theorem receipt_3_14_2339_0_part15 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1920 88 = 234007447668878381820852156 := by decide +kernel
-private theorem receipt_3_14_2339_0_join0 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 0 256 = 40877378218886158283283578496 :=
-  phaseBlock_append receipt_3_14_2339_0_part0 receipt_3_14_2339_0_part1 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join1 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 256 256 = 33941923350451367021585055360 :=
-  phaseBlock_append receipt_3_14_2339_0_part2 receipt_3_14_2339_0_part3 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join2 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 0 512 = 74819301569337525304868633856 :=
-  phaseBlock_append receipt_3_14_2339_0_join0 receipt_3_14_2339_0_join1 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join3 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 512 256 = 27412833873678411150610611840 :=
-  phaseBlock_append receipt_3_14_2339_0_part4 receipt_3_14_2339_0_part5 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join4 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 768 256 = 21305187800430984767438536320 :=
-  phaseBlock_append receipt_3_14_2339_0_part6 receipt_3_14_2339_0_part7 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join5 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 512 512 = 48718021674109395918049148160 :=
-  phaseBlock_append receipt_3_14_2339_0_join3 receipt_3_14_2339_0_join4 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join6 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 0 1024 = 123537323243446921222917782016 :=
-  phaseBlock_append receipt_3_14_2339_0_join2 receipt_3_14_2339_0_join5 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join7 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1024 256 = 15633883727733732428379537024 :=
-  phaseBlock_append receipt_3_14_2339_0_part8 receipt_3_14_2339_0_part9 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join8 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1280 256 = 10413641443976462241415249536 :=
-  phaseBlock_append receipt_3_14_2339_0_part10 receipt_3_14_2339_0_part11 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join9 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1024 512 = 26047525171710194669794786560 :=
-  phaseBlock_append receipt_3_14_2339_0_join7 receipt_3_14_2339_0_join8 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join10 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1536 256 = 5659002535118358958636744320 :=
-  phaseBlock_append receipt_3_14_2339_0_part12 receipt_3_14_2339_0_part13 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join11 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1792 216 = 1429952676219707878724065020 :=
-  phaseBlock_append receipt_3_14_2339_0_part14 receipt_3_14_2339_0_part15 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join12 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1536 472 = 7088955211338066837360809340 :=
-  phaseBlock_append receipt_3_14_2339_0_join10 receipt_3_14_2339_0_join11 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join13 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 1024 984 = 33136480383048261507155595900 :=
-  phaseBlock_append receipt_3_14_2339_0_join9 receipt_3_14_2339_0_join12 rfl rfl rfl
-private theorem receipt_3_14_2339_0_join14 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 0) 0 2008 = 156673803626495182730073377916 :=
-  phaseBlock_append receipt_3_14_2339_0_join6 receipt_3_14_2339_0_join13 rfl rfl rfl
+private theorem receipt_3_14_2359_0_part0 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 0 128 = 21388498730998469787645260640 := by decide +kernel
+private theorem receipt_3_14_2359_0_part1 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 128 128 = 19599990061056976437392204640 := by decide +kernel
+private theorem receipt_3_14_2359_0_part2 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 256 128 = 17861019785256544191271572320 := by decide +kernel
+private theorem receipt_3_14_2359_0_part3 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 384 128 = 16172542030950350003000099680 := by decide +kernel
+private theorem receipt_3_14_2359_0_part4 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 512 128 = 14535505298417056752874746720 := by decide +kernel
+private theorem receipt_3_14_2359_0_part5 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 640 128 = 12950852470315161891297633120 := by decide +kernel
+private theorem receipt_3_14_2359_0_part6 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 768 128 = 11419520821137346082300973920 := by decide +kernel
+private theorem receipt_3_14_2359_0_part7 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 896 128 = 9942442026664821847072015200 := by decide +kernel
+private theorem receipt_3_14_2359_0_part8 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1024 128 = 8520542173421682207477969760 := by decide +kernel
+private theorem receipt_3_14_2359_0_part9 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1152 128 = 7154741768129249329590952800 := by decide +kernel
+private theorem receipt_3_14_2359_0_part10 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1280 128 = 5845955747160423167212917600 := by decide +kernel
+private theorem receipt_3_14_2359_0_part11 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1408 128 = 4595093485994030105400591200 := by decide +kernel
+private theorem receipt_3_14_2359_0_part12 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1536 128 = 3403058808669171603990410080 := by decide +kernel
+private theorem receipt_3_14_2359_0_part13 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1664 128 = 2270749997239572841123455840 := by decide +kernel
+private theorem receipt_3_14_2359_0_part14 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1792 128 = 1199059801227931356770390880 := by decide +kernel
+private theorem receipt_3_14_2359_0_part15 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1920 88 = 234615434404783652826825450 := by decide +kernel
+private theorem receipt_3_14_2359_0_join0 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 0 256 = 40988488792055446225037465280 :=
+  phaseBlock_append receipt_3_14_2359_0_part0 receipt_3_14_2359_0_part1 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join1 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 256 256 = 34033561816206894194271672000 :=
+  phaseBlock_append receipt_3_14_2359_0_part2 receipt_3_14_2359_0_part3 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join2 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 0 512 = 75022050608262340419309137280 :=
+  phaseBlock_append receipt_3_14_2359_0_join0 receipt_3_14_2359_0_join1 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join3 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 512 256 = 27486357768732218644172379840 :=
+  phaseBlock_append receipt_3_14_2359_0_part4 receipt_3_14_2359_0_part5 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join4 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 768 256 = 21361962847802167929372989120 :=
+  phaseBlock_append receipt_3_14_2359_0_part6 receipt_3_14_2359_0_part7 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join5 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 512 512 = 48848320616534386573545368960 :=
+  phaseBlock_append receipt_3_14_2359_0_join3 receipt_3_14_2359_0_join4 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join6 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 0 1024 = 123870371224796726992854506240 :=
+  phaseBlock_append receipt_3_14_2359_0_join2 receipt_3_14_2359_0_join5 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join7 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1024 256 = 15675283941550931537068922560 :=
+  phaseBlock_append receipt_3_14_2359_0_part8 receipt_3_14_2359_0_part9 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join8 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1280 256 = 10441049233154453272613508800 :=
+  phaseBlock_append receipt_3_14_2359_0_part10 receipt_3_14_2359_0_part11 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join9 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1024 512 = 26116333174705384809682431360 :=
+  phaseBlock_append receipt_3_14_2359_0_join7 receipt_3_14_2359_0_join8 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join10 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1536 256 = 5673808805908744445113865920 :=
+  phaseBlock_append receipt_3_14_2359_0_part12 receipt_3_14_2359_0_part13 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join11 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1792 216 = 1433675235632715009597216330 :=
+  phaseBlock_append receipt_3_14_2359_0_part14 receipt_3_14_2359_0_part15 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join12 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1536 472 = 7107484041541459454711082250 :=
+  phaseBlock_append receipt_3_14_2359_0_join10 receipt_3_14_2359_0_join11 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join13 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 1024 984 = 33223817216246844264393513610 :=
+  phaseBlock_append receipt_3_14_2359_0_join9 receipt_3_14_2359_0_join12 rfl rfl rfl
+private theorem receipt_3_14_2359_0_join14 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 0) 0 2008 = 157094188441043571257248019850 :=
+  phaseBlock_append receipt_3_14_2359_0_join6 receipt_3_14_2359_0_join13 rfl rfl rfl
 
-private theorem receipt_3_14_2339_0 : fastPhase (bank 3 14).shape 179827 2339 73 1 1 1 0 = 156673803626495182730073377916 :=
-  phase_of_block (n := 2008) (by decide +kernel) receipt_3_14_2339_0_join14
+private theorem receipt_3_14_2359_0 : fastPhase (bank 3 14).shape 179818 2359 73 1 1 1 0 = 157094188441043571257248019850 :=
+  phase_of_block (n := 2008) (by decide +kernel) receipt_3_14_2359_0_join14
 
-private theorem receipt_3_14_2339_1_part0 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 0 128 = 21316488017795095225480850880 := by decide +kernel
-private theorem receipt_3_14_2339_1_part1 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 128 128 = 19533381894610069765940489664 := by decide +kernel
-private theorem receipt_3_14_2339_1_part2 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 256 128 = 17799653324685069971554577856 := by decide +kernel
-private theorem receipt_3_14_2339_1_part3 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 384 128 = 16116255884038843435997834688 := by decide +kernel
-private theorem receipt_3_14_2339_1_part4 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 512 128 = 14484137518373458146013162944 := by decide +kernel
-private theorem receipt_3_14_2339_1_part5 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 640 128 = 12904240552546243310981000640 := by decide +kernel
-private theorem receipt_3_14_2339_1_part6 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 768 128 = 11377501700041730192488672704 := by decide +kernel
-private theorem receipt_3_14_2339_1_part7 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 896 128 = 9904852072443592933899742656 := by decide +kernel
-private theorem receipt_3_14_2339_1_part8 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1024 128 = 8487217188906589389923364288 := by decide +kernel
-private theorem receipt_3_14_2339_1_part9 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1152 128 = 7125516985628501956183633344 := by decide +kernel
-private theorem receipt_3_14_2339_1_part10 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1280 128 = 5820665825322078398788939200 := by decide +kernel
-private theorem receipt_3_14_2339_1_part11 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1408 128 = 4573572506686972683901316544 := by decide +kernel
-private theorem receipt_3_14_2339_1_part12 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1536 128 = 3385140273881685807305797056 := by decide +kernel
-private theorem receipt_3_14_2339_1_part13 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1664 128 = 2256266825995506623979761088 := by decide +kernel
-private theorem receipt_3_14_2339_1_part14 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1792 128 = 1187844326520452677662289344 := by decide +kernel
-private theorem receipt_3_14_2339_1_part15 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1920 88 = 228712903995828157818764148 := by decide +kernel
-private theorem receipt_3_14_2339_1_join0 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 0 256 = 40849869912405164991421340544 :=
-  phaseBlock_append receipt_3_14_2339_1_part0 receipt_3_14_2339_1_part1 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join1 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 256 256 = 33915909208723913407552412544 :=
-  phaseBlock_append receipt_3_14_2339_1_part2 receipt_3_14_2339_1_part3 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join2 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 0 512 = 74765779121129078398973753088 :=
-  phaseBlock_append receipt_3_14_2339_1_join0 receipt_3_14_2339_1_join1 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join3 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 512 256 = 27388378070919701456994163584 :=
-  phaseBlock_append receipt_3_14_2339_1_part4 receipt_3_14_2339_1_part5 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join4 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 768 256 = 21282353772485323126388415360 :=
-  phaseBlock_append receipt_3_14_2339_1_part6 receipt_3_14_2339_1_part7 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join5 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 512 512 = 48670731843405024583382578944 :=
-  phaseBlock_append receipt_3_14_2339_1_join3 receipt_3_14_2339_1_join4 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join6 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 0 1024 = 123436510964534102982356332032 :=
-  phaseBlock_append receipt_3_14_2339_1_join2 receipt_3_14_2339_1_join5 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join7 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1024 256 = 15612734174535091346106997632 :=
-  phaseBlock_append receipt_3_14_2339_1_part8 receipt_3_14_2339_1_part9 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join8 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1280 256 = 10394238332009051082690255744 :=
-  phaseBlock_append receipt_3_14_2339_1_part10 receipt_3_14_2339_1_part11 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join9 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1024 512 = 26006972506544142428797253376 :=
-  phaseBlock_append receipt_3_14_2339_1_join7 receipt_3_14_2339_1_join8 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join10 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1536 256 = 5641407099877192431285558144 :=
-  phaseBlock_append receipt_3_14_2339_1_part12 receipt_3_14_2339_1_part13 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join11 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1792 216 = 1416557230516280835481053492 :=
-  phaseBlock_append receipt_3_14_2339_1_part14 receipt_3_14_2339_1_part15 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join12 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1536 472 = 7057964330393473266766611636 :=
-  phaseBlock_append receipt_3_14_2339_1_join10 receipt_3_14_2339_1_join11 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join13 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 1024 984 = 33064936836937615695563865012 :=
-  phaseBlock_append receipt_3_14_2339_1_join9 receipt_3_14_2339_1_join12 rfl rfl rfl
-private theorem receipt_3_14_2339_1_join14 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2339 73 1 1 1 1) 0 2008 = 156501447801471718677920197044 :=
-  phaseBlock_append receipt_3_14_2339_1_join6 receipt_3_14_2339_1_join13 rfl rfl rfl
+private theorem receipt_3_14_2359_1_part0 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 0 128 = 21374523922617186521617708704 := by decide +kernel
+private theorem receipt_3_14_2359_1_part1 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 128 128 = 19586381846825224630355797664 := by decide +kernel
+private theorem receipt_3_14_2359_1_part2 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 256 128 = 17847786267176417854535145120 := by decide +kernel
+private theorem receipt_3_14_2359_1_part3 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 384 128 = 16159691264725500178418271904 := by decide +kernel
+private theorem receipt_3_14_2359_1_part4 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 512 128 = 14523045293529471578046625440 := by decide +kernel
+private theorem receipt_3_14_2359_1_part5 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 640 128 = 12938791190101946664765515424 := by decide +kernel
+private theorem receipt_3_14_2359_1_part6 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 768 128 = 11407866182867503328749049504 := by decide +kernel
+private theorem receipt_3_14_2359_1_part7 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 896 128 = 9931201901616031382525068960 := by decide +kernel
+private theorem receipt_3_14_2359_1_part8 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1024 128 = 8509724386957081204500084384 := by decide +kernel
+private theorem receipt_3_14_2359_1_part9 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1152 128 = 7144354099774212382484211360 := by decide +kernel
+private theorem receipt_3_14_2359_1_part10 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1280 128 = 5836005930679342357216106144 := by decide +kernel
+private theorem receipt_3_14_2359_1_part11 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1408 128 = 4585589209467095065887901344 := by decide +kernel
+private theorem receipt_3_14_2359_1_part12 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1536 128 = 3394007714569149585670141600 := by decide +kernel
+private theorem receipt_3_14_2359_1_part13 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1664 128 = 2262159682508588777236719264 := by decide +kernel
+private theorem receipt_3_14_2359_1_part14 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1792 128 = 1190937817354247928289810080 := by decide +kernel
+private theorem receipt_3_14_2359_1_part15 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1920 88 = 229307141392722555301681542 := by decide +kernel
+private theorem receipt_3_14_2359_1_join0 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 0 256 = 40960905769442411151973506368 :=
+  phaseBlock_append receipt_3_14_2359_1_part0 receipt_3_14_2359_1_part1 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join1 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 256 256 = 34007477531901918032953417024 :=
+  phaseBlock_append receipt_3_14_2359_1_part2 receipt_3_14_2359_1_part3 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join2 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 0 512 = 74968383301344329184926923392 :=
+  phaseBlock_append receipt_3_14_2359_1_join0 receipt_3_14_2359_1_join1 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join3 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 512 256 = 27461836483631418242812140864 :=
+  phaseBlock_append receipt_3_14_2359_1_part4 receipt_3_14_2359_1_part5 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join4 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 768 256 = 21339068084483534711274118464 :=
+  phaseBlock_append receipt_3_14_2359_1_part6 receipt_3_14_2359_1_part7 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join5 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 512 512 = 48800904568114952954086259328 :=
+  phaseBlock_append receipt_3_14_2359_1_join3 receipt_3_14_2359_1_join4 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join6 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 0 1024 = 123769287869459282139013182720 :=
+  phaseBlock_append receipt_3_14_2359_1_join2 receipt_3_14_2359_1_join5 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join7 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1024 256 = 15654078486731293586984295744 :=
+  phaseBlock_append receipt_3_14_2359_1_part8 receipt_3_14_2359_1_part9 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join8 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1280 256 = 10421595140146437423104007488 :=
+  phaseBlock_append receipt_3_14_2359_1_part10 receipt_3_14_2359_1_part11 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join9 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1024 512 = 26075673626877731010088303232 :=
+  phaseBlock_append receipt_3_14_2359_1_join7 receipt_3_14_2359_1_join8 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join10 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1536 256 = 5656167397077738362906860864 :=
+  phaseBlock_append receipt_3_14_2359_1_part12 receipt_3_14_2359_1_part13 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join11 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1792 216 = 1420244958746970483591491622 :=
+  phaseBlock_append receipt_3_14_2359_1_part14 receipt_3_14_2359_1_part15 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join12 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1536 472 = 7076412355824708846498352486 :=
+  phaseBlock_append receipt_3_14_2359_1_join10 receipt_3_14_2359_1_join11 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join13 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 1024 984 = 33152085982702439856586655718 :=
+  phaseBlock_append receipt_3_14_2359_1_join9 receipt_3_14_2359_1_join12 rfl rfl rfl
+private theorem receipt_3_14_2359_1_join14 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2359 73 1 1 1 1) 0 2008 = 156921373852161721995599838438 :=
+  phaseBlock_append receipt_3_14_2359_1_join6 receipt_3_14_2359_1_join13 rfl rfl rfl
 
-private theorem receipt_3_14_2339_1 : fastPhase (bank 3 14).shape 179827 2339 73 1 1 1 1 = 156501447801471718677920197044 :=
-  phase_of_block (n := 2008) (by decide +kernel) receipt_3_14_2339_1_join14
+private theorem receipt_3_14_2359_1 : fastPhase (bank 3 14).shape 179818 2359 73 1 1 1 1 = 156921373852161721995599838438 :=
+  phase_of_block (n := 2008) (by decide +kernel) receipt_3_14_2359_1_join14
 
-private theorem receipt_3_14_2340_0_part0 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 0 128 = 21330615121303536646084893984 := by decide +kernel
-private theorem receipt_3_14_2340_0_part1 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 128 128 = 19547116260677202129587186976 := by decide +kernel
-private theorem receipt_3_14_2340_0_part2 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 256 128 = 17812989439633496396608126240 := by decide +kernel
-private theorem receipt_3_14_2340_0_part3 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 384 128 = 16129188165599072026777341216 := by decide +kernel
-private theorem receipt_3_14_2340_0_part4 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 512 128 = 14496660316163320054986988832 := by decide +kernel
-private theorem receipt_3_14_2340_0_part5 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 640 128 = 12916348148549431191658884384 := by decide +kernel
-private theorem receipt_3_14_2340_0_part6 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 768 128 = 11389188309085457043011632416 := by decide +kernel
-private theorem receipt_3_14_2340_0_part7 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 896 128 = 9916111842675371331327757600 := by decide +kernel
-private theorem receipt_3_14_2340_0_part8 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1024 128 = 8498044202270131115220835616 := by decide +kernel
-private theorem receipt_3_14_2340_0_part9 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1152 128 = 7135905258338738009902624032 := by decide +kernel
-private theorem receipt_3_14_2340_0_part10 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1280 128 = 5830609308339299407450193184 := by decide +kernel
-private theorem receipt_3_14_2340_0_part11 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1408 128 = 4583065086190089697073057056 := by decide +kernel
-private theorem receipt_3_14_2340_0_part12 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1536 128 = 3394175771740611485380304160 := by decide +kernel
-private theorem receipt_3_14_2340_0_part13 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1664 128 = 2264839000242656816647728416 := by decide +kernel
-private theorem receipt_3_14_2340_0_part14 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1792 128 = 1195946871821368393084960032 := by decide +kernel
-private theorem receipt_3_14_2340_0_part15 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1920 88 = 234007675678387778476557006 := by decide +kernel
-private theorem receipt_3_14_2340_0_join0 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 0 256 = 40877731381980738775672080960 :=
-  phaseBlock_append receipt_3_14_2340_0_part0 receipt_3_14_2340_0_part1 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join1 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 256 256 = 33942177605232568423385467456 :=
-  phaseBlock_append receipt_3_14_2340_0_part2 receipt_3_14_2340_0_part3 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join2 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 0 512 = 74819908987213307199057548416 :=
-  phaseBlock_append receipt_3_14_2340_0_join0 receipt_3_14_2340_0_join1 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join3 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 512 256 = 27413008464712751246645873216 :=
-  phaseBlock_append receipt_3_14_2340_0_part4 receipt_3_14_2340_0_part5 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join4 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 768 256 = 21305300151760828374339390016 :=
-  phaseBlock_append receipt_3_14_2340_0_part6 receipt_3_14_2340_0_part7 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join5 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 512 512 = 48718308616473579620985263232 :=
-  phaseBlock_append receipt_3_14_2340_0_join3 receipt_3_14_2340_0_join4 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join6 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 0 1024 = 123538217603686886820042811648 :=
-  phaseBlock_append receipt_3_14_2340_0_join2 receipt_3_14_2340_0_join5 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join7 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1024 256 = 15633949460608869125123459648 :=
-  phaseBlock_append receipt_3_14_2340_0_part8 receipt_3_14_2340_0_part9 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join8 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1280 256 = 10413674394529389104523250240 :=
-  phaseBlock_append receipt_3_14_2340_0_part10 receipt_3_14_2340_0_part11 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join9 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1024 512 = 26047623855138258229646709888 :=
-  phaseBlock_append receipt_3_14_2340_0_join7 receipt_3_14_2340_0_join8 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join10 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1536 256 = 5659014771983268302028032576 :=
-  phaseBlock_append receipt_3_14_2340_0_part12 receipt_3_14_2340_0_part13 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join11 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1792 216 = 1429954547499756171561517038 :=
-  phaseBlock_append receipt_3_14_2340_0_part14 receipt_3_14_2340_0_part15 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join12 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1536 472 = 7088969319483024473589549614 :=
-  phaseBlock_append receipt_3_14_2340_0_join10 receipt_3_14_2340_0_join11 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join13 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 1024 984 = 33136593174621282703236259502 :=
-  phaseBlock_append receipt_3_14_2340_0_join9 receipt_3_14_2340_0_join12 rfl rfl rfl
-private theorem receipt_3_14_2340_0_join14 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 0) 0 2008 = 156674810778308169523279071150 :=
-  phaseBlock_append receipt_3_14_2340_0_join6 receipt_3_14_2340_0_join13 rfl rfl rfl
+private theorem receipt_3_14_2360_0_part0 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 0 128 = 21388689455474147333927291136 := by decide +kernel
+private theorem receipt_3_14_2360_0_part1 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 128 128 = 19600153437549279151211915520 := by decide +kernel
+private theorem receipt_3_14_2360_0_part2 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 256 128 = 17861158398018678166074951936 := by decide +kernel
+private theorem receipt_3_14_2360_0_part3 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 384 128 = 16172658349048962923572521216 := by decide +kernel
+private theorem receipt_3_14_2360_0_part4 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 512 128 = 14535601676289271651571124480 := by decide +kernel
+private theorem receipt_3_14_2360_0_part5 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 640 128 = 12950931148324731294970358016 := by decide +kernel
+private theorem receipt_3_14_2360_0_part6 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 768 128 = 11419583926129926549925628160 := by decide +kernel
+private theorem receipt_3_14_2360_0_part7 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 896 128 = 9942491572522368898070866176 := by decide +kernel
+private theorem receipt_3_14_2360_0_part8 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1024 128 = 8520580061615965640741243136 := by decide +kernel
+private theorem receipt_3_14_2360_0_part9 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1152 128 = 7154769788274488933195884800 := by decide +kernel
+private theorem receipt_3_14_2360_0_part10 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1280 128 = 5845975577565044818840586496 := by decide +kernel
+private theorem receipt_3_14_2360_0_part11 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1408 128 = 4595106694211542263450528000 := by decide +kernel
+private theorem receipt_3_14_2360_0_part12 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1536 128 = 3403066852048162189392988416 := by decide +kernel
+private theorem receipt_3_14_2360_0_part13 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1664 128 = 2270754223472826509850061056 := by decide +kernel
+private theorem receipt_3_14_2360_0_part14 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1792 128 = 1199061448900667163041368320 := by decide +kernel
+private theorem receipt_3_14_2360_0_part15 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1920 88 = 234615663025438681472336928 := by decide +kernel
+private theorem receipt_3_14_2360_0_join0 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 0 256 = 40988842893023426485139206656 :=
+  phaseBlock_append receipt_3_14_2360_0_part0 receipt_3_14_2360_0_part1 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join1 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 256 256 = 34033816747067641089647473152 :=
+  phaseBlock_append receipt_3_14_2360_0_part2 receipt_3_14_2360_0_part3 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join2 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 0 512 = 75022659640091067574786679808 :=
+  phaseBlock_append receipt_3_14_2360_0_join0 receipt_3_14_2360_0_join1 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join3 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 512 256 = 27486532824614002946541482496 :=
+  phaseBlock_append receipt_3_14_2360_0_part4 receipt_3_14_2360_0_part5 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join4 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 768 256 = 21362075498652295447996494336 :=
+  phaseBlock_append receipt_3_14_2360_0_part6 receipt_3_14_2360_0_part7 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join5 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 512 512 = 48848608323266298394537976832 :=
+  phaseBlock_append receipt_3_14_2360_0_join3 receipt_3_14_2360_0_join4 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join6 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 0 1024 = 123871267963357365969324656640 :=
+  phaseBlock_append receipt_3_14_2360_0_join2 receipt_3_14_2360_0_join5 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join7 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1024 256 = 15675349849890454573937127936 :=
+  phaseBlock_append receipt_3_14_2360_0_part8 receipt_3_14_2360_0_part9 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join8 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1280 256 = 10441082271776587082291114496 :=
+  phaseBlock_append receipt_3_14_2360_0_part10 receipt_3_14_2360_0_part11 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join9 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1024 512 = 26116432121667041656228242432 :=
+  phaseBlock_append receipt_3_14_2360_0_join7 receipt_3_14_2360_0_join8 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join10 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1536 256 = 5673821075520988699243049472 :=
+  phaseBlock_append receipt_3_14_2360_0_part12 receipt_3_14_2360_0_part13 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join11 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1792 216 = 1433677111926105844513705248 :=
+  phaseBlock_append receipt_3_14_2360_0_part14 receipt_3_14_2360_0_part15 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join12 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1536 472 = 7107498187447094543756754720 :=
+  phaseBlock_append receipt_3_14_2360_0_join10 receipt_3_14_2360_0_join11 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join13 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 1024 984 = 33223930309114136199984997152 :=
+  phaseBlock_append receipt_3_14_2360_0_join9 receipt_3_14_2360_0_join12 rfl rfl rfl
+private theorem receipt_3_14_2360_0_join14 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 0) 0 2008 = 157095198272471502169309653792 :=
+  phaseBlock_append receipt_3_14_2360_0_join6 receipt_3_14_2360_0_join13 rfl rfl rfl
 
-private theorem receipt_3_14_2340_0 : fastPhase (bank 3 14).shape 179827 2340 73 1 1 1 0 = 156674810778308169523279071150 :=
-  phase_of_block (n := 2008) (by decide +kernel) receipt_3_14_2340_0_join14
+private theorem receipt_3_14_2360_0 : fastPhase (bank 3 14).shape 179818 2360 73 1 1 1 0 = 157095198272471502169309653792 :=
+  phase_of_block (n := 2008) (by decide +kernel) receipt_3_14_2360_0_join14
 
-private theorem receipt_3_14_2340_1_part0 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 0 128 = 21316678093137976820957375520 := by decide +kernel
-private theorem receipt_3_14_2340_1_part1 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 128 128 = 19533544707620977677961575456 := by decide +kernel
-private theorem receipt_3_14_2340_1_part2 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 256 128 = 17799791452223728013241912352 := by decide +kernel
-private theorem receipt_3_14_2340_1_part3 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 384 128 = 16116371788074289369050012704 := by decide +kernel
-private theorem receipt_3_14_2340_1_part4 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 512 128 = 14484233546540348873043487776 := by decide +kernel
-private theorem receipt_3_14_2340_1_part5 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 640 128 = 12904318938700280458553064480 := by decide +kernel
-private theorem receipt_3_14_2340_1_part6 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 768 128 = 11377564564814206084849716256 := by decide +kernel
-private theorem receipt_3_14_2340_1_part7 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 896 128 = 9904901423795056957411793952 := by decide +kernel
-private theorem receipt_3_14_2340_1_part8 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1024 128 = 8487254922679634748192156704 := by decide +kernel
-private theorem receipt_3_14_2340_1_part9 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1152 128 = 7125544886099672815885302816 := by decide +kernel
-private theorem receipt_3_14_2340_1_part10 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1280 128 = 5820685565752897426194500640 := by decide +kernel
-private theorem receipt_3_14_2340_1_part11 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1408 128 = 4573585649874088972098919456 := by decide +kernel
-private theorem receipt_3_14_2340_1_part12 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1536 128 = 3385148272706143194120760352 := by decide +kernel
-private theorem receipt_3_14_2340_1_part13 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1664 128 = 2256271023971132400592387104 := by decide +kernel
-private theorem receipt_3_14_2340_1_part14 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1792 128 = 1187845958341366687923457056 := by decide +kernel
-private theorem receipt_3_14_2340_1_part15 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1920 88 = 228713127030242612801501502 := by decide +kernel
-private theorem receipt_3_14_2340_1_join0 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 0 256 = 40850222800758954498918950976 :=
-  phaseBlock_append receipt_3_14_2340_1_part0 receipt_3_14_2340_1_part1 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join1 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 256 256 = 33916163240298017382291925056 :=
-  phaseBlock_append receipt_3_14_2340_1_part2 receipt_3_14_2340_1_part3 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join2 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 0 512 = 74766386041056971881210876032 :=
-  phaseBlock_append receipt_3_14_2340_1_join0 receipt_3_14_2340_1_join1 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join3 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 512 256 = 27388552485240629331596552256 :=
-  phaseBlock_append receipt_3_14_2340_1_part4 receipt_3_14_2340_1_part5 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join4 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 768 256 = 21282465988609263042261510208 :=
-  phaseBlock_append receipt_3_14_2340_1_part6 receipt_3_14_2340_1_part7 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join5 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 512 512 = 48671018473849892373858062464 :=
-  phaseBlock_append receipt_3_14_2340_1_join3 receipt_3_14_2340_1_join4 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join6 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 0 1024 = 123437404514906864255068938496 :=
-  phaseBlock_append receipt_3_14_2340_1_join2 receipt_3_14_2340_1_join5 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join7 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1024 256 = 15612799808779307564077459520 :=
-  phaseBlock_append receipt_3_14_2340_1_part8 receipt_3_14_2340_1_part9 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join8 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1280 256 = 10394271215626986398293420096 :=
-  phaseBlock_append receipt_3_14_2340_1_part10 receipt_3_14_2340_1_part11 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join9 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1024 512 = 26007071024406293962370879616 :=
-  phaseBlock_append receipt_3_14_2340_1_join7 receipt_3_14_2340_1_join8 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join10 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1536 256 = 5641419296677275594713147456 :=
-  phaseBlock_append receipt_3_14_2340_1_part12 receipt_3_14_2340_1_part13 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join11 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1792 216 = 1416559085371609300724958558 :=
-  phaseBlock_append receipt_3_14_2340_1_part14 receipt_3_14_2340_1_part15 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join12 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1536 472 = 7057978382048884895438106014 :=
-  phaseBlock_append receipt_3_14_2340_1_join10 receipt_3_14_2340_1_join11 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join13 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 1024 984 = 33065049406455178857808985630 :=
-  phaseBlock_append receipt_3_14_2340_1_join9 receipt_3_14_2340_1_join12 rfl rfl rfl
-private theorem receipt_3_14_2340_1_join14 :
-    phaseBlock (fastLayer (bank 3 14).shape 179827 2340 73 1 1 1 1) 0 2008 = 156502453921362043112877924126 :=
-  phaseBlock_append receipt_3_14_2340_1_join6 receipt_3_14_2340_1_join13 rfl rfl rfl
+private theorem receipt_3_14_2360_1_part0 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 0 128 = 21374714502583553457613967616 := by decide +kernel
+private theorem receipt_3_14_2360_1_part1 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 128 128 = 19586545092361157439943086336 := by decide +kernel
+private theorem receipt_3_14_2360_1_part2 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 256 128 = 17847924761898453824661623040 := by decide +kernel
+private theorem receipt_3_14_2360_1_part3 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 384 128 = 16159807477066998314285404416 := by decide +kernel
+private theorem receipt_3_14_2360_1_part4 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 512 128 = 14523141577297640724342247680 := by decide +kernel
+private theorem receipt_3_14_2360_1_part5 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 640 128 = 12938869785033994017594675456 := by decide +kernel
+private theorem receipt_3_14_2360_1_part6 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 768 128 = 11407929215185903338262630656 := by decide +kernel
+private theorem receipt_3_14_2360_1_part7 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 896 128 = 9931251384582915046246191360 := by decide +kernel
+private theorem receipt_3_14_2360_1_part8 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1024 128 = 8509762221427745751348285696 := by decide +kernel
+private theorem receipt_3_14_2360_1_part9 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1152 128 = 7144382074749751347497406720 := by decide +kernel
+private theorem receipt_3_14_2360_1_part10 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1280 128 = 5836025723858396046970327296 := by decide +kernel
+private theorem receipt_3_14_2360_1_part11 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1408 128 = 4585602387796721414614814976 := by decide +kernel
+private theorem receipt_3_14_2360_1_part12 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1536 128 = 3394015734794815402072346880 := by decide +kernel
+private theorem receipt_3_14_2360_1_part13 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1664 128 = 2262163891723281382000824576 := by decide +kernel
+private theorem receipt_3_14_2360_1_part14 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1792 128 = 1190939453546707182297288960 := by decide +kernel
+private theorem receipt_3_14_2360_1_part15 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1920 88 = 229307365024949799287119728 := by decide +kernel
+private theorem receipt_3_14_2360_1_join0 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 0 256 = 40961259594944710897557053952 :=
+  phaseBlock_append receipt_3_14_2360_1_part0 receipt_3_14_2360_1_part1 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join1 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 256 256 = 34007732238965452138947027456 :=
+  phaseBlock_append receipt_3_14_2360_1_part2 receipt_3_14_2360_1_part3 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join2 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 0 512 = 74968991833910163036504081408 :=
+  phaseBlock_append receipt_3_14_2360_1_join0 receipt_3_14_2360_1_join1 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join3 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 512 256 = 27462011362331634741936923136 :=
+  phaseBlock_append receipt_3_14_2360_1_part4 receipt_3_14_2360_1_part5 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join4 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 768 256 = 21339180599768818384508822016 :=
+  phaseBlock_append receipt_3_14_2360_1_part6 receipt_3_14_2360_1_part7 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join5 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 512 512 = 48801191962100453126445745152 :=
+  phaseBlock_append receipt_3_14_2360_1_join3 receipt_3_14_2360_1_join4 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join6 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 0 1024 = 123770183796010616162949826560 :=
+  phaseBlock_append receipt_3_14_2360_1_join2 receipt_3_14_2360_1_join5 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join7 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1024 256 = 15654144296177497098845692416 :=
+  phaseBlock_append receipt_3_14_2360_1_part8 receipt_3_14_2360_1_part9 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join8 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1280 256 = 10421628111655117461585142272 :=
+  phaseBlock_append receipt_3_14_2360_1_part10 receipt_3_14_2360_1_part11 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join9 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1024 512 = 26075772407832614560430834688 :=
+  phaseBlock_append receipt_3_14_2360_1_join7 receipt_3_14_2360_1_join8 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join10 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1536 256 = 5656179626518096784073171456 :=
+  phaseBlock_append receipt_3_14_2360_1_part12 receipt_3_14_2360_1_part13 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join11 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1792 216 = 1420246818571656981584408688 :=
+  phaseBlock_append receipt_3_14_2360_1_part14 receipt_3_14_2360_1_part15 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join12 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1536 472 = 7076426445089753765657580144 :=
+  phaseBlock_append receipt_3_14_2360_1_join10 receipt_3_14_2360_1_join11 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join13 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 1024 984 = 33152198852922368326088414832 :=
+  phaseBlock_append receipt_3_14_2360_1_join9 receipt_3_14_2360_1_join12 rfl rfl rfl
+private theorem receipt_3_14_2360_1_join14 :
+    phaseBlock (fastLayer (bank 3 14).shape 179818 2360 73 1 1 1 1) 0 2008 = 156922382648932984489038241392 :=
+  phaseBlock_append receipt_3_14_2360_1_join6 receipt_3_14_2360_1_join13 rfl rfl rfl
 
-private theorem receipt_3_14_2340_1 : fastPhase (bank 3 14).shape 179827 2340 73 1 1 1 1 = 156502453921362043112877924126 :=
-  phase_of_block (n := 2008) (by decide +kernel) receipt_3_14_2340_1_join14
+private theorem receipt_3_14_2360_1 : fastPhase (bank 3 14).shape 179818 2360 73 1 1 1 1 = 156922382648932984489038241392 :=
+  phase_of_block (n := 2008) (by decide +kernel) receipt_3_14_2360_1_join14
 
 theorem receipt_3_14 : Checked (bank 3 14) 73 1 1 := by
   refine checked_from_values (bank 3 14) 73 1 1
     (P3_7_1.checked (bank 3 14) rfl rfl rfl rfl rfl
       (by decide) (by decide) (by decide +kernel) (by decide) moment_9203_2007)
     (by decide) (by decide) (by unfold WidthGuard; decide +kernel)
-    (by decide) (by decide) receipt_3_14_2339_0 receipt_3_14_2339_1 receipt_3_14_2340_0 receipt_3_14_2340_1 (by decide +kernel) (by decide +kernel)
+    (by decide) (by decide) receipt_3_14_2359_0 receipt_3_14_2359_1 receipt_3_14_2360_0 receipt_3_14_2360_1 (by decide +kernel) (by decide +kernel)
 
 def group5_stage (i : Fin 2) : Fin 17 :=
   ⟨13+i.val, by have := i.isLt; omega⟩
@@ -3666,7 +3666,7 @@ theorem group5_checked (rect : Fin 4) (i : Fin 2) :
     · exact receipt_3_14
 
 theorem group5_avoids {h : ℕ} {D : K1_14_1.PoleData h} (Crt : K1_14_1.CRTLift D)
-    (word : K1.I → K1_14.L) (lo : 2339 ≤ h) (hi : h ≤ 33561) (rect : Fin 4)
+    (word : K1.I → K1_14.L) (lo : 2359 ≤ h) (hi : h ≤ 33579) (rect : Fin 4)
     (i : Fin 2) {G : K1_14.Jet} (irr : Irreducible G) (seeded : K1_14_2.UsesSeed G)
     (slope : 1≤G.natDegree) (hs : seed rect≤K1_14_2_2_2_1.seedDegree G)
     (hj : G.natDegree+excess rect≤K1_14_2_2_2_1.jetDegree G) :

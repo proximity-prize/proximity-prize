@@ -3275,7 +3275,7 @@ def moment (B c a d e : ℕ) : ℕ :=
 private def raw (b : Bank) : ℕ := moment b.box.b (rawBase b) 1 131071 0
 def extra (B : ℕ) : ℕ := moment B 0 0 2300 1
 def credit (B : ℕ) : ℕ := jetSum B fun q _ _ => 2300 + (B - q)
-private theorem grade_sum (B : ℕ) (f : ℕ → ℕ) :
+theorem grade_sum (B : ℕ) (f : ℕ → ℕ) :
     jetSum B (fun q _ _ => f q) =
       ∑ q ∈ range (B + 1), gradeCount ⟨B, 2300, 1150⟩ q * f q := by
   simp only [jetSum, gradeCount, Nat.reduceDiv, min_self, sum_mul, sum_const,
@@ -4703,10 +4703,10 @@ noncomputable section
 open K1_13 K1_13_4 Polynomial
 open scoped Polynomial
 set_option maxRecDepth 4000
-private abbrev Fiber := FractionRing Lower
-private abbrev toFiber : Lower →+* Fiber := algebraMap _ _
-private abbrev embedConstant : Geom →+* Lower := MvPolynomial.C.comp inclConst
-private theorem toFiber_injective : Function.Injective toFiber :=
+abbrev Fiber := FractionRing Lower
+abbrev toFiber : Lower →+* Fiber := algebraMap _ _
+abbrev embedConstant : Geom →+* Lower := MvPolynomial.C.comp inclConst
+theorem toFiber_injective : Function.Injective toFiber :=
   IsFractionRing.injective Lower Fiber
 theorem asSeedPoly_pad (F : GenericRow) (a : (Polynomial Geom)) :
     asSeedPoly (pad F a) = asSeedPoly F * a.map embedConstant := by
@@ -4723,7 +4723,7 @@ theorem asSeedPoly_pad (F : GenericRow) (a : (Polynomial Geom)) :
   congr 1
   change l (a.map inclConst) = _
   rw [h, coe_mapRingHom, map_map]
-private theorem coprime_in_fiber {f g : (Polynomial Lower)} (hf : f ≠ 0)
+theorem coprime_in_fiber {f g : (Polynomial Lower)} (hf : f ≠ 0)
     (hfg : IsRelPrime f g) : IsCoprime (f.map toFiber) (g.map toFiber) := by
   classical
   let : NormalizedGCDMonoid Lower := Nonempty.some inferInstance
@@ -4755,7 +4755,7 @@ private theorem coprime_in_fiber {f g : (Polynomial Lower)} (hf : f ≠ 0)
     rw [hdeg, ← D.natDegree_primPart, natDegree_eq_zero_of_isUnit hu])
   have hc : d.coeff 0 ≠ 0 := fun hz => hd (he.trans (by simp [hz]))
   exact he.symm ▸ isUnit_C.mpr hc.isUnit
-private theorem exists_constant_nonroot (f : (Polynomial Fiber)) (hf : f ≠ 0) (avoid : Finset Fiber) :
+theorem exists_constant_nonroot (f : (Polynomial Fiber)) (hf : f ≠ 0) (avoid : Finset Fiber) :
     ∃ a : Geom, let x := toFiber (embedConstant a); f.eval x ≠ 0 ∧ x ∉ avoid := by
   classical
   let emb : Geom → Fiber := fun a => toFiber (embedConstant a)
@@ -4768,11 +4768,11 @@ private theorem exists_constant_nonroot (f : (Polynomial Fiber)) (hf : f ≠ 0) 
   change f.eval (emb a) ≠ 0 ∧ emb a ∉ avoid
   simp only [Finset.mem_union, Multiset.mem_toFinset, mem_roots hf, not_or] at ha
   exact ⟨ha.1, ha.2⟩
-private theorem coprime_linear (f : (Polynomial Fiber)) {a : Fiber} (h : f.eval a ≠ 0) :
+theorem coprime_linear (f : (Polynomial Fiber)) {a : Fiber} (h : f.eval a ≠ 0) :
     IsCoprime ((Polynomial.X : (Polynomial Fiber)) - C a) f :=
   ((monic_X_sub_C a).irreducible_of_degree_eq_one (degree_X_sub_C a)).coprime_iff_not_dvd.mpr
     (fun hd => h (dvd_iff_isRoot.mp hd))
-private theorem asSeedPoly_ne_zero {F : GenericRow} (hF : F ≠ 0) : asSeedPoly F ≠ 0 :=
+theorem asSeedPoly_ne_zero {F : GenericRow} (hF : F ≠ 0) : asSeedPoly F ≠ 0 :=
   (map_ne_zero_iff (MvPolynomial.optionEquivLeft GenericX (Fin 3))
     (MvPolynomial.optionEquivLeft GenericX (Fin 3)).injective).mpr hF
 private theorem pad_degree (F : GenericRow) (hF : F ≠ 0)
@@ -4833,7 +4833,7 @@ noncomputable section
 open K1_13 K1_13_4 Polynomial
 open scoped Polynomial BigOperators Pointwise
 set_option maxRecDepth 4000
-private abbrev deg {σ : Type*} (w : σ → ℕ) (P : MvPolynomial σ GenericX) : ℕ :=
+abbrev deg {σ : Type*} (w : σ → ℕ) (P : MvPolynomial σ GenericX) : ℕ :=
   P.weightedTotalDegree w
 private theorem deg_sum_le {σ ι : Type*} (w : σ → ℕ) {s : Finset ι}
     {p : ι → MvPolynomial σ GenericX} {B : ℕ} (h : ∀ i ∈ s, deg w (p i) ≤ B) :
@@ -4868,7 +4868,7 @@ private theorem deg_coeff (w : Fin 3 → ℕ) (F : GenericRow) (i : ℕ) :
   rw [Finsupp.weight_apply, Finsupp.sum_option_index_smul] at h
   simpa only [Option.elim_none, Option.elim_some, smul_zero, zero_add, Finsupp.some_optionElim,
     Finsupp.weight_apply] using h
-private theorem deg_pad_coeff (w : Fin 3 → ℕ) (F : GenericRow) (a : (Polynomial Geom)) (i : ℕ) :
+theorem deg_pad_coeff (w : Fin 3 → ℕ) (F : GenericRow) (a : (Polynomial Geom)) (i : ℕ) :
     deg w ((asSeedPoly (pad F a)).coeff i) ≤ deg (fun o => o.elim 0 w) F := by
   rw [asSeedPoly_pad, Polynomial.coeff_mul]
   apply deg_sum_le
@@ -4879,7 +4879,7 @@ private theorem deg_pad_coeff (w : Fin 3 → ℕ) (F : GenericRow) (a : (Polynom
     deg w (MvPolynomial.C (inclConst (a.coeff j.2))) ≤ _
   rw [deg_C, add_zero]
   exact deg_coeff w F j.1
-private theorem deg_resultant (w : Fin 3 → ℕ) (f g : (Polynomial Lower)) (m n B D : ℕ)
+theorem deg_resultant (w : Fin 3 → ℕ) (f g : (Polynomial Lower)) (m n B D : ℕ)
     (hf : ∀ i, deg w (f.coeff i) ≤ B) (hg : ∀ i, deg w (g.coeff i) ≤ D) :
     deg w (f.resultant g m n) ≤ m * D + n * B := by
   classical

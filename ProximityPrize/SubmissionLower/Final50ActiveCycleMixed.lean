@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Final50ActiveCycleChart
+import ProximityPrize.SubmissionLower.Shared50BentCaps
 import ProximityPrize.SubmissionLower.Final50ActiveCyclePrice
 
 set_option autoImplicit false

@@ -1,4 +1,59 @@
-import ProximityPrize.SubmissionLower.HighCore82258JointRankCharge
+import ProximityPrize.SubmissionLower.HighCore82258PrefixProcess
+
+-- merged module HighCore82258JointRank
+section Merged_HighCore82258JointRank
+
+set_option Elab.async false
+
+namespace HighCore82258JointRank
+
+
+open Finset
+open K1_14_2 (Ambient)
+open P1_7_4 (Mass dotQ massQ weightedBill bill_bound)
+
+
+section
+
+open HighCore82258 (Band AnchorModel AnchoredFamily  Source)
+open HighCore82258_3 (Process PairedMass laterCount stopIndex rankMass history)
+open K1_14_2_2 (dual mass_mono)
+open scoped Classical
+
+
+end
+
+
+end HighCore82258JointRank
+
+end Merged_HighCore82258JointRank
+
+-- merged module HighCore82258JointRankCharge
+section Merged_HighCore82258JointRankCharge
+
+set_option Elab.async false
+
+namespace HighCore82258JointRank
+
+open Polynomial Finset
+open HighCore82268JointRank ( fixed_fee_linear)
+open HighCore82258 (Band AnchorModel AnchoredFamily  K p degreeAt finish gap blockLength agreement)
+open HighCore82258_3 (Process rankMass fixedFee OnParent )
+open P1_7_4 (Mass massQ dotQ ODEGuard rank_equation)
+open K1_14_2_2 (mass ODECaps)
+open scoped Classical
+
+
+
+
+
+
+end HighCore82258JointRank
+
+end Merged_HighCore82258JointRankCharge
+
+-- merged module HighCore82258PrefixGeometry
+section Merged_HighCore82258PrefixGeometry
 
 set_option Elab.async false
 set_option autoImplicit true
@@ -505,3 +560,5 @@ private theorem persistent_regular {w T s d B J} (hw : FixedWord w T s d)
 end
 end HighCore82258_3_2
 end
+
+end Merged_HighCore82258PrefixGeometry
