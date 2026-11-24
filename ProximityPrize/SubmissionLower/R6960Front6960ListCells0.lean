@@ -11,8 +11,8 @@ namespace Front6960ListBank
 open CJ1 (Block total total_eq_sum entryZ)
 open CJ0 (Jet blockRows blockCols blockMatrix)
 open scoped BigOperators
-def source : CJ0.Source := ⟨57,78,24,10,CJ0.fullBox 78 24 10⟩
-def rowLo (q u h : ℕ) := u + 2*q + h + 1 - 81
+def source : CJ0.Source := ⟨58,79,24,10,CJ0.fullBox 79 24 10⟩
+def rowLo (q u h : ℕ) := u + 2*q + h + 1 - 82
 def rowHi (q u h : ℕ) := min (q + 1 - h) (u + 2*q + h + 1 - 24)
 def rowLen (q u h : ℕ) := rowHi q u h - rowLo q u h
 def colLo (u b : ℕ) := (25 - (u+b)) / 2
@@ -52,7 +52,7 @@ def VectorDots (q u : ℕ) (z : Block) (j : ℕ) : Prop :=
   ∀ i < outer (!z.bank.onRows) q,
     ∀ k < fiber (!z.bank.onRows) q u i, dot q u z j i k % (CJ0.p : ℤ) = 0
 private theorem row_bounds (q u c d h : ℕ)
-    (hr : (⟨c,d,h⟩ : Jet) ∈ blockRows 57 q ((u : ℤ)-24)) :
+    (hr : (⟨c,d,h⟩ : Jet) ∈ blockRows 58 q ((u : ℤ)-24)) :
     h < q+1 ∧ rowLo q u h ≤ d ∧ d < rowHi q u h ∧ q-(h+d) = c := by
   simp only [blockRows, Finset.mem_filter, Finset.mem_sigma, Finset.mem_range,
     Finset.mem_singleton, Jet.v, Jet.b, Jet.c, Jet.a, Nat.cast_add, Nat.cast_mul,
@@ -62,14 +62,14 @@ private theorem row_bounds (q u c d h : ℕ)
 private theorem col_bounds (q u c b a : ℕ)
     (hs : (⟨c,b,a⟩ : Jet) ∈ blockCols source q ((u : ℤ)-24)) :
     b < min q 24 + 1 ∧ colLo u b ≤ c ∧ c < colHi q b ∧ q-(b+c) = a := by
-  change (⟨c,b,a⟩ : Jet) ∈ (CJ0.fullBox 78 24 10).filter _ at hs
+  change (⟨c,b,a⟩ : Jet) ∈ (CJ0.fullBox 79 24 10).filter _ at hs
   rw [Finset.mem_filter, CJ0.mem_fullBox (by decide) (by decide)] at hs
   simp only [Jet.q, Jet.v, Jet.a, Jet.b, Jet.c, Nat.cast_add, Nat.cast_mul,
     Nat.cast_ofNat] at hs
   unfold colLo colHi
   omega
 private def rowIndex (q u : ℕ) :
-    ↥(blockRows 57 q ((u : ℤ)-24)) → Row q u
+    ↥(blockRows 58 q ((u : ℤ)-24)) → Row q u
   | ⟨⟨c,d,h⟩, hr⟩ =>
     let H := row_bounds q u c d h hr
     ⟨⟨h,H.1⟩, ⟨d-rowLo q u h, by
@@ -84,7 +84,7 @@ private def colIndex (q u : ℕ) :
       change c - colLo u b < colHi q b - colLo u b
       obtain ⟨_,hlo,hhi,_⟩ := H
       omega⟩⟩
-private theorem rowJet_index (q u : ℕ) (r : ↥(blockRows 57 q ((u : ℤ)-24))) :
+private theorem rowJet_index (q u : ℕ) (r : ↥(blockRows 58 q ((u : ℤ)-24))) :
     rowJet q u (rowIndex q u r) = r.val := by
   rcases r with ⟨⟨c,d,h⟩,hr⟩
   obtain ⟨_, hlo, _, hc⟩ := row_bounds q u c d h hr
@@ -262,7 +262,7 @@ private theorem bound_0 (u : ℕ) :
   unfold allowance_0
   exact (block_rank_le 0 _).trans (rank_le_nominal 0 _)
 
-theorem grade_0 : (∑ u ∈ Finset.range (81-0), (CJ0.blockMatrix source 0 ((u : ℤ)-24)).rank) ≤ 57 := by
+theorem grade_0 : (∑ u ∈ Finset.range (82-0), (CJ0.blockMatrix source 0 ((u : ℤ)-24)).rank) ≤ 58 := by
   refine (Finset.sum_le_sum fun u _ => bound_0 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_0)]
   decide +kernel
@@ -275,7 +275,7 @@ private theorem bound_1 (u : ℕ) :
   unfold allowance_1
   exact (block_rank_le 1 _).trans (rank_le_nominal 1 _)
 
-theorem grade_1 : (∑ u ∈ Finset.range (81-1), (CJ0.blockMatrix source 1 ((u : ℤ)-24)).rank) ≤ 168 := by
+theorem grade_1 : (∑ u ∈ Finset.range (82-1), (CJ0.blockMatrix source 1 ((u : ℤ)-24)).rank) ≤ 171 := by
   refine (Finset.sum_le_sum fun u _ => bound_1 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_1)]
   decide +kernel
@@ -288,7 +288,7 @@ private theorem bound_2 (u : ℕ) :
   unfold allowance_2
   exact (block_rank_le 2 _).trans (rank_le_nominal 2 _)
 
-theorem grade_2 : (∑ u ∈ Finset.range (81-2), (CJ0.blockMatrix source 2 ((u : ℤ)-24)).rank) ≤ 330 := by
+theorem grade_2 : (∑ u ∈ Finset.range (82-2), (CJ0.blockMatrix source 2 ((u : ℤ)-24)).rank) ≤ 336 := by
   refine (Finset.sum_le_sum fun u _ => bound_2 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_2)]
   decide +kernel
@@ -301,7 +301,7 @@ private theorem bound_3 (u : ℕ) :
   unfold allowance_3
   exact (block_rank_le 3 _).trans (rank_le_nominal 3 _)
 
-theorem grade_3 : (∑ u ∈ Finset.range (81-3), (CJ0.blockMatrix source 3 ((u : ℤ)-24)).rank) ≤ 540 := by
+theorem grade_3 : (∑ u ∈ Finset.range (82-3), (CJ0.blockMatrix source 3 ((u : ℤ)-24)).rank) ≤ 550 := by
   refine (Finset.sum_le_sum fun u _ => bound_3 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_3)]
   decide +kernel
@@ -314,7 +314,7 @@ private theorem bound_4 (u : ℕ) :
   unfold allowance_4
   exact (block_rank_le 4 _).trans (rank_le_nominal 4 _)
 
-theorem grade_4 : (∑ u ∈ Finset.range (81-4), (CJ0.blockMatrix source 4 ((u : ℤ)-24)).rank) ≤ 795 := by
+theorem grade_4 : (∑ u ∈ Finset.range (82-4), (CJ0.blockMatrix source 4 ((u : ℤ)-24)).rank) ≤ 810 := by
   refine (Finset.sum_le_sum fun u _ => bound_4 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_4)]
   decide +kernel
@@ -327,7 +327,7 @@ private theorem bound_5 (u : ℕ) :
   unfold allowance_5
   exact (block_rank_le 5 _).trans (rank_le_nominal 5 _)
 
-theorem grade_5 : (∑ u ∈ Finset.range (81-5), (CJ0.blockMatrix source 5 ((u : ℤ)-24)).rank) ≤ 1092 := by
+theorem grade_5 : (∑ u ∈ Finset.range (82-5), (CJ0.blockMatrix source 5 ((u : ℤ)-24)).rank) ≤ 1113 := by
   refine (Finset.sum_le_sum fun u _ => bound_5 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_5)]
   decide +kernel
@@ -340,7 +340,7 @@ private theorem bound_6 (u : ℕ) :
   unfold allowance_6
   exact (block_rank_le 6 _).trans (rank_le_nominal 6 _)
 
-theorem grade_6 : (∑ u ∈ Finset.range (81-6), (CJ0.blockMatrix source 6 ((u : ℤ)-24)).rank) ≤ 1428 := by
+theorem grade_6 : (∑ u ∈ Finset.range (82-6), (CJ0.blockMatrix source 6 ((u : ℤ)-24)).rank) ≤ 1456 := by
   refine (Finset.sum_le_sum fun u _ => bound_6 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_6)]
   decide +kernel
@@ -353,7 +353,7 @@ private theorem bound_7 (u : ℕ) :
   unfold allowance_7
   exact (block_rank_le 7 _).trans (rank_le_nominal 7 _)
 
-theorem grade_7 : (∑ u ∈ Finset.range (81-7), (CJ0.blockMatrix source 7 ((u : ℤ)-24)).rank) ≤ 1800 := by
+theorem grade_7 : (∑ u ∈ Finset.range (82-7), (CJ0.blockMatrix source 7 ((u : ℤ)-24)).rank) ≤ 1836 := by
   refine (Finset.sum_le_sum fun u _ => bound_7 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_7)]
   decide +kernel
@@ -366,7 +366,7 @@ private theorem bound_8 (u : ℕ) :
   unfold allowance_8
   exact (block_rank_le 8 _).trans (rank_le_nominal 8 _)
 
-theorem grade_8 : (∑ u ∈ Finset.range (81-8), (CJ0.blockMatrix source 8 ((u : ℤ)-24)).rank) ≤ 2205 := by
+theorem grade_8 : (∑ u ∈ Finset.range (82-8), (CJ0.blockMatrix source 8 ((u : ℤ)-24)).rank) ≤ 2250 := by
   refine (Finset.sum_le_sum fun u _ => bound_8 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_8)]
   decide +kernel
@@ -379,7 +379,7 @@ private theorem bound_9 (u : ℕ) :
   unfold allowance_9
   exact (block_rank_le 9 _).trans (rank_le_nominal 9 _)
 
-theorem grade_9 : (∑ u ∈ Finset.range (81-9), (CJ0.blockMatrix source 9 ((u : ℤ)-24)).rank) ≤ 2640 := by
+theorem grade_9 : (∑ u ∈ Finset.range (82-9), (CJ0.blockMatrix source 9 ((u : ℤ)-24)).rank) ≤ 2695 := by
   refine (Finset.sum_le_sum fun u _ => bound_9 u).trans_eq ?_
   rw [← CJ1.total_eq_sum (allowance_9)]
   decide +kernel

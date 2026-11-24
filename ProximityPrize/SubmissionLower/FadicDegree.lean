@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Wide50EulerPrimaryFamily
-set_option Elab.async false
 
 -- merged module FadicCount
 section Merged_FadicCount

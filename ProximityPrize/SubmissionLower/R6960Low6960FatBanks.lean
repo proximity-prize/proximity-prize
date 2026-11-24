@@ -12,13 +12,13 @@ open K1 (I K)
 open K1_13 (Geom)
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
-abbrev firstOrder : ℕ := 4541009
-abbrev secondOrder : ℕ := 1814447
-abbrev firstCut : ℕ := 5000 * 179818 - firstOrder
-abbrev secondCut : ℕ := 5000 * 179818 - secondOrder
-abbrev bankRank : ℕ := 550123473967010264942
+abbrev firstOrder : ℕ := 4478157
+abbrev secondOrder : ℕ := 1728660
+abbrev firstCut : ℕ := 5000 * 179808 - firstOrder
+abbrev secondCut : ℕ := 5000 * 179808 - secondOrder
+abbrev bankRank : ℕ := 554753222939294143701
 def mixedWeight (a : SeedVar →₀ ℕ) : ℕ :=
-  7074 * a none + 48749 * a.some.degree
+  7134 * a none + 48739 * a.some.degree
 theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
     mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
   simp only [mixedWeight, Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
@@ -33,7 +33,7 @@ def Source27 {Γ s} (w : I → K) (P : K1_13.PoleData Γ s) (L : ResidueChart P)
 def HasRank27 {Γ s} (w : I → K) (P : K1_13.PoleData Γ s) (L : ResidueChart P)
     (a : K1_13.Shape) (t n : ℕ) : Prop :=
   ∃ e : Fin n → PhysicalRow, LinearIndependent Geom e ∧ ∀ i, Source27 w P L a t (e i)
-abbrev commonBox : K1_13.Shape := ⟨2502, 811, 0⟩
+abbrev commonBox : K1_13.Shape := ⟨2501, 810, 0⟩
 abbrev resultantBox : K1_13.Shape := ⟨367443000, 124200000, 0⟩
 structure FatEquations where
   common : K1_13.Row 3
@@ -56,8 +56,8 @@ structure CommonPair (F G : GenericRow) where
   fixed_kind : ∀ f ∈ fixed, Irreducible f ∧ 0 < jetTotal f ∧ seedDegree f = 0
   moving_kind : ∀ f ∈ moving, Irreducible f ∧ 0 < jetTotal f ∧
     0 < seedDegree f ∧ f.degreeOf (some 2) = 0
-  fixed_total : jetTotal (∏ f ∈ fixed, f) ≤ 122
-  fixed_index : jetIndex (∏ f ∈ fixed, f) ≤ 41
+  fixed_total : jetTotal (∏ f ∈ fixed, f) ≤ 121
+  fixed_index : jetIndex (∏ f ∈ fixed, f) ≤ 40
   moving_total : jetTotal (∏ f ∈ moving, f) ≤ 17
   moving_index : jetIndex (∏ f ∈ moving, f) ≤ 5
   moving_seed : seedDegree (∏ f ∈ moving, f) ≤ 70
@@ -89,9 +89,9 @@ open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necess
 open P0_9_4 (clear_denominators)
 open scoped Polynomial BigOperators
 structure Messages (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)) : Prop where
-  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 179818 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
+  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 179808 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
 def c1 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2358 →
+  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2378 →
     (∃ F, F ≠ 0 ∧ Source27 w P L firstBox firstCut F) ∧
     HasRank27 w P L secondBox secondCut bankRank
 def c2 : Prop :=
@@ -100,21 +100,21 @@ def c2 : Prop :=
     ∃ G, G ∈ Necessary w P L ∧ Nonempty (CommonPair (toGeneric F) (toGeneric G))
 def c3 : Prop :=
   ∀ w Γ s, Messages w Γ s →
-    ∀ (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2358 →
+    ∀ (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2378 →
       (∀ F, Source27 w P L firstBox firstCut F → ∀ γ ∈ Γ,
         MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) firstOrder) ∧
       (∀ G ∈ Necessary w P L, ∀ γ ∈ Γ,
         MixedOrder (toGeneric G) (inclConst (P.z γ)) (trajectory (extend (s γ))) secondOrder)
 
-abbrev fatOrder : ℕ := 23893
+abbrev fatOrder : ℕ := 22264
 def Holds (E : FatEquations) (S : (Polynomial K1_13.Geom)) : Prop :=
   K1_13.atJet E.common S = 0 ∨ K1_13.OrderAt E.residual S fatOrder
 
 def Equations : Prop :=
   ∀ (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)),
-    (∀ γ ∈ Γ, (s γ).natDegree ≤ 133429) →
-    (∀ γ ∈ Γ, ∃ T : Finset I, 179818 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i) →
-    ∀ P : K1_13.PoleData Γ s, P.H.natDegree ≤ 2358 →
+    (∀ γ ∈ Γ, (s γ).natDegree ≤ 133449) →
+    (∀ γ ∈ Γ, ∃ T : Finset I, 179808 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i) →
+    ∀ P : K1_13.PoleData Γ s, P.H.natDegree ≤ 2378 →
     ∃ (book : Finset K1.K) (E : FatEquations), book.card ≤ 140000 ∧
       ∀ γ ∈ Γ, γ ∉ book → Holds E (K1_13.extend (s γ))
 end
@@ -595,30 +595,30 @@ private theorem volume_eq (b : Bank) (h : ℕ) :
   simp only [width, rawVolume, moment, credit, jetSum, sum_mul, ← sum_add_distrib]
   refine sum_congr rfl fun q _ => sum_congr rfl fun k _ => sum_congr rfl fun l _ => ?_
   ring
-private theorem first_raw : rawVolume .first = 2815626131482542900 := by
-  change moment 6789 4707973 1 131071 0 = _
-  exact moment_eq 6789 4707973 1 131071 0 _ (by decide) (by decide +kernel)
-private theorem second_raw : rawVolume .second = 2836217932827295824 := by
-  change moment 6820 3371334 1 131071 0 = _
-  exact moment_eq 6820 3371334 1 131071 0 _ (by decide) (by decide +kernel)
+private theorem first_raw : rawVolume .first = 2815722160053972180 := by
+  change moment 6789 4720825 1 131071 0 = _
+  exact moment_eq 6789 4720825 1 131071 0 _ (by decide) (by decide +kernel)
+private theorem second_raw : rawVolume .second = 2836486798642653501 := by
+  change moment 6820 3407121 1 131071 0 = _
+  exact moment_eq 6820 3407121 1 131071 0 _ (by decide) (by decide +kernel)
 private theorem endpoint (b : Bank) :
-    targetRank b + 262144 * (27001 * b.nodeRank) + 2358 * extra b.box.b ≤
+    targetRank b + 262144 * (27001 * b.nodeRank) + 2378 * extra b.box.b ≤
       27001 * rawVolume b := by
   obtain ⟨_, _, hfirst, hsecond⟩ := bank_moments
   cases b
   · have he : extra Bank.first.box.b = 0x1cc973f372d9cdc := hfirst
-    have ha : (1 : ℕ) + 262144 * (27001 * 0x9bab8f5dfb7) + 2358 * 0x1cc973f372d9cdc ≤
-        27001 * 2815626131482542900 := by decide
+    have ha : (1 : ℕ) + 262144 * (27001 * 0x9bab8f5dfb7) + 2378 * 0x1cc973f372d9cdc ≤
+        27001 * 2815722160053972180 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
-      targetRank Bank.first + 262144 * (27001 * Bank.first.nodeRank) + 2358 * x ≤ 27001 * y)
+      targetRank Bank.first + 262144 * (27001 * Bank.first.nodeRank) + 2378 * x ≤ 27001 * y)
       he first_raw).mpr ha
   · have he : extra Bank.second.box.b = 0x1d32fca954a0ef7 := hsecond
-    have ha : (550123473967010264942 : ℕ) + 262144 * (27001 * 0x9bac59312df) +
-        2358 * 0x1d32fca954a0ef7 ≤ 27001 * 2836217932827295824 := by decide
+    have ha : (554753222939294143701 : ℕ) + 262144 * (27001 * 0x9bac59312df) +
+        2378 * 0x1d32fca954a0ef7 ≤ 27001 * 2836486798642653501 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
-      targetRank Bank.second + 262144 * (27001 * Bank.second.nodeRank) + 2358 * x ≤ 27001 * y)
+      targetRank Bank.second + 262144 * (27001 * Bank.second.nodeRank) + 2378 * x ≤ 27001 * y)
       he second_raw).mpr ha
-theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2358) :
+theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2378) :
     targetRank b + 262144 * (27001 * b.nodeRank) + h * Low6960FatSeed.poleDebit27 b.box ≤
       27001 * jetSum b.box.b (width b h) := by
   have he := endpoint b
@@ -640,7 +640,7 @@ private theorem simple_pole_bound : Low6960FatSeed.c3_27 :=
 private theorem deformation_bound : K1_13_4_2.c4 :=
   K1_13_4_2_4.of_children K1_13_4_2_4_1.proof K1_13_4_2_4_2.proof
 private theorem rank_of_bounds (b : Bank) (w : I → K) {Γ s}
-    (P : PoleData Γ s) (L : ResidueChart P) (hh : P.H.natDegree ≤ 2358) :
+    (P : PoleData Γ s) (L : ResidueChart P) (hh : P.H.natDegree ≤ 2378) :
     Low6960Fat.HasRank27 w P L b.box (cut b) (targetRank b) := by
   classical
   obtain ⟨V, hV, hbox, hdimV⟩ := ambient b P.H.natDegree

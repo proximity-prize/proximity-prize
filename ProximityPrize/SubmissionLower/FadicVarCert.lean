@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.FadicDegree
 import ProximityPrize.SubmissionLower.FadicChunk
-set_option Elab.async false
 
 -- merged module FadicNat
 section Merged_FadicNat

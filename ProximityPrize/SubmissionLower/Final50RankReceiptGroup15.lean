@@ -7,95 +7,95 @@ set_option maxHeartbeats 20000000
 namespace Final50RankReceipt
 open K1_13_1_1 (bandCount)
 
-private def cert15_0 := witnessFinal50 15 44 0 10897 10897 1 101
+private def cert15_0 := witnessFinal50 15 44 0 10897 10897 1 105
   0x0 (by decide +kernel)
-private def cert15_1 := witnessFinal50 15 43 0 20834 20896 2 202
+private def cert15_1 := witnessFinal50 15 43 0 20834 20896 2 210
   0x0 (by decide +kernel)
-private def cert15_2 := witnessFinal50 15 42 0 30771 30896 3 300
+private def cert15_2 := witnessFinal50 15 42 0 30771 30896 3 312
   0x2240 (by decide +kernel)
-private def cert15_3 := witnessFinal50 15 41 0 40708 40833 4 400
+private def cert15_3 := witnessFinal50 15 41 0 40708 40833 4 416
   0x12200 (by decide +kernel)
-private def cert15_4 := witnessFinal50 15 40 0 50645 50832 5 497
+private def cert15_4 := witnessFinal50 15 40 0 50645 50832 5 517
   0x9112200 (by decide +kernel)
-private def cert15_5 := witnessFinal50 15 39 0 60582 60832 7 692
+private def cert15_5 := witnessFinal50 15 39 0 60582 60832 7 720
   0x2422848812200 (by decide +kernel)
-private def cert15_6 := witnessFinal50 15 38 0 70519 70769 8 788
+private def cert15_6 := witnessFinal50 15 38 0 70519 70769 8 820
   0x22224448812200 (by decide +kernel)
-private def cert15_7 := witnessFinal50 15 37 0 80456 80768 10 982
+private def cert15_7 := witnessFinal50 15 37 0 80456 80768 10 1022
   0x88911122048812200 (by decide +kernel)
-private def cert15_8 := witnessFinal50 15 36 0 90393 90768 12 1169
+private def cert15_8 := witnessFinal50 15 36 0 90393 90768 12 1217
   0x2211444448911122048812200 (by decide +kernel)
-private def cert15_9 := witnessFinal50 15 35 0 100330 100705 14 1362
+private def cert15_9 := witnessFinal50 15 35 0 100330 100705 14 1418
   0xc8911222244111122048812200 (by decide +kernel)
-private def cert15_10 := witnessFinal50 15 34 0 110267 110704 16 1548
+private def cert15_10 := witnessFinal50 15 34 0 110267 110704 16 1612
   0x32264488891222244111122048812200 (by decide +kernel)
-private def cert15_11 := witnessFinal50 15 33 0 120204 120704 19 1828
+private def cert15_11 := witnessFinal50 15 33 0 120204 120704 19 1904
   0x64228c8911322444488222244111122048812200 (by decide +kernel)
-private def cert15_12 := witnessFinal50 15 32 0 130141 130641 21 2013
+private def cert15_12 := witnessFinal50 15 32 0 130141 130641 21 2097
   0x21132264488891322444488222244111122048812200 (by decide +kernel)
-private def cert15_13 := witnessFinal50 15 31 0 140078 140640 24 2292
+private def cert15_13 := witnessFinal50 15 31 0 140078 140640 24 2388
   0x422844c8911322444488322444488222244111122048812200 (by decide +kernel)
-private def cert15_14 := witnessFinal50 15 30 0 150015 150640 27 2560
+private def cert15_14 := witnessFinal50 15 30 0 150015 150640 27 2668
   0x842290899142264488891322444488322444488222244111122048812200 (by decide +kernel)
-private def cert15_15 := witnessFinal50 15 29 0 160014 160577 29 2737
+private def cert15_15 := witnessFinal50 15 29 0 160014 160577 29 2853
   0x291422844c891142264488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert15_16 := witnessFinal50 15 28 0 170013 170576 31 2903
+private def cert15_16 := witnessFinal50 15 28 0 170013 170576 31 3027
   0xa4548a11322844c8911122844c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert15_17 := witnessFinal50 15 27 0 180012 180576 33 3062
+private def cert15_17 := witnessFinal50 15 27 0 180012 180576 33 3194
   0x2908a52284548a11322445089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert15_18 := witnessFinal50 15 26 0 190011 190513 34 3130
+private def cert15_18 := witnessFinal50 15 26 0 190011 190513 34 3266
   0x188a91522844c8a9142264488891422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert15_19 := witnessFinal50 15 25 0 200010 200512 35 3195
+private def cert15_19 := witnessFinal50 15 25 0 200010 200512 35 3335
   0xc4588a91422a4508991222a4508991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert15_20 := witnessFinal50 15 24 0 210009 210512 36 3245
+private def cert15_20 := witnessFinal50 15 24 0 210009 210512 36 3389
   0x62114c4548b11522844c8a9142264488891522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert15_21 := witnessFinal50 15 23 0 220008 220449 36 3220
+private def cert15_21 := witnessFinal50 15 23 0 220008 220449 36 3364
   0x722c4588a91422c4548a1132244548a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert15_22 := witnessFinal50 15 22 0 230007 230448 36 3180
+private def cert15_22 := witnessFinal50 15 22 0 230007 230448 36 3324
   0x722e4588a91622a4508991622a450899122224548a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert15_23 := witnessFinal50 15 21 0 240006 240448 36 3141
+private def cert15_23 := witnessFinal50 15 21 0 240006 240448 36 3285
   0x72114e4588b91622a4508b11522844c8911622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert15_24 := witnessFinal50 15 20 0 250005 250385 35 3015
+private def cert15_24 := witnessFinal50 15 20 0 250005 250385 35 3155
   0x1045c8b91622a45c8b11522844c8b11522844c8911122c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert15_25 := witnessFinal50 15 19 0 260004 260384 34 2894
+private def cert15_25 := witnessFinal50 15 19 0 260004 260384 34 3030
   0x208c11722c45c8b11522845c8b11522844c8911622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert15_26 := witnessFinal50 15 18 0 270003 270384 33 2754
+private def cert15_26 := witnessFinal50 15 18 0 270003 270384 33 2886
   0x4108a822e4608b91622a45c8b11522844c8b91622a450899122224588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert15_27 := witnessFinal50 15 17 0 280002 280321 31 2555
+private def cert15_27 := witnessFinal50 15 17 0 280002 280321 31 2679
   0x124608c11722c4608b91622a4508b91622a4508991222e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert15_28 := witnessFinal50 15 16 0 290001 290320 29 2337
+private def cert15_28 := witnessFinal50 15 16 0 290001 290320 29 2453
   0x491923045c8c11722c4548c11722c4548a11322e4588a9142264488891722c4548a11322444488 (by decide +kernel)
-private def cert15_29 := witnessFinal50 15 15 0 300000 300320 27 2128
+private def cert15_29 := witnessFinal50 15 15 0 300000 300320 27 2236
   0x12422a48c11923045c8b11822e4588a91423045c8b11522844c8911722c4548a11322444488 (by decide +kernel)
-private def cert15_30 := witnessFinal50 15 14 0 310000 310257 24 1836
+private def cert15_30 := witnessFinal50 15 14 0 310000 310257 24 1932
   0xa2324648c1172324608b91622a4608b91622a4508991822e4588a9142264488891 (by decide +kernel)
-private def cert15_31 := witnessFinal50 15 13 0 320000 320256 21 1557
+private def cert15_31 := witnessFinal50 15 13 0 320000 320256 21 1641
   0x511a2324608c91822e4588c91822e4588a91423045c8b11522844c8911 (by decide +kernel)
-private def cert15_32 := witnessFinal50 15 12 0 330000 330256 19 1356
+private def cert15_32 := witnessFinal50 15 12 0 330000 330256 19 1432
   0x14422a88c91a2324608b91923045c8b1152324608b91622a4508991 (by decide +kernel)
-private def cert15_33 := witnessFinal50 15 11 0 340000 340193 16 1108
+private def cert15_33 := witnessFinal50 15 11 0 340000 340193 16 1172
   0xb2344688c9182344648c11722c4648c11722c4548a11 (by decide +kernel)
-private def cert15_34 := witnessFinal50 15 10 0 350000 350192 14 934
+private def cert15_34 := witnessFinal50 15 10 0 350000 350192 14 990
   0x2c8d91a2324688c91822e4688c91822e4588a91 (by decide +kernel)
-private def cert15_35 := witnessFinal50 15 9 0 360000 360192 12 769
+private def cert15_35 := witnessFinal50 15 9 0 360000 360192 12 817
   0xb211564688d91a2324608d11923045c8b11 (by decide +kernel)
-private def cert15_36 := witnessFinal50 15 8 0 370000 370129 10 618
+private def cert15_36 := witnessFinal50 15 8 0 370000 370129 10 658
   0x308d91b2344648d91a2324608b91 (by decide +kernel)
-private def cert15_37 := witnessFinal50 15 7 0 380000 380128 8 476
+private def cert15_37 := witnessFinal50 15 7 0 380000 380128 8 508
   0xc23846c8d11b2344648c11 (by decide +kernel)
-private def cert15_38 := witnessFinal50 15 6 0 390000 390128 7 396
+private def cert15_38 := witnessFinal50 15 6 0 390000 390128 7 424
   0x18422b08d91c2364688c91 (by decide +kernel)
-private def cert15_39 := witnessFinal50 15 5 0 400000 400065 5 273
+private def cert15_39 := witnessFinal50 15 5 0 400000 400065 5 293
   0x691c23846c8d11 (by decide +kernel)
-private def cert15_40 := witnessFinal50 15 4 0 410000 410064 4 208
+private def cert15_40 := witnessFinal50 15 4 0 410000 410064 4 224
   0xd23a4708d91 (by decide +kernel)
-private def cert15_41 := witnessFinal50 15 3 0 420000 420064 3 148
+private def cert15_41 := witnessFinal50 15 3 0 420000 420064 3 160
   0x1a422b48e11 (by decide +kernel)
-private def cert15_42 := witnessFinal50 15 2 0 430000 430001 2 94
+private def cert15_42 := witnessFinal50 15 2 0 430000 430001 2 102
   0x388e91 (by decide +kernel)
-private def cert15_43 := witnessFinal50 15 1 0 440000 440000 1 45
+private def cert15_43 := witnessFinal50 15 1 0 440000 440000 1 49
   0x711 (by decide +kernel)
-private def cert15_44 := witnessFinal50 15 0 0 450000 450000 1 42
+private def cert15_44 := witnessFinal50 15 0 0 450000 450000 1 46
   0x7108a (by decide +kernel)
 private def chunks15 : List (Chunk 15) := [
   cert15_0,
@@ -150,111 +150,111 @@ theorem good15 : ∀ r ∈ rows15, good 15 r = true := rowsFrom_good chunks15
 theorem sorted15 : rows15.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks15 0 (by decide +kernel)).1
 
-theorem mass15 (i : Fin 58) :
-    bandCount 15 (i.val : ℤ) 57 14 ≤ (rows15.filter (fun r => decide (i.val ≤ r.index))).length := by
+theorem mass15 (i : Fin 60) :
+    bandCount 15 (i.val : ℤ) 59 14 ≤ (rows15.filter (fun r => decide (i.val ≤ r.index))).length := by
   change _ ≤ ((rowsFrom chunks15).filter _).length
   rw [mass_eq]
-  have h : (List.range 58).all
-      (fun j => decide (bandCount 15 (j : ℤ) 57 14 ≤ mass j chunks15)) = true := by
+  have h : (List.range 60).all
+      (fun j => decide (bandCount 15 (j : ℤ) 59 14 ≤ mass j chunks15)) = true := by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total15 : (rows15.map (price 15)).sum = 70090 :=
+theorem total15 : (rows15.map (price 15)).sum = 73350 :=
   (total_eq chunks15).trans (by decide +kernel)
 
-private def cert16_0 := witnessFinal50 16 46 0 20898 20898 1 101
+private def cert16_0 := witnessFinal50 16 46 0 20898 20898 1 105
   0x0 (by decide +kernel)
-private def cert16_1 := witnessFinal50 16 45 0 30835 30897 2 202
+private def cert16_1 := witnessFinal50 16 45 0 30835 30897 2 210
   0x0 (by decide +kernel)
-private def cert16_2 := witnessFinal50 16 44 0 40772 40897 4 401
+private def cert16_2 := witnessFinal50 16 44 0 40772 40897 4 417
   0x11200 (by decide +kernel)
-private def cert16_3 := witnessFinal50 16 43 0 50709 50896 5 498
+private def cert16_3 := witnessFinal50 16 43 0 50709 50896 5 518
   0x8912200 (by decide +kernel)
-private def cert16_4 := witnessFinal50 16 42 0 60646 60896 7 693
+private def cert16_4 := witnessFinal50 16 42 0 60646 60896 7 721
   0x42448812200 (by decide +kernel)
-private def cert16_5 := witnessFinal50 16 41 0 70583 70833 8 789
+private def cert16_5 := witnessFinal50 16 41 0 70583 70833 8 821
   0x1211424448812200 (by decide +kernel)
-private def cert16_6 := witnessFinal50 16 40 0 80520 80832 10 983
+private def cert16_6 := witnessFinal50 16 40 0 80520 80832 10 1023
   0x4845111122048812200 (by decide +kernel)
-private def cert16_7 := witnessFinal50 16 39 0 90457 90832 12 1170
+private def cert16_7 := witnessFinal50 16 39 0 90457 90832 12 1218
   0x1221444448911122048812200 (by decide +kernel)
-private def cert16_8 := witnessFinal50 16 38 0 100394 100769 14 1363
+private def cert16_8 := witnessFinal50 16 38 0 100394 100769 14 1419
   0x8845111222244111122048812200 (by decide +kernel)
-private def cert16_9 := witnessFinal50 16 37 0 110331 110768 16 1549
+private def cert16_9 := witnessFinal50 16 37 0 110331 110768 16 1613
   0x2211464488891222244111122048812200 (by decide +kernel)
-private def cert16_10 := witnessFinal50 16 36 0 120268 120768 19 1829
+private def cert16_10 := witnessFinal50 16 36 0 120268 120768 19 1905
   0x44428c8911322444488222244111122048812200 (by decide +kernel)
-private def cert16_11 := witnessFinal50 16 35 0 130205 130705 21 2014
+private def cert16_11 := witnessFinal50 16 35 0 130205 130705 21 2098
   0x1908a32264488891322444488222244111122048812200 (by decide +kernel)
-private def cert16_12 := witnessFinal50 16 34 0 140142 140704 24 2293
+private def cert16_12 := witnessFinal50 16 34 0 140142 140704 24 2389
   0x32114844c8911322444488322444488222244111122048812200 (by decide +kernel)
-private def cert16_13 := witnessFinal50 16 33 0 150079 150704 27 2561
+private def cert16_13 := witnessFinal50 16 33 0 150079 150704 27 2669
   0x644290899142264488891322444488322444488222244111122048812200 (by decide +kernel)
-private def cert16_14 := witnessFinal50 16 32 0 160016 160641 30 2839
+private def cert16_14 := witnessFinal50 16 32 0 160016 160641 30 2959
   0x1084521142264488a11322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert16_15 := witnessFinal50 16 31 0 170015 170640 32 3005
+private def cert16_15 := witnessFinal50 16 31 0 170015 170640 32 3133
   0x42114a45089914226448889142264488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert16_16 := witnessFinal50 16 30 0 180014 180640 35 3261
+private def cert16_16 := witnessFinal50 16 30 0 180014 180640 35 3401
   0x8442948a11522844c8911422644888910844c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert16_17 := witnessFinal50 16 29 0 190013 190577 36 3329
+private def cert16_17 := witnessFinal50 16 29 0 190013 190577 36 3473
   0x52114a4548a11322a4508991222245089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert16_18 := witnessFinal50 16 28 0 200012 200576 38 3487
+private def cert16_18 := witnessFinal50 16 28 0 200012 200576 38 3639
   0x1484531152284548a1132244548a11322444488422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert16_19 := witnessFinal50 16 27 0 210011 210576 39 3537
+private def cert16_19 := witnessFinal50 16 27 0 210011 210576 39 3693
   0xa442988a91622a4508991522844c8911122a4508991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert16_20 := witnessFinal50 16 26 0 220010 220513 40 3601
+private def cert16_20 := witnessFinal50 16 26 0 220010 220513 40 3761
   0x62114c4588a91422c4548a1132244548a11322444488522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert16_21 := witnessFinal50 16 25 0 230009 230512 40 3561
+private def cert16_21 := witnessFinal50 16 25 0 230009 230512 40 3721
   0x62114e4588a91622a4508991622a450899122224548a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert16_22 := witnessFinal50 16 24 0 240008 240512 41 3607
+private def cert16_22 := witnessFinal50 16 24 0 240008 240512 41 3771
   0x3110a722c45c8b1152284588a9142264488b11522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert16_23 := witnessFinal50 16 23 0 250007 250449 40 3481
+private def cert16_23 := witnessFinal50 16 23 0 250007 250449 40 3641
   0x72114e45c8b11522e4588a9142264588a9142264488891622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert16_24 := witnessFinal50 16 22 0 260006 260448 40 3441
+private def cert16_24 := witnessFinal50 16 22 0 260006 260448 40 3601
   0x72115045c8b11722c4548a11722c4548a1132244588a91422644888910c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert16_25 := witnessFinal50 16 21 0 270005 270448 39 3301
+private def cert16_25 := witnessFinal50 16 21 0 270005 270448 39 3457
   0xe442a08b91822e4588a91722c4548a11322e4588a9142264488891622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert16_26 := witnessFinal50 16 20 0 280004 280385 38 3179
+private def cert16_26 := witnessFinal50 16 20 0 280004 280385 38 3331
   0x20845411822e4588c11722c4548a11722c4548a11322445c8b11522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert16_27 := witnessFinal50 16 19 0 290003 290384 36 2961
+private def cert16_27 := witnessFinal50 16 19 0 290003 290384 36 3105
   0x8211524608b91822e4588a91822e4588a91422645c8b11522844c8911122e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert16_28 := witnessFinal50 16 18 0 300002 300384 35 2825
+private def cert16_28 := witnessFinal50 16 18 0 300002 300384 35 2965
   0x10442a48c11923045c8b11822e4588a91423045c8b11522844c8911722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert16_29 := witnessFinal50 16 17 0 310001 310321 32 2533
+private def cert16_29 := witnessFinal50 16 17 0 310001 310321 32 2661
   0x9211524648c1172324608b91622a4608b91622a4508991822e4588a9142264488891722c4548a11322444488 (by decide +kernel)
-private def cert16_30 := witnessFinal50 16 16 0 320000 320320 30 2323
+private def cert16_30 := witnessFinal50 16 16 0 320000 320320 30 2443
   0x2484551192304648c11722c4648c11722c4548a11822e4588a9142264488c11722c4548a11322444488 (by decide +kernel)
-private def cert16_31 := witnessFinal50 16 15 0 330000 330320 27 2021
+private def cert16_31 := witnessFinal50 16 15 0 330000 330320 27 2129
   0x12442a88c91a2324608b91923045c8b1152324608b91622a4508991822e4588a9142264488891 (by decide +kernel)
-private def cert16_32 := witnessFinal50 16 14 0 340000 340257 24 1741
+private def cert16_32 := witnessFinal50 16 14 0 340000 340257 24 1837
   0xa211544688c9182344648c11722c4648c11722c4548a11923045c8b11522844c8911 (by decide +kernel)
-private def cert16_33 := witnessFinal50 16 13 0 350000 350256 21 1474
+private def cert16_33 := witnessFinal50 16 13 0 350000 350256 21 1558
   0x5108ab2344648d11923045c8d11923045c8b1152324608b91622a4508991 (by decide +kernel)
-private def cert16_34 := witnessFinal50 16 12 0 360000 360256 19 1281
+private def cert16_34 := witnessFinal50 16 12 0 360000 360256 19 1357
   0x14442ac8d11b2344648c11a2324608b9162344648c11722c4548a11 (by decide +kernel)
-private def cert16_35 := witnessFinal50 16 11 0 370000 370193 16 1045
+private def cert16_35 := witnessFinal50 16 11 0 370000 370193 16 1109
   0xb2115646c8d1192364688c91822e4688c91822e4588a91 (by decide +kernel)
-private def cert16_36 := witnessFinal50 16 10 0 380000 380192 14 879
+private def cert16_36 := witnessFinal50 16 10 0 380000 380192 14 935
   0x2c845611b23446c8d11923046c8d11923045c8b11 (by decide +kernel)
-private def cert16_37 := witnessFinal50 16 9 0 390000 390192 12 722
+private def cert16_37 := witnessFinal50 16 9 0 390000 390192 12 770
   0xb2215846c8e11b2344648d91a2324608b91 (by decide +kernel)
-private def cert16_38 := witnessFinal50 16 8 0 400000 400129 10 579
+private def cert16_38 := witnessFinal50 16 8 0 400000 400129 10 619
   0x30845611c2364688e11b2344648c11 (by decide +kernel)
-private def cert16_39 := witnessFinal50 16 7 0 410000 410128 8 445
+private def cert16_39 := witnessFinal50 16 7 0 410000 410128 8 477
   0xc2115a4708d91c2364688c91 (by decide +kernel)
-private def cert16_40 := witnessFinal50 16 6 0 420000 420128 7 369
+private def cert16_40 := witnessFinal50 16 6 0 420000 420128 7 397
   0x18442b48e11d23846c8d11 (by decide +kernel)
-private def cert16_41 := witnessFinal50 16 5 0 430000 430065 5 254
+private def cert16_41 := witnessFinal50 16 5 0 430000 430065 5 274
   0x6908ad23a4708d91 (by decide +kernel)
-private def cert16_42 := witnessFinal50 16 4 0 440000 440064 4 193
+private def cert16_42 := witnessFinal50 16 4 0 440000 440064 4 209
   0xd2115c4748e11 (by decide +kernel)
-private def cert16_43 := witnessFinal50 16 3 0 450000 450064 3 137
+private def cert16_43 := witnessFinal50 16 3 0 450000 450064 3 149
   0x1a442b88e91 (by decide +kernel)
-private def cert16_44 := witnessFinal50 16 2 0 460000 460001 2 87
+private def cert16_44 := witnessFinal50 16 2 0 460000 460001 2 95
   0x38845711 (by decide +kernel)
-private def cert16_45 := witnessFinal50 16 1 0 470000 470000 1 42
+private def cert16_45 := witnessFinal50 16 1 0 470000 470000 1 46
   0x7108a (by decide +kernel)
-private def cert16_46 := witnessFinal50 16 0 0 480000 480000 1 39
+private def cert16_46 := witnessFinal50 16 0 0 480000 480000 1 43
   0x7110a (by decide +kernel)
 private def chunks16 : List (Chunk 16) := [
   cert16_0,
@@ -311,115 +311,115 @@ theorem good16 : ∀ r ∈ rows16, good 16 r = true := rowsFrom_good chunks16
 theorem sorted16 : rows16.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks16 0 (by decide +kernel)).1
 
-theorem mass16 (i : Fin 58) :
-    bandCount 16 (i.val : ℤ) 57 14 ≤ (rows16.filter (fun r => decide (i.val ≤ r.index))).length := by
+theorem mass16 (i : Fin 60) :
+    bandCount 16 (i.val : ℤ) 59 14 ≤ (rows16.filter (fun r => decide (i.val ≤ r.index))).length := by
   change _ ≤ ((rowsFrom chunks16).filter _).length
   rw [mass_eq]
-  have h : (List.range 58).all
-      (fun j => decide (bandCount 16 (j : ℤ) 57 14 ≤ mass j chunks16)) = true := by
+  have h : (List.range 60).all
+      (fun j => decide (bandCount 16 (j : ℤ) 59 14 ≤ mass j chunks16)) = true := by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total16 : (rows16.map (price 16)).sum = 82025 :=
+theorem total16 : (rows16.map (price 16)).sum = 85885 :=
   (total_eq chunks16).trans (by decide +kernel)
 
-private def cert17_0 := witnessFinal50 17 48 0 30899 30899 1 101
+private def cert17_0 := witnessFinal50 17 48 0 30899 30899 1 105
   0x0 (by decide +kernel)
-private def cert17_1 := witnessFinal50 17 47 0 40836 40898 2 202
+private def cert17_1 := witnessFinal50 17 47 0 40836 40898 2 210
   0x0 (by decide +kernel)
-private def cert17_2 := witnessFinal50 17 46 0 50773 50898 4 401
+private def cert17_2 := witnessFinal50 17 46 0 50773 50898 4 417
   0x11200 (by decide +kernel)
-private def cert17_3 := witnessFinal50 17 45 0 60710 60897 6 599
+private def cert17_3 := witnessFinal50 17 45 0 60710 60897 6 623
   0x44812200 (by decide +kernel)
-private def cert17_4 := witnessFinal50 17 44 0 70647 70897 8 791
+private def cert17_4 := witnessFinal50 17 44 0 70647 70897 8 823
   0x21222448812200 (by decide +kernel)
-private def cert17_5 := witnessFinal50 17 43 0 80584 80896 10 985
+private def cert17_5 := witnessFinal50 17 43 0 80584 80896 10 1025
   0x848908a122048812200 (by decide +kernel)
-private def cert17_6 := witnessFinal50 17 42 0 90521 90896 12 1172
+private def cert17_6 := witnessFinal50 17 42 0 90521 90896 12 1220
   0x3122422848911122048812200 (by decide +kernel)
-private def cert17_7 := witnessFinal50 17 41 0 100458 100833 14 1365
+private def cert17_7 := witnessFinal50 17 41 0 100458 100833 14 1421
   0x48850908a222244111122048812200 (by decide +kernel)
-private def cert17_8 := witnessFinal50 17 40 0 110395 110832 16 1551
+private def cert17_8 := witnessFinal50 17 40 0 110395 110832 16 1615
   0x122144422888891222244111122048812200 (by decide +kernel)
-private def cert17_9 := witnessFinal50 17 39 0 120332 120832 19 1831
+private def cert17_9 := witnessFinal50 17 39 0 120332 120832 19 1907
   0x246288845111322444488222244111122048812200 (by decide +kernel)
-private def cert17_10 := witnessFinal50 17 38 0 130269 130769 21 2016
+private def cert17_10 := witnessFinal50 17 38 0 130269 130769 21 2100
   0x1110a2211464488891322444488222244111122048812200 (by decide +kernel)
-private def cert17_11 := witnessFinal50 17 37 0 140206 140768 24 2295
+private def cert17_11 := witnessFinal50 17 37 0 140206 140768 24 2391
   0x2221464228c8911322444488322444488222244111122048812200 (by decide +kernel)
-private def cert17_12 := witnessFinal50 17 36 0 150143 150768 27 2563
+private def cert17_12 := witnessFinal50 17 36 0 150143 150768 27 2671
   0x44628c84519142264488891322444488322444488222244111122048812200 (by decide +kernel)
-private def cert17_13 := witnessFinal50 17 35 0 160080 160705 30 2841
+private def cert17_13 := witnessFinal50 17 35 0 160080 160705 30 2961
   0xc8851908a42264488a11322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert17_14 := witnessFinal50 17 34 0 170017 170704 33 3108
+private def cert17_14 := witnessFinal50 17 34 0 170017 170704 33 3240
   0x1910a42114844c8a1132244448a11322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert17_15 := witnessFinal50 17 33 0 180016 180704 36 3364
+private def cert17_15 := witnessFinal50 17 33 0 180016 180704 36 3508
   0x323148422908a9142264488a1132244448842264488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert17_16 := witnessFinal50 17 32 0 190015 190641 38 3529
+private def cert17_16 := witnessFinal50 17 32 0 190015 190641 38 3681
   0x108852108a522844c8a9142264488891422644888910844c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert17_17 := witnessFinal50 17 31 0 200014 200640 40 3687
+private def cert17_17 := witnessFinal50 17 31 0 200014 200640 40 3847
   0x42214a422948a11522844c8911522844c89111221089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert17_18 := witnessFinal50 17 30 0 210013 210640 42 3830
+private def cert17_18 := witnessFinal50 17 30 0 210013 210640 42 3998
   0x108c52908a522c4548a11322a450899122224548a11322444488422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert17_19 := witnessFinal50 17 29 0 220012 220577 43 3894
+private def cert17_19 := witnessFinal50 17 29 0 220012 220577 43 4066
   0xa4429484531152284588a9142264488a91422644888910a4508991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert17_20 := witnessFinal50 17 28 0 230011 230576 44 3943
+private def cert17_20 := witnessFinal50 17 28 0 230011 230576 44 4119
   0x52214c422988a91622a4508991622a450899122224548a11322444488522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert17_21 := witnessFinal50 17 27 0 240010 240576 45 3989
+private def cert17_21 := witnessFinal50 17 27 0 240010 240576 45 4169
   0x2918a62114c45c8b1152284588a9142264488b11522844c8911122148a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert17_22 := witnessFinal50 17 26 0 250009 250513 45 3948
+private def cert17_22 := witnessFinal50 17 26 0 250009 250513 45 4128
   0x3110a62114e4588a91722c4548a11322c4548a1132244448b11522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert17_23 := witnessFinal50 17 25 0 260008 260512 45 3908
+private def cert17_23 := witnessFinal50 17 25 0 260008 260512 45 4088
   0x3110a72114e4588b91622a4508b91622a4508991222c4548a11322444488622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert17_24 := witnessFinal50 17 24 0 270007 270512 45 3849
+private def cert17_24 := witnessFinal50 17 24 0 270007 270512 45 4029
   0x3118a72114e4608b91622a45c8b11522844c8b91622a450899122224588a91422644888910c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert17_25 := witnessFinal50 17 23 0 280006 280449 44 3727
+private def cert17_25 := witnessFinal50 17 23 0 280006 280449 44 3903
   0x72214e422a08b91623045c8b11522845c8b11522844c8911722c4548a11322444488622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert17_26 := witnessFinal50 17 22 0 290005 290448 43 3586
+private def cert17_26 := witnessFinal50 17 22 0 290005 290448 43 3758
   0xe442a0845411723045c8b11523045c8b11522844c8b91622a4508991222245c8b11522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert17_27 := witnessFinal50 17 21 0 300004 300448 42 3450
+private def cert17_27 := witnessFinal50 17 21 0 300004 300448 42 3618
   0x1c8c54108a82324608b91623045c8b1152284608b91622a4508991222e4588a91422644888910e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert17_28 := witnessFinal50 17 20 0 310003 310385 40 3231
+private def cert17_28 := witnessFinal50 17 20 0 310003 310385 40 3391
   0x822150422a48c1172324608b91622a4608b91622a4508991822e4588a9142264488891722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert17_29 := witnessFinal50 17 19 0 320002 320384 38 3021
+private def cert17_29 := witnessFinal50 17 19 0 320002 320384 38 3173
   0x208854908a92304648c11722c4648c11722c4548a11822e4588a9142264488c11722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert17_30 := witnessFinal50 17 18 0 330001 330384 36 2788
+private def cert17_30 := witnessFinal50 17 18 0 330001 330384 36 2932
   0x823152422a48d11923045c8c91822e4588a91923045c8b11522844c8c11722c4548a1132244448c11722c4548a11322444488 (by decide +kernel)
-private def cert17_31 := witnessFinal50 17 17 0 340000 340321 33 2508
+private def cert17_31 := witnessFinal50 17 17 0 340000 340321 33 2640
   0x4910a9211544648c11a2324608b9162324608b91622a4508c91822e4588a9142264488c11722c4548a11322444488 (by decide +kernel)
-private def cert17_32 := witnessFinal50 17 16 0 350000 350320 30 2205
+private def cert17_32 := witnessFinal50 17 16 0 350000 350320 30 2325
   0x248855108aa2324688c91822e4688c91822e4588a91923045c8b11522844c8c91822e4588a9142264488891 (by decide +kernel)
-private def cert17_33 := witnessFinal50 17 15 0 360000 360320 27 1915
+private def cert17_33 := witnessFinal50 17 15 0 360000 360320 27 2023
   0x12462a8845511b2344648c11a2324608b9162344648c11722c4548a11923045c8b11522844c8911 (by decide +kernel)
-private def cert17_34 := witnessFinal50 17 14 0 370000 370257 24 1647
+private def cert17_34 := witnessFinal50 17 14 0 370000 370257 24 1743
   0xa22154422ac8d1192364688c91822e4688c91822e4588a91a2324608b91622a4508991 (by decide +kernel)
-private def cert17_35 := witnessFinal50 17 13 0 380000 380256 21 1392
+private def cert17_35 := witnessFinal50 17 13 0 380000 380256 21 1476
   0x5110ab211564688d91a2324608d91a2324608b9162344648c11722c4548a11 (by decide +kernel)
-private def cert17_36 := witnessFinal50 17 12 0 390000 390256 19 1207
+private def cert17_36 := witnessFinal50 17 12 0 390000 390256 19 1283
   0x14462ac845591c2364688c91b2344648c1172364688c91822e4588a91 (by decide +kernel)
-private def cert17_37 := witnessFinal50 17 11 0 400000 400193 16 983
+private def cert17_37 := witnessFinal50 17 11 0 400000 400193 16 1047
   0xb22156422b08d91a23846c8d11923046c8d11923045c8b11 (by decide +kernel)
-private def cert17_38 := witnessFinal50 17 10 0 410000 410192 14 825
+private def cert17_38 := witnessFinal50 17 10 0 410000 410192 14 881
   0x2c8856108ac2364708d91a2324708d91a2324608b91 (by decide +kernel)
-private def cert17_39 := witnessFinal50 17 9 0 420000 420192 12 676
+private def cert17_39 := witnessFinal50 17 9 0 420000 420192 12 724
   0xb23158422b08e91c2364688e11b2344648c11 (by decide +kernel)
-private def cert17_40 := witnessFinal50 17 8 0 430000 430129 10 541
+private def cert17_40 := witnessFinal50 17 8 0 430000 430129 10 581
   0x308856108ad23846c8e91c2364688c91 (by decide +kernel)
-private def cert17_41 := witnessFinal50 17 7 0 440000 440128 8 415
+private def cert17_41 := witnessFinal50 17 7 0 440000 440128 8 447
   0xc2215a422b48e11d23846c8d11 (by decide +kernel)
-private def cert17_42 := witnessFinal50 17 6 0 450000 450128 7 343
+private def cert17_42 := witnessFinal50 17 6 0 450000 450128 7 371
   0x18462b4845691e23a4708d91 (by decide +kernel)
-private def cert17_43 := witnessFinal50 17 5 0 460000 460065 5 236
+private def cert17_43 := witnessFinal50 17 5 0 460000 460065 5 256
   0x6910ad2115c4748e11 (by decide +kernel)
-private def cert17_44 := witnessFinal50 17 4 0 470000 470064 4 179
+private def cert17_44 := witnessFinal50 17 4 0 470000 470064 4 195
   0xd2215c422b88e91 (by decide +kernel)
-private def cert17_45 := witnessFinal50 17 3 0 480000 480064 3 127
+private def cert17_45 := witnessFinal50 17 3 0 480000 480064 3 139
   0x1a462b8845711 (by decide +kernel)
-private def cert17_46 := witnessFinal50 17 2 0 490000 490001 2 81
+private def cert17_46 := witnessFinal50 17 2 0 490000 490001 2 89
   0x388857108a (by decide +kernel)
-private def cert17_47 := witnessFinal50 17 1 0 500000 500000 1 39
+private def cert17_47 := witnessFinal50 17 1 0 500000 500000 1 43
   0x7110a (by decide +kernel)
-private def cert17_48 := witnessFinal50 17 0 0 510000 510000 1 36
+private def cert17_48 := witnessFinal50 17 0 0 510000 510000 1 40
   0x7118a (by decide +kernel)
 private def chunks17 : List (Chunk 17) := [
   cert17_0,
@@ -478,119 +478,119 @@ theorem good17 : ∀ r ∈ rows17, good 17 r = true := rowsFrom_good chunks17
 theorem sorted17 : rows17.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks17 0 (by decide +kernel)).1
 
-theorem mass17 (i : Fin 58) :
-    bandCount 17 (i.val : ℤ) 57 14 ≤ (rows17.filter (fun r => decide (i.val ≤ r.index))).length := by
+theorem mass17 (i : Fin 60) :
+    bandCount 17 (i.val : ℤ) 59 14 ≤ (rows17.filter (fun r => decide (i.val ≤ r.index))).length := by
   change _ ≤ ((rowsFrom chunks17).filter _).length
   rw [mass_eq]
-  have h : (List.range 58).all
-      (fun j => decide (bandCount 17 (j : ℤ) 57 14 ≤ mass j chunks17)) = true := by
+  have h : (List.range 60).all
+      (fun j => decide (bandCount 17 (j : ℤ) 59 14 ≤ mass j chunks17)) = true := by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total17 : (rows17.map (price 17)).sum = 94920 :=
+theorem total17 : (rows17.map (price 17)).sum = 99440 :=
   (total_eq chunks17).trans (by decide +kernel)
 
-private def cert18_0 := witnessFinal50 18 50 0 40900 40900 1 101
+private def cert18_0 := witnessFinal50 18 50 0 40900 40900 1 105
   0x0 (by decide +kernel)
-private def cert18_1 := witnessFinal50 18 49 0 50837 50899 2 202
+private def cert18_1 := witnessFinal50 18 49 0 50837 50899 2 210
   0x0 (by decide +kernel)
-private def cert18_2 := witnessFinal50 18 48 0 60774 60899 4 401
+private def cert18_2 := witnessFinal50 18 48 0 60774 60899 4 417
   0x11200 (by decide +kernel)
-private def cert18_3 := witnessFinal50 18 47 0 70711 70898 6 599
+private def cert18_3 := witnessFinal50 18 47 0 70711 70898 6 623
   0x44812200 (by decide +kernel)
-private def cert18_4 := witnessFinal50 18 46 0 80648 80898 9 892
+private def cert18_4 := witnessFinal50 18 46 0 80648 80898 9 928
   0x109112048812200 (by decide +kernel)
-private def cert18_5 := witnessFinal50 18 45 0 90585 90897 11 1083
+private def cert18_5 := witnessFinal50 18 45 0 90585 90897 11 1127
   0x424448908a122048812200 (by decide +kernel)
-private def cert18_6 := witnessFinal50 18 44 0 100522 100897 14 1368
+private def cert18_6 := witnessFinal50 18 44 0 100522 100897 14 1424
   0xc490912114244111122048812200 (by decide +kernel)
-private def cert18_7 := witnessFinal50 18 43 0 110459 110896 16 1554
+private def cert18_7 := witnessFinal50 18 43 0 110459 110896 16 1618
   0x312244284845091222244111122048812200 (by decide +kernel)
-private def cert18_8 := witnessFinal50 18 42 0 120396 120896 19 1835
+private def cert18_8 := witnessFinal50 18 42 0 120396 120896 19 1911
   0x82448850908a22114444488222244111122048812200 (by decide +kernel)
-private def cert18_9 := witnessFinal50 18 41 0 130333 130833 21 2019
+private def cert18_9 := witnessFinal50 18 41 0 130333 130833 21 2103
   0x918a122144422888891322444488222244111122048812200 (by decide +kernel)
-private def cert18_10 := witnessFinal50 18 40 0 140270 140832 24 2298
+private def cert18_10 := witnessFinal50 18 40 0 140270 140832 24 2394
   0x12314444288845111322444488322444488222244111122048812200 (by decide +kernel)
-private def cert18_11 := witnessFinal50 18 39 0 150207 150832 27 2567
+private def cert18_11 := witnessFinal50 18 39 0 150207 150832 27 2675
   0x2482888851108a3211464488891322444488322444488222244111122048812200 (by decide +kernel)
-private def cert18_12 := witnessFinal50 18 38 0 160144 160769 30 2844
+private def cert18_12 := witnessFinal50 18 38 0 160144 160769 30 2964
   0x88c51110a3211464488a11322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert18_13 := witnessFinal50 18 37 0 170081 170768 33 3111
+private def cert18_13 := witnessFinal50 18 37 0 170081 170768 33 3243
   0x1118a3221464228c8a1132244448a11322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert18_14 := witnessFinal50 18 36 0 180018 180768 37 3469
+private def cert18_14 := witnessFinal50 18 36 0 180018 180768 37 3617
   0x1120a3221464229084521132244508991222244211322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert18_15 := witnessFinal50 18 35 0 190017 190705 39 3633
+private def cert18_15 := witnessFinal50 18 35 0 190017 190705 39 3789
   0x64628c8852108a42264548a1132244448a1132244448842264488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert18_16 := witnessFinal50 18 34 0 200016 200704 42 3888
+private def cert18_16 := witnessFinal50 18 34 0 200016 200704 42 4056
   0xc8c52110a4211484548a1132244548a11322444488422644888910844c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert18_17 := witnessFinal50 18 33 0 210015 210704 44 4032
+private def cert18_17 := witnessFinal50 18 33 0 210015 210704 44 4208
   0x324148442908452908a522844c8a9142264488891522844c89111221089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert18_18 := witnessFinal50 18 32 0 220014 220641 46 4188
+private def cert18_18 := witnessFinal50 18 32 0 220014 220641 46 4372
   0x108c52110a52114a4508b11522844c8911522844c8911122148a11322444488422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert18_19 := witnessFinal50 18 31 0 230013 230640 47 4237
+private def cert18_19 := witnessFinal50 18 31 0 230013 230640 47 4425
   0x8462948852908a522c4548a11322c4548a1132244448a91422644888910a4508991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert18_20 := witnessFinal50 18 30 0 240012 240640 49 4373
+private def cert18_20 := witnessFinal50 18 30 0 240012 240640 49 4569
   0x2120a52214a4229884531152284588a9142264488b11522844c8911122148a11322444488522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert18_21 := witnessFinal50 18 29 0 250011 250577 49 4331
+private def cert18_21 := witnessFinal50 18 29 0 250011 250577 49 4527
   0x2918a52214c422988a91722c4548a11322c4548a1132244448b11522844c8911122148a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert18_22 := witnessFinal50 18 28 0 260010 260576 50 4376
+private def cert18_22 := witnessFinal50 18 28 0 260010 260576 50 4576
   0x148c53110a62114c45c8b11522845c8b11522844c8911622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert18_23 := witnessFinal50 18 27 0 270009 270576 50 4318
+private def cert18_23 := witnessFinal50 18 27 0 270009 270576 50 4518
   0x149053110a62114e4229c8b11522e4588a91422645c8b11522844c8911122c4548a11322444488622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert18_24 := witnessFinal50 18 26 0 280008 280513 50 4276
+private def cert18_24 := witnessFinal50 18 26 0 280008 280513 50 4476
   0x188c53110a72114e4588c11722c4548a11722c4548a11322445c8b11522844c8911122188a91422644888910c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert18_25 := witnessFinal50 18 25 0 290007 290512 49 4135
+private def cert18_25 := witnessFinal50 18 25 0 290007 290512 49 4331
   0x3118a72214e4229c8c11722c4548c11722c4548a11322e4588a9142264488891722c4548a11322444488622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert18_26 := witnessFinal50 18 24 0 300006 300512 49 4077
+private def cert18_26 := witnessFinal50 18 24 0 300006 300512 49 4273
   0x3120a72214e422a0845411722c4608b91622a4508c11722c4548a11322445c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert18_27 := witnessFinal50 18 23 0 310005 310449 47 3857
+private def cert18_27 := witnessFinal50 18 23 0 310005 310449 47 4045
   0xe4629c8854108a822e4648c11722c4548c11722c4548a11323045c8b11522844c8911122e4588a91422644888910e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert18_28 := witnessFinal50 18 22 0 320004 320448 46 3720
+private def cert18_28 := witnessFinal50 18 22 0 320004 320448 46 3904
   0x1c8c54110a8211504648c11722c4648c11722c4548a11822e4588a9142264488c11722c4548a11322444488722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert18_29 := witnessFinal50 18 21 0 330003 330448 44 3488
+private def cert18_29 := witnessFinal50 18 21 0 330003 330448 44 3664
   0x724150442a08454908a923045c8c91822e4588a91923045c8b11522844c8c11722c4548a1132244448c11722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert18_30 := witnessFinal50 18 20 0 340002 340385 42 3276
+private def cert18_30 := witnessFinal50 18 20 0 340002 340385 42 3444
   0x208c54110a9211524608d11923045c8b11923045c8b1152284648c11722c4548a1132244608b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert18_31 := witnessFinal50 18 19 0 350001 350384 39 2973
+private def cert18_31 := witnessFinal50 18 19 0 350001 350384 39 3129
   0x10462a48854908a92344648c1172344648c11722c4548c91822e4588a9142264648c11722c4548a1132244448c11722c4548a11322444488 (by decide +kernel)
-private def cert18_32 := witnessFinal50 18 18 0 360000 360384 37 2749
+private def cert18_32 := witnessFinal50 18 18 0 360000 360384 37 2897
   0x4120a922152422a884551192304688c91822e4588d11923045c8b1152284648c11722c4548a1132244648c11722c4548a11322444488 (by decide +kernel)
-private def cert18_33 := witnessFinal50 18 17 0 370000 370321 33 2379
+private def cert18_33 := witnessFinal50 18 17 0 370000 370321 33 2511
   0x4918a922154422a88c91b2344648c1172344648c11722c4548d11923045c8b11522844c8c91822e4588a9142264488891 (by decide +kernel)
-private def cert18_34 := witnessFinal50 18 16 0 380000 380320 30 2088
+private def cert18_34 := witnessFinal50 18 16 0 380000 380320 30 2208
   0x248c55110aa2115446c8d11923046c8d11923045c8b11a2324608b91622a4508d11923045c8b11522844c8911 (by decide +kernel)
-private def cert18_35 := witnessFinal50 18 15 0 390000 390320 27 1811
+private def cert18_35 := witnessFinal50 18 15 0 390000 390320 27 1919
   0x12482a88855108ab211564688c91b2344648c1172364688c91822e4588a91a2324608b91622a4508991 (by decide +kernel)
-private def cert18_36 := witnessFinal50 18 14 0 400000 400257 24 1554
+private def cert18_36 := witnessFinal50 18 14 0 400000 400257 24 1650
   0xa23154442ac845591a23846c8d11923046c8d11923045c8b11b2344648c11722c4548a11 (by decide +kernel)
-private def cert18_37 := witnessFinal50 18 13 0 410000 410256 21 1311
+private def cert18_37 := witnessFinal50 18 13 0 410000 410256 21 1395
   0x5118ab22156422ac8e11b2344648e11b2344648c1172364688c91822e4588a91 (by decide +kernel)
-private def cert18_38 := witnessFinal50 18 12 0 420000 420256 19 1135
+private def cert18_38 := witnessFinal50 18 12 0 420000 420256 19 1211
   0x14482ac8855908ac2115846c8d11c2364688c91823846c8d11923045c8b11 (by decide +kernel)
-private def cert18_39 := witnessFinal50 18 11 0 430000 430193 16 922
+private def cert18_39 := witnessFinal50 18 11 0 430000 430193 16 986
   0xb23156442b0845611b23a4708d91a2324708d91a2324608b91 (by decide +kernel)
-private def cert18_40 := witnessFinal50 18 10 0 440000 440192 14 772
+private def cert18_40 := witnessFinal50 18 10 0 440000 440192 14 828
   0x2c8c56110ac211584748e11b2344748e11b2344648c11 (by decide +kernel)
-private def cert18_41 := witnessFinal50 18 9 0 450000 450192 12 632
+private def cert18_41 := witnessFinal50 18 9 0 450000 450192 12 680
   0xb24158442b08456908ad23846c8e91c2364688c91 (by decide +kernel)
-private def cert18_42 := witnessFinal50 18 8 0 460000 460129 10 504
+private def cert18_42 := witnessFinal50 18 8 0 460000 460129 10 544
   0x308c56110ad2115a4708f11d23846c8d11 (by decide +kernel)
-private def cert18_43 := witnessFinal50 18 7 0 470000 470128 8 386
+private def cert18_43 := witnessFinal50 18 7 0 470000 470128 8 418
   0xc2315a442b4845691e23a4708d91 (by decide +kernel)
-private def cert18_44 := witnessFinal50 18 6 0 480000 480128 7 319
+private def cert18_44 := witnessFinal50 18 6 0 480000 480128 7 347
   0x18482b48856908ae2115c4748e11 (by decide +kernel)
-private def cert18_45 := witnessFinal50 18 5 0 490000 490065 5 219
+private def cert18_45 := witnessFinal50 18 5 0 490000 490065 5 239
   0x6918ad2215c422b88e91 (by decide +kernel)
-private def cert18_46 := witnessFinal50 18 4 0 500000 500064 4 166
+private def cert18_46 := witnessFinal50 18 4 0 500000 500064 4 182
   0xd2315c442b8845711 (by decide +kernel)
-private def cert18_47 := witnessFinal50 18 3 0 510000 510064 3 118
+private def cert18_47 := witnessFinal50 18 3 0 510000 510064 3 130
   0x1a482b88857108a (by decide +kernel)
-private def cert18_48 := witnessFinal50 18 2 0 520000 520001 2 75
+private def cert18_48 := witnessFinal50 18 2 0 520000 520001 2 83
   0x388c57110a (by decide +kernel)
-private def cert18_49 := witnessFinal50 18 1 0 530000 530000 1 36
+private def cert18_49 := witnessFinal50 18 1 0 530000 530000 1 40
   0x7118a (by decide +kernel)
-private def cert18_50 := witnessFinal50 18 0 0 540000 540000 1 33
+private def cert18_50 := witnessFinal50 18 0 0 540000 540000 1 37
   0x7120a (by decide +kernel)
 private def chunks18 : List (Chunk 18) := [
   cert18_0,
@@ -651,123 +651,123 @@ theorem good18 : ∀ r ∈ rows18, good 18 r = true := rowsFrom_good chunks18
 theorem sorted18 : rows18.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks18 0 (by decide +kernel)).1
 
-theorem mass18 (i : Fin 58) :
-    bandCount 18 (i.val : ℤ) 57 14 ≤ (rows18.filter (fun r => decide (i.val ≤ r.index))).length := by
+theorem mass18 (i : Fin 60) :
+    bandCount 18 (i.val : ℤ) 59 14 ≤ (rows18.filter (fun r => decide (i.val ≤ r.index))).length := by
   change _ ≤ ((rowsFrom chunks18).filter _).length
   rw [mass_eq]
-  have h : (List.range 58).all
-      (fun j => decide (bandCount 18 (j : ℤ) 57 14 ≤ mass j chunks18)) = true := by
+  have h : (List.range 60).all
+      (fun j => decide (bandCount 18 (j : ℤ) 59 14 ≤ mass j chunks18)) = true := by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total18 : (rows18.map (price 18)).sum = 108730 :=
+theorem total18 : (rows18.map (price 18)).sum = 113970 :=
   (total_eq chunks18).trans (by decide +kernel)
 
-private def cert19_0 := witnessFinal50 19 52 0 50901 50901 1 101
+private def cert19_0 := witnessFinal50 19 52 0 50901 50901 1 105
   0x0 (by decide +kernel)
-private def cert19_1 := witnessFinal50 19 51 0 60838 60900 2 202
+private def cert19_1 := witnessFinal50 19 51 0 60838 60900 2 210
   0x0 (by decide +kernel)
-private def cert19_2 := witnessFinal50 19 50 0 70775 70900 4 401
+private def cert19_2 := witnessFinal50 19 50 0 70775 70900 4 417
   0x11200 (by decide +kernel)
-private def cert19_3 := witnessFinal50 19 49 0 80712 80899 6 599
+private def cert19_3 := witnessFinal50 19 49 0 80712 80899 6 623
   0x44812200 (by decide +kernel)
-private def cert19_4 := witnessFinal50 19 48 0 90649 90899 9 892
+private def cert19_4 := witnessFinal50 19 48 0 90649 90899 9 928
   0x109112048812200 (by decide +kernel)
-private def cert19_5 := witnessFinal50 19 47 0 100586 100898 12 1184
+private def cert19_5 := witnessFinal50 19 47 0 100586 100898 12 1232
   0x2122240908a122048812200 (by decide +kernel)
-private def cert19_6 := witnessFinal50 19 46 0 110523 110898 15 1466
+private def cert19_6 := witnessFinal50 19 46 0 110523 110898 15 1526
   0x6248488912114244111122048812200 (by decide +kernel)
-private def cert19_7 := witnessFinal50 19 45 0 120460 120897 18 1750
+private def cert19_7 := witnessFinal50 19 45 0 120460 120897 18 1822
   0xc49091221424228488222244111122048812200 (by decide +kernel)
-private def cert19_8 := witnessFinal50 19 44 0 130397 130897 21 2024
+private def cert19_8 := witnessFinal50 19 44 0 130397 130897 21 2108
   0x20931224428484509122114444488222244111122048812200 (by decide +kernel)
-private def cert19_9 := witnessFinal50 19 43 0 140334 140896 24 2303
+private def cert19_9 := witnessFinal50 19 43 0 140334 140896 24 2399
   0x4122462848850908a22114444488322444488222244111122048812200 (by decide +kernel)
-private def cert19_10 := witnessFinal50 19 42 0 150271 150896 27 2572
+private def cert19_10 := witnessFinal50 19 42 0 150271 150896 27 2680
   0xa2448c50910a222144422888891322444488322444488222244111122048812200 (by decide +kernel)
-private def cert19_11 := witnessFinal50 19 41 0 160208 160833 30 2849
+private def cert19_11 := witnessFinal50 19 41 0 160208 160833 30 2969
   0x49050918a2221444228889908a322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert19_12 := witnessFinal50 19 40 0 170145 170832 33 3116
+private def cert19_12 := witnessFinal50 19 40 0 170145 170832 33 3248
   0x920a223144442888451908a32244448a11322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert19_13 := witnessFinal50 19 39 0 180082 180832 37 3474
+private def cert19_13 := witnessFinal50 19 39 0 180082 180832 37 3622
   0x928a2231444428c8851908a32244508991222244211322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert19_14 := witnessFinal50 19 38 0 190019 190769 40 3739
+private def cert19_14 := witnessFinal50 19 38 0 190019 190769 40 3899
   0x2241444628c8851908a322842290899122224508991222244211322444488322444488322444488222244111122048812200 (by decide +kernel)
-private def cert19_15 := witnessFinal50 19 37 0 200018 200768 43 3994
+private def cert19_15 := witnessFinal50 19 37 0 200018 200768 43 4166
   0x44828c8c51910a321148422908991222a450899122224421132244448842264488891064488891064488891044448822224409102440 (by decide +kernel)
-private def cert19_16 := witnessFinal50 19 36 0 210017 210768 46 4235
+private def cert19_16 := witnessFinal50 19 36 0 210017 210768 46 4419
   0x89451918a32214844290845211322a450899122224548a11322444488422644888910844c89111220c89111220c891112208889104444881220488 (by decide +kernel)
-private def cert19_17 := witnessFinal50 19 35 0 220016 220705 48 4391
+private def cert19_17 := witnessFinal50 19 35 0 220016 220705 48 4583
   0x324146462908852108a422a422948a1132244548a11322444488522844c89111221089912222442113224444883224444883224444882222441111220488 (by decide +kernel)
-private def cert19_18 := witnessFinal50 19 34 0 230015 230704 50 4533
+private def cert19_18 := witnessFinal50 19 34 0 230015 230704 50 4733
   0xc9052118a4221484229484529142264588a9142264488891522844c8911122148a11322444488422644888910844c89111220c89111220c89111220888910444488 (by decide +kernel)
-private def cert19_19 := witnessFinal50 19 33 0 240014 240704 52 4669
+private def cert19_19 := witnessFinal50 19 33 0 240014 240704 52 4877
   0x325148462908852910a52114a4508b11522844c8911622a4508991222244291422644888910a4508991222244211322444488422644888910644888910644888910444488 (by decide +kernel)
-private def cert19_20 := witnessFinal50 19 32 0 250013 250641 53 4716
+private def cert19_20 := witnessFinal50 19 32 0 250013 250641 53 4928
   0x2120a42314a4429484529162114c4548a11322c4548a1132244448b11522844c8911122148a11322444488522844c8911122108991222244211322444488322444488322444488 (by decide +kernel)
-private def cert19_21 := witnessFinal50 19 31 0 260012 260640 54 4761
+private def cert19_21 := witnessFinal50 19 31 0 260012 260640 54 4977
   0x109052918a52214a42298845311522845c8b11522844c8911622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488322444488 (by decide +kernel)
-private def cert19_22 := witnessFinal50 19 30 0 270011 270640 55 4788
+private def cert19_22 := witnessFinal50 19 30 0 270011 270640 55 5008
   0x84a2948c52910a62214c422988a91722c4548a11322e4588a9142264488891622a4508991222244311522844c8911122148a11322444488522844c8911122108991222244211322444488 (by decide +kernel)
-private def cert19_23 := witnessFinal50 19 29 0 280010 280577 55 4746
+private def cert19_23 := witnessFinal50 19 29 0 280010 280577 55 4966
   0xa482948c53110a62114c45c845391622a4508b91622a4508991222e4588a91422644888910c4548a11322444488622a4508991222244291422644888910a4508991222244211322444488 (by decide +kernel)
-private def cert19_24 := witnessFinal50 19 28 0 290009 290576 55 4686
+private def cert19_24 := witnessFinal50 19 28 0 290009 290576 55 4906
   0xa482988c53110a62114e4229c8b11523045c8b11522844c8b91622a4508991222245c8b11522844c8911122188a91422644888910c4548a11322444488522844c8911122148a11322444488 (by decide +kernel)
-private def cert19_25 := witnessFinal50 19 27 0 300008 300576 55 4628
+private def cert19_25 := witnessFinal50 19 27 0 300008 300576 55 4848
   0xa4a2988c53110a72214e4229c8b11822e4588a91423045c8b11522844c8911722c4548a11322444488722c4548a11322444488622a4508991222244311522844c8911122148a11322444488 (by decide +kernel)
-private def cert19_26 := witnessFinal50 19 26 0 310007 310513 54 4485
+private def cert19_26 := witnessFinal50 19 26 0 310007 310513 54 4701
   0x189053118a72214e4229c8c108a822e4588a91822e4588a9142264608b91622a4508991222245c8b11522844c89111221c8b11522844c8911122188a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert19_27 := witnessFinal50 19 25 0 320006 320512 53 4348
+private def cert19_27 := witnessFinal50 19 25 0 320006 320512 53 4560
   0x3120a72314e4429c8454108a822e4588c91822e4588a91423045c8b11522844c8911822e4588a91422644888910e4588a91422644888910e4588a91422644888910c4548a11322444488 (by decide +kernel)
-private def cert19_28 := witnessFinal50 19 24 0 330005 330512 52 4189
+private def cert19_28 := witnessFinal50 19 24 0 330005 330512 52 4397
   0x62514e4629c8854110a82115045c8c91822e4588a91923045c8b11522844c8c11722c4548a1132244448c11722c4548a11322444488722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert19_29 := witnessFinal50 19 23 0 340004 340449 50 3977
+private def cert19_29 := witnessFinal50 19 23 0 340004 340449 50 4177
   0x1c9053918a822150422a08c908a923045c8b11923045c8b1152284648c11722c4548a1132244608b91622a4508991222244411722c4548a11322444488722c4548a11322444488 (by decide +kernel)
-private def cert19_30 := witnessFinal50 19 22 0 350003 350448 48 3743
+private def cert19_30 := witnessFinal50 19 22 0 350003 350448 48 3935
   0x724150462a08854108a9211524608b91a2324608b91622a4648c11722c4548a1132324608b91622a450899122224608b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert19_31 := witnessFinal50 19 21 0 360002 360448 46 3519
+private def cert19_31 := witnessFinal50 19 21 0 360002 360448 46 3703
   0x1c9454118a822152442a484549182344648c11722c4688c91822e4588a9142324608b91622a450899122324608b91622a4508991222244411722c4548a11322444488 (by decide +kernel)
-private def cert19_32 := witnessFinal50 19 20 0 370001 370385 43 3214
+private def cert19_32 := witnessFinal50 19 20 0 370001 370385 43 3386
   0x10482a08c54910a921152468845511923045c8d11923045c8b1152344648c11722c4548a1132324608b91622a450899122224648c11722c4548a11322444488 (by decide +kernel)
-private def cert19_33 := witnessFinal50 19 19 0 380000 380384 40 2923
+private def cert19_33 := witnessFinal50 19 19 0 380000 380384 40 3083
   0x824152462a48854908aa211544648c11b2344648c11722c4688c91822e4588a9142344648c11722c4548a1132244648c11722c4548a11322444488 (by decide +kernel)
-private def cert19_34 := witnessFinal50 19 18 0 390000 390384 37 2606
+private def cert19_34 := witnessFinal50 19 18 0 390000 390384 37 2754
   0x4128a923152442a88855108aa23246c8d11923045c8d91a2324608b91622a4688c91822e4588a9142264688c91822e4588a9142264488891 (by decide +kernel)
-private def cert19_35 := witnessFinal50 19 17 0 400000 400321 33 2252
+private def cert19_35 := witnessFinal50 19 17 0 400000 400321 33 2384
   0x4920a923154442a8845511b211564688c9182364688c91822e4588d91a2324608b91622a4508d11923045c8b11522844c8911 (by decide +kernel)
-private def cert19_36 := witnessFinal50 19 16 0 410000 410320 30 1973
+private def cert19_36 := witnessFinal50 19 16 0 410000 410320 30 2093
   0x249055118aa22154422ac845591a2324708d91a2324608b91b2344648c11722c4548d91a2324608b91622a4508991 (by decide +kernel)
-private def cert19_37 := witnessFinal50 19 15 0 420000 420320 27 1708
+private def cert19_37 := witnessFinal50 19 15 0 420000 420320 27 1816
   0x124a2a88c55110ab22156422ac8d11c2364688c91823846c8d11923045c8b11b2344648c11722c4548a11 (by decide +kernel)
-private def cert19_38 := witnessFinal50 19 14 0 430000 430257 24 1463
+private def cert19_38 := witnessFinal50 19 14 0 430000 430257 24 1559
   0xa24154462ac8855908ab238422b08d91a2324708d91a2324608b91c2364688c91822e4588a91 (by decide +kernel)
-private def cert19_39 := witnessFinal50 19 13 0 440000 440256 21 1232
+private def cert19_39 := witnessFinal50 19 13 0 440000 440256 21 1316
   0x5120ab23156442ac8456108ac2364688e91c2364688c91823846c8d11923045c8b11 (by decide +kernel)
-private def cert19_40 := witnessFinal50 19 12 0 450000 450256 19 1064
+private def cert19_40 := witnessFinal50 19 12 0 450000 450256 19 1140
   0x144a2ac8c55910ac22158422b08d91d23846c8d11923a4708d91a2324608b91 (by decide +kernel)
-private def cert19_41 := witnessFinal50 19 11 0 460000 460193 16 863
+private def cert19_41 := witnessFinal50 19 11 0 460000 460193 16 927
   0xb24156462b08856108ac23a422b48e11b2344748e11b2344648c11 (by decide +kernel)
-private def cert19_42 := witnessFinal50 19 10 0 470000 470192 14 721
+private def cert19_42 := witnessFinal50 19 10 0 470000 470192 14 777
   0x2c9056118ac22158422b4845691c2364788e91c2364688c91 (by decide +kernel)
-private def cert19_43 := witnessFinal50 19 9 0 480000 480192 12 589
+private def cert19_43 := witnessFinal50 19 9 0 480000 480192 12 637
   0xb25158462b08856910ad2115a4708f11d23846c8d11 (by decide +kernel)
-private def cert19_44 := witnessFinal50 19 8 0 490000 490129 10 469
+private def cert19_44 := witnessFinal50 19 8 0 490000 490129 10 509
   0x309056118ad2215a422b48f108ae23a4708d91 (by decide +kernel)
-private def cert19_45 := witnessFinal50 19 7 0 500000 500128 8 359
+private def cert19_45 := witnessFinal50 19 7 0 500000 500128 8 391
   0xc2415a462b48856908ae2115c4748e11 (by decide +kernel)
-private def cert19_46 := witnessFinal50 19 6 0 510000 510128 7 296
+private def cert19_46 := witnessFinal50 19 6 0 510000 510128 7 324
   0x184a2b48c56910ae2215c422b88e91 (by decide +kernel)
-private def cert19_47 := witnessFinal50 19 5 0 520000 520065 5 203
+private def cert19_47 := witnessFinal50 19 5 0 520000 520065 5 223
   0x6920ad2315c442b8845711 (by decide +kernel)
-private def cert19_48 := witnessFinal50 19 4 0 530000 530064 4 154
+private def cert19_48 := witnessFinal50 19 4 0 530000 530064 4 170
   0xd2415c462b88857108a (by decide +kernel)
-private def cert19_49 := witnessFinal50 19 3 0 540000 540064 3 109
+private def cert19_49 := witnessFinal50 19 3 0 540000 540064 3 121
   0x1a4a2b88c57110a (by decide +kernel)
-private def cert19_50 := witnessFinal50 19 2 0 550000 550001 2 69
+private def cert19_50 := witnessFinal50 19 2 0 550000 550001 2 77
   0x389057118a (by decide +kernel)
-private def cert19_51 := witnessFinal50 19 1 0 560000 560000 1 33
+private def cert19_51 := witnessFinal50 19 1 0 560000 560000 1 37
   0x7120a (by decide +kernel)
-private def cert19_52 := witnessFinal50 19 0 0 570000 570000 1 30
+private def cert19_52 := witnessFinal50 19 0 0 570000 570000 1 34
   0x7128a (by decide +kernel)
 private def chunks19 : List (Chunk 19) := [
   cert19_0,
@@ -830,16 +830,16 @@ theorem good19 : ∀ r ∈ rows19, good 19 r = true := rowsFrom_good chunks19
 theorem sorted19 : rows19.Pairwise (fun a b => a.tag < b.tag) :=
   (rowsFrom_sorted_aux chunks19 0 (by decide +kernel)).1
 
-theorem mass19 (i : Fin 58) :
-    bandCount 19 (i.val : ℤ) 57 14 ≤ (rows19.filter (fun r => decide (i.val ≤ r.index))).length := by
+theorem mass19 (i : Fin 60) :
+    bandCount 19 (i.val : ℤ) 59 14 ≤ (rows19.filter (fun r => decide (i.val ≤ r.index))).length := by
   change _ ≤ ((rowsFrom chunks19).filter _).length
   rw [mass_eq]
-  have h : (List.range 58).all
-      (fun j => decide (bandCount 19 (j : ℤ) 57 14 ≤ mass j chunks19)) = true := by
+  have h : (List.range 60).all
+      (fun j => decide (bandCount 19 (j : ℤ) 59 14 ≤ mass j chunks19)) = true := by
     decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp h i.val (List.mem_range.mpr i.isLt))
 
-theorem total19 : (rows19.map (price 19)).sum = 123410 :=
+theorem total19 : (rows19.map (price 19)).sum = 129430 :=
   (total_eq chunks19).trans (by decide +kernel)
 
 

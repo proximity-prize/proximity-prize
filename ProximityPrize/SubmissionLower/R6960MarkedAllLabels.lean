@@ -22,7 +22,7 @@ single-determinant estimate. The protocol, scalar list, and all other cases
 are supplied by the verified 69.61 pipeline. -/
 def NonlinearPrice : Prop :=
   ∀ {u deleted} {M:Model u deleted} {Γ} (F:Family M Γ) (T:Finset K), T⊆Γ →
-    Word 179818 wordDegree M.word F.scalar T →
+    Word 179808 wordDegree M.word F.scalar T →
     ∀ f:Curve (Polynomial L),Irreducible f → 3≤f.degreeOf ordinate → f.degreeOf ordinate<48 →
       0<f.degreeOf parameter → height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
       ¬GeometricallyLinear (view f) →
@@ -30,7 +30,7 @@ def NonlinearPrice : Prop :=
       T.card≤rate (f.degreeOf ordinate)*f.degreeOf parameter+(f.degreeOf ordinate-1)*f.degreeOf ordinate
 
 theorem protocol_of_price (gates : Low6960Allocation.Gates) (price:NonlinearPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6961 ProximityPrize.SubmissionLower.Front6960Radius.p
+    ProximityPrize.Benchmark.ProtocolClaim 6962 ProximityPrize.SubmissionLower.Front6960Radius.p
       ProximityPrize.SubmissionLower.Front6960Radius.q := by
   have mono:Monotone rate:=by
     intro e n en

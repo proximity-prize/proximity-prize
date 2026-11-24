@@ -242,7 +242,7 @@ open Low6960FatSlots (topSlots)
 open Low6960Fat (mixedWeight secondCut bankRank)
 open scoped Polynomial BigOperators
 open K1_13_4_4_2 (line line_zero line_toGeneric transverse pow_dvd_of_coeff positive_jet_degree)
-def reserveCost (moving : Bool) : ℕ := if moving then 7074 else 48749
+def reserveCost (moving : Bool) : ℕ := if moving then 7134 else 48739
 def layerPower (e t : ℕ) : ℕ := 1 + (secondCut - t) / e
 private theorem choose_coordinate {moving : Bool} {A : Finset GenericRow}
     (hA : FactorsFor moving A) {F f : GenericRow} (hF : F ≠ 0) (hcap : Caps secondBox F)
@@ -304,9 +304,9 @@ theorem factor_power (moving : Bool) (A : Finset GenericRow) (F : PhysicalRow) (
 set_option maxRecDepth 1024
 theorem factor_arithmetic :
     let T := 202857067663471
-    48749 * 6820 * T / bankRank = 122 ∧ 48749 * 2300 * T / bankRank = 41 ∧
-      7074 * 6820 * T / bankRank = 17 ∧ 7074 * 2300 * T / bankRank = 5 ∧
-      7074 * 27000 * T / bankRank = 70 := by decide
+    48739 * 6820 * T / bankRank = 121 ∧ 48739 * 2300 * T / bankRank = 40 ∧
+      7134 * 6820 * T / bankRank = 17 ∧ 7134 * 2300 * T / bankRank = 5 ∧
+      7134 * 27000 * T / bankRank = 70 := by decide
 theorem resource_bound {e V d : ℕ} (he : 0 < e) (r : ℕ → ℕ)
     (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
     (hcap : ∀ t ≤ secondCut, r t ≤ topSlots 0)
@@ -342,13 +342,13 @@ theorem resource_bound {e V d : ℕ} (he : 0 < e) (r : ℕ → ℕ)
     _ = e * V * topSlots 0 := by ring
 theorem top_exclusion (r : ℕ → ℕ)
     (hr : bankRank ≤ ∑ t ∈ Finset.range (secondCut + 1), r t)
-    (h : ∀ t ≤ secondCut, r t ≤ topSlots (layerPower 7074 t)) : False := by
-  have hb := cutoff_sum_le (W := secondCut) (n := 1150) (by decide : 0 < 7074)
+    (h : ∀ t ≤ secondCut, r t ≤ topSlots (layerPower 7134 t)) : False := by
+  have hb := cutoff_sum_le (W := secondCut) (n := 1150) (by decide : 0 < 7134)
     r (fun k => topSlots (1 + k)) h (fun k hk => by
       have hk' : 1151 - (1 + k) = 0 := by omega
       simp [topSlots, hk'])
   rw [Low6960FatSlots.slot_sum] at hb
-  exact (not_le_of_gt (by decide : 7074 * 77728095800419025 < bankRank)) (hr.trans hb)
+  exact (not_le_of_gt (by decide : 7134 * 77728095800419025 < bankRank)) (hr.trans hb)
 end
 end Low6960FatFactors
 end
@@ -370,7 +370,7 @@ theorem factor_pair27
     (F G : GenericRow) (hF : F ≠ 0) (hG : G ≠ 0)
     (hFCap : Caps27 firstBox F) (hGCap : Caps27 secondBox G)
     (hfixed : ∀ A, FactorsFor false A → (∀ f ∈ A, f ∣ F ∧ f ∣ G) →
-      jetTotal (factorProduct A) ≤ 122 ∧ jetIndex (factorProduct A) ≤ 41)
+      jetTotal (factorProduct A) ≤ 121 ∧ jetIndex (factorProduct A) ≤ 40)
     (hmoving : ∀ A, FactorsFor true A → (∀ f ∈ A, f ∣ F ∧ f ∣ G) →
       jetTotal (factorProduct A) ≤ 17 ∧ jetIndex (factorProduct A) ≤ 5 ∧
       seedDegree (factorProduct A) ≤ 70 ∧ ∀ f ∈ A, f.degreeOf (some 2) = 0) :
@@ -596,7 +596,7 @@ private theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
     (hb : ∀ t ≤ secondCut, ∃ u : Fin (r t) → GenericRow,
       LinearIndependent GenericX u ∧ ∀ i, u i ∈ layerSpan w P L t)
     (hdvd : ∀ t ≤ secondCut,
-      layerSpan w P L t ≤ multiples (factorProduct A ^ layerPower 7074 t)) :
+      layerSpan w P L t ≤ multiples (factorProduct A ^ layerPower 7134 t)) :
     ∀ f ∈ A, f.degreeOf (some 2) = 0 := by
   classical
   let v : SeedVar → ℕ := Pi.single (some 2) 1
@@ -609,7 +609,7 @@ private theorem excludes_top {Γ s} {w : I → K} {P : PoleData Γ s}
     have h := MvPolynomial.weightedTotalDegree_le_of_dvd v
       (mem_multiples.mp (hdvd t ht hR)) hRne
     rw [weighted_pow _ _ (product_ne_zero hA)] at h
-    have hle := Nat.mul_le_mul_left (layerPower 7074 t) (Nat.pos_of_ne_zero hn)
+    have hle := Nat.mul_le_mul_left (layerPower 7134 t) (Nat.pos_of_ne_zero hn)
     rw [Nat.mul_one] at hle
     simpa only [v, MvPolynomial.weightedTotalDegree_piSingle] using hle.trans h
   intro f hf
@@ -650,10 +650,10 @@ theorem proof : Low6960Fat.c2 := by
     have hji := hbound false A hA hcomm _ _ hjcap
     change jetTotal _ ≤ _ at hbt
     change jetIndex _ ≤ _ at hji
-    have hbt' : jetTotal (factorProduct A) ≤ 122 := by
+    have hbt' : jetTotal (factorProduct A) ≤ 121 := by
       simp only [reserveCost, Bool.false_eq_true, ite_false, Low6960FatSlots.slot_zero, bF] at hbt
       exact hbt.trans (by decide)
-    have hji' : jetIndex (factorProduct A) ≤ 41 := by
+    have hji' : jetIndex (factorProduct A) ≤ 40 := by
       simp only [reserveCost, Bool.false_eq_true, ite_false, Low6960FatSlots.slot_zero, jF] at hji
       exact hji.trans (by decide)
     exact ⟨hbt', hji'⟩

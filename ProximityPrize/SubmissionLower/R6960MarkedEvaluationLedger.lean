@@ -160,12 +160,12 @@ open KoalaRect (axisDegree)
 open RescueGeometry (Model Family)
 open scoped Polynomial
 
-abbrev retainedCap : ℕ := 30359056712357701
+abbrev retainedCap : ℕ := 29416300486653916
 
 /-- A bound for the actual family of simple marked sheets left by the high prefix. -/
 def RetainedCount : Prop :=
   ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    (_lo : 2359 ≤ M.overhead.toNat) (_hi : M.overhead.toNat ≤ 33579)
+    (_lo : 2379 ≤ M.overhead.toNat) (_hi : M.overhead.toNat ≤ 33599)
     {D : PoleData M.overhead.toNat} (_Crt : CRTLift D)
     (_regular : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (_residues : ∀ γ ∈ Γ, MarkResidues D (M.label γ) (F.scalar γ))
@@ -179,10 +179,10 @@ def RetainedCount : Prop :=
 
 theorem high_count_of_retained (retained : RetainedCount)
     {u deleted} (M : Model u deleted) {Γ} (F : Family M Γ)
-    (lo : 2359 ≤ M.overhead) (hi : M.overhead ≤ 33579) :
-    Γ.card ≤ 266228295297719504 := by
-  have hlo : 2359 ≤ M.overhead.toNat := by omega
-  have hhi : M.overhead.toNat ≤ 33579 := by omega
+    (lo : 2379 ≤ M.overhead) (hi : M.overhead ≤ 33599) :
+    Γ.card ≤ 266094087021427205 := by
+  have hlo : 2379 ≤ M.overhead.toNat := by omega
+  have hhi : M.overhead.toNat ≤ 33599 := by omega
   obtain ⟨D, ⟨Crt⟩, regular, residues⟩ := FrontPoleChart.of_family M F
   rcases TerminalMarked.good_remainder F Crt hlo hhi regular residues with
     paid | ⟨T, f, sub, paid, degree, small, axes, grade, marks⟩
@@ -221,9 +221,9 @@ theorem scalar_injective {u deleted} (M : Model u deleted) : Function.Injective 
 theorem marked_projection {u deleted} {M : Model u deleted} {Γ T : Finset K}
     (F : Family M Γ) (f : Equation) (sub : T⊆Γ)
     (degree : 3≤f.natDegree) (axes : axisDegree f 0+axisDegree f 1≤2400)
-    (hi : M.overhead.toNat≤33579)
+    (hi : M.overhead.toNat≤33599)
     (marks : ∀ γ∈T, TerminalMarked.simpleSheet f (M.label γ) (F.scalar γ)) :
-    Word 179818 164650 M.word F.scalar T ∧
+    Word 179808 164670 M.word F.scalar T ∧
     ∃ P : Ordinate, P≠0 ∧ P.natDegree=f.natDegree ∧
       (zView P).natDegree≤axisDegree f 0+p*axisDegree f 1 ∧
       ∀ γ∈T, MarkedFiber P (scalar M γ) (liftPoly (F.scalar γ)) := by
@@ -235,7 +235,7 @@ theorem marked_projection {u deleted} {M : Model u deleted} {Γ T : Finset K}
     rcases (F.mark γ (sub hγ)).scalar_degree with z | bound
     · simp [z]
     · change ((F.scalar γ).natDegree : ℤ)≤131071+M.overhead at bound
-      have hh : M.overhead≤(33579 : ℤ) := by omega
+      have hh : M.overhead≤(33599 : ℤ) := by omega
       omega
   · intro γ hγ
     let mark := F.mark γ (sub hγ)
@@ -402,11 +402,11 @@ theorem price {N e s t loss obstructions ordinary meromorphic rank pole : ℕ}
   exact Nat.le_of_mul_le_mul_right (Nat.le_of_add_le_add_right paid) positive
 theorem live_maximum (e : Fin 48) (lo:3≤e.val) :
     rate e.val * (2400+K1.p*((TerminalReceipts.witness e.val).order 1-1))+
-      (e.val-1)*e.val ≤ 27833294590898808 := by
+      (e.val-1)*e.val ≤ 28934612001281415 := by
   fin_cases e <;> decide +kernel
 theorem maximum_at_42 : rate 42 * (2400+K1.p*((TerminalReceipts.witness 42).order 1-1))+
-    41*42=27833294590898808 ∧
-    27833294590898808+2525762121458893=retainedCap := by decide +kernel
+    41*42=28934612001281415 ∧
+    28934612001281415+481688485372501=retainedCap := by decide +kernel
 theorem budget (e a b : ℕ) (lo:3≤e) (hi:e<48) (axes:a+b≤2400)
     (bound:b<(TerminalReceipts.witness e).order 1) : rate e*(a+K1.p*b)+(e-1)*e≤retainedCap := by
   have fit:=live_maximum ⟨e,hi⟩ lo
