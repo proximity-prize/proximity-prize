@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.Low48BentVolume
 import ProximityPrize.SubmissionLower.Low48Price
 
+set_option Elab.async false
+
 set_option autoImplicit false
 
 namespace Low48BentVolume

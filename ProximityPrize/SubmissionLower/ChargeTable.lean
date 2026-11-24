@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.FadicVar
 
+set_option Elab.async false
+
 set_option autoImplicit false
 namespace KoalaFarBridge
 open FadicGate (Entry)

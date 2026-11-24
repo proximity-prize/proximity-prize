@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.PrimaryTaperColumns
 
+set_option Elab.async false
+
 /-!
 # Exact counts of tapered boxes of jet exponents
 

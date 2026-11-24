@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.Low48BentVolumePrice
 
+set_option Elab.async false
+
 set_option autoImplicit false
 set_option maxHeartbeats 650000
 

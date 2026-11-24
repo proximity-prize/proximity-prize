@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.R6960CoverBudget
 import Mathlib.GroupTheory.GroupAction.Basic
 
+set_option Elab.async false
+
 open scoped BigOperators
 open Finset
 namespace Lower6960.MarkedSheet

@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.PortLow7
 
+set_option Elab.async false
+
 set_option autoImplicit false
 namespace Low48BentLattice
 open K1_13 (Shape)

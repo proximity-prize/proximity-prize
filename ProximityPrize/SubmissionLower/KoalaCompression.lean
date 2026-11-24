@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.KoalaBoxDegree
 import ArkLib.Data.MvPolynomial.WeightAtMost
 import Mathlib.LinearAlgebra.Matrix.Rank
 
+set_option Elab.async false
+
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 

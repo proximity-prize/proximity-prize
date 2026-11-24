@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.KoalaRectReceipts
 import ProximityPrize.SubmissionLower.HighCore82258RectangleOrder
 
+set_option Elab.async false
+
 namespace KoalaRectAxes
 
 open KoalaRect (area rectDebit rectGain rectSlots)

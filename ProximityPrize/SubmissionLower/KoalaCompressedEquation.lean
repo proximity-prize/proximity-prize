@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.KoalaCompression
 import ProximityPrize.SubmissionLower.KoalaNodeTranslation
 
+set_option Elab.async false
+
 set_option autoImplicit false
 set_option maxHeartbeats 1200000
 

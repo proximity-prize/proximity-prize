@@ -1,0 +1,6 @@
+import ProximityPrize.SubmissionLower.R6961RetainedCompressionPureNodes
+import ProximityPrize.SubmissionLower.R6961RetainedCompressionDiscriminant
+
+set_option Elab.async false
+namespace Lower6961
+end Lower6961

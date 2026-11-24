@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.FadicGateDim
 
+set_option Elab.async false
+
 /-!
 # A Nat-only evaluator for the gate certificate
 

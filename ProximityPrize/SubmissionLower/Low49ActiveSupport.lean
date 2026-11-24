@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.Low49ActiveLattice
 import ProximityPrize.SubmissionLower.Low48BentSupport
 
+set_option Elab.async false
+
 set_option autoImplicit false
 
 namespace Low49ActiveSupport

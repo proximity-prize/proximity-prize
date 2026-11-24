@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.RankRows82190
 
+set_option Elab.async false
+
 namespace Final50RankCore
 open K1_13 (Geom)
 open K1_13_1_1 (Form bandSpace bandCount backShift targetOrder bandSpace_finite finrank_bandSpace)

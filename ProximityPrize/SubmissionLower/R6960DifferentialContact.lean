@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960HelperPrefix
 
+set_option Elab.async false
+
 /-! Seed-contact algebra for source rows chosen after separating the unique helper prime. -/
 noncomputable section
 namespace Lower6960.DifferentialContact

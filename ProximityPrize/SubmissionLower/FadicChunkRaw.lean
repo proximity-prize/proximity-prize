@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.FadicChunk
 import ProximityPrize.SubmissionLower.FadicRaw
 
+set_option Elab.async false
+
 /-!
 # Kernel-raw evaluator of the chunked certificate
 -/

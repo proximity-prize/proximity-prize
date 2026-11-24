@@ -1,6 +1,8 @@
 import ArkLib.ToMathlib.RingTheory.MvPolynomial.AffineHilbertComap
 import ArkLib.ToMathlib.RingTheory.MvPolynomial.MonomialMap
 
+set_option Elab.async false
+
 set_option autoImplicit false
 set_option maxHeartbeats 900000
 

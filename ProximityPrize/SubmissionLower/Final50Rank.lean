@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.Final50RankBlocks
 import ProximityPrize.SubmissionLower.Final50RankReceipt
 
+set_option Elab.async false
+
 namespace Final50Rank
 open K1_13 (Geom InBox Row shape extend atJet)
 open K1 (I K node)

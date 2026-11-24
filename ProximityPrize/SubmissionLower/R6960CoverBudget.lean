@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960CubicJump
 
+set_option Elab.async false
+
 /-! Whole-family arithmetic for the normalized-cover paper proof. -/
 namespace Lower6960.CoverBudget
 

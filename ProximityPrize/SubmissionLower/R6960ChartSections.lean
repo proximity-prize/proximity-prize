@@ -2,6 +2,8 @@ import Mathlib.Data.Finsupp.Basic
 import Mathlib.Data.Fintype.Prod
 import Mathlib.Data.Finset.Union
 
+set_option Elab.async false
+
 /-! Scalar two-chart computations for the product of the abscissa and
 parameter lines. Integer pairs are Laurent monomials on their common torus. -/
 namespace Lower6960.ChartSections

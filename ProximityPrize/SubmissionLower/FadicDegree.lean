@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.FadicVar
 
+set_option Elab.async false
+
 /-!
 # Weighted-degree bounds of the anchor factor
 

@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotBaseline
 
+set_option Elab.async false
+
 set_option autoImplicit false
 
 namespace Low48PrimaryPivot.RawReceipt

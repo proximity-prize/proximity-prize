@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.FadicChunkRaw
 
+set_option Elab.async false
+
 /-!
 # The raw evaluator computes the checked bounds
 

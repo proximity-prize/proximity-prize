@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.FadicNat
 
+set_option Elab.async false
+
 /-!
 # Kernel-raw evaluator
 

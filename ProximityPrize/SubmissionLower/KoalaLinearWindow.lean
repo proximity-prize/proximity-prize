@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaPiecewiseTriangle
 
+set_option Elab.async false
+
 set_option autoImplicit false
 
 namespace KoalaLinearWindow

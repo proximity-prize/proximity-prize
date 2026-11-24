@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.FadicCount
 
+set_option Elab.async false
+
 /-!
 # The f-adic gate space
 

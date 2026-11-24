@@ -4,6 +4,8 @@ import Mathlib.Algebra.Order.Ring.Int
 import Mathlib.Data.Int.Interval
 import Mathlib.Tactic.Ring
 
+set_option Elab.async false
+
 set_option autoImplicit false
 
 namespace KoalaAffineTriangle

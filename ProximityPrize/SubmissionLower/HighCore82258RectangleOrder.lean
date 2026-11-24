@@ -1,5 +1,7 @@
 import Mathlib.Data.Nat.Basic
 
+set_option Elab.async false
+
 namespace HighCore82258
 
 private theorem transfer_capacity {x y d : ℕ} (hxy : y ≤ x) :

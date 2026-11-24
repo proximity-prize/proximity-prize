@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.Low49ActiveLattice
 
+set_option Elab.async false
+
 set_option autoImplicit false
 set_option maxHeartbeats 1400000
 

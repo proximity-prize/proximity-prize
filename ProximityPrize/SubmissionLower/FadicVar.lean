@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.FadicGateDim
 
+set_option Elab.async false
+
 /-!
 # Variable-depth f-adic gate
 

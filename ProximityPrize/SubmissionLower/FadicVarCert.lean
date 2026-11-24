@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.FadicVar
 import ProximityPrize.SubmissionLower.FadicCast
 
+set_option Elab.async false
+
 /-!
 # Certificates for the variable-depth gate
 

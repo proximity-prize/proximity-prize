@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.FadicSpace
 
+set_option Elab.async false
+
 /-!
 # The gate space of one level, and its kernel certificate
 

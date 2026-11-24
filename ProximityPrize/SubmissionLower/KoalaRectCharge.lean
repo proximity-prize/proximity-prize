@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.KoalaRectSource
 
+set_option Elab.async false
+
 namespace KoalaRect
 open K1_14 (Shape shapeSum)
 
