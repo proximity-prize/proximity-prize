@@ -1,6 +1,55 @@
+import Mathlib.RingTheory.TensorProduct.Quotient
+import Mathlib.RingTheory.TensorProduct.Maps
+import Mathlib.RingTheory.Ideal.Quotient.Operations
 import ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
-import ProximityPrize.SubmissionLower.R6960RetainedFibreQuotient
 import Mathlib.RingTheory.Polynomial.Ideal
+
+-- merged module R6960RetainedFibreQuotient
+section Merged_R6960RetainedFibreQuotient
+
+noncomputable section
+set_option Elab.async false
+set_option backward.isDefEq.respectTransparency.types false
+namespace Lower6960.RetainedFibreQuotient
+open Algebra
+open scoped TensorProduct
+variable {k A S : Type*} [Field k] [CommRing A] [CommRing S]
+  [Algebra k A] [Algebra A S] [Algebra k S] [IsScalarTower k A S]
+
+/-- Specializing the finite algebra at a scalar-valued point is its quotient by
+the extended point ideal, with the original scalar action on that quotient. -/
+def atPoint (φ : A →ₐ[k] k) :
+    letI := φ.toRingHom.toAlgebra
+    (S ⧸ (RingHom.ker φ.toRingHom).map (algebraMap A S)) ≃ₐ[k] (k ⊗[A] S) := by
+  letI := φ.toRingHom.toAlgebra
+  let I:=RingHom.ker φ.toRingHom
+  have sur : Function.Surjective φ.toRingHom := fun x=>⟨algebraMap k A x,φ.commutes x⟩
+  let e : (A ⧸ I) ≃ₐ[A] k :=
+    { __ := φ.toRingHom.quotientKerEquivOfSurjective sur
+      commutes' := fun x=>φ.toRingHom.quotientKerEquivOfSurjective_apply_mk sur x }
+  let tensor := Algebra.TensorProduct.congr e (AlgEquiv.refl (R:=A) (A₁:=S))
+  let result := (Algebra.TensorProduct.quotIdealMapEquivQuotTensor S I).toRingEquiv.trans tensor.toRingEquiv
+  refine { __ := result, commutes' := fun c=>?_ }
+  change result ((Ideal.Quotient.mk _) (algebraMap k S c))=_
+  change tensor (Algebra.TensorProduct.quotIdealMapEquivQuotTensor S I (Ideal.Quotient.mk _ (algebraMap k S c)))=_
+  rw [Algebra.TensorProduct.quotIdealMapEquivQuotTensor_mk]
+  change e 1 ⊗ₜ[A] (algebraMap k S c)=_
+  rw [map_one]
+  rw [IsScalarTower.algebraMap_apply k A S]
+  change (1:k) ⊗ₜ[A] (algebraMap A S (algebraMap k A c))=c ⊗ₜ[A] (1:S)
+  rw [Algebra.algebraMap_eq_smul_one,TensorProduct.tmul_smul]
+  change (φ (algebraMap k A c) * 1) ⊗ₜ[A] (1:S)=_
+  rw [φ.commutes,mul_one]
+  rfl
+
+#print axioms atPoint
+end Lower6960.RetainedFibreQuotient
+
+end
+end Merged_R6960RetainedFibreQuotient
+
+-- merged module R6960RetainedCrossingComparison
+section Merged_R6960RetainedCrossingComparison
 
 noncomputable section
 set_option Elab.async false
@@ -108,12 +157,13 @@ private theorem scaled (x z:L) (v:Tor E) :
   change π (fromFinite E y)=_
   rw [val,map_mul,map_pow,map_mul,xx,zz,map_mul]
 
+set_option synthInstance.maxHeartbeats 200000 in
 theorem cross_surjective (x z:L) (nx:x≠0) (nz:z≠0) : Function.Surjective (toCross E x z) := by
   intro w
   obtain ⟨v,rfl⟩:=Ideal.Quotient.mk_surjective w
   obtain ⟨n,y,eq⟩:=scaled E x z v
   refine ⟨(x*z)⁻¹^n • y,?_⟩
-  rw [AlgHom.map_smul_of_tower,eq,←map_pow,←Algebra.smul_def,smul_smul,←mul_pow,inv_mul_cancel₀ (mul_ne_zero nx nz),one_pow,one_smul]
+  rw [map_smul,eq,←map_pow,←Algebra.smul_def,smul_smul,←mul_pow,inv_mul_cancel₀ (mul_ne_zero nx nz),one_pow,one_smul]
 
 #print axioms point_kernel
 #print axioms cross_surjective
@@ -184,3 +234,6 @@ theorem actual_crossing (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3�
 
 #print axioms actual_crossing
 end Lower6960.RetainedSurfaceClass
+
+end
+end Merged_R6960RetainedCrossingComparison

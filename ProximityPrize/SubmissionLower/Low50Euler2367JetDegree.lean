@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Polynomial.HasseDeriv
 import Mathlib.Algebra.MvPolynomial.Eval
 import Mathlib.Tactic
+set_option Elab.async false
 
 open scoped BigOperators Polynomial
 open Polynomial

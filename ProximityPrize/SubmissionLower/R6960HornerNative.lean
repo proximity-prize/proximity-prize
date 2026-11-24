@@ -1,28 +1,84 @@
+import ProximityPrize.SubmissionLower.R6960LineEulerFree
 import ProximityPrize.SubmissionLower.R6960HornerScalar
-import ProximityPrize.SubmissionLower.R6960HornerDeterminant
-import ProximityPrize.SubmissionLower.R6960LineEulerNormalization
 
+-- merged module R6960HornerDeterminant
+section Merged_R6960HornerDeterminant
+set_option Elab.async false
+set_option maxHeartbeats 3700000
+set_option backward.isDefEq.respectTransparency.types false
+namespace Lower6960.Horner
+noncomputable section
+open Polynomial LaurentPolynomial
+open LineEuler (Laurent infinityEmbedding)
+open scoped Polynomial BigOperators
+variable {k ι : Type*} [Field k] [Fintype ι] [DecidableEq ι]
+omit [Fintype ι] in
+private theorem prod_T (s : Finset ι) (n : ι→ℤ) :
+    (∏ i∈s,(T (n i):Laurent k))=T (∑ i∈s,n i) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp
+  | insert j s hj ih => rw [Finset.prod_insert hj,Finset.sum_insert hj,ih,T_add]
+private theorem coeff_C_product (c : k) (p : Laurent k) (i : ℤ) :
+    (LaurentPolynomial.C c*p).coeff i=c*p.coeff i := by
+  rw [←single_eq_C,AddMonoidAlgebra.coeff_single_zero_mul]
+theorem determinant_budget (G : Matrix ι ι (Laurent k)) (unit : IsUnit G)
+    (P Q : Matrix ι ι (Polynomial k)) (width : ι→ℕ) (independent : P.det≠0)
+    (join : P.map (Polynomial.toLaurent (R:=k)) = G * (Q.map (infinityEmbedding (k:=k))) *
+      Matrix.diagonal (fun i=>T (R:=k) (width i : ℤ))) :
+    ∃ d : ℤ, G.det.degree=(d:WithBot ℤ) ∧ -d≤∑ i,(width i : ℤ) := by
+  let D : ℤ := ∑ i,(width i : ℤ)
+  obtain ⟨c,d,cn,dc⟩ := LineEuler.unit_monomial G.det ((Matrix.isUnit_iff_isUnit_det G).mp unit)
+  have lhs : (P.map (Polynomial.toLaurent (R:=k))).det=P.det.toLaurent :=
+    (RingHom.map_det (Polynomial.toLaurent (R:=k)) P).symm
+  have rhs : (Q.map (infinityEmbedding (k:=k))).det=infinityEmbedding Q.det :=
+    ((infinityEmbedding (k:=k)).toRingHom.map_det Q).symm
+  have det := congrArg Matrix.det join
+  rw [lhs,Matrix.det_mul,Matrix.det_mul,rhs,Matrix.det_diagonal,prod_T,dc] at det
+  have eq : P.det.toLaurent=LaurentPolynomial.C c*(T (d+D)*infinityEmbedding Q.det) := calc
+    _ = (LaurentPolynomial.C c*T d)*infinityEmbedding Q.det*T D := det
+    _ = _ := by rw [T_add]; ring
+  let n : ℤ := P.det.natDegree
+  have coeff : P.det.toLaurent.coeff n≠0 := Finsupp.mem_support_iff.mp (by
+    rw [support_coeff_toLaurent]
+    exact Finset.mem_map.mpr ⟨_,natDegree_mem_support_of_nonzero independent,rfl⟩)
+  have bounded : infinityEmbedding Q.det∈AddMonoidAlgebra.supported k k (Set.Iic (0:ℤ)) := by
+    change infinityEmbedding Q.det∈AddMonoidAlgebra.supported k k (Set.Iic ((0:ℕ):ℤ))
+    rw [←LineEuler.range_shiftPolynomial 0]
+    exact ⟨Q.det,by rw [LineEuler.shiftPolynomial_apply,Nat.cast_zero,T_zero,one_mul]⟩
+  refine ⟨d,by rw [dc,degree_C_mul_T _ _ cn],?_⟩
+  change -d≤D
+  by_contra bad
+  have near : ¬n-(d+D)∈Set.Iic (0:ℤ) := by
+    change ¬n-(d+D)≤0
+    have nn : 0≤n := Int.natCast_nonneg _
+    omega
+  have outside := AddMonoidAlgebra.mem_supported'.mp bounded _ near
+  rw [eq,coeff_C_product,LineEuler.coeff_shift,outside,mul_zero] at coeff
+  exact coeff rfl
+#print axioms determinant_budget
+end
+end Lower6960.Horner
+
+end Merged_R6960HornerDeterminant
+
+-- merged module R6960HornerNative
+section Merged_R6960HornerNative
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 6000000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.Horner
 noncomputable section
 open Polynomial LaurentPolynomial Module
 open LineEuler
 open scoped Polynomial BigOperators Matrix
-
 variable {k : Type*} [Field k]
-
-/-- The actual Laurent overlap inside the rational function field. -/
 def rationalLaurent : Laurent k →+* RatFunc k :=
   LaurentPolynomial.eval₂ RatFunc.C (Units.mk0 RatFunc.X RatFunc.X_ne_zero)
-
 @[simp] theorem rationalLaurent_T (n : ℕ) :
     rationalLaurent (T (n:ℤ) : Laurent k)=(RatFunc.X:RatFunc k)^n :=
   LaurentPolynomial.eval₂_T_n _ _ n
-
 theorem rationalLaurent_finite :
     (rationalLaurent (k:=k)).comp (chartEmbedding false).toRingHom=algebraMap (Polynomial k) (RatFunc k) := by
   apply RingHom.ext
@@ -30,7 +86,6 @@ theorem rationalLaurent_finite :
   change rationalLaurent p.toLaurent=algebraMap (Polynomial k) (RatFunc k) p
   rw [rationalLaurent,LaurentPolynomial.eval₂_toLaurent]
   exact RatFunc.aeval_X_left_eq_algebraMap p
-
 theorem rationalLaurent_infinity :
     (rationalLaurent (k:=k)).comp (chartEmbedding true).toRingHom=MonicChart.AtInfinity k := by
   apply Polynomial.ringHom_ext
@@ -46,30 +101,23 @@ theorem rationalLaurent_infinity :
       simpa only [rationalLaurent, Int.natCast_one, pow_one, Units.val_inv_eq_inv_val, Units.val_mk0] using neg
     rw [atNeg]
     exact (Polynomial.aeval_X _).symm
-
 variable {E : Type*} [Field E] [Algebra (RatFunc k) E]
-
 scoped instance rationalLaurentAlgebra : Algebra (Laurent k) E :=
   ((algebraMap (RatFunc k) E).comp rationalLaurent).toAlgebra
-
 private theorem chart_finite_eq (q : (Polynomial k)) :
     algebraMap (Laurent k) E (chartEmbedding false q)=finiteScalar q :=
   congrArg (algebraMap (RatFunc k) E) (RingHom.congr_fun rationalLaurent_finite q)
-
 private theorem chart_infinity_eq (q : (Polynomial k)) :
     algebraMap (Laurent k) E (chartEmbedding true q)=infinityScalar q :=
   congrArg (algebraMap (RatFunc k) E) (RingHom.congr_fun rationalLaurent_infinity q)
-
 theorem finite_chart_algebra :
     ((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra =
       (finiteScalar (k:=k) (E:=E)).toAlgebra :=
   congrArg RingHom.toAlgebra (RingHom.ext chart_finite_eq)
-
 private theorem infinity_chart_algebra :
     ((algebraMap (Laurent k) E).comp (chartEmbedding true).toRingHom).toAlgebra =
       (infinityScalar (k:=k) (E:=E)).toAlgebra :=
   congrArg RingHom.toAlgebra (RingHom.ext chart_infinity_eq)
-
 private theorem sectionDet_ne_zero {ι : Type*} [Fintype ι] [DecidableEq ι]
     (bf : Basis ι (Polynomial k) (chartOrder (k:=k) (E:=E) false))
     (x : ι→chartOrder (k:=k) (E:=E) false)
@@ -115,11 +163,6 @@ private theorem sectionDet_ne_zero {ι : Type*} [Fintype ι] [DecidableEq ι]
   intro z
   apply nonzero
   rw [show M.det=j P.det from (RingHom.map_det j P).symm,z,map_zero]
-
-/-- Over the generic scalar line, the actual normalization determinant
-has deficit at most `(e-1)*v`. The bases are those of the original two
-integral closures, and no choice of pole bound for their basis elements
-is assumed. -/
 theorem actual_horner_budget (p : (Polynomial (Polynomial k))) (v : ℕ) (ep : 0<p.natDegree)
     (width : ∀ j,(p.coeff j).natDegree≤v) (y : E)
     (root : aeval y (p.map (algebraMap (Polynomial k) (RatFunc k)))=0)
@@ -188,7 +231,8 @@ theorem actual_horner_budget (p : (Polynomial (Polynomial k))) (v : ℕ) (ep : 0
     simp only [Finset.sum_ite_eq',Finset.mem_univ,ite_true,Int.natCast_one]
     ring
   exact ⟨d,hd,by rwa [sum] at bd⟩
-
 #print axioms actual_horner_budget
 end
 end Lower6960.Horner
+
+end Merged_R6960HornerNative

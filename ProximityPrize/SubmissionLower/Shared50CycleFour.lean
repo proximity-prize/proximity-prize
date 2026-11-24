@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Final50GeometryCut
+import ProximityPrize.SubmissionLower.Final50ActiveCyclePrice
 set_option Elab.async false
 
 namespace Shared50CycleFour

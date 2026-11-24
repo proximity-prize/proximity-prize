@@ -1,21 +1,15 @@
 import ProximityPrize.SubmissionLower.R6960CollisionTameLineDegree
 import Mathlib.Algebra.Polynomial.FieldDivision
-
 set_option Elab.async false
 set_option maxRecDepth 17000
 set_option maxHeartbeats 1800000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionTame
 noncomputable section
 open Polynomial LaurentPolynomial
 open scoped Polynomial
-
 section Unit
 variable {R : Type*} [CommRing R] [IsDomain R]
-
-/-- A unit over an integral coefficient domain has one Laurent exponent
-and a unit coefficient. -/
 theorem laurent_unit_over_domain (f : LaurentPolynomial R) (unit : IsUnit f) :
     ∃ (c : R) (m : ℤ),IsUnit c ∧ f=LaurentPolynomial.C c*T m := by
   obtain ⟨u,rfl⟩ := unit
@@ -38,22 +32,16 @@ theorem laurent_unit_over_domain (f : LaurentPolynomial R) (unit : IsUnit f) :
       rw [mul_assoc,←T_add,add_neg_cancel,T_zero,mul_one]
     _ = LaurentPolynomial.C c*T ((j:ℤ)-n) := by rw [shifted,mul_assoc,T_sub]
 end Unit
-
 section CoefficientMap
 variable {R S : Type*} [CommRing R] [CommRing S]
-
 private def unitT (S : Type*) [CommRing S] : (LaurentPolynomial S)ˣ :=
   ⟨T 1,T (-1),by rw [←T_add,show (1:ℤ)+(-1)=0 by decide,T_zero],
     by rw [←T_add,show (-1:ℤ)+1=0 by decide,T_zero]⟩
-
-/-- Change only scalar coefficients on the affine Laurent overlap. -/
 def laurentCoefficients (f : R→+*S) : LaurentPolynomial R→+*LaurentPolynomial S :=
   LaurentPolynomial.eval₂ (LaurentPolynomial.C.comp f) (unitT S)
-
 @[simp] theorem laurentCoefficients_C (f : R→+*S) (a : R) :
     laurentCoefficients f (LaurentPolynomial.C a)=LaurentPolynomial.C (f a) :=
   LaurentPolynomial.eval₂_C _ _ _
-
 @[simp] theorem laurentCoefficients_T (f : R→+*S) (m : ℤ) :
     laurentCoefficients f (T m)=T m := by
   cases m with
@@ -67,7 +55,6 @@ def laurentCoefficients (f : R→+*S) : LaurentPolynomial R→+*LaurentPolynomia
     rw [laurentCoefficients,LaurentPolynomial.eval₂_T_neg_n]
     change (T (-1):LaurentPolynomial S)^(n+1)=T (-(↑(n+1):ℤ))
     rw [T_pow,mul_neg_one]
-
 @[simp] theorem laurentCoefficients_polynomial (f : R→+*S) (p : (Polynomial R)) :
     laurentCoefficients f p.toLaurent=(p.map f).toLaurent := by
   have eq : (laurentCoefficients f).comp Polynomial.toLaurent=
@@ -79,7 +66,6 @@ def laurentCoefficients (f : R→+*S) : LaurentPolynomial R→+*LaurentPolynomia
     · simp only [RingHom.comp_apply,Polynomial.toLaurent_X,Polynomial.coe_mapRingHom,
         Polynomial.map_X,laurentCoefficients_T]
   exact RingHom.congr_fun eq p
-
 @[simp] theorem laurentCoefficients_inverse (f : R→+*S) (p : (Polynomial R)) :
     laurentCoefficients f (invert p.toLaurent)=invert ((p.map f).toLaurent) := by
   let v := (invert (R:=S)).toRingEquiv.toRingHom
@@ -96,12 +82,8 @@ def laurentCoefficients (f : R→+*S) : LaurentPolynomial R→+*LaurentPolynomia
       simp only [Polynomial.toLaurent_X,Polynomial.map_X,invert_T,laurentCoefficients_T]
   exact RingHom.congr_fun eq p
 end CoefficientMap
-
 section Degree
 variable {k K : Type*} [Field k] [Field K]
-
-/-- Two actual principal generators on adjacent plane charts differ on
-the overlap by a constant in the ground field and one abscissa exponent. -/
 theorem plane_overlap_unit (δfin δinf : (Polynomial (Polynomial k)))
     (glue : (Ideal.span {δfin.toLaurent} : Ideal (LaurentPolynomial (Polynomial k)))=
       Ideal.span {invert δinf.toLaurent}) :
@@ -114,16 +96,11 @@ theorem plane_overlap_unit (δfin δinf : (Polynomial (Polynomial k)))
   obtain ⟨c,cu,hc⟩ := Polynomial.isUnit_iff.mp au
   refine ⟨c,m,cu.ne_zero,?_⟩
   rw [←hu,eq,←hc,mul_comm]
-
 private theorem associated_constant {u v : (Polynomial K)} (h : Associated u v) :
     ∃ c : K, c≠0 ∧ u=Polynomial.C c*v := by
   obtain ⟨x,hx⟩ := h.symm
   obtain ⟨c,cu,eq⟩ := Polynomial.isUnit_iff.mp x.isUnit
   exact ⟨c,cu.ne_zero,by rw [←hx,eq,mul_comm]⟩
-
-/-- The same overlap unit fixes the determinant exponent after every
-coefficient specialization where the normalized discriminant is nonzero.
-The orientation is `δfin = c·t^m·δinf(t⁻¹)`. -/
 theorem overlap_transition_exponent (δfin δinf : (Polynomial (Polynomial k))) (c : k) (cn : c≠0) (m : ℤ)
     (glue : δfin.toLaurent=LaurentPolynomial.C (Polynomial.C c)*T m*invert δinf.toLaurent)
     (spec : (Polynomial k)→+*K) (nonzero : δfin.map spec≠0)
@@ -162,7 +139,6 @@ theorem overlap_transition_exponent (δfin δinf : (Polynomial (Polynomial k))) 
   rw [LaurentPolynomial.degree_C bn,degree_C_mul_T _ _ (mul_ne_zero (mul_ne_zero (pow_ne_zero 2 wn) an) scalar_ne)] at degree
   have z := WithBot.coe_inj.mp degree
   exact ⟨d,by rw [mon,degree_C_mul_T _ _ wn],by omega⟩
-
 #print axioms plane_overlap_unit
 #print axioms overlap_transition_exponent
 end Degree

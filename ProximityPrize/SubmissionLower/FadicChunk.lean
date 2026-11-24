@@ -1,21 +1,7 @@
-import ProximityPrize.SubmissionLower.FadicGateDim
-
-/-!
-# Chunked bounds for the gate dimensions
-
-The non-flat grade ranges of every box count are bounded in blocks of `h` grades: inside a block
-the padded degree lies between `min lo ((Θ - 26 hi) / 25)` and `min hi ((Θ - 26 lo) / 25)`, and
-the accepted `cappedCount` is monotone in the degree.  The flat range stays exact.
-
-* `fastLow ≤ boxCount ≤ fastHigh`;
-* `depthLow ≤ depthDim`, `fadicLow ≤ fadicDim`, `plainLow ≤ plainDim`;
-* `loss_le_certLoss`: the level loss is at most `certLoss`, which a certificate evaluates.
--/
-
+import ProximityPrize.SubmissionLower.FadicDegree
+set_option Elab.async false
 set_option autoImplicit false
-
 namespace FadicGate
-
 open K1_13_2 (cappedCount)
 open K1_13_2_2 (JetExp oldWeight gradeWeight cumulativeColumns cumulativeExponents
   mem_cumulativeColumns)
@@ -23,13 +9,9 @@ open scoped BigOperators
 open Finset
 open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
-
-/-! ### Monotonicity of the accepted count -/
-
 theorem cappedCount_nonneg (d u t : ℤ) : 0 ≤ cappedCount d u t := by
   rw [← capped_card K1_13_2_2_2.proof]
   positivity
-
 theorem cappedCount_mono {d d' : ℕ} (hd : d ≤ d') (u t : ℤ) :
     cappedCount d u t ≤ cappedCount d' u t := by
   rw [← capped_card K1_13_2_2_2.proof, ← capped_card K1_13_2_2_2.proof]
@@ -61,44 +43,29 @@ theorem cappedCount_mono {d d' : ℕ} (hd : d ≤ d') (u t : ℤ) :
     · intro x _ y _ hxy
       exact add_right_cancel hxy
   exact_mod_cast hcard
-
-/-! ### The padded degree inside a block -/
-
 theorem padGrade_ge {Θ lo q hi : ℕ} (hlo : lo ≤ q) (hhi : q ≤ hi) :
     min lo ((Θ - 26 * hi) / 25) ≤ padGrade Θ q := by
   unfold padGrade
   apply le_min
   · exact (min_le_left _ _).trans hlo
   · exact (min_le_right _ _).trans (Nat.div_le_div_right (by omega))
-
 theorem padGrade_le {Θ lo q hi : ℕ} (hlo : lo ≤ q) (hhi : q ≤ hi) :
     padGrade Θ q ≤ min hi ((Θ - 26 * lo) / 25) := by
   unfold padGrade
   exact min_le_min hhi (Nat.div_le_div_right (by omega))
-
 theorem term_nonneg (J T Θ q : ℕ) : 0 ≤ term J T Θ q := by
   unfold term
   split
   · exact cappedCount_nonneg _ _ _
   · exact le_rfl
-
-/-! ### Blocks -/
-
 def segLo (base h k : ℕ) : ℕ := base + h * k
 def segHi (base h m k : ℕ) : ℕ := base + min (h * k + h - 1) (m - 1)
-
-/-- Smallest padded degree in block `k` (natural-number arithmetic). -/
 def lowDeg (Θ base h m k : ℕ) : ℕ := min (segLo base h k) ((Θ - 26 * segHi base h m k) / 25)
-
-/-- Largest padded degree in block `k` (natural-number arithmetic). -/
 def highDeg (Θ base h m k : ℕ) : ℕ := min (segHi base h m k) ((Θ - 26 * segLo base h k) / 25)
-
 def lowSeg (J T Θ base h m k : ℕ) : ℤ :=
   if 26 * segHi base h m k ≤ Θ then cappedCount (lowDeg Θ base h m k : ℕ) J T else 0
-
 def highSeg (J T Θ base h m k : ℕ) : ℤ :=
   if 26 * segLo base h k ≤ Θ then cappedCount (highDeg Θ base h m k : ℕ) J T else 0
-
 theorem seg_bounds {base h m i : ℕ} (hh : 0 < h) (hi : i < m) :
     segLo base h (i / h) ≤ base + i ∧ base + i ≤ segHi base h m (i / h) := by
   have h1 : h * (i / h) ≤ i := Nat.mul_div_le i h
@@ -110,16 +77,13 @@ theorem seg_bounds {base h m i : ℕ} (hh : 0 < h) (hi : i < m) :
   · have : i ≤ h * (i / h) + h - 1 := by omega
     have : i ≤ m - 1 := by omega
     omega
-
 theorem term_of_le {J T Θ q : ℕ} (hq : 26 * q ≤ Θ) :
     term J T Θ q = cappedCount (padGrade Θ q : ℕ) J T := by
   unfold term
   exact if_pos hq
-
 theorem term_of_gt {J T Θ q : ℕ} (hq : ¬ 26 * q ≤ Θ) : term J T Θ q = 0 := by
   unfold term
   exact if_neg hq
-
 theorem lowSeg_le {J T Θ base h m i : ℕ} (hh : 0 < h) (hi : i < m) :
     lowSeg J T Θ base h m (i / h) ≤ term J T Θ (base + i) := by
   obtain ⟨hlo, hhi⟩ := seg_bounds (base := base) (m := m) hh hi
@@ -137,7 +101,6 @@ theorem lowSeg_le {J T Θ base h m i : ℕ} (hh : 0 < h) (hi : i < m) :
       exact if_neg h26
     rw [hl]
     exact term_nonneg _ _ _ _
-
 theorem le_highSeg {J T Θ base h m i : ℕ} (hh : 0 < h) (hi : i < m) :
     term J T Θ (base + i) ≤ highSeg J T Θ base h m (i / h) := by
   obtain ⟨hlo, hhi⟩ := seg_bounds (base := base) (m := m) hh hi
@@ -159,8 +122,6 @@ theorem le_highSeg {J T Θ base h m i : ℕ} (hh : 0 < h) (hi : i < m) :
       unfold highSeg
       exact if_neg h26
     rw [hl, term_of_gt hq]
-
-/-- Summing a block-constant function. -/
 theorem sum_div_block (F : ℕ → ℤ) {h : ℕ} (hh : 0 < h) (n : ℕ) :
     ∑ i ∈ range n, F (i / h) = h * ∑ k ∈ range (n / h), F k + ((n % h : ℕ) : ℤ) * F (n / h) := by
   induction n with
@@ -188,39 +149,30 @@ theorem sum_div_block (F : ℕ → ℤ) {h : ℕ} (hh : 0 < h) (n : ℕ) :
       rw [hh1]
       push_cast
       ring
-
 def segSumLow (J T Θ base h m : ℕ) : ℤ :=
   h * ∑ k ∈ range (m / h), lowSeg J T Θ base h m k +
     ((m % h : ℕ) : ℤ) * lowSeg J T Θ base h m (m / h)
-
 def segSumHigh (J T Θ base h m : ℕ) : ℤ :=
   h * ∑ k ∈ range (m / h), highSeg J T Θ base h m k +
     ((m % h : ℕ) : ℤ) * highSeg J T Θ base h m (m / h)
-
 theorem segSumLow_le {J T Θ base h m : ℕ} (hh : 0 < h) :
     segSumLow J T Θ base h m ≤ ∑ i ∈ range m, term J T Θ (base + i) := by
   unfold segSumLow
   rw [← sum_div_block (lowSeg J T Θ base h m) hh m]
   exact sum_le_sum fun i hi => lowSeg_le hh (mem_range.mp hi)
-
 theorem le_segSumHigh {J T Θ base h m : ℕ} (hh : 0 < h) :
     ∑ i ∈ range m, term J T Θ (base + i) ≤ segSumHigh J T Θ base h m := by
   unfold segSumHigh
   rw [← sum_div_block (highSeg J T Θ base h m) hh m]
   exact sum_le_sum fun i hi => le_highSeg hh (mem_range.mp hi)
-
-/-! ### Box counts -/
-
 def fastLow (B J T Θ h : ℕ) : ℤ :=
   segSumLow J T Θ 0 h (flatLo B J) +
     ((flatHi B J Θ - flatLo B J : ℕ) : ℤ) * cappedCount J J T +
     segSumLow J T Θ (flatHi B J Θ) h (B + 1 - flatHi B J Θ)
-
 def fastHigh (B J T Θ h : ℕ) : ℤ :=
   segSumHigh J T Θ 0 h (flatLo B J) +
     ((flatHi B J Θ - flatLo B J : ℕ) : ℤ) * cappedCount J J T +
     segSumHigh J T Θ (flatHi B J Θ) h (B + 1 - flatHi B J Θ)
-
 theorem fastLow_le (B J T Θ : ℕ) {h : ℕ} (hh : 0 < h) : fastLow B J T Θ h ≤ boxCount B J T Θ := by
   rw [← fastCount_eq]
   unfold fastLow fastCount
@@ -230,7 +182,6 @@ theorem fastLow_le (B J T Θ : ℕ) {h : ℕ} (hh : 0 < h) : fastLow B J T Θ h 
     (m := B + 1 - flatHi B J Θ) hh
   simp only [zero_add] at h1
   linarith
-
 theorem le_fastHigh (B J T Θ : ℕ) {h : ℕ} (hh : 0 < h) : boxCount B J T Θ ≤ fastHigh B J T Θ h := by
   rw [← fastCount_eq]
   unfold fastHigh fastCount
@@ -240,22 +191,7 @@ theorem le_fastHigh (B J T Θ : ℕ) {h : ℕ} (hh : 0 < h) : boxCount B J T Θ 
     (m := B + 1 - flatHi B J Θ) hh
   simp only [zero_add] at h1
   linarith
-
-/-! ### Gate dimensions -/
-
-
-
-
-
-
-
-
-
-
-
-
 end FadicGate
-
 #print axioms FadicGate.cappedCount_mono
 #print axioms FadicGate.sum_div_block
 #print axioms FadicGate.fastLow_le

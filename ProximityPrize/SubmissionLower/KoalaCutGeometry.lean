@@ -2,21 +2,12 @@ import Mathlib.RingTheory.Derivation.Basic
 import Mathlib.RingTheory.Polynomial.DegreeLT
 import ArkLib.Data.Polynomial.ResultantDegree
 import Mathlib.Tactic
-
+set_option Elab.async false
 set_option autoImplicit false
 set_option maxRecDepth 4096
 set_option maxHeartbeats 1800000
-
 namespace SplitCut
-
 open Polynomial
-
-
-
-/-- Polynomial nullspace compression. Rows may have degree `D`. With `m`
-    independent rows it suffices to enforce all their coefficients below `p`.
-    The vector returned has enough space left for substitution of the scalar
-    polynomial, whose Y-powers consume at most `D` abscissa degrees. -/
 theorem compress_rows {F : Type*} [Field F] (n m p D : ℕ) (hD : D < p)
     (hdim : m*p < n*(p-D)) (A : Fin m → Fin n → (Polynomial F))
     (hA : ∀ i j, (A i j).natDegree ≤ D) :
@@ -58,9 +49,6 @@ theorem compress_rows {F : Type*} [Field F] (n m p D : ℕ) (hD : D < p)
   obtain ⟨w, hw, hn⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hni
   refine ⟨w, hn, fun i => ?_⟩
   exact congrArg Subtype.val (congrFun (LinearMap.mem_ker.mp hw) i)
-
-/-- The referee's compression guard yields strict surplus for the polynomial
-    nullspace after accounting for the known independent multiples. -/
 theorem compression_guard {n k p D m : ℕ} (hk : k ≤ n) (hD : D ≤ p)
     (hm : m ≤ n-k) (hg : n*D < k*p) : m*p < n*(p-D) := by
   calc
@@ -68,14 +56,6 @@ theorem compression_guard {n k p D m : ℕ} (hk : k ≤ n) (hD : D ≤ p)
     _ < n*(p-D) := by
       zify [hk, hD] at hg ⊢
       nlinarith
-
-
-
-
-
-
-
 end SplitCut
-
 #print axioms SplitCut.compress_rows
 #print axioms SplitCut.compression_guard

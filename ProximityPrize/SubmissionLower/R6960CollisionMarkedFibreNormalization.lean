@@ -1,24 +1,20 @@
-import ProximityPrize.SubmissionLower.R6960CollisionMarkedMonicTrace
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedMonicFibre
 import ProximityPrize.SubmissionLower.R6960QuadraticProjection
 import Mathlib.RingTheory.Artinian.Module
 import Mathlib.RingTheory.DedekindDomain.IntegralClosure
 import Mathlib.RingTheory.Localization.Module
-
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 2000000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionMarked
 noncomputable section
 open Polynomial Module Algebra
 open scoped Polynomial
-
 variable {A K V : Type*} [CommRing A] [IsDomain A] [IsPrincipalIdealRing A]
   [Field K] [Algebra A K] [IsFractionRing A K]
   [CommRing V] [Algebra A V] [Algebra K V] [IsScalarTower A K V]
   [FiniteDimensional K V]
-
 private theorem small_fields_separable {L : Type*} [Field L] [Algebra K L] [FiniteDimensional K L]
     (p : ℕ) [CharP K p] (small : finrank K L<p) : Algebra.IsSeparable K L := by
   constructor
@@ -27,10 +23,6 @@ private theorem small_fields_separable {L : Type*} [Field L] [Algebra K L] [Fini
   exact (separable_iff_derivative_ne_zero (minpoly.irreducible hx)).mpr
     (CurvatureSquares.derivative_ne_zero_of_natDegree_pos_lt_char p _ (minpoly.natDegree_pos hx)
       ((minpoly.natDegree_le x).trans_lt small))
-
-/-- The normalization of the already specialized reduced generic fibre
-is finite over its polynomial base. Each field factor is normalized
-separately, and the original order embeds into that finite module. -/
 theorem reduced_normalization_finite [IsReduced V] (p : ℕ) [CharP K p]
     (small : finrank K V<p) : Module.Finite A (integralClosure A V) := by
   classical
@@ -63,11 +55,7 @@ theorem reduced_normalization_finite [IsReduced V] (p : ℕ) [CharP K p]
     funext i
     exact congrArg Subtype.val (congrFun h i)
   exact Module.Finite.of_injective j ji
-
 omit [IsPrincipalIdealRing A] in
-/-- Integral closure in a finite generic algebra localizes back to the
-whole generic algebra. This applies to the normalization of a fibre
-without identifying it with the fibre of the normalization. -/
 theorem integral_elements_localize (K : Type*) [Field K] [Algebra A K] [IsFractionRing A K]
     [Algebra K V] [IsScalarTower A K V] [FiniteDimensional K V] :
     IsLocalizedModule (nonZeroDivisors A) (integralClosure A V).val.toLinearMap := by
@@ -96,9 +84,6 @@ theorem integral_elements_localize (K : Type*) [Field K] [Algebra A K] [IsFracti
     exact ⟨⟨⟨r • x,h⟩,⟨r,mem_nonZeroDivisors_iff_ne_zero.mpr nz⟩⟩,rfl⟩
   · intro a b eq
     exact ⟨1,congrArg (1 • ·) (Subtype.ext eq)⟩
-
-/-- Each reduced normalized fibre order has a basis of precisely the
-generic rank, and this basis extends to a basis in the generic fibre. -/
 theorem reduced_normalization_basis [IsReduced V] (p : ℕ) [CharP K p]
     (small : finrank K V<p) :
     ∃ (b : Basis (Fin (finrank K V)) A (integralClosure A V))
@@ -121,7 +106,6 @@ theorem reduced_normalization_basis [IsReduced V] (p : ℕ) [CharP K p]
   refine ⟨b.reindex (finCongr rank),bk.reindex (finCongr rank),fun i=>?_⟩
   rw [Basis.reindex_apply,Basis.reindex_apply,Basis.ofIsLocalizedModule_apply]
   rfl
-
 #print axioms reduced_normalization_finite
 #print axioms reduced_normalization_basis
 end

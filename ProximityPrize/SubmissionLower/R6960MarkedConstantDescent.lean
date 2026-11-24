@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960MarkedNativeNorm
-import ProximityPrize.SubmissionLower.R6960RetainedLinearAssembly
+import ProximityPrize.SubmissionLower.R6960MonicChartActual
 set_option synthInstance.maxHeartbeats 200000
-
 noncomputable section
 set_option Elab.async false
 set_option backward.isDefEq.respectTransparency false
@@ -10,10 +9,6 @@ set_option maxHeartbeats 1650000
 namespace Lower6960.MarkedEvaluation
 open Polynomial Algebra Module Finset
 open scoped Polynomial BigOperators
-
-/-- If the root field has a full frame of algebraic constants, every
-geometric root is rational after adjoining the algebraically closed
-constant field. This includes inseparable constant extensions. -/
 theorem splits_of_constant_basis {k F A H E I:Type} [Field k] [Field F] [Field A] [Field H]
     [Field E] [Algebra k F] [Algebra F E] [Algebra k E] [IsScalarTower k F E] [IsAlgClosed A] [Fintype I]
     (j:F→+*H) (t:k→+*A) (n:A→+*H) (co:∀a,j (algebraMap k F a)=n (t a))
@@ -51,16 +46,13 @@ theorem splits_of_constant_basis {k F A H E I:Type} [Field k] [Field F] [Field A
   apply inc.range.sum_mem;intro i _
   rw [Algebra.smul_def,map_mul,ψ.commutes]
   exact inc.range.mul_mem ⟨j (w.repr b.gen i),rfl⟩ (member i)
-
 open K1_14 (L)
 open MonicChart (Scalar ChartField)
 open RetainedLinear (Fn Seed toSeed GeometricallyLinear)
 open RetainedCompression (view ordinate Curve)
 open scoped Lower6960.MarkedEvaluation
 local instance (priority:=2200) descentScalarBase : Algebra Scalar ChartField:=RatFunc.instAlgebraOfPolynomial Scalar Scalar
-
 def genericToFraction : ChartField≃+*Fn Scalar:=(IsLocalization.algEquiv (nonZeroDivisors (Polynomial Scalar)) ChartField (Fn Scalar)).toRingEquiv
-
 theorem actual_geometric_of_constants {E I:Type} [Field E] [Algebra ChartField E] [Fintype I] [Nonempty I]
     (P:CurvatureSquares.Ordinate) (ir:Irreducible P) (pos:0<P.natDegree) (b:PowerBasis ChartField E)
     (root:aeval b.gen ((toSeed P).map (algebraMap (Polynomial Scalar) ChartField))=0)
@@ -89,7 +81,6 @@ theorem actual_geometric_of_constants {E I:Type} [Field E] [Algebra ChartField E
   have split:=splits_of_constant_basis j (algebraMap Scalar A) n co _ qp b root B (fun i=>bEq i ▸ ints i)
   rw [Polynomial.map_map,mapEq] at split
   exact split
-
 #print axioms splits_of_constant_basis
 #print axioms actual_geometric_of_constants
 end Lower6960.MarkedEvaluation

@@ -1,19 +1,12 @@
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.LinearAlgebra.Quotient.Basic
-
 set_option Elab.async false
 set_option maxHeartbeats 3400000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.LineEuler
 noncomputable section
 open Module Submodule LinearMap
-
 variable {k V : Type*} [Field k] [AddCommGroup V] [Module k V]
-
-/-- If `B` and `F` generate the ambient space and `A ≤ B`, replacing
-`B` by `A` changes the intersection-minus-cokernel index by `dim(B/A)`.
-The spaces are defined by the actual ambient intersection and quotient. -/
 theorem compare_lattices (F A B : Submodule k V) (inc : A≤B) (cover : F⊔B=⊤)
     [FiniteDimensional k ↥(F⊓B)] [FiniteDimensional k (B ⧸ A.comap B.subtype)] :
     FiniteDimensional k ↥(F⊓A) ∧ FiniteDimensional k (V ⧸ (F⊔A)) ∧
@@ -70,7 +63,6 @@ theorem compare_lattices (F A B : Submodule k V) (inc : A≤B) (cover : F⊔B=�
   rw [exact_fg,←e.finrank_eq] at hf
   rw [LinearMap.range_eq_top.mpr g_surj,finrank_top] at hg
   exact ⟨inferInstance,inferInstance,by dsimp only [P,D] at *; omega⟩
-
 #print axioms compare_lattices
 end
 end Lower6960.LineEuler

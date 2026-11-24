@@ -1437,8 +1437,17 @@ private theorem transport_chart (P : JetIdeal) [P.IsPrime] (g : Row 4) (S : (Pol
     physicalConstants (separant g) (MvPolynomial.C Polynomial.X)
     (fun i : Fin taylorLength => jetNumerator g i.val) (componentRow P) (markRow S)
     hgen hmark hker q hq
-theorem proof : K1_13_6_3_2.c3 := by
-  intro g P hp hg hsep S hd hP hr
+/-- Same statement as `K1_13_6_3_2.c3`, but written out so that the `IsDomain` instance of the
+quotient is elaborated in place; `c3` itself stores it as an auxiliary proof whose type uses a
+different instance path, and unifying the two through the KoalaBear extension field is very
+expensive on Lean 4.36. -/
+theorem proof (g : Row 4) (P : JetIdeal) [hp : P.IsPrime]
+    (hg : toGeneric g ∈ P) (hsep : toGeneric (separant g) ∉ P) :
+    ∀ S : (Polynomial Geom), S.natDegree < taylorLength → P ≤ markIdeal S →
+      atJet (separant g) S ≠ 0 →
+      coeffPoint S ∈ MvPolynomial.zeroLocus Geom
+        (coefficientKernel (componentConstants P) (chartTaylor (componentRow P) g)) := by
+  intro S hd hP hr
   have hgen : componentRow P (separant g) ≠ 0 := fun h => hsep ((componentRow_eq_zero P _).mp h)
   have hmark : markRow S (separant g) ≠ 0 := (map_ne_zero_iff _ genericCoeffs_inj).mpr hr
   have hzero := K1_13_6_1.mem_markIdeal.mp (hP hg)

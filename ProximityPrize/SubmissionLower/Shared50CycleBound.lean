@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Final50ActiveCycleBound
+import ProximityPrize.SubmissionLower.Final50ActiveCyclePrice
 
 set_option autoImplicit false
 set_option Elab.async false

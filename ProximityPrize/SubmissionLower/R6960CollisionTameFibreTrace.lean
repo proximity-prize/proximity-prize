@@ -1,29 +1,22 @@
 import ProximityPrize.SubmissionLower.R6960CollisionTamePlaneDiscriminant
-
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 1000000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionTame
 noncomputable section
 open Polynomial Module NormalizedFiber
 open scoped Polynomial Matrix BigOperators
 open Lower6960.NormalizedFiber (specialize)
-
 variable {k E : Type} [Field k] [Field E] [Algebra (Plane k) E]
   [Algebra (FractionRing (Plane k)) E] [IsScalarTower (Plane k) (FractionRing (Plane k)) E]
   [FiniteDimensional (FractionRing (Plane k)) E] [Algebra.IsSeparable (FractionRing (Plane k)) E]
-
 local instance fibreRing (z : k) : CommRing (Fiber E z) :=
   @Ideal.Quotient.commRing (↥(Order k E)) ((Order k E).toCommRing) (sliceIdeal E z)
-
 local instance fibreAlgebra (z : k) : Algebra (Polynomial k) (Fiber E z) :=
   @RingHom.toAlgebra (Polynomial k) (Fiber E z) _ (fibreRing (E:=E) z).toCommSemiring (baseMap E z)
-
 private abbrev FieldDegree (k E : Type) [Field k] [Field E] [Algebra (FractionRing (Plane k)) E] :=
   Fin (finrank (FractionRing (Plane k)) E)
-
 omit [Algebra (FractionRing (Plane k)) E] [IsScalarTower (Plane k) (FractionRing (Plane k)) E]
   [FiniteDimensional (FractionRing (Plane k)) E] [Algebra.IsSeparable (FractionRing (Plane k)) E] in
 private theorem quotient_smul (z : k) (a : Plane k) (x : Order k E) :
@@ -32,10 +25,6 @@ private theorem quotient_smul (z : k) (a : Plane k) (x : Order k E) :
   change quotientMap E z (algebraMap (Plane k) (Order k E) a)*quotientMap E z x=
     baseMap E z (a.eval (C z))*quotientMap E z x
   exact congrArg (· * quotientMap E z x) (Lower6960.NormalizedFiber.specialize E z a)
-
-/-- The restricted generic trace specializes to the actual fibre trace.
-The calculation uses the common lift basis and clears the multiplication
-columns by a scalar that becomes one on the fibre. -/
 theorem trace_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) (Polynomial k) (Fiber E z))
     (bf : Basis (FieldDegree k E) (FractionRing (Plane k)) E)
     (u : FieldDegree k E→Order k E) (g : Plane k)
@@ -86,9 +75,6 @@ theorem trace_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) (Polynomial 
   apply Finset.sum_congr rfl
   intro i _
   rw [Matrix.diag_apply,Algebra.leftMulMatrix_eq_repr_mul,←sumk i,b.repr_sum_self]
-
-/-- Literal trace-matrix agreement between the integral coefficients on
-the plane and the free basis on the scalar fibre. -/
 theorem gram_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) (Polynomial k) (Fiber E z))
     (bf : Basis (FieldDegree k E) (FractionRing (Plane k)) E)
     (u : FieldDegree k E→Order k E) (g : Plane k)
@@ -106,10 +92,6 @@ theorem gram_reduces_on_fibre (z : k) (b : Basis (FieldDegree k E) (Polynomial k
   change (integralTraceForm (A:=Plane k) (E:=E) (FractionRing (Plane k)) (u i) (u j)).eval (C z)=_
   rw [same,trace_reduces_on_fibre z b bf u g red gen one patch,map_mul,red,red,
     Algebra.traceMatrix_apply,Algebra.traceForm_apply]
-
-/-- A principal plane discriminant generator specializes to the actual
-trace determinant of the scalar fibre up to a unit. The denominator of
-the chosen frame disappears since it is one on the whole fibre. -/
 theorem fibre_trace_det_associated (δ : Plane k)
     (principal : normalizationDiscriminant (A:=Plane k) (E:=E) (FractionRing (Plane k))=Ideal.span {δ})
     (z : k) :
@@ -135,7 +117,6 @@ theorem fibre_trace_det_associated (δ : Plane k)
   have eq := congrArg Matrix.det (gram_reduces_on_fibre z b bf u g red gen one patch)
   have det : j D=(Algebra.traceMatrix (Polynomial k) b).det := (RingHom.map_det j _).trans eq
   exact ⟨b,det ▸ (dvd_dvd_iff_associated.mp ⟨rev,map_dvd j divides⟩)⟩
-
 #print axioms trace_reduces_on_fibre
 #print axioms gram_reduces_on_fibre
 #print axioms fibre_trace_det_associated

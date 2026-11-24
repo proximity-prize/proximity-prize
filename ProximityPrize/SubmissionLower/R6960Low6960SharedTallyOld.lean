@@ -1,6 +1,6 @@
-import ProximityPrize.SubmissionLower.R6960Low6960SharedTally
+import ProximityPrize.SubmissionLower.R6960Low6960RetainedAssembly
 import ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleMixed
-import ProximityPrize.SubmissionLower.R6960Low6960SharedPrice
+import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
 
 set_option Elab.async false
 set_option maxRecDepth 20000
@@ -107,11 +107,11 @@ private theorem active_charge (D : Data Γ s f Q l S) (input : CutInput Γ s f Q
   simpa only [orderCost,Nat.cast_mul,Nat.cast_sum,Nat.cast_ofNat] using hh
 
 def auxiliaryCap (x : Shape) : ℕ :=
-  ceilDiv (82317*auxCurves32 x + 2*46418*auxPoints32 x) (32*46418)
+  ceilDiv (82326*auxCurves32 x + 2*46389*auxPoints32 x) (32*46389)
 def continuedCap (x : Shape) : ℕ :=
-  ceilDiv ((82317+2*46418)*membershipDegree x) 46418
+  ceilDiv ((82326+2*46389)*membershipDegree x) 46389
 def surfaceCap (x : Shape) : ℕ :=
-  2*(133409*x.b*primaryBox.b)
+  2*(133429*x.b*primaryBox.b)
 
 private theorem charge_le {x : Shape} {l a c d n scale budget O : ℕ}
     (hl : 0<l) (hs : 0<scale)
@@ -164,7 +164,7 @@ theorem additive_le {x : Shape} {l a c d : ℕ} (hl : 0<l)
     _ = _ := by
       unfold Low6960SharedPrice.additiveBase auxiliaryCap continuedCap surfaceCap
         auxCurves32 auxPoints32 membershipDegree
-      simp only [show Low6960Prices.errors = 82317 by decide, show Low6960Prices.incidenceGap = 46418 by decide, show Low6960Prices.physicalDegree = 133409 by decide,
+      simp only [show Low6960Prices.errors = 82326 by decide, show Low6960Prices.incidenceGap = 46389 by decide, show Low6960Prices.physicalDegree = 133429 by decide,
         Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
       omega
 

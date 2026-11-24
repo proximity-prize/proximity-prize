@@ -1,21 +1,15 @@
 import ProximityPrize.SubmissionLower.R6960CollisionTameOverlapUnit
 import ProximityPrize.SubmissionLower.R6960LineEulerFree
-
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 2200000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionTame
 noncomputable section
 open Polynomial Matrix Module LineEuler LaurentPolynomial
 open scoped Polynomial Matrix BigOperators
-
 variable {k U V M ι : Type*} [Field k] [CommRing U] [CommRing V] [CommRing M]
   [Algebra (Polynomial k) U] [Algebra (Polynomial k) V] [Algebra (Laurent k) M] [Fintype ι] [DecidableEq ι]
-
-/-- The trace of the selected finite-free algebra specializes on its
-actual common Laurent chart, including for a proper suborder. -/
 theorem free_trace_matrix_on_torus (s : Bool) (b : Basis ι (Polynomial k) U)
     (f : ChartMap (k:=k) s U M) (loc : IsChartLocalization s f)
     (r : U→+*M) (agree : ∀ x,f x=r x) :
@@ -37,12 +31,10 @@ theorem free_trace_matrix_on_torus (s : Bool) (b : Basis ι (Polynomial k) U)
   simp only [Matrix.map_apply,Algebra.traceMatrix_apply,Algebra.traceForm_apply,localFreeBasis_apply,
     agree,←map_mul]
   exact tr (b i*b j)
-
 section Both
 variable (bf : Basis ι (Polynomial k) U) (bi : Basis ι (Polynomial k) V)
   (ff : ChartMap (k:=k) false U M) (fi : ChartMap (k:=k) true V M)
   (lf : IsChartLocalization false ff) (li : IsChartLocalization true fi)
-
 private theorem free_expansion (i : ι) :
     (∑ j,freeTransition bf bi ff fi lf li j i • localFreeBasis false bf ff lf j)=localFreeBasis true bi fi li i := by
   let fin := localFreeBasis false bf ff lf
@@ -60,9 +52,6 @@ private theorem free_expansion (i : ι) :
   rw [show (∑ j,freeTransition bf bi ff fi lf li j i • fin j)=(∑ j,fin.equivFun (inf i) j • fin j)
     from Finset.sum_congr rfl (fun j _=>congrArg (· • fin j) (repr j))]
   exact (fin.equivFun_symm_apply (fin.equivFun (inf i))).symm.trans (fin.equivFun.symm_apply_apply (inf i))
-
-/-- The actual trace determinants satisfy the squared transition law for
-both normalized lines and reduced free suborders. -/
 theorem free_trace_transition (r0 : U→+*M) (r1 : V→+*M)
     (h0 : ∀ x,ff x=r0 x) (h1 : ∀ x,fi x=r1 x) :
     invert ((Algebra.traceMatrix (Polynomial k) bi).det.toLaurent)=
@@ -91,7 +80,6 @@ theorem free_trace_transition (r0 : U→+*M) (r1 : V→+*M)
   rw [←detI,change,det_mul,det_mul,det_transpose,detF]
   ring
 end Both
-
 #print axioms free_trace_transition
 end
 end Lower6960.CollisionTame

@@ -1,3 +1,8 @@
+import ArkLib.ToMathlib.RingTheory.MvPolynomial.StandardMonomials
+import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import ProximityPrize.SubmissionLower.Pack_K1_14_3_2_7Proof
+import ProximityPrize.SubmissionLower.Fast029
+import ProximityPrize.SubmissionLower.Fast042
 import ArkLib.Data.CodingTheory.ReedSolomon.MutualCorrelatedAgreement.Johnson.Agreement
 import ArkLib.Data.Finset.PairwiseIntersection
 import Mathlib.Algebra.AffineMonoid.Basic
@@ -23,7 +28,296 @@ import Mathlib.RingTheory.KrullDimension.LocalRing
 import Mathlib.RingTheory.RingHom.Unramified
 import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
 import Mathlib.Topology.Algebra.MvPolynomial
-import ProximityPrize.SubmissionLower.Pack_K1_14_3_2_5_3Proof
+
+-- merged module FiltrationLift
+section Merged_FiltrationLift
+set_option Elab.async false
+set_option autoImplicit true
+section
+set_option autoImplicit false
+namespace K1_13_6_2_3_3_1
+noncomputable section
+open MvPolynomial
+open scoped MonomialOrder BigOperators
+variable {k σ : Type*} [Field k] [Finite σ]
+theorem exists_degree_shift (I : Ideal (MvPolynomial σ k)) (g : MvPolynomial σ k) :
+    ∃ C : ℕ, ∀ f ∈ I ⊔ Ideal.span {g}, ∃ q : MvPolynomial σ k,
+      f - q * g ∈ I ∧ q.totalDegree ≤ f.totalDegree + C := by
+  classical
+  let := Fintype.ofFinite σ
+  let : LinearOrder σ := LinearOrder.lift' _ (Fintype.equivFin σ).injective
+  let : WellFoundedGT σ := Finite.to_wellFoundedGT
+  let m : MonomialOrder σ := MonomialOrder.degLex
+  let J := I ⊔ Ideal.span {g}
+  obtain ⟨E, hE⟩ := m.exists_finset_standardExponents_iff J
+  have hex (e : E) : ∃ b ∈ J, b ≠ 0 ∧ m.degree b ≤ (e : σ →₀ ℕ) := by
+    by_contra! h
+    have hs : (e : σ →₀ ℕ) ∈ m.standardExponents J := fun b hb hn => h b hb hn
+    exact (hE _).mp hs _ e.property le_rfl
+  choose b hb hn he using hex
+  let B : Set (MvPolynomial σ k) := Set.range b
+  let : Fintype B := (Set.finite_range b).fintype
+  have hB (x : B) : (x : MvPolynomial σ k) ∈ J ∧ (x : MvPolynomial σ k) ≠ 0 := by
+    obtain ⟨e, h⟩ := x.property
+    rw [← h]
+    exact ⟨hb e, hn e⟩
+  have hrep (x : B) : ∃ q : MvPolynomial σ k, (x : MvPolynomial σ k) - q * g ∈ I := by
+    obtain ⟨i, hi, j, hj, hij⟩ := Submodule.mem_sup.mp (hB x).1
+    obtain ⟨q, rfl⟩ := Ideal.mem_span_singleton.mp hj
+    refine ⟨q, ?_⟩
+    rw [← hij, mul_comm g q, add_sub_cancel_right]
+    exact hi
+  choose a ha using hrep
+  refine ⟨Finset.univ.sup fun x : B => (a x).totalDegree, ?_⟩
+  intro f hf
+  obtain ⟨c, r, hfr, hc, hr⟩ :=
+    m.div_set (B := B) (fun x hx => m.isUnit_leadingCoeff.mpr (hB ⟨x, hx⟩).2) f
+  rw [Finsupp.linearCombination_apply, Finsupp.sum] at hfr
+  have hsum : ∑ x ∈ c.support, c x • (x : MvPolynomial σ k) ∈ J :=
+    J.sum_mem fun x _ => J.smul_mem (c x) (hB x).1
+  have hrJ : r ∈ J := by
+    convert J.sub_mem hf hsum using 1
+    rw [hfr, add_comm, add_sub_cancel_right]
+  have hr0 : r = 0 := by
+    by_contra hr0
+    have hstd : m.degree r ∈ m.standardExponents J := by
+      apply (hE _).mpr
+      intro e heE hle
+      exact hr _ (m.degree_mem_support hr0) (b ⟨e, heE⟩) ⟨⟨e, heE⟩, rfl⟩
+        ((he ⟨e, heE⟩).trans hle)
+    exact hstd r hrJ hr0 le_rfl
+  refine ⟨∑ x ∈ c.support, c x * a x, ?_, ?_⟩
+  · rw [Finset.sum_mul, hfr, hr0, add_zero, ← Finset.sum_sub_distrib]
+    exact I.sum_mem fun x _ => by
+      simpa only [smul_eq_mul, mul_sub, mul_assoc] using I.mul_mem_left (c x) (ha x)
+  · apply totalDegree_finsetSum_le
+    intro x _
+    have hcx : (c x).totalDegree ≤ f.totalDegree := by
+      by_cases hx : c x = 0
+      · simp [hx]
+      have hx' := m.totalDegree_le_of_degree_le
+        (fun _ _ h => degree_le_degree_of_degLex_le h) (hc x)
+      rw [totalDegree_mul_of_isDomain (hB x).2 hx] at hx'
+      omega
+    exact (totalDegree_mul _ _).trans
+      (Nat.add_le_add hcx (Finset.le_sup (f := fun y : B => (a y).totalDegree) (Finset.mem_univ x)))
+end
+end K1_13_6_2_3_3_1
+end
+
+end Merged_FiltrationLift
+
+-- merged module Numeric5Defs
+section Merged_Numeric5Defs
+set_option Elab.async false
+set_option autoImplicit true
+section
+namespace CJ6_8
+open CJ6 (VectorDots belowSucc belowZero block_rank_le rank_of_dots)
+open CJ6.Fast
+set_option maxRecDepth 4096
+local notation "v!" side "," q "," b "," l =>
+  CJ6.Fast.vector b (buckets side q l) rfl rfl rfl (id (α := good side q l b) rfl)
+end CJ6_8
+end
+section
+namespace K1_13_2_3_5
+open K1_13_2 K1_13_2_3
+end K1_13_2_3_5
+end
+
+end Merged_Numeric5Defs
+
+-- merged module Numeric5Certificate
+section Merged_Numeric5Certificate
+set_option Elab.async false
+set_option autoImplicit true
+section
+namespace K1_13_2_3_5
+open K1_13_2 K1_13_2_3
+open scoped BigOperators
+structure Row where
+  first : ℕ
+  count : ℕ
+  packed : ℕ
+  deriving Inhabited
+def unpack (packed : ℕ) : Powers :=
+  ⟨packed % 512, packed / 512 % 512, packed / 262144 % 1024⟩
+private def powersAt : ℕ → ℕ → Powers
+  | 0, packed => unpack packed
+  | k + 1, packed => powersAt k (packed / 268435456)
+private def rowPowers (r : Row) (j : ℕ) : Powers :=
+  powersAt (j - r.first) r.packed
+private def assignment (start : ℕ) (rows : List Row) (i : BlockIndex) : Powers :=
+  rowPowers (rows[i.1.val - start]?.getD default) i.2.val
+end K1_13_2_3_5
+end
+
+end Merged_Numeric5Certificate
+
+-- merged module Pack_K1_14_2_2Split
+section Merged_Pack_K1_14_2_2Split
+set_option Elab.async false
+set_option autoImplicit true
+section
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 8
+set_option maxHeartbeats 1500000
+namespace K1_14_2_2
+noncomputable section
+open K1 K1_14 K1_14_2 Polynomial
+open scoped Classical
+def c1 : Prop :=
+  ∀ P s, P ≠ 0 → RowCaps P s → Nonempty (FixedPart P s)
+end
+end K1_14_2_2
+end
+
+end Merged_Pack_K1_14_2_2Split
+
+-- merged module Pack_K1_14_2_2_4Split
+section Merged_Pack_K1_14_2_2_4Split
+set_option Elab.async false
+set_option autoImplicit true
+section
+set_option backward.isDefEq.respectTransparency false
+namespace K1_14_2_2_4
+noncomputable section
+open K1 K1_14 K1_14_2 K1_14_2_2 Polynomial
+def seedDegree (H : Equation) : ℕ :=
+  H.support.sup fun j => (H.coeff j).totalDegree
+def residualShape (s : Shape) (x z : ℕ) : Shape :=
+  ⟨s.m, s.B - z, min s.J (s.B - z), s.U - x⟩
+structure SharedGcd {w rows i} {B : RowPair w rows i} (A : FixedPair B) where
+  ordinary : Equation
+  cheapTail : Jet
+  layeredTail : Jet
+  ordinary_ne : ordinary ≠ 0
+  cheap_ne : cheapTail ≠ 0
+  layered_ne : layeredTail ≠ 0
+  cheap_factor : B.cheap = fixedIncl A.cheap.equation * (C ordinary * cheapTail)
+  layered_factor : B.layered = fixedIncl A.layered.equation * (C ordinary * layeredTail)
+  relativelyPrime : IsRelPrime (toJet cheapTail) (toJet layeredTail)
+  seed_le : seedDegree ordinary ≤ min (stageAt i).cheap.U (stageAt i).layered.U
+  ordinate_le : ordinary.natDegree ≤ min (stageAt i).cheap.B (stageAt i).layered.B
+  cheap_caps : RowCaps cheapTail
+    (residualShape (stageAt i).cheap (seedDegree ordinary) ordinary.natDegree)
+  layered_caps : RowCaps layeredTail
+    (residualShape (stageAt i).layered (seedDegree ordinary) ordinary.natDegree)
+def HighOn (H : Equation) (r : ℕ) (I : Ideal Ambient) : Prop :=
+  ∃ f : Equation, Irreducible f ∧ 0 < f.natDegree ∧ f ^ r ∣ H ∧ toJet (C f) ∈ I
+def highScale (r : ℕ) (k : Fin 4) : ℕ :=
+  ![r, r, r ^ 2, r ^ 2] k
+def highCap (x z : ℕ) (k : Fin 4) : ℕ :=
+  ![z, x, 2 * x * z, x * x] k
+def pairCap (s t : Shape) (k : Fin 4) : ℕ :=
+  ![s.B * t.J + t.B * s.J - s.J * t.J, s.U * t.J + t.U * s.J,
+    s.U * t.B + t.U * s.B, s.U * t.U] k
+def localLength (P Q : Jet) (I : Ideal Ambient) (hp : I.IsPrime) : ℕ∞ :=
+  letI : I.IsPrime := hp
+  let R := Localization.AtPrime I
+  letI : CommRing R := inferInstanceAs (CommRing (Localization.AtPrime I))
+  let J : Ideal Ambient := Ideal.span {toJet P, toJet Q}
+  let A : Ideal R := J.map (algebraMap Ambient R)
+  Module.length R (R ⧸ (A : Submodule R R))
+end
+end K1_14_2_2_4
+end
+section
+namespace K1_14_2_2_4
+noncomputable section
+open K1 K1_14 K1_14_2 K1_14_2_2
+def residualScale (square : Bool) (k : Fin 4) (n : ℕ) : ℕ :=
+  if square = true ∨ k = 3 then n ^ 2 else n
+private def seedNumerator (s t : Shape) (d r z : ℕ) : ℕ :=
+  d * z + r * pairCap (residualShape s 0 z) (residualShape t 0 z) 0
+private def ordinateNumerator (s t : Shape) (d r x : ℕ) : ℕ :=
+  d * x + r * ((s.U - x) * t.J + (t.U - x) * s.J)
+private def mixedNumerator (s t : Shape) (d r x z : ℕ) : ℕ :=
+  d * (2 * x * z) + r ^ 2 * ((s.U - x) * (t.B - z) + (t.U - x) * (s.B - z))
+private def jetsNumerator (s t : Shape) (d r x : ℕ) : ℕ :=
+  d * (x * x) + r ^ 2 * ((s.U - x) * (t.U - x))
+private def checkNumerator (s t : Shape) (d r M : ℕ) (k : Fin 4) : Prop :=
+  match k.val with
+  | 0 => ∀ z : Fin (s.B + 1), seedNumerator s t d r z.val < M
+  | 1 => ordinateNumerator s t d r 0 < M ∧ ordinateNumerator s t d r s.U < M
+  | 2 => mixedNumerator s t d r 0 0 < M ∧ mixedNumerator s t d r 0 s.B < M ∧
+      mixedNumerator s t d r s.U 0 < M ∧ mixedNumerator s t d r s.U s.B < M
+  | _ => jetsNumerator s t d r 0 < M ∧ jetsNumerator s t d r s.U < M
+private instance (s t : Shape) (d r M : ℕ) (k : Fin 4) :
+    Decidable (checkNumerator s t d r M k) := by
+  unfold checkNumerator
+  split <;> infer_instance
+private def certificate (i : Fin 10) (square : Bool) (cap : Fin 4 → ℕ)
+    (k : Fin 4) (r : ℕ) : Prop :=
+  let s := (stageAt i).cheap
+  let t := (stageAt i).layered
+  let m := (stageAt i).reserve + 1
+  let d := residualScale square k (m + 1 - r)
+  budget (i.val - 1) k ≤ cap k ∨
+    (0 < r ∧ r ≤ m ∧ checkNumerator s t d r (highScale r k * d * (cap k + 1)) k)
+private instance (i : Fin 10) (square : Bool) (cap : Fin 4 → ℕ)
+    (k : Fin 4) (r : ℕ) : Decidable (certificate i square cap k r) := by
+  unfold certificate
+  infer_instance
+end
+end K1_14_2_2_4
+end
+section
+set_option maxHeartbeats 1000000
+namespace K1_14_2_2_4
+noncomputable section
+open K1 K1_14 K1_14_2 K1_14_2_2 Polynomial
+open scoped Classical BigOperators
+def c3 : Prop :=
+  ∀ (H : Equation) (P : Jet) (I : Ideal Ambient) (m r : ℕ),
+    H ≠ 0 → seedDegree H < p → H.natDegree < p →
+    Active I → 0 < r → r ≤ m → ¬ HighOn H r I →
+    orderOn I (C H * P) m → orderOn I P (m + 1 - r)
+def c4 : Prop :=
+  ∀ (P Q : Jet) (I : Ideal Ambient) (hI : Active I) (n : ℕ),
+    0 < n → orderOn I P n → orderOn I Q n →
+    ((if dual I then n ^ 2 else n : ℕ) : ℕ∞) ≤ localLength P Q I hI.prime
+def c5 : Prop :=
+  ∀ (P Q : Jet) (s t : Shape) (S : Finset (Ideal Ambient)) (k : Fin 4) (d : ℕ),
+    P ≠ 0 → Q ≠ 0 → IsRelPrime (toJet P) (toJet Q) →
+    s.J ≤ s.B → t.J ≤ t.B → RowCaps P s → RowCaps Q t → 0 < d →
+    (∀ I ∈ S, ∃ hI : Active I,
+      sectionDegree I k ≠ 0 → (d : ℕ∞) ≤ localLength P Q I hI.prime) →
+    d * mass S k ≤ pairCap s t k
+theorem cancel_fixed {I : Ideal Ambient} (hp : I.IsPrime) (G : ODE) (P : Jet)
+    (m : ℕ) (hG : ¬ fixedOn G I) (ho : orderOn I (fixedIncl G * P) m) :
+    orderOn I P m := by
+  obtain ⟨a, ha, h⟩ := ho
+  refine ⟨a * toJet (fixedIncl G), fun hn => (hp.mem_or_mem hn).elim ha hG, ?_⟩
+  simpa only [map_mul, mul_assoc] using h
+end
+end K1_14_2_2_4
+end
+
+end Merged_Pack_K1_14_2_2_4Split
+
+-- merged module Pack_K1_14_3_2_5_3Proof
+section Merged_Pack_K1_14_3_2_5_3Proof
+set_option Elab.async false
+set_option autoImplicit true
+section
+set_option autoImplicit false
+set_option backward.isDefEq.respectTransparency false
+set_option maxHeartbeats 1000000
+set_option maxSynthPendingDepth 12
+namespace K1_14_3_2_5_3
+noncomputable section
+open K1_14 K1_14_3 K1_14_3_2_5 Polynomial
+open scoped nonZeroDivisors
+end
+end K1_14_3_2_5_3
+end
+
+end Merged_Pack_K1_14_3_2_5_3Proof
+
+-- merged module Fast049
+section Merged_Fast049
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -774,3 +1068,5 @@ def constantComponents (I : Ideal Ambient) (P : Jet) : Finset (Ideal Ambient) :=
 end
 end K1_14_2_2_7
 end
+
+end Merged_Fast049

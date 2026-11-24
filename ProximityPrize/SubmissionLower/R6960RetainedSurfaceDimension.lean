@@ -1,7 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960RetainedGlobalEvaluation
 import ProximityPrize.SubmissionLower.R6960RetainedTwoLineBound
 set_option synthInstance.maxHeartbeats 200000
-
 noncomputable section
 set_option Elab.async false
 set_option backward.isDefEq.respectTransparency false
@@ -17,7 +16,6 @@ open Lower6960.RetainedSurfaceClass (cut_running through)
 open Lower6960.RetainedSurfaceClass (evalX evalZ)
 open Lower6960.RetainedTwoLineBound (diagonal image)
 variable (E:Type) [Field E] [Algebra ChartField E]
-
 theorem point_polynomial (j:Bool) (x z:L) (p:(Polynomial L)) :
     Lower6960.RetainedSurfaceClass.nodeRing E j x z (polyMap E j (atCoord j x z) false p) =
       algebraMap L (Crossing E x z) (p.eval (atCoord (!j) x z)) := by
@@ -42,7 +40,6 @@ theorem point_polynomial (j:Bool) (x z:L) (p:(Polynomial L)) :
       rw [map_sub,co,sub_eq_zero] at van
       simpa [g] using van
   exact DFunLike.congr_fun eq p
-
 theorem node_rank_le (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) {n:ℕ}
     (bf:Basis (Fin n) (Polynomial L) (chartImage E j (atCoord j x z) false)) :
     finrank L (Crossing E x z)≤n := by
@@ -66,15 +63,11 @@ theorem node_rank_le (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) {n:ℕ}
     simpa [generate,Basis.constr_apply_fintype,v] using rep.trans eu
   have bound:=LinearMap.finrank_le_finrank_of_surjective (f:=generate) onto
   simpa only [Module.finrank_pi,Fintype.card_fin] using bound
-
 def transition (j:Bool) (c:L) (nc:c≠0) {n:ℕ} (bf:Basis (Fin n) (Polynomial L) (chartImage E j c false))
     (bi:Basis (Fin n) (Polynomial L) (chartImage E j c true)) : Matrix (Fin n) (Fin n) (Laurent L) := by
   let : Module (Laurent L) (Axis E j c) := (axisAlgebra E j c).toModule
   exact freeTransition (M:=Axis E j c) bf bi (nativeMap E j c false) (nativeMap E j c true)
     (native_localization E j c nc false) (native_localization E j c nc true)
-
-/-- Bound the very quotient through which the surface restricts. The two determinant
-degrees come from the original surface's specialized line orders. -/
 theorem paired_bound (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)]
     [FiniteDimensional L (Crossing E x z)] {m n:ℕ}
     (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
@@ -124,13 +117,8 @@ theorem paired_bound (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)]
   have ds:tz= -(s:ℤ) := by dsimp [s]; omega
   have dt:tx= -(t:ℤ) := by dsimp [t]; omega
   exact ⟨finite,s,t,dt ▸ xt,ds ▸ zt,by omega⟩
-
 #print axioms paired_bound
-
 open RetainedCompression (Curve ordinate view height heightCap wordDegree)
-
-/-- The first-cohomology bound for the original retained factor. The kernel equality
-identifies the range with its transition classes modulo ordinary coboundaries. -/
 theorem actual_surface_budget (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
     (hi:f.degreeOf ordinate<48) (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis:PowerBasis ChartField E)
@@ -151,6 +139,5 @@ theorem actual_surface_budget (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3�
   obtain ⟨finite,s,t,dt,ds,count⟩:=paired_bound E x z nx nz xf xi zf zi
   exact ⟨x,z,nx,nz,m,n,s,t,xf,xi,zf,zi,dt,ds,
     restriction_kernel E f ir lo hi bounded basis root x z nx nz,finite,count⟩
-
 #print axioms actual_surface_budget
 end Lower6960.RetainedSurfaceClass

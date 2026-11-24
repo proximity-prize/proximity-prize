@@ -3474,7 +3474,7 @@ namespace K1_13_7_6
 noncomputable section
 open K1_13 K1_13_7 MvPolynomial
 open scoped Pointwise
-private theorem zero_mem_cap (b j : ℕ) : 0 ∈ cap b j := by
+theorem zero_mem_cap (b j : ℕ) : 0 ∈ cap b j := by
   simp [cap]
 theorem chartMap_surjective : Function.Surjective chartMap := by
   apply monomialMap_surjective
@@ -3482,7 +3482,7 @@ theorem chartMap_surjective : Function.Surjective chartMap := by
   change (Finsupp.single i 1).degree ≤ totalCap ∧
     Finsupp.single i 1 1 + 2 * Finsupp.single i 1 2 ≤ 2 * halfIndexCap
   fin_cases i <;> norm_num [Finsupp.degree_single, Finsupp.single_apply, totalCap, halfIndexCap]
-private theorem cap_add_subset (b j b' j' : ℕ) :
+theorem cap_add_subset (b j b' j' : ℕ) :
     cap b j + cap b' j' ⊆ cap (b + b') (j + j') := by
   rintro _ ⟨e, he, e', he', rfl⟩
   change e.degree ≤ b ∧ e 1 + 2 * e 2 ≤ j at he
@@ -3491,7 +3491,7 @@ private theorem cap_add_subset (b j b' j' : ℕ) :
     (e + e') 1 + 2 * (e + e') 2 ≤ j + j'
   simp only [map_add, Finsupp.add_apply]
   omega
-private theorem nsmul_cap_subset (b j n : ℕ) : n • cap b j ⊆ cap (b * n) (j * n) := by
+theorem nsmul_cap_subset (b j n : ℕ) : n • cap b j ⊆ cap (b * n) (j * n) := by
   induction n with
   | zero =>
       rw [zero_smul, Set.zero_subset]
@@ -3499,7 +3499,7 @@ private theorem nsmul_cap_subset (b j n : ℕ) : n • cap b j ⊆ cap (b * n) (
   | succ n ih =>
       rw [succ_nsmul, Nat.mul_succ, Nat.mul_succ]
       exact (Set.add_subset_add ih subset_rfl).trans (cap_add_subset _ _ _ _)
-private theorem indexWeight_eq (e : Fin 3 →₀ ℕ) :
+theorem indexWeight_eq (e : Fin 3 →₀ ℕ) :
     (e.sum fun i a => i.val * a) = e 1 + 2 * e 2 := by
   rw [Finsupp.sum_fintype _ _ (fun _ => by simp), Fin.sum_univ_three]
   simp

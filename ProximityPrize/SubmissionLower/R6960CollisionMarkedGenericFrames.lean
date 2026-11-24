@@ -1,12 +1,239 @@
+import ProximityPrize.SubmissionLower.R6960CollisionTameBranchFrame
+import ProximityPrize.SubmissionLower.R6960CollisionTameLineDegree
+import Mathlib.RingTheory.Localization.Algebra
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedPlaneOverlap
-import ProximityPrize.SubmissionLower.R6960CollisionTameCoefficientLine
 
+-- merged module R6960CollisionTameLocalizedDegree
+section Merged_R6960CollisionTameLocalizedDegree
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 1250000
+set_option backward.isDefEq.respectTransparency.types false
+namespace Lower6960.CollisionTame
+noncomputable section
+open Polynomial LineEuler Module Matrix
+open scoped Polynomial Matrix
+variable {k A F E : Type*} [Field k] [CommRing A] [IsDomain A] [IsIntegrallyClosed A]
+  [IsNoetherianRing A] [Field F] [Field E] [Algebra (Laurent k) E]
+local instance finiteLineAlgebra : Algebra (Polynomial k) E :=
+  ((algebraMap (Laurent k) E).comp (chartEmbedding false).toRingHom).toAlgebra
+variable [Algebra A (Polynomial k)] [Algebra A F] [Algebra A E] [Algebra (Polynomial k) F] [Algebra F E]
+  [IsScalarTower A (Polynomial k) F] [IsScalarTower A (Polynomial k) E] [IsScalarTower A F E] [IsScalarTower (Polynomial k) F E]
+  [IsFractionRing A F] [IsFractionRing (Polynomial k) F] [FiniteDimensional F E] [Algebra.IsSeparable F E]
+theorem localized_line_discriminant_degree (S : Submonoid A) [IsLocalization S (Polynomial k)]
+    (δ : A) (nz : δ≠0) (principal : normalizationDiscriminant (A:=A) (E:=E) F=Ideal.span {δ})
+    (bf : Basis (Fin (finrank F E)) (Polynomial k) (chartOrder (k:=k) (E:=E) false))
+    (bi : Basis (Fin (finrank F E)) (Polynomial k) (chartOrder (k:=k) (E:=E) true)) :
+    ∃ d : ℤ,(normalizedTransition bf bi).det.degree=(d:WithBot ℤ) ∧
+      ((algebraMap A (Polynomial k) δ).natDegree:ℤ)≤-2*d := by
+  let j := algebraMap A (Polynomial k)
+  let b : Basis (Fin (finrank F E)) (Polynomial k) (integralClosure (Polynomial k) E) := bf
+  let G := (Algebra.traceMatrix (Polynomial k) bf).det
+  have h : (Ideal.span {j δ} : Ideal (Polynomial k))=Ideal.span {G} := by
+    have localEq := normalizationDiscriminant_map (R:=(Polynomial k)) (A:=A) (F:=F) (E:=E) S
+    rw [principal,Ideal.map_span,Set.image_singleton,normalizationDiscriminant_basis F b] at localEq
+    exact localEq
+  have associated : Associated (j δ) G := Ideal.span_singleton_eq_span_singleton.mp h
+  have inj : Function.Injective j := by
+    intro x y eq
+    apply IsFractionRing.injective A F
+    rw [IsScalarTower.algebraMap_apply A (Polynomial k) F,IsScalarTower.algebraMap_apply A (Polynomial k) F]
+    exact congrArg (algebraMap (Polynomial k) F) eq
+  have nonzero : G≠0 := by
+    intro z
+    have div : (j δ)∣0 := z ▸ associated.dvd
+    have div' : 0∣j δ := z ▸ associated.dvd'
+    exact (map_ne_zero_iff _ inj).mpr nz (zero_dvd_iff.mp div')
+  obtain ⟨d,dd,cap⟩ := normalized_line_discriminant_degree bf bi nonzero
+  exact ⟨d,dd,(congrArg (fun n : ℕ=>(n:ℤ)) (natDegree_eq_of_degree_eq
+    (degree_eq_degree_of_associated associated))).trans_le cap⟩
+#print axioms localized_line_discriminant_degree
+end
+end Lower6960.CollisionTame
+
+end Merged_R6960CollisionTameLocalizedDegree
+
+-- merged module R6960CollisionTameCoefficientLine
+section Merged_R6960CollisionTameCoefficientLine
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 1500000
+set_option backward.isDefEq.respectTransparency.types false
+namespace Lower6960.CollisionTame
+noncomputable section
+open Polynomial LaurentPolynomial LineEuler Module
+open scoped Polynomial BigOperators
+variable (k : Type) [Field k]
+abbrev PlaneRing := (Polynomial (Polynomial k))
+abbrev PlaneField := FractionRing (PlaneRing k)
+abbrev GenericCoefficients := FractionRing (Polynomial k)
+abbrev GenericLine := (Polynomial (GenericCoefficients k))
+abbrev coeffDenominators : Submonoid (PlaneRing k) := (nonZeroDivisors (Polynomial k)).map Polynomial.C
+attribute [local instance] Polynomial.algebra Polynomial.isLocalization
+private theorem coeffDenominators_regular : coeffDenominators k≤nonZeroDivisors (PlaneRing k) := by
+  rintro _ ⟨a,ha,rfl⟩
+  exact mem_nonZeroDivisors_iff_ne_zero.mpr (C_ne_zero.mpr (mem_nonZeroDivisors_iff_ne_zero.mp ha))
+def genericFinite : GenericLine k→+*PlaneField k :=
+  IsLocalization.lift (M:=coeffDenominators k) (g:=algebraMap _ _) fun s=>
+    IsUnit.mk0 _ ((map_ne_zero_iff _ (IsFractionRing.injective (PlaneRing k) _)).mpr
+      (mem_nonZeroDivisors_iff_ne_zero.mp (coeffDenominators_regular k s.property)))
+theorem genericFinite_on_plane (a : PlaneRing k) :
+    genericFinite k (algebraMap (PlaneRing k) (GenericLine k) a)=algebraMap (PlaneRing k) (PlaneField k) a :=
+  IsLocalization.lift_eq _ _
+theorem genericFinite_fraction :
+    let : Algebra (GenericLine k) (PlaneField k) := (genericFinite k).toAlgebra
+    IsFractionRing (GenericLine k) (PlaneField k) := by
+  let : Algebra (GenericLine k) (PlaneField k) := (genericFinite k).toAlgebra
+  let : IsScalarTower (PlaneRing k) (GenericLine k) (PlaneField k) :=
+    IsScalarTower.of_algebraMap_eq (fun p=>(genericFinite_on_plane k p).symm)
+  exact IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (coeffDenominators k) _ _
+private theorem genericFinite_injective : Function.Injective (genericFinite k) := by
+  let : Algebra (GenericLine k) (PlaneField k) := (genericFinite k).toAlgebra
+  let : IsFractionRing (GenericLine k) (PlaneField k) := genericFinite_fraction k
+  exact IsFractionRing.injective _ _
+private abbrev t : PlaneField k := genericFinite k (Polynomial.X (R:=GenericCoefficients k))
+private theorem t_ne : t k≠0 := (map_ne_zero_iff _ (genericFinite_injective k)).mpr Polynomial.X_ne_zero
+def genericLaurent : Laurent (GenericCoefficients k)→+*PlaneField k :=
+  LaurentPolynomial.eval₂ ((genericFinite k).comp Polynomial.C) (Units.mk0 (t k) (t_ne k))
+theorem genericLaurent_finite :
+    (genericLaurent k).comp (chartEmbedding false).toRingHom=genericFinite k := by
+  apply Polynomial.ringHom_ext
+  · intro a
+    change genericLaurent k (Polynomial.toLaurent (Polynomial.C a)) = _
+    rw [genericLaurent,LaurentPolynomial.eval₂_toLaurent,Polynomial.eval₂_C]
+    rfl
+  · change genericLaurent k (Polynomial.toLaurent (Polynomial.X (R:=GenericCoefficients k))) = _
+    rw [genericLaurent,LaurentPolynomial.eval₂_toLaurent,Polynomial.eval₂_X]
+    rfl
+abbrev genericInverse : GenericLine k→+*PlaneField k :=
+  Polynomial.eval₂RingHom ((genericFinite k).comp Polynomial.C) ((t k)⁻¹)
+theorem genericLaurent_inverse :
+    (genericLaurent k).comp (chartEmbedding true).toRingHom=genericInverse k := by
+  apply Polynomial.ringHom_ext
+  · intro a
+    change genericLaurent k (invert (Polynomial.toLaurent (Polynomial.C a))) = _
+    rw [Polynomial.toLaurent_C,invert_C,genericLaurent,LaurentPolynomial.eval₂_C]
+    exact (Polynomial.eval₂_C _ _).symm
+  · change genericLaurent k (invert (Polynomial.toLaurent (Polynomial.X (R:=GenericCoefficients k)))) = _
+    rw [Polynomial.toLaurent_X,invert_T]
+    have val := LaurentPolynomial.eval₂_T_neg_n ((genericFinite k).comp Polynomial.C) (Units.mk0 (t k) (t_ne k)) 1
+    simpa only [genericLaurent,genericInverse,Int.natCast_one,pow_one,Units.val_inv_eq_inv_val,
+      Units.val_mk0,Polynomial.coe_eval₂RingHom,Polynomial.eval₂_X] using val
+theorem genericInverse_fractions :
+    let : Algebra (GenericLine k) (PlaneField k) := (genericInverse k).toAlgebra
+    IsFractionRing (GenericLine k) (PlaneField k) := by
+  let J := (genericFinite k).comp Polynomial.C
+  let : Algebra (GenericCoefficients k) (PlaneField k) := J.toAlgebra
+  have finite_eval : Polynomial.eval₂RingHom J (t k)=genericFinite k :=
+    Polynomial.ringHom_ext (fun _=>Polynomial.eval₂_C _ _) (Polynomial.eval₂_X _ _)
+  have transcend : Transcendental (GenericCoefficients k) (t k) := by
+    apply transcendental_iff_injective.mpr
+    change Function.Injective (Polynomial.eval₂RingHom J (t k))
+    rw [finite_eval]
+    exact genericFinite_injective k
+  have inv_transcend : Transcendental (GenericCoefficients k) ((t k)⁻¹) := by
+    simpa only [Transcendental,IsAlgebraic.inv_iff] using transcend
+  have inj : Function.Injective (genericInverse k) := transcendental_iff_injective.mp inv_transcend
+  have repr (a : PlaneField k) : ∃ x y : GenericLine k,genericFinite k x/genericFinite k y=a := by
+    let : Algebra (GenericLine k) (PlaneField k) := (genericFinite k).toAlgebra
+    let : IsFractionRing (GenericLine k) (PlaneField k) := genericFinite_fraction k
+    obtain ⟨x,y,_,eq⟩ := IsFractionRing.div_surjective (GenericLine k) a
+    exact ⟨x,y,eq⟩
+  let : Algebra (GenericLine k) (PlaneField k) := (genericInverse k).toAlgebra
+  let : FaithfulSMul (GenericLine k) (PlaneField k) :=
+    (faithfulSMul_iff_algebraMap_injective _ _).mpr inj
+  apply IsFractionRing.of_field
+  intro a
+  obtain ⟨x,y,eq⟩ := repr a
+  let N := max x.natDegree y.natDegree
+  let : Invertible (t k) := invertibleOfNonzero (t_ne k)
+  have reflect (p : GenericLine k) (hp : p.natDegree≤N) :
+      genericInverse k (p.reflect N)=genericFinite k p*((t k)⁻¹)^N := by
+    have h := Polynomial.eval₂_reflect_mul_pow J (t k) N p hp
+    rw [invOf_eq_inv] at h
+    change genericInverse k (p.reflect N)*(t k)^N=(Polynomial.eval₂RingHom J (t k)) p at h
+    rw [finite_eval] at h
+    apply mul_right_cancel₀ (pow_ne_zero N (t_ne k))
+    rw [h,mul_assoc,←mul_pow,inv_mul_cancel₀ (t_ne k),one_pow,mul_one]
+  refine ⟨x.reflect N,y.reflect N,?_⟩
+  change a=genericInverse k (x.reflect N)/genericInverse k (y.reflect N)
+  rw [reflect x (le_max_left _ _),reflect y (le_max_right _ _),
+    mul_div_mul_right _ _ (pow_ne_zero _ (inv_ne_zero (t_ne k)))]
+  exact eq.symm
+variable {E : Type} [Field E] [Algebra (PlaneRing k) E] [Algebra (PlaneField k) E]
+  [IsScalarTower (PlaneRing k) (PlaneField k) E]
+  [FiniteDimensional (PlaneField k) E] [Algebra.IsSeparable (PlaneField k) E]
+scoped instance genericLaurentAlgebra : Algebra (Laurent (GenericCoefficients k)) E :=
+  ((algebraMap (PlaneField k) E).comp (genericLaurent k)).toAlgebra
+omit [Algebra (PlaneRing k) E] [IsScalarTower (PlaneRing k) (PlaneField k) E] in
+theorem genericLine_basis (s : Bool) :
+    Nonempty (Basis (Fin (finrank (PlaneField k) E)) (GenericLine k)
+      (chartOrder (k:=GenericCoefficients k) (E:=E) s)) := by
+  let A := GenericLine k
+  let F := PlaneField k
+  let j := (genericLaurent k).comp (chartEmbedding s).toRingHom
+  let : Algebra A F := j.toAlgebra
+  let : IsFractionRing A F := by
+    cases s with
+    | false =>
+      exact ((congrArg (fun f : A→+*F=>@IsFractionRing A _ F _ f.toAlgebra) (genericLaurent_finite k)).symm ▸
+        genericFinite_fraction k)
+    | true => exact ((congrArg (fun f : A→+*F=>@IsFractionRing A _ F _ f.toAlgebra) (genericLaurent_inverse k)).symm ▸
+        genericInverse_fractions k)
+  let : Algebra A E := ((algebraMap F E).comp j).toAlgebra
+  let : IsScalarTower A F E := IsScalarTower.of_algebraMap_eq (R:=A) (S:=F) (A:=E) fun _=>rfl
+  let C := integralClosure A E
+  have inj : Function.Injective (algebraMap A E) := (algebraMap F E).injective.comp (IsFractionRing.injective A F)
+  let : Module.IsTorsionFree A E := Module.IsTorsionFree.of_smul_eq_zero fun a x eq=>by
+    rw [Algebra.smul_def,mul_eq_zero] at eq
+    exact eq.imp (fun h=>inj (h.trans (map_zero _).symm)) id
+  let : Module.Finite A C := IsIntegralClosure.finite A F E C
+  let : Module.Free A C := IsIntegralClosure.module_free A F E C
+  have rank : finrank A C=finrank F E := IsIntegralClosure.rank A F E C
+  exact ⟨Module.finBasisOfFinrankEq A C rank⟩
+theorem plane_generic_outer_degree (δ : PlaneRing k) (nz : δ≠0)
+    (generator : normalizationDiscriminant (A:=PlaneRing k) (E:=E) (PlaneField k)=Ideal.span {δ}) :
+    ∃ (bf : Basis (Fin (finrank (PlaneField k) E)) (GenericLine k)
+        (chartOrder (k:=GenericCoefficients k) (E:=E) false))
+      (bi : Basis (Fin (finrank (PlaneField k) E)) (GenericLine k)
+        (chartOrder (k:=GenericCoefficients k) (E:=E) true)) (d : ℤ),
+      (normalizedTransition bf bi).det.degree=(d:WithBot ℤ) ∧ (δ.natDegree:ℤ)≤-2*d := by
+  let A := PlaneRing k
+  let R := GenericLine k
+  let F := PlaneField k
+  let j := (genericLaurent k).comp (chartEmbedding false).toRingHom
+  let : Algebra R F := j.toAlgebra
+  let : IsFractionRing R F := by
+    exact ((congrArg (fun f : R→+*F=>@IsFractionRing R _ F _ f.toAlgebra) (genericLaurent_finite k)).symm ▸
+      genericFinite_fraction k)
+  let : IsScalarTower A R F := IsScalarTower.of_algebraMap_eq (R:=A) (S:=R) (A:=F) fun r=>by
+    change algebraMap A F r=j (algebraMap A R r)
+    rw [show j=genericFinite k from genericLaurent_finite k,genericFinite_on_plane]
+  let : Algebra R E := ((algebraMap F E).comp j).toAlgebra
+  let : IsScalarTower R F E := IsScalarTower.of_algebraMap_eq (R:=R) (S:=F) (A:=E) fun _=>rfl
+  let : IsScalarTower A R E := IsScalarTower.of_algebraMap_eq (R:=A) (S:=R) (A:=E) fun r=>by
+    rw [IsScalarTower.algebraMap_apply A F E,IsScalarTower.algebraMap_apply A R F,
+      ←IsScalarTower.algebraMap_apply R F E]
+  obtain ⟨bf⟩ := genericLine_basis (E:=E) k false
+  obtain ⟨bi⟩ := genericLine_basis (E:=E) k true
+  obtain ⟨d,dd,cap⟩ := localized_line_discriminant_degree (F:=F) (E:=E) (coeffDenominators k) δ nz generator bf bi
+  change ((δ.map (algebraMap (Polynomial k) (GenericCoefficients k))).natDegree:ℤ)≤-2*d at cap
+  rw [natDegree_map_eq_of_injective (IsFractionRing.injective _ _)] at cap
+  exact ⟨bf,bi,d,dd,cap⟩
+#print axioms genericLine_basis
+#print axioms plane_generic_outer_degree
+end
+end Lower6960.CollisionTame
+
+end Merged_R6960CollisionTameCoefficientLine
+
+-- merged module R6960CollisionMarkedGenericFrames
+section Merged_R6960CollisionMarkedGenericFrames
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 4500000
 set_option synthInstance.maxHeartbeats 95000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionMarked
 noncomputable section
 open K1_14 (L)
@@ -16,23 +243,16 @@ open Polynomial Module CollisionTame LineEuler
 open scoped Polynomial Lower6960.MonicChartProbes
 open Lower6960.CollisionMarked (outerPlane outerField outer_X outer_CC outer_CX outerField_fraction)
 open Lower6960.CollisionTame (genericFinite_on_plane genericFinite_fraction genericLaurent_finite genericLaurent_inverse genericInverse_fractions genericInverse coeffDenominators)
-
 attribute [local instance] Polynomial.algebra Polynomial.isLocalization
-
-/-- The generic line orientation keeps its varying coordinate outside
-the fixed polynomial coefficients. -/
 def genericPlaneField (j:Bool) : FractionRing (Plane L)≃+*ChartField :=
   IsFractionRing.ringEquivOfRingEquiv (K:=FractionRing (Plane L)) (L:=ChartField)
     (Lower6960.CollisionMarked.outerPlane j false)
-
 private theorem genericPlaneField_apply (j:Bool) (p:Plane L) :
     genericPlaneField j (algebraMap (Plane L) (FractionRing (Plane L)) p)=
       Lower6960.CollisionMarked.outerField j false p :=
   IsFractionRing.ringEquivOfRingEquiv_algebraMap _ _
-
 def lineEmbedding (j b:Bool) : GenericLine L→+*ChartField :=
   (genericPlaneField j).toRingHom.comp ((genericLaurent L).comp (chartEmbedding b).toRingHom)
-
 private theorem lineEmbedding_fraction (j b:Bool) :
     let : Algebra (GenericLine L) ChartField := (lineEmbedding j b).toAlgebra
     IsFractionRing (GenericLine L) ChartField := by
@@ -51,9 +271,6 @@ private theorem lineEmbedding_fraction (j b:Bool) :
           Lower6960.CollisionTame.genericInverse_fractions L)
   let e : F≃ₐ[R]ChartField := { genericPlaneField j with commutes' := fun _=>rfl }
   exact IsFractionRing.of_algEquiv e
-
-/-- Localizing the fixed coefficients of either original plane chart
-gives the corresponding actual generic polynomial chart. -/
 theorem lineEmbedding_on_plane (j b:Bool) (p:Plane L) :
     lineEmbedding j b (algebraMap (Plane L) (GenericLine L) p)=
       Lower6960.CollisionMarked.outerField j b p := by
@@ -108,15 +325,10 @@ theorem lineEmbedding_on_plane (j b:Bool) (p:Plane L) :
         rfl
     rw [Lower6960.CollisionTame.genericLaurent_inverse]
     exact DFunLike.congr_fun map_eq p
-
 variable {E:Type} [Field E] [Algebra ChartField E] [FiniteDimensional ChartField E]
   [Algebra.IsSeparable ChartField E]
-
-/-- The actual common generic Laurent algebra, with the finite scalar
-variable placed in the coefficient fraction field. -/
 @[instance_reducible] def genericLineAlgebra (j:Bool) : Algebra (Laurent (GenericCoefficients L)) E :=
   (((algebraMap ChartField E).comp (genericPlaneField j).toRingHom).comp (genericLaurent L)).toAlgebra
-
 theorem generic_line_basis (j b:Bool) :
     let : Algebra (Laurent (GenericCoefficients L)) E := genericLineAlgebra j
     Nonempty (Basis (Fin (finrank ChartField E)) (GenericLine L)
@@ -138,10 +350,6 @@ theorem generic_line_basis (j b:Bool) :
   let : Module.Free R C := IsIntegralClosure.module_free R ChartField E C
   have rank : finrank R C=finrank ChartField E := IsIntegralClosure.rank R ChartField E C
   exact ⟨Module.finBasisOfFinrankEq R C rank⟩
-
-/-- The trace determinant in the actual generic normalized chart is
-associated to coefficient localization of the original plane generator.
-Both the finite and the reciprocal charts use the same extension E. -/
 theorem generic_line_trace_associated (j b:Bool) (δ:Plane L)
     (principal:lineDiscriminant (E:=E) j b=Ideal.span {δ}) :
     let : Algebra (Laurent (GenericCoefficients L)) E := genericLineAlgebra j
@@ -208,8 +416,9 @@ theorem generic_line_trace_associated (j b:Bool) (δ:Plane L)
     normalizationDiscriminant_basis (A:=R) (E:=E) ChartField aa
   rw [basisDisc] at loc
   exact Ideal.span_singleton_eq_span_singleton.mp loc.symm
-
 #print axioms generic_line_basis
 #print axioms generic_line_trace_associated
 end
 end Lower6960.CollisionMarked
+
+end Merged_R6960CollisionMarkedGenericFrames

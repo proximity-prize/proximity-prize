@@ -2,23 +2,16 @@ import Mathlib.Algebra.Polynomial.Reverse
 import Mathlib.Algebra.Polynomial.FieldDivision
 import Mathlib.RingTheory.Polynomial.Basic
 import Mathlib.RingTheory.PrincipalIdealDomain
-
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 1500000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.CollisionMarked
 noncomputable section
 open Polynomial
 open scoped Polynomial
-
 variable {k V Bf Bi : Type*} [Field k] [CommRing V] [CommRing Bf] [CommRing Bi]
   [Algebra (Polynomial k) Bi]
-
-/-- A power of the boundary coordinate and a polynomial unit at the
-boundary are relatively prime. Two clearings of this form in the same
-original order recover the original section there. -/
 theorem boundary_clearings (φ : Bi→+*V) (a : (Polynomial k)→+*V)
     (scalars : ∀ f,φ (algebraMap (Polynomial k) Bi f)=a f)
     (w : V) (n : ℕ) (D : (Polynomial k)) (unit : D.eval 0≠0)
@@ -38,11 +31,6 @@ theorem boundary_clearings (φ : Bi→+*V) (a : (Polynomial k)→+*V)
   simp only [Algebra.smul_def,map_add,map_mul,scalars,hu,hv]
   calc _ = a (x*Polynomial.X^n+y*D)*w := by rw [map_add,map_mul,map_mul]; ring
        _ = w := by rw [xy,map_one,one_mul]
-
-/-- Actual chart images with a common localization agree on the
-representatives of a regular marked multiple. The first chart can clear
-an arbitrary polynomial denominator. The second chart only needs the
-index to be a unit at its boundary point. -/
 theorem marked_multiple_two_charts (ι : k→+*V) (X : Vˣ)
     (φf : Bf→+*V) (φi : Bi→+*V)
     (scalars : ∀ f,φi (algebraMap (Polynomial k) Bi f)=f.eval₂ ι (↑X⁻¹))
@@ -80,7 +68,6 @@ theorem marked_multiple_two_charts (ι : k→+*V) (X : Vˣ)
     ring
   obtain ⟨v,hv⟩ := boundary_clearings φi j scalars w n D unit power_clear det_clear
   exact ⟨u,v,hu,hv⟩
-
 #print axioms marked_multiple_two_charts
 end
 end Lower6960.CollisionMarked

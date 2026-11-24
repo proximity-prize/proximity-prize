@@ -1,17 +1,13 @@
-import ProximityPrize.SubmissionLower.R6960RetainedNodalIndex
-import ProximityPrize.SubmissionLower.R6960LineEuler
-
+import ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
+import ProximityPrize.SubmissionLower.R6960LineEulerFree
 noncomputable section
 set_option Elab.async false
 set_option backward.isDefEq.respectTransparency.types false
 namespace Lower6960.RetainedTwoLineBound
 open Module Submodule LinearMap LineEuler
-
 section
 variable {k U : Type*} [Field k] [AddCommGroup U] [Module k U]
-
 def difference (P Q : Submodule k U) : (P×Q)→ₗ[k]U := P.subtype.coprod (-Q.subtype)
-
 theorem image (P Q : Submodule k U) : (difference P Q).range = P⊔Q := by
   ext v
   constructor
@@ -20,7 +16,6 @@ theorem image (P Q : Submodule k U) : (difference P Q).range = P⊔Q := by
   · intro h
     obtain ⟨u,hu,w,hw,rfl⟩:=mem_sup.mp h
     exact ⟨(⟨u,hu⟩,⟨-w,Q.neg_mem hw⟩),by simp [difference]⟩
-
 def diagonal (P Q : Submodule k U) : ↥(P⊓Q) ≃ₗ[k] (difference P Q).ker where
   toFun w:=⟨(⟨w,w.property.1⟩,⟨w,w.property.2⟩),by simp [difference]⟩
   invFun v:=⟨(v.val.1:U),v.val.1.property,by
@@ -37,20 +32,14 @@ def diagonal (P Q : Submodule k U) : ↥(P⊓Q) ≃ₗ[k] (difference P Q).ker w
   map_add' _ _:=rfl
   map_smul' _ _:=rfl
 end
-
 variable {k ι C : Type*} [Field k] [Fintype ι] [DecidableEq ι]
   [AddCommGroup C] [Module k C] [FiniteDimensional k C]
-
 abbrev diff (G : Matrix ι ι (Laurent k)) := difference (finiteLattice k ι) (transitionLattice G)
 abbrev ev (G : Matrix ι ι (Laurent k)) (x : finiteLattice k ι →ₗ[k] C) :=
   x.comp (LinearMap.fst k (finiteLattice k ι) (transitionLattice G))
 abbrev globals (G : Matrix ι ι (Laurent k)) (x : finiteLattice k ι →ₗ[k] C) :
     H0 G →ₗ[k] C := x.comp (Submodule.inclusion inf_le_left)
-
-set_option synthInstance.maxHeartbeats 200000 in
-/-- On two rank-e Laurent lines meeting in rank e, the joint obstruction space has
-dimension at most the sum of their determinant deficits. The overlap equations have
-one shared crossing evaluation. Each global section is detected there. -/
+set_option synthInstance.maxHeartbeats 400000 in
 theorem two_line_bound (G H : Matrix ι ι (Laurent k)) (g : IsUnit G) (h : IsUnit H)
     (s t : ℕ) (dg : G.det.degree = ((-(s:ℤ) : ℤ) : WithBot ℤ))
     (dh : H.det.degree = ((-(t:ℤ) : ℤ) : WithBot ℤ))
@@ -82,6 +71,5 @@ theorem two_line_bound (G H : Matrix ι ι (Laurent k)) (g : IsUnit G) (h : IsUn
   rw [cross] at c
   change _ + finrank k W ≤ finrank k (H1 G)+finrank k (H1 H)+Fintype.card ι at bound
   exact ⟨finite,by omega⟩
-
 #print axioms two_line_bound
 end Lower6960.RetainedTwoLineBound

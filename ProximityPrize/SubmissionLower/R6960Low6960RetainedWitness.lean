@@ -1,30 +1,23 @@
-import ProximityPrize.SubmissionLower.R6960Low6960Prices
+import ProximityPrize.SubmissionLower.R6960Low6960Monotone
 import ProximityPrize.SubmissionLower.KoalaRetainedCut
-import ProximityPrize.SubmissionLower.Final50GeoCover
-
+import ProximityPrize.SubmissionLower.R6960Low6960Inventory
 set_option autoImplicit false
 set_option Elab.async false
-
 namespace Low6960RetainedCut
 noncomputable section
-
 open KoalaRetainedCut (orderAt_off_quotient)
 open MvPolynomial
 open K1_13 (Row Geom Shape shape InBox OrderAt atJet extend embed indexDegree)
 open Low6960Prices (primaryBox primaryCutoff TrueWeightLE ActiveFits physicalDegree)
 open P0_9_3_2 (translateTop topHasse topHasse_zero topHasse_coeff source_support sum_add_top total_add_top apply_add_top erase_top_add topHasse_order exact_hasse_not_dvd)
 open scoped Polynomial BigOperators
-
-/-- The primary box after extracting at least l copies of a retained product of shape h. -/
 def residualBox (h : Shape) (l : ℕ) : Shape :=
   ⟨primaryBox.b-l*h.b, primaryBox.j-l*h.j, primaryBox.t-l*h.t⟩
-
 private theorem wdegree_pow (w : Fin 4 → ℕ) {H : Row 4} (hn : H ≠ 0) (k : ℕ) :
     (H^k).weightedTotalDegree w = k*H.weightedTotalDegree w := by
   induction k with
   | zero => rw [pow_zero,zero_mul,← MvPolynomial.C_1,weightedTotalDegree_C]
   | succ k ih => rw [pow_succ,weightedTotalDegree_mul _ _ _ (pow_ne_zero k hn) hn,ih,Nat.succ_mul]
-
 theorem residual_box {H G : Row 4} {v l : ℕ} (hv : l ≤ v)
     (hH : H ≠ 0) (hG : G ≠ 0) (hb : InBox (shape (H^v*G)) primaryBox) :
     InBox (shape G) (residualBox (shape H) l) := by
@@ -46,7 +39,6 @@ theorem residual_box {H G : Row 4} {v l : ℕ} (hv : l ≤ v)
     simpa only [← K1_13_1.indexDegree_eq] using bound Fin.val hb₂
   · change G.degreeOf 3 ≤ primaryBox.t-l*H.degreeOf 3
     simpa only [weightedTotalDegree_piSingle] using bound (Pi.single (3 : Fin 4) 1) hb₃
-
 private theorem weight_of_factor {P G : Row 4} {D : ℕ} (hP : P ≠ 0) (hG : G ∣ P)
     (hw : TrueWeightLE P D) : TrueWeightLE G D := by
   let e := MvPolynomial.optionEquivRight Geom (Fin 4)
@@ -54,8 +46,6 @@ private theorem weight_of_factor {P G : Row 4} {D : ℕ} (hP : P ≠ 0) (hG : G 
   have hn : e.symm P ≠ 0 := fun h => hP (e.symm.injective (h.trans (map_zero _).symm))
   exact (Lower6960.Low.trueWeight_iff G).mpr <|
     (weightedTotalDegree_le_of_dvd _ hd hn).trans ((Lower6960.Low.trueWeight_iff P).mp hw)
-
--- The next two support lemmas are the accepted Low6960Order Hasse bounds.
 private theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
     (hb : InBox (shape P) box) (hw : TrueWeightLE P T) :
     InBox (shape (topHasse a P)) box ∧ TrueWeightLE (topHasse a P) T := by
@@ -129,8 +119,6 @@ private theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
   have h := MvPolynomial.degreeOf_mul_eq (n := (3 : Fin 4)) hf.ne_zero hg0
   rw [hg, h] at hdeg
   omega
-
-/-- Strip the forced retained power before differentiating in the proper factor. -/
 theorem exists_divided_cut {P H f : Row 4} {k a l A : ℕ} (hP : P ≠ 0) (hH : H ≠ 0)
     (hf : Irreducible f) (htop : 0 < f.degreeOf 3) (hchar : f.degreeOf 3 < K1.p)
     (hc : IsRelPrime f H) (hl : l ≤ k-a)
@@ -161,8 +149,6 @@ theorem exists_divided_cut {P H f : Row 4} {k a l A : ℕ} (hP : P ≠ 0) (hH : 
   intro S hS hPS m hm
   have hor := orderAt_off_quotient hS hPS
   exact hl.trans (topHasse_order a k G S hor m hm)
-
-/-- Exact availability for the retained product of distinct anchor factors. -/
 theorem retained_power_dvd {ι : Type*} [Fintype ι] [DecidableEq ι] (z : Finset ι)
     (f : ι → Row 4) (hfi : ∀ i, Irreducible (f i))
     (hdis : ∀ i j, i ≠ j → ¬ Associated (f i) (f j))
@@ -173,7 +159,6 @@ theorem retained_power_dvd {ι : Type*} [Fintype ι] [DecidableEq ι] (z : Finse
     exact ((hfi i).isRelPrime_iff_not_dvd.mpr
       (fun hd => hdis i j hij ((hfi i).associated_of_dvd (hfi j) hd))).pow
   · exact hdiv
-
 theorem prime_off_product {ι : Type*} [DecidableEq ι] (z : Finset ι)
     (f : ι → Row 4) (hfi : ∀ i, Irreducible (f i))
     (hdis : ∀ i j, i ≠ j → ¬ Associated (f i) (f j))
@@ -182,7 +167,6 @@ theorem prime_off_product {ι : Type*} [DecidableEq ι] (z : Finset ι)
   intro j hj
   exact (hfi i).isRelPrime_iff_not_dvd.mpr
     (fun hd => hdis i j (fun eq => hi (eq ▸ hj)) ((hfi i).associated_of_dvd (hfi j) hd))
-
 #print axioms residual_box
 #print axioms exists_divided_cut
 #print axioms retained_power_dvd

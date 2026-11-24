@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Equiv
+set_option Elab.async false
 
 /-! On Lean 4.36 Mathlib the generic search for `AddMonoidHomClass` / `MonoidHomClass` on ring
 homs between quotient and polynomial rings exceeds the synthesis budget; these shortcuts resolve

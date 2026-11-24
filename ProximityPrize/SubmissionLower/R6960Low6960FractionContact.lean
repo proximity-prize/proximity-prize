@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6960Low6960SharedShapeRank
+import ProximityPrize.SubmissionLower.R6960Low6960VariableSelect
 
 set_option Elab.async false
 set_option maxRecDepth 18000

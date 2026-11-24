@@ -1,13 +1,47 @@
-import ProximityPrize.SubmissionLower.R6960Low6960Profile
+import ProximityPrize.SubmissionLower.R6960Low6960Fat
 import ProximityPrize.SubmissionLower.Wide50EulerPrimaryFamily
-import ProximityPrize.SubmissionLower.PrimaryTaperActive
+import ProximityPrize.SubmissionLower.Final50Order
 
+-- merged module R6960Low6960Profile
+section Merged_R6960Low6960Profile
+
+set_option Elab.async false
+
+namespace Lower6960.Low
+open P3 (I K node)
+open K1_13 (Row Shape InBox shape OrderAt extend)
+open scoped Polynomial BigOperators
+
+abbrev layerWidth : ℕ := agreement-physicalDegree+3
+abbrev layerCount : ℕ := 1+primaryCutoff/layerWidth
+abbrev TrueWeightLE {n : ℕ} (P : Row n) (T : ℕ) := PrimaryTaper.TrueWeightLE physicalDegree P T
+
+structure Messages (w : I→K) (Γ : Finset K) (s : K→(Polynomial K)) : Prop where
+  distinct : Set.InjOn s (Γ : Set K)
+  degree : ∀ γ∈Γ,(s γ).natDegree≤physicalDegree
+  hits : ∀ γ∈Γ,∃ T : Finset I,agreement≤T.card ∧ ∀ i∈T,(s γ).eval (node i)=w i
+
+theorem Messages.mono {w Γ s Δ} (h : Messages w Γ s) (hΔ : Δ⊆Γ) : Messages w Δ s :=
+  ⟨h.distinct.mono hΔ,fun γ mem=>h.degree γ (hΔ mem),fun γ mem=>h.hits γ (hΔ mem)⟩
+
+def ProperCut (f : Row 4) (Γ : Finset K) (s : K→(Polynomial K)) (l : ℕ) : Prop :=
+  ∃ Q : Row 4, (¬f∣Q) ∧ InBox (shape Q) PrimaryTaper.primaryBox ∧ TrueWeightLE Q primaryCutoff ∧
+    Final50Price.ActiveFits Q 5164 ∧ ∀ γ∈Γ,OrderAt Q (extend (s γ)) l
+
+def LayerBudget {n : ℕ} (a : Fin n→Shape) (l : Fin n→ℕ) : Prop :=
+  need ≤ ∑ r∈Finset.range layerCount,
+    Final50Price.remaining (∑ i,(r+1-l i)*(a i).b) (∑ i,(r+1-l i)*(a i).j)
+end Lower6960.Low
+
+end Merged_R6960Low6960Profile
+
+-- merged module R6960Low6960Order
+section Merged_R6960Low6960Order
 set_option Elab.async false
 namespace Low6960Order
 noncomputable section
 open K1_13 (Geom Row shape InBox Contact)
 open P3 (I K)
-
 abbrev TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) := Lower6960.Low.TrueWeightLE P D
 abbrev physicalDegree := Lower6960.Low.physicalDegree
 abbrev agreement := Lower6960.Low.agreement
@@ -19,21 +53,14 @@ abbrev layerNeed := Lower6960.Low.need
 abbrev Messages := Lower6960.Low.Messages
 abbrev ProperCut := Lower6960.Low.ProperCut
 abbrev LayerBudget := @Lower6960.Low.LayerBudget
-
-/-- Exact dimension supplied by the compact source and the uniform node rank cap. -/
-theorem sourceRank_eq : sourceRank = 993690969812708868 := by decide
-
-/-- The number of layers guaranteed by the stronger compact certificate. -/
-theorem certified_layers : sourceRank / layerWidth + 1 = 21406065569736 := by decide
-
+theorem sourceRank_eq : sourceRank = 963463873054672528 := by decide
+theorem certified_layers : sourceRank / layerWidth + 1 = 20767888279330 := by decide
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
     ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧
       PrimaryTaper.JetsBounded (e i) ∧ Contact w (e i)
-
 end
 end Low6960Order
-
 section
 namespace Low6960OrderProof
 noncomputable section
@@ -312,7 +339,6 @@ theorem order_of_contact (w : I → K) (P : Row 4) {T : ℕ} (hT : T ≤ primary
       Nat.add_le_add_left (Nat.mul_le_mul_left layerWidth hj') T
     _ ≤ T + (primaryCutoff - T) := Nat.add_le_add_left hq T
     _ = primaryCutoff := Nat.add_sub_of_le hT
-
 theorem proof : Low6960OrderProof.c1 := by
   intro w T P hT hP S hS hits
   obtain ⟨H, hH, hhits⟩ := hits
@@ -656,25 +682,21 @@ noncomputable section
 open K1_13 (Row shape)
 open P3 (K)
 open scoped Polynomial
-
 export Low6960OrderProof (BankRow requiredOrder)
 export Low6960OrderProof_1 (order_of_contact)
-
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2338) :
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2358) :
     Messages M.word Γ F.scalar := by
   refine ⟨F.distinct, ?_, ?_⟩
   · intro γ hγ
     obtain hz | hd := (F.mark γ hγ).scalar_degree
     · simp [hz]
     · change ((F.scalar γ).natDegree : ℤ) ≤ (131072 : ℤ) - 1 + M.overhead at hd
-      change (F.scalar γ).natDegree ≤ 133409
+      change (F.scalar γ).natDegree ≤ 133429
       omega
   · intro γ hγ
     let m := F.mark γ hγ
     exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
-
-/-- Compatible proper cuts for a family of distinct irreducible factors. -/
 theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
     (hm : Messages w Γ s) (hr : PrimaryRank w)
     (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
@@ -685,15 +707,10 @@ theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
   Low6960OrderProof.of_children Low6960OrderProof_1.proof
     Low6960OrderProof_2.proof Low6960OrderProof_3.proof
     hm hr hirr hpos htop hdiff
-
-/-- Supply the compact primary bank at height 2338. -/
 theorem primary_rank (w : P3.I → K) : PrimaryRank w :=
   Wide50EulerPrimary.primary_family agreement physicalDegree (by decide) (by decide)
     (by decide) w (n := sourceRank) le_rfl
-
-/-- A common evaluation point gives an independent symbol family at each cutoff. -/
 theorem symbol_families : Low6960OrderProof.c3 := Low6960OrderProof_3.proof
-
 theorem proper_layers {w Γ s n} {f : Fin n → Row 4}
     (hm : Messages w Γ s)
     (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
@@ -702,6 +719,7 @@ theorem proper_layers {w Γ s n} {f : Fin n → Row 4}
     ∃ l : Fin n → ℕ, LayerBudget (fun i => shape (f i)) l ∧
       ∀ i, 0 < l i → ProperCut (f i) Γ s (l i) :=
   proper_layers_of_rank hm (primary_rank w) hirr hpos htop hdiff
-
 end
 end Low6960Order
+
+end Merged_R6960Low6960Order

@@ -1,11 +1,97 @@
+import Mathlib.Data.Finsupp.Basic
+import Mathlib.Data.Fintype.Prod
+import Mathlib.Data.Finset.Union
 import ProximityPrize.SubmissionLower.R6960MonicChartFrobenius
-import ProximityPrize.SubmissionLower.R6960ChartSections
 
+-- merged module R6960ChartSections
+section Merged_R6960ChartSections
+namespace Lower6960.ChartSections
+abbrev Exponent := ℤ×ℤ
+abbrev Chart := Bool×Bool
+def fits (d : ℕ) (s : Bool) (i : ℤ) : Prop :=
+  if s then i ≤ -(d:ℤ) else 0 ≤ i
+def allowed (a b : ℕ) (s : Chart) (m : Exponent) : Prop :=
+  fits a s.1 m.1 ∧ fits b s.2 m.2
+def overlap (a b : ℕ) (s t : Chart) (m : Exponent) : Prop :=
+  (s.1=t.1 → fits a s.1 m.1) ∧ (s.2=t.2 → fits b s.2 m.2)
+private def opposite (i : ℤ) : Bool := decide (0 ≤ i)
+private theorem excluded (d : ℕ) (hd : 0<d) (i : ℤ) : ¬fits d (opposite i) i := by
+  by_cases hi : 0 ≤ i
+  · simp [opposite,hi,fits]; omega
+  · simp [opposite,hi,fits]
+theorem negative_correction {k : Type*} [AddCommGroup k] (a b : ℕ) (ha : 0<a) (hb : 0<b)
+    (p : Chart→Exponent→₀k)
+    (compatible : ∀ s t m,¬overlap a b s t m → (p s) m=(p t) m) :
+    ∃ c : Exponent→₀k, ∀ s m,¬allowed a b s m → (p s-c) m=0 := by
+  classical
+  let coeff (m : Exponent) := p (opposite m.1,opposite m.2) m
+  let support := Finset.univ.biUnion fun s : Chart=>(p s).support
+  let c : Exponent→₀k := Finsupp.onFinset support coeff (fun m hm=>
+    Finset.mem_biUnion.mpr ⟨_,Finset.mem_univ _,Finsupp.mem_support_iff.mpr hm⟩)
+  refine ⟨c,?_⟩
+  rintro ⟨s,t⟩ ⟨i,j⟩ bad
+  change ¬(fits a s i ∧ fits b t j) at bad
+  change p (s,t) (i,j)-p (opposite i,opposite j) (i,j)=0
+  apply sub_eq_zero.mpr
+  by_cases bx : fits a s i
+  · have bz : ¬fits b t j := fun z=>bad ⟨bx,z⟩
+    calc p (s,t) (i,j) = p (opposite i,t) (i,j) := compatible (s,t) (opposite i,t) (i,j) (fun h=>bz (h.2 rfl))
+         _ = _ := compatible (opposite i,t) (opposite i,opposite j) (i,j) (fun h=>excluded a ha i (h.1 rfl))
+  · calc p (s,t) (i,j) = p (s,opposite j) (i,j) := compatible (s,t) (s,opposite j) (i,j) (fun h=>bx (h.1 rfl))
+         _ = _ := compatible (s,opposite j) (opposite i,opposite j) (i,j) (fun h=>excluded b hb j (h.2 rfl))
+theorem no_global {k : Type*} [Zero k] (a b : ℕ) (negative : 0<a ∨ 0<b)
+    (f : Exponent→₀k) (regular : ∀ s m,¬allowed a b s m → f m=0) : f=0 := by
+  ext m
+  rcases negative with ha | hb
+  · exact regular (opposite m.1,false) m (fun h=>excluded a ha m.1 h.1)
+  · exact regular (false,opposite m.2) m (fun h=>excluded b hb m.2 h.2)
+#print axioms negative_correction
+#print axioms no_global
+section
+variable {k ι J : Type*} [CommRing k] [Fintype ι]
+def relation (column : ι→J) (coefficient : ι→k) (offset : ι→Exponent)
+    (u : J→Exponent→₀k) (m : Exponent) : k :=
+  ∑ i,coefficient i*u (column i) (m.1-(offset i).1,m.2-(offset i).2)
+theorem correction_with_relations {L : Type*} (a b B : ℕ) (wide : 2*B<a) (hb : 0<b)
+    (col : L→ι→J) (coeff : L→ι→k) (off : L→ι→Exponent)
+    (bound : ∀ l i,-(B:ℤ)≤(off l i).1 ∧ (off l i).1≤(B:ℤ))
+    (u : Chart→J→Exponent→₀k)
+    (compatible : ∀ j s t m,¬overlap a b s t m → u s j m=u t j m)
+    (closed : ∀ l s m,relation (col l) (coeff l) (off l) (u s) m=0) :
+    ∃ v : J→Exponent→₀k,
+      (∀ s j m,¬allowed a b s m → (u s j-v j) m=0) ∧
+      ∀ l m,relation (col l) (coeff l) (off l) v m=0 := by
+  classical
+  choose v hv using fun j=>negative_correction a b (by omega) hb (fun s=>u s j) (compatible j)
+  refine ⟨v,fun s j=>hv j s,?_⟩
+  intro l m
+  let s : Chart := (decide (-(B:ℤ) ≤ m.1),false)
+  have agree (i) : u s (col l i) (m.1-(off l i).1,m.2-(off l i).2)=
+      v (col l i) (m.1-(off l i).1,m.2-(off l i).2) := by
+    apply sub_eq_zero.mp
+    apply hv (col l i) s
+    intro h
+    have x:=h.1
+    obtain ⟨low,high⟩:=bound l i
+    by_cases side : -(B:ℤ)≤m.1
+    · simp [s,side,fits] at x; omega
+    · simp [s,side,fits] at x; omega
+  calc _ = relation (col l) (coeff l) (off l) (u s) m := by
+             unfold relation
+             exact Finset.sum_congr rfl (fun i _=>congrArg (coeff l i*·) (agree i).symm)
+       _ = 0 := closed l s m
+#print axioms correction_with_relations
+end
+end Lower6960.ChartSections
+
+end Merged_R6960ChartSections
+
+-- merged module R6960MonicFourChartDescent
+section Merged_R6960MonicFourChartDescent
 set_option Elab.async false
 set_option maxRecDepth 18000
 set_option maxHeartbeats 3900000
 set_option backward.isDefEq.respectTransparency.types false
-
 namespace Lower6960.MonicFourChartDescent
 noncomputable section
 open Polynomial
@@ -14,36 +100,21 @@ open MonicChart (ChartField Scalar Infinity)
 open ChartSections (Chart)
 open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 open scoped Polynomial
-
-/-- The constants and the two coordinates in the actual rational field. -/
 def constants : L →+* ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
-
 def scalarCoordinate : ChartField := RatFunc.C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L)))
-
 def chartCoordinate (infinity : Bool) (x : ChartField) : ChartField :=
   if infinity then x⁻¹ else x
-
-/-- The first bit is the abscissa chart and the second is the scalar chart.
-Each chart contains the constants and its two chosen affine coordinates. -/
 def baseChart (s : Chart) : Subring ChartField :=
   Subring.closure (Set.range constants ∪
     {chartCoordinate s.1 RatFunc.X, chartCoordinate s.2 scalarCoordinate})
-
-/-- The factor converting a rational section to its polynomial frame on
-this chart. The twist is negative at infinity in each direction. -/
 def frame (a b : ℕ) (s : Chart) : ChartField :=
   (if s.1 then RatFunc.X else 1)^a * (if s.2 then scalarCoordinate else 1)^b
-
 theorem frame_scale (a b n : ℕ) (s : Chart) :
     frame (a*n) (b*n) s=(frame a b s)^n := by
   simp only [frame,pow_mul,mul_pow]
-
 variable {E : Type*} [Field E] [Algebra ChartField E]
-
-/-- The same correction gives an integral element over each actual base chart. -/
 def Correction (a b : ℕ) (u : Chart → E) (c : E) : Prop :=
   ∀ s, IsIntegral (baseChart s) (algebraMap ChartField E (frame a b s)*(u s-c))
-
 theorem finite_inclusion :
     baseChart (false,false) ≤ (algebraMap (Polynomial Scalar) ChartField).range := by
   apply Subring.closure_le.mpr
@@ -53,7 +124,6 @@ theorem finite_inclusion :
   · exact ⟨C (algebraMap (Polynomial L) Scalar (C c)),RatFunc.algebraMap_C _⟩
   · exact ⟨Polynomial.X,RatFunc.algebraMap_X⟩
   · exact ⟨C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L))),RatFunc.algebraMap_C _⟩
-
 theorem infinity_inclusion [DecidableEq ChartField] :
     baseChart (true,false) ≤ (algebraMap (Infinity Scalar) ChartField).range := by
   apply Subring.closure_le.mpr
@@ -64,9 +134,6 @@ theorem infinity_inclusion [DecidableEq ChartField] :
   · exact ⟨MonicChart.inftyRingEval Scalar Polynomial.X,MonicChart.mapped_X_infty⟩
   · exact ⟨MonicChart.inftyRingEval Scalar (C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L)))),
       aeval_C _ _⟩
-
-/-- Integrality persists under passage from a base chart to a larger ring
-in the same rational field. -/
 theorem integral_of_inclusion (s : Chart) {R : Type*} [CommRing R] [Algebra R ChartField]
     [Algebra R E] [IsScalarTower R ChartField E] (inj : Function.Injective (algebraMap R ChartField))
     (fit : baseChart s ≤ (algebraMap R ChartField).range) {q : E}
@@ -82,10 +149,6 @@ theorem integral_of_inclusion (s : Chart) {R : Type*} [CommRing R] [Algebra R Ch
     change algebraMap ChartField E (x:ChartField) = algebraMap R E (lift x)
     rw [IsScalarTower.algebraMap_apply R ChartField E,commute]
   exact integral.tower_top
-
-/-- A correction on the four actual charts for the Frobenius powers of the
-potentials descends to a single correction over all four charts. Its
-p-th power is the original correction in the same root field. -/
 theorem descend (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
@@ -151,9 +214,6 @@ theorem descend (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degr
   apply IsIntegral.of_pow KoalaBear.is_prime.pos (n:=p)
   rw [mul_pow,subpow,dp,←map_pow,←frame_scale]
   exact h s
-
-/-- Descend an arbitrarily iterated Frobenius correction, preserving the
-same correction across all four actual chart rings on each step. -/
 theorem descend_iterate (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
@@ -174,8 +234,9 @@ theorem descend_iterate (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3�
       (Nat.mul_pos ha (pow_pos KoalaBear.is_prime.pos _)) (fun s=>u s ^ (K1.p^n)) c next
     obtain ⟨d,hd,hd'⟩ := ih v hv'
     exact ⟨d,by rw [pow_succ K1.p n,pow_mul,hd,hv],hd'⟩
-
 #print axioms descend
 #print axioms descend_iterate
 end
 end Lower6960.MonicFourChartDescent
+
+end Merged_R6960MonicFourChartDescent

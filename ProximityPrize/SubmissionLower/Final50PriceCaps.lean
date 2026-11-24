@@ -1,5 +1,44 @@
+import ProximityPrize.SubmissionLower.R6960Low6960Retained
 import ProximityPrize.SubmissionLower.KoalaAllocationWeight
-import ProximityPrize.SubmissionLower.Final50PriceRetained
+
+-- merged module Final50PriceRetained
+section Merged_Final50PriceRetained
+
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 2400000
+
+namespace Final50PriceRetained
+open K1_13 (Shape InBox)
+open K1_13_8 (Valid zeroShape zeroMass)
+open P0_9_8 (symbol_count)
+open Final50Price (layerNeed)
+open Final50PriceLayer (layerTerm layerCount)
+open scoped BigOperators
+open P3_6_8 (shapeSum shapeSum_empty shapeSum_valid_or_empty spend_le)
+open P3_6_8_1 (sumBelow term mass_eq extend)
+
+
+def combined {n : ℕ} (a : Fin n → Shape) (z : Finset (Fin n)) := P3_6_8.shapeSum a z
+
+local notation "row!" h "," len "," nxt "," v "," z =>
+  P3_6_8_1.extend (n := len) (N := nxt) (y := v) (total := z) h rfl rfl rfl
+
+
+
+
+
+
+
+
+
+
+end Final50PriceRetained
+
+end Merged_Final50PriceRetained
+
+-- merged module Final50PriceCaps
+section Merged_Final50PriceCaps
 
 set_option Elab.async false
 namespace Final50PriceCaps
@@ -104,3 +143,5 @@ theorem order_pos (k : Band) (x : Shape) : 0 < order k x :=
 theorem order_mono (k : Band) {x y : Shape} (hb : x.b ≤ y.b) (hj : x.j ≤ y.j) :
     order k x ≤ order k y := P0_9_8.orderFor_mono hb hj _
 end Final50PriceCaps
+
+end Merged_Final50PriceCaps

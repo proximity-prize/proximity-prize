@@ -419,7 +419,7 @@ theorem codim_finset_inf_le {ι : Type*} (V : Submodule Geom PhysicalRow)
     have hT := ih fun j hj => hr j (Finset.mem_insert_of_mem hj)
     exact (codim_inf_le V (U i) (T.inf U)).trans
       (by simpa only [add_comm] using Nat.add_le_add hi' hT)
-private theorem codim_antitone (V : Submodule Geom PhysicalRow) [Module.Finite Geom V]
+theorem codim_antitone (V : Submodule Geom PhysicalRow) [Module.Finite Geom V]
     {U W : Submodule Geom PhysicalRow} (h : U ≤ W) : codimIn V W ≤ codimIn V U :=
   Nat.sub_le_sub_left
     (Cardinal.toNat_le_toNat (Submodule.rank_mono (inf_le_inf_left V h))
@@ -2200,12 +2200,12 @@ open scoped Polynomial BigOperators
 set_option maxHeartbeats 600000
 set_option backward.isDefEq.respectTransparency false
 private abbrev JetRow := MvPolynomial (Fin 3) (Polynomial Geom)
-private def seedView : PhysicalRow ≃ₐ[(Polynomial Geom)] (Polynomial JetRow) :=
+def seedView : PhysicalRow ≃ₐ[(Polynomial Geom)] (Polynomial JetRow) :=
   optionEquivLeft _ _
-private def toRow : Flat ≃ₐ[Geom] JetRow := optionEquivRight _ _
-private def seedCoeff (n : ℕ) : PhysicalRow →ₗ[Geom] JetRow :=
+def toRow : Flat ≃ₐ[Geom] JetRow := optionEquivRight _ _
+def seedCoeff (n : ℕ) : PhysicalRow →ₗ[Geom] JetRow :=
   (Polynomial.lcoeff JetRow n).restrictScalars Geom ∘ₗ seedView.toLinearMap.restrictScalars Geom
-private def flatCoeff (n : ℕ) : PhysicalRow →ₗ[Geom] Flat :=
+def flatCoeff (n : ℕ) : PhysicalRow →ₗ[Geom] Flat :=
   toRow.symm.toLinearMap ∘ₗ seedCoeff n
 private theorem seedCoeff_apply (n : ℕ) (F : PhysicalRow) (e : PlaneExp) :
     (seedCoeff n F).coeff e = F.coeff (e.optionElim n) :=
@@ -2217,7 +2217,7 @@ private theorem flatCoeff_apply (n : ℕ) (F : PhysicalRow) (e : Exp) :
   change ((toRow (toRow.symm (seedCoeff n F))).coeff e.some).coeff (e none) = _ at h
   rw [AlgEquiv.apply_symm_apply, seedCoeff_apply] at h
   exact h.symm
-private theorem coeff_mem_capped {b : Bank} {F : PhysicalRow} (hF : Caps b.box F) (n : ℕ) :
+theorem coeff_mem_capped {b : Bank} {F : PhysicalRow} (hF : Caps b.box F) (n : ℕ) :
     flatCoeff n F ∈ Capped b.box.b := by
   intro e he
   change e ∈ (flatCoeff n F).support at he
@@ -2253,9 +2253,9 @@ private theorem seedCoeff_eq_zero {b : Bank} {F : PhysicalRow} (hF : Caps b.box 
   have hdeg : (seedView F).natDegree ≤ 70000 := by
     simpa only [seedView, natDegree_optionEquivLeft, seedDegree] using hF.2.2.2
   exact Polynomial.coeff_eq_zero_of_natDegree_lt (hdeg.trans_lt hn)
-private def normalize (x v : Geom) : Flat →ₐ[Geom] Flat :=
+def normalize (x v : Geom) : Flat →ₐ[Geom] Flat :=
   globalPointTranslation (d := 2) x v
-private theorem normalize_mem_capped {B : ℕ} {Q : Flat} (h : Q ∈ Capped B) (x v : Geom) :
+theorem normalize_mem_capped {B : ℕ} {Q : Flat} (h : Q ∈ Capped B) (x v : Geom) :
     normalize x v Q ∈ Capped B := by
   have preserve (w : Option (Fin 3) → ℕ) (a : ℕ)
       (hQ : ∀ e ∈ Q.support, e.weight w ≤ a) :
@@ -2330,7 +2330,7 @@ private theorem normalize_shear (x v : Geom) :
     fin_cases j <;>
       (simp [normalize, shear, toRow, taylorRows, shearImage, jetBackward, backwardImage,
         Polynomial.taylor_X, Polynomial.taylor_C, h₁, h₂]; try ring)
-private theorem node_coeff (x v : Geom) (F : PhysicalRow) (n : ℕ) (e : PlaneExp) :
+theorem node_coeff (x v : Geom) (F : PhysicalRow) (n : ℕ) (e : PlaneExp) :
     (toRow (shear (normalize x v (flatCoeff n F)))).coeff e =
       Polynomial.taylor x ((backwardShift x v F).coeff (e.optionElim n)) := by
   have h := DFunLike.congr_fun (normalize_shear x v) (flatCoeff n F)
@@ -2339,7 +2339,7 @@ private theorem node_coeff (x v : Geom) (F : PhysicalRow) (n : ℕ) (e : PlaneEx
   rw [AlgEquiv.apply_symm_apply, ← seedCoeff_backward] at h
   rw [h, taylorRows, mapAlgHom_apply, coeff_map, seedCoeff_apply]
   rfl
-private theorem contactWeight_eq (e : PlaneExp) (i : ℕ) :
+theorem contactWeight_eq (e : PlaneExp) (i : ℕ) :
     (e.optionElim i).weight contactWeight = i + 3 * e 0 := by
   unfold contactWeight
   rw [Finsupp.weight_optionElim, Finsupp.weight_single_index, one_mul,
@@ -2443,7 +2443,7 @@ def c5 : Prop :=
 def c6 : Prop :=
   ∃ p : ℕ → ℕ → Powers,
     (∑ j ∈ Finset.range 1790, gradeBound p (5000 + j)) ≤ 364983426528
-private theorem plane_rank_le (h1 : c1) (h2 : c2) {q k : ℕ} (hq : q < 6821) (hk : k < 7300)
+theorem plane_rank_le (h1 : c1) (h2 : c2) {q k : ℕ} (hq : q < 6821) (hk : k < 7300)
     (p : Powers) :
     Module.finrank Geom (LinearMap.range (planeContact q (offset k))) ≤ blockBound q (offset k) p := by
   let f := planeContact q (offset k)
@@ -2501,7 +2501,7 @@ private theorem join_windows {a m n r s : ℕ}
   simp only [← Nat.add_assoc]
   rw [hsecond]
   exact Nat.add_le_add hp₁ hp₂
-private theorem bank_bound (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) (b : Bank) :
+theorem bank_bound (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) (b : Bank) :
     ∃ p : ℕ → ℕ → Powers, (∑ q ∈ Finset.range (b.box.b + 1), gradeBound p q) ≤ b.nodeRank := by
   unfold c3 at h3
   have h34 := join_windows (a := 0) (m := 1151) (n := 1149)
@@ -4430,15 +4430,15 @@ noncomputable section
 open K1_13_4
 open scoped BigOperators
 set_option maxHeartbeats 650000
-private abbrev Exponent := SeedVar →₀ ℕ
+abbrev Exponent := SeedVar →₀ ℕ
 private def slotTuples (a : ℕ) : Finset (ℕ × ℕ × ℕ × ℕ) :=
   (Finset.Ico a 1151).biUnion (fun k =>
     (Finset.range (2301 - 2*k)).biUnion (fun j =>
       (Finset.range (6821 - k - j)).biUnion (fun i =>
         (Finset.range 70001).image (fun z => (k, j, i, z)))))
-private def slotExponent (q : ℕ × ℕ × ℕ × ℕ) : Exponent :=
+def slotExponent (q : ℕ × ℕ × ℕ × ℕ) : Exponent :=
   Finsupp.equivFunOnFinite.symm (fun i => i.elim q.2.2.2 (![q.2.2.1, q.2.1, q.1] ·))
-private theorem sum_value_choices {k : ℕ} (hk : k ≤ 1150) :
+theorem sum_value_choices {k : ℕ} (hk : k ≤ 1150) :
     (∑ j ∈ Finset.range (2301 - 2*k), (6821 - k - j)) = (2301 - 2*k) * 5671 := by
   let n := 2301 - 2*k
   have hpair : (∑ j ∈ Finset.range n, (6821 - k - j)) +
@@ -4458,13 +4458,13 @@ private theorem sum_value_choices {k : ℕ} (hk : k ≤ 1150) :
   change s + s = n * 5671 + n * 5671 at hpair
   change s = n * 5671
   omega
-private theorem sum_odds (n : ℕ) : (∑ k ∈ Finset.range n, (2*k + 1)) = n^2 := by
+theorem sum_odds (n : ℕ) : (∑ k ∈ Finset.range n, (2*k + 1)) = n^2 := by
   induction n with
   | zero => simp
   | succ n ih =>
     rw [Finset.sum_range_succ, ih]
     ring
-private theorem sum_index_choices (a : ℕ) :
+theorem sum_index_choices (a : ℕ) :
     (∑ k ∈ Finset.Ico a 1151, (2301 - 2*k)) = (1151 - a)^2 := by
   rw [Finset.sum_Ico_eq_sum_range]
   let n := 1151 - a
@@ -4522,7 +4522,7 @@ private theorem exponent_mem {a : ℕ} {R : GenericRow} (hR : Caps secondBox R)
     cases i with
     | none => simp [slotExponent]
     | some i => fin_cases i <;> simp [slotExponent]
-private theorem rank_le_coeffs {σ 𝕜 : Type*} [Field 𝕜]
+theorem rank_le_coeffs {σ 𝕜 : Type*} [Field 𝕜]
     (A : Finset (σ →₀ ℕ)) {r : ℕ} (e : Fin r → MvPolynomial σ 𝕜)
     (he : LinearIndependent 𝕜 e)
     (h : ∀ R ∈ Submodule.span 𝕜 (Set.range e), R ≠ 0 → ∃ m ∈ A, R.coeff m ≠ 0) :
@@ -4623,7 +4623,7 @@ theorem cutoff_sum_le {W e n : ℕ} (he : 0 < e) (r q : ℕ → ℕ)
         apply hz
         apply (Nat.le_div_iff_mul_le he).mpr
         exact Nat.le_of_not_gt (fun hlt => ht (Finset.mem_range.mpr hlt))
-private theorem sum_squares (n : ℕ) :
+theorem sum_squares (n : ℕ) :
     6 * (∑ k ∈ Finset.range n, (n - k)^2) = n * (n + 1) * (2 * n + 1) := by
   induction n with
   | zero => simp
@@ -4677,11 +4677,11 @@ def c2 : Prop :=
           algebraMap (Polynomial Geom) GenericSeed (p q F c) =
             (algebraMap (Polynomial Geom) GenericSeed D) ^ (a.b - q.val) *
               localCoeff a α q.val c (centered z₀ F)
-private def clearedTest {a : Shape} {q : ℕ}
+def clearedTest {a : Shape} {q : ℕ}
     (w : JetCoeff a q → Geom) (p : PhysicalRow →ₗ[Geom] (JetCoeff a q → (Polynomial Geom))) :
     PhysicalRow →ₗ[Geom] (Polynomial Geom) :=
   ∑ c, w c • ((LinearMap.proj c).comp p)
-private theorem clearedTest_apply {a : Shape} {q : ℕ}
+theorem clearedTest_apply {a : Shape} {q : ℕ}
     (w : JetCoeff a q → Geom) (p : PhysicalRow →ₗ[Geom] (JetCoeff a q → (Polynomial Geom)))
     (F : PhysicalRow) :
     clearedTest w p F = ∑ c, w c • p F c := by
@@ -4715,7 +4715,7 @@ private theorem coeff_test_zero_iff {a : Shape} {q : ℕ} {α : Geom}
   have hne : algebraMap (Polynomial Geom) GenericSeed D ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective (Polynomial Geom) GenericSeed)).2 hD
   simp [pow_ne_zero _ hne]
-private theorem codim_le_test_finrank {E : Type*} [AddCommGroup E] [Module Geom E]
+theorem codim_le_test_finrank {E : Type*} [AddCommGroup E] [Module Geom E]
     [Module.Finite Geom E] (V W : Submodule Geom PhysicalRow) [Module.Finite Geom V]
     (f : V →ₗ[Geom] E) (hker : LinearMap.ker f = W.comap V.subtype) :
     codimIn V W ≤ Module.finrank Geom E := by
@@ -5736,11 +5736,11 @@ open K1_13 K1_13_4 K1_13_4_2 K1_13_4_2_3
 open scoped Polynomial BigOperators
 private abbrev SourceExp := SeedVar →₀ ℕ
 private abbrev JetExp := Fin 3 →₀ ℕ
-private abbrev seedMap : (Polynomial Geom) →+* GenericSeed := algebraMap _ _
+abbrev seedMap : (Polynomial Geom) →+* GenericSeed := algebraMap _ _
 private abbrev constMap : Geom →+* GenericSeed := algebraMap _ _
 private theorem seedMap_C (x : Geom) : seedMap (Polynomial.C x) = constMap x :=
   (IsScalarTower.algebraMap_apply Geom (Polynomial Geom) GenericSeed x).symm
-private def grade (m : SourceExp) : ℕ :=
+def grade (m : SourceExp) : ℕ :=
   m (some 0) + m (some 1) + m (some 2)
 private def shiftedExp (m : SourceExp) (k : ℕ) : JetExp :=
   Finsupp.single 0 k + Finsupp.single 1 (m (some 1)) + Finsupp.single 2 (m (some 2))
@@ -5756,7 +5756,7 @@ private theorem exponent_grade (a : Shape) (q : ℕ) (c : Slot a q) :
     (Nat.le_of_lt_succ c.2.isLt).trans (min_le_left _ _)
   change q - c.1.val - c.2.val + c.2.val + c.1.val = q
   omega
-private theorem support_bounds {a : Shape} {F : PhysicalRow} (hF : Caps a F)
+theorem support_bounds {a : Shape} {F : PhysicalRow} (hF : Caps a F)
     {m : SourceExp} (hm : m ∈ F.support) :
     grade m ≤ a.b ∧ m (some 1) + 2 * m (some 2) ≤ a.j ∧
       m (some 2) ≤ a.t ∧ m none ≤ 70000 := by
@@ -5813,7 +5813,7 @@ private theorem centered_coeff (z : GenericSeed) (F : PhysicalRow) (e : JetExp) 
         else 0 := by
   nth_rw 1 [F.as_sum]
   simp only [map_sum, centered_monomial, MvPolynomial.coeff_sum, MvPolynomial.coeff_monomial]
-private theorem centered_admissible (z : GenericSeed) {a : Shape} {F : PhysicalRow}
+theorem centered_admissible (z : GenericSeed) {a : Shape} {F : PhysicalRow}
     (hF : Caps a F) (e : JetExp) (he : e ∈ (centered z F).support) : admissible a e := by
   classical
   by_contra ha
@@ -5831,7 +5831,7 @@ private theorem centered_admissible (z : GenericSeed) {a : Shape} {F : PhysicalR
   have hk' : k ≤ m (some 0) := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
   unfold grade at hB
   exact ⟨by omega, hJ, hT⟩
-private def clearedFactor (a : Shape) (N D : (Polynomial Geom)) (m : SourceExp) (k : ℕ) :
+def clearedFactor (a : Shape) (N D : (Polynomial Geom)) (m : SourceExp) (k : ℕ) :
     (Polynomial Geom) :=
   Polynomial.C ((m (some 0)).choose k : Geom) * Polynomial.X ^ m none *
     N ^ (m (some 0) - k) * D ^ (a.b - grade m)
@@ -5843,12 +5843,12 @@ private def clearedMonomial (a : Shape) (α : Geom) (N D : (Polynomial Geom)) (i
       ((Polynomial.lcoeff Geom i).comp (Polynomial.taylor α)).smulRight
         (clearedFactor a N D m k)
     else 0
-private def cleared (a : Shape) (α : Geom) (N D : (Polynomial Geom)) (q : Fin (a.b + 1)) :
+def cleared (a : Shape) (α : Geom) (N D : (Polynomial Geom)) (q : Fin (a.b + 1)) :
     PhysicalRow →ₗ[Geom] (JetCoeff a q.val → (Polynomial Geom)) :=
   LinearMap.pi fun c =>
     (Finsupp.lsum Geom (clearedMonomial a α N D c.1.val (exponent a q.val c.2))).comp
       (AddMonoidAlgebra.coeffLinearEquiv Geom).toLinearMap
-private theorem cleared_apply (a : Shape) (α : Geom) (N D : (Polynomial Geom))
+theorem cleared_apply (a : Shape) (α : Geom) (N D : (Polynomial Geom))
     (q : Fin (a.b + 1)) (F : PhysicalRow) (c : JetCoeff a q.val) :
     cleared a α N D q F c =
       ∑ m ∈ F.support, ∑ k ∈ Finset.range (m (some 0) + 1),
@@ -5867,7 +5867,7 @@ private theorem cleared_apply (a : Shape) (α : Geom) (N D : (Polynomial Geom))
   apply Finset.sum_congr rfl
   intro k _
   by_cases h : shiftedExp m k = exponent a q.val c.2 <;> simp [h]
-private theorem grade_sub {a : Shape} {q : ℕ} {c : Slot a q} {m : SourceExp} {k : ℕ}
+theorem grade_sub {a : Shape} {q : ℕ} {c : Slot a q} {m : SourceExp} {k : ℕ}
     (hB : grade m ≤ a.b) (hk : k ≤ m (some 0))
     (he : shiftedExp m k = exponent a q c) :
     a.b - q = (m (some 0) - k) + (a.b - grade m) := by
@@ -5914,7 +5914,7 @@ private theorem map_clearedFactor (a : Shape) {N D : (Polynomial Geom)} (hD : se
   simp only [clearedFactor, seedTerm, map_mul, map_pow, map_natCast, hq, pow_add,
     div_pow]
   field_simp [pow_ne_zero _ hD]
-private theorem map_cleared {a : Shape} {α : Geom} {N D : (Polynomial Geom)} (hD : seedMap D ≠ 0)
+theorem map_cleared {a : Shape} {α : Geom} {N D : (Polynomial Geom)} (hD : seedMap D ≠ 0)
     {F : PhysicalRow} (hF : Caps a F) (q : Fin (a.b + 1)) (c : JetCoeff a q.val) :
     seedMap (cleared a α N D q F c) =
       seedMap D ^ (a.b - q.val) *

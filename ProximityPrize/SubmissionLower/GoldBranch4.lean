@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.SilverBase
+import ProximityPrize.SubmissionLower.HighCore82258Pairs
 set_option Elab.async false
 set_option autoImplicit true
 section

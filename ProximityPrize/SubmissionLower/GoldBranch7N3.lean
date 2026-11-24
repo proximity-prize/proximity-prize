@@ -1,5 +1,5 @@
-import ProximityPrize.SubmissionLower.GoldBranch7
-import ProximityPrize.SubmissionLower.UpperBranch4
+import ProximityPrize.SubmissionLower.FrontCore82258Model
+import ProximityPrize.SubmissionLower.R6960HelperSourceArithmetic
 set_option Elab.async false
 set_option autoImplicit true
 section
