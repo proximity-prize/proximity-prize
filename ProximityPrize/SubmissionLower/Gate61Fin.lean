@@ -456,12 +456,19 @@ open K1_13 (Shape shape)
 open Gate61Bilinear (tpOf opOf)
 
 def DEN : ℕ := 10000000
+def tlRef : ℕ := 133430
 def kT : ℕ := Low6960Prices.taylorLength - 4
+def kTRef : ℕ := tlRef - 4
 def rayT (p : Shape) : Fin 3 → Fin 3 → ℤ :=
   (tpOf p kT (Low6960Prices.bentLift kT p).2 (Low6960Prices.bentLift (kT + 1) p).2).ray
+def rayTRef (p : Shape) : Fin 3 → Fin 3 → ℤ :=
+  (tpOf p kTRef (Low6960Prices.bentLift kTRef p).2 (Low6960Prices.bentLift (kTRef + 1) p).2).ray
 def rayO (p : Shape) : Fin 3 → Fin 3 → ℤ :=
   (opOf (K1_13.chart (Low6960Prices.taylorLength + 1) p.chamber)
     (K1_13.chart (Low6960Prices.taylorLength + 2) p.chamber)).ray
+def rayORef (p : Shape) : Fin 3 → Fin 3 → ℤ :=
+  (opOf (K1_13.chart (tlRef + 1) p.chamber)
+    (K1_13.chart (tlRef + 2) p.chamber)).ray
 
 def cd (x y : ℤ) : ℕ := if y ≤ 0 then 0 else (((DEN : ℤ) * x).toNat + y.toNat - 1) / y.toNat
 
@@ -484,8 +491,8 @@ def cls (x : Shape) : ℕ :=
   else if inR Gate61DatO1.G x = true ∧ tfB x = false then 2
   else if inR Gate61DatO2.G x = true ∧ tfB x = false then 3 else 0
 
-def numT (G : Gt) (x : Shape) : ℕ := thNum (rayT x) (rayT (hiS G))
-def numO (G : Gt) (x : Shape) : ℕ := thNum (rayO x) (rayO (hiS G))
+def numT (G : Gt) (x : Shape) : ℕ := thNum (rayT x) (rayTRef (hiS G))
+def numO (G : Gt) (x : Shape) : ℕ := thNum (rayO x) (rayORef (hiS G))
 def Ax (num A : ℕ) : ℕ := (num * A + DEN - 1) / DEN
 
 def Gfun (x : Shape) : ℕ :=
@@ -494,9 +501,9 @@ def Gfun (x : Shape) : ℕ :=
   else if cls x = 3 then Ax (numO Gate61DatO2.G x) Gate61DatO2.G.A else 0
 
 def shapeOK (x : Shape) : Bool :=
-  if cls x = 1 then thOK (rayT x) (rayT (hiS Gate61DatET.G))
-  else if cls x = 2 then thOK (rayO x) (rayO (hiS Gate61DatO1.G))
-  else if cls x = 3 then thOK (rayO x) (rayO (hiS Gate61DatO2.G)) else false
+  if cls x = 1 then thOK (rayT x) (rayTRef (hiS Gate61DatET.G))
+  else if cls x = 2 then thOK (rayO x) (rayORef (hiS Gate61DatO1.G))
+  else if cls x = 3 then thOK (rayO x) (rayORef (hiS Gate61DatO2.G)) else false
 
 def allShapes : Bool :=
   (List.range 6).all fun id => (List.range 15).all fun t =>
@@ -543,9 +550,9 @@ theorem tfB_false {x : Shape} (h : tfB x = false) : ¬ (3 * x.t + 3 ≤ x.j ∧ 
   simp [tfB, e1, e2] at h
 
 theorem shapeOK_cases {x : Shape} (h : shapeOK x = true) :
-    (cls x = 1 ∧ thOK (rayT x) (rayT (hiS Gate61DatET.G)) = true) ∨
-    (cls x = 2 ∧ thOK (rayO x) (rayO (hiS Gate61DatO1.G)) = true) ∨
-    (cls x = 3 ∧ thOK (rayO x) (rayO (hiS Gate61DatO2.G)) = true) := by
+    (cls x = 1 ∧ thOK (rayT x) (rayTRef (hiS Gate61DatET.G)) = true) ∨
+    (cls x = 2 ∧ thOK (rayO x) (rayORef (hiS Gate61DatO1.G)) = true) ∨
+    (cls x = 3 ∧ thOK (rayO x) (rayORef (hiS Gate61DatO2.G)) = true) := by
   unfold shapeOK at h
   split_ifs at h with c1 c2 c3
   · exact Or.inl ⟨c1, h⟩
@@ -566,8 +573,8 @@ theorem gated_price {w : P3.I → K} {Γ : Finset K} {s : K → (Polynomial K)} 
     · obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
       have hθ := thOK_spec hth
       have key := price_T hm hf hon hl hproper hchar (tfB_true htf) Gate61DatET.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
-        (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
-        (Low6960Prices.bentLift kT (hiS Gate61DatET.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatET.G)).2
+        (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT kTRef
+        (Low6960Prices.bentLift kTRef (hiS Gate61DatET.G)).2 (Low6960Prices.bentLift (kTRef + 1) (hiS Gate61DatET.G)).2
         (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
         (by decide +kernel) (numT Gate61DatET.G (shape f)) DEN (Ax (numT Gate61DatET.G (shape f)) Gate61DatET.G.A)
         (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatET.ws Gate61DatET.tabOK Gate61DatET.lv Gate61DatET.n rfl
@@ -585,8 +592,8 @@ theorem gated_price {w : P3.I → K} {Γ : Finset K} {s : K → (Polynomial K)} 
       have hcx : 3 * (shape f).t ≤ (shape f).j := (K1_13_7_1.shape_chamber f).2
       have key := price_O hm hf hon hl hproper hchar hcx Gate61DatO1.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl
         (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩
-        (K1_13.chart (Low6960Prices.taylorLength + 1) (hiS Gate61DatO1.G).chamber)
-        (K1_13.chart (Low6960Prices.taylorLength + 2) (hiS Gate61DatO1.G).chamber)
+        (K1_13.chart (tlRef + 1) (hiS Gate61DatO1.G).chamber)
+        (K1_13.chart (tlRef + 2) (hiS Gate61DatO1.G).chamber)
         (by decide +kernel) (numO Gate61DatO1.G (shape f)) DEN (Ax (numO Gate61DatO1.G (shape f)) Gate61DatO1.G.A)
         (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatO1.ws Gate61DatO1.tabOK Gate61DatO1.lv Gate61DatO1.n rfl
         (by decide +kernel) (by decide +kernel) Gate61DatO1.allOKn Gate61DatO1.rho0 Gate61DatO1.amax (by decide)
@@ -603,8 +610,8 @@ theorem gated_price {w : P3.I → K} {Γ : Finset K} {s : K → (Polynomial K)} 
       have hcx : 3 * (shape f).t ≤ (shape f).j := (K1_13_7_1.shape_chamber f).2
       have key := price_O hm hf hon hl hproper hchar hcx Gate61DatO2.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl
         (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩
-        (K1_13.chart (Low6960Prices.taylorLength + 1) (hiS Gate61DatO2.G).chamber)
-        (K1_13.chart (Low6960Prices.taylorLength + 2) (hiS Gate61DatO2.G).chamber)
+        (K1_13.chart (tlRef + 1) (hiS Gate61DatO2.G).chamber)
+        (K1_13.chart (tlRef + 2) (hiS Gate61DatO2.G).chamber)
         (by decide +kernel) (numO Gate61DatO2.G (shape f)) DEN (Ax (numO Gate61DatO2.G (shape f)) Gate61DatO2.G.A)
         (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatO2.ws Gate61DatO2.tabOK Gate61DatO2.lv Gate61DatO2.n rfl
         (by decide +kernel) (by decide +kernel) Gate61DatO2.allOKn Gate61DatO2.rho0 Gate61DatO2.amax (by decide)

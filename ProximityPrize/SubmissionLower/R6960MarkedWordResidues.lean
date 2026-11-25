@@ -338,10 +338,10 @@ theorem grow [FiniteDimensional ChartField E] (i:ℕ) (x:L) (nx:x≠0)
   rw [eq,add_sub_cancel_right]
   exact lr s
 
-open RetainedCompression (Curve ordinate view height heightCap wordDegree)
+open RetainedCompression (Curve ordinate view height heightCap MarkedBand)
 
-theorem initial (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
-    (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (basis:PowerBasis ChartField E)
+theorem initial (B:MarkedBand) (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<B.maxOrd)
+    (bounded:height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree) (basis:PowerBasis ChartField E)
     (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) [FiniteDimensional L (Paired E x z)] {b:ℕ}
     (size:finrank L (Paired E x z)≤b) : Budget E 0 b := by
@@ -353,7 +353,7 @@ theorem initial (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf o
   apply RetainedCodimension.from_map f₀ _ _ size
   ext u
   change e u∈(rawMap E x z).ker ↔ ∃ c:E,∀s, Regular s 0 ((u.1 s:E)-c)
-  rw [restriction_kernel E f ir lo hi bounded basis root x z nx nz]
+  rw [restriction_kernel E B f ir lo hi bounded basis root x z nx nz]
   simp only [Regular,pow_zero,one_mul]; rfl
 
 #print axioms grow
@@ -361,8 +361,8 @@ theorem initial (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf o
 
 /-- Uniform surface bound for every positive abscissa twist of the same actual
 factor. The degrees s,t are measured on its own two specialized chart orders. -/
-theorem actual_all_twists (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
-    (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (basis:PowerBasis ChartField E)
+theorem actual_all_twists (B:MarkedBand) (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<B.maxOrd)
+    (bounded:height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree) (basis:PowerBasis ChartField E)
     (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
     ∃ (x z:L) (nx:x≠0) (nz:z≠0) (m n s t:ℕ),
       ∃ (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
@@ -372,9 +372,10 @@ theorem actual_all_twists (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.
         Nonempty (Basis (Fin (f.degreeOf ordinate)) L (Crossing E x z)) ∧ IsReduced (Crossing E x z) ∧
         ∀ i:ℕ, Budget E i (s+(i+1)*t) := by
   have : FiniteDimensional ChartField E := basis.finite
-  have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi basis root
-  obtain ⟨x,z,nx,nz,⟨B⟩,red⟩:=actual_crossing E f ir lo hi basis root
-  have : FiniteDimensional L (Crossing E x z) := Module.Finite.of_basis B
+  have hiP : f.degreeOf ordinate < K1.p := hi.trans B.small_E
+  have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hiP basis root
+  obtain ⟨x,z,nx,nz,⟨B_bas⟩,red⟩:=actual_crossing E f ir lo hiP basis root
+  have : FiniteDimensional L (Crossing E x z) := Module.Finite.of_basis B_bas
   obtain ⟨m,⟨xf⟩,⟨xi⟩⟩:=native_frames E false x nx
   obtain ⟨n,⟨zf⟩,⟨zi⟩⟩:=native_frames E true z nz
   obtain ⟨finite,s,t,dt,ds,base⟩:=paired_bound E x z nx nz xf xi zf zi
@@ -386,9 +387,9 @@ theorem actual_all_twists (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.
   change finrank L (LineGlobals E false x)≤finrank L (Crossing E x z) at eRank
   have mrank:=node_rank_le E false x z nx nz xf
   have line : finrank L (LineObstructions E false x)≤t := by omega
-  refine ⟨x,z,nx,nz,m,n,s,t,xf,xi,zf,zi,dt,ds,⟨B⟩,red,fun i=>?_⟩
+  refine ⟨x,z,nx,nz,m,n,s,t,xf,xi,zf,zi,dt,ds,⟨B_bas⟩,red,fun i=>?_⟩
   induction i with
-  | zero => simpa only [zero_add,one_mul] using initial E f ir lo hi bounded basis root x z nx nz base
+  | zero => simpa only [zero_add,one_mul] using initial E B f ir lo hi bounded basis root x z nx nz base
   | succ i ih =>
     simpa only [Nat.succ_eq_add_one,Nat.add_mul,one_mul,Nat.add_assoc] using grow E i x nx ih line
 

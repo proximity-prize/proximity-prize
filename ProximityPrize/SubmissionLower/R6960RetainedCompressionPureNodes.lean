@@ -138,20 +138,32 @@ private theorem twice_width_sum (a b d W : ℕ) (hW : d*a≤W) :
 def paddedSeed (v : ℕ) : ℕ := 10*v
 def quotientSeed (v : ℕ) : ℕ := 9*v
 def boxOrdinate (e : ℕ) : ℕ := 2*e
-def heightCap (e d : ℕ) : ℕ := (2*e-1)*d
-def width (e d : ℕ) : ℕ := (3*e-1)*d+1
+def heightCap (e d : ℕ) : ℕ := (7*e-3)*(d/4)
+def width (e d : ℕ) : ℕ := heightCap e d + e*d + 1
 def quotientWidth (e d : ℕ) : ℕ := e*d+1
 abbrev Rect (e v : ℕ) := Slots (boxOrdinate e) (paddedSeed v)
 abbrev QuotRect (e v : ℕ) := Slots e (quotientSeed v)
-private theorem count_comparison (e v d : ℕ) (he : 2≤e) (hd : 0<d) :
+private theorem count_comparison (e v d : ℕ) (he : 2≤e) (hd : 0<d) (hd4 : 4 ∣ d) :
     (Fintype.card (Rect e v)-Fintype.card (QuotRect e v))*width e d +
       (∑ m : QuotRect e v, (quotientWidth e d - columnWeight d m)) <
       ∑ m : Rect e v, (width e d - columnWeight d m) := by
+  obtain ⟨d₀, hd₀⟩ := hd4
+  have hd₀_pos : 0 < d₀ := by omega
+  have hdiv : d / 4 = d₀ := by rw [hd₀]; exact Nat.mul_div_cancel_left d₀ (by decide)
   let N := (2*e+1)*(10*v+1)
   let K := (e+1)*(9*v+1)
   have kN : K≤N := Nat.mul_le_mul (by omega) (by omega)
-  have large : d*(2*e)≤(3*e-1)*d+1 := by
-    exact (Nat.mul_comm d (2*e)).le.trans ((Nat.mul_le_mul_right d (by omega)).trans (Nat.le_add_right ..))
+  have large : d*(2*e)≤width e d := by
+    unfold width heightCap
+    rw [hdiv, hd₀]
+    have : 4 * d₀ * (2 * e) = 8 * e * d₀ := by ring
+    have : (7 * e - 3) * d₀ + e * (4 * d₀) = (11 * e - 3) * d₀ := by
+      have h1 : e * (4 * d₀) = (4 * e) * d₀ := by ring
+      rw [h1, ← Nat.add_mul]
+      congr 1; omega
+    have hle : 8 * e ≤ 11 * e - 3 := by omega
+    have hmul := Nat.mul_le_mul_right d₀ hle
+    omega
   have small : d*e≤e*d+1 := by rw [Nat.mul_comm d e]; omega
   let src := ∑ m : Rect e v, (width e d - columnWeight d m)
   let qt := ∑ m : QuotRect e v, (quotientWidth e d - columnWeight d m)
@@ -166,11 +178,11 @@ private theorem count_comparison (e v d : ℕ) (he : 2≤e) (hd : 0<d) :
   obtain ⟨u,hu⟩ := Nat.exists_eq_add_of_le he
   have diff : d*(9*v+1)*e*(e+1)+2*K*width e d =
       d*(10*v+1)*(2*e)*(2*e+1)+2*K*quotientWidth e d+
-        d*(v*(5*u^2+27*u+16)+u^2+5*u+4) := by
-    dsimp only [K,width,quotientWidth]
-    rw [hu,show 3*(2+u)-1=3*u+5 by omega]
+        d₀*(v*(2*u^2+36*u+10)+2*u^2+12*u+10) := by
+    dsimp only [K,width,heightCap,quotientWidth]
+    rw [hdiv, hd₀, hu, show 7*(2+u)-3=7*u+11 by omega]
     ring
-  have positive : 0<d*(v*(5*u^2+27*u+16)+u^2+5*u+4) := by positivity
+  have positive : 0<d₀*(v*(2*u^2+36*u+10)+2*u^2+12*u+10) := by positivity
   have cards : Fintype.card (Rect e v)=N ∧ Fintype.card (QuotRect e v)=K := by
     constructor
     · change Fintype.card (Fin (2*e+1) × Fin (10*v+1))=(2*e+1)*(10*v+1)
@@ -181,7 +193,7 @@ private theorem count_comparison (e v d : ℕ) (he : 2≤e) (hd : 0<d) :
   change (N-K)*width e d+qt<src
   omega
 theorem relation_space_gt {F : Type*} [Field F] {α : Type*} [Finite α]
-    {e v d : ℕ} (he : 2≤e) (hd : 0<d) (A : Matrix α (Rect e v) (Polynomial F))
+    {e v d : ℕ} (he : 2≤e) (hd : 0<d) (hd4 : 4 ∣ d) (A : Matrix α (Rect e v) (Polynomial F))
     (columns : ∀ i j,(A i j).natDegree≤columnWeight d j)
     (ker : Fintype.card (QuotRect e v) ≤ Module.finrank (FractionRing (Polynomial F))
       (LinearMap.ker (A.map (algebraMap (Polynomial F) (FractionRing (Polynomial F)))).mulVecLin)) :
@@ -191,19 +203,53 @@ theorem relation_space_gt {F : Type*} [Field F] {α : Type*} [Finite α]
         (columnWeight d) (width e d))) := by
   have lower := HeightCompression.weighted_kernel A (columnWeight d) (width e d)
     columns (Fintype.card (QuotRect e v)) ker
-  have large := count_comparison e v d he hd
+  have large := count_comparison e v d he hd hd4
   have dim : Module.finrank F (HeightCompression.Coeffs F
       (fun j : QuotRect e v => columnWeight d j) (quotientWidth e d)) =
       ∑ j : QuotRect e v, (quotientWidth e d - columnWeight d j) := by
     simp [HeightCompression.Coeffs,Module.finrank_pi_fintype,(degreeLTEquiv F _).finrank_eq]
   rw [dim]
   omega
-theorem tame_height {e d : ℕ} (he : e≤47) (hd : d≤164650) :
-    2*((3*e-2)*(e-1)*d+(e-1))<2130706433 :=
-  (Nat.mul_le_mul_left 2 (Nat.add_le_add
-    (Nat.mul_le_mul (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 3 he) 2)
-      (Nat.sub_le_sub_right he 1)) hd)
-    (Nat.sub_le_sub_right he 1))).trans_lt (by decide +kernel)
+
+structure MarkedBand where
+  wordDegree : ℕ
+  maxOrd : ℕ
+  pos_d : 0 < wordDegree
+  dvd4 : 4 ∣ wordDegree
+  lt_A : wordDegree < 179808
+  small_E : maxOrd < K1.p
+  vote_scale : CurvatureVotes.VoteScale 179808 wordDegree 18
+  deg2_tame : 2 * heightCap 2 wordDegree < K1.p
+  room : ∀ e < maxOrd, 3 ≤ e → 2 * ((10 * e ^ 2 - 13 * e + 3) * (wordDegree / 4)) < K1.p
+  vert : ∀ e < maxOrd, 3 ≤ e → 2 * ((e - 1) * heightCap e wordDegree) < K1.p
+
+def bandHi : MarkedBand where
+  wordDegree := 164672
+  maxOrd := 48
+  pos_d := by decide
+  dvd4 := ⟨41168, by decide⟩
+  lt_A := by decide
+  small_E := by decide
+  vote_scale := Or.inl (by decide +kernel)
+  deg2_tame := by unfold heightCap; decide +kernel
+  room := fun e he _ =>
+    (by decide +kernel : ∀ i : Fin 48, 2 * ((10 * i.val ^ 2 - 13 * i.val + 3) * (164672 / 4)) < K1.p) ⟨e, he⟩
+  vert := fun e he _ =>
+    (by decide +kernel : ∀ i : Fin 48, 2 * ((i.val - 1) * heightCap i.val 164672) < K1.p) ⟨e, he⟩
+
+def bandLo : MarkedBand where
+  wordDegree := 133520
+  maxOrd := 58
+  pos_d := by decide
+  dvd4 := ⟨33380, by decide⟩
+  lt_A := by decide
+  small_E := by decide
+  vote_scale := Or.inl (by decide +kernel)
+  deg2_tame := by unfold heightCap; decide +kernel
+  room := fun e he _ =>
+    (by decide +kernel : ∀ i : Fin 58, 2 * ((10 * i.val ^ 2 - 13 * i.val + 3) * (133520 / 4)) < K1.p) ⟨e, he⟩
+  vert := fun e he _ =>
+    (by decide +kernel : ∀ i : Fin 58, 2 * ((i.val - 1) * heightCap i.val 133520) < K1.p) ⟨e, he⟩
 #print axioms relation_space_gt
 end
 end Lower6960.RetainedCompression
@@ -553,7 +599,7 @@ private theorem eval_packed {F α : Type*} [Field F]
   rw [eval_vector]
   simp [HeightCompression.evaluation,markMatrix,C_pow]
 theorem escape {F α : Type*} [Field F] [Finite α]
-    (z : α→F) (S : α→(Polynomial F)) (d : ℕ) (hd : 0<d) (degree : ∀ i,(S i).natDegree≤d)
+    (z : α→F) (S : α→(Polynomial F)) (d : ℕ) (hd : 0<d) (hd4 : 4 ∣ d) (degree : ∀ i,(S i).natDegree≤d)
     (f : Curve (Polynomial F)) (fn : f≠0) {e v : ℕ} (he : 2≤e)
     (ed : f.degreeOf ordinate=e) (vd : f.degreeOf parameter=v)
     (marks : ∀ i,evaluate (z i) (S i) f=0) (hlarge : heightCap e d<height d f) :
@@ -566,7 +612,7 @@ theorem escape {F α : Type*} [Field F] [Finite α]
   let mult := (LinearMap.mulLeft F f).comp (packLinear F e (quotientSeed v) d (quotientWidth e d))
   have ker_size : Module.finrank F (HeightCompression.Coeffs F
       (fun j : QuotRect e v => columnWeight d j) (quotientWidth e d)) < Module.finrank F ker :=
-    relation_space_gt he hd A (mark_degree z S d _ _ degree)
+    relation_space_gt he hd hd4 A (mark_degree z S d _ _ degree)
       (rational_kernel z S f fn e v ((box_iff _ _ _).mpr ⟨ed.le,vd.le⟩) marks)
   by_contra! h
   have all (u : ker) : f ∣ pack u.val := by
@@ -595,9 +641,7 @@ theorem escape {F α : Type*} [Field F] [Finite α]
       have top := pack_height (by unfold width; omega) u.val
       change height d (pack u.val)<width e d at top
       rw [eq,height_mul d fn qn] at top
-      unfold heightCap width quotientWidth at *
-      have eq : (3*e-1)*d=(2*e-1)*d+e*d := by
-        rw [show 3*e-1=(2*e-1)+e by omega, Nat.add_mul]
+      unfold width quotientWidth at *
       omega
     obtain ⟨w,hw⟩ := represented Q dQ wQ
     refine ⟨w,?_⟩
@@ -830,37 +874,30 @@ end Merged_R6960RetainedCompressionCut
 -- merged module R6960RetainedCompressionReduction
 section Merged_R6960RetainedCompressionReduction
 set_option Elab.async false
-set_option maxRecDepth 15000
-set_option maxHeartbeats 2500000
+set_option maxRecDepth 14000
+set_option maxHeartbeats 2200000
 namespace Lower6960.RetainedCompression
 noncomputable section
 open Polynomial Finset
 open K1 (K p)
-open K1_14 (L liftPoly)
-open RescueGeometry (Model Family)
+open K1_14 (L liftPoly Equation)
+open Lower6961.RescueGeometry (Model Family)
+open KoalaRect (axisDegree)
 open RetainedShortening (Word)
 open CurvatureSquares (Ordinate ordEval xView zView)
 open scoped Polynomial
 open CurvatureSquares (degree_two_count)
-abbrev wordDegree : ℕ := 164650
-def FactorPriceAt (rate:ℕ→ℕ) : Prop :=
+
+def FactorPriceAt (B : MarkedBand) (rate : ℕ → ℕ) : Prop :=
   ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
-    Word 179818 wordDegree M.word F.scalar T →
+    Word 179808 B.wordDegree M.word F.scalar T →
     ∀ f : Curve (Polynomial L), Irreducible f →
-      3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
-      height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
+      3≤f.degreeOf ordinate → f.degreeOf ordinate<B.maxOrd → 0<f.degreeOf parameter →
+      height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree →
       (∀ γ∈T, MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
       T.card≤rate (f.degreeOf ordinate)*(f.degreeOf parameter)+
         (f.degreeOf ordinate-1)*(f.degreeOf ordinate)
-abbrev BoundedFactorPrice := FactorPriceAt MarkedSheet.rate
-theorem rate_mono {e n : ℕ} (h : e≤n) : MarkedSheet.rate e≤MarkedSheet.rate n := by
-  unfold MarkedSheet.rate
-  exact Nat.sub_le_sub_right (Nat.add_le_add
-    (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 9 h) 6)
-      (Nat.sub_le_sub_right h 1))
-    (Nat.mul_le_mul_left 2 h)) 1
-private theorem vote_scale : CurvatureVotes.VoteScale 179818 wordDegree 18 :=
-  Or.inl (by decide +kernel)
+
 private theorem word_roots {u deleted} {M : Model u deleted} {Γ U : Finset K} (F : Family M Γ)
     (Q : Ordinate) (H : ∀ γ∈U, MarkedFiber Q (scalar M γ) (liftPoly (F.scalar γ))) :
     ∀ γ∈U, ordEval (scalar M γ) ((F.scalar γ).map (algebraMap K L)) Q=0 := by
@@ -868,11 +905,12 @@ private theorem word_roots {u deleted} {M : Model u deleted} {Γ U : Finset K} (
   change Q.eval₂ (mapRingHom (evalRingHom (scalar M γ))) (liftPoly (F.scalar γ))=0
   rw [← eval_map]
   exact (H γ hγ).root
-private theorem factor_price (rate:ℕ→ℕ) (mono:Monotone rate) (small:24≤rate 3)
-    (proper:∀e,3≤e→e<48→12*e≤rate e) (bounded : FactorPriceAt rate)
+
+private theorem factor_price (B : MarkedBand) (rate : ℕ → ℕ) (mono : Monotone rate) (small : 24≤rate 3)
+    (proper : ∀ e, 3≤e → e<B.maxOrd → 12*e≤rate e) (bounded : FactorPriceAt B rate)
     {u deleted} {M : Model u deleted} {Γ U : Finset K} (F : Family M Γ) (sub : U⊆Γ)
-    (words : Word 179818 wordDegree M.word F.scalar U)
-    {Q : Ordinate} (ir : Irreducible Q) (n : ℕ) (lo : 3≤n) (hi : n<48)
+    (words : Word 179808 B.wordDegree M.word F.scalar U)
+    {Q : Ordinate} (ir : Irreducible Q) (n : ℕ) (lo : 3≤n) (hi : n<B.maxOrd)
     (degree : Q.natDegree≤n) (mark : ∀ γ∈U, MarkedFiber Q (scalar M γ) (liftPoly (F.scalar γ))) :
     U.card≤rate n*(zView Q).natDegree+(n-1)*Q.natDegree := by
   classical
@@ -897,20 +935,20 @@ private theorem factor_price (rate:ℕ→ℕ) (mono:Monotone rate) (small:24≤r
   have roots := word_roots F Q mark
   by_cases linear : e=1
   · have count := CurvatureSquares.irreducible_linear_node words (algebraMap K L) (scalar M) inj
-      (by decide) vote_scale Q ir linear roots
+      B.lt_A B.vote_scale Q ir linear roots
     exact count.trans (Nat.add_le_add (Nat.mul_le_mul_right _ vRate) (pos.trans_le budget))
   have el : 2≤e := by omega
-  by_cases tall : heightCap e wordDegree < height wordDegree q
+  by_cases tall : heightCap e B.wordDegree < height B.wordDegree q
   · let parameter (j : U) := scalar M j.val
     let root (j : U) := liftPoly (F.scalar j.val)
-    have d (j : U) : (root j).natDegree≤wordDegree := by
+    have d (j : U) : (root j).natDegree≤B.wordDegree := by
       simpa only [root,liftPoly,natDegree_map_eq_of_injective (algebraMap K L).injective]
         using words.degree j.val j.property
     have rootsF (j : U) : evaluate (parameter j) (root j) q=0 := by
       rw [evaluate_view,RingEquiv.apply_symm_apply]
       exact (mark j.val j.property).root
     obtain ⟨G,_,nondiv,box,_,rootsG⟩ :=
-      escape parameter root wordDegree (by decide) d q qp.ne_zero el y z rootsF tall
+      escape parameter root B.wordDegree B.pos_d B.dvd4 d q qp.ne_zero el y z rootsF tall
     have ⟨gy,gz⟩ := (box_iff _ _ _).mp box
     have price := proper_cut_price U (scalar M) (fun w=>liftPoly (F.scalar w))
       inj q G qp nondiv pos y z gy gz (fun γ hγ=>rootsF ⟨γ,hγ⟩)
@@ -924,11 +962,11 @@ private theorem factor_price (rate:ℕ→ℕ) (mono:Monotone rate) (small:24≤r
   · have wt := Nat.le_of_not_gt tall
     by_cases two : e=2
     · have D : 2*(xView Q).natDegree<p := by
-        have a := abscissa_le_height q wordDegree
+        have a := abscissa_le_height q B.wordDegree
         rw [RingEquiv.apply_symm_apply] at a
-        exact (Nat.mul_le_mul_left 2 (a.trans wt)).trans_lt (by rw [two]; decide)
+        exact (Nat.mul_le_mul_left 2 (a.trans wt)).trans_lt (two ▸ B.deg2_tame)
       have count := degree_two_count words (algebraMap K L) (scalar M) inj
-        (by decide) vote_scale Q ir two D roots
+        B.lt_A B.vote_scale Q ir two D roots
       have add : 2≤(n-1)*e := el.trans budget
       exact count.trans (Nat.add_le_add
         (Nat.mul_le_mul_right _ (show max 8 18≤rate n from vRate)) add)
@@ -939,31 +977,39 @@ private theorem factor_price (rate:ℕ→ℕ) (mono:Monotone rate) (small:24≤r
     rw [y,z] at charge
     exact charge.trans (Nat.add_le_add (Nat.mul_le_mul_right _ (mono degree))
       (Nat.mul_le_mul_right _ (Nat.sub_le_sub_right degree 1)))
-theorem retained_of_tariff (rate:ℕ→ℕ) (mono:Monotone rate) (small:24≤rate 3)
-    (proper:∀e,3≤e→e<48→12*e≤rate e)
-    (paid:∀e a b,3≤e→e<48→a+b≤2400→b<(TerminalReceipts.witness e).order 1→
-      rate e*(a+p*b)+(e-1)*e≤retainedCap) (bounded : FactorPriceAt rate) : RetainedCount := by
-  intro u deleted M Γ F lo hi D Crt regular residues T f sub emin emax axes graded marks
+
+theorem retained_of_tariff (B : MarkedBand) (hMax axesCap retainedCap : ℕ) (witnessBound : ℕ → ℕ)
+    (haxesSmall : axesCap < p) (hdegFit : 131071 + hMax ≤ B.wordDegree)
+    (rate : ℕ → ℕ) (mono : Monotone rate) (small : 24≤rate 3)
+    (proper : ∀ e, 3≤e → e<B.maxOrd → 12*e≤rate e)
+    (paid : ∀ e a b, 3≤e → e<B.maxOrd → a+b≤axesCap → b<witnessBound e →
+      rate e*(a+p*b)+(e-1)*e≤retainedCap)
+    (bounded : FactorPriceAt B rate)
+    {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
+    (hi : M.overhead.toNat ≤ hMax) (T : Finset K) (f : Equation) (sub : T⊆Γ)
+    (emin : 3≤f.natDegree) (emax : f.natDegree<B.maxOrd)
+    (axes : axisDegree f 0+axisDegree f 1≤axesCap)
+    (graded : ∀ j : Fin 2, axisDegree f j < witnessBound f.natDegree)
+    (marks : ∀ γ∈T, simpleSheet f (M.label γ) (F.scalar γ)) :
+    T.card ≤ retainedCap := by
   obtain ⟨W,P,pn,deg,seed,fibre⟩ :=
-    marked_projection F f sub emin axes hi (fun γ hγ => (marks γ hγ).1)
+    marked_projection hMax axesCap B.wordDegree haxesSmall hdegFit F f sub emin axes hi marks
   have pmin : 3≤P.natDegree := deg.symm ▸ emin
-  have pmax : P.natDegree<48 := deg.symm ▸ emax
+  have pmax : P.natDegree<B.maxOrd := deg.symm ▸ emax
   have count := aggregate P T (scalar M) (fun γ=>liftPoly (F.scalar γ))
     (rate P.natDegree) (P.natDegree-1) pn fibre (by
       intro Q ir dvd U us qmark
-      have words : Word 179818 wordDegree M.word F.scalar U :=
+      have words : Word 179808 B.wordDegree M.word F.scalar U :=
         ⟨W.distinct.mono us,fun γ hγ=>W.degree γ (us hγ),fun γ hγ=>W.hits γ (us hγ)⟩
-      exact factor_price rate mono small proper bounded F (us.trans sub) words ir _ pmin pmax
+      exact factor_price B rate mono small proper bounded F (us.trans sub) words ir _ pmin pmax
         (natDegree_le_of_dvd dvd pn) qmark)
   rw [deg] at count
   have priced := Nat.add_le_add_right (Nat.mul_le_mul_left (rate f.natDegree) seed)
     ((f.natDegree-1)*f.natDegree)
   exact count.trans (priced.trans (paid f.natDegree _ _ emin emax axes (graded 1)))
-theorem retained_of_bounded (bounded : BoundedFactorPrice) : RetainedCount :=
-  retained_of_tariff MarkedSheet.rate (fun _ _ h=>rate_mono h) (by decide)
-    (fun e h hi=>(MarkedSheet.endpoint.2.1 ⟨e,hi⟩ h).1) graded_budget bounded
+
 #print axioms factor_price
-#print axioms retained_of_bounded
+#print axioms retained_of_tariff
 end
 end Lower6960.RetainedCompression
 
@@ -981,9 +1027,8 @@ open K1 (K I node)
 open K1_14 (L liftPoly)
 open CurvatureSquares (Ordinate zView coeff_caps)
 open RetainedShortening (Word)
-open RescueGeometry (Model Family)
+open Lower6961.RescueGeometry (Model Family)
 open scoped Polynomial
-open Lower6960.RetainedCompression (rate_mono)
 open CurvatureSquares (node_eval node_height node_ne root_count)
 private abbrev embed := algebraMap K L
 def atNode (P : Ordinate) (i : I) : Polynomial (Polynomial L) :=
@@ -1011,13 +1056,13 @@ private theorem root_at_node {P : Ordinate} {z : L} {S : (Polynomial K)}
     (p:=specialize P z) (x:=liftPoly S)
   rw [commute,coe_evalRingHom,value] at eq
   exact eq.trans (h.trans eval_zero)
-theorem pure_node_price {w s T} (W : Word 179818 wordDegree w s T)
+theorem pure_node_price (B : MarkedBand) {w s T} (W : Word 179808 B.wordDegree w s T)
     (z : K → L) (inj : Set.InjOn z (T:Set K)) (P : Ordinate) (irr : Irreducible P)
     (pos : 0<P.natDegree) (pure : PureNodes w P)
     (marks : ∀ γ∈T, MarkedFiber P (z γ) (liftPoly (s γ))) :
     T.card≤18*(zView P).natDegree+1 := by
   classical
-  apply CurvatureVotes.minority_count W (by decide) (Or.inl (by decide))
+  apply CurvatureVotes.minority_count W B.lt_A B.vote_scale
   intro i
   let Q := atNode P i
   let a := Q.leadingCoeff
@@ -1056,35 +1101,7 @@ theorem pure_node_price {w s T} (W : Word 179818 wordDegree w s T)
       Polynomial.map_X,Polynomial.map_C,eval_mul,eval_pow,eval_sub,eval_X,eval_C,
       eval_C,coe_evalRingHom,eval_C] at hz
     exact (mul_eq_zero.mp hz).resolve_right (pow_ne_zero _ (sub_ne_zero.mpr (embed.injective.ne miss)))
-def NonPureFactorPrice : Prop :=
-  ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
-    Word 179818 wordDegree M.word F.scalar T →
-    ∀ f : Curve (Polynomial L), Irreducible f →
-      3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
-      height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
-      ¬PureNodes M.word (view f) →
-      (∀ γ∈T, MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
-      T.card≤MarkedSheet.rate (f.degreeOf ordinate)*(f.degreeOf parameter)+
-        (f.degreeOf ordinate-1)*(f.degreeOf ordinate)
-theorem bounded_of_nonpure (other : NonPureFactorPrice) : BoundedFactorPrice := by
-  intro u deleted M Γ F T sub W f irr lo hi sv cap marks
-  by_cases pure : PureNodes M.word (view f)
-  · let P := view f
-    have ir : Irreducible P := (MulEquiv.irreducible_iff view).mpr irr
-    have positive : 0<P.natDegree := by change 0<(view f).natDegree; rw [view_y]; omega
-    have fee := pure_node_price W (scalar M) (scalar_injective M).injOn P ir positive pure marks
-    change _≤18*(zView (view f)).natDegree+1 at fee
-    rw [view_z] at fee
-    have rate : 18≤MarkedSheet.rate (f.degreeOf ordinate) := (by decide :
-      18≤MarkedSheet.rate 3).trans (rate_mono lo)
-    have additive : 1≤(f.degreeOf ordinate-1)*(f.degreeOf ordinate) :=
-      Nat.one_le_iff_ne_zero.mpr (mul_ne_zero (by omega) (by omega))
-    exact fee.trans (Nat.add_le_add (Nat.mul_le_mul_right _ rate) additive)
-  · exact other F T sub W f irr lo hi sv cap pure marks
-theorem retained_of_nonpure (other : NonPureFactorPrice) : RetainedCount :=
-  retained_of_bounded (bounded_of_nonpure other)
 #print axioms pure_node_price
-#print axioms retained_of_nonpure
 end
 end Lower6960.RetainedCompression
 

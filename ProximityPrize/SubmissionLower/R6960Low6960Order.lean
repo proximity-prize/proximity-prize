@@ -53,8 +53,8 @@ abbrev layerNeed := Lower6960.Low.need
 abbrev Messages := Lower6960.Low.Messages
 abbrev ProperCut := Lower6960.Low.ProperCut
 abbrev LayerBudget := @Lower6960.Low.LayerBudget
-theorem sourceRank_eq : sourceRank = 963463873054672528 := by decide
-theorem certified_layers : sourceRank / layerWidth + 1 = 20767888279330 := by decide
+theorem sourceRank_eq : sourceRank = 963767780073398099 := by decide
+theorem certified_layers : sourceRank / layerWidth + 1 = 20773095809320 := by decide
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
     ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧
@@ -685,14 +685,14 @@ open scoped Polynomial
 export Low6960OrderProof (BankRow requiredOrder)
 export Low6960OrderProof_1 (order_of_contact)
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2358) :
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2345) :
     Messages M.word Γ F.scalar := by
   refine ⟨F.distinct, ?_, ?_⟩
   · intro γ hγ
     obtain hz | hd := (F.mark γ hγ).scalar_degree
     · simp [hz]
     · change ((F.scalar γ).natDegree : ℤ) ≤ (131072 : ℤ) - 1 + M.overhead at hd
-      change (F.scalar γ).natDegree ≤ 133429
+      change (F.scalar γ).natDegree ≤ 133416
       omega
   · intro γ hγ
     let m := F.mark γ hγ

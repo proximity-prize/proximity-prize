@@ -45,19 +45,19 @@ private theorem source_le_wide : source ≤ wideSpace := by
   rintro _ ⟨u,rfl⟩
   exact column_wide u.property
 
-private theorem dim_source : Module.finrank Geom source = 4936915165500 := by
+private theorem dim_source : Module.finrank Geom source = 4936934951912 := by
   classical
   obtain ⟨e⟩ := Low6960AnchorDimension.eligible_card
   letI : Fintype Slot := Fintype.ofEquiv _ e.symm
   rw [source,finrank_span_eq_card independent_dp,Fintype.card_congr e,Fintype.card_fin]
 
-private theorem source_eval (Q : source) (S : (Polynomial Geom)) (hs : S.natDegree ≤ 133429) :
-    (differentialSpecialization (Q.val : DP) S).natDegree ≤ 101*179818-1 := by
+private theorem source_eval (Q : source) (S : (Polynomial Geom)) (hs : S.natDegree ≤ 133416) :
+    (differentialSpecialization (Q.val : DP) S).natDegree ≤ 101*179808-1 := by
   change (differentialSpecializationHom S Q.val).natDegree ≤ _
   let f := (differentialSpecializationHom (d := 3) S).toLinearMap
   change (f Q.val).natDegree ≤ _
   have hq : Q.val ∈ Submodule.span Geom (Set.range fun u : Slot => column u.val) := Q.property
-  refine Submodule.span_induction (p := fun p _ => (f p).natDegree ≤ 101 * 179818 - 1) ?_ ?_ ?_ ?_ hq
+  refine Submodule.span_induction (p := fun p _ => (f p).natDegree ≤ 101 * 179808 - 1) ?_ ?_ ?_ ?_ hq
   · rintro _ ⟨u,rfl⟩
     exact column_eval_degree S u.property hs
   · rw [map_zero]
@@ -96,9 +96,9 @@ private theorem exists_local (w : I → K) :
 /-- The Euler anchor at the actual low endpoint, using the published local-rank witnesses. -/
 theorem exists_anchor (w : I → K) :
     ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨136,57,14⟩ ∧ Low50Anchor.ActiveFits P 169 ∧
-      differentialWeightedDegree 133429 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
-        101 * 179818 - 1 + 57 ∧
-      ∀ (S : (Polynomial K)) (T : Finset I), S.natDegree ≤ 133429 → 179818 ≤ T.card →
+      differentialWeightedDegree 133416 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
+        101 * 179808 - 1 + 57 ∧
+      ∀ (S : (Polynomial K)) (T : Finset I), S.natDegree ≤ 133416 → 179808 ≤ T.card →
         (∀ i ∈ T, S.eval (node i) = w i) → atJet P (extend S) = 0 := by
   classical
   obtain ⟨Q,hQ,hloc⟩ := exists_local w
@@ -112,27 +112,27 @@ theorem exists_anchor (w : I → K) :
   · simpa only [P,AlgEquiv.symm_apply_apply] using rawWeight V
   · intro S T hd hT hits
     rw [atJet_unflatten]
-    have hS : (extend S).natDegree ≤ 133429 := Polynomial.natDegree_map_le.trans hd
-    have hdeg := (source_eval Q (extend S) hS).trans_lt (by decide : 101*179818-1 < 101*179818)
+    have hS : (extend S).natDegree ≤ 133416 := Polynomial.natDegree_map_le.trans hd
+    have hdeg := (source_eval Q (extend S) hS).trans_lt (by decide : 101*179808-1 < 101*179808)
     have heval (i : I) (hi : i ∈ T) : (extend S).eval (embed (node i)) = embed (w i) := by
       rw [Polynomial.eval_map, Polynomial.eval₂_hom, hits i hi]
     exact eq_zero_of_natDegree_lt_mul_of_pow_X_sub_C_dvd_at_injOn
-      (fun i => embed (node i)) T 101 179818
+      (fun i => embed (node i)) T 101 179808
       ((RingHom.injective embed).comp node.injective).injOn hT
       (fun i hi => X_sub_C_pow_dvd_differentialSpecialization_of_contact
         Q.val (extend S) (embed (node i)) (embed (w i)) (heval i hi) (hloc i)) hdeg
 
 /-- The actual low-band model and marks supply the same single anchor. -/
-theorem anchor_of_family {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179818 M Γ)
-    (hi : M.overhead ≤ 2358) :
+theorem anchor_of_family {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179808 M Γ)
+    (hi : M.overhead ≤ 2345) :
     ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨136,57,14⟩ ∧ Low50Anchor.ActiveFits P 169 ∧
-      differentialWeightedDegree 133429 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
-        101*179818-1+57 ∧ ∀ γ∈Γ,atJet P (extend (F.scalar γ))=0 := by
+      differentialWeightedDegree 133416 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
+        101*179808-1+57 ∧ ∀ γ∈Γ,atJet P (extend (F.scalar γ))=0 := by
   obtain ⟨P,nz,box,active,weight,zero⟩ := exists_anchor M.word
   refine ⟨P,nz,box,active,weight,?_⟩
   intro γ hγ
   let mark := F.mark γ hγ
-  have degree : (F.scalar γ).natDegree ≤ 133429 := by
+  have degree : (F.scalar γ).natDegree ≤ 133416 := by
     rcases mark.scalar_degree with z | h
     · simp [z]
     · change ((F.scalar γ).natDegree : ℤ) ≤ 131071 + M.overhead at h

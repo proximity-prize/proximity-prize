@@ -19,7 +19,7 @@ import ProximityPrize.SubmissionLower.R6960Low6960Tiles14
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles15
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles16
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles17
-import ProximityPrize.SubmissionLower.R6960Front6960List
+import ProximityPrize.SubmissionLower.Scalar6963DirectList
 import ProximityPrize.SubmissionLower.R6960MarkedEvaluationLedger
 import ProximityPrize.SubmissionLower.R6960Front6960Rank2
 import ProximityPrize.SubmissionLower.R6960Front6960Rank3
@@ -350,11 +350,11 @@ private def receipts : ∀ k : Band, Receipt k
 private theorem receipts_orders : (fun k => (receipts k).orders) = bandOrders :=
   funext fun k => by fin_cases k <;> rfl
 
-/-- The 69.61 low count for the actual family at every positive height through 2358, given the
+/-- The 69.61 low count for the actual family at every positive height through 2345, given the
 payment `gates` of the gated shapes (empty band and bands `(w,3,1)`, `w ≤ 5`) by the two-cut gates. -/
 theorem count (gates : Gates) {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179818 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2358) :
-    Γ.card≤266228295297719504 := by
+    (F : P1.FamilyAt 179808 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2345) :
+    Γ.card≤272188771910282110 := by
   obtain ⟨G,gate,htab⟩ := gates
   rw [← receipts_orders] at htab
   exact count_with_receipts receipts htab gate M F lo hi
@@ -363,6 +363,7 @@ theorem count (gates : Gates) {cap u del Γ} (M : P1.ModelAt cap u del)
 end Lower6960.Low
 
 end Merged_R6960Low6960Count
+
 
 -- merged module R6960Front6960Assembly
 section Merged_R6960Front6960Assembly
@@ -374,44 +375,23 @@ theorem low_front_count (gates : Low6960Allocation.Gates) : Front6960.c6 := by
   intro _ _ M _ F lo hi
   exact Low.count gates M F lo hi
 theorem protocol_claim (gates : Low6960Allocation.Gates)
-    (high : ∀ {u deleted Γ} (M : P1.ModelAt 33579 u deleted) (_F : P1.FamilyAt 179818 M Γ),
-      2359 ≤ M.overhead → M.overhead ≤ 33579 → Γ.card ≤ 266228295297719504) :
-    ProtocolClaim 6961 p q := by
+    (high : ∀ {u deleted Γ} (M : P1.ModelAt 33599 u deleted) (_F : P1.FamilyAt 179808 M Γ),
+      2346 ≤ M.overhead → M.overhead ≤ 33599 → Γ.card ≤ 272188771910282110) :
+    ProtocolClaim 6962 p q := by
   apply ProximityPrize.SubmissionLower.Front6960Radius.extend
-  apply Front6960.of_children Front6960ListBank.scalar_list
+  apply Front6960.of_children Scalar6963DirectList.scalar_list_6962
     Front6960_1.proof Front6960_2.proof
     (Front6960_3.of_children Front6960_3_1.proof Front6960_3_2.proof)
     (Front6960_4.of_children Front6960_4_1.proof Front6960_4_2.proof)
     Front6960_5.proof (low_front_count gates)
   intro _ _ M _ F lo hi
   exact high M F lo hi
-theorem protocol_claim_of_retained (gates : Low6960Allocation.Gates) (retained : RetainedCount) : ProtocolClaim 6961 p q :=
-  protocol_claim gates (fun M F lo hi => high_count_of_retained retained M F lo hi)
-#print axioms protocol_claim_of_retained
 #print axioms low_front_count
 #print axioms protocol_claim
 end Lower6960
 
 end Merged_R6960Front6960Assembly
 
--- merged module R6960RetainedCompressionAssembly
-section Merged_R6960RetainedCompressionAssembly
-
-set_option Elab.async false
-namespace Lower6960
-
-/-- The 69.61 claim reduces to the remaining bounded-weight,
-positive-seed, nonpure marked-factor estimate. -/
-theorem protocol_claim_of_nonpure (gates : Low6960Allocation.Gates) (count : RetainedCompression.NonPureFactorPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6961
-      ProximityPrize.SubmissionLower.Front6960Radius.p
-      ProximityPrize.SubmissionLower.Front6960Radius.q :=
-  protocol_claim_of_retained gates (RetainedCompression.retained_of_nonpure count)
-
-#print axioms protocol_claim_of_nonpure
-end Lower6960
-
-end Merged_R6960RetainedCompressionAssembly
 
 -- merged module R6960RetainedLinearBase
 section Merged_R6960RetainedLinearBase
@@ -921,10 +901,9 @@ open Polynomial Finset
 open K1 (K I node)
 open K1_14 (L liftPoly)
 open CurvatureSquares (Ordinate)
-open RescueGeometry (Model Family)
 open RetainedShortening (Word)
-open RetainedCompression (Curve ordinate parameter height heightCap wordDegree MarkedFiber
-  PureNodes atNode NonPureFactorPrice view view_y scalar)
+open RetainedCompression (Curve ordinate parameter height heightCap MarkedBand MarkedFiber
+  PureNodes atNode view view_y scalar)
 open scoped Polynomial
 abbrev Seed := Fn L
 def toSeed : Ordinate →+* Plane Seed :=
@@ -1002,32 +981,8 @@ theorem pure_of_geometrically_linear (w : I→K) (P : Ordinate)
   simp only [Polynomial.map_mul,Polynomial.map_C,Polynomial.map_pow,Polynomial.map_sub,
     Polynomial.map_X,← leadingCoeff_map_of_injective (incl_injective L)]
   exact formula
-def NonlinearFactorPrice : Prop :=
-  ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
-    Word 179818 wordDegree M.word F.scalar T→
-    ∀ f : Curve (Polynomial L), Irreducible f →
-      3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
-      height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
-      ¬GeometricallyLinear (view f) →
-      (∀ γ∈T, MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
-      T.card≤MarkedSheet.rate (f.degreeOf ordinate)*(f.degreeOf parameter)+
-        (f.degreeOf ordinate-1)*(f.degreeOf ordinate)
-theorem nonpure_of_nonlinear (price : NonlinearFactorPrice) : NonPureFactorPrice := by
-  intro u deleted M Γ F T sub W f ir lo hi sv cap nonpure marks
-  apply price F T sub W f ir lo hi sv cap _ marks
-  intro linear
-  apply nonpure
-  have irr : Irreducible (view f) := (MulEquiv.irreducible_iff view).mpr ir
-  have pos : 0<(view f).natDegree := by rw [view_y]; omega
-  exact pure_of_geometrically_linear M.word _ irr pos linear
-theorem protocol_claim_of_nonlinear (gates : Low6960Allocation.Gates) (price : NonlinearFactorPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6961
-      ProximityPrize.SubmissionLower.Front6960Radius.p
-      ProximityPrize.SubmissionLower.Front6960Radius.q :=
-  Lower6960.protocol_claim_of_nonpure gates (nonpure_of_nonlinear price)
 #print axioms toSeed_irreducible
 #print axioms pure_of_geometrically_linear
-#print axioms protocol_claim_of_nonlinear
 end
 end Lower6960.RetainedLinear
 
@@ -1097,7 +1052,7 @@ theorem actual_finite {E : Type*} [Field E] [Algebra (RatFunc Scalar) E]
     [Algebra (Polynomial Scalar) E] [IsScalarTower (Polynomial Scalar) (RatFunc Scalar) E]
     [Algebra.IsSeparable (RatFunc Scalar) E] [FiniteDimensional (RatFunc Scalar) E]
     [Differential (Polynomial Scalar)] [Differential E] [DifferentialAlgebra (Polynomial Scalar) E]
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<K1.p)
     (b : PowerBasis (RatFunc Scalar) E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
     (x : E) (int : IsIntegral (Polynomial Scalar) x) :
     IsIntegral (Polynomial Scalar)
@@ -1128,7 +1083,7 @@ theorem actual_finite {E : Type*} [Field E] [Algebra (RatFunc Scalar) E]
   have tame : (P.natDegree:RatFunc Scalar)≠0 := by
     intro zero
     have h := (CharP.cast_eq_zero_iff (RatFunc Scalar) K1.p P.natDegree).mp zero
-    have lt : P.natDegree<K1.p := by rw [deg]; exact hi.trans (by decide)
+    have lt : P.natDegree<K1.p := by rw [deg]; exact hi
     exact pd (Nat.eq_zero_of_dvd_of_lt h lt)
   exact clears_finite b P prim (by omega) dim tame root x int
 end Actual
@@ -1373,28 +1328,36 @@ namespace Lower6960.MonicChart
 noncomputable section
 open Polynomial
 open K1_14 (L)
-open RetainedCompression (Curve ordinate view view_y height heightCap wordDegree abscissa_coeff_height)
+open RetainedCompression (Curve ordinate view view_y height heightCap MarkedBand abscissa_coeff_height)
 open scoped Polynomial Differential
 open Lower6960.RetainedCompression (derivative_weighted_add_le)
 
-private theorem width_at_cutoff (e d : ℕ) (pos : 0<e) :
-    resultantWidth e (heightCap e d) d=(3*e-1)*(e-1)*d := by
+private theorem width_at_cutoff (e d : ℕ) (he : 2≤e) (hd4 : 4 ∣ d) :
+    resultantWidth e (heightCap e d) d = (10*e^2 - 13*e + 3) * (d / 4) := by
+  obtain ⟨d₀, hd₀⟩ := hd4
+  have hdiv : d / 4 = d₀ := by rw [hd₀]; exact Nat.mul_div_cancel_left d₀ (by decide)
   have mul : d*e≤heightCap e d := by
     unfold heightCap
-    rw [mul_comm d e]
-    exact Nat.mul_le_mul_right d (by omega)
-  have eq := resultantWidth_eq (e:=e) (d:=d) pos mul
-  have identity : (2*e-1)*heightCap e d=d*e^2+(3*e-1)*(e-1)*d := by
-    obtain ⟨k,h⟩ := Nat.exists_eq_add_of_le (show 1≤e from pos)
+    rw [hdiv, hd₀]
+    have h1 : 4 * d₀ * e = (4 * e) * d₀ := by ring
+    rw [h1]
+    exact Nat.mul_le_mul_right d₀ (by omega)
+  have eq := resultantWidth_eq (e:=e) (d:=d) (by omega) mul
+  have identity : (2*e-1)*heightCap e d = d*e^2 + (10*e^2 - 13*e + 3) * (d / 4) := by
+    obtain ⟨k,h⟩ := Nat.exists_eq_add_of_le he
     unfold heightCap
-    rw [h,show 2*(1+k)-1=2*k+1 by omega,show 3*(1+k)-1=3*k+2 by omega,
-      show 1+k-1=k by omega]
+    rw [hdiv, hd₀, h]
+    have h1 : 2*(2+k)-1 = 2*k+3 := by omega
+    have h2 : 7*(2+k)-3 = 7*k+11 := by omega
+    have h3 : 10*(2+k)^2 - 13*(2+k) + 3 = 10*k^2 + 27*k + 17 := by
+      have hsq : 10*(2+k)^2 = 10*k^2 + 40*k + 40 := by ring
+      have hlin : 13*(2+k) = 13*k + 26 := by ring
+      rw [hsq, hlin]
+      omega
+    rw [h1, h2, h3]
     ring
   omega
 
-/-- For the actual bounded projected factor, the overlap of the finite
-and infinity chart coefficients has zero derivative. The only overlap
-input is their Frobenius relation in the root field. -/
 theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scalar)]
     [Algebra (RatFunc Scalar) E] [Algebra (Polynomial Scalar) E]
     [IsScalarTower (Polynomial Scalar) (RatFunc Scalar) E]
@@ -1402,8 +1365,9 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
     [Algebra.IsSeparable (RatFunc Scalar) E] [FiniteDimensional (RatFunc Scalar) E]
     [Differential (Polynomial Scalar)] [Differential (Infinity Scalar)] [Differential E]
     [DifferentialAlgebra (Polynomial Scalar) E] [DifferentialAlgebra (Infinity Scalar) E]
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
-    (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
+    (B : MarkedBand)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<B.maxOrd)
+    (bounded : height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree)
     (b : PowerBasis (RatFunc Scalar) E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
     (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
     (overlap : y=(algebraMap (RatFunc Scalar) E RatFunc.X)^K1.p*x+z^K1.p) :
@@ -1415,7 +1379,7 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
   letI : CharP E K1.p := charP_of_injective_ringHom inE.injective K1.p
   let P := RetainedLinear.toSeed (view f)
   let e := f.degreeOf ordinate
-  let H := heightCap e wordDegree
+  let H := heightCap e B.wordDegree
   have deg : P.natDegree=e := (RetainedLinear.toSeed_degree _).trans (view_y _)
   have e2 : 2≤P.natDegree := by omega
   have ep : 0<P.natDegree := by omega
@@ -1424,29 +1388,32 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
   have tame : (P.natDegree:Scalar)≠0 := by
     intro zero
     have dvd := (CharP.cast_eq_zero_iff Scalar K1.p P.natDegree).mp zero
-    exact ep.ne' (Nat.eq_zero_of_dvd_of_lt dvd (deg.symm ▸ hi.trans (by decide)))
+    exact ep.ne' (Nat.eq_zero_of_dvd_of_lt dvd (deg.symm ▸ hi.trans B.small_E))
   have coefficient (j : ℕ) : (P.coeff j).natDegree=((view f).coeff j).natDegree := by
     unfold P RetainedLinear.toSeed
     simp only [coe_mapRingHom,coeff_map,natDegree_map_eq_of_injective (RetainedLinear.incl_injective L)]
   have weights (j : ℕ) (jle : j≤P.natDegree) :
-      (P.coeff j).natDegree+wordDegree*j≤H := by
+      (P.coeff j).natDegree+B.wordDegree*j≤H := by
     rw [coefficient]
     by_cases zero : (view f).coeff j=0
-    · rw [zero,natDegree_zero,zero_add,mul_comm wordDegree]
-      exact Nat.mul_le_mul_right _ (by omega)
-    exact (abscissa_coeff_height f wordDegree j zero).trans bounded
-  have Hfit : wordDegree*P.natDegree≤H :=
+    · rw [zero,natDegree_zero,zero_add]
+      obtain ⟨d₀, hd₀⟩ := B.dvd4
+      have hdiv : B.wordDegree / 4 = d₀ := by rw [hd₀]; exact Nat.mul_div_cancel_left d₀ (by decide)
+      dsimp only [H]; unfold heightCap; rw [hdiv, hd₀]
+      have h1 : 4 * d₀ * j = (4 * j) * d₀ := by ring
+      rw [h1]
+      exact Nat.mul_le_mul_right d₀ (by omega)
+    exact (abscissa_coeff_height f B.wordDegree j zero).trans bounded
+  have Hfit : B.wordDegree*P.natDegree≤H :=
     (Nat.le_add_left ..).trans (weights _ le_rfl)
-  have resBound : (paddedRes P).natDegree≤resultantWidth P.natDegree H wordDegree := by
+  have resBound : (paddedRes P).natDegree≤resultantWidth P.natDegree H B.wordDegree := by
     have h := Lower6960.RetainedCompression.derivative_weighted_add_le P P.natDegree
-      H wordDegree ep weights
-    have eq := resultantWidth_eq (e:=P.natDegree) (d:=wordDegree) (H:=H) ep Hfit
+      H B.wordDegree ep weights
+    have eq := resultantWidth_eq (e:=P.natDegree) (d:=B.wordDegree) (H:=H) ep Hfit
     exact Nat.le_of_add_le_add_right (h.trans_eq eq.symm)
-  have room : 2*resultantWidth P.natDegree H wordDegree<K1.p := by
-    rw [deg,width_at_cutoff e wordDegree (by omega)]
-    exact (Nat.mul_le_mul_left 2 (Nat.mul_le_mul_right wordDegree
-      (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 3 (by omega : e≤47)) 1)
-       (Nat.sub_le_sub_right (by omega : e≤47) 1)))).trans_lt (by decide +kernel)
+  have room : 2*resultantWidth P.natDegree H B.wordDegree<K1.p := by
+    rw [deg,width_at_cutoff e B.wordDegree (by omega) B.dvd4]
+    exact B.room e hi lo
   have tameA : (P.natDegree:(Polynomial Scalar))≠0 := by
     simpa only [map_natCast] using
       (map_ne_zero_iff (Polynomial.C : Scalar→+*(Polynomial Scalar)) Polynomial.C_injective).mpr tame
@@ -1466,7 +1433,7 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
   have dimension : P.natDegree=b.dim :=
     (natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) (RatFunc Scalar)) P).symm.trans
       (size.trans b.natDegree_minpoly)
-  exact common_coboundary_zero_generic b P H wordDegree K1.p prim e2 dimension tame weights
+  exact common_coboundary_zero_generic b P H B.wordDegree K1.p prim e2 dimension tame weights
     resBound room resNZ root x y z fx iy overlap
 
 #print axioms actual_coboundary_zero

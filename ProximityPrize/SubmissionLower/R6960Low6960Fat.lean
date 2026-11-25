@@ -104,18 +104,18 @@ open K1_13 (Row Geom Shape shape InBox Contact)
 open Wide50EulerPrimary (primary_family sourceRank layerNeed)
 open scoped Polynomial
 
-abbrev agreement : ℕ := 179818
-abbrev physicalDegree : ℕ := 133429
+abbrev agreement : ℕ := 179808
+abbrev physicalDegree : ℕ := 133416
 abbrev primaryCutoff : ℕ := 3000*agreement-1
 abbrev primaryRank : ℕ := sourceRank agreement physicalDegree
 abbrev need : ℕ := layerNeed agreement physicalDegree
 
-theorem certified_layers : need = 20767888279330 := by decide +kernel
+theorem certified_layers : need = 20773095809320 := by decide +kernel
 
 /-- The common endpoint supplies all physical degree and agreement data
 for every actual low-height mark. -/
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179818 M Γ) (hi : M.overhead ≤ 2358) :
+    (F : P1.FamilyAt 179808 M Γ) (hi : M.overhead ≤ 2345) :
     Set.InjOn F.scalar (Γ : Set K) ∧
       (∀ γ∈Γ,(F.scalar γ).natDegree≤physicalDegree) ∧
       ∀ γ∈Γ,∃ T : Finset I,agreement≤T.card ∧ ∀ i∈T,(F.scalar γ).eval (node i)=M.word i := by
@@ -124,7 +124,7 @@ theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
     rcases (F.mark γ hγ).scalar_degree with zero | deg
     · simp [zero]
     · change ((F.scalar γ).natDegree : ℤ)≤131071+M.overhead at deg
-      change (F.scalar γ).natDegree≤133429
+      change (F.scalar γ).natDegree≤133416
       omega
   · intro γ hγ
     let Mγ := F.mark γ hγ
@@ -203,7 +203,7 @@ theorem fat_equations : Equations := by
   rcases hcover γ hγ hb with he | ho
   · exact Or.inl (eval_cleared mapQ _ he)
   · refine Or.inr (order_cleared mapR _ ?_)
-    have hres : LowerOrder R (trajectory (extend (s γ))) 23893 :=
+    have hres : LowerOrder R (trajectory (extend (s γ))) 23389 :=
       resultant_order (pad D.left J.a) (pad D.right J.b) (inclConst (P.z γ)) _
         J.degree_left.le J.degree_right.le ⟨mixedOrder_pad J.a ho.1, mixedOrder_pad J.b ho.2⟩
     exact hres
@@ -220,12 +220,12 @@ open Low6960Fat (Holds)
 /-- The actual low family supplies common and resultant equations with the
 revised resultant order. -/
 theorem fat_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179818 M Γ) (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2358) :
+    (F : P1.FamilyAt 179808 M Γ) (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2345) :
     ∃ (book : Finset P1.K) (E : Low6960Fat.FatEquations), book.card≤140000 ∧
       ∀ γ∈Γ,γ∉book → Holds E (extend (F.scalar γ)) := by
   obtain ⟨_,deg,hits⟩ := messages_of_family M F hi
   obtain ⟨pole,hpole⟩ := ModelExactPole.exists_pole M F lo (hi.trans (by decide))
-  have small : pole.H.natDegree≤2358 := by rw [hpole]; omega
+  have small : pole.H.natDegree≤2345 := by rw [hpole]; omega
   exact Low6960Fat.fat_equations M.word Γ F.scalar deg hits pole small
 
 #print axioms fat_of_family

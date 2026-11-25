@@ -153,17 +153,44 @@ theorem Tp_eq (G : Gt) (ph q1 q2 : Shape) (hb : ph.j + 1 ≤ ph.b) (hj : 2 ≤ p
   ring
 
 theorem Tt_le (G : Gt) (ph px q1 q2 : Shape) (num den : ℕ) (hden : 0 < den)
-    (hbh : ph.j + 1 ≤ ph.b) (hjh : 2 ≤ ph.j) (hbx : px.j + 1 ≤ px.b) (hjx : 2 ≤ px.j) (k h1 h2 hx1 hx2 : ℕ)
-    (hk : Low6960Prices.taylorLength - 4 = k) (hh1 : (Low6960Prices.bentLift k ph).2 = h1)
-    (hh2 : (Low6960Prices.bentLift (k + 1) ph).2 = h2) (hx1' : (Low6960Prices.bentLift k px).2 = hx1)
+    (hbx : px.j + 1 ≤ px.b) (hjx : 2 ≤ px.j) (k kh h1 h2 hx1 hx2 : ℕ)
+    (hk : Low6960Prices.taylorLength - 4 = k) (hx1' : (Low6960Prices.bentLift k px).2 = hx1)
     (hx2' : (Low6960Prices.bentLift (k + 1) px).2 = hx2)
-    (hM : ∀ i k', (tpOf ph k h1 h2).ray i k' = G.mat i k')
-    (hθ : ∀ i k' : Fin 3, (den : ℤ) * (tpOf px k hx1 hx2).ray i k' ≤ num * (tpOf ph k h1 h2).ray i k')
+    (hM : ∀ i k', (tpOf ph kh h1 h2).ray i k' = G.mat i k')
+    (hθ : ∀ i k' : Fin 3, (den : ℤ) * (tpOf px k hx1 hx2).ray i k' ≤ num * (tpOf ph kh h1 h2).ray i k')
     (c1 : q1.j ≤ q1.b ∧ 3 * q1.t ≤ q1.j) (c2 : q2.j ≤ q2.b ∧ 3 * q2.t ≤ q2.j) :
     (Gate61.tiltedPair px q1 q2 : ℚ) ≤ (num : ℚ) / den * (TT G q1.b q1.j q1.t q2.b q2.j q2.t : ℚ) := by
-  have h := Gate61Bilinear.tiltedPair_theta px ph q1 q2 num den hbx hjx hbh hjh k hx1 hx2 h1 h2 hk hx1' hx2'
-    hh1 hh2 hθ c1.1 c1.2 c2.1 c2.2
-  rw [Tp_eq G ph q1 q2 hbh hjh k h1 h2 hk hh1 hh2 hM c1 c2] at h
+  have hc1 := Gate61Bilinear.tiltedPair_cone px q1 q2 hbx hjx k hx1 hx2 hk hx1' hx2' c1.1 c1.2 c2.1 c2.2
+  have hc2 : (tpOf ph kh h1 h2).cone ((q1.b - q1.j : ℕ) : ℤ) ((q1.j - 3 * q1.t : ℕ) : ℤ) q1.t
+        ((q2.b - q2.j : ℕ) : ℤ) ((q2.j - 3 * q2.t : ℕ) : ℤ) q2.t =
+      (TT G q1.b q1.j q1.t q2.b q2.j q2.t : ℤ) := by
+    rw [Gate61Bilinear.cone_expand]
+    have e := fun i k' => hM i k'
+    simp only [e, Gt.mat]
+    simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, Fin.isValue]
+    unfold TT
+    push_cast
+    ring
+  have hth := Gate61Bilinear.theta_cone (tpOf px k hx1 hx2) (tpOf ph kh h1 h2) (num : ℤ) (den : ℤ) hθ
+    ((q1.b - q1.j : ℕ) : ℤ) ((q1.j - 3 * q1.t : ℕ) : ℤ) q1.t
+    ((q2.b - q2.j : ℕ) : ℤ) ((q2.j - 3 * q2.t : ℕ) : ℤ) q2.t
+    (by positivity) (by positivity) (by positivity) (by positivity) (by positivity) (by positivity)
+  rw [hc2] at hth
+  have h : den * Gate61.tiltedPair px q1 q2 ≤ num * TT G q1.b q1.j q1.t q2.b q2.j q2.t := by
+    rw [hc1]
+    generalize (tpOf px k hx1 hx2).cone ((q1.b - q1.j : ℕ) : ℤ) ((q1.j - 3 * q1.t : ℕ) : ℤ) q1.t
+      ((q2.b - q2.j : ℕ) : ℤ) ((q2.j - 3 * q2.t : ℕ) : ℤ) q2.t = A at hth ⊢
+    have eA : (A.toNat : ℤ) = max A 0 := Int.toNat_eq_max A
+    have hB : (0 : ℤ) ≤ (TT G q1.b q1.j q1.t q2.b q2.j q2.t : ℤ) := by positivity
+    have hn : (0 : ℤ) ≤ num := by positivity
+    have hd : (0 : ℤ) ≤ den := by positivity
+    have : ((den * A.toNat : ℕ) : ℤ) ≤ ((num * TT G q1.b q1.j q1.t q2.b q2.j q2.t : ℕ) : ℤ) := by
+      push_cast
+      rw [eA]
+      rcases le_total 0 A with hA | hA
+      · rw [max_eq_left hA]; exact hth
+      · rw [max_eq_right hA]; nlinarith
+    exact_mod_cast this
   have hq : (den : ℚ) * (Gate61.tiltedPair px q1 q2 : ℚ) ≤ num * (TT G q1.b q1.j q1.t q2.b q2.j q2.t : ℚ) := by
     exact_mod_cast h
   have hd : (0 : ℚ) < den := by exact_mod_cast hden
@@ -193,13 +220,13 @@ theorem rhs_le_tilted (f : Row 4) (G : Gt) (hG : G.Ok) (hlift : G.lift = false) 
     (hlo : G.lb ≤ (shape f).b ∧ G.lj ≤ (shape f).j ∧ G.lt ≤ (shape f).t)
     (hhi : (shape f).b ≤ G.xb ∧ (shape f).j ≤ G.xj ∧ (shape f).t ≤ G.xt)
     (htf : 3 * (shape f).t + 3 ≤ (shape f).j ∧ (shape f).j + 1 ≤ (shape f).b)
-    (k h1 h2 hx1 hx2 : ℕ) (hk : Low6960Prices.taylorLength - 4 = k)
-    (hh1 : (Low6960Prices.bentLift k ⟨G.xb, G.xj, G.xt⟩).2 = h1)
-    (hh2 : (Low6960Prices.bentLift (k + 1) ⟨G.xb, G.xj, G.xt⟩).2 = h2)
+    (k kh h1 h2 hx1 hx2 : ℕ) (hk : Low6960Prices.taylorLength - 4 = k)
+    (hh1 : (Low6960Prices.bentLift kh ⟨G.xb, G.xj, G.xt⟩).2 = h1)
+    (hh2 : (Low6960Prices.bentLift (kh + 1) ⟨G.xb, G.xj, G.xt⟩).2 = h2)
     (hx1' : (Low6960Prices.bentLift k (shape f)).2 = hx1) (hx2' : (Low6960Prices.bentLift (k + 1) (shape f)).2 = hx2)
-    (hM : ∀ i k', (tpOf ⟨G.xb, G.xj, G.xt⟩ k h1 h2).ray i k' = G.mat i k')
+    (hM : ∀ i k', (tpOf ⟨G.xb, G.xj, G.xt⟩ kh h1 h2).ray i k' = G.mat i k')
     (num den Ax : ℕ) (hden : 0 < den)
-    (hθ : ∀ i k' : Fin 3, (den : ℤ) * (tpOf (shape f) k hx1 hx2).ray i k' ≤ num * (tpOf ⟨G.xb, G.xj, G.xt⟩ k h1 h2).ray i k')
+    (hθ : ∀ i k' : Fin 3, (den : ℤ) * (tpOf (shape f) k hx1 hx2).ray i k' ≤ num * (tpOf ⟨G.xb, G.xj, G.xt⟩ kh h1 h2).ray i k')
     (hA : num * G.A ≤ den * Ax)
     (qs : Shape) (hqs : qs = ⟨G.sep.1, G.sep.2.1, G.sep.2.2⟩)
     (r a cn vn W : ℕ) (B η : Fin 3 → ℕ) (hρ : a < r) (hcn : cn ≤ 2 * (r - a))
@@ -245,7 +272,7 @@ theorem rhs_le_tilted (f : Row 4) (G : Gt) (hG : G.Ok) (hlift : G.lift = false) 
     rw [div_le_one hpos]; exact_mod_cast hcn
   have hv0 : (0 : ℚ) ≤ (vn : ℚ) / 10000000 := by positivity
   have T := fun (q1 q2 : Shape) (c1 : q1.j ≤ q1.b ∧ 3 * q1.t ≤ q1.j) (c2 : q2.j ≤ q2.b ∧ 3 * q2.t ≤ q2.j) =>
-    Tt_le G ⟨G.xb, G.xj, G.xt⟩ (shape f) q1 q2 num den hden hbh hjh (by omega) (by omega) k h1 h2 hx1 hx2 hk hh1 hh2
+    Tt_le G ⟨G.xb, G.xj, G.xt⟩ (shape f) q1 q2 num den hden (by omega) (by omega) k kh h1 h2 hx1 hx2 hk
       hx1' hx2' hM hθ c1 c2
   have cx : (shape f).j ≤ (shape f).b ∧ 3 * (shape f).t ≤ (shape f).j := ⟨by omega, by omega⟩
   have cX : Cone (mx G.xb G.xj) G.xj G.xt := ⟨by rw [mx_eq]; exact le_max_right _ _, hxt⟩
@@ -405,13 +432,13 @@ theorem price_T {w : P3.I → K} {Γ : Finset K} {s : K → (Polynomial K)} {f :
     (hpos : 0 < G.lb ∧ 0 < G.lj ∧ 0 < G.lt)
     (hlo : G.lb ≤ (shape f).b ∧ G.lj ≤ (shape f).j ∧ G.lt ≤ (shape f).t)
     (hhi : (shape f).b ≤ G.xb ∧ (shape f).j ≤ G.xj ∧ (shape f).t ≤ G.xt)
-    (k h1 h2 hx1 hx2 : ℕ) (hk : Low6960Prices.taylorLength - 4 = k)
-    (hh1 : (Low6960Prices.bentLift k ⟨G.xb, G.xj, G.xt⟩).2 = h1)
-    (hh2 : (Low6960Prices.bentLift (k + 1) ⟨G.xb, G.xj, G.xt⟩).2 = h2)
+    (k kh h1 h2 hx1 hx2 : ℕ) (hk : Low6960Prices.taylorLength - 4 = k)
+    (hh1 : (Low6960Prices.bentLift kh ⟨G.xb, G.xj, G.xt⟩).2 = h1)
+    (hh2 : (Low6960Prices.bentLift (kh + 1) ⟨G.xb, G.xj, G.xt⟩).2 = h2)
     (hx1' : (Low6960Prices.bentLift k (shape f)).2 = hx1) (hx2' : (Low6960Prices.bentLift (k + 1) (shape f)).2 = hx2)
-    (hM : ∀ i k', (tpOf ⟨G.xb, G.xj, G.xt⟩ k h1 h2).ray i k' = G.mat i k')
+    (hM : ∀ i k', (tpOf ⟨G.xb, G.xj, G.xt⟩ kh h1 h2).ray i k' = G.mat i k')
     (num den Ax : ℕ) (hden : 0 < den)
-    (hθ : ∀ i k' : Fin 3, (den : ℤ) * (tpOf (shape f) k hx1 hx2).ray i k' ≤ num * (tpOf ⟨G.xb, G.xj, G.xt⟩ k h1 h2).ray i k')
+    (hθ : ∀ i k' : Fin 3, (den : ℤ) * (tpOf (shape f) k hx1 hx2).ray i k' ≤ num * (tpOf ⟨G.xb, G.xj, G.xt⟩ kh h1 h2).ray i k')
     (hA : num * G.A ≤ den * Ax)
     (r0 : ℕ) (ws : List ℕ) (ht : Gate61ClassTable.tableOK r0 ws = true) (lv : Lv) (n : ℕ) (hn : n = lv.length)
     (hr0 : r0 + ws.length ≤ n + 1) (hL : n ≤ Gate61Final.levelCount)
@@ -463,7 +490,7 @@ theorem price_T {w : P3.I → K} {Γ : Finset K} {s : K → (Polynomial K)} {f :
   obtain ⟨hlt, hI⟩ := hI_of_free G hG hxt hpos r0 ws lv n hn hr0 hall ρ0 amax hρ0 hru hamax hS0 hS1 hS2 i
     (fun k => coord (shape f) k) hxl a η hfit hv hfree
   have hc : (cvOf r0 ws (i + 1) a).1 ≤ 2 * (i + 1 - a) := cvOf_le r0 ws (i + 1) a
-  have hr := rhs_le_tilted f G hG hlift hsc hxt hbh hjh hlo hhi htf k h1 h2 hx1 hx2 hk hh1 hh2 hx1' hx2' hM num den Ax hden
+  have hr := rhs_le_tilted f G hG hlift hsc hxt hbh hjh hlo hhi htf k kh h1 h2 hx1 hx2 hk hh1 hh2 hx1' hx2' hM num den Ax hden
     hθ hA qs hqs (i + 1) a _ _ (Wof lv i) (Bof lv i) η hlt hc hI
   exact hng ⟨hlt, certF_class ht hlt, hr⟩
 

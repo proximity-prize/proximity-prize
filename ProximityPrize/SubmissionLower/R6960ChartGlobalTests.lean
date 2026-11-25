@@ -172,7 +172,7 @@ theorem frame_ratio (D : ℕ) (t s : Chart) :
       RatFunc.X_ne_zero,scalar_ne] <;> field_simp [RatFunc.X_ne_zero,scalar_ne]
 variable {E : Type*} [Field E] [Algebra ChartField E]
 theorem simultaneous_tests (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : f.degreeOf ordinate<48) (b : PowerBasis ChartField E)
+    (hi : f.degreeOf ordinate<K1.p) (b : PowerBasis ChartField E)
     (root : aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     ∃ n D : ℕ, ∃ P : E →ₗ[ChartField] (Fin n → ChartField), ∀ s (x : E),
       IsIntegral (baseChart s) x ↔ ∀ j, P x j / frame D D s ∈ baseChart s := by

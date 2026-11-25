@@ -282,9 +282,9 @@ analytic pricing theorems supplied by the guarded 69.60 modules. -/
 theorem count_with_receipts (receipts : ∀ k : Band, Receipt k) {G : Shape → ℕ}
     (htab : GateTable (fun k => (receipts k).orders) G) (gate : Low6960RetainedCut.GateBank G)
     {cap u del Γ}
-    (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179818 M Γ)
-    (lo : 1≤M.overhead) (hi : M.overhead≤2358) :
-    Γ.card≤266228295297719504 := by
+    (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179808 M Γ)
+    (lo : 1≤M.overhead) (hi : M.overhead≤2345) :
+    Γ.card≤272188771910282110 := by
   have messages := Low6960Order.messages_of_family M F hi
   obtain ⟨P,nz,box,active,weight,zero⟩ := Low6960Anchor.anchor_of_family M F hi
   have hw : TrueWeightLE P anchorCutoff := by

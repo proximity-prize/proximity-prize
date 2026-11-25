@@ -50,7 +50,7 @@ open K1_13_1_1 (exponent_le_of_mem_translation_monomial)
 def WideEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
   u.some.degree ≤ 136 ∧ u.some.weight (fun i => i.val) ≤ 57 ∧ u (some 3) ≤ 14 ∧
     u.some.degree ≤ gradeLimit (u (some 1) + u (some 2) + u (some 3)) ∧
-    u.weight (differentialWeight 133429) ≤ 101 * 179818 - 1 + 57
+    u.weight (differentialWeight 133416) ≤ 101 * 179808 - 1 + 57
 
 def wideSpace : Submodule Geom (DifferentialPolynomial Geom 3) :=
   MvPolynomial.restrictSupport Geom {u | WideEligible u}
@@ -175,12 +175,12 @@ theorem per_position (x y : Geom) :
   (rank_at_point_le_origin x y).trans Final50Rank.origin_rank
 
 theorem finiteWide : Module.Finite Geom wideSpace := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133429 j ≠ 0 := by
+  have hpositive (j : JetVariable 3) : differentialWeight 133416 j ≠ 0 := by
     cases j with
     | none => decide
     | some j =>
       have hj := j.isLt
-      change 133429 - j.val ≠ 0
+      change 133416 - j.val ≠ 0
       omega
   exact MvPolynomial.restrictSupport_finite <|
     (Finsupp.finite_of_nat_weight_le _ hpositive _).subset fun _ hu => hu.2.2.2.2
@@ -238,8 +238,8 @@ theorem active_bound (Q : wideSpace) :
   omega
 
 theorem rawWeight (Q : wideSpace) :
-    differentialWeightedDegree 133429 (Q : DifferentialPolynomial Geom 3) ≤
-      101 * 179818 - 1 + 57 := by
+    differentialWeightedDegree 133416 (Q : DifferentialPolynomial Geom 3) ≤
+      101 * 179808 - 1 + 57 := by
   rw [differentialWeightedDegree, MvPolynomial.weightedTotalDegree, Finset.sup_le_iff]
   exact fun m hm => (Q.property hm).2.2.2.2
 

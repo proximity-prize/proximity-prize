@@ -118,9 +118,9 @@ theorem paired_bound (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)]
   have dt:tx= -(t:ℤ) := by dsimp [t]; omega
   exact ⟨finite,s,t,dt ▸ xt,ds ▸ zt,by omega⟩
 #print axioms paired_bound
-open RetainedCompression (Curve ordinate view height heightCap wordDegree)
-theorem actual_surface_budget (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
-    (hi:f.degreeOf ordinate<48) (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
+open RetainedCompression (Curve ordinate view height heightCap MarkedBand)
+theorem actual_surface_budget (B:MarkedBand) (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
+    (hi:f.degreeOf ordinate<B.maxOrd) (bounded:height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree)
     (basis:PowerBasis ChartField E)
     (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
     ∃ (x z:L) (nx:x≠0) (nz:z≠0) (m n s t:ℕ),
@@ -131,13 +131,14 @@ theorem actual_surface_budget (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3�
       (rawMap E x z).ker=coboundaries E ∧ FiniteDimensional L (Paired E x z) ∧
       finrank L (Paired E x z)≤s+t := by
   have : FiniteDimensional ChartField E := basis.finite
-  have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi basis root
-  obtain ⟨x,z,nx,nz,⟨B⟩,red⟩:=actual_crossing E f ir lo hi basis root
-  have : FiniteDimensional L (Crossing E x z) := Module.Finite.of_basis B
+  have hiP : f.degreeOf ordinate < K1.p := hi.trans B.small_E
+  have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hiP basis root
+  obtain ⟨x,z,nx,nz,⟨B_bas⟩,red⟩:=actual_crossing E f ir lo hiP basis root
+  have : FiniteDimensional L (Crossing E x z) := Module.Finite.of_basis B_bas
   obtain ⟨m,⟨xf⟩,⟨xi⟩⟩:=native_frames E false x nx
   obtain ⟨n,⟨zf⟩,⟨zi⟩⟩:=native_frames E true z nz
   obtain ⟨finite,s,t,dt,ds,count⟩:=paired_bound E x z nx nz xf xi zf zi
   exact ⟨x,z,nx,nz,m,n,s,t,xf,xi,zf,zi,dt,ds,
-    restriction_kernel E f ir lo hi bounded basis root x z nx nz,finite,count⟩
+    restriction_kernel E B f ir lo hi bounded basis root x z nx nz,finite,count⟩
 #print axioms actual_surface_budget
 end Lower6960.RetainedSurfaceClass

@@ -627,7 +627,7 @@ structure Inventory (Γ : Finset K) (s : K→(Polynomial K)) where
   fat_at : ∀ i γ,γ∈pieces i → Low6960Fat.Holds fat (extend (s γ))
   cover_count : Γ.card ≤ book.card+low.card+∑ i,(pieces i).card
 theorem inventory_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179818 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2358) :
+    (F : P1.FamilyAt 179808 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2345) :
     Nonempty (Inventory Γ F.scalar) := by
   obtain ⟨P,hP,hbox,hact,weight,vanish⟩ := Low6960Anchor.anchor_of_family M F hi
   have hw : TrueWeightLE P anchorCutoff := by
