@@ -30,7 +30,7 @@ structure Envelope where
 
 def Fits (p : Envelope) (x : Shape) : Prop :=
   p.widthLow ≤ x.b ∧ x.b ≤ p.widthHigh ∧ p.indexLow ≤ x.j ∧ x.j ≤ p.indexHigh ∧
-    p.topLow ≤ x.t ∧ p.taperLow ≤ 26*x.b ∧ min (26*x.b+25*x.j) (x.b+25*171) ≤ p.taperHigh
+    p.topLow ≤ x.t ∧ p.taperLow ≤ 26*x.b ∧ min (26*x.b+25*x.j) (x.b+25*177) ≤ p.taperHigh
 
 def RayBounds (p : Envelope) (x : Shape) (amount : ℕ) : Prop :=
   let w := weights .tilted x
@@ -51,7 +51,7 @@ instance (p : Envelope) (x : Shape) (u : Rate) : Decidable (Pays p x u) := by
 def first : Envelope := ⟨106,48,4,132,53,2756,4257,⟨4886433,26118015,6676780⟩,1966580209⟩
 
 def Allowed (x : Shape) (u : Rate) : Prop :=
-  Low6960SharedPrice.RateFits x u ∨ Pays first x u
+  Low6960SharedPrice.RateFits x u
 
 instance (x : Shape) (u : Rate) : Decidable (Allowed x u) := by unfold Allowed; infer_instance
 
@@ -380,11 +380,10 @@ instance (p : Envelope) (x : Shape) (u : Rate) : Decidable (PaysF p x u) := by
   unfold PaysF Fits RayBoundsF
   infer_instance
 def AllowedF (x : Shape) (u : Rate) : Prop :=
-  RateFitsF x u ∨ PaysF first x u
+  RateFitsF x u
 instance (x : Shape) (u : Rate) : Decidable (AllowedF x u) := by unfold AllowedF; infer_instance
-theorem allowedF_iff (x : Shape) (u : Rate) : AllowedF x u ↔ Low6960WeightedRate.Allowed x u := by
-  simp only [AllowedF, Low6960WeightedRate.Allowed, PaysF, Low6960WeightedRate.Pays, RayBoundsF,
-    Low6960WeightedRate.RayBounds, rateFitsF_iff, weightsF_eq]
+theorem allowedF_iff (x : Shape) (u : Rate) : AllowedF x u ↔ Low6960WeightedRate.Allowed x u :=
+  rateFitsF_iff x u
 open Low6960Allocation (Band MassCell start order allowance)
 open Low6960Rectangle (hullOf)
 def PaidFourF {k : Band} (cells : List (MassCell k)) (t bl jl bh jh l : ℕ) : Prop :=

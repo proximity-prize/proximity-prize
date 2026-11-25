@@ -375,7 +375,7 @@ set_option backward.isDefEq.respectTransparency.types false
 namespace Lower6960.RetainedChartGluing
 open ChartSections (Chart)
 open MonicChart MonicFourChartDescent MonicScalarCorrection ChartGlobalTests
-open RetainedCompression (Curve ordinate view height heightCap TameBand)
+open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 open Polynomial
 open K1_14 (L)
 open Lower6960.MonicFourChartDescent (finite_inclusion infinity_inclusion)
@@ -384,7 +384,7 @@ private theorem frame_add (a b D : ℕ) (s : Chart) :
   simp only [frame,pow_add]; ring
 variable {E : Type*} [Field E] [Algebra ChartField E]
 theorem high_twist (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : f.degreeOf ordinate<64) (basis : PowerBasis ChartField E)
+    (hi : f.degreeOf ordinate<48) (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     ∃ H : ℕ, ∀ a b, H<a → H<b →
       ∀ u : Chart→E, Compatible a b u → ∃ c, Correction a b u c := by
@@ -435,23 +435,23 @@ theorem high_twist (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.d
   rw [←Algebra.smul_def,map_smul,map_sub,pv,Pi.smul_apply,smul_eq_mul,Pi.sub_apply,frames,
     mul_right_comm,mul_div_cancel_right₀ _ (frame_ne D D s)]
   exact sol r s
-theorem common_correction (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : TameBand (f.degreeOf ordinate) degD) (bounded : height degD f≤heightCap (f.degreeOf ordinate) degD)
+theorem common_correction (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (a b : ℕ) (ha : 0<a) (hb : 0<b) (u : Chart→E) (compatible : Compatible a b u) :
     ∃ c : E, Correction a b u c := by
-  obtain ⟨H,high⟩:=high_twist f ir lo hi.lt_64 basis root
+  obtain ⟨H,high⟩:=high_twist f ir lo hi basis root
   have large : H<K1.p^H := Nat.lt_pow_self KoalaBear.is_prime.one_lt
   have above {d : ℕ} (pos : 0<d) : H<d*K1.p^H :=
     large.trans_le (Nat.le_mul_of_pos_left _ pos)
   obtain ⟨c,hc⟩:=high _ _ (above ha) (above hb) _ (compatible_iterate a b u compatible H)
-  obtain ⟨d,_,hd⟩ := descend_iterate degD f ir lo hi bounded basis root a b ha u H c hc
+  obtain ⟨d,_,hd⟩ := descend_iterate f ir lo hi bounded basis root a b ha u H c hc
   exact ⟨d,hd⟩
 #print axioms high_twist
 #print axioms common_correction
-theorem split_cocycle (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : TameBand (f.degreeOf ordinate) degD) (bounded : height degD f≤heightCap (f.degreeOf ordinate) degD)
+theorem split_cocycle (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (a b : ℕ) (ha : 0<a) (hb : 0<b) (g : Chart→Chart→E)
@@ -462,7 +462,7 @@ theorem split_cocycle (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible 
       ∀ s t, g s t=w s-w t := by
   let u (s : Chart):=g s (false,false)
   have diff (s t) : u s-u t=g s t := sub_eq_of_eq_add (add s t (false,false)).symm
-  obtain ⟨c,hc⟩:=common_correction degD f ir lo hi bounded basis root a b ha hb u
+  obtain ⟨c,hc⟩:=common_correction f ir lo hi bounded basis root a b ha hb u
     (fun s t=> by rw [diff]; exact regular s t)
   exact ⟨fun s=>u s-c,hc,fun s t=>by rw [←diff]; ring⟩
 #print axioms split_cocycle
@@ -481,7 +481,7 @@ open MonicFourChartDescent ChartSections MonicChart RetainedChartGluing
 open ChartGlobalTests (frame_ne)
 open MonicChartLaurent (overlapRing)
 open MonicChartProbes (planeMap planeMap_injective)
-open RetainedCompression (Curve ordinate view height heightCap TameBand)
+open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 open Polynomial
 open K1_14 (L)
 def lines (x z : L) : ChartField :=
@@ -511,8 +511,8 @@ theorem local_equation (x z : L) (s : Chart) : lines x z / frame 1 1 s∈baseCha
   exact (baseChart s).mul_mem (linear_factor _ _ _ _ RatFunc.X_ne_zero Xmem (constants_mem x))
     (linear_factor _ _ _ _ ChartOverlapTests.scalar_ne Zmem (constants_mem z))
 variable {E : Type*} [Field E] [Algebra ChartField E]
-theorem split_of_split_on_lines (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : TameBand (f.degreeOf ordinate) degD) (bounded : height degD f≤heightCap (f.degreeOf ordinate) degD)
+theorem split_of_split_on_lines (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (x z : L) (g : Chart→Chart→E) (add : ∀ s t r, g s t+g t r=g s r)
@@ -537,7 +537,7 @@ theorem split_of_split_on_lines (degD : ℕ) (f : Curve (Polynomial L)) (ir : Ir
       change ι (frame 1 1 s)*(P/ι (frame 1 1 s)*r/P)=r
       field_simp
     rwa [recover]
-  obtain ⟨w,localW,diff⟩:=split_cocycle degD f ir lo hi bounded basis root 1 1 (by decide) (by decide) h coc twist
+  obtain ⟨w,localW,diff⟩:=split_cocycle f ir lo hi bounded basis root 1 1 (by decide) (by decide) h coc twist
   refine ⟨fun s=>v s+P*w s,fun s=>(localV s).add ?_,fun s t=>?_⟩
   · have integral : IsIntegral (baseChart s) (ι (lines x z/frame 1 1 s)) :=
       isIntegral_algebraMap (x:=(⟨_, local_equation x z s⟩ : baseChart s))

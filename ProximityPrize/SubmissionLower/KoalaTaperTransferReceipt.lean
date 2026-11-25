@@ -8,7 +8,6 @@ import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins3Part1562
 import ProximityPrize.SubmissionLower.KoalaTaperTransfer
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRaw
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins2
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins0
 
 -- merged module Low48PrimaryPivotBins3Part1626
 section Merged_Low48PrimaryPivotBins3Part1626
@@ -87,11 +86,9 @@ theorem node_rank (x y : Geom) :
       (LinearMap.range ((localConstraintAt 3000 x y).domRestrict
         (TaperNormalize.space cap))) ≤ localRank := by
   apply node_rank_of_receipts x y
-  · rw [rawWindow_w0, rawWindow_w2, rawWindow_w3]
-  · have h0 := debit_le_binCompute w0 (by decide)
-    have h2 := debit_le_binCompute w2 (by decide)
+  · rw [rawWindow_w2, rawWindow_w3]
+  · have h2 := debit_le_binCompute w2 (by decide)
     have h3 := debit_le_binCompute w3 (by decide)
-    rw [binCompute0] at h0
     rw [binCompute2] at h2
     rw [binCompute3] at h3
     omega

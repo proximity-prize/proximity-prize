@@ -1,15 +1,33 @@
 import ProximityPrize.SubmissionLower.Gate61Assm
 import ProximityPrize.SubmissionLower.Gate61GateT
 import ProximityPrize.SubmissionLower.Gate61ThetaOrd
-import ProximityPrize.SubmissionLower.Gate61DatET1
-import ProximityPrize.SubmissionLower.Gate61DatET2
-import ProximityPrize.SubmissionLower.Gate61DatO1
-import ProximityPrize.SubmissionLower.Gate61DatO2
-import ProximityPrize.SubmissionLower.Gate61SumET1
-import ProximityPrize.SubmissionLower.Gate61SumET2
-import ProximityPrize.SubmissionLower.Gate61SumO1
-import ProximityPrize.SubmissionLower.Gate61SumO2
 import ProximityPrize.SubmissionLower.R6960Low6960Gates
+import ProximityPrize.SubmissionLower.Gate61DatTB
+import ProximityPrize.SubmissionLower.Gate61SumTB
+import ProximityPrize.SubmissionLower.Gate61DatTM1
+import ProximityPrize.SubmissionLower.Gate61SumTM1
+import ProximityPrize.SubmissionLower.Gate61DatTM2
+import ProximityPrize.SubmissionLower.Gate61SumTM2
+import ProximityPrize.SubmissionLower.Gate61DatMLJ
+import ProximityPrize.SubmissionLower.Gate61SumMLJ
+import ProximityPrize.SubmissionLower.Gate61DatRL
+import ProximityPrize.SubmissionLower.Gate61SumRL
+import ProximityPrize.SubmissionLower.Gate61DatR53a
+import ProximityPrize.SubmissionLower.Gate61SumR53a
+import ProximityPrize.SubmissionLower.Gate61DatR53b
+import ProximityPrize.SubmissionLower.Gate61SumR53b
+import ProximityPrize.SubmissionLower.Gate61DatRJa
+import ProximityPrize.SubmissionLower.Gate61SumRJa
+import ProximityPrize.SubmissionLower.Gate61DatRJb
+import ProximityPrize.SubmissionLower.Gate61SumRJb
+import ProximityPrize.SubmissionLower.Gate61DatLOA
+import ProximityPrize.SubmissionLower.Gate61SumLOA
+import ProximityPrize.SubmissionLower.Gate61DatLOB
+import ProximityPrize.SubmissionLower.Gate61SumLOB
+import ProximityPrize.SubmissionLower.Gate61DatLOD
+import ProximityPrize.SubmissionLower.Gate61SumLOD
+import ProximityPrize.SubmissionLower.Gate61DatLO3
+import ProximityPrize.SubmissionLower.Gate61SumLO3
 
 -- merged module Gate61FinalOrd
 section Merged_Gate61FinalOrd
@@ -444,11 +462,10 @@ end Gate61Cell
 
 end Merged_Gate61GateO
 
--- merged module Gate61Fin
 section Merged_Gate61Fin
 
 set_option autoImplicit false
-set_option maxHeartbeats 3000000
+set_option maxHeartbeats 20000000
 set_option maxRecDepth 200000
 set_option Elab.async false
 
@@ -457,7 +474,7 @@ open Gate61Cell
 open K1_13 (Shape shape)
 open Gate61Bilinear (tpOf opOf)
 
-def DEN : ℕ := 10000000
+def DEN : ℕ := 1000000000000
 def kT : ℕ := Low6960Prices.taylorLength - 4
 def rayT (p : Shape) : Fin 3 → Fin 3 → ℤ :=
   (tpOf p kT (Low6960Prices.bentLift kT p).2 (Low6960Prices.bentLift (kT + 1) p).2).ray
@@ -481,35 +498,77 @@ def inR (G : Gt) (x : Shape) : Bool :=
   Nat.ble G.lb x.b && Nat.ble G.lj x.j && Nat.ble G.lt x.t && Nat.ble x.b G.xb && Nat.ble x.j G.xj && Nat.ble x.t G.xt
 def tfB (x : Shape) : Bool := Nat.ble (3 * x.t + 3) x.j && Nat.ble (x.j + 1) x.b
 
-def cls (x : Shape) : ℕ :=
-  if inR Gate61DatET1.G x = true ∧ tfB x = true then 1
-  else if inR Gate61DatET2.G x = true ∧ tfB x = true then 2
-  else if inR Gate61DatO1.G x = true ∧ tfB x = false then 3
-  else if inR Gate61DatO2.G x = true ∧ tfB x = false then 4 else 0
-
 def numT (G : Gt) (x : Shape) : ℕ := thNum (rayT x) (rayT (hiS G))
 def numO (G : Gt) (x : Shape) : ℕ := thNum (rayO x) (rayO (hiS G))
 def Ax (num A : ℕ) : ℕ := (num * A + DEN - 1) / DEN
 
-def Gfun (x : Shape) : ℕ :=
-  if cls x = 1 then Ax (numT Gate61DatET1.G x) Gate61DatET1.G.A
-  else if cls x = 2 then Ax (numT Gate61DatET2.G x) Gate61DatET2.G.A
-  else if cls x = 3 then Ax (numO Gate61DatO1.G x) Gate61DatO1.G.A
-  else if cls x = 4 then Ax (numO Gate61DatO2.G x) Gate61DatO2.G.A else 0
+def valid (x : Shape) : Bool := Nat.ble x.j (2 * x.b + x.t)
 
+def Gk : ℕ → Gt
+  | 1 => Gate61DatTB.G
+  | 2 => Gate61DatTM1.G
+  | 3 => Gate61DatTM2.G
+  | 4 => Gate61DatMLJ.G
+  | 5 => Gate61DatRL.G
+  | 6 => Gate61DatR53a.G
+  | 7 => Gate61DatR53b.G
+  | 8 => Gate61DatRJa.G
+  | 9 => Gate61DatRJb.G
+  | 10 => Gate61DatLOA.G
+  | 11 => Gate61DatLOB.G
+  | 12 => Gate61DatLOD.G
+  | 13 => Gate61DatLO3.G
+  | _ => Gate61DatTB.G
+def isT : ℕ → Bool
+  | 1 => true
+  | 2 => true
+  | 3 => true
+  | 4 => true
+  | 5 => true
+  | 6 => true
+  | 7 => true
+  | 8 => true
+  | 9 => true
+  | 10 => false
+  | 11 => false
+  | 12 => false
+  | 13 => false
+  | _ => false
+
+def okK (k : ℕ) (x : Shape) : Bool := valid x && inR (Gk k) x && (if isT k then tfB x else !tfB x)
+
+def clsTab : ℕ → List (ℕ × ℕ × ℕ × ℕ)
+  | 2 => [(44,139,141,1), (45,134,141,1), (46,130,141,1), (47,126,141,1), (48,125,141,1), (49,122,141,1), (50,119,141,1), (51,116,141,1), (52,114,141,1), (53,111,141,1), (54,109,141,1), (55,107,107,1), (55,113,140,1), (55,141,141,7), (56,111,114,7), (56,115,139,1), (56,140,141,7), (57,118,141,1), (58,115,139,1), (58,140,141,8), (59,112,141,8)]
+  | 3 => [(46,137,141,1), (47,133,141,1), (48,129,141,1), (49,126,141,1), (50,122,141,1), (51,119,141,1), (52,117,141,1), (53,114,141,1), (54,112,141,1), (55,109,141,1), (56,107,108,5), (56,109,141,1), (57,115,141,1), (58,111,141,1), (59,109,110,5), (59,111,141,8)]
+  | 4 => [(44,139,140,1), (45,134,141,1), (46,130,141,1), (47,126,141,1), (48,122,122,1), (48,124,141,1), (49,121,141,1), (50,117,141,1), (51,114,141,1), (52,111,141,1), (53,109,141,1), (54,107,141,1), (55,104,141,1), (56,102,102,5), (56,103,141,1), (57,111,141,1), (58,108,141,1), (59,105,120,1), (59,121,141,8)]
+  | 5 => [(43,141,141,1), (44,135,141,1), (45,130,141,1), (46,126,141,1), (47,121,141,1), (48,118,141,1), (49,114,141,1), (50,111,111,1), (50,113,141,1), (51,110,141,1), (52,107,141,1), (53,105,141,1), (54,102,141,1), (55,100,141,1), (56,98,141,1), (57,108,141,1), (58,105,141,1), (59,102,141,1)]
+  | 6 => [(43,137,141,1), (44,132,141,1), (45,127,141,1), (46,122,141,1), (47,118,141,1), (48,114,141,1), (49,111,141,1), (50,108,141,1), (51,105,141,1), (52,104,141,1), (53,101,141,1), (54,99,141,1), (55,96,141,1), (56,94,141,1), (57,104,141,1), (58,101,141,1), (59,98,141,1)]
+  | 7 => [(42,141,141,4), (43,135,137,1), (43,138,141,4), (44,129,140,1), (44,141,141,4), (45,124,139,1), (45,140,140,4), (45,141,141,1), (46,120,141,1), (47,116,141,1), (48,112,141,1), (49,108,141,1), (50,105,141,1), (51,102,141,1), (52,101,141,1), (53,98,141,1), (54,96,141,1), (55,93,141,1), (56,91,141,1), (57,101,141,1), (58,98,141,1), (59,95,141,1)]
+  | 8 => [(42,140,141,4), (43,133,141,4), (44,128,141,4), (45,123,141,4), (46,118,119,1), (46,120,141,4), (47,114,122,1), (47,123,141,4), (48,110,124,1), (48,125,141,4), (49,106,126,1), (49,127,141,4), (50,103,128,1), (50,129,141,4), (51,100,130,1), (51,131,141,4), (52,97,132,1), (52,133,141,4), (53,96,134,1), (53,135,141,6), (54,93,94,5), (54,95,136,1), (54,137,141,6), (55,91,100,5), (55,101,138,1), (55,139,141,6), (56,89,105,5), (56,106,140,1), (56,141,141,6), (57,99,141,1), (58,96,141,1), (59,93,141,1)]
+  | 9 => [(42,139,141,2), (43,132,141,2), (44,127,141,2), (45,121,141,2), (46,117,141,2), (47,112,141,2), (48,108,141,2), (49,105,141,2), (50,101,141,2), (51,98,141,2), (52,95,141,2), (53,92,92,2), (53,94,141,2), (54,91,141,2), (55,89,141,2), (56,87,96,5), (56,97,141,2), (57,98,141,2), (58,94,141,2), (59,91,141,2)]
+  | 10 => [(42,138,141,4), (43,132,141,4), (44,126,129,2), (44,130,141,4), (45,121,132,2), (45,133,141,4), (46,116,134,2), (46,135,141,4), (47,111,136,2), (47,137,141,4), (48,107,139,2), (48,140,141,4), (49,103,141,2), (50,100,141,2), (51,97,141,2), (52,94,141,2), (53,91,141,2), (54,90,141,2), (55,87,141,2), (56,85,93,5), (56,94,141,2), (57,96,141,2), (58,93,141,2), (59,90,141,2)]
+  | 11 => [(42,139,141,4), (43,132,141,4), (44,126,141,4), (45,120,141,4), (46,115,118,2), (46,119,141,4), (47,111,120,2), (47,121,141,4), (48,107,122,2), (48,123,141,4), (49,103,124,2), (49,125,141,4), (50,99,126,2), (50,127,141,4), (51,96,128,2), (51,129,141,4), (52,93,130,2), (52,131,141,4), (53,90,132,2), (53,133,141,6), (54,89,93,5), (54,94,134,2), (54,135,141,6), (55,86,101,5), (55,102,136,2), (55,137,141,6), (56,84,108,5), (56,109,138,2), (56,139,141,6), (57,95,141,2), (58,92,141,2), (59,89,141,2)]
+  | 12 => [(37,141,141,10), (38,133,141,10), (42,139,141,4), (43,132,135,3), (43,136,141,4), (44,126,137,3), (44,138,141,4), (45,121,138,3), (45,139,141,4), (46,115,139,3), (46,140,140,4), (46,141,141,3), (47,111,141,3), (48,106,141,3), (49,103,141,3), (50,99,141,3), (51,95,141,3), (52,92,141,3), (53,89,141,3), (54,88,141,3), (55,86,87,5), (55,88,141,3), (56,83,100,5), (56,101,141,3), (57,95,141,3), (58,91,141,3), (59,88,134,3), (59,135,141,9)]
+  | 13 => [(39,126,141,10), (40,120,141,11), (41,114,141,11), (42,140,141,4), (43,133,141,4), (44,127,141,4), (45,121,126,3), (45,127,141,4), (46,116,129,3), (46,130,141,4), (47,111,131,3), (47,132,141,4), (48,107,133,3), (48,134,141,4), (49,102,135,3), (49,136,141,4), (50,99,137,3), (50,138,141,4), (51,95,139,3), (51,140,141,4), (52,92,141,3), (53,89,141,3), (54,88,141,3), (55,85,141,3), (56,22,22,13), (56,82,97,5), (56,98,141,3), (57,94,141,3), (58,90,141,3), (59,87,141,3)]
+  | 14 => [(44,138,141,12), (48,137,141,3), (49,131,141,3), (50,126,141,3), (51,120,141,3), (52,115,141,3), (53,110,141,3), (54,106,141,3), (55,102,141,3), (56,98,141,3), (57,94,141,3), (58,90,141,3), (59,87,141,3)]
+  | _ => []
+
+def cls (x : Shape) : ℕ :=
+  match (clsTab x.t).find? (fun r => r.1 == x.j && Nat.ble r.2.1 x.b && Nat.ble x.b r.2.2.1) with
+  | some r => r.2.2.2
+  | none => 0
+
+def numK (k : ℕ) (x : Shape) : ℕ := if isT k then numT (Gk k) x else numO (Gk k) x
+def thK (k : ℕ) (x : Shape) : Bool :=
+  if isT k then thOK (rayT x) (rayT (hiS (Gk k))) else thOK (rayO x) (rayO (hiS (Gk k)))
+def Gfun (x : Shape) : ℕ := if cls x = 0 then 0 else Ax (numK (cls x) x) (Gk (cls x)).A
 def shapeOK (x : Shape) : Bool :=
-  if cls x = 1 then thOK (rayT x) (rayT (hiS Gate61DatET1.G))
-  else if cls x = 2 then thOK (rayT x) (rayT (hiS Gate61DatET2.G))
-  else if cls x = 3 then thOK (rayO x) (rayO (hiS Gate61DatO1.G))
-  else if cls x = 4 then thOK (rayO x) (rayO (hiS Gate61DatO2.G)) else false
-
-def allShapes : Bool :=
-  (List.range 10).all fun id => (List.range 15).all fun t =>
-    (Low6960Gate.gateList id t).all fun p => shapeOK ⟨p.1, p.2, t⟩
+  if cls x = 0 then false else Nat.ble (cls x) 13 && okK (cls x) x && thK (cls x) x
 
 theorem gl_nil (id t : ℕ) (h : 15 ≤ t) : Low6960Gate.gateList id t = [] := by
   unfold Low6960Gate.gateList
-  split <;> first | rfl | (rename_i h2; omega)
+  rw [Nat.ble_eq_true_of_le h]
+  rfl
 
 theorem amax_le (lb lj lt amax : ℕ) (hb : 0 < lb) (hj : 0 < lj) (ht : 0 < lt)
     (h : amax = min (4012 / lb) (min (1650 / lj) (550 / lt))) :
@@ -522,19 +581,6 @@ theorem amax_le (lb lj lt amax : ℕ) (hb : 0 < lb) (hj : 0 < lj) (ht : 0 < lt)
 theorem ceil_le (N D : ℕ) (hD : 0 < D) : N ≤ D * ((N + D - 1) / D) := by
   have := Gate61CertCF.ceil_mul N D hD
   rw [Nat.mul_comm]; exact this
-
-theorem cls_cases {x : Shape} {c : ℕ} (h : cls x = c) (hc : c ≠ 0) :
-    (c = 1 ∧ inR Gate61DatET1.G x = true ∧ tfB x = true) ∨
-    (c = 2 ∧ inR Gate61DatET2.G x = true ∧ tfB x = true) ∨
-    (c = 3 ∧ inR Gate61DatO1.G x = true ∧ tfB x = false) ∨
-    (c = 4 ∧ inR Gate61DatO2.G x = true ∧ tfB x = false) := by
-  unfold cls at h
-  split_ifs at h with c1 c2 c3 c4
-  · subst h; exact Or.inl ⟨rfl, c1⟩
-  · subst h; exact Or.inr (Or.inl ⟨rfl, c2⟩)
-  · subst h; exact Or.inr (Or.inr (Or.inl ⟨rfl, c3⟩))
-  · subst h; exact Or.inr (Or.inr (Or.inr ⟨rfl, c4⟩))
-  · exact absurd h.symm hc
 
 theorem inR_props {G : Gt} {x : Shape} (h : inR G x = true) :
     G.lb ≤ x.b ∧ G.lj ≤ x.j ∧ G.lt ≤ x.t ∧ x.b ≤ G.xb ∧ x.j ≤ G.xj ∧ x.t ≤ G.xt := by
@@ -551,16 +597,16 @@ theorem tfB_false {x : Shape} (h : tfB x = false) : ¬ (3 * x.t + 3 ≤ x.j ∧ 
   simp [tfB, e1, e2] at h
 
 theorem shapeOK_cases {x : Shape} (h : shapeOK x = true) :
-    (cls x = 1 ∧ thOK (rayT x) (rayT (hiS Gate61DatET1.G)) = true) ∨
-    (cls x = 2 ∧ thOK (rayT x) (rayT (hiS Gate61DatET2.G)) = true) ∨
-    (cls x = 3 ∧ thOK (rayO x) (rayO (hiS Gate61DatO1.G)) = true) ∨
-    (cls x = 4 ∧ thOK (rayO x) (rayO (hiS Gate61DatO2.G)) = true) := by
+    cls x ≠ 0 ∧ cls x ≤ 13 ∧ okK (cls x) x = true ∧ thK (cls x) x = true := by
   unfold shapeOK at h
-  split_ifs at h with c1 c2 c3 c4
-  · exact Or.inl ⟨c1, h⟩
-  · exact Or.inr (Or.inl ⟨c2, h⟩)
-  · exact Or.inr (Or.inr (Or.inl ⟨c3, h⟩))
-  · exact Or.inr (Or.inr (Or.inr ⟨c4, h⟩))
+  split_ifs at h with c0
+  simp only [Bool.and_eq_true, Nat.ble_eq] at h
+  exact ⟨c0, h.1.1, h.1.2, h.2⟩
+
+theorem okK_props {k : ℕ} {x : Shape} (h : okK k x = true) :
+    valid x = true ∧ inR (Gk k) x = true ∧ (if isT k then tfB x else !tfB x) = true := by
+  unfold okK at h
+  simpa [Bool.and_eq_true, and_assoc] using h
 
 open P3 (K) in
 open scoped Polynomial in
@@ -571,83 +617,225 @@ theorem gated_price {w : P3.I → K} {Γ : Finset K} {s : K → (Polynomial K)} 
     (hx : shapeOK (shape f) = true) :
     Γ.card ≤ Gfun (shape f) + Low6960SharedPrice.additiveBase (shape f) l +
       Low6960SharedPrice.nonsharedFee (shape f) l := by
-  rcases shapeOK_cases hx with ⟨hc, hth⟩ | ⟨hc, hth⟩ | ⟨hc, hth⟩ | ⟨hc, hth⟩
-  · obtain (⟨_, hin, htf⟩ | ⟨h2, _⟩ | ⟨h3, _⟩ | ⟨h4, _⟩) := cls_cases hc (by norm_num)
-    · obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
-      have hθ := thOK_spec hth
-      have key := price_T hm hf hon hl hproper hchar (tfB_true htf) Gate61DatET1.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
-        (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
-        (Low6960Prices.bentLift kT (hiS Gate61DatET1.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatET1.G)).2
-        (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
-        (by decide +kernel) (numT Gate61DatET1.G (shape f)) DEN (Ax (numT Gate61DatET1.G (shape f)) Gate61DatET1.G.A)
-        (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatET1.ws Gate61DatET1.tabOK Gate61DatET1.lv Gate61DatET1.n rfl
-        (by decide +kernel) (by decide +kernel) Gate61DatET1.allOKn Gate61DatET1.rho0 Gate61DatET1.amax (by decide)
-        (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
-        (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatET1.sumLt
-      simp only [Gfun, hc, ite_true]
-      exact key
-    · omega
-    · omega
-    · omega
-  · obtain (⟨h1, _⟩ | ⟨_, hin, htf⟩ | ⟨h3, _⟩ | ⟨h4, _⟩) := cls_cases hc (by norm_num)
-    · omega
-    · obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
-      have hθ := thOK_spec hth
-      have key := price_T hm hf hon hl hproper hchar (tfB_true htf) Gate61DatET2.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
-        (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
-        (Low6960Prices.bentLift kT (hiS Gate61DatET2.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatET2.G)).2
-        (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
-        (by decide +kernel) (numT Gate61DatET2.G (shape f)) DEN (Ax (numT Gate61DatET2.G (shape f)) Gate61DatET2.G.A)
-        (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatET2.ws Gate61DatET2.tabOK Gate61DatET2.lv Gate61DatET2.n rfl
-        (by decide +kernel) (by decide +kernel) Gate61DatET2.allOKn Gate61DatET2.rho0 Gate61DatET2.amax (by decide)
-        (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
-        (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatET2.sumLt
-      simp only [Gfun, hc]
-      simpa using key
-    · omega
-    · omega
-  · obtain (⟨h1, _⟩ | ⟨h2, _⟩ | ⟨_, hin, htf⟩ | ⟨h4, _⟩) := cls_cases hc (by norm_num)
-    · omega
-    · omega
-    · obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
-      have hθ := thOK_spec hth
-      have hcx : 3 * (shape f).t ≤ (shape f).j := (K1_13_7_1.shape_chamber f).2
-      have key := price_O hm hf hon hl hproper hchar hcx Gate61DatO1.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl
-        (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩
-        (K1_13.chart (Low6960Prices.taylorLength + 1) (hiS Gate61DatO1.G).chamber)
-        (K1_13.chart (Low6960Prices.taylorLength + 2) (hiS Gate61DatO1.G).chamber)
-        (by decide +kernel) (numO Gate61DatO1.G (shape f)) DEN (Ax (numO Gate61DatO1.G (shape f)) Gate61DatO1.G.A)
-        (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatO1.ws Gate61DatO1.tabOK Gate61DatO1.lv Gate61DatO1.n rfl
-        (by decide +kernel) (by decide +kernel) Gate61DatO1.allOKn Gate61DatO1.rho0 Gate61DatO1.amax (by decide)
-        (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
-        (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatO1.sumLt
-      simp only [Gfun, hc]
-      simpa using key
-    · omega
-  · obtain (⟨h1, _⟩ | ⟨h2, _⟩ | ⟨h3, _⟩ | ⟨_, hin, htf⟩) := cls_cases hc (by norm_num)
-    · omega
-    · omega
-    · omega
-    · obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
-      have hθ := thOK_spec hth
-      have hcx : 3 * (shape f).t ≤ (shape f).j := (K1_13_7_1.shape_chamber f).2
-      have key := price_O hm hf hon hl hproper hchar hcx Gate61DatO2.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl
-        (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩
-        (K1_13.chart (Low6960Prices.taylorLength + 1) (hiS Gate61DatO2.G).chamber)
-        (K1_13.chart (Low6960Prices.taylorLength + 2) (hiS Gate61DatO2.G).chamber)
-        (by decide +kernel) (numO Gate61DatO2.G (shape f)) DEN (Ax (numO Gate61DatO2.G (shape f)) Gate61DatO2.G.A)
-        (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatO2.ws Gate61DatO2.tabOK Gate61DatO2.lv Gate61DatO2.n rfl
-        (by decide +kernel) (by decide +kernel) Gate61DatO2.allOKn Gate61DatO2.rho0 Gate61DatO2.amax (by decide)
-        (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
-        (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatO2.sumLt
-      simp only [Gfun, hc]
-      simpa using key
+  obtain ⟨hc, c2, hok, hth⟩ := shapeOK_cases hx
+  obtain ⟨_, hin, htf⟩ := okK_props hok
+  generalize hcc : cls (shape f) = c at *
+  have c1 : 1 ≤ c := by omega
+  interval_cases c
+  · -- gate 1 = TB
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatTB.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatTB.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatTB.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatTB.G (shape f)) DEN (Ax (numT Gate61DatTB.G (shape f)) Gate61DatTB.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatTB.ws Gate61DatTB.tabOK Gate61DatTB.lv Gate61DatTB.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatTB.allOKn Gate61DatTB.rho0 Gate61DatTB.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatTB.sumLt
+    simp only [Gfun, hcc, show numK 1 (shape f) = numT Gate61DatTB.G (shape f) from rfl]
+    have e1 : (Gk 1).A = Gate61DatTB.G.A := rfl
+    simpa [e1] using key
+  · -- gate 2 = TM1
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatTM1.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatTM1.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatTM1.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatTM1.G (shape f)) DEN (Ax (numT Gate61DatTM1.G (shape f)) Gate61DatTM1.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatTM1.ws Gate61DatTM1.tabOK Gate61DatTM1.lv Gate61DatTM1.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatTM1.allOKn Gate61DatTM1.rho0 Gate61DatTM1.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatTM1.sumLt
+    simp only [Gfun, hcc, show numK 2 (shape f) = numT Gate61DatTM1.G (shape f) from rfl]
+    have e1 : (Gk 2).A = Gate61DatTM1.G.A := rfl
+    simpa [e1] using key
+  · -- gate 3 = TM2
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatTM2.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatTM2.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatTM2.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatTM2.G (shape f)) DEN (Ax (numT Gate61DatTM2.G (shape f)) Gate61DatTM2.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatTM2.ws Gate61DatTM2.tabOK Gate61DatTM2.lv Gate61DatTM2.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatTM2.allOKn Gate61DatTM2.rho0 Gate61DatTM2.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatTM2.sumLt
+    simp only [Gfun, hcc, show numK 3 (shape f) = numT Gate61DatTM2.G (shape f) from rfl]
+    have e1 : (Gk 3).A = Gate61DatTM2.G.A := rfl
+    simpa [e1] using key
+  · -- gate 4 = MLJ
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatMLJ.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatMLJ.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatMLJ.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatMLJ.G (shape f)) DEN (Ax (numT Gate61DatMLJ.G (shape f)) Gate61DatMLJ.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatMLJ.ws Gate61DatMLJ.tabOK Gate61DatMLJ.lv Gate61DatMLJ.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatMLJ.allOKn Gate61DatMLJ.rho0 Gate61DatMLJ.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatMLJ.sumLt
+    simp only [Gfun, hcc, show numK 4 (shape f) = numT Gate61DatMLJ.G (shape f) from rfl]
+    have e1 : (Gk 4).A = Gate61DatMLJ.G.A := rfl
+    simpa [e1] using key
+  · -- gate 5 = RL
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatRL.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatRL.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatRL.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatRL.G (shape f)) DEN (Ax (numT Gate61DatRL.G (shape f)) Gate61DatRL.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatRL.ws Gate61DatRL.tabOK Gate61DatRL.lv Gate61DatRL.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatRL.allOKn Gate61DatRL.rho0 Gate61DatRL.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatRL.sumLt
+    simp only [Gfun, hcc, show numK 5 (shape f) = numT Gate61DatRL.G (shape f) from rfl]
+    have e1 : (Gk 5).A = Gate61DatRL.G.A := rfl
+    simpa [e1] using key
+  · -- gate 6 = R53a
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatR53a.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatR53a.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatR53a.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatR53a.G (shape f)) DEN (Ax (numT Gate61DatR53a.G (shape f)) Gate61DatR53a.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatR53a.ws Gate61DatR53a.tabOK Gate61DatR53a.lv Gate61DatR53a.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatR53a.allOKn Gate61DatR53a.rho0 Gate61DatR53a.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatR53a.sumLt
+    simp only [Gfun, hcc, show numK 6 (shape f) = numT Gate61DatR53a.G (shape f) from rfl]
+    have e1 : (Gk 6).A = Gate61DatR53a.G.A := rfl
+    simpa [e1] using key
+  · -- gate 7 = R53b
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatR53b.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatR53b.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatR53b.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatR53b.G (shape f)) DEN (Ax (numT Gate61DatR53b.G (shape f)) Gate61DatR53b.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatR53b.ws Gate61DatR53b.tabOK Gate61DatR53b.lv Gate61DatR53b.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatR53b.allOKn Gate61DatR53b.rho0 Gate61DatR53b.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatR53b.sumLt
+    simp only [Gfun, hcc, show numK 7 (shape f) = numT Gate61DatR53b.G (shape f) from rfl]
+    have e1 : (Gk 7).A = Gate61DatR53b.G.A := rfl
+    simpa [e1] using key
+  · -- gate 8 = RJa
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatRJa.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatRJa.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatRJa.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatRJa.G (shape f)) DEN (Ax (numT Gate61DatRJa.G (shape f)) Gate61DatRJa.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatRJa.ws Gate61DatRJa.tabOK Gate61DatRJa.lv Gate61DatRJa.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatRJa.allOKn Gate61DatRJa.rho0 Gate61DatRJa.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatRJa.sumLt
+    simp only [Gfun, hcc, show numK 8 (shape f) = numT Gate61DatRJa.G (shape f) from rfl]
+    have e1 : (Gk 8).A = Gate61DatRJa.G.A := rfl
+    simpa [e1] using key
+  · -- gate 9 = RJb
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have htf' : tfB (shape f) = true := by simpa [isT] using htf
+    have key := price_T hm hf hon hl hproper hchar (tfB_true htf') Gate61DatRJb.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl (by decide)
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩ kT
+          (Low6960Prices.bentLift kT (hiS Gate61DatRJb.G)).2 (Low6960Prices.bentLift (kT + 1) (hiS Gate61DatRJb.G)).2
+          (Low6960Prices.bentLift kT (shape f)).2 (Low6960Prices.bentLift (kT + 1) (shape f)).2 rfl rfl rfl rfl rfl
+          (by decide +kernel) (numT Gate61DatRJb.G (shape f)) DEN (Ax (numT Gate61DatRJb.G (shape f)) Gate61DatRJb.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatRJb.ws Gate61DatRJb.tabOK Gate61DatRJb.lv Gate61DatRJb.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatRJb.allOKn Gate61DatRJb.rho0 Gate61DatRJb.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatRJb.sumLt
+    simp only [Gfun, hcc, show numK 9 (shape f) = numT Gate61DatRJb.G (shape f) from rfl]
+    have e1 : (Gk 9).A = Gate61DatRJb.G.A := rfl
+    simpa [e1] using key
+  · -- gate 10 = LOA
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have hcx : 3 * (shape f).t ≤ (shape f).j := (K1_13_7_1.shape_chamber f).2
+    have key := price_O hm hf hon hl hproper hchar hcx Gate61DatLOA.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩
+          (K1_13.chart (Low6960Prices.taylorLength + 1) (hiS Gate61DatLOA.G).chamber)
+          (K1_13.chart (Low6960Prices.taylorLength + 2) (hiS Gate61DatLOA.G).chamber)
+          (by decide +kernel) (numO Gate61DatLOA.G (shape f)) DEN (Ax (numO Gate61DatLOA.G (shape f)) Gate61DatLOA.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatLOA.ws Gate61DatLOA.tabOK Gate61DatLOA.lv Gate61DatLOA.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatLOA.allOKn Gate61DatLOA.rho0 Gate61DatLOA.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatLOA.sumLt
+    simp only [Gfun, hcc, show numK 10 (shape f) = numO Gate61DatLOA.G (shape f) from rfl]
+    have e1 : (Gk 10).A = Gate61DatLOA.G.A := rfl
+    simpa [e1] using key
+  · -- gate 11 = LOB
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have hcx : 3 * (shape f).t ≤ (shape f).j := (K1_13_7_1.shape_chamber f).2
+    have key := price_O hm hf hon hl hproper hchar hcx Gate61DatLOB.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩
+          (K1_13.chart (Low6960Prices.taylorLength + 1) (hiS Gate61DatLOB.G).chamber)
+          (K1_13.chart (Low6960Prices.taylorLength + 2) (hiS Gate61DatLOB.G).chamber)
+          (by decide +kernel) (numO Gate61DatLOB.G (shape f)) DEN (Ax (numO Gate61DatLOB.G (shape f)) Gate61DatLOB.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatLOB.ws Gate61DatLOB.tabOK Gate61DatLOB.lv Gate61DatLOB.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatLOB.allOKn Gate61DatLOB.rho0 Gate61DatLOB.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatLOB.sumLt
+    simp only [Gfun, hcc, show numK 11 (shape f) = numO Gate61DatLOB.G (shape f) from rfl]
+    have e1 : (Gk 11).A = Gate61DatLOB.G.A := rfl
+    simpa [e1] using key
+  · -- gate 12 = LOD
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have hcx : 3 * (shape f).t ≤ (shape f).j := (K1_13_7_1.shape_chamber f).2
+    have key := price_O hm hf hon hl hproper hchar hcx Gate61DatLOD.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩
+          (K1_13.chart (Low6960Prices.taylorLength + 1) (hiS Gate61DatLOD.G).chamber)
+          (K1_13.chart (Low6960Prices.taylorLength + 2) (hiS Gate61DatLOD.G).chamber)
+          (by decide +kernel) (numO Gate61DatLOD.G (shape f)) DEN (Ax (numO Gate61DatLOD.G (shape f)) Gate61DatLOD.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatLOD.ws Gate61DatLOD.tabOK Gate61DatLOD.lv Gate61DatLOD.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatLOD.allOKn Gate61DatLOD.rho0 Gate61DatLOD.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatLOD.sumLt
+    simp only [Gfun, hcc, show numK 12 (shape f) = numO Gate61DatLOD.G (shape f) from rfl]
+    have e1 : (Gk 12).A = Gate61DatLOD.G.A := rfl
+    simpa [e1] using key
+  · -- gate 13 = LO3
+    obtain ⟨a1, a2, a3, a4, a5, a6⟩ := inR_props hin
+    have hθ := thOK_spec (by simpa [thK, isT] using hth)
+    have hcx : 3 * (shape f).t ≤ (shape f).j := (K1_13_7_1.shape_chamber f).2
+    have key := price_O hm hf hon hl hproper hchar hcx Gate61DatLO3.G (by simp only [Gt.Ok]; decide +kernel) rfl rfl
+          (by decide) (by decide) (by decide) ⟨a1, a2, a3⟩ ⟨a4, a5, a6⟩
+          (K1_13.chart (Low6960Prices.taylorLength + 1) (hiS Gate61DatLO3.G).chamber)
+          (K1_13.chart (Low6960Prices.taylorLength + 2) (hiS Gate61DatLO3.G).chamber)
+          (by decide +kernel) (numO Gate61DatLO3.G (shape f)) DEN (Ax (numO Gate61DatLO3.G (shape f)) Gate61DatLO3.G.A)
+          (by decide) hθ (ceil_le _ _ (by decide)) 1 Gate61DatLO3.ws Gate61DatLO3.tabOK Gate61DatLO3.lv Gate61DatLO3.n rfl
+          (by decide +kernel) (by decide +kernel) Gate61DatLO3.allOKn Gate61DatLO3.rho0 Gate61DatLO3.amax (by decide)
+          (by decide) (amax_le _ _ _ _ (by decide) (by decide) (by decide) (by decide))
+          (by decide +kernel) (by decide +kernel) (by decide +kernel) Gate61DatLO3.sumLt
+    simp only [Gfun, hcc, show numK 13 (shape f) = numO Gate61DatLO3.G (shape f) from rfl]
+    have e1 : (Gk 13).A = Gate61DatLO3.G.A := rfl
+    simpa [e1] using key
 
-def one (id t : ℕ) : Bool := (Low6960Gate.gateList id t).all fun p => shapeOK ⟨p.1, p.2, t⟩
+def one (id t : ℕ) : Bool := (Low6960Gate.gateList id t).all fun p => !(valid ⟨p.1, p.2, t⟩) || shapeOK ⟨p.1, p.2, t⟩
 
 def gtOne (id t : ℕ) : Bool := (Low6960Gate.gateList id t).all fun p =>
   let x : Shape := ⟨p.1, p.2, t⟩
-  let k : Low6960Allocation.Band := ⟨id % 24, Nat.mod_lt _ (by decide)⟩
+  let k : Low6960Allocation.Band := ⟨id % 44, Nat.mod_lt _ (by decide)⟩
   let l := Low6960Allocation.order (Low6960Allocation.bandOrders k) x
   Nat.blt 0 l && Nat.ble (Low6960Gate.gatePrice Gfun x l)
     (Low6960Allocation.allowance k ((Low6960Allocation.start k).t + t) p.1 p.2 t)

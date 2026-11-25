@@ -210,7 +210,7 @@ scoped instance chartFractionRing (s : Chart) : IsFractionRing (baseChart s) Cha
   exact ⟨⟨x,hx'⟩,⟨y,hy'⟩,ratio.symm⟩
 variable {E : Type*} [Field E] [Algebra ChartField E]
 theorem actual_separable
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<64)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     Algebra.IsSeparable ChartField E := by
@@ -233,7 +233,7 @@ theorem actual_separable
     (CurvatureSquares.derivative_ne_zero_of_natDegree_pos_lt_char K1.p _ (minpoly.natDegree_pos integ)
       ((minpoly.natDegree_le x).trans_lt small))
 theorem actual_integral_iff_finite_traces
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<64)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     ∃ probes : Chart → Finset E, ∀ s (x : E), IsIntegral (baseChart s) x ↔

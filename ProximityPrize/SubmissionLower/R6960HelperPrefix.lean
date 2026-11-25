@@ -639,7 +639,7 @@ theorem exceptional_history (G Q : Jet) (s t : Shape) (S : Finset (Ideal Ambient
   rw [scaled_pair,Nat.mul_assoc] at bound
   exact Nat.le_of_mul_le_mul_left bound hk
 theorem high_ledger :
-    116851670497542517 + 118687375614631597 + 27283109943102372 +
+    118268519856115495 + 117270526256058619 + 27283109943102372 +
     143456202788540 + 48 + 3730105881391565 = 266695718139456639 := by decide +kernel
 #print axioms exceptional_initial
 #print axioms exceptional_history

@@ -14,32 +14,32 @@ namespace Top1
 private abbrev P := PaidBatch orders 1
 
 private def p0 : P :=
-  ⟨unpack [2214661125, 5620568073, 19379066889, 40469277713, 142525879325, 39933400285], by decide +kernel⟩
+  ⟨unpack [2164329477, 1006702601, 10352071691, 27700961293, 86875257877, 87111012401], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [56643714269, 39547942109, 35218723145, 30555274657, 21931859361, 17452348853], by decide +kernel⟩
+  ⟨unpack [35486961917, 44060392705, 39715301633, 34984333653, 34816636245, 9214679381], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [13123897781, 1099918399927, 43288966597, 4416522737, 1099666739699, 1099666740723], by decide +kernel⟩
+  ⟨unpack [17435506117, 8845576645, 8778470853, 47432938973, 25891148269, 17301286381], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [8711484921, 4416520697, 25790538257, 17200684561, 20886033, 20892177], by decide +kernel⟩
+  ⟨unpack [1099633123823, 87873013, 1099599501815, 1099599502839, 38692088321, 8610693637], by decide +kernel⟩
 private def p4 : P :=
-  ⟨unpack [20893201], by decide +kernel⟩
+  ⟨unpack [4315729413], by decide +kernel⟩
 private def batches : List P := [p0, p1, p2, p3, p4]
-private theorem i3 : checks (tilesOf batches) 133 3 8 = true := by
+private theorem i3 : checks (tilesOf batches) 130 3 8 = true := by
   decide +kernel
-private theorem i11 : checks (tilesOf batches) 133 11 8 = true := by
+private theorem i11 : checks (tilesOf batches) 130 11 8 = true := by
   decide +kernel
-private theorem i19 : checks (tilesOf batches) 133 19 8 = true := by
+private theorem i19 : checks (tilesOf batches) 130 19 8 = true := by
   decide +kernel
-private theorem i27 : checks (tilesOf batches) 133 27 8 = true := by
+private theorem i27 : checks (tilesOf batches) 130 27 8 = true := by
   decide +kernel
-private theorem i35 : checks (tilesOf batches) 133 35 8 = true := by
+private theorem i35 : checks (tilesOf batches) 130 35 8 = true := by
   decide +kernel
-private theorem i43 : checks (tilesOf batches) 133 43 8 = true := by
+private theorem i43 : checks (tilesOf batches) 130 43 8 = true := by
   decide +kernel
-private theorem i51 : checks (tilesOf batches) 133 51 4 = true := by
+private theorem i51 : checks (tilesOf batches) 130 51 6 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=1)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i3 (checks_join i11 (checks_join i19 (checks_join i27 (checks_join i35 (checks_join i43 (i51))))))) a ha ht hb hj
 end Top1
@@ -48,30 +48,32 @@ namespace Top2
 private abbrev P := PaidBatch orders 2
 
 private def p0 : P :=
-  ⟨unpack [19379066889, 36342082577, 91204309021, 52936091705, 39748915473, 39497398545], by decide +kernel⟩
+  ⟨unpack [18942531593, 44461992977, 86959609889, 57146977341, 39631411489, 35219144993], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [22418333969, 17553013129, 13224562057, 30303615453, 17418787293, 1099750624735], by decide +kernel⟩
+  ⟨unpack [39262528801, 21797588345, 43540426109, 43322382769, 17536099765, 13190871477], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [1099750625759, 1099750626783, 1099750627807, 8745040357, 4433298917, 34531257837], by decide +kernel⟩
+  ⟨unpack [13090212277, 4433172937, 1099784053195, 4399614441, 1099649831403, 1099649832427], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [8728260085, 54445577, 1099566074379, 4332632589, 37667341], by decide +kernel⟩
-private def batches : List P := [p0, p1, p2, p3]
-private theorem i6 : checks (tilesOf batches) 133 6 8 = true := by
+  ⟨unpack [1099633056239, 1099633057263, 30169334257, 17284440561, 8627468801, 4332504577], by decide +kernel⟩
+private def p4 : P :=
+  ⟨unpack [20762117], by decide +kernel⟩
+private def batches : List P := [p0, p1, p2, p3, p4]
+private theorem i6 : checks (tilesOf batches) 130 6 8 = true := by
   decide +kernel
-private theorem i14 : checks (tilesOf batches) 133 14 8 = true := by
+private theorem i14 : checks (tilesOf batches) 130 14 8 = true := by
   decide +kernel
-private theorem i22 : checks (tilesOf batches) 133 22 8 = true := by
+private theorem i22 : checks (tilesOf batches) 130 22 8 = true := by
   decide +kernel
-private theorem i30 : checks (tilesOf batches) 133 30 8 = true := by
+private theorem i30 : checks (tilesOf batches) 130 30 8 = true := by
   decide +kernel
-private theorem i38 : checks (tilesOf batches) 133 38 8 = true := by
+private theorem i38 : checks (tilesOf batches) 130 38 8 = true := by
   decide +kernel
-private theorem i46 : checks (tilesOf batches) 133 46 8 = true := by
+private theorem i46 : checks (tilesOf batches) 130 46 8 = true := by
   decide +kernel
-private theorem i54 : checks (tilesOf batches) 133 54 1 = true := by
+private theorem i54 : checks (tilesOf batches) 130 54 3 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=2)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i6 (checks_join i14 (checks_join i22 (checks_join i30 (checks_join i38 (checks_join i46 (i54))))))) a ha ht hb hj
 end Top2
@@ -80,30 +82,30 @@ namespace Top3
 private abbrev P := PaidBatch orders 3
 
 private def p0 : P :=
-  ⟨unpack [32029942797, 53086340121, 99744249897, 1698551881, 35252762897, 39296212241], by decide +kernel⟩
+  ⟨unpack [27852153869, 61424353305, 86943104045, 18710515785, 35168812329, 34950783273], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [17922114833, 43490297229, 30639092109, 17569783213, 13190934957, 8862482861], by decide +kernel⟩
+  ⟨unpack [30572004649, 43724980561, 35135253841, 13123765669, 17502544313, 13157316025], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [1099851288007, 1099851289031, 1099851290055, 1099733850595, 43154744805, 17368453609], by decide +kernel⟩
+  ⟨unpack [4466726329, 1099851161019, 1099851162043, 4416390625, 1099683384803, 1099683385827], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [155107825, 1099666736627, 1099666737651, 8694706681, 121552377, 8627529229], by decide +kernel⟩
+  ⟨unpack [1099666609639, 1099666610663, 21596180973, 8644244989, 4332503549, 47281939969], by decide +kernel⟩
 private def p4 : P :=
-  ⟨unpack [30085435921, 4299076117, 4110868], by decide +kernel⟩
+  ⟨unpack [37538305, 12888877577, 3981833, 3982857], by decide +kernel⟩
 private def batches : List P := [p0, p1, p2, p3, p4]
-private theorem i9 : checks (tilesOf batches) 133 9 8 = true := by
+private theorem i9 : checks (tilesOf batches) 130 9 8 = true := by
   decide +kernel
-private theorem i17 : checks (tilesOf batches) 133 17 8 = true := by
+private theorem i17 : checks (tilesOf batches) 130 17 8 = true := by
   decide +kernel
-private theorem i25 : checks (tilesOf batches) 133 25 8 = true := by
+private theorem i25 : checks (tilesOf batches) 130 25 8 = true := by
   decide +kernel
-private theorem i33 : checks (tilesOf batches) 133 33 8 = true := by
+private theorem i33 : checks (tilesOf batches) 130 33 8 = true := by
   decide +kernel
-private theorem i41 : checks (tilesOf batches) 133 41 8 = true := by
+private theorem i41 : checks (tilesOf batches) 130 41 8 = true := by
   decide +kernel
-private theorem i49 : checks (tilesOf batches) 133 49 6 = true := by
+private theorem i49 : checks (tilesOf batches) 130 49 8 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=3)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i9 (checks_join i17 (checks_join i25 (checks_join i33 (checks_join i41 (i49)))))) a ha ht hb hj
 end Top3
@@ -112,30 +114,32 @@ namespace Top4
 private abbrev P := PaidBatch orders 4
 
 private def p0 : P :=
-  ⟨unpack [36392546321, 65703007261, 74125644853, 30655944001, 26243609921, 9164476737], by decide +kernel⟩
+  ⟨unpack [36274843665, 82614244381, 65569137721, 39681676561, 35235921169, 35017892113], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [39430214993, 26579008849, 8862414261, 8795374005, 1099918396855, 1099817734607], by decide +kernel⟩
+  ⟨unpack [26126042445, 1100304146767, 8845575589, 8761692581, 1099935047079, 17502544305], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [1099817735631, 1099817736655, 17435564497, 4584222161, 1099700290027, 1099700291051], by decide +kernel⟩
+  ⟨unpack [8895837617, 8828797361, 1099750494675, 1099750495699, 1099750496723, 47432872413], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [1099700292075, 43070927353, 4399740409, 121552377, 34397183501, 12905716241], by decide +kernel⟩
+  ⟨unpack [30219664869, 17317993957, 1099666607591, 4366057965, 1099633052143, 4349277693], by decide +kernel⟩
 private def p4 : P :=
-  ⟨unpack [20883985, 21478867477, 20887060], by decide +kernel⟩
-private def batches : List P := [p0, p1, p2, p3, p4]
-private theorem i12 : checks (tilesOf batches) 133 12 8 = true := by
+  ⟨unpack [4332502525, 8627466753, 1099549165059, 38658531849, 12888808969, 8593911305], by decide +kernel⟩
+private def p5 : P :=
+  ⟨unpack [3980809, 3981833], by decide +kernel⟩
+private def batches : List P := [p0, p1, p2, p3, p4, p5]
+private theorem i12 : checks (tilesOf batches) 130 12 8 = true := by
   decide +kernel
-private theorem i20 : checks (tilesOf batches) 133 20 8 = true := by
+private theorem i20 : checks (tilesOf batches) 130 20 8 = true := by
   decide +kernel
-private theorem i28 : checks (tilesOf batches) 133 28 8 = true := by
+private theorem i28 : checks (tilesOf batches) 130 28 8 = true := by
   decide +kernel
-private theorem i36 : checks (tilesOf batches) 133 36 8 = true := by
+private theorem i36 : checks (tilesOf batches) 130 36 8 = true := by
   decide +kernel
-private theorem i44 : checks (tilesOf batches) 133 44 8 = true := by
+private theorem i44 : checks (tilesOf batches) 130 44 8 = true := by
   decide +kernel
-private theorem i52 : checks (tilesOf batches) 133 52 3 = true := by
+private theorem i52 : checks (tilesOf batches) 130 52 5 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=4)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i12 (checks_join i20 (checks_join i28 (checks_join i36 (checks_join i44 (i52)))))) a ha ht hb hj
 end Top4
@@ -144,54 +148,60 @@ namespace Top5
 private abbrev P := PaidBatch orders 5
 
 private def p0 : P :=
-  ⟨unpack [40553561109, 74125304869, 48506907709, 35235915057, 26562234673, 17922041137], by decide +kernel⟩
+  ⟨unpack [48790977557, 82631289893, 39950400577, 35286183197, 35034665245, 30605554973], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [17536235885, 13207784813, 1099884842431, 1099884843455, 1099884844479, 1099884845503], by decide +kernel⟩
+  ⟨unpack [13123769721, 43490164105, 34900371849, 13157250465, 8828798369, 8744915361], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [8761817541, 1099851285959, 1099851286983, 43188370909, 8795301349, 4500402661], by decide +kernel⟩
+  ⟨unpack [1099867938231, 1099867939255, 21763953089, 13123692993, 1099784049099, 1099784050123], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [21629864433, 155034097, 155105777, 1099666734579, 1099666735603, 30135839237], by decide +kernel⟩
-private def batches : List P := [p0, p1, p2, p3]
-private theorem i15 : checks (tilesOf batches) 133 15 8 = true := by
+  ⟨unpack [1099784051147, 1099700159967, 1099700160991, 1099700162015, 4433164773, 154976741], by decide +kernel⟩
+private def p4 : P :=
+  ⟨unpack [21529071101, 8644241917, 4349277693, 12888876553, 3980809], by decide +kernel⟩
+private def batches : List P := [p0, p1, p2, p3, p4]
+private theorem i15 : checks (tilesOf batches) 130 15 8 = true := by
   decide +kernel
-private theorem i23 : checks (tilesOf batches) 133 23 8 = true := by
+private theorem i23 : checks (tilesOf batches) 130 23 8 = true := by
   decide +kernel
-private theorem i31 : checks (tilesOf batches) 133 31 8 = true := by
+private theorem i31 : checks (tilesOf batches) 130 31 8 = true := by
   decide +kernel
-private theorem i39 : checks (tilesOf batches) 133 39 8 = true := by
+private theorem i39 : checks (tilesOf batches) 130 39 8 = true := by
   decide +kernel
-private theorem i47 : checks (tilesOf batches) 133 47 8 = true := by
+private theorem i47 : checks (tilesOf batches) 130 47 8 = true := by
+  decide +kernel
+private theorem i55 : checks (tilesOf batches) 130 55 2 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=5)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i15 (checks_join i23 (checks_join i31 (checks_join i39 (i47))))) a ha ht hb hj
+  cover_at (batches:=batches) (checks_join i15 (checks_join i23 (checks_join i31 (checks_join i39 (checks_join i47 (i55)))))) a ha ht hb hj
 end Top5
 
 namespace Top6
 private abbrev P := PaidBatch orders 6
 
 private def p0 : P :=
-  ⟨unpack [53069629465, 82581224493, 14382124101, 30957862169, 30706277657, 13610368281], by decide +kernel⟩
+  ⟨unpack [53035878425, 82564250669, 22871264325, 35185589525, 34934006037, 30521672981], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [39245662601, 26360902025, 1099951951279, 1099951952303, 1099951953327, 1099951954351], by decide +kernel⟩
+  ⟨unpack [43523787137, 30622184833, 13140542853, 1100002153879, 1100002154903, 1100002155927], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [13274815925, 8895966645, 4601067957, 1099834507723, 1099834508747, 1099834509771], by decide +kernel⟩
+  ⟨unpack [1100002156951, 13325017505, 13157249441, 8828797345, 1099800825287, 1099800826311], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [17334898161, 4382961153, 87995905, 1099599624707, 1099599625731, 8593973781], by decide +kernel⟩
-private def batches : List P := [p0, p1, p2, p3]
-private theorem i18 : checks (tilesOf batches) 133 18 8 = true := by
+  ⟨unpack [17368323549, 1099700158943, 1099700159967, 1099700160991, 8711352805, 154975717], by decide +kernel⟩
+private def p4 : P :=
+  ⟨unpack [4315722245, 20756997, 30068667913], by decide +kernel⟩
+private def batches : List P := [p0, p1, p2, p3, p4]
+private theorem i18 : checks (tilesOf batches) 130 18 8 = true := by
   decide +kernel
-private theorem i26 : checks (tilesOf batches) 133 26 8 = true := by
+private theorem i26 : checks (tilesOf batches) 130 26 8 = true := by
   decide +kernel
-private theorem i34 : checks (tilesOf batches) 133 34 8 = true := by
+private theorem i34 : checks (tilesOf batches) 130 34 8 = true := by
   decide +kernel
-private theorem i42 : checks (tilesOf batches) 133 42 8 = true := by
+private theorem i42 : checks (tilesOf batches) 130 42 8 = true := by
   decide +kernel
-private theorem i50 : checks (tilesOf batches) 133 50 5 = true := by
+private theorem i50 : checks (tilesOf batches) 130 50 7 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=6)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i18 (checks_join i26 (checks_join i34 (checks_join i42 (i50))))) a ha ht hb hj
 end Top6
@@ -200,28 +210,28 @@ namespace Top7
 private abbrev P := PaidBatch orders 7
 
 private def p0 : P :=
-  ⟨unpack [53052986397, 74041690161, 10070380617, 26579011881, 26344203561, 13492928809], by decide +kernel⟩
+  ⟨unpack [57213539357, 86792244273, 1497096269, 35084930313, 39128379657, 9265010953], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [39245731209, 22065937801, 1099951952303, 1099951953327, 1099951954351, 8979850677], by decide +kernel⟩
+  ⟨unpack [39329486185, 26444660073, 13291467133, 13190873469, 8828801405, 1099901492655], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [8828858805, 4533960117, 1099884840383, 1099884841407, 1099884842431, 13056710125], by decide +kernel⟩
+  ⟨unpack [1099867939255, 17502542265, 8879058361, 1099851157947, 1099851158971, 1099851159995], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [4416516593, 1099666733555, 1099666734579, 1099666735603, 20886033, 20887057], by decide +kernel⟩
+  ⟨unpack [4433166793, 1099784047051, 1099784048075, 4416387553, 1099633050095, 1099633051119], by decide +kernel⟩
 private def p4 : P :=
-  ⟨unpack [4299007509, 4107796], by decide +kernel⟩
+  ⟨unpack [4332498433, 4332500481, 37535233, 12888807945, 8593910281], by decide +kernel⟩
 private def batches : List P := [p0, p1, p2, p3, p4]
-private theorem i21 : checks (tilesOf batches) 133 21 8 = true := by
+private theorem i21 : checks (tilesOf batches) 130 21 8 = true := by
   decide +kernel
-private theorem i29 : checks (tilesOf batches) 133 29 8 = true := by
+private theorem i29 : checks (tilesOf batches) 130 29 8 = true := by
   decide +kernel
-private theorem i37 : checks (tilesOf batches) 133 37 8 = true := by
+private theorem i37 : checks (tilesOf batches) 130 37 8 = true := by
   decide +kernel
-private theorem i45 : checks (tilesOf batches) 133 45 8 = true := by
+private theorem i45 : checks (tilesOf batches) 130 45 8 = true := by
   decide +kernel
-private theorem i53 : checks (tilesOf batches) 133 53 2 = true := by
+private theorem i53 : checks (tilesOf batches) 130 53 4 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=7)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i21 (checks_join i29 (checks_join i37 (checks_join i45 (i53))))) a ha ht hb hj
 end Top7
@@ -230,54 +240,56 @@ namespace Top8
 private abbrev P := PaidBatch orders 8
 
 private def p0 : P :=
-  ⟨unpack [61424951329, 65468603445, 22166674737, 26210055473, 9114145073, 35152093529], by decide +kernel⟩
+  ⟨unpack [69846917153, 65434919993, 26327295277, 26159595821, 4835826989, 39497261361], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [22233711961, 8879191453, 8795373981, 1100019060127, 1099935175091, 1099935176115], by decide +kernel⟩
+  ⟨unpack [26545326385, 13106987405, 1100035707279, 1100035708303, 1100035709327, 1099884715443], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [1099935177139, 1099800953299, 1099800954323, 1099800955347, 13107043801, 4533890521], by decide +kernel⟩
+  ⟨unpack [1099884716467, 13174023605, 8845571509, 4433166789, 1099800824263, 1099800825287], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [4416517605, 1099717066215, 71218693, 1099582847495, 21495645713, 8610749969], by decide +kernel⟩
+  ⟨unpack [1099649827307, 1099649828331, 21596178925, 12989473261, 4366054901, 1099599494647], by decide +kernel⟩
 private def p4 : P :=
-  ⟨unpack [4315851281, 4108820], by decide +kernel⟩
+  ⟨unpack [38708863485, 4349276669, 12888875529, 3979785], by decide +kernel⟩
 private def batches : List P := [p0, p1, p2, p3, p4]
-private theorem i24 : checks (tilesOf batches) 133 24 8 = true := by
+private theorem i24 : checks (tilesOf batches) 130 24 8 = true := by
   decide +kernel
-private theorem i32 : checks (tilesOf batches) 133 32 8 = true := by
+private theorem i32 : checks (tilesOf batches) 130 32 8 = true := by
   decide +kernel
-private theorem i40 : checks (tilesOf batches) 133 40 8 = true := by
+private theorem i40 : checks (tilesOf batches) 130 40 8 = true := by
   decide +kernel
-private theorem i48 : checks (tilesOf batches) 133 48 7 = true := by
+private theorem i48 : checks (tilesOf batches) 130 48 8 = true := by
+  decide +kernel
+private theorem i56 : checks (tilesOf batches) 130 56 1 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=8)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i24 (checks_join i32 (checks_join i40 (i48)))) a ha ht hb hj
+  cover_at (batches:=batches) (checks_join i24 (checks_join i32 (checks_join i40 (checks_join i48 (i56))))) a ha ht hb hj
 end Top8
 
 namespace Top9
 private abbrev P := PaidBatch orders 9
 
 private def p0 : P :=
-  ⟨unpack [65602546725, 48406244413, 30957792577, 22284111169, 22049301825, 17536236885], by decide +kernel⟩
+  ⟨unpack [74074909733, 48372560957, 35252628773, 26545393957, 30538444069, 17485843789], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [8946372949, 8761818541, 1099951950255, 1099951951279, 1099951952303, 1099951953327], by decide +kernel⟩
+  ⟨unpack [1100304146767, 13207580057, 8862350745, 4533832089, 1099985375643, 1099985376667], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [1099951954351, 8862410189, 4533891533, 4466850253, 1099767398875, 1099767399899], by decide +kernel⟩
+  ⟨unpack [1099985377691, 1099985378715, 1099733715415, 1099733716439, 1099700157919, 1099700158943], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [1099633179131, 1099633180155, 17251012101, 8661082629, 54440457, 54441481], by decide +kernel⟩
+  ⟨unpack [1099700159967, 17351545313, 8761615841, 4433162729, 4366055913, 34413899261], by decide +kernel⟩
 private def p4 : P :=
-  ⟨unpack [20885009], by decide +kernel⟩
+  ⟨unpack [54311421], by decide +kernel⟩
 private def batches : List P := [p0, p1, p2, p3, p4]
-private theorem i27 : checks (tilesOf batches) 133 27 8 = true := by
+private theorem i27 : checks (tilesOf batches) 130 27 8 = true := by
   decide +kernel
-private theorem i35 : checks (tilesOf batches) 133 35 8 = true := by
+private theorem i35 : checks (tilesOf batches) 130 35 8 = true := by
   decide +kernel
-private theorem i43 : checks (tilesOf batches) 133 43 8 = true := by
+private theorem i43 : checks (tilesOf batches) 130 43 8 = true := by
   decide +kernel
-private theorem i51 : checks (tilesOf batches) 133 51 4 = true := by
+private theorem i51 : checks (tilesOf batches) 130 51 6 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=9)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i27 (checks_join i35 (checks_join i43 (i51)))) a ha ht hb hj
 end Top9
@@ -286,24 +298,26 @@ namespace Top10
 private abbrev P := PaidBatch orders 10
 
 private def p0 : P :=
-  ⟨unpack [69796919337, 31327042625, 30941083949, 26411309357, 13560034605, 13140673905], by decide +kernel⟩
+  ⟨unpack [74041423913, 35554771009, 31008061729, 30689368353, 22015621409, 13140545889], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [1100203611507, 1100203612531, 1099935172019, 1099935173043, 1099935174067, 1099935175091], by decide +kernel⟩
+  ⟨unpack [1100220260707, 1099951821219, 1099951822243, 1099951823267, 1099951824291, 8845572517], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [13207706057, 8845633993, 4500403665, 1099800952275, 1099800953299, 25857653249], by decide +kernel⟩
+  ⟨unpack [4517053861, 1099935042983, 17502542265, 8879058361, 1099700159967, 1099700160991], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [87922177, 71218693, 1099582847495, 4349340169, 54440457], by decide +kernel⟩
-private def batches : List P := [p0, p1, p2, p3]
-private theorem i30 : checks (tilesOf batches) 133 30 8 = true := by
+  ⟨unpack [4382833125, 1099666604519, 54311421, 1099565940223, 4332498433, 4315723265], by decide +kernel⟩
+private def p4 : P :=
+  ⟨unpack [30085446149, 12888807945, 8593910281, 3978761], by decide +kernel⟩
+private def batches : List P := [p0, p1, p2, p3, p4]
+private theorem i30 : checks (tilesOf batches) 130 30 8 = true := by
   decide +kernel
-private theorem i38 : checks (tilesOf batches) 133 38 8 = true := by
+private theorem i38 : checks (tilesOf batches) 130 38 8 = true := by
   decide +kernel
-private theorem i46 : checks (tilesOf batches) 133 46 8 = true := by
+private theorem i46 : checks (tilesOf batches) 130 46 8 = true := by
   decide +kernel
-private theorem i54 : checks (tilesOf batches) 133 54 1 = true := by
+private theorem i54 : checks (tilesOf batches) 130 54 3 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=10)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i30 (checks_join i38 (checks_join i46 (i54)))) a ha ht hb hj
 end Top10
@@ -312,22 +326,22 @@ namespace Top11
 private abbrev P := PaidBatch orders 11
 
 private def p0 : P :=
-  ⟨unpack [65518797869, 22821061701, 30773314869, 26277094709, 9181184309, 1100102946187], by decide +kernel⟩
+  ⟨unpack [69763302445, 27015170117, 30840292649, 26344072489, 21914960169, 1100153149811], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [1100102947211, 1100102948235, 1100102949259, 13190931889, 8795305393, 1099851284935], by decide +kernel⟩
+  ⟨unpack [1100153150835, 1100153151859, 8828797333, 1100002151831, 1100002152855, 1100002153879], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [1099851285959, 1099851286983, 21696906721, 13090266593, 4416517605, 1099717066215], by decide +kernel⟩
+  ⟨unpack [13190800821, 8828794293, 1099750490579, 1099750491603, 1099750492627, 25924699621], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [4399738365, 71218693, 1099582847495, 8593972757, 4106772], by decide +kernel⟩
+  ⟨unpack [13039804901, 4382832113, 1099616271859, 4332499457, 3979785], by decide +kernel⟩
 private def batches : List P := [p0, p1, p2, p3]
-private theorem i33 : checks (tilesOf batches) 133 33 8 = true := by
+private theorem i33 : checks (tilesOf batches) 130 33 8 = true := by
   decide +kernel
-private theorem i41 : checks (tilesOf batches) 133 41 8 = true := by
+private theorem i41 : checks (tilesOf batches) 130 41 8 = true := by
   decide +kernel
-private theorem i49 : checks (tilesOf batches) 133 49 6 = true := by
+private theorem i49 : checks (tilesOf batches) 130 49 8 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=11)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i33 (checks_join i41 (i49))) a ha ht hb hj
 end Top11
@@ -336,22 +350,22 @@ namespace Top12
 private abbrev P := PaidBatch orders 12
 
 private def p0 : P :=
-  ⟨unpack [69713170481, 5758637129, 26562302241, 30538575137, 4970171681, 13207711125], by decide +kernel⟩
+  ⟨unpack [86708359217, 30924181749, 34900455669, 13509580021, 13291467129, 13157319033], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [8862481813, 1100052613527, 1099968730539, 1099968731563, 1099851288007, 1099851289031], by decide +kernel⟩
+  ⟨unpack [8795246969, 1100035710351, 1100035711375, 1099901489583, 1099901490607, 1099901491631], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [1099767397851, 1099767398875, 1099767399899, 17402008033, 8812078561, 4483625445], by decide +kernel⟩
+  ⟨unpack [4466721213, 1099834378687, 1099834379711, 21747175877, 8879057349, 4483495389], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [1099717065191, 20886036], by decide +kernel⟩
+  ⟨unpack [4382834141, 1099649828331, 1099599494647, 1099599495671, 17183773193, 8593909257], by decide +kernel⟩
 private def batches : List P := [p0, p1, p2, p3]
-private theorem i36 : checks (tilesOf batches) 133 36 8 = true := by
+private theorem i36 : checks (tilesOf batches) 130 36 8 = true := by
   decide +kernel
-private theorem i44 : checks (tilesOf batches) 133 44 8 = true := by
+private theorem i44 : checks (tilesOf batches) 130 44 8 = true := by
   decide +kernel
-private theorem i52 : checks (tilesOf batches) 133 52 3 = true := by
+private theorem i52 : checks (tilesOf batches) 130 52 5 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=12)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i36 (checks_join i44 (i52))) a ha ht hb hj
 end Top12
@@ -360,29 +374,31 @@ namespace Top13
 private abbrev P := PaidBatch orders 13
 
 private def p0 : P :=
-  ⟨unpack [65418271797, 26428087589, 21982198053, 9130922277, 8828860833, 1100002280867], by decide +kernel⟩
+  ⟨unpack [73924189237, 26528619793, 26293811473, 13425759505, 8912615825, 8812021137], by decide +kernel⟩
 private def p1 : P :=
-  ⟨unpack [1100002281891, 1100002282915, 1099968729515, 1099968730539, 1099968731563, 13224484293], by decide +kernel⟩
+  ⟨unpack [1100018930067, 1100002153879, 1100002154903, 1100002155927, 1100002156951, 17401880009], by decide +kernel⟩
 private def p2 : P :=
-  ⟨unpack [8828857797, 4416518621, 1099750621663, 1099616401919, 1099616402943, 4382961153], by decide +kernel⟩
+  ⟨unpack [8812016073, 1099784046027, 1099784047051, 1099784048075, 171752929, 1099683381731], by decide +kernel⟩
 private def p3 : P :=
-  ⟨unpack [87995905], by decide +kernel⟩
+  ⟨unpack [12922363393, 8627465729, 37534209], by decide +kernel⟩
 private def batches : List P := [p0, p1, p2, p3]
-private theorem i39 : checks (tilesOf batches) 133 39 8 = true := by
+private theorem i39 : checks (tilesOf batches) 130 39 8 = true := by
   decide +kernel
-private theorem i47 : checks (tilesOf batches) 133 47 8 = true := by
+private theorem i47 : checks (tilesOf batches) 130 47 8 = true := by
+  decide +kernel
+private theorem i55 : checks (tilesOf batches) 130 55 2 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=13)
-    (hb : a.b≤133) (hj : a.j≤54) :
+    (hb : a.b≤130) (hj : a.j≤56) :
     Covered orders a ∨ Low6960Gate.Gated ((11 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i39 (i47)) a ha ht hb hj
+  cover_at (batches:=batches) (checks_join i39 (checks_join i47 (i55))) a ha ht hb hj
 end Top13
 
 def receipt : Receipt 11 where
   orders := orders
   covers := by
     intro a ha box
-    change 5+a.b≤138 ∧ 4+a.j≤58 ∧ 1+a.t≤14 at box
+    change 11+a.b≤141 ∧ 3+a.j≤59 ∧ 1+a.t≤14 at box
     have pos := ha.1
     have cases : a.t=1 ∨ a.t=2 ∨ a.t=3 ∨ a.t=4 ∨ a.t=5 ∨ a.t=6 ∨ a.t=7 ∨ a.t=8 ∨ a.t=9 ∨ a.t=10 ∨ a.t=11 ∨ a.t=12 ∨ a.t=13 := by omega
     rcases cases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 | h11 | h12 | h13

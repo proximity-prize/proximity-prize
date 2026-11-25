@@ -10,7 +10,6 @@ import Mathlib.LinearAlgebra.Dimension.Constructions
 import ArkLib.Data.MvPolynomial.WeightedDegree.Products
 import ArkLib.Data.MvPolynomial.WeightAtMost
 import Mathlib.RingTheory.MvPolynomial.Homogeneous
-set_option Elab.async false
 
 -- merged module Gate61Coprime
 section Merged_Gate61Coprime

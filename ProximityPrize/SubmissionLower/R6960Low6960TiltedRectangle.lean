@@ -198,7 +198,7 @@ instance {k : Band} (cells : List (MassCell k)) (t b j B l : ℕ) :
 theorem tilted {k : Band} {cells : List (MassCell k)} {a : Shape} {b j B t l : ℕ}
     (h : PaidTilted cells t b j B l) (hb : b≤a.b) (hB : a.b≤B)
     (hj : a.j=j) (ht : a.t=t) :
-    ∃ l, 0<l ∧ l≤order cells a ∧ contractedPrice a (start k) l 171≤
+    ∃ l, 0<l ∧ l≤order cells a ∧ contractedPrice a (start k) l 177≤
       allowance k ((start k).t+a.t) a.b a.j a.t := by
   obtain ⟨lp,lo,ht',hj',hw,fee⟩ := h
   cases a with
@@ -207,7 +207,7 @@ theorem tilted {k : Band} {cells : List (MassCell k)} {a : Shape} {b j B t l : �
     change z=t at ht
     subst d z
     have geom : tiltedFits ⟨a,j,t⟩ := ⟨hj',hw.trans hb⟩
-    have hprice : contractedPrice ⟨a,j,t⟩ (start k) l 171 ≤
+    have hprice : contractedPrice ⟨a,j,t⟩ (start k) l 177 ≤
         cutPrice ⟨a,j,t⟩ l 1920 (tiltedSurface (⟨a,j,t⟩ : Shape).chamber (hullOf k l)) := by
       unfold contractedPrice
       dsimp only

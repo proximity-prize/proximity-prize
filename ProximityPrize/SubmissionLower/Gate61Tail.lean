@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.Gate61Level
-set_option Elab.async false
 
 set_option autoImplicit false
 

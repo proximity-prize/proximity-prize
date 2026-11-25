@@ -1,6 +1,5 @@
 import Mathlib.Algebra.Polynomial.Div
 import Mathlib.Tactic
-set_option Elab.async false
 
 set_option autoImplicit false
 

@@ -53,8 +53,8 @@ private def numericCell (t j : ℕ) : ℕ :=
     let k := cap i.1.val
     let v := valuePower k i.1.val i.2.val
     let p := windowPower t j
-    min (twoFactorBound 1650 i 0 0) (twoFactorBound k i v 0) -
-      twoFactorBound k i p.value p.top
+    min (twoFactorBoundI 1650 i 0 0) (twoFactorBoundI k i v 0) -
+      twoFactorBoundI k i p.value p.top
   else 0 else 0
 
 private theorem cell_eq (t : Fin 80) (j : Fin 44) :
@@ -74,7 +74,7 @@ private theorem cell_eq (t : Fin 80) (j : Fin 44) :
     funext j
     fin_cases j <;> rfl
   simp only [numericCell, t.isLt, j.isLt, dite_true, gain, hw, ite_true, alternate,
-    ht, hj, twoFactorBound_eq, power, windowPower, hzero, old_bound_eq, baseline]
+    ht, hj, twoFactorBoundI_eq, twoFactorBound_eq, power, windowPower, hzero, old_bound_eq, baseline]
 
 private def row (t : ℕ) : ℕ := sumRange (numericCell t) 44
 

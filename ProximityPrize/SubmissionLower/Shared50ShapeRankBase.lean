@@ -1,6 +1,5 @@
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Tactic
-set_option Elab.async false
 
 open scoped BigOperators
 

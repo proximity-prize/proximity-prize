@@ -356,7 +356,7 @@ theorem small_ordinate_count {A d w s T} (W : Word A d w s T)
     (marks : ∀ γ∈T, atMark f (label γ) (s γ)=0) :
     T.card≤8*((v+b)+K1.p*(u+b))+4 :=
   small_ordinate_count_at_scale W label inj hd scale f ne degree axes small guard width marks
-theorem first_band_small_ordinate {w s T} (W : Word 179808 133606 w s T)
+theorem first_band_small_ordinate {w s T} (W : Word 179798 133606 w s T)
     (label : K1.K → K1.K) (inj : Set.InjOn label (T : Set K1.K))
     (f : Equation) (ne : f≠0) (degree : f.natDegree≤2)
     (axes : ∀ i, (f.coeff i).degreeOf 0≤2400 ∧ (f.coeff i).degreeOf 1≤2400)
@@ -384,7 +384,7 @@ private theorem coeff_axis (f : Equation) (i : Fin 2) (j : ℕ) :
   simpa [n,axis] using MvPolynomial.le_degreeOf_of_mem_support (some i) hi
 private def lowFee (f : Equation) : ℕ :=
   8*(axis f 0+K1.p*axis f 1)+(8*128*(K1.p+1)+4)*f.natDegree
-theorem low_component_count {w s T} (W : Word 179808 133606 w s T)
+theorem low_component_count {w s T} (W : Word 179798 133606 w s T)
     (label : K1.K → K1.K) (inj : Set.InjOn label (T : Set K1.K)) (f : Equation) :
     f≠0 → (∀ i, axis f i≤2400) →
     (∀ γ∈T, ∃ q : Equation, Irreducible q ∧ q∣f ∧ 0<q.natDegree ∧ q.natDegree≤2 ∧
@@ -407,7 +407,7 @@ theorem low_component_count {w s T} (W : Word 179808 133606 w s T)
     let V := T \ U
     have us : U⊆T := Finset.filter_subset _ _
     have vs : V⊆T := Finset.sdiff_subset
-    have subword (R) (sub : R⊆T) : Word 179808 133606 w s R :=
+    have subword (R) (sub : R⊆T) : Word 179798 133606 w s R :=
       ⟨W.distinct.mono sub,fun γ h => W.degree _ (sub h),fun γ h => W.hits _ (sub h)⟩
     have ax (i : Fin 2) := axis_mul irr.ne_zero ng i
     have upper (i : Fin 2) : axis q i+axis g i≤2400 := (ax i) ▸ caps i
@@ -452,13 +452,13 @@ theorem low_component_count {w s T} (W : Word 179808 133606 w s T)
 def smallMarks (T : Finset K1.K) (label : K1.K → K1.K) (s : K1.K → (Polynomial K1.K)) (f : Equation) :
     Finset K1.K := T.filter (fun γ => ∃ q : Equation, Irreducible q ∧ q∣f ∧
       0<q.natDegree ∧ q.natDegree≤2 ∧ atMark q (label γ) (s γ)=0)
-theorem small_marks_at_first_band {w s T} (W : Word 179808 133606 w s T)
+theorem small_marks_at_first_band {w s T} (W : Word 179798 133606 w s T)
     (label : K1.K → K1.K) (inj : Set.InjOn label (T : Set K1.K))
     (f : Equation) (ne : f≠0) (degree : f.natDegree≤47) (caps : ∀ i, axis f i≤2400) :
     (smallMarks T label s f).card≤8*((2400+47*128)+K1.p*(2400+47*128))+4*47 := by
   let U:=smallMarks T label s f
   have sub : U⊆T := Finset.filter_subset _ _
-  have word : Word 179808 133606 w s U :=
+  have word : Word 179798 133606 w s U :=
     ⟨W.distinct.mono sub,fun γ h => W.degree _ (sub h),fun γ h => W.hits _ (sub h)⟩
   have h:=low_component_count word label (inj.mono sub) f ne caps
     (fun γ h => (Finset.mem_filter.mp h).2)
@@ -488,7 +488,7 @@ open KoalaRect (axisDegree axisDegree_le_iff axisDegree_mul)
 open RescueGeometry (Model Family)
 def fee (f : Equation) : ℕ :=
   18*(axisDegree f 0+K1.p*axisDegree f 1)+(K1.p+1)*(axisDegree f 0+axisDegree f 1)+4*f.natDegree
-private theorem one {w s T} (W : Word 179808 164670 w s T)
+private theorem one {w s T} (W : Word 179798 164690 w s T)
     (label : K→K) (inj : Set.InjOn label (T:Set K)) (q : Equation)
     (nq : q≠0) (pos : 0<q.natDegree) (dy : q.natDegree≤2)
     (cap : axisDegree q 0+axisDegree q 1≤2400)
@@ -498,9 +498,9 @@ private theorem one {w s T} (W : Word 179808 164670 w s T)
   let b:=(v+u)/18
   have vmax : v+b+1≤19*(b+1) := by dsimp [b]; omega
   have umax : u+b+1≤19*(b+1) := by dsimp [b]; omega
-  have shape : 3*(v+b+1)*(u+b+1)*(2*164670) < (b+1)*(b+1)*(K1.p/2) := by
-    calc _ ≤ 3*(19*(b+1))*(19*(b+1))*(2*164670) := by gcongr
-         _ = (b+1)*(b+1)*(3*19*19*(2*164670)) := by ring
+  have shape : 3*(v+b+1)*(u+b+1)*(2*164690) < (b+1)*(b+1)*(K1.p/2) := by
+    calc _ ≤ 3*(19*(b+1))*(19*(b+1))*(2*164690) := by gcongr
+         _ = (b+1)*(b+1)*(3*19*19*(2*164690)) := by ring
          _ < _ := Nat.mul_lt_mul_of_pos_left (by decide) (by positivity)
   have sz : v+u≤2400 := cap
   have charge := small_ordinate_count_at_scale (k:=18) (b:=b) W label inj (by decide)
@@ -514,7 +514,7 @@ private theorem one {w s T} (W : Word 179808 164670 w s T)
   calc _ ≤ _ := charge
        _ = 18*(v+K1.p*u)+(K1.p+1)*(18*b)+4 := by ring
        _ ≤ _ := by omega
-theorem covered {w s T} (W : Word 179808 164670 w s T) (label : K→K)
+theorem covered {w s T} (W : Word 179798 164690 w s T) (label : K→K)
     (inj : Set.InjOn label (T:Set K)) (f : Equation) :
     f≠0 → axisDegree f 0+axisDegree f 1≤2400 →
     (∀ γ∈T,∃ q : Equation,Irreducible q ∧ q∣f ∧ 0<q.natDegree ∧ q.natDegree≤2 ∧
@@ -534,7 +534,7 @@ theorem covered {w s T} (W : Word 179808 164670 w s T) (label : K→K)
     let V:=T\U
     have us : U⊆T := filter_subset _ _
     have vs : V⊆T := sdiff_subset
-    have word (R) (sub : R⊆T) : Word 179808 164670 w s R :=
+    have word (R) (sub : R⊆T) : Word 179798 164690 w s R :=
       ⟨W.distinct.mono sub, fun γ h=>W.degree γ (sub h),fun γ h=>W.hits γ (sub h)⟩
     have a0 := axisDegree_mul ir.ne_zero ng 0
     have a1 := axisDegree_mul ir.ne_zero ng 1
@@ -559,14 +559,14 @@ theorem covered {w s T} (W : Word 179808 164670 w s T) (label : K→K)
          _ ≤ fee q+fee g := Nat.add_le_add cb ca
          _ = _ := by unfold fee; rw [a0,a1,natDegree_mul ir.ne_zero ng]; ring
 def smallCap : ℕ := (19*K1.p+1)*2400+4*47
-theorem small_marks {w s T} (W : Word 179808 164670 w s T) (label : K→K)
+theorem small_marks {w s T} (W : Word 179798 164690 w s T) (label : K→K)
     (inj : Set.InjOn label (T:Set K)) {f : Equation} (ne : f≠0) (deg : f.natDegree<48)
     (axes : axisDegree f 0+axisDegree f 1≤2400) :
     (smallMarks T label s f).card≤smallCap := by
   classical
   let U:=smallMarks T label s f
   have sub : U⊆T := filter_subset _ _
-  have word : Word 179808 164670 w s U :=
+  have word : Word 179798 164690 w s U :=
     ⟨W.distinct.mono sub,fun γ h=>W.degree γ (sub h),fun γ h=>W.hits γ (sub h)⟩
   have paid:=covered word label (inj.mono sub) f ne axes (fun γ h=>(mem_filter.mp h).2)
   refine paid.trans ?_
@@ -590,8 +590,8 @@ private theorem root_factor {f : Equation} (nf : f≠0) (z : K) (S : (Polynomial
 open K1_14_1 (PoleData CRTLift nodeL MarkResidues)
 open TerminalReceipts (witness)
 theorem higher_remainder {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    {D : PoleData M.overhead.toNat} (Crt : CRTLift D) (lo : 2383≤M.overhead.toNat)
-    (hi : M.overhead.toNat≤33599) (regular : ∀ j i,(D.block j).eval (nodeL i)≠0)
+    {D : PoleData M.overhead.toNat} (Crt : CRTLift D) (lo : 2402≤M.overhead.toNat)
+    (hi : M.overhead.toNat≤33619) (regular : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     Γ.card≤MainGeometry.prefixCap ∨
       ∃ (T : Finset K) (f : Equation), T⊆Γ ∧ Γ.card≤MainGeometry.prefixCap+smallCap+T.card ∧
@@ -610,7 +610,7 @@ theorem higher_remainder {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ
   have us : U⊆Γ := sdiff_subset
   have ls : L⊆U := filter_subset _ _
   have ts : T⊆U := sdiff_subset
-  have W : Word 179808 164670 M.word F.scalar U := by
+  have W : Word 179798 164690 M.word F.scalar U := by
     refine ⟨F.distinct.mono us,?_,?_⟩
     · intro γ hγ
       rcases (F.mark γ (us hγ)).scalar_degree with zero | degree
