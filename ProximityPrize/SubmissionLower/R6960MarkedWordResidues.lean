@@ -338,11 +338,10 @@ theorem grow [FiniteDimensional ChartField E] (i:ℕ) (x:L) (nx:x≠0)
   rw [eq,add_sub_cancel_right]
   exact lr s
 
-open RetainedCompression (Curve ordinate view height heightCap TameBand)
+open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 
-theorem initial (degD : ℕ) (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
-    (hi:TameBand (f.degreeOf ordinate) degD)
-    (bounded:height degD f≤heightCap (f.degreeOf ordinate) degD) (basis:PowerBasis ChartField E)
+theorem initial (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
+    (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (basis:PowerBasis ChartField E)
     (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) [FiniteDimensional L (Paired E x z)] {b:ℕ}
     (size:finrank L (Paired E x z)≤b) : Budget E 0 b := by
@@ -354,7 +353,7 @@ theorem initial (degD : ℕ) (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3�
   apply RetainedCodimension.from_map f₀ _ _ size
   ext u
   change e u∈(rawMap E x z).ker ↔ ∃ c:E,∀s, Regular s 0 ((u.1 s:E)-c)
-  rw [restriction_kernel E degD f ir lo hi bounded basis root x z nx nz]
+  rw [restriction_kernel E f ir lo hi bounded basis root x z nx nz]
   simp only [Regular,pow_zero,one_mul]; rfl
 
 #print axioms grow
@@ -362,9 +361,8 @@ theorem initial (degD : ℕ) (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3�
 
 /-- Uniform surface bound for every positive abscissa twist of the same actual
 factor. The degrees s,t are measured on its own two specialized chart orders. -/
-theorem actual_all_twists (degD : ℕ) (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
-    (hi:TameBand (f.degreeOf ordinate) degD)
-    (bounded:height degD f≤heightCap (f.degreeOf ordinate) degD) (basis:PowerBasis ChartField E)
+theorem actual_all_twists (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
+    (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (basis:PowerBasis ChartField E)
     (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
     ∃ (x z:L) (nx:x≠0) (nz:z≠0) (m n s t:ℕ),
       ∃ (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
@@ -374,8 +372,8 @@ theorem actual_all_twists (degD : ℕ) (f:Curve (Polynomial L)) (ir:Irreducible 
         Nonempty (Basis (Fin (f.degreeOf ordinate)) L (Crossing E x z)) ∧ IsReduced (Crossing E x z) ∧
         ∀ i:ℕ, Budget E i (s+(i+1)*t) := by
   have : FiniteDimensional ChartField E := basis.finite
-  have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi.lt_64 basis root
-  obtain ⟨x,z,nx,nz,⟨B⟩,red⟩:=actual_crossing E f ir lo hi.lt_64 basis root
+  have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi basis root
+  obtain ⟨x,z,nx,nz,⟨B⟩,red⟩:=actual_crossing E f ir lo hi basis root
   have : FiniteDimensional L (Crossing E x z) := Module.Finite.of_basis B
   obtain ⟨m,⟨xf⟩,⟨xi⟩⟩:=native_frames E false x nx
   obtain ⟨n,⟨zf⟩,⟨zi⟩⟩:=native_frames E true z nz
@@ -390,7 +388,7 @@ theorem actual_all_twists (degD : ℕ) (f:Curve (Polynomial L)) (ir:Irreducible 
   have line : finrank L (LineObstructions E false x)≤t := by omega
   refine ⟨x,z,nx,nz,m,n,s,t,xf,xi,zf,zi,dt,ds,⟨B⟩,red,fun i=>?_⟩
   induction i with
-  | zero => simpa only [zero_add,one_mul] using initial E degD f ir lo hi bounded basis root x z nx nz base
+  | zero => simpa only [zero_add,one_mul] using initial E f ir lo hi bounded basis root x z nx nz base
   | succ i ih =>
     simpa only [Nat.succ_eq_add_one,Nat.add_mul,one_mul,Nat.add_assoc] using grow E i x nx ih line
 

@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.R6960RescueGeometryBills
-import ProximityPrize.SubmissionLower.HighCore82258PrefixGeometry
+import ProximityPrize.SubmissionLower.HighCore82258PrefixProcess
 
 -- merged module R6960RescueGeometryTariffs
 section Merged_R6960RescueGeometryTariffs
@@ -27,9 +27,9 @@ open K1_14_2_5 (clear_equation factor_cover)
 open K1_14_3_6 (power totalCap topCap)
 open scoped Classical BigOperators
 
-private abbrev agreement : ℕ := 179808
+private abbrev agreement : ℕ := 179798
 private abbrev blockLength : ℕ := 262144
-abbrev endpointDegree : ℕ := 164670
+abbrev endpointDegree : ℕ := 164690
 
 structure FixedWord (w : I → K) (U : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop where
   distinct : Set.InjOn s (U : Set K)
@@ -118,7 +118,7 @@ private theorem weights {s d : ℕ} (hs : s ≤ d) (hd : d < agreement)
     _ ≤ (blockLength : ℚ) * ((d : ℚ) / agreement) :=
       mul_le_mul (by exact_mod_cast Nat.sub_le blockLength s) hfrac (by positivity) (by positivity)
     _ = density * d := by ring
-private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164670) :
+private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164690) :
     rho d ≤ density * d := by
   have hdA : d < agreement := hh.trans_lt (by decide)
   have hdN : d ≤ blockLength := hh.trans (by decide)
@@ -127,8 +127,8 @@ private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164670
     have hp : (0 : ℚ) < ((agreement - d : ℕ) : ℚ) := by exact_mod_cast Nat.sub_pos_of_lt hdA
     apply (div_le_iff₀ hp).mpr
     rw [Nat.cast_sub hdN, Nat.cast_sub hdA.le]
-    change (262144 : ℚ) - d ≤ 17 * ((179808 : ℚ) - d)
-    have hQ : (d : ℚ) ≤ 164670 := by exact_mod_cast hh
+    change (262144 : ℚ) - d ≤ 17 * ((179798 : ℚ) - d)
+    have hQ : (d : ℚ) ≤ 164690 := by exact_mod_cast hh
     linarith only [hQ]
   have hDensity : 1 ≤ density := by
     apply (le_div_iff₀ (show (0 : ℚ) < (agreement : ℚ) by positivity)).mpr
@@ -146,7 +146,7 @@ private theorem taylorPower_cast {g : ℕ} (hg : 0 < g) :
   rfl
 private theorem regular_count {n g H d : ℕ} {U : Finset K} {s : K → Polynomial K} {w}
     (A : K1_14_2_4.RegularChart U s g H n) (hw : FixedWord w U s d)
-    (hg : 0 < g) (hl : 131071 ≤ d) (hh : d ≤ 164670) :
+    (hg : 0 < g) (hl : 131071 ≤ d) (hh : d ≤ 164690) :
     (U.card : ℚ) ≤ (2 * density * d * (taylorPower g : ℚ) + rho d) * H + 1 := by
   have hbound : 0 ≤ (2 * density * d * (taylorPower g : ℚ) + rho d) * (H : ℚ) := by
     unfold rho
@@ -202,7 +202,7 @@ private theorem regular_count {n g H d : ℕ} {U : Finset K} {s : K → Polynomi
 /-- Degree and agreement at the new upper height, for an arbitrary set
 of marks from the actual anchored family. -/
 theorem fixed_word {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    (hi : M.overhead.toNat≤33599) {T : Finset K} (hT : T⊆Γ) :
+    (hi : M.overhead.toNat≤33619) {T : Finset K} (hT : T⊆Γ) :
     FixedWord M.word T F.scalar endpointDegree where
   distinct := F.distinct.mono hT
   degree := by
@@ -210,7 +210,7 @@ theorem fixed_word {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     rcases (F.mark γ (hT hγ)).scalar_degree with zero | bound
     · simp [zero]
     · change ((F.scalar γ).natDegree : ℤ)≤131071+M.overhead at bound
-      change (F.scalar γ).natDegree≤164670
+      change (F.scalar γ).natDegree≤164690
       omega
   hits := by
     intro γ hγ
@@ -228,7 +228,7 @@ def CurveTariff {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) : Prop 
     (T.card : ℚ)≤curveUnit g*H+g
 
 theorem curve_tariff {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    (hi : M.overhead.toNat≤33599) : CurveTariff F := by
+    (hi : M.overhead.toNat≤33619) : CurveTariff F := by
   intro T hT J g H hg hgLimit hcurve _ hmarks
   obtain ⟨U,hU,hexc,n,⟨A⟩⟩ := regular_chart T M.label F.scalar J g H hg
     (hgLimit.trans_lt (by decide)) hcurve (label_injective M).injOn hmarks
@@ -358,7 +358,7 @@ def persistentTop (d B J : ℕ) : ℚ :=
 private theorem persistentTotal_nonneg (d B : ℕ) : 0 ≤ persistentTotal d B := by
   unfold persistentTotal siteRatio
   positivity
-private theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164670)
+private theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 164690)
     (hm : m ≤ d) (hJ : 0 < J) :
     let t := max 1 (d-m)
     siteRatio m * totalCap t B ≤ persistentTotal d B ∧
@@ -395,7 +395,7 @@ private theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 16
       _ = (siteRatio m * t) * (2*J-1 : ℕ) := by push_cast; ring
       _ ≤ _ := mul_le_mul_of_nonneg_right hLambda (Nat.cast_nonneg _)
 private theorem persistent_regular {w T s d B J} (hw : FixedWord w T s d)
-    (hl : 131071 ≤ d) (hh : d ≤ 164670) (hJ : 0 < J)
+    (hl : 131071 ≤ d) (hh : d ≤ 164690) (hJ : 0 < J)
     (f : Row 2) (hf : Irreducible f) (hfpos : 0 < f.degreeOf 1)
     (hb : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J)
     (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) :
@@ -453,7 +453,7 @@ def fixedFee (B J : ℕ) : ℕ :=
   (mix B J (persistentTotal endpointDegree B) (persistentTop endpointDegree B J)).ceil.toNat+B^2
 
 theorem fixed_count {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    (hi : M.overhead.toNat≤33599) {B J : ℕ} (guard : ODEGuard B J)
+    (hi : M.overhead.toNat≤33619) {B J : ℕ} (guard : ODEGuard B J)
     (G : ODE) (caps : ODECaps G B J) {T : Finset K} (hT : T⊆Γ)
     (roots : ∀ γ∈T,fixedAt G (F.scalar γ)=0) :
     T.card≤fixedFee B J := by

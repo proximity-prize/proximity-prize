@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.FadicDegree
-set_option Elab.async false
 set_option autoImplicit false
 namespace FadicGate
 open K1_13_2 (cappedCount)

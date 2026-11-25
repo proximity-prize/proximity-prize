@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.Gate61Amb
 import ProximityPrize.SubmissionLower.Gate61Shape
-set_option Elab.async false
 
 set_option autoImplicit false
 

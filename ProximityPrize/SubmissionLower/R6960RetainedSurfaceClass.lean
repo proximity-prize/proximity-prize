@@ -234,12 +234,12 @@ private theorem matched_of_eq (x z:L) (a b:Tor E)
   obtain ⟨t,rfl⟩:=Ideal.mem_span_singleton.mp hv
   exact ⟨r,t,r.property,t.property,congrArg Subtype.val l.symm⟩
 
-open RetainedCompression (Curve ordinate view height heightCap TameBand)
+open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 
 /-- The actual bounded cover's untwisted obstruction space embeds in the quotient
 formed by the two torus fibres and a single shared crossing. -/
-theorem restriction_kernel (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : TameBand (f.degreeOf ordinate) degD) (bounded : height degD f≤heightCap (f.degreeOf ordinate) degD)
+theorem restriction_kernel (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) :
@@ -249,7 +249,7 @@ theorem restriction_kernel (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreduc
     rw [raw_zero]
     constructor
     · rintro ⟨v,w,iv,iw,ex,ez,node⟩
-      have r:=split_of_paired_data degD f ir lo hi bounded basis root x z nx nz
+      have r:=split_of_paired_data f ir lo hi bounded basis root x z nx nz
         (fun s=>(u.1 s:E)) u.property (fun b=>(v b:E)) (fun b=>(w b:E))
         ⟨iv,congr_of_eq E false x _ _ ex⟩ ⟨iw,congr_of_eq E true z _ _ ez⟩
         (matched_of_eq E x z _ _ node)

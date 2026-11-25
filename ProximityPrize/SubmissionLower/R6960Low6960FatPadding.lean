@@ -12,7 +12,7 @@ open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necess
 open scoped Polynomial BigOperators
 private theorem mixedWeight_pos {a : SeedVar →₀ ℕ} (ha : a ≠ 0) : 0 < mixedWeight a := by
   by_contra! h
-  change 7077 * a none + 48739 * a.some.degree ≤ 0 at h
+  change 7101 * a none + 48729 * a.some.degree ≤ 0 at h
   have hn : a none = 0 := by omega
   have hd : a.some.degree = 0 := by omega
   have hs := (Finsupp.degree_eq_zero_iff _).mp hd
@@ -186,11 +186,11 @@ open Polynomial
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
 open P3_6_4 (resultant_taylor_formal)
-private def weight (d i : ℕ) : ℕ := d - 7077 * i
-private def power (w : ℕ) : ℕ := (48738 + w) / 48739
+private def weight (d i : ℕ) : ℕ := d - 7101 * i
+private def power (w : ℕ) : ℕ := (48728 + w) / 48729
 private theorem coefficient_bound {k : Type*} [CommRing k]
     (P : (Polynomial (Polynomial k))) (d e i j : ℕ) (hij : j ≤ i)
-    (hP : ∀ i l : ℕ, 7077 * i + 48739 * l < d → (P.coeff i).coeff l = 0) :
+    (hP : ∀ i l : ℕ, 7101 * i + 48729 * l < d → (P.coeff i).coeff l = 0) :
     (Polynomial.X : (Polynomial k)) ^ power (weight (d + e) i - weight e j) ∣ P.coeff (i - j) := by
   have hweight : weight (d + e) i ≤ weight e j + weight d (i - j) := by
     unfold weight
@@ -199,15 +199,15 @@ private theorem coefficient_bound {k : Type*} [CommRing k]
   intro l hl
   apply hP
   unfold power at hl
-  have hsmall : 48739 * l < weight (d + e) i - weight e j := by omega
+  have hsmall : 48729 * l < weight (d + e) i - weight e j := by omega
   unfold weight at hweight hsmall
   omega
 private def columnWeight {m n : ℕ} (j : Fin (m + n)) : ℕ :=
   j.addCases (fun j : Fin m => weight firstOrder j) (fun j : Fin n => weight secondOrder j)
 private theorem sylvester_entry {k : Type*} [CommRing k]
     (F G : (Polynomial (Polynomial k))) (m n : ℕ)
-    (hF : ∀ i l : ℕ, 7077 * i + 48739 * l < firstOrder → (F.coeff i).coeff l = 0)
-    (hG : ∀ i l : ℕ, 7077 * i + 48739 * l < secondOrder → (G.coeff i).coeff l = 0)
+    (hF : ∀ i l : ℕ, 7101 * i + 48729 * l < firstOrder → (F.coeff i).coeff l = 0)
+    (hG : ∀ i l : ℕ, 7101 * i + 48729 * l < secondOrder → (G.coeff i).coeff l = 0)
     (i j : Fin (m + n)) :
     (Polynomial.X : (Polynomial k)) ^ power (weight (firstOrder + secondOrder) i - columnWeight j) ∣
       sylvester F G m n i j := by
@@ -226,7 +226,7 @@ private theorem sylvester_entry {k : Type*} [CommRing k]
 private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
     (M : Matrix (Fin N) (Fin N) (Polynomial k)) (row col : Fin N → ℕ)
     (hM : ∀ i j, (Polynomial.X : (Polynomial k)) ^ power (row i - col j) ∣ M i j)
-    (hbudget : (∑ j, col j) + 48739 * D ≤ (∑ i, row i) + 48738) :
+    (hbudget : (∑ j, col j) + 48729 * D ≤ (∑ i, row i) + 48728) :
     (Polynomial.X : (Polynomial k)) ^ D ∣ M.det := by
   classical
   rw [Matrix.det_apply']
@@ -236,7 +236,7 @@ private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
   have hprod : (Polynomial.X : (Polynomial k)) ^ (∑ j, a j) ∣ ∏ j, M (σ j) j := by
     rw [← Finset.prod_pow_eq_pow_sum]
     exact Finset.prod_dvd_prod_of_dvd _ _ (fun j _ => hM (σ j) j)
-  have hsum : (∑ i, row i) ≤ (∑ j, col j) + 48739 * (∑ j, a j) := by
+  have hsum : (∑ i, row i) ≤ (∑ j, col j) + 48729 * (∑ j, a j) := by
     rw [← Equiv.sum_comp σ row, Finset.mul_sum, ← Finset.sum_add_distrib]
     apply Finset.sum_le_sum
     intro j _
@@ -244,9 +244,9 @@ private theorem det_bound {k : Type*} [CommRing k] {N D : ℕ}
     omega
   have hD : D ≤ ∑ j, a j := by omega
   exact dvd_mul_of_dvd_right ((pow_dvd_pow _ hD).trans hprod) _
-private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 7077 * t)
-    (hbefore : ∀ i < t, 7077 * i ≤ d) :
-    (∑ i : Fin N, weight d i) = t * d - 7077 * (t * (t - 1) / 2) := by
+private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 7101 * t)
+    (hbefore : ∀ i < t, 7101 * i ≤ d) :
+    (∑ i : Fin N, weight d i) = t * d - 7101 * (t * (t - 1) / 2) := by
   rw [Fin.sum_univ_eq_sum_range]
   have htrim : (∑ i ∈ Finset.range t, weight d i) = ∑ i ∈ Finset.range N, weight d i := by
     apply Finset.sum_subset (Finset.range_mono ht)
@@ -255,7 +255,7 @@ private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 7077 * t)
     unfold weight
     omega
   rw [← htrim]
-  have hsum : (∑ i ∈ Finset.range t, weight d i) + 7077 * (∑ i ∈ Finset.range t, i) =
+  have hsum : (∑ i ∈ Finset.range t, weight d i) + 7101 * (∑ i ∈ Finset.range t, i) =
       t * d := by
     rw [Finset.mul_sum, ← Finset.sum_add_distrib]
     calc
@@ -269,19 +269,19 @@ private theorem sum_weight {d t N : ℕ} (ht : t ≤ N) (hend : d ≤ 7077 * t)
   rw [Finset.sum_range_id] at hsum
   omega
 private theorem benchmark_budget :
-    (∑ j : Fin (27000 + 27000), columnWeight (m := 27000) (n := 27000) j) + 48739 * 22950 ≤
-      (∑ i : Fin (27000 + 27000), weight (firstOrder + secondOrder) i) + 48738 := by
-  have hF : (∑ i : Fin 27000, weight firstOrder i) = 1426818330 := by
-    rw [sum_weight (t := 635) (by decide) (by decide)
+    (∑ j : Fin (27000 + 27000), columnWeight (m := 27000) (n := 27000) j) + 48729 * 21768 ≤
+      (∑ i : Fin (27000 + 27000), weight (firstOrder + secondOrder) i) + 48728 := by
+  have hF : (∑ i : Fin 27000, weight firstOrder i) = 1387321250 := by
+    rw [sum_weight (t := 625) (by decide) (by decide)
       (by intro i hi; simp only [firstOrder]; omega)]
     decide
-  have hG : (∑ i : Fin 27000, weight secondOrder i) = 220434875 := by
-    rw [sum_weight (t := 250) (by decide) (by decide)
+  have hG : (∑ i : Fin 27000, weight secondOrder i) = 203926440 := by
+    rw [sum_weight (t := 240) (by decide) (by decide)
       (by intro i hi; simp only [secondOrder]; omega)]
     decide
   have hFG : (∑ i : Fin (27000 + 27000), weight (firstOrder + secondOrder) i) =
-      2765768590 := by
-    rw [sum_weight (t := 884) (by decide) (by decide)
+      2651968080 := by
+    rw [sum_weight (t := 864) (by decide) (by decide)
       (by intro i hi; simp only [firstOrder, secondOrder]; omega)]
     decide
   rw [Fin.sum_univ_add, hFG]
@@ -289,12 +289,12 @@ private theorem benchmark_budget :
   decide
 private theorem resultant_bound
     (F G : (Polynomial (Polynomial GenericX))) (z : GenericX) {m n D : ℕ} (hF : F.natDegree ≤ m) (hG : G.natDegree ≤ n)
-    (hFO : ∀ i l : ℕ, 7077 * i + 48739 * l < firstOrder →
+    (hFO : ∀ i l : ℕ, 7101 * i + 48729 * l < firstOrder →
       ((F.taylor (C z)).coeff i).coeff l = 0)
-    (hGO : ∀ i l : ℕ, 7077 * i + 48739 * l < secondOrder →
+    (hGO : ∀ i l : ℕ, 7101 * i + 48729 * l < secondOrder →
       ((G.taylor (C z)).coeff i).coeff l = 0)
-    (hbudget : (∑ j : Fin (m + n), columnWeight (m := m) (n := n) j) + 48739 * D ≤
-      (∑ i : Fin (m + n), weight (firstOrder + secondOrder) i) + 48738) :
+    (hbudget : (∑ j : Fin (m + n), columnWeight (m := m) (n := n) j) + 48729 * D ≤
+      (∑ i : Fin (m + n), weight (firstOrder + secondOrder) i) + 48728) :
     (Polynomial.X : (Polynomial GenericX)) ^ D ∣ resultant F G m n := by
   rw [← resultant_taylor_formal F G (C z) hF hG]
   unfold resultant
@@ -305,12 +305,12 @@ private theorem resultant_bound
     (sylvester_entry _ _ m n hFO hGO) hbudget
 theorem line_resultant_order (F G : (Polynomial (Polynomial GenericX))) (z : GenericX)
     (hF : F.natDegree ≤ 27000) (hG : G.natDegree ≤ 27000)
-    (hFO : ∀ i j, 7077 * i + 48739 * j < firstOrder →
+    (hFO : ∀ i j, 7101 * i + 48729 * j < firstOrder →
       ((F.taylor (Polynomial.C z)).coeff i).coeff j = 0)
-    (hGO : ∀ i j, 7077 * i + 48739 * j < secondOrder →
+    (hGO : ∀ i j, 7101 * i + 48729 * j < secondOrder →
       ((G.taylor (Polynomial.C z)).coeff i).coeff j = 0) :
-    (Polynomial.X : (Polynomial GenericX)) ^ 22950 ∣ Polynomial.resultant F G 27000 27000 := by
-  exact resultant_bound F G z (m := 27000) (n := 27000) (D := 22950)
+    (Polynomial.X : (Polynomial GenericX)) ^ 21768 ∣ Polynomial.resultant F G 27000 27000 := by
+  exact resultant_bound F G z (m := 27000) (n := 27000) (D := 21768)
     hF hG hFO hGO benchmark_budget
 end Low6960Fat
 end
@@ -359,7 +359,7 @@ private theorem line_translation (F : GenericRow) (z : GenericX) (y v : Fin 3 �
   exact DFunLike.congr_fun he F
 private theorem line_order (F : GenericRow) (z : GenericX) (y v : Fin 3 → GenericX)
     (d : ℕ) (hF : MixedOrder F z y d) :
-    ∀ i j, 7077 * i + 48739 * j < d →
+    ∀ i j, 7101 * i + 48729 * j < d →
       ((((asSeedPoly F).map ((ray v).comp (K1_13_4.translate y))).taylor (C z)).coeff i).coeff j = 0 := by
   intro i j h
   change ((((asSeedPoly F).map ((ray v).comp (K1_13_4.translate y))).comp
@@ -374,8 +374,8 @@ private theorem line_order (F : GenericRow) (z : GenericX) (y v : Fin 3 → Gene
     rw [← MvPolynomial.mem_support_coeff_optionEquivLeft]
     exact ha
   have hb := hF _ hmem
-  have hweight : mixedWeight (a.optionElim i) = 7077 * i + 48739 * j := by
-    change 7077 * a.optionElim i none + 48739 * (a.optionElim i).some.degree = _
+  have hweight : mixedWeight (a.optionElim i) = 7101 * i + 48729 * j := by
+    change 7101 * a.optionElim i none + 48729 * (a.optionElim i).some.degree = _
     rw [Finsupp.optionElim_apply_none, Finsupp.some_optionElim, hj]
   rw [hweight] at hb
   exact (Nat.not_lt_of_ge hb) h
@@ -413,7 +413,7 @@ theorem mixedOrder_pad {F : GenericRow} {z : GenericX} {y : Fin 3 → GenericX}
 theorem resultant_order (F G : GenericRow) (z : GenericX)
     (y : Fin 3 → GenericX) (hF : (asSeedPoly F).natDegree ≤ 27000)
     (hG : (asSeedPoly G).natDegree ≤ 27000) (h : PairOrders F G z y) :
-    LowerOrder (seedResultant27 F G) y 22950 := by
+    LowerOrder (seedResultant27 F G) y 21768 := by
   apply order_of_rays
   intro v
   rw [← line_resultant F G y v]

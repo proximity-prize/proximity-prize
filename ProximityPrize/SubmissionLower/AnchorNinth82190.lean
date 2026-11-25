@@ -21,7 +21,10 @@ theorem spec8 : Sound data8 (poly src8) := by
     exact poly_order _ (by decide +kernel)
   · exact encoded_degree (b := 110002) ([(1,⟨0,5,0,0⟩), (-2,⟨1,4,0,0⟩), (-4,⟨2,1,1,1⟩), (-1,⟨0,4,1,0⟩), (1,⟨1,2,2,0⟩), (-2,⟨2,2,0,1⟩), (2,⟨1,3,0,1⟩), (1,⟨2,2,1,0⟩), (2,⟨3,0,1,1⟩), (1,⟨3,0,0,2⟩), (1,⟨3,0,2,0⟩), (1,⟨2,0,3,0⟩), (-1,⟨2,1,2,0⟩)]) (by decide) (by decide)
 
-def allData : Fin 9 → Data := ![data0, data1, data2, data3, data4, data5, data6, data7, data8]
+def allData (i : Fin 9) : Data :=
+  match i.val with
+  | 0 => data0 | 1 => data1 | 2 => data2 | 3 => data3 | 4 => data4
+  | 5 => data5 | 6 => data6 | 7 => data7 | _ => data8
 noncomputable def allPoly : Fin 9 → Form := ![poly src0, poly src1, poly src2, poly src3, poly src4, poly src5, poly src6, poly src7, poly src8]
 theorem all_ok (i : Fin 9) : Sound (allData i) (allPoly i) := by
   fin_cases i

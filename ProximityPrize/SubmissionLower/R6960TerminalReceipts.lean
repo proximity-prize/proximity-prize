@@ -1,6 +1,5 @@
 import ProximityPrize.SubmissionLower.R6960TerminalArithmetic
 import ProximityPrize.SubmissionLower.HighCore82258Source
-
 set_option Elab.async false
 set_option maxHeartbeats 9000000
 set_option maxRecDepth 18000
@@ -9,7 +8,7 @@ open TerminalArithmetic
 open P1_7_1_3 (blockEstimate block_append momentEstimate)
 open P1_7_1_3_2 (moment_from_blocks)
 
-def terminalBank : P1_7.Bank := ⟨⟨4500,6286,1329,748778⟩,2693670660997120,42045879552530⟩
+def terminalBank : P1_7.Bank := ⟨⟨4500,6286,1329,778757⟩,2693670660997120,42045879552530⟩
 
 private theorem moment_6286_1329_part0 :
     blockEstimate 6286 1329 1329 128 = 2214802720 := by decide +kernel
@@ -317,60 +316,60 @@ theorem bank_checked : P3_7_1.BankOK terminalBank :=
     (by decide) (by decide) (by decide +kernel) (by decide) moment_6286_1329
 
 def witness : ℕ → RectArgs
-  | 0 => ⟨![655181, 93597], ![1200, 1201]⟩
-  | 1 => ⟨![668256, 80522], ![0, 1167]⟩
-  | 2 => ⟨![667439, 81339], ![0, 1162]⟩
-  | 3 => ⟨![667789, 80989], ![0, 1157]⟩
-  | 4 => ⟨![666987, 81791], ![0, 1152]⟩
-  | 5 => ⟨![667342, 81436], ![0, 1147]⟩
-  | 6 => ⟨![666555, 82223], ![0, 1142]⟩
-  | 7 => ⟨![666915, 81863], ![0, 1137]⟩
-  | 8 => ⟨![666143, 82635], ![0, 1132]⟩
-  | 9 => ⟨![666581, 82197], ![0, 1126]⟩
-  | 10 => ⟨![665825, 82953], ![0, 1121]⟩
-  | 11 => ⟨![666269, 82509], ![0, 1115]⟩
-  | 12 => ⟨![665529, 83249], ![0, 1110]⟩
-  | 13 => ⟨![664875, 83903], ![0, 1104]⟩
-  | 14 => ⟨![665255, 83523], ![0, 1099]⟩
-  | 15 => ⟨![664618, 84160], ![0, 1093]⟩
-  | 16 => ⟨![665080, 83698], ![0, 1087]⟩
-  | 17 => ⟨![664461, 84317], ![0, 1081]⟩
-  | 18 => ⟨![663854, 84924], ![0, 1075]⟩
-  | 19 => ⟨![663259, 85519], ![0, 1069]⟩
-  | 20 => ⟨![663739, 85039], ![0, 1063]⟩
-  | 21 => ⟨![663243, 85535], ![0, 1056]⟩
-  | 22 => ⟨![662679, 86099], ![0, 1050]⟩
-  | 23 => ⟨![662210, 86568], ![0, 1043]⟩
-  | 24 => ⟨![661671, 87107], ![0, 1037]⟩
-  | 25 => ⟨![661229, 87549], ![0, 1030]⟩
-  | 26 => ⟨![660801, 87977], ![0, 1023]⟩
-  | 27 => ⟨![660474, 88304], ![0, 1015]⟩
-  | 28 => ⟨![660075, 88703], ![0, 1008]⟩
-  | 29 => ⟨![658779, 89999], ![0, 1000]⟩
-  | 30 => ⟨![658416, 90362], ![0, 993]⟩
-  | 31 => ⟨![658251, 90527], ![0, 984]⟩
-  | 32 => ⟨![657035, 91743], ![0, 976]⟩
-  | 33 => ⟨![655947, 92831], ![0, 967]⟩
-  | 34 => ⟨![654895, 93883], ![0, 958]⟩
-  | 35 => ⟨![653879, 94899], ![0, 949]⟩
-  | 36 => ⟨![652213, 96565], ![0, 939]⟩
-  | 37 => ⟨![651339, 97439], ![0, 928]⟩
-  | 38 => ⟨![648826, 99952], ![0, 917]⟩
-  | 39 => ⟨![645893, 102885], ![0, 905]⟩
-  | 40 => ⟨![641859, 106919], ![0, 891]⟩
-  | 41 => ⟨![630789, 117989], ![0, 874]⟩
-  | 42 => ⟨![560486, 188292], ![0, 835]⟩
-  | 43 => ⟨![505149, 243629], ![0, 757]⟩
-  | 44 => ⟨![465194, 283584], ![0, 649]⟩
-  | 45 => ⟨![434665, 314113], ![0, 516]⟩
-  | 46 => ⟨![410482, 338296], ![0, 362]⟩
-  | 47 => ⟨![390747, 358031], ![0, 189]⟩
-  | 48 => ⟨![374389, 374389], ![0, 0]⟩
+  | 0 => ⟨![685160, 93597], ![1200, 1201]⟩
+  | 1 => ⟨![697338, 81419], ![0, 1180]⟩
+  | 2 => ⟨![697683, 81074], ![0, 1175]⟩
+  | 3 => ⟨![696858, 81899], ![0, 1170]⟩
+  | 4 => ⟨![697208, 81549], ![0, 1165]⟩
+  | 5 => ⟨![696398, 82359], ![0, 1160]⟩
+  | 6 => ⟨![696753, 82004], ![0, 1155]⟩
+  | 7 => ⟨![695958, 82799], ![0, 1150]⟩
+  | 8 => ⟨![696318, 82439], ![0, 1145]⟩
+  | 9 => ⟨![695611, 83146], ![0, 1139]⟩
+  | 10 => ⟨![695976, 82781], ![0, 1134]⟩
+  | 11 => ⟨![695212, 83545], ![0, 1129]⟩
+  | 12 => ⟨![695622, 83135], ![0, 1123]⟩
+  | 13 => ⟨![694983, 83774], ![0, 1117]⟩
+  | 14 => ⟨![694246, 84511], ![0, 1112]⟩
+  | 15 => ⟨![694702, 84055], ![0, 1106]⟩
+  | 16 => ⟨![694058, 84699], ![0, 1100]⟩
+  | 17 => ⟨![693426, 85331], ![0, 1094]⟩
+  | 18 => ⟨![693894, 84863], ![0, 1088]⟩
+  | 19 => ⟨![693280, 85477], ![0, 1082]⟩
+  | 20 => ⟨![692678, 86079], ![0, 1076]⟩
+  | 21 => ⟨![692169, 86588], ![0, 1069]⟩
+  | 22 => ⟨![691592, 87165], ![0, 1063]⟩
+  | 23 => ⟨![692166, 86591], ![0, 1056]⟩
+  | 24 => ⟨![691691, 87066], ![0, 1049]⟩
+  | 25 => ⟨![691230, 87527], ![0, 1042]⟩
+  | 26 => ⟨![690783, 87974], ![0, 1035]⟩
+  | 27 => ⟨![689322, 89435], ![0, 1028]⟩
+  | 28 => ⟨![688910, 89847], ![0, 1021]⟩
+  | 29 => ⟨![688601, 90156], ![0, 1013]⟩
+  | 30 => ⟨![688308, 90449], ![0, 1005]⟩
+  | 31 => ⟨![687034, 91723], ![0, 997]⟩
+  | 32 => ⟨![686781, 91976], ![0, 989]⟩
+  | 33 => ⟨![685658, 93099], ![0, 980]⟩
+  | 34 => ⟨![684571, 94186], ![0, 971]⟩
+  | 35 => ⟨![683520, 95237], ![0, 962]⟩
+  | 36 => ⟨![681949, 96808], ![0, 952]⟩
+  | 37 => ⟨![680894, 97863], ![0, 941]⟩
+  | 38 => ⟨![678318, 100439], ![0, 930]⟩
+  | 39 => ⟨![675942, 102815], ![0, 918]⟩
+  | 40 => ⟨![672086, 106671], ![0, 904]⟩
+  | 41 => ⟨![663382, 115375], ![0, 888]⟩
+  | 42 => ⟨![598328, 180429], ![0, 855]⟩
+  | 43 => ⟨![534494, 244263], ![0, 780]⟩
+  | 44 => ⟨![489330, 289427], ![0, 671]⟩
+  | 45 => ⟨![455498, 323259], ![0, 536]⟩
+  | 46 => ⟨![428834, 349923], ![0, 377]⟩
+  | 47 => ⟨![407283, 371474], ![0, 198]⟩
+  | 48 => ⟨![389379, 389378], ![0, 0]⟩
   | _ => ⟨![0,0],![0,0]⟩
 
 private theorem check0 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 1 (witness 0) := by
-  apply checks_of_runs _ _ _ _ _ _ 1407 52 237985219718959440678467330880 237986601894656012804267125440 237975757450156937696550508800 237975802785840653231065804800
+    2402 1 (witness 0) := by
+  apply checks_of_runs _ _ _ _ _ _ 1407 52 248870910392765111192005692000 248872355927229084464936689920 248865033006728200837652976000 248865080157522445643795764800
   · decide +kernel
   · decide
   · decide
@@ -380,8 +379,8 @@ private theorem check0 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check1 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 1 (witness 1) := by
-  apply checks_of_runs _ _ _ _ _ _ 1398 52 208833281898179136626009266560 208834497756007737587409640320 208831103810177008401948268800 208831149145860723936463564800
+    2402 1 (witness 1) := by
+  apply checks_of_runs _ _ _ _ _ _ 1398 52 220346095817754726454956960000 220347378924189204075496963200 220346076713778200504007561600 220346123864572445310150350400
   · decide +kernel
   · decide
   · decide
@@ -391,8 +390,8 @@ private theorem check1 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check2 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 2 (witness 2) := by
-  apply checks_of_runs _ _ _ _ _ _ 1399 52 210693262383294995112881587200 210694488659165439647321702400 210691072929034977110905248000 210691118264718692645420544000
+    2402 2 (witness 2) := by
+  apply checks_of_runs _ _ _ _ _ _ 1398 52 219521390427815749776828000000 219522668901358040332191792000 219521382624883767857478537600 219521429775678012663621326400
   · decide +kernel
   · decide
   · decide
@@ -402,8 +401,8 @@ private theorem check2 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check3 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 3 (witness 3) := by
-  apply checks_of_runs _ _ _ _ _ _ 1399 52 209897078339846915733587227200 209898300148574804598085862400 209894902536827529554809248000 209894947872511245089324544000
+    2402 3 (witness 3) := by
+  apply checks_of_runs _ _ _ _ _ _ 1399 52 221491949605593669779794617600 221493239128384011554118163200 221491941146525771101469577600 221491988297320015907612366400
   · decide +kernel
   · decide
   · decide
@@ -413,8 +412,8 @@ private theorem check3 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check4 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 4 (witness 4) := by
-  apply checks_of_runs _ _ _ _ _ _ 1400 52 211720057281770173040386621440 211721289303595687041809940480 211717864009656583022222956800 211717909345340298556738252800
+    2402 4 (witness 4) := by
+  apply checks_of_runs _ _ _ _ _ _ 1399 52 220656599683657885712040451200 220657884518389561831627718400 220656591486949042738789257600 220656638637743287544932046400
   · decide +kernel
   · decide
   · decide
@@ -424,8 +423,8 @@ private theorem check4 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check5 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 5 (witness 5) := by
-  apply checks_of_runs _ _ _ _ _ _ 1400 52 210913747641422799972295422240 210914975143682382767154022080 210911557681696584439996012800 210911603017380299974511308800
+    2402 5 (witness 5) := by
+  apply checks_of_runs _ _ _ _ _ _ 1400 52 222588400235481672498310406400 222589695904846354235235110400 222588383997709765767953289600 222588431148504010574096078400
   · decide +kernel
   · decide
   · decide
@@ -435,8 +434,8 @@ private theorem check5 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check6 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 6 (witness 6) := by
-  apply checks_of_runs _ _ _ _ _ _ 1401 52 212699956180393212632891539200 212701193692974842817332828160 212697740556700368572974291200 212697785892384084107489587200
+    2402 6 (witness 6) := by
+  apply checks_of_runs _ _ _ _ _ _ 1400 52 221742387805510374954481915200 221743678731574940733807907200 221742360730631995652406153600 221742407881426240458548942400
   · decide +kernel
   · decide
   · decide
@@ -446,8 +445,8 @@ private theorem check6 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check7 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 7 (witness 7) := by
-  apply checks_of_runs _ _ _ _ _ _ 1401 52 211883499997333674118738185600 211884732937825654449637186560 211881277308215901532652755200 211881322643899617067168051200
+    2402 7 (witness 7) := by
+  apply checks_of_runs _ _ _ _ _ _ 1401 52 223635664095599444063230152000 223636965643911683747181672000 223635619381823685842533257600 223635666532617930648676046400
   · decide +kernel
   · decide
   · decide
@@ -457,8 +456,8 @@ private theorem check7 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check8 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 8 (witness 8) := by
-  apply checks_of_runs _ _ _ _ _ _ 1402 52 213633162256690796847183544320 213634405006846992430547189760 213630903651603708933768403200 213630948987287424468283699200
+    2402 8 (witness 8) := by
+  apply checks_of_runs _ _ _ _ _ _ 1401 52 222778968836689163856334197600 222780265586364507809146725600 222778902143094676835892105600 222778949293888921642034894400
   · decide +kernel
   · decide
   · decide
@@ -468,8 +467,8 @@ private theorem check8 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check9 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 9 (witness 9) := by
-  apply checks_of_runs _ _ _ _ _ _ 1402 52 212640997712001766056135866880 212642234874307665645072099840 212638807450775914895941228800 212638852786459630430456524800
+    2402 9 (witness 9) := by
+  apply checks_of_runs _ _ _ _ _ _ 1402 52 224460456567448387424968857600 224461762719600616408654911360 224460448005991535163780796800 224460495156785779969923585600
   · decide +kernel
   · decide
   · decide
@@ -479,8 +478,8 @@ private theorem check9 : BlockChecks terminalBank.shape terminalBank.nodeRows te
   all_goals decide +kernel
 
 private theorem check10 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 10 (witness 10) := by
-  apply checks_of_runs _ _ _ _ _ _ 1403 52 214352498314575934782429401280 214353745077563885253605423040 214350260158956690949997779200 214350305494640406484513075200
+    2402 10 (witness 10) := by
+  apply checks_of_runs _ _ _ _ _ _ 1402 52 223592848637557853279216563200 223594149934264864309682621760 223592807398307923693711036800 223592854549102168499853825600
   · decide +kernel
   · decide
   · decide
@@ -490,8 +489,8 @@ private theorem check10 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check11 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 11 (witness 11) := by
-  apply checks_of_runs _ _ _ _ _ _ 1403 52 213347837562617565343259064000 213349078671565958034868152000 213345658601135951203520928000 213345703936819666738036224000
+    2402 11 (witness 11) := by
+  apply checks_of_runs _ _ _ _ _ _ 1403 52 225407811772653142991970480480 225409123262308046638862905920 225407727506538217232654832000 225407774657332462038797620800
   · decide +kernel
   · decide
   · decide
@@ -501,8 +500,8 @@ private theorem check11 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check12 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 12 (witness 12) := by
-  apply checks_of_runs _ _ _ _ _ _ 1404 52 215021385678038741045042832000 215022636180669468867515424000 215019144899702101989118368000 215019190235385817523633664000
+    2402 12 (witness 12) := by
+  apply checks_of_runs _ _ _ _ _ _ 1404 52 224434354315147311390069353760 224435660323187846938185979200 224434315037264379590205936000 224434362188058624396348724800
   · decide +kernel
   · decide
   · decide
@@ -512,8 +511,8 @@ private theorem check12 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check13 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 13 (witness 13) := by
-  apply checks_of_runs _ _ _ _ _ _ 1405 52 216496825386502374160734504960 216498084137050868102622597120 216494608665712522926425299200 216494654001396238460940595200
+    2402 13 (witness 13) := by
+  apply checks_of_runs _ _ _ _ _ _ 1404 52 225950855190630792179698897920 225952169686728358830439864320 225950846382048018560285577600 225950893532842263366428366400
   · decide +kernel
   · decide
   · decide
@@ -523,8 +522,8 @@ private theorem check13 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check14 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 14 (witness 14) := by
-  apply checks_of_runs _ _ _ _ _ _ 1405 52 215639977717265555641532002560 215641231687967227323716344320 215637709429664037781570771200 215637754765347753316086067200
+    2402 14 (witness 14) := by
+  apply checks_of_runs _ _ _ _ _ _ 1405 52 227696095816152158615237510400 227697420120901417862512208640 227696026374214039530679996800 227696073525008284336822785600
   · decide +kernel
   · decide
   · decide
@@ -534,8 +533,8 @@ private theorem check14 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check15 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 15 (witness 15) := by
-  apply checks_of_runs _ _ _ _ _ _ 1406 52 217075769103437683926992049600 217077031106736225514868856960 217073508140532503741924563200 217073553476216219276439859200
+    2402 15 (witness 15) := by
+  apply checks_of_runs _ _ _ _ _ _ 1405 52 226616786797710069615363364800 226618105037360013520690351680 226616737678049936820396528000 226616784828844181626539316800
   · decide +kernel
   · decide
   · decide
@@ -545,8 +544,8 @@ private theorem check15 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check16 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 16 (witness 16) := by
-  apply checks_of_runs _ _ _ _ _ _ 1406 52 216034706997224702457533784000 216035963155897049482489618560 216032473232870608314762451200 216032518568554323849277747200
+    2402 16 (witness 16) := by
+  apply checks_of_runs _ _ _ _ _ _ 1406 52 228140565529724531873025408000 228141892306043762967687888000 228140526650808405781216137600 228140573801602650587358926400
   · decide +kernel
   · decide
   · decide
@@ -556,8 +555,8 @@ private theorem check16 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check17 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 17 (witness 17) := by
-  apply checks_of_runs _ _ _ _ _ _ 1407 52 217429147339149060462752412480 217430411306143344907480309440 217426902781598651004788332800 217426948117282366539303628800
+    2402 17 (witness 17) := by
+  apply checks_of_runs _ _ _ _ _ _ 1407 52 229632827598644249767617604800 229634162736682803013977269760 229632793982628924743003836800 229632841133423169549146625600
   · decide +kernel
   · decide
   · decide
@@ -567,8 +566,8 @@ private theorem check17 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check18 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 18 (witness 18) := by
-  apply checks_of_runs _ _ _ _ _ _ 1408 52 218793674120235258849987780000 218794945730137925977634040000 218791413173459399641649568000 218791458509143115176164864000
+    2402 18 (witness 18) := by
+  apply checks_of_runs _ _ _ _ _ _ 1407 52 228528095903378624971139328000 228529424843739374655285043200 228528058290925107126041481600 228528105441719351932184270400
   · decide +kernel
   · decide
   · decide
@@ -578,8 +577,8 @@ private theorem check18 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check19 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 19 (witness 19) := by
-  apply checks_of_runs _ _ _ _ _ _ 1409 52 220128458299149852783792489600 220129737388103628086776819200 220126173931275752459456928000 220126219266959467993972224000
+    2402 19 (witness 19) := by
+  apply checks_of_runs _ _ _ _ _ _ 1408 52 229977140262622721478017729280 229978477331087600192600257920 229977086030864581554594288000 229977133181658826360737076800
   · decide +kernel
   · decide
   · decide
@@ -589,8 +588,8 @@ private theorem check19 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check20 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 20 (witness 20) := by
-  apply checks_of_runs _ _ _ _ _ _ 1409 52 219051900301948470003545020800 219053173362792446742074841600 219049606257951019592569248000 219049651593634735127084544000
+    2402 20 (witness 20) := by
+  apply checks_of_runs _ _ _ _ _ _ 1409 52 231395033650379566399466636160 231396378675407064626392229760 231394954541919671511513993600 231395001692713916317656782400
   · decide +kernel
   · decide
   · decide
@@ -600,8 +599,8 @@ private theorem check20 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check21 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 21 (witness 21) := by
-  apply checks_of_runs _ _ _ _ _ _ 1410 52 220164278263007547759465922560 220165557528541095699465093120 220162028737549250319025363200 220162074073232965853540659200
+    2402 21 (witness 21) := by
+  apply checks_of_runs _ _ _ _ _ _ 1410 52 232591611106425144581397504000 232592962811917577819904100800 232591590059372739251501961600 232591637210166984057644750400
   · decide +kernel
   · decide
   · decide
@@ -611,8 +610,8 @@ private theorem check21 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check22 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 22 (witness 22) := by
-  apply checks_of_runs _ _ _ _ _ _ 1411 52 221426947320331797509774400000 221428233674168014772550720000 221424641797582909324644768000 221424687133266624859160064000
+    2402 22 (witness 22) := by
+  apply checks_of_runs _ _ _ _ _ _ 1411 52 233945726310939410136062376480 233947085623302773093197452480 233945659844520673163338224000 233945706995314917969481012800
   · decide +kernel
   · decide
   · decide
@@ -622,8 +621,8 @@ private theorem check22 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check23 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 23 (witness 23) := by
-  apply checks_of_runs _ _ _ _ _ _ 1412 52 222474982419802581772063511520 222476274625888844245515821760 222472701441040208766108883200 222472746776723924300624179200
+    2402 23 (witness 23) := by
+  apply checks_of_runs _ _ _ _ _ _ 1411 52 232598668518204122928135767040 232600020257310187709256099840 232598636963000215007702716800 232598684113794459813845505600
   · decide +kernel
   · decide
   · decide
@@ -633,8 +632,8 @@ private theorem check23 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check24 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 24 (witness 24) := by
-  apply checks_of_runs _ _ _ _ _ _ 1413 52 223677441059189480828720766720 223678740025799201251711848960 223675080451778220116188780800 223675125787461935650704076800
+    2402 24 (witness 24) := by
+  apply checks_of_runs _ _ _ _ _ _ 1412 52 233713526671802361501578534400 233714884647923173123410101760 233713516003007255409110716800 233713563153801500215253505600
   · decide +kernel
   · decide
   · decide
@@ -644,8 +643,8 @@ private theorem check24 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check25 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 25 (witness 25) := by
-  apply checks_of_runs _ _ _ _ _ _ 1414 52 224661755289964692952917216000 224663059762076219065647552000 224659393963140272654897568000 224659439298823988189412864000
+    2402 25 (witness 25) := by
+  apply checks_of_runs _ _ _ _ _ _ 1413 52 234793864724897746050679442880 234795228749658145494458637120 234793861726569819403969008000 234793908877364064210111796800
   · decide +kernel
   · decide
   · decide
@@ -655,8 +654,8 @@ private theorem check25 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check26 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 26 (witness 26) := by
-  apply checks_of_runs _ _ _ _ _ _ 1415 52 225613462104896373509868440640 225614771905641889362798444480 225611085781565154546720364800 225611131117248870081235660800
+    2402 26 (witness 26) := by
+  apply checks_of_runs _ _ _ _ _ _ 1414 52 235839834236387853999402393600 235841204122823378410884633600 235839824339659761083841417600 235839871490454005889984206400
   · decide +kernel
   · decide
   · decide
@@ -666,8 +665,8 @@ private theorem check26 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check27 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 27 (witness 27) := by
-  apply checks_of_runs _ _ _ _ _ _ 1416 52 226339551144707115904456500000 226340864977338881562998520000 226337238480765042408804768000 226337283816448757943320064000
+    2402 27 (witness 27) := by
+  apply checks_of_runs _ _ _ _ _ _ 1416 52 239247728272829962159266827520 239249117270461665699292481280 239247694775927536228229616000 239247741926721781034372404800
   · decide +kernel
   · decide
   · decide
@@ -677,8 +676,8 @@ private theorem check27 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check28 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 28 (witness 28) := by
-  apply checks_of_runs _ _ _ _ _ _ 1417 52 227224513674104618730614814720 227225832474353248286320066560 227222154400465004427936979200 227222199736148719962452275200
+    2402 28 (witness 28) := by
+  apply checks_of_runs _ _ _ _ _ _ 1417 52 240205793314596243658434751680 240207187695355140225919367040 240205716330793236945428976000 240205763481587481751571764800
   · decide +kernel
   · decide
   · decide
@@ -688,8 +687,8 @@ private theorem check28 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check29 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 29 (witness 29) := by
-  apply checks_of_runs _ _ _ _ _ _ 1419 52 230090299877214179616643200000 230091634711045237723574400000 230087946937792198432510368000 230087992273475913967025664000
+    2402 29 (witness 29) := by
+  apply checks_of_runs _ _ _ _ _ _ 1418 52 240923411314860651350080550400 240924809697669199874480754240 240923368323864746725519036800 240923415474658991531661825600
   · decide +kernel
   · decide
   · decide
@@ -699,8 +698,8 @@ private theorem check29 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check30 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 30 (witness 30) := by
-  apply checks_of_runs _ _ _ _ _ _ 1420 52 230890740181668498291254943840 230892079526833900532217382080 230888298268463863051099756800 230888343604147578585615052800
+    2402 30 (witness 30) := by
+  apply checks_of_runs _ _ _ _ _ _ 1419 52 241603204722602378877247089600 241604606903200482510394876800 241603176162042757599558537600 241603223312837002405701326400
   · decide +kernel
   · decide
   · decide
@@ -710,8 +709,8 @@ private theorem check30 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check31 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 31 (witness 31) := by
-  apply checks_of_runs _ _ _ _ _ _ 1421 53 231254115096967769884551505920 231255456433394903118170634240 231251756399333374301871724800 231251801735017089836387020800
+    2402 31 (witness 31) := by
+  apply checks_of_runs _ _ _ _ _ _ 1421 52 244551359920905116329586702400 244552778626657110199324070400 244551320523716713716743049600 244551367674510958522885838400
   · decide +kernel
   · decide
   · decide
@@ -721,8 +720,8 @@ private theorem check31 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check32 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 32 (witness 32) := by
-  apply checks_of_runs _ _ _ _ _ _ 1423 53 233926242066399123035515607040 233927598379900684631432417280 233923818887686621064266963200 233923864223370336598782259200
+    2402 32 (witness 32) := by
+  apply checks_of_runs _ _ _ _ _ _ 1422 52 245135362301381590110782317440 245136784288495718893518515520 245135285509138846257295036800 245135332659933091063437825600
   · decide +kernel
   · decide
   · decide
@@ -732,8 +731,8 @@ private theorem check32 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check33 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 33 (witness 33) := by
-  apply checks_of_runs _ _ _ _ _ _ 1425 53 236307305644951912579510986240 236308675275302985541242074880 236304888235807550560837228800 236304933571491266095352524800
+    2402 33 (witness 33) := by
+  apply checks_of_runs _ _ _ _ _ _ 1424 52 247721404404243683084232297600 247722840867311897781778156800 247721357592123592789031817600 247721404742917837595174606400
   · decide +kernel
   · decide
   · decide
@@ -743,8 +742,8 @@ private theorem check33 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check34 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 34 (witness 34) := by
-  apply checks_of_runs _ _ _ _ _ _ 1427 53 238600884637878412027585489920 238602267108307509925913303040 238598439743170850400961747200 238598485078854565935477043200
+    2402 34 (witness 34) := by
+  apply checks_of_runs _ _ _ _ _ _ 1426 53 250215260609302675640967525120 250216711044582167464489585920 250215209856800105747230396800 250215257007594350553373185600
   · decide +kernel
   · decide
   · decide
@@ -754,8 +753,8 @@ private theorem check34 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check35 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 35 (witness 35) := by
-  apply checks_of_runs _ _ _ _ _ _ 1429 53 240807867058861990475697907200 240809261900339548043850643200 240805354816743681749143968000 240805400152427397283659264000
+    2402 35 (witness 35) := by
+  apply checks_of_runs _ _ _ _ _ _ 1428 53 252617848740003056375850108480 252619312651827712314098544000 252617753034511830175441392000 252617800185306074981584180800
   · decide +kernel
   · decide
   · decide
@@ -765,8 +764,8 @@ private theorem check35 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check36 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 36 (witness 36) := by
-  apply checks_of_runs _ _ _ _ _ _ 1432 53 244409385324520194955003391040 244410800324882296601609130240 244406842535018826763797715200 244406887870702542298313011200
+    2402 36 (witness 36) := by
+  apply checks_of_runs _ _ _ _ _ _ 1431 53 256193103702133426762650024000 256194587639350247667905664000 256193017266381914775059337600 256193064417176159581202126400
   · decide +kernel
   · decide
   · decide
@@ -776,8 +775,8 @@ private theorem check36 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check37 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 37 (witness 37) := by
-  apply checks_of_runs _ _ _ _ _ _ 1434 53 246290124931698997046063923200 246291550434452176742331187200 246287607473632598256505248000 246287652809316313791020544000
+    2402 37 (witness 37) := by
+  apply checks_of_runs _ _ _ _ _ _ 1433 53 258583263751171272009213460800 258584761051289249025544560000 258583228287107284469119881600 258583275437901529275262670400
   · decide +kernel
   · decide
   · decide
@@ -787,8 +786,8 @@ private theorem check37 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check38 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 38 (witness 38) := by
-  apply checks_of_runs _ _ _ _ _ _ 1438 53 251664931693651659471661484160 251666387297432473423951192320 251662329392066004375871084800 251662374727749719910386380800
+    2402 38 (witness 38) := by
+  apply checks_of_runs _ _ _ _ _ _ 1437 53 264383197846389505768280256000 264384727649277827559193612800 264383140275622207186893705600 264383187426416451993036494400
   · decide +kernel
   · decide
   · decide
@@ -798,8 +797,8 @@ private theorem check38 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check39 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 39 (witness 39) := by
-  apply checks_of_runs _ _ _ _ _ _ 1443 53 257876070688280667178801800000 257877561071686105317804048000 257873375625456774156322003200 257873420961140489690837299200
+    2402 39 (witness 39) := by
+  apply checks_of_runs _ _ _ _ _ _ 1441 53 269687184765242725519921664640 269688744284641308141657834240 269687109754751169361338864000 269687156905545414167481652800
   · decide +kernel
   · decide
   · decide
@@ -809,8 +808,8 @@ private theorem check39 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check40 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 40 (witness 40) := by
-  apply checks_of_runs _ _ _ _ _ _ 1449 54 266309693894489136071627462400 266311231475079209501109772800 266306930933649821079949728000 266306976269333536614465024000
+    2402 40 (witness 40) := by
+  apply checks_of_runs _ _ _ _ _ _ 1447 53 278201714037457649130249292800 278203321231263555799840197120 278201686685484558321233596800 278201733836278803127376385600
   · decide +kernel
   · decide
   · decide
@@ -820,8 +819,8 @@ private theorem check40 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check41 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 41 (witness 41) := by
-  apply checks_of_runs _ _ _ _ _ _ 1464 54 288804510537201708281356809600 288806174026872562316592691200 288801523832123548724089248000 288801569167807264258604544000
+    2402 41 (witness 41) := by
+  apply checks_of_runs _ _ _ _ _ _ 1459 54 296997306165648136672565114880 296999018651266534274256103680 296997264141323237677851120000 296997311292117482483993908800
   · decide +kernel
   · decide
   · decide
@@ -831,8 +830,8 @@ private theorem check41 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check42 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 42 (witness 42) := by
-  apply checks_of_runs _ _ _ _ _ _ 1479 55 409473450150364248598102253760 409475789016738050973056768640 409469263207715826810003052800 409469308543399542344518348800
+    2402 42 (witness 42) := by
+  apply checks_of_runs _ _ _ _ _ _ 1479 55 418864206152226834738837201600 418866601242028632947997868800 418864191577805322356882313600 418864238728599567163025102400
   · decide +kernel
   · decide
   · decide
@@ -842,8 +841,8 @@ private theorem check42 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check43 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 43 (witness 43) := by
-  apply checks_of_runs _ _ _ _ _ _ 1476 55 477486179567307646467367968000 477488899051528057979974848000 477481319413135336992919968000 477481364748819052527435264000
+    2402 43 (witness 43) := by
+  apply checks_of_runs _ _ _ _ _ _ 1476 54 506532408180154055529183244800 506535294281986751850993225600 506532382640627896178539401600 506532429791422140984682190400
   · decide +kernel
   · decide
   · decide
@@ -853,8 +852,8 @@ private theorem check43 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check44 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 44 (witness 44) := by
-  apply checks_of_runs _ _ _ _ _ _ 1472 54 511824859632179550054750938400 511827771241169137156720075200 511819658137883518035546528000 511819703473567233570061824000
+    2402 44 (witness 44) := by
+  apply checks_of_runs _ _ _ _ _ _ 1472 54 549464693528756661144933250080 549467820028182328055535850560 549464689145865364132585968000 549464736296659608938728756800
   · decide +kernel
   · decide
   · decide
@@ -864,8 +863,8 @@ private theorem check44 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check45 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 45 (witness 45) := by
-  apply checks_of_runs _ _ _ _ _ _ 1469 54 529715801456491973393380354560 529718813121583110304059626880 529710444007423368842118355200 529710489343107084376633651200
+    2402 45 (witness 45) := by
+  apply checks_of_runs _ _ _ _ _ _ 1469 54 571258312036094220904877512320 571261560550555757645271104640 571258263326235402923506569600 571258310477029647729649358400
   · decide +kernel
   · decide
   · decide
@@ -875,8 +874,8 @@ private theorem check45 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check46 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 46 (witness 46) := by
-  apply checks_of_runs _ _ _ _ _ _ 1466 54 538755597615114910462006834560 538758659805096826714594622400 538750154386277848487337580800 538750199721961564021852876800
+    2402 46 (witness 46) := by
+  apply checks_of_runs _ _ _ _ _ _ 1466 54 582177556909937637799421911200 582180866505869000528748981600 582177527643935273652681609600 582177574794729518458824398400
   · decide +kernel
   · decide
   · decide
@@ -886,8 +885,8 @@ private theorem check46 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check47 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 47 (witness 47) := by
-  apply checks_of_runs _ _ _ _ _ _ 1463 54 542770749159670660136757223680 542773833754325435897239526400 542765268486977766078062188800 542765313822661481612577484800
+    2402 47 (witness 47) := by
+  apply checks_of_runs _ _ _ _ _ _ 1463 54 586972505312229404146259767680 586975841696903945799975338880 586972471845752311290100617600 586972518996546556096243406400
   · decide +kernel
   · decide
   · decide
@@ -897,8 +896,8 @@ private theorem check47 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 private theorem check48 : BlockChecks terminalBank.shape terminalBank.nodeRows terminalBank.poleMoment
-    2383 48 (witness 48) := by
-  apply checks_of_runs _ _ _ _ _ _ 1460 54 543808749659191483331806272000 543811840027340043887764416000 543803196888134274214777248000 543803242223817989749292544000
+    2402 48 (witness 48) := by
+  apply checks_of_runs _ _ _ _ _ _ 1460 54 588215949293668152376329350400 588219292569870103453036790400 588215930595570372678351753600 588215977746364617484494542400
   · decide +kernel
   · decide
   · decide
@@ -908,7 +907,7 @@ private theorem check48 : BlockChecks terminalBank.shape terminalBank.nodeRows t
   all_goals decide +kernel
 
 theorem receipts (i : Fin 49) : BlockChecks terminalBank.shape terminalBank.nodeRows
-    terminalBank.poleMoment 2383 (max 1 i.val) (witness i.val) := by
+    terminalBank.poleMoment 2402 (max 1 i.val) (witness i.val) := by
   fin_cases i
   · exact check0
   · exact check1
@@ -960,9 +959,9 @@ theorem receipts (i : Fin 49) : BlockChecks terminalBank.shape terminalBank.node
   · exact check47
   · exact check48
 
-theorem positive {h : ℕ} (lo : 2383≤h) (hi : h≤33599) (i : Fin 49) :
+theorem positive {h : ℕ} (lo : 2402≤h) (hi : h≤33619) (i : Fin 49) :
     KoalaRect.rectDebit h terminalBank.nodeRows terminalBank.poleMoment (witness i.val).U <
-      KoalaRect.rectGain 179808 h terminalBank.shape (max 1 i.val) (witness i.val).U
+      KoalaRect.rectGain 179798 h terminalBank.shape (max 1 i.val) (witness i.val).U
         (witness i.val).order :=
   strict_of_checks lo (by omega) (by decide) (by decide) (by omega) (receipts i)
 

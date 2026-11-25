@@ -9,8 +9,8 @@ open K1_13 (Shape chart ceilDiv mixed32 shape OnFactor extend)
 open Low6960Prices (Messages SmallFactor ActiveFits ProperCut taylorLength primaryBox
   physicalPrice physicalDegree errors incidenceGap tiltedFits tiltedSurface)
 open scoped Polynomial
-abbrev slope : Shape := ⟨63,26,7⟩
-abbrev slopeLoss : ℕ := 20520741992860
+abbrev slope : Shape := ⟨64,27,7⟩
+abbrev slopeLoss : ℕ := 19923944485484
 inductive Surface where
   | ordinary
   | tilted

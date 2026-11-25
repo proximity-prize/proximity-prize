@@ -17,13 +17,13 @@ open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 open TaperColumns (sumGrade sumOld)
 
 def fits (r : ℕ) (m : JetExp) : Prop :=
-  m.weight gradeWeight ≤ r*63 ∧ m.weight oldWeight ≤ r*26 ∧ m 3 ≤ r*7
+  m.weight gradeWeight ≤ r*64 ∧ m.weight oldWeight ≤ r*27 ∧ m 3 ≤ r*7
 
 noncomputable instance (r : ℕ) (m : JetExp) : Decidable (fits r m) := by unfold fits; infer_instance
 
 noncomputable def width (r : ℕ) : ℕ := (jetColumns.filter (fits r)).card
 
-def bound (r : ℕ) : ℕ := min 4013 (r*63+1)
+def bound (r : ℕ) : ℕ := min 4013 (r*64+1)
 def start (k : ℕ) : ℕ := 16*k
 def stop (r k : ℕ) : ℕ := min (bound r) (start (k+1))
 def chunks (r : ℕ) : ℕ := (bound r + 15) / 16
@@ -31,7 +31,7 @@ def chunks (r : ℕ) : ℕ := (bound r + 15) / 16
 def padGrade (r k : ℕ) : ℕ :=
   min (gradeCap (start k)) (gradeCap (stop r k-1))
 
-def index (r : ℕ) : ℕ := min 1650 (r*26)
+def index (r : ℕ) : ℕ := min 1650 (r*27)
 
 private theorem grade_le {r k q : ℕ} (hlo : start k ≤ q) (hhi : q < stop r k) :
     padGrade r k ≤ gradeCap q := by
@@ -81,7 +81,7 @@ private theorem map_mem {r : ℕ} {x : Σ _ : ℕ, ℕ × JetExp} (hx : x ∈ gr
   have hindex : m.weight oldWeight ≤ index r := by exact_mod_cast hi
   have htop : m 3 ≤ r*7 := by exact_mod_cast ht
   have hD := (grade_le hl hh).trans (min_le_right _ _ : gradeCap q ≤ TaperBudget.cap q)
-  have hb : q ≤ 4012 ∧ q ≤ r*63 := by
+  have hb : q ≤ 4012 ∧ q ≤ r*64 := by
     unfold stop bound at hh
     omega
   apply Finset.mem_filter.mpr
@@ -178,23 +178,23 @@ private theorem intPrefix_add (f : ℕ → ℤ) (a b : ℕ) :
   | zero => simp [intPrefix]
   | succ b ih => rw [Nat.add_succ, intPrefix, ih, intPrefix, add_assoc]
 
-private theorem part0 : intPrefix (fun k => rowLoss (0+k)) 7 = 2847532782416 := by decide +kernel
+private theorem part0 : intPrefix (fun k => rowLoss (0+k)) 7 = 2847517673070 := by decide +kernel
 
-private theorem part7 : intPrefix (fun k => rowLoss (7+k)) 7 = 2844539183495 := by decide +kernel
+private theorem part7 : intPrefix (fun k => rowLoss (7+k)) 7 = 2844146896911 := by decide +kernel
 
-private theorem part14 : intPrefix (fun k => rowLoss (14+k)) 7 = 2827823622330 := by decide +kernel
+private theorem part14 : intPrefix (fun k => rowLoss (14+k)) 7 = 2825317787526 := by decide +kernel
 
-private theorem part21 : intPrefix (fun k => rowLoss (21+k)) 7 = 2776605184953 := by decide +kernel
+private theorem part21 : intPrefix (fun k => rowLoss (21+k)) 7 = 2767612684278 := by decide +kernel
 
-private theorem part28 : intPrefix (fun k => rowLoss (28+k)) 7 = 2660118172273 := by decide +kernel
+private theorem part28 : intPrefix (fun k => rowLoss (28+k)) 7 = 2636359772099 := by decide +kernel
 
-private theorem part35 : intPrefix (fun k => rowLoss (35+k)) 7 = 2437612100821 := by decide +kernel
+private theorem part35 : intPrefix (fun k => rowLoss (35+k)) 7 = 2385633074480 := by decide +kernel
 
-private theorem part42 : intPrefix (fun k => rowLoss (42+k)) 7 = 2058351710503 := by decide +kernel
+private theorem part42 : intPrefix (fun k => rowLoss (42+k)) 7 = 1958252464881 := by decide +kernel
 
-private theorem part49 : intPrefix (fun k => rowLoss (49+k)) 7 = 1461616954653 := by decide +kernel
+private theorem part49 : intPrefix (fun k => rowLoss (49+k)) 7 = 1285783655977 := by decide +kernel
 
-private theorem part56 : intPrefix (fun k => rowLoss (56+k)) 7 = 579260375294 := by decide +kernel
+private theorem part56 : intPrefix (fun k => rowLoss (56+k)) 7 = 346038570140 := by decide +kernel
 
 private theorem part63 : intPrefix (fun k => rowLoss (63+k)) 7 = 17873729242 := by decide +kernel
 
@@ -205,40 +205,40 @@ private theorem part77 : intPrefix (fun k => rowLoss (77+k)) 1 = 1058415011 := b
 set_option maxRecDepth 10000 in
 theorem computed_loss : intPrefix rowLoss 78 = Low6960SharedPrice.slopeLoss := by
   have h0 : intPrefix rowLoss 0 = 0 := rfl
-  have h7 : intPrefix rowLoss 7 = 2847532782416 := by
+  have h7 : intPrefix rowLoss 7 = 2847517673070 := by
     rw [show (7 : ℕ) = 0+7 by decide,intPrefix_add,h0,part0]
     rfl
-  have h14 : intPrefix rowLoss 14 = 5692071965911 := by
+  have h14 : intPrefix rowLoss 14 = 5691664569981 := by
     rw [show (14 : ℕ) = 7+7 by decide,intPrefix_add,h7,part7]
     rfl
-  have h21 : intPrefix rowLoss 21 = 8519895588241 := by
+  have h21 : intPrefix rowLoss 21 = 8516982357507 := by
     rw [show (21 : ℕ) = 14+7 by decide,intPrefix_add,h14,part14]
     rfl
-  have h28 : intPrefix rowLoss 28 = 11296500773194 := by
+  have h28 : intPrefix rowLoss 28 = 11284595041785 := by
     rw [show (28 : ℕ) = 21+7 by decide,intPrefix_add,h21,part21]
     rfl
-  have h35 : intPrefix rowLoss 35 = 13956618945467 := by
+  have h35 : intPrefix rowLoss 35 = 13920954813884 := by
     rw [show (35 : ℕ) = 28+7 by decide,intPrefix_add,h28,part28]
     rfl
-  have h42 : intPrefix rowLoss 42 = 16394231046288 := by
+  have h42 : intPrefix rowLoss 42 = 16306587888364 := by
     rw [show (42 : ℕ) = 35+7 by decide,intPrefix_add,h35,part35]
     rfl
-  have h49 : intPrefix rowLoss 49 = 18452582756791 := by
+  have h49 : intPrefix rowLoss 49 = 18264840353245 := by
     rw [show (49 : ℕ) = 42+7 by decide,intPrefix_add,h42,part42]
     rfl
-  have h56 : intPrefix rowLoss 56 = 19914199711444 := by
+  have h56 : intPrefix rowLoss 56 = 19550624009222 := by
     rw [show (56 : ℕ) = 49+7 by decide,intPrefix_add,h49,part49]
     rfl
-  have h63 : intPrefix rowLoss 63 = 20493460086738 := by
+  have h63 : intPrefix rowLoss 63 = 19896662579362 := by
     rw [show (63 : ℕ) = 56+7 by decide,intPrefix_add,h56,part56]
     rfl
-  have h70 : intPrefix rowLoss 70 = 20511333815980 := by
+  have h70 : intPrefix rowLoss 70 = 19914536308604 := by
     rw [show (70 : ℕ) = 63+7 by decide,intPrefix_add,h63,part63]
     rfl
-  have h77 : intPrefix rowLoss 77 = 20519683577849 := by
+  have h77 : intPrefix rowLoss 77 = 19922886070473 := by
     rw [show (77 : ℕ) = 70+7 by decide,intPrefix_add,h70,part70]
     rfl
-  have h78 : intPrefix rowLoss 78 = 20520741992860 := by
+  have h78 : intPrefix rowLoss 78 = 19923944485484 := by
     rw [show (78 : ℕ) = 77+1 by decide,intPrefix_add,h77,part77]
     rfl
   exact h78

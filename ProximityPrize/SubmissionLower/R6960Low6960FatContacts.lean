@@ -9,7 +9,7 @@ open scoped BigOperators
 open P0_9_4 (line eval_line coeff_contact order_of_locator_lines translate_map)
 set_option maxRecDepth 12000
 private def Bounded (F : Polynomial (Polynomial Geom)) (b : ℕ) : Prop :=
-  ∀ j, (F.coeff j).natDegree ≤ b + 48739 * j
+  ∀ j, (F.coeff j).natDegree ≤ b + 48729 * j
 private theorem bounded_mul {F G : Polynomial (Polynomial Geom)} {a b : ℕ}
     (hF : Bounded F a) (hG : Bounded G b) : Bounded (F * G) (a + b) := by
   intro j
@@ -44,8 +44,8 @@ private theorem bounded_pow {f : Polynomial (Polynomial Geom)} {b : ℕ} (hf : B
     rw [pow_succ, Nat.mul_succ]
     exact bounded_mul ih hf
 private theorem line_degree (Q : Row 3) (T U : (Polynomial Geom)) (t : ℕ)
-    (hQ : RawCut t Q) (hT : T.natDegree ≤ 131071) (hU : U.natDegree ≤ 179810)
-    (j : ℕ) : ((line Q T U).coeff j).natDegree ≤ t + 48739 * j := by
+    (hQ : RawCut t Q) (hT : T.natDegree ≤ 131071) (hU : U.natDegree ≤ 179800)
+    (j : ℕ) : ((line Q T U).coeff j).natDegree ≤ t + 48729 * j := by
   let b (i : Fin 3) : ℕ := 131071 - i.val
   let F (i : Fin 3) : Polynomial (Polynomial Geom) :=
     Polynomial.C (jet T i) + Polynomial.C (jet U i) * Polynomial.X
@@ -53,12 +53,12 @@ private theorem line_degree (Q : Row 3) (T U : (Polynomial Geom)) (t : ℕ)
     intro k
     have ht : (jet T i).natDegree ≤ b i :=
       (natDegree_hasseDeriv_le T i.val).trans (Nat.sub_le_sub_right hT _)
-    have hu : (jet U i).natDegree ≤ b i + 48739 := by
+    have hu : (jet U i).natDegree ≤ b i + 48729 := by
       refine (natDegree_hasseDeriv_le U i.val).trans ((Nat.sub_le_sub_right hU _).trans ?_)
       have hi := i.isLt
-      change 179810 - i.val ≤ (131071 - i.val) + 48739
+      change 179800 - i.val ≤ (131071 - i.val) + 48729
       omega
-    change ((F i).coeff k).natDegree ≤ b i + 48739 * k
+    change ((F i).coeff k).natDegree ≤ b i + 48729 * k
     rw [show F i = _ from rfl, Polynomial.coeff_add, Polynomial.coeff_C,
       Polynomial.coeff_C_mul_X]
     by_cases h0 : k = 0
@@ -76,15 +76,15 @@ private theorem line_degree (Q : Row 3) (T U : (Polynomial Geom)) (t : ℕ)
   exact hterm.trans (Nat.add_le_add_right (hQ a ha) _)
 private theorem line_coeff_zero (w : I → K) (H res T : (Polynomial Geom)) (t r : ℕ) (Q : Row 3)
     (hT : T.natDegree ≤ 131071) (hQ : RawCut t Q) (hcontact : RawContact r w H res Q)
-    (A : Finset I) (hA : A.card = 179808)
+    (A : Finset I) (hA : A.card = 179798)
     (hhit : ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
-    (V : (Polynomial Geom)) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 48739 * j < r * 179808) :
+    (V : (Polynomial Geom)) (hV : V.natDegree ≤ 2) (j : ℕ) (hj : t + 48729 * j < r * 179798) :
     (line Q T (locator (fun i => embed (node i)) A * V)).coeff j = 0 := by
   classical
   let x (i : I) : Geom := embed (node i)
   let L := locator x A
   let U := L * V
-  have hU : U.natDegree ≤ 179810 :=
+  have hU : U.natDegree ≤ 179800 :=
     natDegree_mul_le.trans (by rw [locator_natDegree, hA]; omega)
   have hc (i : I) (hi : i ∈ A) (c : Geom) :
       (Polynomial.X - C (x i)) ^ r ∣ (line Q T U).eval (C c) := by
@@ -104,10 +104,10 @@ private theorem line_coeff_zero (w : I → K) (H res T : (Polynomial Geom)) (t r
     exact (line_degree Q T U t hQ hT hU j).trans_lt hj
 theorem raw_locator_order (w : I → K) (H res T : (Polynomial Geom)) (t k : ℕ) (Q : Row 3)
     (hT : T.natDegree ≤ 131071)
-    (hhits : ∃ A : Finset I, 179808 ≤ A.card ∧
+    (hhits : ∃ A : Finset I, 179798 ≤ A.card ∧
       ∀ i ∈ A, (H * T + res).eval (embed (node i)) = embed (w i))
     (hc : RawContact 5000 w H res Q) (hQ : RawCut t Q)
-    (hcut : t + 48739 * k < 5000 * 179808) :
+    (hcut : t + 48729 * k < 5000 * 179798) :
     LowerOrder (MvPolynomial.map inclX Q) (trajectory T) (k + 1) := by
   obtain ⟨B, hB, hhits⟩ := hhits
   obtain ⟨A, hAB, hA⟩ := Finset.exists_subset_card_eq hB
@@ -133,8 +133,8 @@ open scoped Polynomial BigOperators
 open K1_13_4_3_1 (coeff_scalar support_seed weight_shift)
 open K1_13_4_3 (coeff_eq_zero_of_lowerOrder)
 private theorem trueCut_seed (H : (Polynomial Geom)) (i t : ℕ) (F : PhysicalRow)
-    (hH : H.natDegree ≤ 2359) (hF : TrueCut H.natDegree t F) :
-    TrueCut H.natDegree (t + 7077 * i) (clearedSeed H i F) := by
+    (hH : H.natDegree ≤ 2367) (hF : TrueCut H.natDegree t F) :
+    TrueCut H.natDegree (t + 7101 * i) (clearedSeed H i F) := by
   intro b hb
   obtain ⟨u, hu⟩ := coeff_scalar F i b
   have hbefore := hF _ (support_seed hb)
@@ -153,16 +153,16 @@ private theorem trueCut_seed (H : (Polynomial Geom)) (i t : ℕ) (F : PhysicalRo
     simp only [clearedSeed, ← partial_eq_mixedHasse, MvPolynomial.coeff_C_mul, hu]
     exact Polynomial.natDegree_mul_le.trans
       (Nat.add_le_add_left (Polynomial.natDegree_mul_C_le _ _) _)
-  have hp' : (H ^ (3 * i)).natDegree ≤ 7077 * i := by
+  have hp' : (H ^ (3 * i)).natDegree ≤ 7101 * i := by
     calc
       _ ≤ (3 * i) * H.natDegree := Polynomial.natDegree_pow_le
-      _ ≤ (3 * i) * 2359 := Nat.mul_le_mul_left _ hH
-      _ = 7077 * i := by ring
+      _ ≤ (3 * i) * 2367 := Nat.mul_le_mul_left _ hH
+      _ = 7101 * i := by ring
   omega
 private theorem seed_motion (w : I → K) {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
-    (hh : P.H.natDegree ≤ 2359) (box : Shape) (t : ℕ) (F : PhysicalRow)
+    (hh : P.H.natDegree ≤ 2367) (box : Shape) (t : ℕ) (F : PhysicalRow)
     (hF : Source w P L box t F) (i : ℕ) :
-    Source w P L box (t + 7077 * i) (clearedSeed P.H i F) := by
+    Source w P L box (t + 7101 * i) (clearedSeed P.H i F) := by
   obtain ⟨hcap, hcut, hcontact, hpole⟩ := hF
   refine ⟨K1_13_4_3_1.caps_seed P.H i F box hcap, ?_, K1_13_4_3_1.contact_seed P.H i w F hcontact,
     K1_13_4_3_1.pole_seed P L _ i F hpole⟩
@@ -181,7 +181,7 @@ private theorem mixedOrder_iff_coeff {F : GenericRow} {z : GenericX}
 private theorem fixed_seed_order (h2 : K1_13_4_3.c2)
     {w Γ s} (hw : Low6960Fat.Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
     {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
-    (k : ℕ) (hk : t + 48739 * k < 5000 * 179808) :
+    (k : ℕ) (hk : t + 48729 * k < 5000 * 179798) :
     LowerOrder (atSeed (inclConst (P.z γ)) (toGeneric F))
       (trajectory (extend (s γ))) (k + 1) := by
   let res := residueAt L.numerator L.denominator (P.z γ)
@@ -189,7 +189,7 @@ private theorem fixed_seed_order (h2 : K1_13_4_3.c2)
   obtain ⟨T, hT, hST⟩ := L.quotient γ hγ
   change extend (s γ) = P.H * T + res at hST
   obtain ⟨A, hA, hhits⟩ := hw.hits γ hγ
-  have hhit : ∃ B : Finset I, 179808 ≤ B.card ∧
+  have hhit : ∃ B : Finset I, 179798 ≤ B.card ∧
       ∀ i ∈ B, (P.H * T + res).eval (embed (node i)) = embed (w i) := by
     refine ⟨A, hA, fun i hi => ?_⟩
     rw [← hST, extend, Polynomial.eval_map, Polynomial.eval₂_at_apply, hhits i hi]
@@ -202,7 +202,7 @@ private theorem fixed_seed_order (h2 : K1_13_4_3.c2)
 private theorem source_order (h2 : K1_13_4_3.c2)
     {w Γ s} (hw : Low6960Fat.Messages w Γ s) (P : PoleData Γ s) (L : ResidueChart P)
     {box t F} (hF : Source w P L box t F) {γ} (hγ : γ ∈ Γ)
-    (hh : P.H.natDegree ≤ 2359) {d : ℕ} (hd : t + d ≤ 5000 * 179808) :
+    (hh : P.H.natDegree ≤ 2367) {d : ℕ} (hd : t + d ≤ 5000 * 179798) :
     MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) d := by
   set z := inclConst (P.z γ)
   set y := trajectory (extend (s γ))
@@ -216,8 +216,8 @@ private theorem source_order (h2 : K1_13_4_3.c2)
   have hdis : ∀ i, i ∉ a.support ∨ i ∉ b.support := by
     intro i
     cases i <;> simp [a, b, Finsupp.mem_support_iff]
-  have hlt : t + 7077 * m none + 48739 * m.some.degree < 5000 * 179808 := by
-    change 7077 * m none + 48739 * m.some.degree < d at hm
+  have hlt : t + 7101 * m none + 48729 * m.some.degree < 5000 * 179798 := by
+    change 7101 * m none + 48729 * m.some.degree < d at hm
     omega
   have hD := seed_motion w P L hh box t F hF (m none)
   have ho := fixed_seed_order h2 hw P L hD hγ m.some.degree hlt
@@ -252,7 +252,7 @@ theorem proof : Low6960Fat.c3 := by
   let h2 := K1_13_4_3_2.proof
   constructor
   · intro F hF γ hγ
-    exact source_order h2 hw P L hF.1 hγ hh (Nat.sub_add_cancel (show 4490367 ≤ 899040000 from by decide)).le
+    exact source_order h2 hw P L hF.1 hγ hh (Nat.sub_add_cancel (show 4435226 ≤ 898990000 from by decide)).le
   · intro G hG γ hγ
     let z := inclConst (P.z γ)
     let y := trajectory (extend (s γ))
@@ -263,8 +263,8 @@ theorem proof : Low6960Fat.c3 := by
       obtain ⟨t, F, a, hF, ht, rfl⟩ := hQ
       apply mixedHasse_order
       apply source_order h2 hw P L hF.1 hγ hh
-      change t + mixedWeight a ≤ 5000 * 179808 - 1762826 at ht
-      change t + (1762826 + mixedWeight a) ≤ 5000 * 179808
+      change t + mixedWeight a ≤ 5000 * 179798 - 1698263 at ht
+      change t + (1698263 + mixedWeight a) ≤ 5000 * 179798
       omega
     | zero =>
       exact mixedOrder_iff_coeff.mpr (fun _ _ => by simp [toGeneric])

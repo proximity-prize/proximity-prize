@@ -219,7 +219,7 @@ open RetainedCompression (Curve ordinate view)
 /-- The crossing space in the actual restriction map is reduced and has precisely
 the ordinate degree, for one finite pair off the coordinate boundary. -/
 theorem actual_crossing (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : f.degreeOf ordinate<64) (basis : PowerBasis ChartField E)
+    (hi : f.degreeOf ordinate<48) (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
     ∃ x z:L,x≠0 ∧ z≠0 ∧ Nonempty (Basis (Fin (f.degreeOf ordinate)) L (Crossing E x z)) ∧
       IsReduced (Crossing E x z) := by

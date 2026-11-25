@@ -1,0 +1,2147 @@
+import ProximityPrize.SubmissionLower.R6961RetainedCompressionPureNodes
+import ArkLib.Data.Polynomial.ResultantDegree
+import Mathlib.FieldTheory.IsAlgClosed.Basic
+import Mathlib.RingTheory.Localization.NumDen
+import Mathlib.RingTheory.Polynomial.GaussLemma
+import Mathlib.RingTheory.AdjoinRoot
+import ProximityPrize.SubmissionLower.R6960MonicChartInfinityRing
+import ProximityPrize.SubmissionLower.R6960ChartIntegrality
+import Mathlib.LinearAlgebra.Basis.SMul
+import ProximityPrize.SubmissionLower.R6960MonicChartFrobenius
+import Mathlib.RingTheory.Localization.Integral
+import ProximityPrize.SubmissionLower.R6960MonicFourChartDescent
+import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
+import Mathlib.Algebra.Field.Subfield.Basic
+
+set_option Elab.async false
+
+-- merged module R6961RetainedCompressionDiscriminant
+section Merged_R6961RetainedCompressionDiscriminant
+
+set_option Elab.async false
+set_option maxRecDepth 15000
+set_option maxHeartbeats 2200000
+
+namespace Lower6961.RetainedCompression
+noncomputable section
+open Polynomial Matrix Finset
+open K1_14 (L)
+open scoped Polynomial BigOperators
+
+private theorem resultant_weighted_add_le {R : Type*} [CommRing R]
+    (P Q : Polynomial (Polynomial R)) (m n a b d : ℕ)
+    (hp : ∀ i≤m, (P.coeff i).natDegree+d*i≤a)
+    (hq : ∀ i≤n, (Q.coeff i).natDegree+d*i≤b) :
+    (resultant P Q m n).natDegree+d*(m*n)≤n*a+m*b := by
+  classical
+  let M := sylvester P Q m n
+  let w : Fin (m+n) → ℕ := Fin.addCases (fun j : Fin m => b+d*j.val)
+    (fun j : Fin n => a+d*j.val)
+  have entry (σ : Equiv.Perm (Fin (m+n))) (i : Fin (m+n)) (ne : M (σ i) i≠0) :
+      (M (σ i) i).natDegree+d*(σ i).val≤w i := by
+    cases i using Fin.addCases with
+    | left j =>
+      have eq : M (σ (j.castAdd n)) (j.castAdd n) =
+          if (σ (j.castAdd n)).val ∈ Set.Icc j.val (j.val+n) then
+            Q.coeff ((σ (j.castAdd n)).val-j.val) else 0 := by simp [M,sylvester]
+      rw [eq] at ne ⊢
+      split_ifs at ne ⊢ with h
+      · have low : j.val≤(σ (j.castAdd n)).val := h.1
+        have small : (σ (j.castAdd n)).val-j.val≤n := by have := h.2; omega
+        have c := hq _ small
+        have step : d*((σ (j.castAdd n)).val-j.val)+d*j.val=d*(σ (j.castAdd n)).val := by
+          rw [← Nat.mul_add,Nat.sub_add_cancel low]
+        simp only [w,Fin.addCases_left]
+        omega
+      · exact (ne rfl).elim
+    | right j =>
+      have eq : M (σ (j.natAdd m)) (j.natAdd m) =
+          if (σ (j.natAdd m)).val ∈ Set.Icc j.val (j.val+m) then
+            P.coeff ((σ (j.natAdd m)).val-j.val) else 0 := by simp [M,sylvester]
+      rw [eq] at ne ⊢
+      split_ifs at ne ⊢ with h
+      · have low : j.val≤(σ (j.natAdd m)).val := h.1
+        have small : (σ (j.natAdd m)).val-j.val≤m := by have := h.2; omega
+        have c := hp _ small
+        have step : d*((σ (j.natAdd m)).val-j.val)+d*j.val=d*(σ (j.natAdd m)).val := by
+          rw [← Nat.mul_add,Nat.sub_add_cancel low]
+        simp only [w,Fin.addCases_right]
+        omega
+      · exact (ne rfl).elim
+  let s := (∑ j : Fin m, d*j.val) + ∑ j : Fin n, d*j.val
+  have ws : ∑ i,w i = n*a+m*b+s := by
+    simp only [w,s,Fin.sum_univ_add,Fin.addCases_left,Fin.addCases_right,Finset.sum_add_distrib,
+      Finset.sum_const,card_univ,Fintype.card_fin,nsmul_eq_mul,Nat.cast_id]
+    ring
+  have pos : d*(m*n)≤n*a+m*b := by
+    have h : d*m≤a := (Nat.le_add_left ..).trans (hp m le_rfl)
+    calc
+      _ = (d*m)*n := by ring
+      _ ≤ a*n := Nat.mul_le_mul_right n h
+      _ ≤ _ := by rw [Nat.mul_comm a n]; exact Nat.le_add_right ..
+  have idx : (∑ i : Fin (m+n), d*i.val)=d*(m*n)+s := by
+    simp only [s,Fin.sum_univ_add,Fin.val_castAdd,Fin.val_natAdd,Nat.mul_add,
+      Finset.sum_add_distrib,Finset.sum_const,card_univ,Fintype.card_fin,nsmul_eq_mul,Nat.cast_id]
+    ring
+  have terms (σ : Equiv.Perm (Fin (m+n))) :
+      (Equiv.Perm.sign σ • ∏ i, M (σ i) i).natDegree≤n*a+m*b-d*(m*n) := by
+    apply (Polynomial.natDegree_smul_le _ _).trans
+    by_cases exists_zero : ∃ i, M (σ i) i=0
+    · obtain ⟨i,h⟩ := exists_zero
+      have zero : (∏ j : Fin (m+n), M (σ j) j)=0 :=
+        Finset.prod_eq_zero (f := fun j => M (σ j) j) (Finset.mem_univ i) h
+      rw [zero,natDegree_zero]
+      exact Nat.zero_le _
+    · push Not at exists_zero
+      have bound := natDegree_prod_le Finset.univ (fun i=>M (σ i) i)
+      have sum : (∑ i, ((M (σ i) i).natDegree+d*(σ i).val))≤∑ i,w i :=
+        Finset.sum_le_sum (fun i _ => entry σ i (exists_zero i))
+      have perm : (∑ i, d*(σ i).val) = ∑ i : Fin (m+n), d*i.val :=
+        Equiv.sum_comp σ (fun i=>d*i.val)
+      rw [Finset.sum_add_distrib,perm,ws,idx] at sum
+      omega
+  have det := natDegree_sum_le_of_forall_le (Finset.univ : Finset (Equiv.Perm (Fin (m+n)))) _
+    (fun σ _ => terms σ)
+  rw [← Matrix.det_apply] at det
+  change M.det.natDegree+d*(m*n)≤_
+  omega
+
+theorem derivative_weighted_add_le {R : Type*} [CommRing R]
+    (P : Polynomial (Polynomial R)) (e H d : ℕ) (he : 0<e)
+    (cap : ∀ i≤e,(P.coeff i).natDegree+d*i≤H) :
+    (P.resultant P.derivative e (e-1)).natDegree+d*e^2≤(2*e-1)*H := by
+  have dh : d≤H := by have h := cap 1 he; simp at h; omega
+  have der (i : ℕ) (hi : i≤e-1) :
+      (P.derivative.coeff i).natDegree+d*i≤H-d := by
+    have h := cap (i+1) (by omega)
+    rw [Nat.mul_add,Nat.mul_one] at h
+    have q := Polynomial.coeff_derivative_natDegree_le P i
+    omega
+  have bound := resultant_weighted_add_le P P.derivative e (e-1) H (H-d) d cap der
+  have sum : (e-1)*H+e*(H-d)+e*d=(2*e-1)*H := by
+    rw [add_assoc,← Nat.mul_add e (H-d) d,Nat.sub_add_cancel dh,← add_mul]
+    have same : e-1+e=2*e-1 := by omega
+    rw [same]
+  have quad : d*(e*(e-1))+e*d=d*e^2 := by
+    have delta : e-1+1=e := Nat.sub_add_cancel he
+    calc
+      _ = d*e*(e-1+1) := by ring
+      _ = _ := by rw [delta]; ring
+  have h := Nat.add_le_add_right bound (e*d)
+  rw [sum,add_assoc,quad] at h
+  exact h
+
+theorem derivative_resultant_nonzero (f : Curve (Polynomial L)) (ir : Irreducible f)
+    (pos : 0<f.degreeOf ordinate) (small : f.degreeOf ordinate<K1.p) :
+    (view f).resultant (view f).derivative (f.degreeOf ordinate)
+      (f.degreeOf ordinate-1)≠0 := by
+  let P := view f
+  have ip : Irreducible P := (MulEquiv.irreducible_iff view).mpr ir
+  have dP : P.natDegree=f.degreeOf ordinate := view_y f
+  have ne : ((P.natDegree : ℕ) : Polynomial (Polynomial L)) ≠0 := by
+    intro zero
+    have dvd := (CharP.cast_eq_zero_iff (Polynomial (Polynomial L)) K1.p P.natDegree).mp zero
+    exact (Nat.ne_of_gt (dP.symm ▸ pos)) (Nat.eq_zero_of_dvd_of_lt dvd (dP.symm ▸ small))
+  have der : P.derivative≠0 := by
+    intro zero
+    have base : P.natDegree-1+1=P.natDegree := Nat.sub_add_cancel (dP.symm ▸ pos)
+    have h := congrArg (fun Q => Q.coeff (P.natDegree-1)) zero
+    rw [coeff_derivative,← Nat.cast_add_one,base,coeff_natDegree,coeff_zero] at h
+    exact mul_ne_zero (leadingCoeff_ne_zero.mpr ip.ne_zero) ne h
+  have result := Polynomial.resultant_derivative_ne_zero_of_irreducible P ip der
+  rwa [dP] at result
+
+#print axioms derivative_resultant_nonzero
+end
+end Lower6961.RetainedCompression
+
+end Merged_R6961RetainedCompressionDiscriminant
+
+-- merged module R6961RetainedCompressionAssembly
+section Merged_R6961RetainedCompressionAssembly
+
+set_option Elab.async false
+namespace Lower6961
+end Lower6961
+
+end Merged_R6961RetainedCompressionAssembly
+
+-- merged module R6961RetainedLinearBase
+section Merged_R6961RetainedLinearBase
+
+set_option Elab.async false
+set_option maxRecDepth 14000
+set_option maxHeartbeats 2500000
+
+namespace Lower6961.RetainedLinear
+noncomputable section
+open Polynomial
+open scoped Polynomial nonZeroDivisors
+
+variable {F E : Type} [Field F] [Field E] [Algebra F E]
+
+abbrev Fn (F : Type) [Field F] := FractionRing (Polynomial F)
+
+def constants : (Polynomial F) →+* (Polynomial E) := mapRingHom (algebraMap F E)
+
+theorem constants_injective : Function.Injective (constants (F:=F) (E:=E)) :=
+  Polynomial.map_injective _ (algebraMap F E).injective
+
+def rationalConstants : Fn F →+* Fn E :=
+  IsFractionRing.map (constants_injective (F:=F) (E:=E))
+
+abbrev incl (F : Type) [Field F] := algebraMap (Polynomial F) (Fn F)
+
+theorem incl_injective (F : Type) [Field F] : Function.Injective (incl F) :=
+  IsFractionRing.injective (Polynomial F) (Fn F)
+
+@[simp] theorem rationalConstants_incl (a : (Polynomial F)) :
+    rationalConstants (E:=E) (incl F a)=incl E (constants a) := by
+  unfold rationalConstants IsFractionRing.map
+  exact IsLocalization.map_eq _ _
+
+@[simp] theorem eval_constants (a : (Polynomial F)) (x : F) :
+    (constants (E:=E) a).eval (algebraMap F E x)=algebraMap F E (a.eval x) :=
+  Polynomial.eval_map_apply (algebraMap F E) (p:=a) x
+
+/-- An algebraic linear factor away from a rational abscissa divides the
+lift of a polynomial of the base field also avoiding that abscissa. -/
+private theorem base_multiple_linear [Algebra.IsAlgebraic F E] (x : F) (r : E)
+    (away : r≠algebraMap F E x) :
+    ∃ b : (Polynomial F), b.eval x≠0 ∧ (Polynomial.X-C r)∣constants b := by
+  have integ : IsIntegral F r := Algebra.IsIntegral.isIntegral r
+  let b := minpoly F r
+  have root : (constants (E:=E) b).eval r=0 := by
+    change (b.map (algebraMap F E)).eval r=0
+    rw [eval_map]
+    exact minpoly.aeval F r
+  refine ⟨b,?_ ,dvd_iff_isRoot.mpr root⟩
+  intro zero
+  have dvd : Polynomial.X-C x∣b := dvd_iff_isRoot.mpr zero
+  have assoc := (irreducible_X_sub_C x).associated_of_dvd (minpoly.irreducible integ) dvd
+  obtain ⟨a,eq⟩ := assoc.symm.dvd
+  have mapped := congrArg (fun g : (Polynomial F) => (constants (E:=E) g).eval r) eq
+  change (constants (E:=E) (Polynomial.X-C x)).eval r=(constants (E:=E) (b*a)).eval r at mapped
+  rw [map_mul,eval_mul,root,zero_mul] at mapped
+  have eq' : (constants (E:=E) (Polynomial.X-C x)).eval r=r-algebraMap F E x := by
+    simp only [constants,coe_mapRingHom,Polynomial.map_sub,Polynomial.map_X,
+      Polynomial.map_C,eval_sub,eval_X,eval_C]
+  rw [eq'] at mapped
+  exact away (sub_eq_zero.mp mapped)
+
+/-- Rational functions over the geometric constant field admit a denominator
+over the arithmetic constant field that stays nonzero at a prescribed node. -/
+theorem base_multiple [IsAlgClosed E] [Algebra.IsAlgebraic F E]
+    (x : F) (q : (Polynomial E)) (regular : q.eval (algebraMap F E x)≠0) :
+    ∃ b : (Polynomial F), b.eval x≠0 ∧ q∣constants b := by
+  induction q using WfDvdMonoid.induction_on_irreducible with
+  | zero => simp at regular
+  | unit q hu => exact ⟨1,by simp,hu.dvd⟩
+  | mul a q an ir ih =>
+    rw [eval_mul] at regular
+    have qa : a.eval (algebraMap F E x)≠0 := fun z=>regular (by rw [z,mul_zero])
+    have qq : q.eval (algebraMap F E x)≠0 := fun z=>regular (by rw [z,zero_mul])
+    obtain ⟨u,hu,dU⟩ := ih qa
+    obtain ⟨r,hr⟩ := IsAlgClosed.exists_root q (degree_pos_of_irreducible ir).ne'
+    have away : r≠algebraMap F E x := fun h=>qq (h ▸ hr)
+    have n : Polynomial.X-C r∣q := dvd_iff_isRoot.mpr hr
+    have tied := (irreducible_X_sub_C r).associated_of_dvd ir n
+    obtain ⟨v,hv,dV⟩ := base_multiple_linear x r away
+    exact ⟨v*u,by rw [eval_mul]; exact mul_ne_zero hv hu,
+      by rw [map_mul]; exact mul_dvd_mul (tied.symm.dvd.trans dV) dU⟩
+
+/-- Arithmetic polynomials viewed in the geometric rational function field. -/
+def base : (Polynomial F) →+* Fn E := (incl E).comp constants
+
+/-- Every geometric polynomial is integral over the original arithmetic
+polynomial ring. The proof only uses algebraicity of the constants. -/
+theorem polynomial_integral [Algebra.IsAlgebraic F E] (p : (Polynomial E)) :
+    (base (F:=F) (E:=E)).IsIntegralElem (incl E p) := by
+  let j := base (F:=F) (E:=E)
+  letI : Algebra (Polynomial F) (Fn E) := j.toAlgebra
+  have const (a : E) : IsIntegral (Polynomial F) (incl E (C a)) := by
+    let η : E →+* Fn E := (incl E).comp C
+    have h : (algebraMap F E).IsIntegralElem a := Algebra.IsIntegral.isIntegral a
+    have mapped := h.map η
+    have eq : η.comp (algebraMap F E)=j.comp C := by
+      apply RingHom.ext
+      intro t
+      simp [η,j,base,constants]
+    rw [eq] at mapped
+    exact mapped.of_comp
+  have abscissa : IsIntegral (Polynomial F) (incl E (Polynomial.X : (Polynomial E))) := by
+    have eq : (algebraMap (Polynomial F) (Fn E)) Polynomial.X=incl E (Polynomial.X : (Polynomial E)) := by
+      change j Polynomial.X=_
+      simp [j,base,constants]
+    exact eq ▸ isIntegral_algebraMap
+  change IsIntegral (Polynomial F) (incl E p)
+  induction p using Polynomial.induction_on' with
+  | add p q hp hq => rw [map_add]; exact hp.add hq
+  | monomial n a =>
+    rw [← C_mul_X_pow_eq_monomial,map_mul,map_pow]
+    exact (const a).mul (abscissa.pow n)
+
+/-- An element integral over the arithmetic polynomial ring has no
+abscissa denominator in the geometric polynomial ring. -/
+theorem integral_is_polynomial {r : Fn E} (h : (base (F:=F) (E:=E)).IsIntegralElem r) :
+    ∃ p : (Polynomial E), incl E p=r := by
+  have integral : IsIntegral (Polynomial E) r := h.of_comp
+  exact (isIntegrallyClosed_iff (K:=Fn E)).mp (inferInstance : IsIntegrallyClosed (Polynomial E)) integral
+
+end
+end Lower6961.RetainedLinear
+
+end Merged_R6961RetainedLinearBase
+
+-- merged module R6961RetainedLinearFactor
+section Merged_R6961RetainedLinearFactor
+
+set_option Elab.async false
+set_option maxRecDepth 15000
+set_option maxHeartbeats 2300000
+
+namespace Lower6961.RetainedLinear
+noncomputable section
+open Polynomial
+open scoped Polynomial nonZeroDivisors
+
+variable {F E : Type} [Field F] [Field E] [Algebra F E]
+
+abbrev Plane (F : Type) [Field F] := Polynomial (Polynomial F)
+
+def arithmetic (P : Plane F) : Polynomial (Fn F) := P.map (incl F)
+
+def geometric (P : Plane F) : Polynomial (Fn E) := P.map (base (E:=E))
+
+theorem geometric_map (P : Plane F) : geometric (E:=E) P=(arithmetic P).map rationalConstants := by
+  unfold geometric arithmetic
+  rw [Polynomial.map_map]
+  congr 1
+  apply RingHom.ext
+  intro a
+  simp [base]
+
+theorem geometric_deg (P : Plane F) : (geometric (E:=E) P).natDegree=P.natDegree := by
+  have injective : Function.Injective (base (F:=F) (E:=E)) :=
+    (incl_injective E).comp (constants_injective (F:=F) (E:=E))
+  exact natDegree_map_eq_of_injective injective P
+
+theorem arithmetic_irred {P : Plane F} (ir : Irreducible P) (pos : 0<P.natDegree) :
+    Irreducible (arithmetic P) :=
+  (ir.isPrimitive (Nat.ne_of_gt pos)).irreducible_iff_irreducible_map_fraction_map.mp ir
+
+/-- Content-freeness survives each physical abscissa because an identically
+vanishing fibre would give a nonunit abscissa factor. -/
+theorem node_not_zero {P : Plane F} (ir : Irreducible P) (pos : 0<P.natDegree) (x : F) :
+    P.map (evalRingHom x)≠0 := by
+  intro zero
+  have prime := ir.isPrimitive (Nat.ne_of_gt pos)
+  apply (irreducible_X_sub_C x).not_isUnit
+  apply isPrimitive_iff_isUnit_of_C_dvd.mp prime
+  apply (C_dvd_iff_dvd_coeff ..).mpr
+  intro i
+  apply dvd_iff_isRoot.mpr
+  have gone := congrArg (fun Q : (Polynomial F) => Q.coeff i) zero
+  simpa only [Polynomial.IsRoot,coeff_map,coe_evalRingHom,coeff_zero] using gone
+
+abbrev numerator (r : Fn E) : (Polynomial E) := IsFractionRing.num (Polynomial E) r
+abbrev denominator (r : Fn E) : (Polynomial E) := (IsFractionRing.den (Polynomial E) r).val
+
+theorem denominator_ne (r : Fn E) : denominator r≠0 :=
+  nonZeroDivisors.coe_ne_zero (IsFractionRing.den (Polynomial E) r)
+
+theorem numerator_eq (r : Fn E) : r*incl E (denominator r)=incl E (numerator r) :=
+  (IsFractionRing.num_mul_den_eq_num_iff_eq' (A:=(Polynomial E))).mpr rfl
+
+private def line (r : Fn E) : Plane E := C (denominator r)*Polynomial.X+C (-numerator r)
+
+private theorem line_primitive (r : Fn E) : (line r).IsPrimitive := by
+  apply isPrimitive_iff_isUnit_of_C_dvd.mpr
+  intro b hb
+  have coef := (C_dvd_iff_dvd_coeff ..).mp hb
+  have first : b∣denominator r := by simpa [line] using coef 1
+  have second : b∣numerator r := dvd_neg.mp (by simpa [line] using coef 0)
+  exact IsFractionRing.num_den_reduced (Polynomial E) r second first
+
+private theorem mapped_line (r : Fn E) :
+    (line r).map (incl E)=C (incl E (denominator r))*(Polynomial.X-C r) := by
+  simp only [line,Polynomial.map_add,Polynomial.map_mul,Polynomial.map_C,Polynomial.map_X,
+    Polynomial.map_neg,map_neg]
+  rw [← numerator_eq r]
+  rw [mul_sub, mul_comm r, C_mul]
+  ring
+
+private theorem line_prod_primitive (s : Multiset (Fn E)) : ((s.map line).prod).IsPrimitive := by
+  letI : NormalizedGCDMonoid (Polynomial E) := Classical.choice inferInstance
+  induction s using Multiset.induction_on with
+  | empty => simp
+  | cons r s ih =>
+    rw [Multiset.map_cons,Multiset.prod_cons]
+    exact (line_primitive r).mul ih
+
+private theorem mapped_lines (s : Multiset (Fn E)) :
+    ((s.map line).prod).map (incl E)=C ((s.map (fun r=>incl E (denominator r))).prod) *
+      (s.map (fun r=>Polynomial.X-C r)).prod := by
+  induction s using Multiset.induction_on with
+  | empty => simp
+  | cons r s ih =>
+    simp only [Multiset.map_cons,Multiset.prod_cons,Polynomial.map_mul,mapped_line,ih,C_mul]
+    ring
+
+/-- A received root in a nonzero physical fibre is carried by a
+regular degree-one geometric branch. The denominator is obtained from
+the primitive factor itself. -/
+theorem exists_regular_root {P : Plane F} (ir : Irreducible P) (pos : 0<P.natDegree)
+    (splits : (geometric (E:=E) P).Splits) (x t : F) (hit : (P.map (evalRingHom x)).eval t=0) :
+    ∃ r ∈ (geometric (E:=E) P).roots,
+      (denominator r).eval (algebraMap F E x)≠0 ∧
+      (numerator r).eval (algebraMap F E x)=(denominator r).eval (algebraMap F E x)*algebraMap F E t := by
+  classical
+  let Qe := P.map (constants (F:=F) (E:=E))
+  let L := geometric (E:=E) P
+  let rs := L.roots
+  let G := (rs.map line).prod
+  let b := (rs.map (fun r=>incl E (denominator r))).prod
+  have Pn := ir.ne_zero
+  have geo : Qe.map (incl E)=L := by
+    simp [Qe, L, geometric, base, Polynomial.map_map]
+  have dn : b≠0 := by
+    apply Multiset.prod_ne_zero
+    intro mem
+    obtain ⟨r,_,eq⟩ := Multiset.mem_map.mp mem
+    exact ((map_ne_zero_iff _ (incl_injective E)).mpr (denominator_ne r)) eq
+  have Gmap : G.map (incl E)=C b*(rs.map (fun r=>Polynomial.X-C r)).prod := mapped_lines rs
+  have fac := splits.eq_prod_roots
+  have mapped_dvd : G.map (incl E)∣Qe.map (incl E) := by
+    refine ⟨C (L.leadingCoeff/b),?_⟩
+    rw [geo,Gmap]
+    change L=C b*(rs.map (fun r=>Polynomial.X-C r)).prod*C (L.leadingCoeff/b)
+    calc
+      _ = C L.leadingCoeff*(rs.map (fun r=>Polynomial.X-C r)).prod := fac
+      _ = _ := by
+        rw [mul_right_comm,← C_mul,← mul_div_assoc,mul_div_cancel_left₀ _ dn]
+  obtain ⟨q,hq⟩ := (line_prod_primitive rs).dvd_of_fraction_map_dvd_fraction_map mapped_dvd
+  have Gn : G≠0 := (line_prod_primitive rs).ne_zero
+  have Yn : Qe≠0 := by
+    have inj : Function.Injective (Polynomial.mapRingHom (constants (F:=F) (E:=E))) :=
+      Polynomial.map_injective _ (constants_injective (F:=F) (E:=E))
+    exact (map_ne_zero_iff _ inj).mpr Pn
+  have qn : q≠0 := fun z=>Yn (by rw [hq,z,mul_zero])
+  have degg : G.natDegree=P.natDegree := by
+    rw [← natDegree_map_eq_of_injective (incl_injective E) G,Gmap,natDegree_C_mul dn,
+      natDegree_multiset_prod_X_sub_C_eq_card,← splits.natDegree_eq_card_roots]
+    exact geometric_deg P
+  have degY : Qe.natDegree=P.natDegree := natDegree_map_eq_of_injective constants_injective _
+  have size : q.natDegree=0 := by
+    rw [hq,natDegree_mul Gn qn,degg] at degY
+    omega
+  let c := q.coeff 0
+  have facY : Qe=G*C c := hq.trans (by rw [eq_C_of_natDegree_eq_zero size])
+  let x' := algebraMap F E x
+  let t' := algebraMap F E t
+  let node := evalRingHom x'
+  have compare : Qe.map node=(P.map (evalRingHom x)).map (algebraMap F E) := by
+    apply Polynomial.ext
+    intro i
+    simp only [Qe,coeff_map,node,coe_evalRingHom,eval_constants,x']
+  have Yn' : Qe.map node≠0 := by
+    rw [compare]
+    intro zero
+    apply node_not_zero ir pos x
+    apply Polynomial.map_injective _ (algebraMap F E).injective
+    simpa only [Polynomial.map_zero] using zero
+  have cn' : c.eval x'≠0 := by
+    intro ch
+    apply Yn'
+    rw [facY,Polynomial.map_mul,Polynomial.map_C,coe_evalRingHom,ch,C_0,mul_zero]
+  have hit' : (Qe.map node).eval t'=0 := by
+    rw [compare,eval_map_apply,hit,map_zero]
+  let select : Plane E →+* E := (evalRingHom t').comp (mapRingHom node)
+  change select Qe=0 at hit'
+  rw [facY,map_mul] at hit'
+  have pc : select (C c)=c.eval x' := by
+    simp only [select, RingHom.comp_apply,coe_mapRingHom,Polynomial.map_C,
+      coe_evalRingHom,eval_C,node]
+  rw [pc] at hit'
+  have gone := (mul_eq_zero.mp hit').resolve_right cn'
+  change select (rs.map line).prod=0 at gone
+  rw [← Multiset.prod_hom, Multiset.map_map] at gone
+  obtain ⟨r,hr,val⟩ := Multiset.mem_map.mp (Multiset.prod_eq_zero_iff.mp gone)
+  have v : (denominator r).eval x'*t'+(-(numerator r)).eval x'=0 := by
+    simpa [select,node,line] using val
+  rw [eval_neg] at v
+  have relation : (numerator r).eval x'=(denominator r).eval x'*t' := by
+    linear_combination -v
+  have den : (denominator r).eval x'≠0 := by
+    intro collapse
+    have num : (numerator r).eval x'=0 := by rw [relation,collapse,zero_mul]
+    have d₀ : Polynomial.X-C x'∣numerator r := dvd_iff_isRoot.mpr num
+    have d₁ : Polynomial.X-C x'∣denominator r := dvd_iff_isRoot.mpr collapse
+    exact (irreducible_X_sub_C x').not_isUnit (IsFractionRing.num_den_reduced (Polynomial E) r d₀ d₁)
+  exact ⟨r,hr,den,relation⟩
+
+#print axioms node_not_zero
+#print axioms exists_regular_root
+end
+end Lower6961.RetainedLinear
+
+end Merged_R6961RetainedLinearFactor
+
+-- merged module R6961RetainedLinearConjugacy
+section Merged_R6961RetainedLinearConjugacy
+
+set_option Elab.async false
+set_option maxRecDepth 15000
+set_option maxHeartbeats 2700000
+
+namespace Lower6961.RetainedLinear
+noncomputable section
+open Polynomial
+open scoped Polynomial
+
+variable {F E : Type} [Field F] [Field E] [Algebra F E]
+
+private theorem base_injective : Function.Injective (base (F:=F) (E:=E)) :=
+  (incl_injective E).comp (constants_injective (F:=F) (E:=E))
+
+private theorem adjoint_conjugates {P : Plane F} (ir : Irreducible P) (pos : 0<P.natDegree)
+    (b : (Polynomial F)) (x t : F) {r s : Fn E} (hr : r∈(geometric (E:=E) P).roots)
+    (hs : s∈(geometric (E:=E) P).roots) :
+    (base (F:=F) (E:=E)).IsIntegralElem ((base b)*(r-base (C t))/(base (Polynomial.X-C x))) →
+    (base (F:=F) (E:=E)).IsIntegralElem ((base b)*(s-base (C t))/(base (Polynomial.X-C x))) := by
+  let Q := arithmetic P
+  letI : Fact (Irreducible Q) := ⟨arithmetic_irred ir pos⟩
+  let j := (AdjoinRoot.of Q).comp (incl F)
+  let u : AdjoinRoot Q := j b*(AdjoinRoot.root Q-j (C t))/j (Polynomial.X-C x)
+  have raw (a : Fn E) (ha : a∈(geometric (E:=E) P).roots) :
+      Q.eval₂ (rationalConstants (F:=F) (E:=E)) a=0 := by
+    have injective : Function.Injective (Polynomial.mapRingHom (base (F:=F) (E:=E))) :=
+      Polynomial.map_injective _ base_injective
+    have nonzero : geometric (E:=E) P≠0 := (map_ne_zero_iff _ injective).mpr ir.ne_zero
+    have ez := (mem_roots nonzero).mp ha
+    change (geometric (E:=E) P).eval a=0 at ez
+    rw [geometric_map,eval_map] at ez
+    exact ez
+  let lift (a : Fn E) (ha : a∈(geometric (E:=E) P).roots) :=
+    AdjoinRoot.lift (rationalConstants (F:=F) (E:=E)) a (raw a ha)
+  have extends_base (a : Fn E) (ha : a∈(geometric (E:=E) P).roots) :
+      (lift a ha).comp j=base (F:=F) (E:=E) := by
+    apply RingHom.ext
+    intro a'
+    dsimp [lift,j]
+    rw [AdjoinRoot.lift_of,rationalConstants_incl]
+    rfl
+  have eq (a : Fn E) (ha : a∈(geometric (E:=E) P).roots) :
+      lift a ha u=base b*(a-base (C t))/base (Polynomial.X-C x) := by
+    simp only [u,map_div₀,map_mul,map_sub]
+    have root : lift a ha (AdjoinRoot.root Q)=a := AdjoinRoot.lift_root (raw a ha)
+    have one (v : (Polynomial F)) : lift a ha (j v)=base v := DFunLike.congr_fun (extends_base a ha) v
+    simp only [root,one]
+  intro original
+  have at_r : ((lift r hr).comp j).IsIntegralElem (lift r hr u) := by
+    rwa [extends_base r hr,eq r hr]
+  have integral : j.IsIntegralElem u :=
+    at_r.of_map (lift r hr).injective
+  have at_s := integral.map (lift s hs)
+  rwa [extends_base s hs,eq s hs] at at_s
+
+/-- Lift the received ordinate along one primitive branch. Every conjugate
+has a common arithmetic denominator and the same physical residue. -/
+theorem common_numerators [IsAlgClosed E] [Algebra.IsAlgebraic F E] {P : Plane F}
+    (ir : Irreducible P) (pos : 0<P.natDegree)
+    (splits : (geometric (E:=E) P).Splits) (x t : F) (hit : (P.map (evalRingHom x)).eval t=0) :
+    ∃ b : (Polynomial F), b.eval x≠0 ∧
+      ∀ r∈(geometric (E:=E) P).roots, ∃ a : (Polynomial E),
+        incl E a=base b*r ∧
+        a.eval (algebraMap F E x)=algebraMap F E (b.eval x)*algebraMap F E t := by
+  obtain ⟨r,hr,rden,rt⟩ := exists_regular_root (E:=E) ir pos splits x t hit
+  obtain ⟨b,hb,m,hm⟩ := base_multiple x (denominator r) rden
+  let x' := algebraMap F E x
+  let t' := algebraMap F E t
+  let pX : (Polynomial E) := Polynomial.X-C x'
+  have pX_image : base (Polynomial.X-C x) = incl E pX := by
+    simp [base,constants,pX,x']
+  have x_nonzero : base (E:=E) (Polynomial.X-C x)≠0 :=
+    (map_ne_zero_iff _ base_injective).mpr (X_sub_C_ne_zero _)
+  have t_image : base (C t)=incl E (C t') := by simp [base,constants,t']
+  have exact_root : pX ∣ numerator r-C t'*denominator r := by
+    apply dvd_iff_isRoot.mpr
+    change (numerator r-C t'*denominator r).eval x'=0
+    rw [eval_sub,eval_mul,eval_C,rt]
+    ring
+  obtain ⟨c,hc⟩ := exact_root
+  have b_image : base b=incl E (denominator r*m) := by
+    change incl E (constants b)=_
+    rw [hm]
+  have b_slope : base b*(r-base (C t))/base (Polynomial.X-C x)=incl E (c*m) := by
+    apply (div_eq_iff x_nonzero).mpr
+    calc
+      _ = incl E ((numerator r-C t'*denominator r)*m) := by
+        rw [b_image,t_image]
+        simp only [map_mul,map_sub]
+        rw [← numerator_eq r]
+        ring
+      _ = _ := by rw [hc,pX_image]; simp only [map_mul]; ring
+  have regular : (base (F:=F) (E:=E)).IsIntegralElem
+      (base b*(r-base (C t))/base (Polynomial.X-C x)) := by
+    rw [b_slope]
+    exact polynomial_integral (c*m)
+  refine ⟨b,hb,?_⟩
+  intro s hs
+  have h := adjoint_conjugates ir pos b x t hr hs regular
+  obtain ⟨n,hn⟩ := integral_is_polynomial h
+  let a := constants (E:=E) b*C t'+pX*n
+  have eq : base b*(s-base (C t))=incl E n*base (Polynomial.X-C x) :=
+    (div_eq_iff x_nonzero).mp hn.symm
+  refine ⟨a,?_ ,?_⟩
+  · unfold a
+    simp only [map_add,map_mul]
+    have b_incl : incl E (constants (E:=E) b)=base b := rfl
+    rw [b_incl,← t_image,← pX_image]
+    linear_combination -eq
+  · simp [a,pX,x',t',eval_constants]
+
+#print axioms common_numerators
+end
+end Lower6961.RetainedLinear
+
+end Merged_R6961RetainedLinearConjugacy
+
+-- merged module R6961RetainedLinearSpecialization
+section Merged_R6961RetainedLinearSpecialization
+
+set_option Elab.async false
+set_option maxRecDepth 16000
+set_option maxHeartbeats 3000000
+
+namespace Lower6961.RetainedLinear
+noncomputable section
+open Polynomial
+open scoped Polynomial
+
+variable {F E : Type} [Field F] [Field E] [Algebra F E]
+
+private def linearAt (B A : (Polynomial E)) : Plane E := C B*Polynomial.X-C A
+
+private theorem map_linearAt (B A : (Polynomial E)) (r : Fn E) (ha : incl E A=incl E B*r) :
+    (linearAt B A).map (incl E)=C (incl E B)*(Polynomial.X-C r) := by
+  simp only [linearAt,Polynomial.map_sub,Polynomial.map_mul,Polynomial.map_C,Polynomial.map_X,
+    ha,C_mul,mul_sub]
+
+private theorem mapped_all (B : (Polynomial E)) (A : Fn E→(Polynomial E)) (s : Multiset (Fn E))
+    (h : ∀ r∈s,incl E (A r)=incl E B*r) :
+    ((s.map (fun r=>linearAt B (A r))).prod).map (incl E)=C ((incl E B)^s.card) *
+      (s.map (fun r=>Polynomial.X-C r)).prod := by
+  induction s using Multiset.induction_on with
+  | empty => simp
+  | cons r s ih =>
+    have hr := h r (Multiset.mem_cons_self r s)
+    have rest := ih (fun a ha=>(h a (Multiset.mem_cons_of_mem ha)))
+    simp only [Multiset.map_cons,Multiset.prod_cons,Polynomial.map_mul,map_linearAt B _ r hr,
+      rest,Multiset.card_cons,pow_succ,C_mul]
+    ring
+
+private theorem specialized_all (B : (Polynomial E)) (A : Fn E→(Polynomial E)) (s : Multiset (Fn E)) (x t : E)
+    (h : ∀ r∈s,(A r).eval x=B.eval x*t) :
+    ((s.map (fun r=>linearAt B (A r))).prod).map (evalRingHom x)=
+      C ((B.eval x)^s.card)*(Polynomial.X-C t)^s.card := by
+  induction s using Multiset.induction_on with
+  | empty => simp
+  | cons r s ih =>
+    have hr := h r (Multiset.mem_cons_self r s)
+    have first : (linearAt B (A r)).map (evalRingHom x)=C (B.eval x)*(Polynomial.X-C t) := by
+      simp only [linearAt,Polynomial.map_sub,Polynomial.map_mul,Polynomial.map_C,
+        Polynomial.map_X,coe_evalRingHom,hr,C_mul,mul_sub]
+    have rest := ih (fun a ha=>h a (Multiset.mem_cons_of_mem ha))
+    simp only [Multiset.map_cons,Multiset.prod_cons,Polynomial.map_mul,first,rest,
+      Multiset.card_cons,pow_succ,C_mul]
+    ring
+
+/-- An irreducible plane polynomial which splits into rational abscissa
+branches over algebraic constants has a pure received fibre at every
+arithmetic node at which the received ordinate is a root. -/
+theorem pure_specialization [IsAlgClosed E] [Algebra.IsAlgebraic F E] {P : Plane F}
+    (ir : Irreducible P) (pos : 0<P.natDegree) (splits : (geometric (E:=E) P).Splits)
+    (x t : F) (hit : (P.map (evalRingHom x)).eval t=0) :
+    P.map (evalRingHom x)=C (P.map (evalRingHom x)).leadingCoeff*(Polynomial.X-C t)^P.natDegree := by
+  classical
+  let G := geometric (E:=E) P
+  let roots := G.roots
+  let Q := P.map (constants (F:=F) (E:=E))
+  let x' := algebraMap F E x
+  let t' := algebraMap F E t
+  let atX := evalRingHom x'
+  let degree := P.natDegree
+  have lifts : Q.map (incl E)=G := by
+    simp [Q,G,geometric,base,Polynomial.map_map]
+  have d : roots.card=degree := splits.natDegree_eq_card_roots.symm.trans (geometric_deg P)
+  obtain ⟨b,hb,numerators⟩ := common_numerators (E:=E) ir pos splits x t hit
+  let B := constants (E:=E) b
+  let A (r : Fn E) : (Polynomial E) := if h : r∈roots then (numerators r h).choose else 0
+  have den : B.eval x'≠0 := by rw [eval_constants]; exact (map_ne_zero_iff _ (algebraMap F E).injective).mpr hb
+  have both (r : Fn E) (h : r∈roots) :
+      incl E (A r)=incl E B*r ∧ (A r).eval x'=B.eval x'*t' := by
+    simpa only [A,dite_eq_left h,eval_constants,x',t',B,base,RingHom.comp_apply] using
+      (numerators r h).choose_spec
+  let H := (roots.map (fun r=>linearAt B (A r))).prod
+  have shape : H.map (incl E)=C ((incl E B)^degree)*(roots.map (fun r=>Polynomial.X-C r)).prod := by
+    rw [mapped_all B A roots (fun r hr=>(both r hr).1),d]
+  have fibre : H.map atX=C ((B.eval x')^degree)*(Polynomial.X-C t')^degree := by
+    rw [specialized_all B A roots x' t' (fun r hr=>(both r hr).2),d]
+  have lead : incl E Q.leadingCoeff=G.leadingCoeff := by
+    rw [← lifts, leadingCoeff_map_of_injective (incl_injective E)]
+  have packed : C (B^degree)*Q=C Q.leadingCoeff*H := by
+    apply Polynomial.map_injective _ (incl_injective E)
+    rw [Polynomial.map_mul,Polynomial.map_C,map_pow,lifts,Polynomial.map_mul,Polynomial.map_C,lead,shape]
+    calc
+      C ((incl E B)^degree)*G =
+          C ((incl E B)^degree)*(C G.leadingCoeff*(roots.map (fun r=>Polynomial.X-C r)).prod) :=
+        congrArg _ splits.eq_prod_roots
+      _ = _ := by ring
+  have mapped := congrArg (Polynomial.map atX) packed
+  simp only [Polynomial.map_mul,Polynomial.map_C,atX,coe_evalRingHom,eval_pow] at mapped
+  change C ((B.eval x')^degree)*(Q.map atX)=C (Q.leadingCoeff.eval x')*(H.map atX) at mapped
+  rw [fibre] at mapped
+  have qeq : Q.map atX=C (Q.leadingCoeff.eval x')*(Polynomial.X-C t')^degree := by
+    apply mul_left_cancel₀ (a:=C ((B.eval x')^degree)) (C_ne_zero.mpr (pow_ne_zero _ den))
+    calc
+      _ = C (Q.leadingCoeff.eval x')*(C ((B.eval x')^degree)*(Polynomial.X-C t')^degree) := mapped
+      _ = _ := by ring
+  have lead_eq : (Q.map atX).leadingCoeff=Q.leadingCoeff.eval x' := by
+    have monic : ((Polynomial.X-C t')^degree).Monic := (monic_X_sub_C t').pow _
+    rw [qeq,leadingCoeff_mul,leadingCoeff_C,monic.leadingCoeff,mul_one]
+  rw [← lead_eq] at qeq
+  have recover : Q.map atX=(P.map (evalRingHom x)).map (algebraMap F E) := by
+    apply Polynomial.ext
+    intro i
+    simp only [Q,atX,coeff_map,coe_evalRingHom,eval_constants,x']
+  apply Polynomial.map_injective _ (algebraMap F E).injective
+  simp only [Polynomial.map_mul,Polynomial.map_C,Polynomial.map_pow,Polynomial.map_sub,
+    Polynomial.map_X,← leadingCoeff_map_of_injective (algebraMap F E).injective,← recover]
+  exact qeq
+
+#print axioms pure_specialization
+end
+end Lower6961.RetainedLinear
+
+end Merged_R6961RetainedLinearSpecialization
+
+-- merged module R6961RetainedLinearAssembly
+section Merged_R6961RetainedLinearAssembly
+
+set_option Elab.async false
+set_option maxRecDepth 16000
+set_option maxHeartbeats 2400000
+
+namespace Lower6961.RetainedLinear
+noncomputable section
+open Polynomial Finset
+open K1 (K I node)
+open K1_14 (L liftPoly)
+open CurvatureSquares (Ordinate)
+open RetainedShortening (Word)
+open RetainedCompression (Curve ordinate parameter MarkedFiber PureNodes atNode view view_y)
+open scoped Polynomial
+
+abbrev Seed := Fn L
+
+/-- Extend the scalar variable to its function field while keeping the
+abscissa and ordinate as independent polynomial variables. -/
+def toSeed : Ordinate →+* Plane Seed :=
+  mapRingHom (mapRingHom (incl L))
+
+theorem toSeed_injective : Function.Injective toSeed :=
+  Polynomial.map_injective _ (Polynomial.map_injective _ (incl_injective L))
+
+theorem toSeed_degree (P : Ordinate) : (toSeed P).natDegree=P.natDegree :=
+  natDegree_map_eq_of_injective (Polynomial.map_injective _ (incl_injective L)) P
+
+private def seedScalar (b : (Polynomial L)) : Plane Seed := C (C (incl L b))
+
+private theorem seedScalar_isUnit (b : (Polynomial L)) (hb : b≠0) : IsUnit (seedScalar b) :=
+  isUnit_C.mpr (isUnit_C.mpr (isUnit_iff_ne_zero.mpr ((map_ne_zero_iff _ (incl_injective L)).mpr hb)))
+
+private theorem clear_seed (Q : Plane Seed) :
+    ∃ (b : (Polynomial L)) (R : Ordinate), b≠0 ∧ toSeed R=seedScalar b*Q := by
+  obtain ⟨b,R,nonzero,hr⟩ := RetainedCompression.clear_abscissa Q
+  refine ⟨b,R.map Bivariate.swap.toRingHom,nonzero,?_⟩
+  show (R.map Bivariate.swap.toRingHom).map (mapRingHom (incl L))=_
+  rw [Polynomial.map_map]
+  exact hr
+
+private theorem lifted_scalar_product (P : Ordinate) (a b : (Polynomial L)) :
+    toSeed (C (C (a*b))*P)=seedScalar a*seedScalar b*toSeed P := by
+  rw [map_mul]
+  simp only [toSeed,coe_mapRingHom,Polynomial.map_C,map_mul,seedScalar]
+
+/-- Localizing at the nonzero scalar polynomials preserves irreducibility
+when the ordinate degree is positive. -/
+theorem toSeed_irreducible {P : Ordinate} (ir : Irreducible P) (pos : 0<P.natDegree) :
+    Irreducible (toSeed P) := by
+  have pn : toSeed P≠0 := (map_ne_zero_iff _ toSeed_injective).mpr ir.ne_zero
+  have prime : Prime P := UniqueFactorizationMonoid.irreducible_iff_prime.mp ir
+  refine ⟨fun u => ?_, fun A B split => ?_⟩
+  · have d := natDegree_eq_zero_of_isUnit u
+    rw [toSeed_degree] at d
+    omega
+  obtain ⟨a,U,an,ua⟩ := clear_seed A
+  obtain ⟨b,V,bn,vb⟩ := clear_seed B
+  have product : U*V=P*C (C (a*b)) := by
+    apply toSeed_injective
+    rw [mul_comm P, lifted_scalar_product,map_mul,ua,vb,split]
+    ring
+  have dvd : P∣U*V := ⟨_,product⟩
+  have with_unit {c : (Polynomial L)} {H : Ordinate} {J : Plane Seed}
+      (cn : c≠0) (h : toSeed H=seedScalar c*J) (dv : P∣H) : toSeed P∣J := by
+    have image := map_dvd toSeed dv
+    rw [h] at image
+    exact (seedScalar_isUnit c cn).dvd_mul_left.mp image
+  have other {J K : Plane Seed} (dv : toSeed P∣J) (eq : toSeed P=J*K) : IsUnit K := by
+    obtain ⟨c,fac⟩ := dv
+    have unit : (1 : Plane Seed)=c*K := by
+      apply mul_left_cancel₀ pn
+      rw [mul_one,← mul_assoc,← fac,← eq]
+    exact isUnit_of_dvd_one ⟨c,unit.trans (mul_comm c K)⟩
+  rcases prime.dvd_mul.mp dvd with h | h
+  · exact Or.inr (other (with_unit an ua h) split)
+  · exact Or.inl (other (with_unit bn vb h) (split.trans (mul_comm A B)))
+
+/-- Geometric linearity is expressed by splitting over the rational
+abscissa field with algebraically closed scalar constants. -/
+def GeometricallyLinear (P : Ordinate) : Prop :=
+  (geometric (E:=AlgebraicClosure Seed) (toSeed P)).Splits
+
+private theorem node_map (P : Ordinate) (i : I) :
+    (toSeed P).map (evalRingHom (incl L (C (algebraMap K L (node i)))))=
+    (atNode P i).map (incl L) := by
+  apply Polynomial.ext
+  intro j
+  simp only [toSeed,atNode,coe_mapRingHom,coeff_map,coe_evalRingHom]
+  exact Polynomial.eval_map_apply (incl L) _
+
+/-- Geometrically linear components of the actual projected curve force
+received-node purity. Embeddings of the arithmetic root field transfer
+the received residue to every rational geometric branch. -/
+theorem pure_of_geometrically_linear (w : I→K) (P : Ordinate)
+    (ir : Irreducible P) (pos : 0<P.natDegree) (linear : GeometricallyLinear P) :
+    PureNodes w P := by
+  intro i hit
+  let x := incl L (C (algebraMap K L (node i)))
+  let t := incl L (C (algebraMap K L (w i)))
+  have equal : (toSeed P).map (evalRingHom x)=(atNode P i).map (incl L) := node_map P i
+  have root : ((toSeed P).map (evalRingHom x)).eval t=0 := by
+    rw [equal,eval_map_apply,hit,map_zero]
+  have degree : 0<(toSeed P).natDegree := by rw [toSeed_degree]; exact pos
+  have formula := pure_specialization (E:=AlgebraicClosure Seed)
+    (toSeed_irreducible ir pos) degree linear x t root
+  rw [equal,toSeed_degree] at formula
+  apply Polynomial.map_injective _ (incl_injective L)
+  simp only [Polynomial.map_mul,Polynomial.map_C,Polynomial.map_pow,Polynomial.map_sub,
+    Polynomial.map_X,← leadingCoeff_map_of_injective (incl_injective L)]
+  exact formula
+
+end
+end Lower6961.RetainedLinear
+
+end Merged_R6961RetainedLinearAssembly
+
+-- merged module R6961MonicChartFinite
+section Merged_R6961MonicChartFinite
+
+set_option Elab.async false
+set_option maxRecDepth 16000
+set_option maxHeartbeats 3000000
+
+namespace Lower6961.MonicChart
+open Lower6960.MonicChart
+noncomputable section
+open Polynomial
+open scoped Polynomial Differential
+
+/-- A primitive equation has a constant evaluation avoiding each
+irreducible abscissa divisor. -/
+theorem constant_evaluation_avoids {K : Type*} [Field K] [Infinite K]
+    (f : (Polynomial (Polynomial K))) (primitive : f.IsPrimitive) (q : (Polynomial K)) (ir : Irreducible q) :
+    ∃ c : K, ¬q∣f.eval (C c) := by
+  let J : Ideal (Polynomial K) := Ideal.span {q}
+  letI : J.IsPrime := (Ideal.span_singleton_prime ir.ne_zero).mpr ir.prime
+  let ρ := Ideal.Quotient.mk J
+  let embed : K→+*((Polynomial K)⧸J) := ρ.comp C
+  by_contra! no
+  have roots : (Set.range embed : Set ((Polynomial K)⧸J)) ⊆ {z | (f.map ρ).IsRoot z} := by
+    rintro _ ⟨c,rfl⟩
+    change (f.map ρ).eval (ρ (C c))=0
+    rw [Polynomial.eval_map_apply]
+    apply Ideal.Quotient.eq_zero_iff_mem.mpr
+    exact Ideal.mem_span_singleton.mpr (no c)
+  have zero : f.map ρ=0 := eq_zero_of_infinite_isRoot (f.map ρ)
+    ((Set.infinite_range_of_injective embed.injective).mono roots)
+  apply ir.not_isUnit
+  apply (isPrimitive_iff_isUnit_of_C_dvd.mp primitive) q
+  apply (C_dvd_iff_dvd_coeff ..).mpr
+  intro j
+  have vanish := congrArg (fun P : (Polynomial ((Polynomial K)⧸J)) => P.coeff j) zero
+  rw [coeff_map,coeff_zero] at vanish
+  exact Ideal.mem_span_singleton.mp (Ideal.Quotient.eq_zero_iff_mem.mp vanish)
+
+section Finite
+
+variable {K F E : Type*} [Field K] [Infinite K] [Field F] [Field E]
+    [Algebra (Polynomial K) F] [IsFractionRing (Polynomial K) F] [Algebra F E] [Algebra (Polynomial K) E]
+    [IsScalarTower (Polynomial K) F E] [Algebra.IsSeparable F E] [FiniteDimensional F E]
+    [Differential (Polynomial K)] [Differential E] [DifferentialAlgebra (Polynomial K) E]
+
+/-- The original padded resultant controls the derivative over the whole
+finite abscissa line. The local auxiliary evaluation values disappear
+by the intersection of the codimension-one tests. -/
+theorem clears_finite (b : PowerBasis F E) (f : (Polynomial (Polynomial K))) (primitive : f.IsPrimitive)
+    (e2 : 2≤f.natDegree) (degree : f.natDegree=b.dim) (tame : (f.natDegree:F)≠0)
+    (root : aeval b.gen f=0) (x : E) (integral : IsIntegral (Polynomial K) x) :
+    IsIntegral (Polynomial K) (algebraMap (Polynomial K) E ((paddedRes f)^2)*x′) := by
+  apply Lower6960.ChartIntegrality.integral_from_places F
+  intro q ir
+  obtain ⟨c,n⟩ := constant_evaluation_avoids f primitive q ir
+  let u := f.eval (C c)
+  have un : u≠0 := by
+    intro h
+    apply n
+    change q∣u
+    rw [h]
+    exact dvd_zero q
+  let k := 2*((f.natDegree-1)*(f.natDegree-2))
+  refine ⟨u^k,fun h=>n (ir.prime.dvd_of_dvd_pow h),?_⟩
+  rw [←mul_assoc,←map_mul]
+  exact scaled_raw_square_clears b f (C c) un e2 degree tame root x integral
+
+end Finite
+
+section Actual
+
+open K1_14 (L)
+open RetainedCompression (Curve ordinate view view_y)
+
+abbrev Scalar := RetainedLinear.Seed
+
+/-- The weighted-compression factor over the generic scalar carries the
+same finite derivative clearing as its arithmetic plane equation. -/
+theorem actual_finite {E : Type*} [Field E] [Algebra (RatFunc Scalar) E]
+    [Algebra (Polynomial Scalar) E] [IsScalarTower (Polynomial Scalar) (RatFunc Scalar) E]
+    [Algebra.IsSeparable (RatFunc Scalar) E] [FiniteDimensional (RatFunc Scalar) E]
+    [Differential (Polynomial Scalar)] [Differential E] [DifferentialAlgebra (Polynomial Scalar) E]
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<K1.p)
+    (b : PowerBasis (RatFunc Scalar) E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
+    (x : E) (int : IsIntegral (Polynomial Scalar) x) :
+    IsIntegral (Polynomial Scalar)
+      (algebraMap (Polynomial Scalar) E ((paddedRes (RetainedLinear.toSeed (view f)))^2)*x′) := by
+  let P := RetainedLinear.toSeed (view f)
+  have deg : P.natDegree=f.degreeOf ordinate := (RetainedLinear.toSeed_degree _).trans (view_y _)
+  have pos : 0<(view f).natDegree := by rw [view_y]; omega
+  have pir : Irreducible P :=
+    RetainedLinear.toSeed_irreducible ((MulEquiv.irreducible_iff view).mpr ir) pos
+  have pd : P.natDegree≠0 := by omega
+  have prim := pir.isPrimitive pd
+  let ι := algebraMap (Polynomial Scalar) (RatFunc Scalar)
+  let Q := P.map ι
+  have irrQ : Irreducible Q := prim.irreducible_iff_irreducible_map_fraction_map.mp pir
+  have rootQ : aeval b.gen Q=0 := by rw [aeval_map_algebraMap]; exact root
+  have dvd : minpoly (RatFunc Scalar) b.gen∣Q := minpoly.dvd _ _ rootQ
+  have assoc := (minpoly.irreducible b.isIntegral_gen).associated_of_dvd irrQ dvd
+  have oq : Q.natDegree=(minpoly (RatFunc Scalar) b.gen).natDegree :=
+    le_antisymm (natDegree_le_of_dvd assoc.symm.dvd (minpoly.ne_zero b.isIntegral_gen))
+      (natDegree_le_of_dvd dvd irrQ.ne_zero)
+  have dim : P.natDegree=b.dim :=
+    (natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) (RatFunc Scalar)) P).symm.trans
+      (oq.trans b.natDegree_minpoly)
+  let seed : L→+*Scalar := (algebraMap (Polynomial L) Scalar).comp C
+  letI : Infinite Scalar := Infinite.of_injective seed seed.injective
+  haveI : CharP (RatFunc Scalar) K1.p :=
+    charP_of_injective_ringHom ((RatFunc.C : Scalar→+*RatFunc Scalar).comp seed).injective K1.p
+  have tame : (P.natDegree:RatFunc Scalar)≠0 := by
+    intro zero
+    have h := (CharP.cast_eq_zero_iff (RatFunc Scalar) K1.p P.natDegree).mp zero
+    have lt : P.natDegree<K1.p := by rw [deg]; exact hi
+    exact pd (Nat.eq_zero_of_dvd_of_lt h lt)
+  exact clears_finite b P prim (by omega) dim tame root x int
+
+end Actual
+
+#print axioms clears_finite
+#print axioms actual_finite
+end
+end Lower6961.MonicChart
+
+end Merged_R6961MonicChartFinite
+
+-- merged module R6961MonicChartInfinityClearing
+section Merged_R6961MonicChartInfinityClearing
+
+set_option Elab.async false
+set_option maxRecDepth 17000
+set_option maxHeartbeats 3600000
+
+namespace Lower6961.MonicChart
+open Lower6960.MonicChart
+noncomputable section
+open Polynomial Algebra
+open scoped Polynomial Differential
+
+private def scaleBasis {F E : Type*} [Field F] [Field E] [Algebra F E]
+    (b : PowerBasis F E) (u : Fˣ) : PowerBasis F E where
+  gen := algebraMap F E (u:F)*b.gen
+  dim := b.dim
+  basis := b.basis.unitsSMul (fun j=>u^j.val)
+  basis_eq_pow j := by
+    rw [Module.Basis.unitsSMul_apply,Units.smul_def,Units.val_pow_eq_pow_val,b.basis_eq_pow,
+      Algebra.smul_def,map_pow,mul_pow]
+
+section Infinity
+
+variable {K E : Type*} [Field K] [Infinite K] [DecidableEq (RatFunc K)]
+    [Field E] [Algebra (RatFunc K) E] [Algebra (Polynomial K) E]
+    [IsScalarTower (Polynomial K) (RatFunc K) E]
+    [Algebra (Infinity K) E] [IsScalarTower (Infinity K) (RatFunc K) E]
+    [Algebra.IsSeparable (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
+    [Differential (Infinity K)] [Differential E] [DifferentialAlgebra (Infinity K) E]
+
+local notation "S" => Infinity K
+local notation "F" => RatFunc K
+
+private theorem primitive_unit_infty (p : (Polynomial (Polynomial K))) (prim : p.IsPrimitive) :
+    ∃ i, IsUnit ((p.map (inftyRingEval K)).coeff i) := by
+  by_contra! no
+  have dvd : C (Polynomial.X : (Polynomial K))∣p := by
+    apply (C_dvd_iff_dvd_coeff ..).mpr
+    intro j
+    apply X_dvd_iff.mpr
+    by_contra nz
+    exact no j (by rw [coeff_map]; exact inftyRingEval_isUnit _ nz)
+  exact not_isUnit_X ((isPrimitive_iff_isUnit_of_C_dvd.mp prim) _ dvd)
+
+/-- The weighted infinity chart controls derivatives by its own padded
+resultant. Primitive part is taken before choosing the monic chart, and
+its content factor is returned to the resultant. -/
+theorem clears_homogeneous_infinity (b : PowerBasis F E) (f : (Polynomial (Polynomial K))) (H d : ℕ)
+    (e2 : 2≤f.natDegree) (dim : f.natDegree=b.dim)
+    (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H)
+    (root : aeval b.gen f=0) (x : E) (hx : IsIntegral S x) :
+    IsIntegral S (algebraMap S E ((inftyRingEval K (paddedRes (weightedInfinity f H d)))^2)*x′) := by
+  classical
+  letI : NormalizedGCDMonoid (Polynomial K) := Classical.choice inferInstance
+  let e := f.natDegree
+  let t := ((RatFunc.X : F)⁻¹)
+  let a := t^d
+  have an : a≠0 := pow_ne_zero _ (inv_ne_zero RatFunc.X_ne_zero)
+  let v := scaleBasis b (Units.mk0 a an)
+  have vg : v.gen=algebraMap F E a*b.gen := rfl
+  have vd : v.dim=b.dim := rfl
+  let fI := weightedInfinity f H d
+  let j := inftyRingEval K
+  let r := fI.map j
+  let p := fI.primPart.map j
+  let c := j fI.content
+  let ι := algebraMap S F
+  have rdegree : r.natDegree=e := (natDegree_map_eq_of_injective inftyRingEval_injective _).trans
+    (infinity_degree f H d)
+  have pdegree : p.natDegree=e := by
+    rw [natDegree_map_eq_of_injective inftyRingEval_injective,natDegree_primPart,infinity_degree]
+  have rawSplit : r=C c*p := by
+    have eq := congrArg (Polynomial.map j) fI.eq_C_content_mul_primPart
+    simpa only [Polynomial.map_mul,Polynomial.map_C] using eq
+  have cn : c≠0 := by
+    intro zero
+    rw [rawSplit,zero,C_0,zero_mul,natDegree_zero] at rdegree
+    omega
+  have mapped_r : r.map ι=fI.map (AtInfinity K) := by
+    rw [Polynomial.map_map]
+    rfl
+  have rroot : aeval v.gen r=0 := by
+    rw [← aeval_map_algebraMap F,mapped_r,infinity_field f H d weights,map_mul]
+    have baseRoot : aeval b.gen (f.map (algebraMap (Polynomial K) F))=0 := by
+      rw [aeval_map_algebraMap]
+      exact root
+    have newRoot : aeval v.gen ((f.map (algebraMap (Polynomial K) F)).scaleRoots a)=0 := by
+      rw [vg]
+      exact scaleRoots_eval₂_eq_zero (algebraMap F E) baseRoot
+    rw [newRoot,mul_zero]
+  have proot : aeval v.gen p=0 := by
+    rw [rawSplit,map_mul,aeval_C] at rroot
+    have injective : Function.Injective (algebraMap S E) := by
+      rw [IsScalarTower.algebraMap_eq S F E]
+      exact (algebraMap F E).injective.comp (IsFractionRing.injective _ _)
+    exact (mul_eq_zero.mp rroot).resolve_left ((map_ne_zero_iff _ injective).mpr cn)
+  let emb : K→+*IsLocalRing.ResidueField S := (IsLocalRing.residue S).comp (j.comp C)
+  letI : Infinite (IsLocalRing.ResidueField S) := Infinite.of_injective emb emb.injective
+  have unit : ∃ i, IsUnit (p.coeff i) := primitive_unit_infty _ fI.isPrimitive_primPart
+  have bounded := raw_square_clears_local v p unit (pdegree.trans (dim.trans vd.symm))
+    (pdegree.symm ▸ e2) proot x hx
+  have mapped_result : j (paddedRes fI)=paddedRes r := by
+    unfold paddedRes
+    rw [←resultant_map_map,←derivative_map]
+    have d := natDegree_map_eq_of_injective inftyRingEval_injective fI
+    rw [←d]
+  have content_result : paddedRes r=c^(e+(e-1))*paddedRes p := by
+    unfold paddedRes
+    rw [rdegree,rawSplit,derivative_C_mul,resultant_C_mul_left,resultant_C_mul_right,←mul_assoc,←pow_add]
+    rw [show e-1+e=e+(e-1) by omega,←pdegree]
+  rw [mapped_result,content_result,mul_pow,map_mul,mul_assoc]
+  exact isIntegral_algebraMap.mul bounded
+
+end Infinity
+
+#print axioms clears_homogeneous_infinity
+end
+end Lower6961.MonicChart
+
+end Merged_R6961MonicChartInfinityClearing
+
+-- merged module R6961MonicChartCoboundary
+section Merged_R6961MonicChartCoboundary
+
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 3600000
+
+namespace Lower6961.MonicChart
+open Lower6960.MonicChart
+noncomputable section
+open Polynomial Algebra
+open scoped Polynomial Differential
+open Lower6961.RetainedCompression (derivative_weighted_add_le)
+
+/-- The inverse abscissa has derivative (-X^{-2}) for the abscissa
+derivation. This is the conversion between the two coordinate derivatives. -/
+theorem inverse_abscissa_derivative {E : Type*} [Field E] [Differential E]
+    (x : E) (coordinate : x′=1) : (x⁻¹)′=-(x⁻¹)^2 := by
+  have h := (Differential.deriv (R:=E)).leibniz_inv x
+  rw [coordinate,smul_eq_mul,mul_one] at h
+  exact h
+
+private theorem derivative_power_zero {E : Type*} [Field E] [Differential E]
+    (p : ℕ) [CharP E p] (x : E) : (x^p)′=0 := by
+  rw [Differential.deriv.leibniz_pow,nsmul_eq_mul,CharP.cast_eq_zero,zero_mul]
+
+section Inverse
+
+variable {K E : Type*} [Field K] [Infinite K] [DecidableEq (RatFunc K)]
+    [Field E] [Algebra (RatFunc K) E] [Algebra (Polynomial K) E]
+    [IsScalarTower (Polynomial K) (RatFunc K) E]
+    [Algebra (Infinity K) E] [IsScalarTower (Infinity K) (RatFunc K) E]
+    [Algebra.IsSeparable (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
+    [Differential (Infinity K)] [Differential E] [DifferentialAlgebra (Infinity K) E]
+
+local notation "S" => Infinity K
+local notation "F" => RatFunc K
+
+/-- At infinity the finite resultant loses exactly its unused
+homogenizing width. The remaining factor is a unit of the valuation ring. -/
+theorem clears_inverse_power (b : PowerBasis F E) (f : (Polynomial (Polynomial K))) (H d : ℕ)
+    (e2 : 2≤f.natDegree) (dim : f.natDegree=b.dim) (tame : (f.natDegree:K)≠0)
+    (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H)
+    (resBound : (paddedRes f).natDegree≤resultantWidth f.natDegree H d)
+    (nonzero : paddedRes f≠0) (root : aeval b.gen f=0) (x : E) (hx : IsIntegral S x) :
+    IsIntegral S (algebraMap F E (((RatFunc.X : F)⁻¹)^
+      (2*(resultantWidth f.natDegree H d-(paddedRes f).natDegree)))*x′) := by
+  let r := resultantWidth f.natDegree H d-(paddedRes f).natDegree
+  let t := inftyRingEval K (Polynomial.X : (Polynomial K))
+  let u := inftyRingEval K (paddedRes f).reverse
+  have co : ((paddedRes f).reverse).coeff 0≠0 := by
+    rw [coeff_zero_reverse]
+    exact leadingCoeff_ne_zero.mpr nonzero
+  have unit : IsUnit u := inftyRingEval_isUnit _ co
+  obtain ⟨w,hw⟩ := unit
+  have hom := clears_homogeneous_infinity b f H d e2 dim weights root x hx
+  rw [infinity_resultant f H d (by omega) tame weights resBound,
+    reflected_local_factor _ _ resBound] at hom
+  change IsIntegral S (algebraMap S E ((t^r*u)^2)*x′) at hom
+  have cancel : (↑w⁻¹:S)^2*(t^r*u)^2=t^(2*r) := by
+    have single : (↑w⁻¹:S)*(t^r*u)=t^r := by
+      rw [←hw,mul_comm (↑w⁻¹:S),mul_assoc,Units.mul_inv,mul_one]
+    rw [←mul_pow,single,←pow_mul,Nat.mul_comm]
+  have mul := (isIntegral_algebraMap (x:=(↑w⁻¹:S)^2)).mul hom
+  rw [←mul_assoc,←map_mul,cancel] at mul
+  have loc : algebraMap S F t=(RatFunc.X : F)⁻¹ := mapped_X_infty
+  rw [IsScalarTower.algebraMap_apply S F E,map_pow,loc] at mul
+  exact mul
+
+section Both
+
+variable [Differential (Polynomial K)] [DifferentialAlgebra (Polynomial K) E]
+
+/-- The Frobenius overlap identity gives one common derivative on the
+finite and infinity coordinates. Together with the checked pole bounds
+it forces that derivative to vanish. -/
+theorem common_coboundary_zero_generic (b : PowerBasis F E) (f : (Polynomial (Polynomial K))) (H d p : ℕ)
+    [CharP E p] (primitive : f.IsPrimitive) (e2 : 2≤f.natDegree) (dim : f.natDegree=b.dim)
+    (tame : (f.natDegree:K)≠0)
+    (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H)
+    (resBound : (paddedRes f).natDegree≤resultantWidth f.natDegree H d)
+    (widthRoom : 2*resultantWidth f.natDegree H d<p)
+    (nonzero : paddedRes f≠0) (root : aeval b.gen f=0)
+    (x y z : E) (fx : IsIntegral (Polynomial K) x) (iy : IsIntegral S y)
+    (overlap : y=(algebraMap F E RatFunc.X)^p*x+z^p) :
+    x′=0 := by
+  let r := resultantWidth f.natDegree H d-(paddedRes f).natDegree
+  let Xval := algebraMap F E (RatFunc.X : F)
+  have xn : Xval≠0 := (map_ne_zero_iff _ (algebraMap F E).injective).mpr RatFunc.X_ne_zero
+  have inv := clears_inverse_power b f H d e2 dim tame weights resBound nonzero root y iy
+  have dv : y′=Xval^p*x′ := by
+    rw [overlap,map_add,Differential.deriv.leibniz,derivative_power_zero p,
+      derivative_power_zero p,smul_eq_mul,smul_eq_mul,mul_zero,add_zero,add_zero]
+  rw [dv] at inv
+  have le : 2*r≤p := by dsimp only [r]; omega
+  have cancel : (Xval⁻¹)^(2*r)*Xval^p=Xval^(p-2*r) := by
+    have e : p=2*r+(p-2*r) := (Nat.add_sub_of_le le).symm
+    calc
+      _ = (Xval⁻¹)^(2*r)*(Xval^(2*r)*Xval^(p-2*r)) := by
+        rw [←pow_add,←e]
+      _ = _ := by rw [←mul_assoc,←mul_pow,inv_mul_cancel₀ xn,one_pow,one_mul]
+  have hi : IsIntegral S (Xval^(p-2*r)*x′) := by
+    rw [←cancel,mul_assoc]
+    change IsIntegral S (((algebraMap F E (RatFunc.X : F))⁻¹)^(2*r)*(Xval^p*x′))
+    rw [←map_inv₀,←map_pow]
+    exact inv
+  have fit : 2*(paddedRes f).natDegree<p-2*r := by dsimp only [r]; omega
+  have tame' : (f.natDegree:F)≠0 := by
+    simpa only [map_natCast] using
+      (map_ne_zero_iff (algebraMap K F) (algebraMap K F).injective).mpr tame
+  exact Lower6960.DifferentialPoles.pole_budget (paddedRes f) nonzero (p-2*r) fit (x′)
+    (clears_finite b f primitive e2 dim tame' root x fx) hi
+
+end Both
+end Inverse
+
+#print axioms clears_inverse_power
+#print axioms common_coboundary_zero_generic
+end
+end Lower6961.MonicChart
+
+end Merged_R6961MonicChartCoboundary
+
+-- merged module R6961MonicChartActual
+section Merged_R6961MonicChartActual
+
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 4200000
+
+namespace Lower6961.MonicChart
+open Lower6960.MonicChart
+noncomputable section
+open Polynomial
+open K1_14 (L)
+open RetainedCompression (Curve ordinate view view_y height heightCap MarkedBand abscissa_coeff_height)
+open scoped Polynomial Differential
+open Lower6961.RetainedCompression (derivative_weighted_add_le)
+
+private theorem width_at_cutoff (e d : ℕ) (he : 2≤e) (hd4 : 4 ∣ d) :
+    resultantWidth e (heightCap e d) d = (10*e^2 - 13*e + 3) * (d / 4) := by
+  obtain ⟨d₀, hd₀⟩ := hd4
+  have hdiv : d / 4 = d₀ := by rw [hd₀]; exact Nat.mul_div_cancel_left d₀ (by decide)
+  have mul : d*e≤heightCap e d := by
+    unfold heightCap
+    rw [hdiv, hd₀]
+    have h1 : 4 * d₀ * e = (4 * e) * d₀ := by ring
+    rw [h1]
+    exact Nat.mul_le_mul_right d₀ (by omega)
+  have eq := resultantWidth_eq (e:=e) (d:=d) (by omega) mul
+  have identity : (2*e-1)*heightCap e d = d*e^2 + (10*e^2 - 13*e + 3) * (d / 4) := by
+    obtain ⟨k,h⟩ := Nat.exists_eq_add_of_le he
+    unfold heightCap
+    rw [hdiv, hd₀, h]
+    have h1 : 2*(2+k)-1 = 2*k+3 := by omega
+    have h2 : 7*(2+k)-3 = 7*k+11 := by omega
+    have h3 : 10*(2+k)^2 - 13*(2+k) + 3 = 10*k^2 + 27*k + 17 := by
+      have hsq : 10*(2+k)^2 = 10*k^2 + 40*k + 40 := by ring
+      have hlin : 13*(2+k) = 13*k + 26 := by ring
+      rw [hsq, hlin]
+      omega
+    rw [h1, h2, h3]
+    ring
+  omega
+
+theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scalar)]
+    [Algebra (RatFunc Scalar) E] [Algebra (Polynomial Scalar) E]
+    [IsScalarTower (Polynomial Scalar) (RatFunc Scalar) E]
+    [Algebra (Infinity Scalar) E] [IsScalarTower (Infinity Scalar) (RatFunc Scalar) E]
+    [Algebra.IsSeparable (RatFunc Scalar) E] [FiniteDimensional (RatFunc Scalar) E]
+    [Differential (Polynomial Scalar)] [Differential (Infinity Scalar)] [Differential E]
+    [DifferentialAlgebra (Polynomial Scalar) E] [DifferentialAlgebra (Infinity Scalar) E]
+    (B : MarkedBand)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<B.maxOrd)
+    (bounded : height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree)
+    (b : PowerBasis (RatFunc Scalar) E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
+    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
+    (overlap : y=(algebraMap (RatFunc Scalar) E RatFunc.X)^K1.p*x+z^K1.p) :
+    x′=0 := by
+  let seed : L→+*Scalar := (algebraMap (Polynomial L) Scalar).comp C
+  letI : Infinite Scalar := Infinite.of_injective seed seed.injective
+  letI : CharP Scalar K1.p := charP_of_injective_ringHom seed.injective K1.p
+  let inE : Scalar→+*E := (algebraMap (RatFunc Scalar) E).comp RatFunc.C
+  letI : CharP E K1.p := charP_of_injective_ringHom inE.injective K1.p
+  let P := RetainedLinear.toSeed (view f)
+  let e := f.degreeOf ordinate
+  let H := heightCap e B.wordDegree
+  have deg : P.natDegree=e := (RetainedLinear.toSeed_degree _).trans (view_y _)
+  have e2 : 2≤P.natDegree := by omega
+  have ep : 0<P.natDegree := by omega
+  have pir : Irreducible P := RetainedLinear.toSeed_irreducible
+    ((MulEquiv.irreducible_iff view).mpr ir) (by rw [view_y]; omega)
+  have tame : (P.natDegree:Scalar)≠0 := by
+    intro zero
+    have dvd := (CharP.cast_eq_zero_iff Scalar K1.p P.natDegree).mp zero
+    exact ep.ne' (Nat.eq_zero_of_dvd_of_lt dvd (deg.symm ▸ hi.trans B.small_E))
+  have coefficient (j : ℕ) : (P.coeff j).natDegree=((view f).coeff j).natDegree := by
+    unfold P RetainedLinear.toSeed
+    simp only [coe_mapRingHom,coeff_map,natDegree_map_eq_of_injective (RetainedLinear.incl_injective L)]
+  have weights (j : ℕ) (jle : j≤P.natDegree) :
+      (P.coeff j).natDegree+B.wordDegree*j≤H := by
+    rw [coefficient]
+    by_cases zero : (view f).coeff j=0
+    · rw [zero,natDegree_zero,zero_add]
+      obtain ⟨d₀, hd₀⟩ := B.dvd4
+      have hdiv : B.wordDegree / 4 = d₀ := by rw [hd₀]; exact Nat.mul_div_cancel_left d₀ (by decide)
+      dsimp only [H]; unfold heightCap; rw [hdiv, hd₀]
+      have h1 : 4 * d₀ * j = (4 * j) * d₀ := by ring
+      rw [h1]
+      exact Nat.mul_le_mul_right d₀ (by omega)
+    exact (abscissa_coeff_height f B.wordDegree j zero).trans bounded
+  have Hfit : B.wordDegree*P.natDegree≤H :=
+    (Nat.le_add_left ..).trans (weights _ le_rfl)
+  have resBound : (paddedRes P).natDegree≤resultantWidth P.natDegree H B.wordDegree := by
+    have h := Lower6961.RetainedCompression.derivative_weighted_add_le P P.natDegree
+      H B.wordDegree ep weights
+    have eq := resultantWidth_eq (e:=P.natDegree) (d:=B.wordDegree) (H:=H) ep Hfit
+    exact Nat.le_of_add_le_add_right (h.trans_eq eq.symm)
+  have room : 2*resultantWidth P.natDegree H B.wordDegree<K1.p := by
+    rw [deg,width_at_cutoff e B.wordDegree (by omega) B.dvd4]
+    exact B.room e hi lo
+  have tameA : (P.natDegree:(Polynomial Scalar))≠0 := by
+    simpa only [map_natCast] using
+      (map_ne_zero_iff (Polynomial.C : Scalar→+*(Polynomial Scalar)) Polynomial.C_injective).mpr tame
+  have dp := derivative_degree P ep tameA
+  have der : P.derivative≠0 := by intro zero; rw [zero,natDegree_zero] at dp; omega
+  have resNZ : paddedRes P≠0 := Polynomial.resultant_derivative_ne_zero_of_irreducible P pir der
+  have prim := pir.isPrimitive ep.ne'
+  let ι := algebraMap (Polynomial Scalar) (RatFunc Scalar)
+  let Q := P.map ι
+  have iq : Irreducible Q := prim.irreducible_iff_irreducible_map_fraction_map.mp pir
+  have rq : aeval b.gen Q=0 := by rw [aeval_map_algebraMap]; exact root
+  have dvd : minpoly (RatFunc Scalar) b.gen∣Q := minpoly.dvd _ _ rq
+  have associated := (minpoly.irreducible b.isIntegral_gen).associated_of_dvd iq dvd
+  have size : Q.natDegree=(minpoly (RatFunc Scalar) b.gen).natDegree :=
+    le_antisymm (natDegree_le_of_dvd associated.symm.dvd (minpoly.ne_zero b.isIntegral_gen))
+      (natDegree_le_of_dvd dvd iq.ne_zero)
+  have dimension : P.natDegree=b.dim :=
+    (natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) (RatFunc Scalar)) P).symm.trans
+      (size.trans b.natDegree_minpoly)
+  exact common_coboundary_zero_generic b P H B.wordDegree K1.p prim e2 dimension tame weights
+    resBound room resNZ root x y z fx iy overlap
+
+end
+end Lower6961.MonicChart
+
+end Merged_R6961MonicChartActual
+
+-- merged module R6961MonicChartPlane
+section Merged_R6961MonicChartPlane
+
+set_option Elab.async false
+set_option backward.isDefEq.respectTransparency.types false
+set_option maxHeartbeats 2600000
+
+namespace Lower6961.MonicChart
+open Lower6960.MonicChart
+noncomputable section
+open Polynomial
+open K1_14 (L)
+open Lower6960.PlaneConstants (Plane)
+open scoped Polynomial
+open Lower6960.ChartDerivations (dx dz dz_apply)
+
+abbrev ChartField := RatFunc Scalar
+
+private abbrev scalarIncl : (Polynomial L) →+* Scalar := algebraMap (Polynomial L) Scalar
+
+private def planeIncl : Plane L →+* ChartField :=
+  (algebraMap (Polynomial Scalar) ChartField).comp (Polynomial.mapRingHom scalarIncl)
+
+scoped instance (priority := 2000) chartIntAlgebra : Algebra ℤ ChartField := Ring.toIntAlgebra _
+
+scoped instance planeAlgebra : Algebra (Plane L) ChartField := planeIncl.toAlgebra
+
+theorem plane_fractionRing : IsFractionRing (Plane L) ChartField := by
+  have pinj : Function.Injective (planeIncl) :=
+    (IsFractionRing.injective (Polynomial Scalar) ChartField).comp
+      (Polynomial.map_injective _ (IsFractionRing.injective (Polynomial L) Scalar))
+  let : FaithfulSMul (Plane L) ChartField :=
+    (faithfulSMul_iff_algebraMap_injective _ _).mpr pinj
+  apply IsFractionRing.of_field
+  intro z
+  obtain ⟨p,q,_,eq⟩ := IsFractionRing.div_surjective (Polynomial Scalar) z
+  let M := nonZeroDivisors (Polynomial L)
+  obtain ⟨a,ha,ea⟩ := IsLocalization.integerNormalization_spec M p
+  obtain ⟨b,hb,eb⟩ := IsLocalization.integerNormalization_spec M q
+  let ι := algebraMap (Polynomial Scalar) ChartField
+  refine ⟨IsLocalization.integerNormalization M p * C b,
+    IsLocalization.integerNormalization M q * C a,?_⟩
+  change z = planeIncl _ / planeIncl _
+  simp only [planeIncl,RingHom.comp_apply,coe_mapRingHom,map_C,ea,eb,Algebra.smul_def,map_mul]
+  rw [←eq]
+  change ι p / ι q = ι (C (scalarIncl a)) * ι p * ι (C (scalarIncl b)) /
+    (ι (C (scalarIncl b)) * ι q * ι (C (scalarIncl a)))
+  have nz (u : (Polynomial L)) (hu : u∈M) : ι (C (scalarIncl u)) ≠ 0 := by
+    simpa only [Function.comp_apply,map_zero] using
+      ((IsFractionRing.injective (Polynomial Scalar) ChartField).comp
+        (C_injective.comp (IsFractionRing.injective (Polynomial L) Scalar))).ne
+          (mem_nonZeroDivisors_iff_ne_zero.mp hu)
+  rw [show ι (C (scalarIncl a)) * ι p * ι (C (scalarIncl b)) =
+        (ι (C (scalarIncl a))*ι (C (scalarIncl b)))*ι p by ring,
+      show ι (C (scalarIncl b)) * ι q * ι (C (scalarIncl a)) =
+        (ι (C (scalarIncl a))*ι (C (scalarIncl b)))*ι q by ring,
+    mul_div_mul_left _ _ (mul_ne_zero (nz a ha) (nz b hb))]
+
+private theorem incl_C (a : (Polynomial L)) :
+    algebraMap (Plane L) ChartField (C a) = RatFunc.C (scalarIncl a) := by
+  change planeIncl (C a) = _
+  simp [planeIncl,RatFunc.algebraMap_C]
+
+private theorem incl_X : algebraMap (Plane L) ChartField (Polynomial.X (R:=(Polynomial L))) = RatFunc.X := by
+  change planeIncl (Polynomial.X (R:=(Polynomial L))) = _
+  simp [planeIncl,RatFunc.algebraMap_X]
+
+private theorem dz_C (a : (Polynomial L)) : Lower6960.ChartDerivations.dz (C a) = C a.derivative := by
+  apply Polynomial.ext
+  intro j
+  change ((C a).coeff j).derivative = (C a.derivative).coeff j
+  by_cases eq : j = 0 <;> simp [eq,coeff_C]
+
+private theorem dz_X : Lower6960.ChartDerivations.dz (Polynomial.X (R:=(Polynomial L))) = 0 := by
+  apply Polynomial.ext
+  intro j
+  change ((Polynomial.X (R:=(Polynomial L))).coeff j : (Polynomial L)).derivative = (0 : Polynomial (Polynomial L)).coeff j
+  by_cases eq : j = 1 <;> simp [eq,Ne.symm,coeff_X]
+
+private theorem on_scalar (D : Derivation ℤ ChartField ChartField)
+    (numerator : ∀ a : (Polynomial L),∃ b : Scalar,D (RatFunc.C (scalarIncl a))=RatFunc.C b)
+    (s : Scalar) : ∃ t : Scalar,D (RatFunc.C s)=RatFunc.C t := by
+  obtain ⟨a,b,_,eq⟩ := IsFractionRing.div_surjective (Polynomial L) s
+  obtain ⟨a',ha⟩ := numerator a
+  obtain ⟨b',hb⟩ := numerator b
+  refine ⟨(scalarIncl b)⁻¹ ^ 2 * (scalarIncl b*a'-scalarIncl a*b'),?_⟩
+  rw [←eq,map_div₀,D.leibniz_div,smul_eq_mul,smul_eq_mul,smul_eq_mul,ha,hb]
+  simp only [map_mul,map_pow,map_inv₀,map_sub]
+
+/-- The coordinate derivations on the actual two-variable fraction field,
+with their action on its polynomial coordinates and its localized scalars. -/
+theorem base_coordinates : ∃ dx dz : Derivation ℤ ChartField ChartField,
+    (∀ q,dx (algebraMap (Plane L) ChartField q)=algebraMap (Plane L) ChartField q.derivative) ∧
+    (∀ q,dz (algebraMap (Plane L) ChartField q)=algebraMap (Plane L) ChartField
+      (Bivariate.swap (Bivariate.swap q).derivative)) ∧
+    dx RatFunc.X=1 ∧ dz RatFunc.X=0 ∧
+    (∀ a : Scalar,∃ b : Scalar,dx (RatFunc.C a)=RatFunc.C b) ∧
+    (∀ a : Scalar,∃ b : Scalar,dz (RatFunc.C a)=RatFunc.C b) := by
+  let : IsFractionRing (Plane L) ChartField := plane_fractionRing
+  have : Algebra.FormallyEtale (Plane L) ChartField :=
+    Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors (Plane L))
+  obtain ⟨dx,hx⟩ := Lower6960.ChartDerivations.extend (B:=ChartField) (Lower6960.ChartDerivations.dx (k:=L))
+  obtain ⟨dz,hz⟩ := Lower6960.ChartDerivations.extend (B:=ChartField) (Lower6960.ChartDerivations.dz (k:=L))
+  have hx' (q : Plane L) : dx (algebraMap (Plane L) ChartField q) =
+      algebraMap (Plane L) ChartField q.derivative := hx q
+  refine ⟨dx,dz,hx',fun q=>(hz q).trans (congrArg _ (Lower6960.ChartDerivations.dz_apply q)),
+    ?_,?_,on_scalar dx ?_,on_scalar dz ?_⟩
+  · simpa only [incl_X,derivative_X,map_one] using hx' (Polynomial.X (R:=(Polynomial L)))
+  · rw [←incl_X]
+    exact (hz _).trans ((congrArg (algebraMap (Plane L) ChartField) dz_X).trans (map_zero _))
+  · intro a
+    refine ⟨0,?_⟩
+    simpa only [incl_C,derivative_C,map_zero] using hx' (C a)
+  · intro a
+    refine ⟨scalarIncl a.derivative,?_⟩
+    rw [←incl_C]
+    exact (hz _).trans ((congrArg (algebraMap (Plane L) ChartField) (dz_C a)).trans (incl_C _))
+
+#print axioms plane_fractionRing
+#print axioms base_coordinates
+end
+end Lower6961.MonicChart
+
+end Merged_R6961MonicChartPlane
+
+-- merged module R6961MonicChartDerivationRings
+section Merged_R6961MonicChartDerivationRings
+
+set_option Elab.async false
+set_option maxHeartbeats 2900000
+set_option backward.isDefEq.respectTransparency.types false
+
+namespace Lower6961.MonicChart
+open Lower6960.MonicChart
+noncomputable section
+open Polynomial
+open scoped Polynomial Lower6960.MonicChart Lower6961.MonicChart
+
+scoped instance (priority := 2000) chartPolyIntAlgebra : Algebra ℤ (Polynomial Scalar) :=
+  Ring.toIntAlgebra _
+
+private theorem derivation_restrict {R F : Type*} [CommRing R] [CommRing F]
+    (j : R →+* F) (inj : Function.Injective j) (D : Derivation ℤ F F)
+    (closed : ∀ r,∃ s,D (j r)=j s) :
+    ∃ d : Derivation ℤ R R,∀ r,D (j r)=j (d r) := by
+  classical
+  choose d hd using closed
+  let add : R →+ R := {
+    toFun := d
+    map_zero' := inj (by rw [←hd,map_zero,map_zero])
+    map_add' r s := inj (by rw [←hd,map_add,map_add,map_add,hd,hd]) }
+  let out : Derivation ℤ R R := {
+    add.toIntLinearMap with
+    map_one_eq_zero' := inj (by change j (d 1)=j 0; rw [←hd,map_one,D.map_one_eq_zero,map_zero])
+    leibniz' r s := inj (by
+      change j (d (r*s)) = j (r*d s+s*d r)
+      rw [←hd,map_mul,D.leibniz,smul_eq_mul,smul_eq_mul,hd,hd,map_add,map_mul,map_mul]) }
+  exact ⟨out,hd⟩
+
+private theorem derivation_polynomial_image {K R F : Type*} [CommRing K] [CommRing R]
+    [CommRing F] (g : (Polynomial K) →+* R) (j : R →+* F) (D : Derivation ℤ F F)
+    (coeffs : ∀ a,∃ b,D (j (g (C a)))=j b) (gen : ∃ t,D (j (g (Polynomial.X (R:=K))))=j t)
+    (p : (Polynomial K)) : ∃ q,D (j (g p))=j q := by
+  obtain ⟨t,ht⟩ := gen
+  induction p using Polynomial.induction_on' with
+  | add p q hp hq =>
+    obtain ⟨p',ep⟩ := hp
+    obtain ⟨q',eq⟩ := hq
+    exact ⟨p'+q',by rw [map_add,map_add,map_add,ep,eq,map_add]⟩
+  | monomial n a =>
+    obtain ⟨a',ha⟩ := coeffs a
+    refine ⟨g (C a) * ((n:R)*(g (Polynomial.X (R:=K)))^(n-1)*t) + (g (Polynomial.X (R:=K)))^n*a',?_⟩
+    rw [←C_mul_X_pow_eq_monomial,map_mul,map_mul,D.leibniz,map_pow,map_pow,
+      D.leibniz_pow,ha,ht]
+    simp only [smul_eq_mul,nsmul_eq_mul,map_mul,map_pow,map_add,map_natCast,mul_assoc]
+
+/-- Each coordinate derivation restricts to the finite abscissa chart. -/
+theorem finite_derivation (D : Derivation ℤ ChartField ChartField)
+    (on_scalars : ∀ a : Scalar,∃ b : Scalar,D (RatFunc.C a)=RatFunc.C b)
+    (on_X : D RatFunc.X=1 ∨ D RatFunc.X=0) :
+    ∃ d : Derivation ℤ (Polynomial Scalar) (Polynomial Scalar),∀ r,
+      D (algebraMap (Polynomial Scalar) ChartField r)=algebraMap (Polynomial Scalar) ChartField (d r) := by
+  let j := algebraMap (Polynomial Scalar) ChartField
+  apply derivation_restrict j (IsFractionRing.injective _ _) D
+  apply derivation_polynomial_image (RingHom.id _) j D
+  · intro a
+    obtain ⟨b,hb⟩ := on_scalars a
+    exact ⟨C b,by simpa only [j,RingHom.id_apply,RatFunc.algebraMap_C] using hb⟩
+  · rcases on_X with eq|eq
+    · exact ⟨1,by simpa only [j,RingHom.id_apply,RatFunc.algebraMap_X,map_one] using eq⟩
+    · exact ⟨0,by simpa only [j,RingHom.id_apply,RatFunc.algebraMap_X,map_zero] using eq⟩
+
+/-- Every element of the infinity ring is a ratio of polynomials in
+inverse abscissa whose denominator has nonzero constant term. -/
+theorem infinity_ratio {K : Type*} [Field K] [DecidableEq (RatFunc K)] (v : Infinity K) :
+    ∃ p q : (Polynomial K), q.coeff 0≠0 ∧
+      algebraMap (Infinity K) (RatFunc K) v = AtInfinity K p / AtInfinity K q := by
+  let j := algebraMap (Polynomial K) (RatFunc K)
+  obtain ⟨a,b,bmem,eq⟩ := IsFractionRing.div_surjective (Polynomial K) (v:RatFunc K)
+  have bn : b≠0 := mem_nonZeroDivisors_iff_ne_zero.mp bmem
+  by_cases an : a=0
+  · refine ⟨0,1,by simp,?_⟩
+    change (v:RatFunc K)=_
+    rw [←eq,an]
+    simp
+  have fit : a.natDegree≤b.natDegree := by
+    have val : RatFunc.inftyValuation K (j a/j b)≤1 := eq ▸ v.property
+    rw [map_div₀,div_le_one₀] at val
+    · change RatFunc.inftyValuationDef K (j a)≤RatFunc.inftyValuationDef K (j b) at val
+      rwa [RatFunc.inftyValuation.polynomial _ an,RatFunc.inftyValuation.polynomial _ bn,
+        WithZero.exp_le_exp,Int.ofNat_le] at val
+    · exact (RatFunc.inftyValuation K).pos_iff.mpr
+        ((map_ne_zero_iff _ (IsFractionRing.injective (Polynomial K) (RatFunc K))).mpr bn)
+  refine ⟨a.reflect b.natDegree,b.reverse,by rw [coeff_zero_reverse]; exact leadingCoeff_ne_zero.mpr bn,?_⟩
+  change (v:RatFunc K)=_
+  rw [reverse_atInfinity _ _ fit,Polynomial.reverse,reverse_atInfinity _ _ le_rfl,
+    mul_div_mul_right _ _ (pow_ne_zero _ (inv_ne_zero RatFunc.X_ne_zero))]
+  exact eq.symm
+
+/-- The two derivations also restrict to the infinity valuation ring.
+The abscissa derivative acts there by `-T^2` on `T = 1/X`. -/
+theorem infinity_derivation [DecidableEq ChartField] (D : Derivation ℤ ChartField ChartField)
+    (on_scalars : ∀ a : Scalar,∃ b : Scalar,D (RatFunc.C a)=RatFunc.C b)
+    (on_X : D RatFunc.X=1 ∨ D RatFunc.X=0) :
+    ∃ d : Derivation ℤ (Infinity Scalar) (Infinity Scalar),∀ r,
+      D (algebraMap (Infinity Scalar) ChartField r)=algebraMap (Infinity Scalar) ChartField (d r) := by
+  let j := algebraMap (Infinity Scalar) ChartField
+  let g := inftyRingEval Scalar
+  have Cmap (a : Scalar) : j (g (C a))=RatFunc.C a := aeval_C _ _
+  have Xmap : j (g (Polynomial.X : (Polynomial Scalar)))=RatFunc.X⁻¹ := mapped_X_infty
+  have hpoly : ∀ p : (Polynomial Scalar),∃ q,D (j (g p))=j q := by
+    apply derivation_polynomial_image g j D
+    · intro a
+      obtain ⟨b,hb⟩ := on_scalars a
+      exact ⟨g (C b),by rw [Cmap,Cmap,hb]⟩
+    · rw [Xmap,D.leibniz_inv,smul_eq_mul]
+      rcases on_X with eq|eq
+      · exact ⟨-(g (Polynomial.X : (Polynomial Scalar)))^2,by rw [map_neg,map_pow,Xmap,eq,mul_one]⟩
+      · exact ⟨0,by rw [eq,mul_zero,map_zero]⟩
+  apply derivation_restrict j (ValuationSubring.algebraMap_injective _ ChartField) D
+  intro v
+  obtain ⟨p,q,qnz,eq⟩ := infinity_ratio v
+  change j v=j (g p)/j (g q) at eq
+  obtain ⟨a,ha⟩ := hpoly p
+  obtain ⟨b,hb⟩ := hpoly q
+  obtain ⟨u,hu⟩ := inftyRingEval_isUnit q qnz
+  change (u : Infinity Scalar)=g q at hu
+  refine ⟨(↑u⁻¹:Infinity Scalar)^2*(g q*a-g p*b),?_⟩
+  rw [eq,D.leibniz_div,smul_eq_mul,smul_eq_mul,smul_eq_mul,ha,hb]
+  simp only [map_mul,map_pow,map_sub,map_units_inv,hu]
+
+#print axioms infinity_derivation
+end
+end Lower6961.MonicChart
+
+end Merged_R6961MonicChartDerivationRings
+
+-- merged module R6961MonicChartFrobenius
+section Merged_R6961MonicChartFrobenius
+
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 3700000
+set_option backward.isDefEq.respectTransparency.types false
+
+namespace Lower6961.MonicChart
+open Lower6960.MonicChart
+noncomputable section
+open Polynomial
+open K1_14 (L)
+open Lower6960.PlaneConstants (Plane)
+open RetainedCompression (Curve ordinate view view_y height heightCap MarkedBand)
+open scoped Polynomial Lower6960.MonicChart Lower6961.MonicChart
+
+variable {E : Type*} [Field E]
+    [Algebra ChartField E] [Algebra (Polynomial Scalar) E] [IsScalarTower (Polynomial Scalar) ChartField E]
+
+theorem root_finrank (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0) :
+    Module.finrank ChartField E=f.degreeOf ordinate := by
+  let P := RetainedLinear.toSeed (view f)
+  let j := algebraMap (Polynomial Scalar) ChartField
+  have deg : P.natDegree=f.degreeOf ordinate := (RetainedLinear.toSeed_degree _).trans (view_y _)
+  have pir : Irreducible P := RetainedLinear.toSeed_irreducible
+    ((MulEquiv.irreducible_iff view).mpr ir) (by rw [view_y]; omega)
+  have prim := pir.isPrimitive (by omega : P.natDegree≠0)
+  have iq : Irreducible (P.map j) := prim.irreducible_iff_irreducible_map_fraction_map.mp pir
+  have rq : aeval b.gen (P.map j)=0 := by rw [aeval_map_algebraMap]; exact root
+  have dvd := minpoly.dvd ChartField b.gen rq
+  have assoc := (minpoly.irreducible b.isIntegral_gen).associated_of_dvd iq dvd
+  have size : (P.map j).natDegree=(minpoly ChartField b.gen).natDegree :=
+    le_antisymm (natDegree_le_of_dvd assoc.symm.dvd (minpoly.ne_zero b.isIntegral_gen))
+      (natDegree_le_of_dvd dvd iq.ne_zero)
+  rw [b.finrank,←b.natDegree_minpoly,←size,
+    natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) ChartField),deg]
+
+variable [DecidableEq ChartField] [Algebra (Infinity Scalar) E] [IsScalarTower (Infinity Scalar) ChartField E]
+
+private theorem overlap_zero [FiniteDimensional ChartField E] [Algebra.IsSeparable ChartField E]
+    (d : Derivation ℤ ChartField ChartField) (D : Derivation ℤ E E)
+    (share : ∀ a,D (algebraMap ChartField E a)=algebraMap ChartField E (d a))
+    (on_scalars : ∀ a : Scalar,∃ b : Scalar,d (RatFunc.C a)=RatFunc.C b)
+    (on_X : d RatFunc.X=1 ∨ d RatFunc.X=0)
+    (B : MarkedBand)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<B.maxOrd)
+    (bounded : height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree)
+    (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
+    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
+    (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) : D x=0 := by
+  obtain ⟨df,hf⟩ := finite_derivation d on_scalars on_X
+  obtain ⟨di,hi'⟩ := infinity_derivation d on_scalars on_X
+  let : Differential E := ⟨D⟩
+  let : Differential (Polynomial Scalar) := ⟨df⟩
+  let : Differential (Infinity Scalar) := ⟨di⟩
+  let : DifferentialAlgebra (Polynomial Scalar) E := ⟨fun a=>by
+    change D (algebraMap (Polynomial Scalar) E a)=algebraMap (Polynomial Scalar) E (df a)
+    rw [IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField E,share,hf]
+    exact (IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField E (df a)).symm⟩
+  let : DifferentialAlgebra (Infinity Scalar) E := ⟨fun a=>by
+    change D (algebraMap (Infinity Scalar) E a)=algebraMap (Infinity Scalar) E (di a)
+    rw [IsScalarTower.algebraMap_apply (Infinity Scalar) ChartField E,share,hi']
+    exact (IsScalarTower.algebraMap_apply (Infinity Scalar) ChartField E (di a)).symm⟩
+  exact actual_coboundary_zero B f ir lo hi bounded b root x y z fx iy overlap
+
+/-- An integral Frobenius overlap for the actual bounded projected
+factor has a p-th root in its own root field. Both underlying coordinate
+partials restrict to the finite and infinity charts used in the pole proof. -/
+theorem actual_coboundary_pth_root
+    (B : MarkedBand) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<B.maxOrd)
+    (bounded : height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree)
+    (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
+    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
+    (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) :
+    ∃ w : E,w^K1.p=x := by
+  let : Algebra (Plane L) ChartField := Lower6961.MonicChart.planeAlgebra
+  let : IsFractionRing (Plane L) ChartField := Lower6961.MonicChart.plane_fractionRing
+  let : FiniteDimensional ChartField E := b.finite
+  let incl : L→+*ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
+  let : Fact K1.p.Prime := ⟨KoalaBear.is_prime⟩
+  let : CharP E K1.p := charP_of_injective_ringHom ((algebraMap ChartField E).comp incl).injective K1.p
+  have small : Module.finrank ChartField E<K1.p := by
+    rw [root_finrank f ir lo b root]
+    exact hi.trans B.small_E
+  have : Algebra.IsSeparable ChartField E := by
+    constructor
+    intro a
+    have integ : IsIntegral ChartField a := Algebra.IsIntegral.isIntegral a
+    let : CharP ChartField K1.p := charP_of_injective_ringHom incl.injective K1.p
+    exact (separable_iff_derivative_ne_zero (minpoly.irreducible integ)).mpr
+      (CurvatureSquares.derivative_ne_zero_of_natDegree_pos_lt_char K1.p _ (minpoly.natDegree_pos integ)
+        ((minpoly.natDegree_le a).trans_lt small))
+  have : Algebra.FormallyEtale ChartField E := Algebra.FormallyEtale.of_isSeparable ChartField E
+  obtain ⟨dx,dz,hx,hz,xx,zx,xs,zs⟩ := base_coordinates
+  obtain ⟨Dx,ex⟩ := Lower6960.ChartDerivations.extend (B:=E) dx
+  obtain ⟨Dz,ez⟩ := Lower6960.ChartDerivations.extend (B:=E) dz
+  exact Lower6960.PlaneConstants.root_field_constant K1.p dx dz Dx Dz hx hz ex ez small x
+    (overlap_zero dx Dx ex xs (Or.inl xx) B f ir lo hi bounded b root x y z fx iy overlap)
+    (overlap_zero dz Dz ez zs (Or.inr zx) B f ir lo hi bounded b root x y z fx iy overlap)
+
+/-- The integral roots of both chart sections have the original twist
+rather than its p-th power. -/
+theorem actual_coboundary_descent
+    (B : MarkedBand) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<B.maxOrd)
+    (bounded : height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree)
+    (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
+    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
+    (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) :
+    ∃ w : E,w^K1.p=x ∧ IsIntegral (Polynomial Scalar) w ∧
+      IsIntegral (Infinity Scalar) (algebraMap ChartField E RatFunc.X*w+z) ∧
+      (algebraMap ChartField E RatFunc.X*w+z)^K1.p=y := by
+  let incl : L→+*ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
+  let : Fact K1.p.Prime := ⟨KoalaBear.is_prime⟩
+  let : CharP E K1.p := charP_of_injective_ringHom ((algebraMap ChartField E).comp incl).injective K1.p
+  obtain ⟨w,hw⟩ := actual_coboundary_pth_root B f ir lo hi bounded b root x y z fx iy overlap
+  have ep : 0<K1.p := KoalaBear.is_prime.pos
+  have iy' : (algebraMap ChartField E RatFunc.X*w+z)^K1.p=y := by
+    rw [add_pow_char,mul_pow,hw,←overlap]
+  exact ⟨w,hw,IsIntegral.of_pow ep (hw.symm ▸ fx),IsIntegral.of_pow ep (iy'.symm ▸ iy),iy'⟩
+
+#print axioms actual_coboundary_pth_root
+#print axioms actual_coboundary_descent
+end
+end Lower6961.MonicChart
+
+end Merged_R6961MonicChartFrobenius
+
+-- merged module R6961MonicFourChartDescent
+section Merged_R6961MonicFourChartDescent
+
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 3900000
+set_option backward.isDefEq.respectTransparency.types false
+
+namespace Lower6961.MonicFourChartDescent
+noncomputable section
+open Polynomial
+open K1_14 (L)
+open Lower6960.MonicChart (Infinity)
+open Lower6961.MonicChart (ChartField Scalar)
+open Lower6960.ChartSections (Chart)
+open RetainedCompression (Curve ordinate view height heightCap MarkedBand)
+open scoped Polynomial
+
+/-- The constants and the two coordinates in the actual rational field. -/
+def constants : L →+* ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
+
+def scalarCoordinate : ChartField := RatFunc.C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L)))
+
+def chartCoordinate (infinity : Bool) (x : ChartField) : ChartField :=
+  if infinity then x⁻¹ else x
+
+/-- The first bit is the abscissa chart and the second is the scalar chart.
+Each chart contains the constants and its two chosen affine coordinates. -/
+def baseChart (s : Chart) : Subring ChartField :=
+  Subring.closure (Set.range constants ∪
+    {chartCoordinate s.1 RatFunc.X, chartCoordinate s.2 scalarCoordinate})
+
+/-- The factor converting a rational section to its polynomial frame on
+this chart. The twist is negative at infinity in each direction. -/
+def frame (a b : ℕ) (s : Chart) : ChartField :=
+  (if s.1 then RatFunc.X else 1)^a * (if s.2 then scalarCoordinate else 1)^b
+
+theorem frame_scale (a b n : ℕ) (s : Chart) :
+    frame (a*n) (b*n) s=(frame a b s)^n := by
+  simp only [frame,pow_mul,mul_pow]
+
+variable {E : Type*} [Field E] [Algebra ChartField E]
+
+/-- The same correction gives an integral element over each actual base chart. -/
+def Correction (a b : ℕ) (u : Chart → E) (c : E) : Prop :=
+  ∀ s, IsIntegral (baseChart s) (algebraMap ChartField E (frame a b s)*(u s-c))
+
+theorem finite_inclusion :
+    baseChart (false,false) ≤ (algebraMap (Polynomial Scalar) ChartField).range := by
+  apply Subring.closure_le.mpr
+  intro x hx
+  simp only [Set.mem_union,Set.mem_range,Set.mem_insert_iff,Set.mem_singleton_iff] at hx
+  rcases hx with ⟨c,rfl⟩ | rfl | rfl
+  · exact ⟨C (algebraMap (Polynomial L) Scalar (C c)),RatFunc.algebraMap_C _⟩
+  · exact ⟨Polynomial.X,RatFunc.algebraMap_X⟩
+  · exact ⟨C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L))),RatFunc.algebraMap_C _⟩
+
+theorem infinity_inclusion [DecidableEq ChartField] :
+    baseChart (true,false) ≤ (algebraMap (Infinity Scalar) ChartField).range := by
+  apply Subring.closure_le.mpr
+  intro x hx
+  simp only [Set.mem_union,Set.mem_range,Set.mem_insert_iff,Set.mem_singleton_iff] at hx
+  rcases hx with ⟨c,rfl⟩ | rfl | rfl
+  · exact ⟨Lower6960.MonicChart.inftyRingEval Scalar (C (algebraMap (Polynomial L) Scalar (C c))),aeval_C _ _⟩
+  · exact ⟨Lower6960.MonicChart.inftyRingEval Scalar Polynomial.X,Lower6960.MonicChart.mapped_X_infty⟩
+  · exact ⟨Lower6960.MonicChart.inftyRingEval Scalar (C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L)))),
+      aeval_C _ _⟩
+
+/-- Integrality persists under passage from a base chart to a larger ring
+in the same rational field. -/
+theorem integral_of_inclusion (s : Chart) {R : Type*} [CommRing R] [Algebra R ChartField]
+    [Algebra R E] [IsScalarTower R ChartField E] (inj : Function.Injective (algebraMap R ChartField))
+    (fit : baseChart s ≤ (algebraMap R ChartField).range) {q : E}
+    (integral : IsIntegral (baseChart s) q) : IsIntegral R q := by
+  let j := algebraMap R ChartField
+  let equiv : R ≃+* j.range := RingEquiv.ofBijective j.rangeRestrict
+    ⟨fun a b eq=>inj (congrArg Subtype.val eq),j.rangeRestrict_surjective⟩
+  let lift : baseChart s →+* R := equiv.symm.toRingHom.comp (Subring.inclusion fit)
+  have commute (x : baseChart s) : j (lift x)=(x:ChartField) :=
+    congrArg Subtype.val (equiv.apply_symm_apply (Subring.inclusion fit x))
+  let : Algebra (baseChart s) R := lift.toAlgebra
+  let : IsScalarTower (baseChart s) R E := IsScalarTower.of_algebraMap_eq fun x=>by
+    change algebraMap ChartField E (x:ChartField) = algebraMap R E (lift x)
+    rw [IsScalarTower.algebraMap_apply R ChartField E,commute]
+  exact integral.tower_top
+
+/-- A correction on the four actual charts for the Frobenius powers of the
+potentials descends to a single correction over all four charts. Its
+p-th power is the original correction in the same root field. -/
+theorem descend (B : MarkedBand) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<B.maxOrd)
+    (bounded : height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree)
+    (basis : PowerBasis ChartField E)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
+    (a b : ℕ) (ha : 0<a) (u : Chart → E) (c : E)
+    (h : Correction (a*K1.p) (b*K1.p) (fun s=>u s ^ K1.p) c) :
+    ∃ d : E, d^K1.p=c ∧ Correction a b u d := by
+  classical
+  let : Algebra (Polynomial Scalar) E := ((algebraMap ChartField E).comp (algebraMap (Polynomial Scalar) ChartField)).toAlgebra
+  let : IsScalarTower (Polynomial Scalar) ChartField E :=
+    IsScalarTower.of_algebraMap_eq (R:=(Polynomial Scalar)) (S:=ChartField) (A:=E) fun _=>rfl
+  let : Algebra (Infinity Scalar) E :=
+    ((algebraMap ChartField E).comp (algebraMap (Infinity Scalar) ChartField)).toAlgebra
+  let : IsScalarTower (Infinity Scalar) ChartField E :=
+    IsScalarTower.of_algebraMap_eq (R:=Infinity Scalar) (S:=ChartField) (A:=E) fun _=>rfl
+  let p := K1.p
+  let : Fact p.Prime := ⟨KoalaBear.is_prime⟩
+  let : CharP E p := charP_of_injective_ringHom ((algebraMap ChartField E).comp constants).injective p
+  let Fr := frobenius E p
+  have subpow (r s : E) : (r-s)^p=r^p-s^p := map_sub Fr r s
+  let Xval := algebraMap ChartField E RatFunc.X
+  have Xnz : Xval≠0 :=
+    (map_ne_zero_iff _ (algebraMap ChartField E).injective).mpr RatFunc.X_ne_zero
+  let x := u (false,false)^p-c
+  let y := Xval^p*(u (true,false)^p-c)
+  have finite : IsIntegral (Polynomial Scalar) x := by
+    apply integral_of_inclusion (false,false) (IsFractionRing.injective _ _) finite_inclusion
+    simpa only [frame,Bool.false_eq_true,ite_false,one_pow,one_mul,map_one] using h (false,false)
+  have infinity_high : IsIntegral (Infinity Scalar) (Xval^(a*p)*(u (true,false)^p-c)) := by
+    apply integral_of_inclusion (true,false)
+      (ValuationSubring.algebraMap_injective _ ChartField) infinity_inclusion
+    simpa only [frame,ite_true,Bool.false_eq_true,ite_false,one_pow,mul_one,map_pow] using h (true,false)
+  have inv_coord : IsIntegral (Infinity Scalar) (Xval⁻¹) := by
+    let t := Lower6960.MonicChart.inftyRingEval Scalar (Polynomial.X (R:=Scalar))
+    have integral : IsIntegral (Infinity Scalar) (algebraMap (Infinity Scalar) E t) := isIntegral_algebraMap
+    rw [IsScalarTower.algebraMap_apply (Infinity Scalar) ChartField E] at integral
+    change IsIntegral (Infinity Scalar) (algebraMap ChartField E ((t:Infinity Scalar):ChartField)) at integral
+    rwa [Lower6960.MonicChart.mapped_X_infty,map_inv₀] at integral
+  have cancel : (Xval⁻¹)^((a-1)*p)*Xval^(a*p)=Xval^p := by
+    have split : (a-1)*p+p=a*p := calc
+      _ = (a-1)*p+1*p := by rw [Nat.one_mul]
+      _ = a*p := by rw [←Nat.add_mul,Nat.sub_add_cancel ha]
+    rw [←split,pow_add,←mul_assoc,←mul_pow,inv_mul_cancel₀ Xnz,one_pow,one_mul]
+  have infinity : IsIntegral (Infinity Scalar) y := by
+    have m := (inv_coord.pow ((a-1)*p)).mul infinity_high
+    rwa [←mul_assoc,cancel] at m
+  have overlap : y=Xval^p*x+(Xval*(u (true,false)-u (false,false)))^p := by
+    rw [mul_pow,subpow]
+    dsimp only [x,y]
+    ring
+  have root_in_tower : aeval basis.gen (RetainedLinear.toSeed (view f))=0 := by
+    rw [aeval_map_algebraMap] at root
+    exact root
+  obtain ⟨w,hw⟩ := MonicChart.actual_coboundary_pth_root B f ir lo hi bounded basis root_in_tower
+    x y (Xval*(u (true,false)-u (false,false))) finite infinity overlap
+  let d := u (false,false)-w
+  have dp : d^p=c := by
+    rw [show d=u (false,false)-w from rfl,subpow,hw]
+    dsimp only [x]
+    ring
+  refine ⟨d,dp,?_⟩
+  intro s
+  apply IsIntegral.of_pow KoalaBear.is_prime.pos (n:=p)
+  rw [mul_pow,subpow,dp,←map_pow,←frame_scale]
+  exact h s
+
+/-- Descend an arbitrarily iterated Frobenius correction, preserving the
+same correction across all four actual chart rings on each step. -/
+theorem descend_iterate (B : MarkedBand) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (hi : f.degreeOf ordinate<B.maxOrd) (bounded : height B.wordDegree f≤heightCap (f.degreeOf ordinate) B.wordDegree)
+    (basis : PowerBasis ChartField E)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
+    (a b : ℕ) (ha : 0<a) (u : Chart → E) (n : ℕ) (c : E)
+    (h : Correction (a*K1.p^n) (b*K1.p^n) (fun s=>u s ^ (K1.p^n)) c) :
+    ∃ d : E, d^(K1.p^n)=c ∧ Correction a b u d := by
+  induction n generalizing c with
+  | zero => exact ⟨c,by simp,by simpa using h⟩
+  | succ n ih =>
+    have next : Correction ((a*K1.p^n)*K1.p) ((b*K1.p^n)*K1.p)
+        (fun s=>(u s ^ (K1.p^n))^K1.p) c := by
+      rw [pow_succ K1.p n,←Nat.mul_assoc,←Nat.mul_assoc] at h
+      have powers : (fun s : Chart=>u s ^ (K1.p^n*K1.p)) =
+          (fun s=> (u s ^ (K1.p^n))^K1.p) := funext fun s=>pow_mul (u s) _ _
+      rwa [powers] at h
+    obtain ⟨v,hv,hv'⟩ := descend B f ir lo hi bounded basis root (a*K1.p^n) (b*K1.p^n)
+      (Nat.mul_pos ha (pow_pos KoalaBear.is_prime.pos _)) (fun s=>u s ^ (K1.p^n)) c next
+    obtain ⟨d,hd,hd'⟩ := ih v hv'
+    exact ⟨d,by rw [pow_succ K1.p n,pow_mul,hd,hv],hd'⟩
+
+#print axioms descend
+#print axioms descend_iterate
+end
+end Lower6961.MonicFourChartDescent
+
+end Merged_R6961MonicFourChartDescent
+
+-- merged module R6961MonicChartProbes
+section Merged_R6961MonicChartProbes
+
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 4200000
+set_option backward.isDefEq.respectTransparency.types false
+
+namespace Lower6961.MonicChartProbes
+noncomputable section
+open Polynomial
+open K1_14 (L)
+open Lower6961.MonicChart (ChartField Scalar)
+open Lower6960.PlaneConstants (Plane)
+open Lower6960.ChartSections (Chart)
+open MonicFourChartDescent (baseChart chartCoordinate constants scalarCoordinate)
+open RetainedCompression (Curve ordinate view)
+open scoped Polynomial Lower6960.MonicChart Lower6961.MonicChart
+open Lower6961.MonicChart (root_finrank)
+
+private def generators (s : Chart) : Set ChartField :=
+  Set.range constants ∪ {chartCoordinate s.1 RatFunc.X, chartCoordinate s.2 scalarCoordinate}
+
+private abbrev scalarX : Scalar := algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L))
+
+private abbrev scalarConstants : L →+* Scalar := (algebraMap (Polynomial L) Scalar).comp Polynomial.C
+
+private def scalarEval (inverse : Bool) : (Polynomial L) →+* Scalar :=
+  Polynomial.eval₂RingHom scalarConstants (if inverse then scalarX⁻¹ else scalarX)
+
+private def abscissaEval (inverse : Bool) : (Polynomial Scalar) →+* ChartField :=
+  Polynomial.eval₂RingHom RatFunc.C (chartCoordinate inverse RatFunc.X)
+
+/-- Evaluate the two polynomial variables independently in the chosen
+abscissa and scalar coordinates of the actual chart. -/
+def planeMap (s : Chart) : Plane L →+* ChartField :=
+  (abscissaEval s.1).comp (Polynomial.mapRingHom (scalarEval s.2))
+
+private theorem scalarEval_finite : scalarEval false = algebraMap (Polynomial L) Scalar := by
+  apply Polynomial.ringHom_ext
+  · intro c
+    exact eval₂_C _ _
+  · exact eval₂_X _ _
+
+private theorem abscissaEval_finite : abscissaEval false = algebraMap (Polynomial Scalar) ChartField := by
+  apply Polynomial.ringHom_ext
+  · intro c
+    exact (eval₂_C _ _).trans (RatFunc.algebraMap_C c).symm
+  · exact (eval₂_X _ _).trans RatFunc.algebraMap_X.symm
+
+private theorem scalarEval_injective (s : Bool) : Function.Injective (scalarEval s) := by
+  let : Algebra L Scalar := scalarConstants.toAlgebra
+  have trans : Transcendental L scalarX := transcendental_iff_injective.mpr (by
+    change Function.Injective (scalarEval false)
+    rw [scalarEval_finite]
+    exact IsFractionRing.injective (Polynomial L) Scalar)
+  cases s with
+  | false => exact transcendental_iff_injective.mp trans
+  | true =>
+    have inv : Transcendental L (scalarX⁻¹) := by
+      simpa only [Transcendental,IsAlgebraic.inv_iff] using trans
+    exact transcendental_iff_injective.mp inv
+
+private theorem abscissaEval_injective (s : Bool) : Function.Injective (abscissaEval s) := by
+  cases s with
+  | false => rw [abscissaEval_finite]; exact IsFractionRing.injective _ _
+  | true => exact Lower6960.MonicChart.atInfinity_injective (K:=Scalar)
+
+theorem planeMap_injective (s : Chart) : Function.Injective (planeMap s) :=
+  (abscissaEval_injective s.1).comp (Polynomial.map_injective _ (scalarEval_injective s.2))
+
+theorem planeMap_finite : planeMap (false,false) = algebraMap (Plane L) ChartField := by
+  rw [planeMap,abscissaEval_finite,scalarEval_finite]
+  rfl
+
+@[simp] theorem planeMap_constants (s : Chart) (c : L) : planeMap s (C (C c)) = constants c := by
+  change abscissaEval s.1 (Polynomial.map (scalarEval s.2) (C (C c))) = _
+  rw [Polynomial.map_C]
+  exact (eval₂_C _ _).trans (congrArg RatFunc.C (eval₂_C _ _))
+
+@[simp] theorem planeMap_abscissa (s : Chart) :
+    planeMap s (Polynomial.X (R:=(Polynomial L))) = chartCoordinate s.1 RatFunc.X := by
+  change abscissaEval s.1 (Polynomial.map (scalarEval s.2) (Polynomial.X (R:=(Polynomial L)))) = _
+  rw [Polynomial.map_X]
+  exact eval₂_X _ _
+
+@[simp] theorem planeMap_scalar (s : Chart) :
+    planeMap s (C (Polynomial.X (R:=L))) = chartCoordinate s.2 scalarCoordinate := by
+  change abscissaEval s.1 (Polynomial.map (scalarEval s.2) (C (Polynomial.X (R:=L)))) = _
+  rw [Polynomial.map_C]
+  refine (eval₂_C _ _).trans ((congrArg RatFunc.C (eval₂_X _ _)).trans ?_)
+  cases s.2 <;> simp [chartCoordinate,scalarCoordinate,map_inv₀]
+
+private theorem image_polynomial {R F : Type*} [CommRing R] [CommRing F]
+    (j : (Polynomial R) →+* F) (S : Subring F) (coeffs : ∀ c,j (C c)∈S)
+    (var : j (Polynomial.X (R:=R))∈S) (q : (Polynomial R)) : j q∈S := by
+  induction q using Polynomial.induction_on' with
+  | add p q hp hq => exact map_add j p q ▸ S.add_mem hp hq
+  | monomial n c =>
+    rw [←C_mul_X_pow_eq_monomial,map_mul,map_pow]
+    exact S.mul_mem (coeffs c) (S.pow_mem var n)
+
+/-- Each of the four concrete rings is exactly the image of a polynomial
+plane, with the reciprocal choices made independently. -/
+theorem planeMap_range (s : Chart) : (planeMap s).range = baseChart s := by
+  apply le_antisymm
+  · rintro _ ⟨q,rfl⟩
+    have xmem : chartCoordinate s.1 RatFunc.X ∈ baseChart s :=
+      Subring.subset_closure (Or.inr (by simp))
+    have zmem : chartCoordinate s.2 scalarCoordinate ∈ baseChart s :=
+      Subring.subset_closure (Or.inr (by simp))
+    apply image_polynomial (planeMap s) (baseChart s) _ (planeMap_abscissa s ▸ xmem) q
+    intro a
+    apply image_polynomial ((planeMap s).comp C) (baseChart s) _ _ a
+    · intro c
+      change planeMap s (C (C c)) ∈ baseChart s
+      rw [planeMap_constants]
+      exact Subring.subset_closure (Or.inl ⟨c,rfl⟩)
+    · change planeMap s (C (Polynomial.X (R:=L))) ∈ baseChart s
+      rwa [planeMap_scalar]
+  · apply Subring.closure_le.mpr
+    intro x hx
+    simp only [Set.mem_union,Set.mem_range,Set.mem_insert_iff,Set.mem_singleton_iff] at hx
+    rcases hx with ⟨c,rfl⟩ | rfl | rfl
+    · exact ⟨C (C c),planeMap_constants s c⟩
+    · exact ⟨Polynomial.X,planeMap_abscissa s⟩
+    · exact ⟨C Polynomial.X,planeMap_scalar s⟩
+
+/-- The coordinate plane identifies with the actual chart as a ring. -/
+def planeEquiv (s : Chart) : Plane L ≃+* baseChart s :=
+  (RingEquiv.ofBijective (planeMap s).rangeRestrict
+    ⟨fun _ _ eq=>planeMap_injective s (congrArg Subtype.val eq),
+      (planeMap s).rangeRestrict_surjective⟩).trans (RingEquiv.subringCongr (planeMap_range s))
+
+scoped instance chartNoetherian (s : Chart) : IsNoetherianRing (baseChart s) :=
+  isNoetherianRing_of_ringEquiv (Plane L) (planeEquiv s)
+
+scoped instance chartIntegrallyClosed (s : Chart) : IsIntegrallyClosed (baseChart s) :=
+  IsIntegrallyClosed.of_equiv (planeEquiv s)
+
+private theorem unreciprocate (s : Bool) (x : ChartField) (T : Subfield ChartField)
+    (h : chartCoordinate s x ∈ T) : x ∈ T := by
+  cases s with
+  | false => exact h
+  | true => simpa only [chartCoordinate,ite_true,inv_inv] using T.inv_mem h
+
+/-- The scalar and abscissa reciprocals generate the same full rational
+function field as the two finite coordinates. -/
+scoped instance chartFractionRing (s : Chart) : IsFractionRing (baseChart s) ChartField := by
+  have : FaithfulSMul (baseChart s) ChartField :=
+    (faithfulSMul_iff_algebraMap_injective _ _).mpr Subtype.val_injective
+  let : IsFractionRing (Plane L) ChartField := MonicChart.plane_fractionRing
+  let T := Subfield.closure (generators s)
+  have hx : RatFunc.X ∈ T := unreciprocate s.1 _ T (Subfield.subset_closure (Or.inr (by simp)))
+  have hz : scalarCoordinate ∈ T := unreciprocate s.2 _ T (Subfield.subset_closure (Or.inr (by simp)))
+  have hc (c : L) : constants c ∈ T := Subfield.subset_closure (Or.inl ⟨c,rfl⟩)
+  have finite : baseChart (false,false) ≤ T.toSubring := by
+    apply Subring.closure_le.mpr
+    intro q hq
+    simp only [Set.mem_union,Set.mem_range,Set.mem_insert_iff,Set.mem_singleton_iff] at hq
+    rcases hq with ⟨c,rfl⟩ | rfl | rfl
+    · exact hc c
+    · exact hx
+    · exact hz
+  have image (q : Plane L) : algebraMap (Plane L) ChartField q ∈ T := by
+    apply finite
+    rw [←planeMap_range,planeMap_finite]
+    exact ⟨q,rfl⟩
+  apply IsFractionRing.of_field
+  intro q
+  obtain ⟨a,b,_,eq⟩ := IsFractionRing.div_surjective (Plane L) q
+  have full : q∈T := eq ▸ T.div_mem (image a) (image b)
+  obtain ⟨x,hx',y,hy',ratio⟩ := Subfield.mem_closure_iff.mp full
+  exact ⟨⟨x,hx'⟩,⟨y,hy'⟩,ratio.symm⟩
+
+variable {E : Type*} [Field E] [Algebra ChartField E]
+
+/-- The small ordinate degree gives separability on the actual root field. -/
+theorem actual_separable
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<K1.p)
+    (basis : PowerBasis ChartField E)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
+    Algebra.IsSeparable ChartField E := by
+  classical
+  let : FiniteDimensional ChartField E := basis.finite
+  let : Algebra (Polynomial Scalar) E := ((algebraMap ChartField E).comp (algebraMap (Polynomial Scalar) ChartField)).toAlgebra
+  let : IsScalarTower (Polynomial Scalar) ChartField E :=
+    IsScalarTower.of_algebraMap_eq (R:=(Polynomial Scalar)) (S:=ChartField) (A:=E) fun _=>rfl
+  have root_in_tower : aeval basis.gen (RetainedLinear.toSeed (view f))=0 := by
+    rw [aeval_map_algebraMap] at root
+    exact root
+  have small : Module.finrank ChartField E<K1.p := by
+    rw [Lower6961.MonicChart.root_finrank f ir lo basis root_in_tower]
+    exact hi
+  constructor
+  intro x
+  have integ : IsIntegral ChartField x := Algebra.IsIntegral.isIntegral x
+  let : CharP ChartField K1.p := charP_of_injective_ringHom constants.injective K1.p
+  exact (separable_iff_derivative_ne_zero (minpoly.irreducible integ)).mpr
+    (CurvatureSquares.derivative_ne_zero_of_natDegree_pos_lt_char K1.p _ (minpoly.natDegree_pos integ)
+      ((minpoly.natDegree_le x).trans_lt small))
+
+/-- The trace is in the same rational field on all four actual charts. -/
+theorem actual_integral_iff_finite_traces
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<K1.p)
+    (basis : PowerBasis ChartField E)
+    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
+    ∃ probes : Chart → Finset E, ∀ s (x : E), IsIntegral (baseChart s) x ↔
+      ∀ d∈probes s, Algebra.trace ChartField E (d*x) ∈ baseChart s := by
+  classical
+  let : FiniteDimensional ChartField E := basis.finite
+  have : Algebra.IsSeparable ChartField E := actual_separable f ir lo hi basis root
+  have test (s : Chart) : ∃ probes : Finset E, ∀ x : E, IsIntegral (baseChart s) x ↔
+      ∀ d∈probes, Algebra.trace ChartField E (d*x) ∈ baseChart s := by
+    obtain ⟨probes,h⟩ := Lower6960.ChartTraceTests.integral_iff_finite_traces (baseChart s) ChartField E
+    refine ⟨probes,?_⟩
+    intro x
+    rw [h]
+    have mem (t : ChartField) : t ∈ (1 : Submodule (baseChart s) ChartField) ↔ t ∈ baseChart s := by
+      rw [Submodule.mem_one]
+      exact ⟨fun ⟨v,eq⟩=>eq ▸ v.property,fun inside=>⟨⟨t,inside⟩,rfl⟩⟩
+    simp only [mem,mul_comm x]
+  choose probes ok using test
+  exact ⟨probes,ok⟩
+
+#print axioms planeMap_range
+#print axioms chartFractionRing
+#print axioms actual_integral_iff_finite_traces
+end
+end Lower6961.MonicChartProbes
+
+end Merged_R6961MonicChartProbes

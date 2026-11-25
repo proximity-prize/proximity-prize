@@ -15,6 +15,7 @@ import ProximityPrize.SubmissionLower.Final50RankReceiptGroup55
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup56
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup57
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup58
+import ProximityPrize.SubmissionLower.Final50RankReceiptGroup59
 import ProximityPrize.SubmissionLower.Final50RankBlocks
 
 -- merged module Final50RankReceiptSum
@@ -69,19 +70,19 @@ private theorem in_late (d s : ℕ) : s ∈ late d ↔ lateLo d ≤ s ∧ s < la
   · intro hs
     exact ⟨s - lateLo d, mem_range.mpr (by omega), by omega⟩
 
-private theorem stage_bounds (d : ℕ) (hd : d < 59) :
-    d < lateLo d ∧ lateLo d ≤ lateHi d ∧ lateHi d ≤ 139 := by
-  have checks : (List.range 59).all (fun i => decide
-      (i < lateLo i ∧ lateLo i ≤ lateHi i ∧ lateHi i ≤ 139)) = true := by decide +kernel
+private theorem stage_bounds (d : ℕ) (hd : d < 60) :
+    d < lateLo d ∧ lateLo d ≤ lateHi d ∧ lateHi d ≤ 142 := by
+  have checks : (List.range 60).all (fun i => decide
+      (i < lateLo i ∧ lateLo i ≤ lateHi i ∧ lateHi i ≤ 142)) = true := by decide +kernel
   exact of_decide_eq_true (List.all_eq_true.mp checks d (List.mem_range.mpr hd))
 
-private theorem stages_eq (d : ℕ) (hd : d < 59) :
-    (range 139).filter (fun s => cap s = d) = stages d := by
-  have checks : (List.range 59).all (fun j =>
-      (List.range 139).all (fun s => decide (cap s = j ↔ inStage j s))) = true := by decide +kernel
+private theorem stages_eq (d : ℕ) (hd : d < 60) :
+    (range 142).filter (fun s => cap s = d) = stages d := by
+  have checks : (List.range 60).all (fun j =>
+      (List.range 142).all (fun s => decide (cap s = j ↔ inStage j s))) = true := by decide +kernel
   ext s
   rw [mem_filter, mem_range, stages, mem_insert, in_late]
-  by_cases hs : s < 139
+  by_cases hs : s < 142
   · have hh := of_decide_eq_true (List.all_eq_true.mp
       (List.all_eq_true.mp checks d (List.mem_range.mpr hd)) s (List.mem_range.mpr hs))
     simpa only [hs, true_and, inStage] using hh
@@ -93,7 +94,7 @@ private theorem fee_add (s i : ℕ) (r : Row) : fee (s+i) r = fee s r - i := by
   unfold fee
   omega
 
-private theorem sum_stage_fee (d : ℕ) (hd : d < 59) (r : Row) :
+private theorem sum_stage_fee (d : ℕ) (hd : d < 60) (r : Row) :
     ∑ s ∈ stages d, fee s r = price d r := by
   obtain ⟨hlo, hlen, _⟩ := stage_bounds d hd
   have hmiss : d ∉ late d := fun h => (Nat.not_le_of_gt hlo) ((in_late d d).mp h).1
@@ -113,12 +114,12 @@ private theorem exchange (st : Finset ℕ) (rows : List Row) :
     simp only [List.map_cons, List.sum_cons, Finset.sum_add_distrib, ih]
 
 theorem sum_fees (rows : ℕ → List Row) :
-    (∑ s : Fin 139, ((rows (cap s)).map (fee s)).sum) =
-      ∑ d : Fin 59, ((rows d).map (price d)).sum := by
-  rw [Fin.sum_univ_eq_sum_range (fun s => ((rows (cap s)).map (fee s)).sum) 139,
-    Fin.sum_univ_eq_sum_range (fun d => ((rows d).map (price d)).sum) 59]
+    (∑ s : Fin 142, ((rows (cap s)).map (fee s)).sum) =
+      ∑ d : Fin 60, ((rows d).map (price d)).sum := by
+  rw [Fin.sum_univ_eq_sum_range (fun s => ((rows (cap s)).map (fee s)).sum) 142,
+    Fin.sum_univ_eq_sum_range (fun d => ((rows d).map (price d)).sum) 60]
   calc
-    _ = ∑ s ∈ range 139, ∑ d ∈ range 59,
+    _ = ∑ s ∈ range 142, ∑ d ∈ range 60,
           if cap s = d then ((rows d).map (fee s)).sum else 0 := by
         apply sum_congr rfl
         intro s hs
@@ -128,7 +129,7 @@ theorem sum_fees (rows : ℕ → List Row) :
           simp [Ne.symm hne]
         · intro he
           exact (he (mem_range.mpr (Nat.lt_succ_of_le (cap_le_index s)))).elim
-    _ = ∑ d ∈ range 59, ((rows d).map (price d)).sum := by
+    _ = ∑ d ∈ range 60, ((rows d).map (price d)).sum := by
         rw [sum_comm]
         apply sum_congr rfl
         intro d hd
@@ -211,71 +212,73 @@ def rows : ℕ → List Row
   | 56 => rows56
   | 57 => rows57
   | 58 => rows58
+  | 59 => rows59
   | _ => []
 
 private def expected : ℕ → ℕ
-  | 0 => 103
-  | 1 => 408
-  | 2 => 1010
-  | 3 => 2000
-  | 4 => 3465
-  | 5 => 5488
-  | 6 => 8148
-  | 7 => 11520
-  | 8 => 15675
-  | 9 => 20680
-  | 10 => 26598
-  | 11 => 33488
-  | 12 => 41405
-  | 13 => 50400
-  | 14 => 60520
-  | 15 => 71720
-  | 16 => 83955
-  | 17 => 97180
-  | 18 => 111350
-  | 19 => 126420
-  | 20 => 142345
-  | 21 => 159080
-  | 22 => 176580
-  | 23 => 194560
-  | 24 => 212668
-  | 25 => 230568
-  | 26 => 247940
-  | 27 => 264480
-  | 28 => 279900
-  | 29 => 293928
-  | 30 => 306381
-  | 31 => 317304
-  | 32 => 326813
-  | 33 => 334950
-  | 34 => 341826
-  | 35 => 347805
-  | 36 => 352669
-  | 37 => 356731
-  | 38 => 359818
-  | 39 => 362196
-  | 40 => 363733
-  | 41 => 364649
-  | 42 => 364850
-  | 43 => 364515
-  | 44 => 363582
-  | 45 => 362195
-  | 46 => 360320
-  | 47 => 358069
-  | 48 => 355434
-  | 49 => 352498
-  | 50 => 349277
-  | 51 => 345828
-  | 52 => 342186
-  | 53 => 338387
-  | 54 => 334481
-  | 55 => 330488
-  | 56 => 326467
-  | 57 => 322426
-  | 58 => 7846364
+  | 0 => 105
+  | 1 => 416
+  | 2 => 1030
+  | 3 => 2040
+  | 4 => 3535
+  | 5 => 5600
+  | 6 => 8316
+  | 7 => 11760
+  | 8 => 16005
+  | 9 => 21120
+  | 10 => 27170
+  | 11 => 34216
+  | 12 => 42315
+  | 13 => 51520
+  | 14 => 61880
+  | 15 => 73350
+  | 16 => 85885
+  | 17 => 99440
+  | 18 => 113970
+  | 19 => 129430
+  | 20 => 145775
+  | 21 => 162960
+  | 22 => 180940
+  | 23 => 199588
+  | 24 => 218538
+  | 25 => 237440
+  | 26 => 255960
+  | 27 => 273780
+  | 28 => 290598
+  | 29 => 306128
+  | 30 => 320100
+  | 31 => 332482
+  | 32 => 343319
+  | 33 => 352728
+  | 34 => 360751
+  | 35 => 367500
+  | 36 => 373014
+  | 37 => 377700
+  | 38 => 381295
+  | 39 => 384155
+  | 40 => 386062
+  | 41 => 387325
+  | 42 => 387767
+  | 43 => 387654
+  | 44 => 386844
+  | 45 => 385564
+  | 46 => 383704
+  | 47 => 381455
+  | 48 => 378736
+  | 49 => 375706
+  | 50 => 372307
+  | 51 => 368673
+  | 52 => 364766
+  | 53 => 360696
+  | 54 => 356443
+  | 55 => 352098
+  | 56 => 347654
+  | 57 => 343186
+  | 58 => 338697
+  | 59 => 8651701
   | _ => 0
 
-theorem rows_good (d : Fin 59) : ∀ r ∈ rows d, good d r = true := by
+theorem rows_good (d : Fin 60) : ∀ r ∈ rows d, good d r = true := by
   fin_cases d
   · exact good0
   · exact good1
@@ -336,7 +339,8 @@ theorem rows_good (d : Fin 59) : ∀ r ∈ rows d, good d r = true := by
   · exact good56
   · exact good57
   · exact good58
-theorem rows_sorted (d : Fin 59) : (rows d).Pairwise (fun a b => a.tag < b.tag) := by
+  · exact good59
+theorem rows_sorted (d : Fin 60) : (rows d).Pairwise (fun a b => a.tag < b.tag) := by
   fin_cases d
   · exact sorted0
   · exact sorted1
@@ -397,8 +401,9 @@ theorem rows_sorted (d : Fin 59) : (rows d).Pairwise (fun a b => a.tag < b.tag) 
   · exact sorted56
   · exact sorted57
   · exact sorted58
-theorem rows_cover (d i : Fin 59) :
-    bandCount d (i.val : ℤ) 58 14 ≤ ((rows d).filter (fun r => decide (i.val ≤ r.index))).length := by
+  · exact sorted59
+theorem rows_cover (d i : Fin 60) :
+    bandCount d (i.val : ℤ) 59 14 ≤ ((rows d).filter (fun r => decide (i.val ≤ r.index))).length := by
   fin_cases d
   · exact mass0 i
   · exact mass1 i
@@ -459,8 +464,9 @@ theorem rows_cover (d i : Fin 59) :
   · exact mass56 i
   · exact mass57 i
   · exact mass58 i
+  · exact mass59 i
 
-private theorem rows_price (d : Fin 59) :
+private theorem rows_price (d : Fin 60) :
     ((rows d).map (price d)).sum = expected d := by
   fin_cases d
   · exact total0
@@ -522,13 +528,14 @@ private theorem rows_price (d : Fin 59) :
   · exact total56
   · exact total57
   · exact total58
+  · exact total59
 
 
 theorem total_fees :
-    (∑ s : Fin 139, ((rows (cap s)).map (fee s)).sum) = 20525824 := by
+    (∑ s : Fin 142, ((rows (cap s)).map (fee s)).sum) = 22350892 := by
   rw [sum_fees]
   simp_rw [rows_price]
-  rw [Fin.sum_univ_eq_sum_range expected 59]
+  rw [Fin.sum_univ_eq_sum_range expected 60]
   decide +kernel
 
 #print axioms rows_good
@@ -550,13 +557,13 @@ open Final50AnchorSpace (cap anchorLocal)
 open PolynomialDifferential ReedSolomon.HiddenDerivative
 open scoped BigOperators Polynomial
 
-theorem origin_rank : Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) ≤ 20525824 := by
+theorem origin_rank : Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) ≤ 22350892 := by
   apply Final50RankBlocks.origin_le_blocks.trans
   calc
-    _ ≤ ∑ s : Fin 139, Final50RankCore.gradeFee s (Final50RankReceipt.rows (cap s)) := by
+    _ ≤ ∑ s : Fin 142, Final50RankCore.gradeFee s (Final50RankReceipt.rows (cap s)) := by
       apply Finset.sum_le_sum
       intro s _
-      let d : Fin 59 := ⟨cap s,Nat.lt_succ_of_le (Final50AnchorSpace.cap_le_index s)⟩
+      let d : Fin 60 := ⟨cap s,Nat.lt_succ_of_le (Final50AnchorSpace.cap_le_index s)⟩
       exact Final50RankCore.grade_bound s d (Final50RankReceipt.rows d)
         (Final50RankReceipt.rows_good d) (Final50RankReceipt.rows_sorted d) (Final50RankReceipt.rows_cover d)
     _ = _ := Final50RankReceipt.total_fees

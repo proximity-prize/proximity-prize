@@ -517,13 +517,13 @@ open Final50Price (ActiveFits)
 open Final50GeoCover (activeDegree activeFits_iff)
 open K1_13_1 (coeff_flatten anchorLead_term index_bounds)
 open scoped BigOperators Polynomial Classical
-abbrev anchorCutoff : ℕ := 103*agreement-1+58
-def fullCap (top : ℕ) : Shape := ⟨138, 58, top⟩
+abbrev anchorCutoff : ℕ := 105*agreement-1+59
+def fullCap (top : ℕ) : Shape := ⟨141, 59, top⟩
 def Fits (top : ℕ) {n : ℕ} (a : Fin n → Shape) : Prop :=
-  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 138 ∧ (∑ i, (a i).j) ≤ 58 ∧
+  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 141 ∧ (∑ i, (a i).j) ≤ 59 ∧
     (∑ i, (a i).t) ≤ top
 def LowerRow (top : ℕ) (g : Row 3) : Prop :=
-  g≠0 ∧ g.totalDegree≤138-top ∧ indexDegree g≤58-3*top ∧ TrueWeightLE g anchorCutoff
+  g≠0 ∧ g.totalDegree≤141-top ∧ indexDegree g≤59-3*top ∧ TrueWeightLE g anchorCutoff
 def SmallFactor (f : Row 4) : Prop :=
   Irreducible f ∧ 0<(shape f).t ∧ InBox (shape f) (fullCap 14) ∧ TrueWeightLE f anchorCutoff
 theorem trueWeight_iff {n D : ℕ} (P : Row n) :
@@ -559,16 +559,16 @@ theorem differentialWeight_eq : differentialWeight (d := 3) physicalDegree =
 section FactorCover
 open MvPolynomial UniqueFactorizationMonoid
 theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨138, 58, 14⟩) (hw : TrueWeightLE P anchorCutoff) :
+    (hbox : InBox (shape P) ⟨141, 59, 14⟩) (hw : TrueWeightLE P anchorCutoff) :
     LowerRow (shape P).t (anchorLead P) := by
   refine ⟨anchorLead_ne hP, ?_, ?_, ?_⟩
   · have hb := (Euler50GeoLead.lead_degree P hP).trans hbox.1
-    change (anchorLead P).totalDegree + (shape P).t ≤ 138 at hb
-    change (anchorLead P).totalDegree ≤ 138 - (shape P).t
+    change (anchorLead P).totalDegree + (shape P).t ≤ 141 at hb
+    change (anchorLead P).totalDegree ≤ 141 - (shape P).t
     omega
   · have hj := (Euler50GeoLead.lead_index P hP).trans hbox.2.1
-    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 58 at hj
-    change indexDegree (anchorLead P) ≤ 58 - 3 * (shape P).t
+    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 59 at hj
+    change indexDegree (anchorLead P) ≤ 59 - 3 * (shape P).t
     omega
   · intro m hm
     obtain ⟨u, hu, hc, h⟩ := anchorLead_term P m hm
@@ -577,7 +577,7 @@ theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
     apply (Nat.add_le_add_left _ _).trans (hw u hu)
     simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm, Fin.val_castSucc] using hle
 theorem factor_small {P f : Row 4} (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨138, 58, 14⟩) (hw : TrueWeightLE P anchorCutoff)
+    (hbox : InBox (shape P) ⟨141, 59, 14⟩) (hw : TrueWeightLE P anchorCutoff)
     (hf : Irreducible f) (ht : 0 < (shape f).t) (hd : f ∣ P) : SmallFactor f := by
   refine ⟨hf, ht, ⟨?_, ?_, ?_⟩, ?_⟩
   · have h := weightedTotalDegree_le_of_dvd (1 : Fin 4 → ℕ) hd hP
@@ -608,7 +608,7 @@ structure Inventory (Γ : Finset K) (s : K→(Polynomial K)) where
   small : ∀ i,SmallFactor (factor i)
   different : ∀ i j,i≠j → ¬Associated (factor i) (factor j)
   fits : Fits top (fun i=>shape (factor i))
-  active : (∑ i,activeDegree (factor i))≤171
+  active : (∑ i,activeDegree (factor i))≤177
   order : Fin n→ℕ
   layers : LayerBudget (fun i=>shape (factor i)) order
   proper : ∀ i,0<order i → ProperCut (factor i) Γ s (order i)
@@ -627,7 +627,7 @@ structure Inventory (Γ : Finset K) (s : K→(Polynomial K)) where
   fat_at : ∀ i γ,γ∈pieces i → Low6960Fat.Holds fat (extend (s γ))
   cover_count : Γ.card ≤ book.card+low.card+∑ i,(pieces i).card
 theorem inventory_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179808 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2359) :
+    (F : P1.FamilyAt 179798 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2367) :
     Nonempty (Inventory Γ F.scalar) := by
   obtain ⟨P,hP,hbox,hact,weight,vanish⟩ := Low6960Anchor.anchor_of_family M F hi
   have hw : TrueWeightLE P anchorCutoff := by
@@ -650,9 +650,9 @@ theorem inventory_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
     · have h := MvPolynomial.sum_weightedTotalDegree_le_of_prod_dvd (Pi.single (3 : Fin 4) 1) Finset.univ f hP prodDvd
       change (∑ i, (f i).degreeOf 3) ≤ P.degreeOf 3
       simpa only [MvPolynomial.weightedTotalDegree_piSingle] using h
-  have active : (∑ i, activeDegree (f i)) ≤ 171 :=
+  have active : (∑ i, activeDegree (f i)) ≤ 177 :=
     (MvPolynomial.sum_weightedTotalDegree_le_of_prod_dvd (![1,2,2,2] : Fin 4 → ℕ)
-      Finset.univ f hP prodDvd).trans ((activeFits_iff P 171).mp hact)
+      Finset.univ f hP prodDvd).trans ((activeFits_iff P 177).mp hact)
   have hchar (i : Fin n) : (shape (f i)).t<K1.p := (small i).2.2.1.2.2.trans_lt (by decide)
   have hm := Low6960Order.messages_of_family M F hi
   obtain ⟨ord,layers,proper⟩ := Low6960Order.proper_layers hm (fun i=>(small i).1)

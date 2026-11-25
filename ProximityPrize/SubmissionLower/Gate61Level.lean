@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import ProximityPrize.SubmissionLower.Gate61Shape
-set_option Elab.async false
 
 -- merged module Gate61FreeArith
 section Merged_Gate61FreeArith

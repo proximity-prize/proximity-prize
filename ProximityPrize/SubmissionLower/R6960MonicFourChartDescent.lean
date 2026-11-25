@@ -98,7 +98,7 @@ open Polynomial
 open K1_14 (L)
 open MonicChart (ChartField Scalar Infinity)
 open ChartSections (Chart)
-open RetainedCompression (Curve ordinate view height heightCap TameBand)
+open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 open scoped Polynomial
 def constants : L →+* ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
 def scalarCoordinate : ChartField := RatFunc.C (algebraMap (Polynomial L) Scalar (Polynomial.X (R:=L)))
@@ -149,9 +149,8 @@ theorem integral_of_inclusion (s : Chart) {R : Type*} [CommRing R] [Algebra R Ch
     change algebraMap ChartField E (x:ChartField) = algebraMap R E (lift x)
     rw [IsScalarTower.algebraMap_apply R ChartField E,commute]
   exact integral.tower_top
-theorem descend (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : TameBand (f.degreeOf ordinate) degD)
-    (bounded : height degD f≤heightCap (f.degreeOf ordinate) degD)
+theorem descend (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (a b : ℕ) (ha : 0<a) (u : Chart → E) (c : E)
@@ -203,7 +202,7 @@ theorem descend (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo
   have root_in_tower : aeval basis.gen (RetainedLinear.toSeed (view f))=0 := by
     rw [aeval_map_algebraMap] at root
     exact root
-  obtain ⟨w,hw⟩ := MonicChart.actual_coboundary_pth_root degD f ir lo hi bounded basis root_in_tower
+  obtain ⟨w,hw⟩ := MonicChart.actual_coboundary_pth_root f ir lo hi bounded basis root_in_tower
     x y (Xval*(u (true,false)-u (false,false))) finite infinity overlap
   let d := u (false,false)-w
   have dp : d^p=c := by
@@ -215,8 +214,8 @@ theorem descend (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo
   apply IsIntegral.of_pow KoalaBear.is_prime.pos (n:=p)
   rw [mul_pow,subpow,dp,←map_pow,←frame_scale]
   exact h s
-theorem descend_iterate (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : TameBand (f.degreeOf ordinate) degD) (bounded : height degD f≤heightCap (f.degreeOf ordinate) degD)
+theorem descend_iterate (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (a b : ℕ) (ha : 0<a) (u : Chart → E) (n : ℕ) (c : E)
@@ -231,7 +230,7 @@ theorem descend_iterate (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducibl
       have powers : (fun s : Chart=>u s ^ (K1.p^n*K1.p)) =
           (fun s=> (u s ^ (K1.p^n))^K1.p) := funext fun s=>pow_mul (u s) _ _
       rwa [powers] at h
-    obtain ⟨v,hv,hv'⟩ := descend degD f ir lo hi bounded basis root (a*K1.p^n) (b*K1.p^n)
+    obtain ⟨v,hv,hv'⟩ := descend f ir lo hi bounded basis root (a*K1.p^n) (b*K1.p^n)
       (Nat.mul_pos ha (pow_pos KoalaBear.is_prime.pos _)) (fun s=>u s ^ (K1.p^n)) c next
     obtain ⟨d,hd,hd'⟩ := ih v hv'
     exact ⟨d,by rw [pow_succ K1.p n,pow_mul,hd,hv],hd'⟩
