@@ -211,7 +211,7 @@ theorem top_of_fraction (f : Row 4) :
   rw [FadicGate.wdeg_top_eq_degreeOf, degreeOf_eq_sup, support_fraction, ← degreeOf_eq_sup]
   rfl
 theorem envelope_bounds (f : Row 4) (p : Low6960WeightedRate.Envelope)
-    (hfit : Low6960WeightedRate.Fits p (shape f)) (hact : ActiveFits f 169) :
+    (hfit : Low6960WeightedRate.Fits p (shape f)) (hact : ActiveFits f 171) :
     p.widthLow ≤ (toFraction f).weightedTotalDegree gradeWeight ∧
       (toFraction f).weightedTotalDegree gradeWeight ≤ p.widthHigh ∧
       p.indexLow ≤ (toFraction f).weightedTotalDegree oldWeight ∧
@@ -225,7 +225,7 @@ theorem envelope_bounds (f : Row 4) (p : Low6960WeightedRate.Envelope)
   · have hg := FadicGate.taper_ge_grade (toFraction f)
     rw [grade_of_fraction] at hg
     exact h6.trans hg
-  · refine (FadicGate.taper_le (toFraction f) (shape f).b (shape f).j 169 ?_ ?_ ?_).trans h7
+  · refine (FadicGate.taper_le (toFraction f) (shape f).b (shape f).j 171 ?_ ?_ ?_).trans h7
     · intro m hm
       have := le_weightedTotalDegree gradeWeight hm
       rwa [grade_of_fraction] at this
@@ -238,7 +238,7 @@ theorem envelope_bounds (f : Row 4) (p : Low6960WeightedRate.Envelope)
 theorem select {w Γ s} (hm : Low6960Prices.Messages w Γ s)
     (surfaces : Finset (Ideal GeoJets)) (hp : ∀ P ∈ surfaces, Persistent Γ s P)
     (f : Row 4) (hf : f ≠ 0) (p : Low6960WeightedRate.Envelope)
-    (hfit : Low6960WeightedRate.Fits p (shape f)) (hact : ActiveFits f 169)
+    (hfit : Low6960WeightedRate.Fits p (shape f)) (hact : ActiveFits f 171)
     (Rt : ℕ) (plainT : ℕ → ℕ × ℕ × ℕ) (boxes : ℕ → List Entry) (loss : ℕ)
     (hcheck : ∀ N, ∑ i ∈ range N,
       max 0 ((Low6960Prices.symbolCount : ℤ) - varGateDim Low6960Prices.symbolCount

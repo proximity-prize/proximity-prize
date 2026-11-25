@@ -18,41 +18,53 @@ open RetainedLinear (GeometricallyLinear)
 open scoped Polynomial
 
 /-- Only the nonlinear marked factors of the actual high family need the
-single-determinant estimate. The protocol, scalar list, and all other cases
-are supplied by the verified 69.61 pipeline. -/
+single-determinant estimate. Works uniformly for both high-side bands. -/
 def NonlinearPrice : Prop :=
-  ∀ {u deleted} {M:Model u deleted} {Γ} (F:Family M Γ) (T:Finset K), T⊆Γ →
-    Word 179818 wordDegree M.word F.scalar T →
-    ∀ f:Curve (Polynomial L),Irreducible f → 3≤f.degreeOf ordinate → f.degreeOf ordinate<48 →
-      0<f.degreeOf parameter → height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
-      ¬GeometricallyLinear (view f) →
-      (∀ γ∈T,MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
-      T.card≤rate (f.degreeOf ordinate)*f.degreeOf parameter+(f.degreeOf ordinate-1)*f.degreeOf ordinate
+  ∀ (degD : ℕ), 0<degD → degD<179808 →
+    ∀ {u deleted} {M:Model u deleted} {Γ} (F:Family M Γ) (T:Finset K), T⊆Γ →
+      Word 179808 degD M.word F.scalar T →
+      ∀ f:Curve (Polynomial L),Irreducible f → 3≤f.degreeOf ordinate →
+        TameBand (f.degreeOf ordinate) degD →
+        0<f.degreeOf parameter → height degD f≤heightCap (f.degreeOf ordinate) degD →
+        ¬GeometricallyLinear (view f) →
+        (∀ γ∈T,MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
+        T.card≤rate (f.degreeOf ordinate)*f.degreeOf parameter+(f.degreeOf ordinate-1)*f.degreeOf ordinate
 
-theorem protocol_of_price (gates : Low6960Allocation.Gates) (price:NonlinearPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6961 ProximityPrize.SubmissionLower.Front6960Radius.p
-      ProximityPrize.SubmissionLower.Front6960Radius.q := by
-  have mono:Monotone rate:=by
-    intro e n en
-    exact Nat.sub_le_sub_right (Nat.add_le_add
-      (Nat.mul_le_mul (Nat.add_le_add_right (Nat.mul_le_mul_left 9 en) _) (Nat.sub_le_sub_right en 1))
-      (Nat.mul_le_mul_left 2 en)) 1
-  apply Lower6960.protocol_claim_of_retained gates
-  have proper (e:ℕ) (he:3≤e) (hi:e<48) : 12*e≤rate e :=
-    (by decide +kernel : ∀ i:Fin 48, 3 ≤ i.val → 12*i.val≤rate i.val) ⟨e,hi⟩ he
-  apply retained_of_tariff rate mono (by decide) proper budget
-  · intro u deleted M Γ F T sub words f ir lo hi sv cap marks
-    by_cases g:GeometricallyLinear (view f)
-    · have irr : Irreducible (view f) := (MulEquiv.irreducible_iff view).mpr ir
-      have pos : 0<(view f).natDegree := by rw [view_y];omega
-      have pure:=RetainedLinear.pure_of_geometrically_linear M.word (view f) irr pos g
-      have bound:=pure_node_price words (scalar M) (scalar_injective M).injOn (view f) irr pos pure marks
-      rw [view_z] at bound
-      exact bound.trans (Nat.add_le_add (Nat.mul_le_mul_right _ ((by decide : 18≤rate 3).trans (mono lo)))
-        (Nat.one_le_iff_ne_zero.mpr (mul_ne_zero (by omega) (by omega))))
-    · exact price F T sub words f ir lo hi sv cap g marks
+theorem rate_monotone : Monotone rate := by
+  intro e n en
+  exact Nat.sub_le_sub_right (Nat.add_le_add
+    (Nat.mul_le_mul (Nat.add_le_add_right (Nat.mul_le_mul_left 9 en) _) (Nat.sub_le_sub_right en 1))
+    (Nat.mul_le_mul_left 2 en)) 1
 
-#print axioms protocol_of_price
+theorem rate_proper (e : ℕ) (he : 3 ≤ e) (hi : e < 64) : 14 * e ≤ rate e :=
+  (by decide +kernel : ∀ i : Fin 64, 3 ≤ i.val → 14 * i.val ≤ rate i.val) ⟨e, hi⟩ he
+
+theorem factor_price_of_nonlinear (price : NonlinearPrice) : FactorPriceAt rate := by
+  intro degD hd0 hdA u deleted M Γ F T sub words f ir lo hi sv cap marks
+  by_cases g : GeometricallyLinear (view f)
+  · have irr : Irreducible (view f) := (MulEquiv.irreducible_iff view).mpr ir
+    have pos : 0<(view f).natDegree := by rw [view_y]; omega
+    have pure := RetainedLinear.pure_of_geometrically_linear M.word (view f) irr pos g
+    have hvote : CurvatureVotes.VoteScale 179808 degD 18 := by
+      apply Or.inl
+      have hle : degD ≤ 164670 := by rcases hi with ⟨_, h⟩ | ⟨_, h⟩ <;> omega
+      omega
+    have bound := pure_node_price words hdA hvote (scalar M) (scalar_injective M).injOn (view f) irr pos pure marks
+    rw [view_z] at bound
+    exact bound.trans (Nat.add_le_add (Nat.mul_le_mul_right _ ((by decide : 18≤rate 3).trans (rate_monotone lo)))
+      (Nat.one_le_iff_ne_zero.mpr (mul_ne_zero (by omega) (by omega))))
+  · exact price degD hd0 hdA F T sub words f ir lo hi sv cap g marks
+
+theorem band2_high_count (price : NonlinearPrice)
+    {u deleted} (M : Model u deleted) {Γ} (F : Family M Γ)
+    (lo : 2383 ≤ M.overhead) (hi : M.overhead ≤ 33599) :
+    Γ.card ≤ 265963255385514628 :=
+  high_count_of_retained
+    (retained_of_tariff rate rate_monotone (by decide) rate_proper budget (factor_price_of_nonlinear price))
+    M F lo hi
+
+#print axioms factor_price_of_nonlinear
+#print axioms band2_high_count
 end Lower6960.MarkedEvaluation
 
 end

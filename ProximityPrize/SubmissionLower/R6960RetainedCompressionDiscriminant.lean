@@ -117,31 +117,21 @@ theorem derivative_weighted_add_le {R : Type*} [CommRing R]
 /-- The padded derivative resultant satisfies the doubled tame-abscissa
 degree bound, including the separate contribution at infinity. -/
 theorem derivative_resultant_tame (f : Curve (Polynomial L)) (d : ℕ)
-    (lo : 2≤f.degreeOf ordinate) (hi : f.degreeOf ordinate≤47) (degree : d≤164650)
+    (lo : 2≤f.degreeOf ordinate) (ht : TameBand (f.degreeOf ordinate) d)
     (bounded : height d f≤heightCap (f.degreeOf ordinate) d) :
     2*((view f).resultant (view f).derivative (f.degreeOf ordinate)
       (f.degreeOf ordinate-1)).natDegree+2*(f.degreeOf ordinate-1)<2130706433 := by
   let e := f.degreeOf ordinate
   let P := view f
-  have caps (i : ℕ) (hi : i≤e) : (P.coeff i).natDegree+d*i≤(2*e-1)*d := by
+  have caps (i : ℕ) (hi : i≤e) : (P.coeff i).natDegree+d*i≤heightCap e d := by
     by_cases nz : P.coeff i=0
     · rw [nz,natDegree_zero,zero_add,mul_comm d i]
+      unfold heightCap
       exact Nat.mul_le_mul_right _ (by omega)
     exact (abscissa_coeff_height f d i nz).trans bounded
-  have bound := derivative_weighted_add_le P e ((2*e-1)*d) d (by omega) caps
-  have compensation : (2*e-1)*((2*e-1)*d)=d*e^2+(3*e-1)*(e-1)*d := by
-    obtain ⟨k,hk⟩ := Nat.exists_eq_add_of_le (show 1≤e from by omega)
-    rw [hk, show 2*(1+k)-1=2*k+1 by omega, show 3*(1+k)-1=3*k+2 by omega,
-      show 1+k-1=k by omega]
-    ring
-  rw [compensation] at bound
-  have R : (P.resultant P.derivative e (e-1)).natDegree≤(3*e-1)*(e-1)*d := by omega
-  have numerics : 2*((3*e-1)*(e-1)*d)+2*(e-1)<2130706433 := by
-    apply LT.lt.trans_le' _ (Nat.add_le_add
-      (Nat.mul_le_mul_left 2 (Nat.mul_le_mul (Nat.mul_le_mul
-        (Nat.sub_le_sub_right (Nat.mul_le_mul_left 3 hi) 1) (Nat.sub_le_sub_right hi 1)) degree))
-      (Nat.mul_le_mul_left 2 (Nat.sub_le_sub_right hi 1)))
-    decide +kernel
+  have bound := derivative_weighted_add_le P e (heightCap e d) d (by omega) caps
+  have R : (P.resultant P.derivative e (e-1)).natDegree≤(2*e-1)*heightCap e d-d*e^2 := by omega
+  have numerics := tame_resultant_bound (e:=e) (d:=d) lo ht
   exact (Nat.add_le_add_right (Nat.mul_le_mul_left 2 R) _).trans_lt numerics
 
 theorem derivative_resultant_nonzero (f : Curve (Polynomial L)) (ir : Irreducible f)

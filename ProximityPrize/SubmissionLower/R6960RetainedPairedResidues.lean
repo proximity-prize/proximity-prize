@@ -262,7 +262,7 @@ private theorem away_coordinate (P : (Polynomial L)) (pn : P≠0) :
   exact ⟨a,fun z=>ha (z ▸ Finset.mem_insert_self ..),
     fun v=>ha (Finset.mem_insert_of_mem (Multiset.mem_toFinset.mpr ((mem_roots pn).mpr v)))⟩
 theorem actual_good_lines {E : Type} [Field E] [Algebra ChartField E]
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<64)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0) :
     let A:=baseChart (false,false)
@@ -457,7 +457,7 @@ namespace Lower6960.RetainedRestrictionTorus
 open MonicChart (ChartField)
 open K1_14 (L)
 open MonicFourChartDescent ChartSections MonicChartLaurent ChartOverlapTests Polynomial
-open RetainedCompression (Curve ordinate view height heightCap wordDegree)
+open RetainedCompression (Curve ordinate view height heightCap TameBand)
 open scoped Polynomial
 variable {E : Type*} [Field E] [Algebra ChartField E]
 local notation "ι" => algebraMap ChartField E
@@ -556,8 +556,8 @@ private theorem lift_axis (j : Bool) (c:L) (nc:c≠0) (u:Chart→E) (v:Bool→E)
 
 /-- Only two transition differences and one crossing value are needed to detect an
 untwisted obstruction on the original four normalized charts. -/
-theorem split_of_paired_data (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
+theorem split_of_paired_data (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (hi : TameBand (f.degreeOf ordinate) degD) (bounded : height degD f≤heightCap (f.degreeOf ordinate) degD)
     (basis : PowerBasis ChartField E)
     (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) (u:Chart→E)
@@ -583,7 +583,7 @@ theorem split_of_paired_data (f : Curve (Polynomial L)) (ir : Irreducible f) (lo
   have restriction (s t : Chart) := product_residue s t x z nx nz ((u s-u t)-(l s-l t))
     ((reg s t).sub ((order_mono (into_cleared _ (edge s t)) (il s)).sub (order_mono (chart_cover s t) (il t))))
     (residual s t _ _ _ (fun i=>(ca i).trans (ax i))) (residual s t _ _ _ (fun i=>(cb i).trans (az i)))
-  obtain ⟨p,ip,eq⟩:=RetainedLineRestriction.split_of_split_on_lines f ir lo hi bounded basis root x z
+  obtain ⟨p,ip,eq⟩:=RetainedLineRestriction.split_of_split_on_lines degD f ir lo hi bounded basis root x z
     (fun s t=>u s-u t) (fun _ _ _=>by abel) l il restriction
   refine ⟨u (false,false)-p (false,false),fun s=>?_⟩
   have id : u s-(u (false,false)-p (false,false))=p s := by linear_combination eq s (false,false)

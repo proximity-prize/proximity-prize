@@ -19,6 +19,12 @@ import ProximityPrize.SubmissionLower.R6960Low6960Tiles14
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles15
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles16
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles17
+import ProximityPrize.SubmissionLower.R6960Low6960Tiles18
+import ProximityPrize.SubmissionLower.R6960Low6960Tiles19
+import ProximityPrize.SubmissionLower.R6960Low6960Tiles20
+import ProximityPrize.SubmissionLower.R6960Low6960Tiles21
+import ProximityPrize.SubmissionLower.R6960Low6960Tiles22
+import ProximityPrize.SubmissionLower.R6960Low6960Tiles23
 import ProximityPrize.SubmissionLower.R6960Front6960List
 import ProximityPrize.SubmissionLower.R6960MarkedEvaluationLedger
 import ProximityPrize.SubmissionLower.R6960Front6960Rank2
@@ -34,288 +40,6 @@ import Mathlib.RingTheory.AdjoinRoot
 import ProximityPrize.SubmissionLower.R6960MonicChartInfinityRing
 import ProximityPrize.SubmissionLower.R6960ChartIntegrality
 import Mathlib.LinearAlgebra.Basis.SMul
-
--- merged module R6960Low6960Tiles18
-section Merged_R6960Low6960Tiles18
-
-set_option Elab.async false
-set_option maxRecDepth 22000
-set_option maxHeartbeats 6000000
-
-namespace Low6960Allocation.Group18
-open K1_13 (Shape InBox)
-open K1_13_8 (Valid)
-open Compact50Cover (checks checks_join)
-
-namespace Top1
-private abbrev P := PaidBatch orders 1
-
-private def p0 : P :=
-  ⟨unpack [45104106503, 83659405335, 66463107123, 81696668163, 47303101963], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i3 : checks (tilesOf batches) 133 3 8 = true := by
-  decide +kernel
-private theorem i11 : checks (tilesOf batches) 133 11 8 = true := by
-  decide +kernel
-private theorem i19 : checks (tilesOf batches) 133 19 8 = true := by
-  decide +kernel
-private theorem i27 : checks (tilesOf batches) 133 27 8 = true := by
-  decide +kernel
-private theorem i35 : checks (tilesOf batches) 133 35 8 = true := by
-  decide +kernel
-private theorem i43 : checks (tilesOf batches) 133 43 7 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=1)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i3 (checks_join i11 (checks_join i19 (checks_join i27 (checks_join i35 (i43)))))) a ha ht hb hj
-end Top1
-
-namespace Top2
-private abbrev P := PaidBatch orders 2
-
-private def p0 : P :=
-  ⟨unpack [58040064011, 83676385311, 40659820603, 77351440911, 42991853071], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i6 : checks (tilesOf batches) 133 6 8 = true := by
-  decide +kernel
-private theorem i14 : checks (tilesOf batches) 133 14 8 = true := by
-  decide +kernel
-private theorem i22 : checks (tilesOf batches) 133 22 8 = true := by
-  decide +kernel
-private theorem i30 : checks (tilesOf batches) 133 30 8 = true := by
-  decide +kernel
-private theorem i38 : checks (tilesOf batches) 133 38 8 = true := by
-  decide +kernel
-private theorem i46 : checks (tilesOf batches) 133 46 4 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=2)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i6 (checks_join i14 (checks_join i22 (checks_join i30 (checks_join i38 (i46)))))) a ha ht hb hj
-end Top2
-
-namespace Top3
-private abbrev P := PaidBatch orders 3
-
-private def p0 : P :=
-  ⟨unpack [66613552143, 79347934247, 23463178303, 73056544271, 25811987983], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i9 : checks (tilesOf batches) 133 9 8 = true := by
-  decide +kernel
-private theorem i17 : checks (tilesOf batches) 133 17 8 = true := by
-  decide +kernel
-private theorem i25 : checks (tilesOf batches) 133 25 8 = true := by
-  decide +kernel
-private theorem i33 : checks (tilesOf batches) 133 33 8 = true := by
-  decide +kernel
-private theorem i41 : checks (tilesOf batches) 133 41 8 = true := by
-  decide +kernel
-private theorem i49 : checks (tilesOf batches) 133 49 1 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=3)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i9 (checks_join i17 (checks_join i25 (checks_join i33 (checks_join i41 (i49)))))) a ha ht hb hj
-end Top3
-
-namespace Top4
-private abbrev P := PaidBatch orders 4
-
-private def p0 : P :=
-  ⟨unpack [70891876371, 75019482155, 10561502275, 68778358283, 12943866379], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i12 : checks (tilesOf batches) 133 12 8 = true := by
-  decide +kernel
-private theorem i20 : checks (tilesOf batches) 133 20 8 = true := by
-  decide +kernel
-private theorem i28 : checks (tilesOf batches) 133 28 8 = true := by
-  decide +kernel
-private theorem i36 : checks (tilesOf batches) 133 36 8 = true := by
-  decide +kernel
-private theorem i44 : checks (tilesOf batches) 133 44 6 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=4)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i12 (checks_join i20 (checks_join i28 (checks_join i36 (i44))))) a ha ht hb hj
-end Top4
-
-namespace Top5
-private abbrev P := PaidBatch orders 5
-
-private def p0 : P :=
-  ⟨unpack [75086314519, 70623855663, 64567346679, 142919159, 73089957383], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i15 : checks (tilesOf batches) 133 15 8 = true := by
-  decide +kernel
-private theorem i23 : checks (tilesOf batches) 133 23 8 = true := by
-  decide +kernel
-private theorem i31 : checks (tilesOf batches) 133 31 8 = true := by
-  decide +kernel
-private theorem i39 : checks (tilesOf batches) 133 39 8 = true := by
-  decide +kernel
-private theorem i47 : checks (tilesOf batches) 133 47 3 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=5)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i15 (checks_join i23 (checks_join i31 (checks_join i39 (i47))))) a ha ht hb hj
-end Top5
-
-namespace Top6
-private abbrev P := PaidBatch orders 6
-
-private def p0 : P :=
-  ⟨unpack [75086383131, 57873174579, 73073248779], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i18 : checks (tilesOf batches) 133 18 8 = true := by
-  decide +kernel
-private theorem i26 : checks (tilesOf batches) 133 26 8 = true := by
-  decide +kernel
-private theorem i34 : checks (tilesOf batches) 133 34 8 = true := by
-  decide +kernel
-private theorem i42 : checks (tilesOf batches) 133 42 8 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=6)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i18 (checks_join i26 (checks_join i34 (i42)))) a ha ht hb hj
-end Top6
-
-namespace Top7
-private abbrev P := PaidBatch orders 7
-
-private def p0 : P :=
-  ⟨unpack [75036120095, 44971564087, 68811838979, 47337150979], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i21 : checks (tilesOf batches) 133 21 8 = true := by
-  decide +kernel
-private theorem i29 : checks (tilesOf batches) 133 29 8 = true := by
-  decide +kernel
-private theorem i37 : checks (tilesOf batches) 133 37 8 = true := by
-  decide +kernel
-private theorem i45 : checks (tilesOf batches) 133 45 5 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=7)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i21 (checks_join i29 (checks_join i37 (i45)))) a ha ht hb hj
-end Top7
-
-namespace Top8
-private abbrev P := PaidBatch orders 8
-
-private def p0 : P :=
-  ⟨unpack [70825107491, 36364854331], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i24 : checks (tilesOf batches) 133 24 8 = true := by
-  decide +kernel
-private theorem i32 : checks (tilesOf batches) 133 32 8 = true := by
-  decide +kernel
-private theorem i40 : checks (tilesOf batches) 133 40 8 = true := by
-  decide +kernel
-private theorem i48 : checks (tilesOf batches) 133 48 2 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=8)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i24 (checks_join i32 (checks_join i40 (i48)))) a ha ht hb hj
-end Top8
-
-namespace Top9
-private abbrev P := PaidBatch orders 9
-
-private def p0 : P :=
-  ⟨unpack [70690892839, 23463178303, 64533720575, 25879096831], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i27 : checks (tilesOf batches) 133 27 8 = true := by
-  decide +kernel
-private theorem i35 : checks (tilesOf batches) 133 35 8 = true := by
-  decide +kernel
-private theorem i43 : checks (tilesOf batches) 133 43 7 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=9)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i27 (checks_join i35 (i43))) a ha ht hb hj
-end Top9
-
-namespace Top10
-private abbrev P := PaidBatch orders 10
-
-private def p0 : P :=
-  ⟨unpack [66446325803, 14856468547, 60171647503, 17222055439], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i30 : checks (tilesOf batches) 133 30 8 = true := by
-  decide +kernel
-private theorem i38 : checks (tilesOf batches) 133 38 8 = true := by
-  decide +kernel
-private theorem i46 : checks (tilesOf batches) 133 46 4 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=10)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i30 (checks_join i38 (i46))) a ha ht hb hj
-end Top10
-
-namespace Top11
-private abbrev P := PaidBatch orders 11
-
-private def p0 : P :=
-  ⟨unpack [62134584367, 6266536003, 60171716111], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i33 : checks (tilesOf batches) 133 33 8 = true := by
-  decide +kernel
-private theorem i41 : checks (tilesOf batches) 133 41 8 = true := by
-  decide +kernel
-private theorem i49 : checks (tilesOf batches) 133 49 1 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=11)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i33 (checks_join i41 (i49))) a ha ht hb hj
-end Top11
-
-namespace Top12
-private abbrev P := PaidBatch orders 12
-
-private def p0 : P :=
-  ⟨unpack [57806065715, 51598561803, 59033099], by decide +kernel⟩
-private def batches : List P := [p0]
-private theorem i36 : checks (tilesOf batches) 133 36 8 = true := by
-  decide +kernel
-private theorem i44 : checks (tilesOf batches) 133 44 6 = true := by
-  decide +kernel
-theorem exact (a : Shape) (ha : Valid a) (ht : a.t=12)
-    (hb : a.b≤133) (hj : a.j≤49) :
-    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i36 (i44)) a ha ht hb hj
-end Top12
-
-def receipt : Receipt 18 where
-  orders := orders
-  covers := by
-    intro a ha box
-    change 3+a.b≤136 ∧ 8+a.j≤57 ∧ 2+a.t≤14 at box
-    have pos := ha.1
-    have cases : a.t=1 ∨ a.t=2 ∨ a.t=3 ∨ a.t=4 ∨ a.t=5 ∨ a.t=6 ∨ a.t=7 ∨ a.t=8 ∨ a.t=9 ∨ a.t=10 ∨ a.t=11 ∨ a.t=12 := by omega
-    rcases cases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 | h11 | h12
-    · exact Top1.exact a ha h1 (by omega) (by omega)
-    · exact Top2.exact a ha h2 (by omega) (by omega)
-    · exact Top3.exact a ha h3 (by omega) (by omega)
-    · exact Top4.exact a ha h4 (by omega) (by omega)
-    · exact Top5.exact a ha h5 (by omega) (by omega)
-    · exact Top6.exact a ha h6 (by omega) (by omega)
-    · exact Top7.exact a ha h7 (by omega) (by omega)
-    · exact Top8.exact a ha h8 (by omega) (by omega)
-    · exact Top9.exact a ha h9 (by omega) (by omega)
-    · exact Top10.exact a ha h10 (by omega) (by omega)
-    · exact Top11.exact a ha h11 (by omega) (by omega)
-    · exact Top12.exact a ha h12 (by omega) (by omega)
-end Low6960Allocation.Group18
-
-end Merged_R6960Low6960Tiles18
 
 -- merged module R6960Low6960Count
 section Merged_R6960Low6960Count
@@ -345,16 +69,21 @@ private def receipts : ∀ k : Band, Receipt k
   | ⟨16,_⟩ => Low6960Allocation.Group16.receipt
   | ⟨17,_⟩ => Low6960Allocation.Group17.receipt
   | ⟨18,_⟩ => Low6960Allocation.Group18.receipt
-  | ⟨n+19,h⟩ => absurd h (by omega)
+  | ⟨19,_⟩ => Low6960Allocation.Group19.receipt
+  | ⟨20,_⟩ => Low6960Allocation.Group20.receipt
+  | ⟨21,_⟩ => Low6960Allocation.Group21.receipt
+  | ⟨22,_⟩ => Low6960Allocation.Group22.receipt
+  | ⟨23,_⟩ => Low6960Allocation.Group23.receipt
+  | ⟨n+24,h⟩ => absurd h (by omega)
 
 private theorem receipts_orders : (fun k => (receipts k).orders) = bandOrders :=
   funext fun k => by fin_cases k <;> rfl
 
-/-- The 69.61 low count for the actual family at every positive height through 2358, given the
-payment `gates` of the gated shapes (empty band and bands `(w,3,1)`, `w ≤ 5`) by the two-cut gates. -/
+/-- The 69.62 low count for the actual family at every positive height through 2359, given the
+payment `gates` of the gated shapes by the two-cut gates. -/
 theorem count (gates : Gates) {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179818 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2358) :
-    Γ.card≤266228295297719504 := by
+    (F : P1.FamilyAt 179808 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2359) :
+    Γ.card≤265963255385514628 := by
   obtain ⟨G,gate,htab⟩ := gates
   rw [← receipts_orders] at htab
   exact count_with_receipts receipts htab gate M F lo hi
@@ -374,9 +103,9 @@ theorem low_front_count (gates : Low6960Allocation.Gates) : Front6960.c6 := by
   intro _ _ M _ F lo hi
   exact Low.count gates M F lo hi
 theorem protocol_claim (gates : Low6960Allocation.Gates)
-    (high : ∀ {u deleted Γ} (M : P1.ModelAt 33579 u deleted) (_F : P1.FamilyAt 179818 M Γ),
-      2359 ≤ M.overhead → M.overhead ≤ 33579 → Γ.card ≤ 266228295297719504) :
-    ProtocolClaim 6961 p q := by
+    (high : ∀ {u deleted Γ} (M : P1.ModelAt 33599 u deleted) (_F : P1.FamilyAt 179808 M Γ),
+      2360 ≤ M.overhead → M.overhead ≤ 33599 → Γ.card ≤ 265963255385514628) :
+    ProtocolClaim 6962 p q := by
   apply ProximityPrize.SubmissionLower.Front6960Radius.extend
   apply Front6960.of_children Front6960ListBank.scalar_list
     Front6960_1.proof Front6960_2.proof
@@ -385,33 +114,22 @@ theorem protocol_claim (gates : Low6960Allocation.Gates)
     Front6960_5.proof (low_front_count gates)
   intro _ _ M _ F lo hi
   exact high M F lo hi
-theorem protocol_claim_of_retained (gates : Low6960Allocation.Gates) (retained : RetainedCount) : ProtocolClaim 6961 p q :=
-  protocol_claim gates (fun M F lo hi => high_count_of_retained retained M F lo hi)
-#print axioms protocol_claim_of_retained
+theorem protocol_claim_of_bands (gates : Low6960Allocation.Gates)
+    (band1 : ∀ {u deleted Γ} (M : P1.ModelAt 33599 u deleted) (_F : P1.FamilyAt 179808 M Γ),
+      2360 ≤ M.overhead → M.overhead ≤ 2382 → Γ.card ≤ 265963255385514628)
+    (band2 : ∀ {u deleted Γ} (M : P1.ModelAt 33599 u deleted) (_F : P1.FamilyAt 179808 M Γ),
+      2383 ≤ M.overhead → M.overhead ≤ 33599 → Γ.card ≤ 265963255385514628) :
+    ProtocolClaim 6962 p q :=
+  protocol_claim gates fun M F lo hi => by
+    by_cases h : M.overhead ≤ 2382
+    · exact band1 M F lo h
+    · exact band2 M F (by omega) hi
 #print axioms low_front_count
 #print axioms protocol_claim
+#print axioms protocol_claim_of_bands
 end Lower6960
 
 end Merged_R6960Front6960Assembly
-
--- merged module R6960RetainedCompressionAssembly
-section Merged_R6960RetainedCompressionAssembly
-
-set_option Elab.async false
-namespace Lower6960
-
-/-- The 69.61 claim reduces to the remaining bounded-weight,
-positive-seed, nonpure marked-factor estimate. -/
-theorem protocol_claim_of_nonpure (gates : Low6960Allocation.Gates) (count : RetainedCompression.NonPureFactorPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6961
-      ProximityPrize.SubmissionLower.Front6960Radius.p
-      ProximityPrize.SubmissionLower.Front6960Radius.q :=
-  protocol_claim_of_retained gates (RetainedCompression.retained_of_nonpure count)
-
-#print axioms protocol_claim_of_nonpure
-end Lower6960
-
-end Merged_R6960RetainedCompressionAssembly
 
 -- merged module R6960RetainedLinearBase
 section Merged_R6960RetainedLinearBase
@@ -923,7 +641,7 @@ open K1_14 (L liftPoly)
 open CurvatureSquares (Ordinate)
 open RescueGeometry (Model Family)
 open RetainedShortening (Word)
-open RetainedCompression (Curve ordinate parameter height heightCap wordDegree MarkedFiber
+open RetainedCompression (Curve ordinate parameter height heightCap TameBand MarkedFiber
   PureNodes atNode NonPureFactorPrice view view_y scalar)
 open scoped Polynomial
 abbrev Seed := Fn L
@@ -1003,31 +721,26 @@ theorem pure_of_geometrically_linear (w : I→K) (P : Ordinate)
     Polynomial.map_X,← leadingCoeff_map_of_injective (incl_injective L)]
   exact formula
 def NonlinearFactorPrice : Prop :=
-  ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
-    Word 179818 wordDegree M.word F.scalar T→
-    ∀ f : Curve (Polynomial L), Irreducible f →
-      3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
-      height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
-      ¬GeometricallyLinear (view f) →
-      (∀ γ∈T, MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
-      T.card≤MarkedSheet.rate (f.degreeOf ordinate)*(f.degreeOf parameter)+
-        (f.degreeOf ordinate-1)*(f.degreeOf ordinate)
+  ∀ (degD : ℕ), 0<degD → degD<179808 →
+    ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
+      Word 179808 degD M.word F.scalar T→
+      ∀ f : Curve (Polynomial L), Irreducible f →
+        3≤f.degreeOf ordinate → TameBand (f.degreeOf ordinate) degD → 0<f.degreeOf parameter →
+        height degD f≤heightCap (f.degreeOf ordinate) degD →
+        ¬GeometricallyLinear (view f) →
+        (∀ γ∈T, MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
+        T.card≤MarkedSheet.rate (f.degreeOf ordinate)*(f.degreeOf parameter)+
+          (f.degreeOf ordinate-1)*(f.degreeOf ordinate)
 theorem nonpure_of_nonlinear (price : NonlinearFactorPrice) : NonPureFactorPrice := by
-  intro u deleted M Γ F T sub W f ir lo hi sv cap nonpure marks
-  apply price F T sub W f ir lo hi sv cap _ marks
+  intro degD hd0 hdA u deleted M Γ F T sub W f ir lo hi sv cap nonpure marks
+  apply price degD hd0 hdA F T sub W f ir lo hi sv cap _ marks
   intro linear
   apply nonpure
   have irr : Irreducible (view f) := (MulEquiv.irreducible_iff view).mpr ir
   have pos : 0<(view f).natDegree := by rw [view_y]; omega
   exact pure_of_geometrically_linear M.word _ irr pos linear
-theorem protocol_claim_of_nonlinear (gates : Low6960Allocation.Gates) (price : NonlinearFactorPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6961
-      ProximityPrize.SubmissionLower.Front6960Radius.p
-      ProximityPrize.SubmissionLower.Front6960Radius.q :=
-  Lower6960.protocol_claim_of_nonpure gates (nonpure_of_nonlinear price)
 #print axioms toSeed_irreducible
 #print axioms pure_of_geometrically_linear
-#print axioms protocol_claim_of_nonlinear
 end
 end Lower6960.RetainedLinear
 
@@ -1097,7 +810,7 @@ theorem actual_finite {E : Type*} [Field E] [Algebra (RatFunc Scalar) E]
     [Algebra (Polynomial Scalar) E] [IsScalarTower (Polynomial Scalar) (RatFunc Scalar) E]
     [Algebra.IsSeparable (RatFunc Scalar) E] [FiniteDimensional (RatFunc Scalar) E]
     [Differential (Polynomial Scalar)] [Differential E] [DifferentialAlgebra (Polynomial Scalar) E]
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
+    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<64)
     (b : PowerBasis (RatFunc Scalar) E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
     (x : E) (int : IsIntegral (Polynomial Scalar) x) :
     IsIntegral (Polynomial Scalar)
@@ -1373,24 +1086,9 @@ namespace Lower6960.MonicChart
 noncomputable section
 open Polynomial
 open K1_14 (L)
-open RetainedCompression (Curve ordinate view view_y height heightCap wordDegree abscissa_coeff_height)
+open RetainedCompression (Curve ordinate view view_y height heightCap TameBand tame_resultant_bound abscissa_coeff_height)
 open scoped Polynomial Differential
 open Lower6960.RetainedCompression (derivative_weighted_add_le)
-
-private theorem width_at_cutoff (e d : ℕ) (pos : 0<e) :
-    resultantWidth e (heightCap e d) d=(3*e-1)*(e-1)*d := by
-  have mul : d*e≤heightCap e d := by
-    unfold heightCap
-    rw [mul_comm d e]
-    exact Nat.mul_le_mul_right d (by omega)
-  have eq := resultantWidth_eq (e:=e) (d:=d) pos mul
-  have identity : (2*e-1)*heightCap e d=d*e^2+(3*e-1)*(e-1)*d := by
-    obtain ⟨k,h⟩ := Nat.exists_eq_add_of_le (show 1≤e from pos)
-    unfold heightCap
-    rw [h,show 2*(1+k)-1=2*k+1 by omega,show 3*(1+k)-1=3*k+2 by omega,
-      show 1+k-1=k by omega]
-    ring
-  omega
 
 /-- For the actual bounded projected factor, the overlap of the finite
 and infinity chart coefficients has zero derivative. The only overlap
@@ -1402,8 +1100,9 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
     [Algebra.IsSeparable (RatFunc Scalar) E] [FiniteDimensional (RatFunc Scalar) E]
     [Differential (Polynomial Scalar)] [Differential (Infinity Scalar)] [Differential E]
     [DifferentialAlgebra (Polynomial Scalar) E] [DifferentialAlgebra (Infinity Scalar) E]
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
-    (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
+    (degD : ℕ) (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
+    (hi : TameBand (f.degreeOf ordinate) degD)
+    (bounded : height degD f≤heightCap (f.degreeOf ordinate) degD)
     (b : PowerBasis (RatFunc Scalar) E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
     (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
     (overlap : y=(algebraMap (RatFunc Scalar) E RatFunc.X)^K1.p*x+z^K1.p) :
@@ -1415,7 +1114,7 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
   letI : CharP E K1.p := charP_of_injective_ringHom inE.injective K1.p
   let P := RetainedLinear.toSeed (view f)
   let e := f.degreeOf ordinate
-  let H := heightCap e wordDegree
+  let H := heightCap e degD
   have deg : P.natDegree=e := (RetainedLinear.toSeed_degree _).trans (view_y _)
   have e2 : 2≤P.natDegree := by omega
   have ep : 0<P.natDegree := by omega
@@ -1424,29 +1123,32 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
   have tame : (P.natDegree:Scalar)≠0 := by
     intro zero
     have dvd := (CharP.cast_eq_zero_iff Scalar K1.p P.natDegree).mp zero
-    exact ep.ne' (Nat.eq_zero_of_dvd_of_lt dvd (deg.symm ▸ hi.trans (by decide)))
+    exact ep.ne' (Nat.eq_zero_of_dvd_of_lt dvd (deg.symm ▸ hi.lt_p))
   have coefficient (j : ℕ) : (P.coeff j).natDegree=((view f).coeff j).natDegree := by
     unfold P RetainedLinear.toSeed
     simp only [coe_mapRingHom,coeff_map,natDegree_map_eq_of_injective (RetainedLinear.incl_injective L)]
   have weights (j : ℕ) (jle : j≤P.natDegree) :
-      (P.coeff j).natDegree+wordDegree*j≤H := by
+      (P.coeff j).natDegree+degD*j≤H := by
     rw [coefficient]
     by_cases zero : (view f).coeff j=0
-    · rw [zero,natDegree_zero,zero_add,mul_comm wordDegree]
+    · rw [zero,natDegree_zero,zero_add,mul_comm degD]
+      unfold H heightCap
       exact Nat.mul_le_mul_right _ (by omega)
-    exact (abscissa_coeff_height f wordDegree j zero).trans bounded
-  have Hfit : wordDegree*P.natDegree≤H :=
+    exact (abscissa_coeff_height f degD j zero).trans bounded
+  have Hfit : degD*P.natDegree≤H :=
     (Nat.le_add_left ..).trans (weights _ le_rfl)
-  have resBound : (paddedRes P).natDegree≤resultantWidth P.natDegree H wordDegree := by
+  have resBound : (paddedRes P).natDegree≤resultantWidth P.natDegree H degD := by
     have h := Lower6960.RetainedCompression.derivative_weighted_add_le P P.natDegree
-      H wordDegree ep weights
-    have eq := resultantWidth_eq (e:=P.natDegree) (d:=wordDegree) (H:=H) ep Hfit
+      H degD ep weights
+    have eq := resultantWidth_eq (e:=P.natDegree) (d:=degD) (H:=H) ep Hfit
     exact Nat.le_of_add_le_add_right (h.trans_eq eq.symm)
-  have room : 2*resultantWidth P.natDegree H wordDegree<K1.p := by
-    rw [deg,width_at_cutoff e wordDegree (by omega)]
-    exact (Nat.mul_le_mul_left 2 (Nat.mul_le_mul_right wordDegree
-      (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 3 (by omega : e≤47)) 1)
-       (Nat.sub_le_sub_right (by omega : e≤47) 1)))).trans_lt (by decide +kernel)
+  have room : 2*resultantWidth P.natDegree H degD<K1.p := by
+    have eq := resultantWidth_eq (e:=e) (d:=degD) (H:=H) (by omega) (deg ▸ Hfit)
+    have hsub : resultantWidth e H degD = (2*e - 1) * heightCap e degD - degD * e^2 :=
+      Nat.eq_sub_of_add_eq eq
+    have ht := tame_resultant_bound (e:=e) (d:=degD) (by omega) hi
+    rw [deg, hsub]
+    omega
   have tameA : (P.natDegree:(Polynomial Scalar))≠0 := by
     simpa only [map_natCast] using
       (map_ne_zero_iff (Polynomial.C : Scalar→+*(Polynomial Scalar)) Polynomial.C_injective).mpr tame
@@ -1466,7 +1168,7 @@ theorem actual_coboundary_zero {E : Type*} [Field E] [DecidableEq (RatFunc Scala
   have dimension : P.natDegree=b.dim :=
     (natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) (RatFunc Scalar)) P).symm.trans
       (size.trans b.natDegree_minpoly)
-  exact common_coboundary_zero_generic b P H wordDegree K1.p prim e2 dimension tame weights
+  exact common_coboundary_zero_generic b P H degD K1.p prim e2 dimension tame weights
     resBound room resNZ root x y z fx iy overlap
 
 #print axioms actual_coboundary_zero

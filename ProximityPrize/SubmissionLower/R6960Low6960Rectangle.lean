@@ -25,7 +25,7 @@ open Final50PriceMass (check check_sum mass_eq)
 open P3_6_8_1 (sumBelow)
 open scoped BigOperators Classical
 
-abbrev Band := Fin 19
+abbrev Band := Fin 24
 abbrev empty : Band := 0
 
 structure BandData where
@@ -38,24 +38,29 @@ structure BandData where
 private def bands : List BandData :=
   [
     ⟨0,0,0,0,0⟩,
-    ⟨1,1,3,1,1952879554821531⟩,
-    ⟨2,2,3,1,1952879554821531⟩,
-    ⟨3,3,3,1,1952879554821531⟩,
-    ⟨4,4,3,1,2264030333312493⟩,
-    ⟨5,5,3,1,2582480582752554⟩,
-    ⟨6,14,3,1,6129519605442608⟩,
-    ⟨15,26,3,1,14739727222783944⟩,
-    ⟨2,17,4,1,16005524698995846⟩,
-    ⟨18,24,4,1,24305329798473406⟩,
-    ⟨2,21,5,1,35451803568510358⟩,
-    ⟨2,17,6,1,40788674056635002⟩,
-    ⟨2,11,6,2,95236959055413996⟩,
-    ⟨12,17,6,2,145986486282605231⟩,
-    ⟨3,12,7,1,39934370655593437⟩,
-    ⟨3,10,7,2,136003299584452471⟩,
-    ⟨11,12,7,2,160254426018254432⟩,
-    ⟨3,4,8,1,37796815539383397⟩,
-    ⟨3,4,8,2,159588895902744127⟩
+    ⟨1,1,3,1,2082656172124625⟩,
+    ⟨2,2,3,1,2082656172124625⟩,
+    ⟨3,3,3,1,2082656172124625⟩,
+    ⟨4,4,3,1,2407398541906984⟩,
+    ⟨5,5,3,1,2739440492051523⟩,
+    ⟨6,6,3,1,3080918482369562⟩,
+    ⟨7,7,3,1,3433968972672420⟩,
+    ⟨8,14,3,1,6408815028518270⟩,
+    ⟨2,4,4,1,4840199963582061⟩,
+    ⟨15,26,3,1,15182194834598135⟩,
+    ⟨5,17,4,1,16654659875432426⟩,
+    ⟨18,24,4,1,25172336815728545⟩,
+    ⟨2,21,5,1,36810984112391687⟩,
+    ⟨2,18,6,1,44809383679300253⟩,
+    ⟨2,8,6,2,74014124830343166⟩,
+    ⟨9,12,6,2,107444623972593638⟩,
+    ⟨13,15,6,2,133508341055216834⟩,
+    ⟨16,18,6,2,160677742451767466⟩,
+    ⟨3,12,7,1,41550007179061313⟩,
+    ⟨3,8,7,2,116483475873067137⟩,
+    ⟨9,12,7,2,166438983552168570⟩,
+    ⟨3,4,8,1,39346946759283370⟩,
+    ⟨3,4,8,2,165806435271283485⟩
   ]
 
 def band (k : Band) : BandData := bands.get ⟨k.val,k.isLt⟩
@@ -102,14 +107,14 @@ theorem admits_fee {k : Band} {r : Shape} (hr : Admits k r) :
   rw [hr.2.2.1,hr.2.2.2]
   exact checked_reserve k ⟨r.b,hr.2.1.trans_lt hm⟩ hr.1 hr.2.1
 
-abbrev budget : ℕ := 266228295297579504
+abbrev budget : ℕ := 265963255385374628
 
 def factorCap (top : ℕ) : ℕ := budget-Low6960Prices.lowerCap top
 
 def pricingWeight (k : Band) (b j t : ℕ) : ℕ :=
   if k=empty then Low6960AllocWeight.weight b j t else j
 
-def pricingDenom (k : Band) : ℕ := if k=empty then 364 else 57-(start k).j
+def pricingDenom (k : Band) : ℕ := if k=empty then 486 else 58-(start k).j
 
 def allowance (k : Band) (top b j t : ℕ) : ℕ :=
   (factorCap top-reserve k)*pricingWeight k b j t/pricingDenom k
@@ -173,8 +178,14 @@ theorem order_valid {k : Band} (cells : List (MassCell k)) (x : Shape) : order c
 theorem layer_le_available {r y : Shape} {L : ℕ}
     (hr : r=zeroShape ∨ 0<r.j) (hj : 0<r.j+y.j) :
     (∑ k∈range layerCount,layerTerm r y L k)≤availableMass r y L := by
-  apply le_trans _ (Final50PriceLayer.layerSum_le_available hr hj)
-  exact sum_le_sum_of_subset (range_mono (by decide +kernel))
+  let N := max layerCount (L + 1650 / (r.j + y.j))
+  rw [← Final50PriceLayer.availableMass_eq_sum hr hj (N := N) (le_max_right _ _)]
+  refine K1_13_8.sum_range_mono (le_max_left _ _) fun k _ => ?_
+  unfold Final50PriceLayer.layerTerm Final50PriceLayer.fastLayer Final50Price.remaining
+  split
+  · exact min_le_left _ _
+  · rw [← P0_9_8.symbol_count]
+    exact min_le_right _ _
 
 #print axioms choose_band
 #print axioms order_valid
@@ -271,7 +282,7 @@ theorem four {k : Band} {cells : List (MassCell k)} {a : Shape} {bl jl bh jh t l
     (h : PaidFour cells t bl jl bh jh l)
     (hb : bl ≤ a.b) (hj : jl ≤ a.j) (hb' : a.b ≤ bh) (hj' : a.j ≤ jh)
     (ht : a.t = t) (ha : 3 * a.t ≤ a.j) :
-    ∃ l, 0 < l ∧ l ≤ order cells a ∧ contractedPrice a (start k) l 169 ≤
+    ∃ l, 0 < l ∧ l ≤ order cells a ∧ contractedPrice a (start k) l 171 ≤
       allowance k ((start k).t+a.t) a.b a.j a.t := by
   obtain ⟨hl, hlo, hq, hbill⟩ := h
   have hu : l ≤ order cells a := hlo.trans (order_mono cells hb hj)
@@ -293,7 +304,7 @@ theorem four {k : Band} {cells : List (MassCell k)} {a : Shape} {bl jl bh jh t l
       cutPrice ⟨bh,jh,t⟩ l 32 (fourSurface (Shape.chamber ⟨bh,jh,t⟩) (hullOf k l)) := by
     rw [cut_eq, cut_eq]
     exact charge_mono hbox ha hi l 32 hsurf
-  have hc : contractedPrice a (start k) l 169 ≤ cutPrice a l 32 (fourSurface a.chamber (hullOf k l)) := by
+  have hc : contractedPrice a (start k) l 171 ≤ cutPrice a l 32 (fourSurface a.chamber (hullOf k l)) := by
     unfold contractedPrice
     dsimp only
     rw [if_pos hq]

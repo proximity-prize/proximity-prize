@@ -608,16 +608,16 @@ open CJ0 (ShapeOK mem_fullBox Jet fullBox Surplus AgreementOK SilentTail)
 open scoped BigOperators
 
 theorem native_shape : ShapeOK source := by
-  have hmem := mem_fullBox (B := 78) (J := 24) (C := 10) (by decide) (by decide)
+  have hmem := mem_fullBox (B := 80) (J := 24) (C := 10) (by decide) (by decide)
   refine ⟨by decide, by decide, by decide, by decide, by decide, fun j hj => (hmem j).mp hj, ?_⟩
   intro j hj hpos
   obtain ⟨hq, hv, hc⟩ := (hmem j).mp hj
   apply (hmem _).mpr
   refine ⟨?_, hv, hc⟩
-  change j.a-1 + j.b + j.c ≤ 78
+  change j.a-1 + j.b + j.c ≤ 80
   unfold Jet.q at hq
   omega
-private def runLength (c b : ℕ) := 78 - (b+c) + 1
+private def runLength (c b : ℕ) := 80 - (b+c) + 1
 private def bRange (c : ℕ) := range (24 - 2*c + 1)
 private def countRow (c : ℕ) := ∑ b ∈ bRange c, runLength c b
 private def totalRow (c : ℕ) := ∑ b ∈ bRange c,
@@ -635,43 +635,43 @@ private theorem box_total : (∑ j ∈ source.E, j.q) = ∑ c ∈ range 11, tota
 private theorem box_index : (∑ j ∈ source.E, j.v) = ∑ c ∈ range 11, indexRow c := by
   simp only [source, fullBox, sum_sigma, indexRow, bRange, runLength, Jet.v, Jet.b, Jet.c,
     sum_const, card_range, smul_eq_mul]
-private theorem row0 : countRow 0 = 1675 ∧ totalRow 0 = 74725 ∧ indexRow 0 = 18800 := by decide +kernel
-private theorem row1 : countRow 1 = 1541 ∧ totalRow 1 = 68839 ∧ indexRow 1 = 19021 := by decide +kernel
-private theorem row2 : countRow 2 = 1407 ∧ totalRow 2 = 62930 ∧ indexRow 2 = 18928 := by decide +kernel
-private theorem row3 : countRow 3 = 1273 ∧ totalRow 3 = 57000 ∧ indexRow 3 = 18525 := by decide +kernel
-private theorem row4 : countRow 4 = 1139 ∧ totalRow 4 = 51051 ∧ indexRow 4 = 17816 := by decide +kernel
-private theorem row5 : countRow 5 = 1005 ∧ totalRow 5 = 45085 ∧ indexRow 5 = 16805 := by decide +kernel
-private theorem row6 : countRow 6 = 871 ∧ totalRow 6 = 39104 ∧ indexRow 6 = 15496 := by decide +kernel
-private theorem row7 : countRow 7 = 737 ∧ totalRow 7 = 33110 ∧ indexRow 7 = 13893 := by decide +kernel
-private theorem row8 : countRow 8 = 603 ∧ totalRow 8 = 27105 ∧ indexRow 8 = 12000 := by decide +kernel
-private theorem row9 : countRow 9 = 469 ∧ totalRow 9 = 21091 ∧ indexRow 9 = 9821 := by decide +kernel
-private theorem row10 : countRow 10 = 335 ∧ totalRow 10 = 15070 ∧ indexRow 10 = 7360 := by decide +kernel
+private theorem row0 : countRow 0 = 1725 ∧ totalRow 0 = 78700 ∧ indexRow 0 = 19400 := by decide +kernel
+private theorem row1 : countRow 1 = 1587 ∧ totalRow 1 = 72496 ∧ indexRow 1 = 19619 := by decide +kernel
+private theorem row2 : countRow 2 = 1449 ∧ totalRow 2 = 66269 ∧ indexRow 2 = 19516 := by decide +kernel
+private theorem row3 : countRow 3 = 1311 ∧ totalRow 3 = 60021 ∧ indexRow 3 = 19095 := by decide +kernel
+private theorem row4 : countRow 4 = 1173 ∧ totalRow 4 = 53754 ∧ indexRow 4 = 18360 := by decide +kernel
+private theorem row5 : countRow 5 = 1035 ∧ totalRow 5 = 47470 ∧ indexRow 5 = 17315 := by decide +kernel
+private theorem row6 : countRow 6 = 897 ∧ totalRow 6 = 41171 ∧ indexRow 6 = 15964 := by decide +kernel
+private theorem row7 : countRow 7 = 759 ∧ totalRow 7 = 34859 ∧ indexRow 7 = 14311 := by decide +kernel
+private theorem row8 : countRow 8 = 621 ∧ totalRow 8 = 28536 ∧ indexRow 8 = 12360 := by decide +kernel
+private theorem row9 : countRow 9 = 483 ∧ totalRow 9 = 22204 ∧ indexRow 9 = 10115 := by decide +kernel
+private theorem row10 : countRow 10 = 345 ∧ totalRow 10 = 15865 ∧ indexRow 10 = 7580 := by decide +kernel
 private theorem sum_rows (f : ℕ → ℕ) : (∑ i ∈ range 11, f i) =
     f 0 + f 1 + f 2 + f 3 + f 4 + f 5 + f 6 + f 7 + f 8 + f 9 + f 10 := by simp only [sum_range_succ, sum_range_zero, zero_add]
-theorem moments : source.E.card = 11055 ∧ (∑ j ∈ source.E, j.q) = 495110 ∧
-    (∑ j ∈ source.E, j.v) = 168465 := by
+theorem moments : source.E.card = 11385 ∧ (∑ j ∈ source.E, j.q) = 521345 ∧
+    (∑ j ∈ source.E, j.v) = 173635 := by
   refine ⟨?_, ?_, ?_⟩
   · rw [box_count, sum_rows, row0.1, row1.1, row2.1, row3.1, row4.1, row5.1, row6.1, row7.1, row8.1, row9.1, row10.1]
   · rw [box_total, sum_rows, row0.2.1, row1.2.1, row2.2.1, row3.2.1, row4.2.1, row5.2.1, row6.2.1, row7.2.1, row8.2.1, row9.2.1, row10.2.1]
   · rw [box_index, sum_rows, row0.2.2, row1.2.2, row2.2.2, row3.2.2, row4.2.2, row5.2.2, row6.2.2, row7.2.2, row8.2.2, row9.2.2, row10.2.2]
 
-theorem surplus : Surplus 179818 source 184686 := by
+theorem surplus : Surplus 179808 source 200031 := by
   obtain ⟨hT, hQ, hV⟩ := moments
   unfold Surplus
   rw [hT, hQ, hV]
-  exact (by decide +kernel : 262144*184686+131071*495110 < 57*179818*11055+168465)
+  exact (by decide +kernel : 262144*200031+131071*521345 < 59*179808*11385+173635)
 
-private theorem list_price : StructuralList.tariff 179818 source = 8609338830670119 := by decide +kernel
+private theorem list_price : StructuralList.tariff 179808 source = 8874293514617645 := by decide +kernel
 
-theorem scalar_list : CJ0.ScalarList 179818 8609338830670119 := by
-  have agr : AgreementOK 179818 := ⟨by decide, by decide, by decide, by decide⟩
-  have tail : SilentTail source 79 := by
+theorem scalar_list : CJ0.ScalarList 179808 8874293514617645 := by
+  have agr : AgreementOK 179808 := ⟨by decide, by decide, by decide, by decide⟩
+  have tail : SilentTail source 81 := by
     intro j hj hcut
-    have hq : j.q ≤ 78 := (native_shape.support j hj).1
+    have hq : j.q ≤ 80 := (native_shape.support j hj).1
     omega
   have h := StructuralList.scalar_list_of_shortening ShortenChart.shortenChart
-    179818 source 184686 agr (by decide) native_shape (by decide) (by decide) surplus
-    (Or.inr ⟨79, le_rfl, tail, prefix_bound⟩)
+    179808 source 200031 agr (by decide) native_shape (by decide) (by decide) surplus
+    (Or.inr ⟨81, le_rfl, tail, prefix_bound⟩)
   rwa [list_price] at h
 
 #print axioms scalar_list

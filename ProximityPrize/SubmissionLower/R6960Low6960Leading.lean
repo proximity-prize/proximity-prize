@@ -341,7 +341,7 @@ private theorem single_mem_box (s : Shape) (h : ℕ)
 theorem lastExponents_single (i : Fin 4) : Finsupp.single i 1 ∈ (lastExponents top) :=
   single_mem_box (lastBox top) taylorLength
     (show 1 ≤ (lastBox top).b by fin_cases top <;> decide) (show 2 ≤ (lastBox top).j by fin_cases top <;> decide)
-    (show 1 ≤ (lastBox top).t by fin_cases top <;> decide) (show 1 ≤ 133430 by decide) i
+    (show 1 ≤ (lastBox top).t by fin_cases top <;> decide) (show 1 ≤ 133431 by decide) i
 private theorem cut_regular {f : Row 3} (hf : Irreducible f) (hw : ¬ Whole f) :
     IsLeftRegular
       (Ideal.Quotient.mk (Ideal.span {genericRow f}) (genericRow (oldCut f))) := by
@@ -1370,7 +1370,7 @@ private theorem mem_shifted {P : Set ExponentSpace} (h0 : 0 ∈ P)
   · simp [bounds, K1_13_5_4_2_5_2_2.support, topSupport, form_fun]
   all_goals rw [hlow _ (by decide)]; simp [bounds]
 private theorem form_bounded {P : Set ExponentSpace} (hsub : P ⊆ capBody lowBox 0)
-    {x : ExponentSpace} (hx : x ∈ P) (i : Fin 6) : |form i x| ≤ 272 := by
+    {x : ExponentSpace} (hx : x ∈ P) (i : Fin 6) : |form i x| ≤ 276 := by
   have hp := hsub hx
   have h0 := hp.1 0
   have h1 := hp.1 1
@@ -1389,21 +1389,21 @@ private theorem shiftedCap_error {P : Set ExponentSpace} (hP : FirstBody P) (hsu
     obtain ⟨v, hv, rfl⟩ := hP.polytope
     exact hv.isCompact_convexHull ℝ
   choose pt hpt heq hmax using support_attains hc hP.zero_mem
-  have hsup (i : Fin 6) : K1_13_5_4_2_5_2_2.support P i ≤ 272 :=
+  have hsup (i : Fin 6) : K1_13_5_4_2_5_2_2.support P i ≤ 276 :=
     (heq i).symm.trans_le ((le_abs_self _).trans (form_bounded hsub (hpt i) i))
-  let R : ℝ := (s.b : ℝ) + (h : ℝ) + 272
-  let coeff (p : Pair) : ℝ := |(slabMatrix p).det⁻¹| * 4 * R^2 * 272^2
+  let R : ℝ := (s.b : ℝ) + (h : ℝ) + 276
+  let coeff (p : Pair) : ℝ := |(slabMatrix p).det⁻¹| * 4 * R^2 * 276^2
   have hR : 0 ≤ R := by positivity
   refine ⟨∑ p, coeff p, ?_⟩
   have htop' : (0 : ℝ) < (s.t : ℝ) := by exact_mod_cast htop
-  have hsmall : ∀ᶠ t : ℝ in 𝓝[Set.Ioi 0] (0 : ℝ), t < (s.t : ℝ) / 272 :=
-    nhdsWithin_le_nhds (Iio_mem_nhds (div_pos htop' (by norm_num : (0 : ℝ) < 272)))
+  have hsmall : ∀ᶠ t : ℝ in 𝓝[Set.Ioi 0] (0 : ℝ), t < (s.t : ℝ) / 276 :=
+    nhdsWithin_le_nhds (Iio_mem_nhds (div_pos htop' (by norm_num : (0 : ℝ) < 276)))
   have hone : ∀ᶠ t : ℝ in 𝓝[Set.Ioi 0] (0 : ℝ), t < 1 :=
     nhdsWithin_le_nhds (Iio_mem_nhds (by norm_num : (0 : ℝ) < 1))
   filter_upwards [eventually_mem_nhdsWithin (a := (0 : ℝ)) (s := Ioi 0), hone, hsmall]
       with t ht ht1 hts
   have ht' : 0 < t := ht
-  let e : ℝ := t * 272
+  let e : ℝ := t * 276
   have he : 0 ≤ e := by positivity
   let S := shiftedCap P s h t
   let C := t • P + capBody s h
@@ -1423,7 +1423,7 @@ private theorem shiftedCap_error {P : Set ExponentSpace} (hP : FirstBody P) (hsu
     intro x hx
     obtain ⟨hn, hb, _, _, hh⟩ := (show x ∈ K1_13_5_4_2_5_2_2.realCap _ _ _ _ from hx)
     have htotal : totalSupport P = K1_13_5_4_2_5_2_2.support P 0 := by simp [totalSupport, K1_13_5_4_2_5_2_2.support, form_fun]
-    have hbx : x 0 + x 1 + x 2 ≤ (s.b : ℝ) + t * 272 := by
+    have hbx : x 0 + x 1 + x 2 ≤ (s.b : ℝ) + t * 276 := by
       rw [htotal] at hb
       exact hb.trans (add_le_add_right (mul_le_mul_of_nonneg_left (hsup 0) ht'.le) _)
     refine ⟨hn, fun i => ?_⟩
@@ -1477,7 +1477,7 @@ private theorem shiftedCap_error {P : Set ExponentSpace} (hP : FirstBody P) (hsu
         push Not at hn
         obtain ⟨rfl, rfl⟩ := hn
         simp [bounds, form_apply] at hi hlo
-        linarith [show e < (s.t : ℝ) from (lt_div_iff₀ (by norm_num : (0 : ℝ) < 272)).mp hts]
+        linarith [show e < (s.t : ℝ) from (lt_div_iff₀ (by norm_num : (0 : ℝ) < 276)).mp hts]
     refine Or.inr (mem_iUnion.mpr ⟨(i,j), ?_⟩)
     change x ∈ slabRegion _ _ _ _
     simp only [slabRegion, hpar, ↓reduceIte, mem_preimage, slabMap_apply]
@@ -2128,13 +2128,13 @@ theorem stable_taylor {f : Row 3} {P : Ideal (GeoRow 3)}
     rw [localTaylor, natDegree_taylor, natDegree_le_iff_coeff_eq_zero]
     intro j hj
     have hsmall : 3 ≤ j := by
-      change 133429 < j at hj
+      change 133430 < j at hj
       omega
     obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le hsmall
     rw [Nat.add_comm 3 n, centred, coeff_jetPolynomial]
     have hn : taylorLength - 3 ≤ n := by
-      change 133429 < 3 + n at hj
-      change 133427 ≤ n
+      change 133430 < 3 + n at hj
+      change 133428 ≤ n
       omega
     have hz : localJet f P (n + 3) = 0 := by
       rw [localJet, chart_zero f P (numerator_mem h hcut hn), mul_zero, zero_mul, zero_mul]
@@ -2176,7 +2176,7 @@ open Low6960Prices (physicalDegree taylorLength)
 open Low6960Leading_1 (Coefficients coefficientPoint coefficientPolynomial oldCutIdeal mem_properComponents)
 open Polynomial MvPolynomial
 private theorem length_le : taylorLength ≤ K1_13.taylorLength := by
-  change 133430 ≤ 133672
+  change 133431 ≤ 133672
   decide
 private def pad {m n : ℕ} (a : Fin m → GeometricX) (i : Fin n) : GeometricX :=
   if h : i.val < m then a ⟨i.val, h⟩ else 0
@@ -2304,7 +2304,7 @@ theorem proof : Low6960Leading_1.c2 top := by
     have hr : RegularAt 2 (f i) S :=
       ⟨genericCoeff_injective (he.trans genericCoeff.map_zero.symm),
         fun h => hn (by rw [show K1_13.atJet (separant (f i)) S = 0 from h, map_zero])⟩
-    have hS' : S.natDegree ≤ 133671 := hS.trans (by change 133429 ≤ 133671; decide)
+    have hS' : S.natDegree ≤ 133671 := hS.trans (by change 133430 ≤ 133671; decide)
     have hres := hmem (reconstructAt (f i) (jetPoint S)) ⟨jetPoint S, hy, rfl⟩
     rw [reconstructAt_mark (f i) S hS' hr] at hres
     exact hres
@@ -2616,10 +2616,10 @@ private theorem coeffPoint_injOn {w Γ s} (h : Messages w Γ s) :
   · exact embed.injective (by simpa [coeffPoint] using congrFun heq ⟨j, hj⟩)
   · change ¬ j < 133672 at hj
     rw [Polynomial.coeff_eq_zero_of_natDegree_lt (p := s γ) (by
-          have hdeg : (s γ).natDegree ≤ 133429 := h.degree γ hγ
+          have hdeg : (s γ).natDegree ≤ 133430 := h.degree γ hγ
           omega),
         Polynomial.coeff_eq_zero_of_natDegree_lt (p := s η) (by
-          have hdeg : (s η).natDegree ≤ 133429 := h.degree η hη
+          have hdeg : (s η).natDegree ≤ 133430 := h.degree η hη
           omega)]
 private theorem zeroDim_count {w Γ s} (h : Messages w Γ s) (P : Ideal CoeffRing)
     (hdim : (affineHilbertPolynomial P).natDegree = 0)
@@ -2653,7 +2653,7 @@ private theorem section_count {w Γ s} (h : Messages w Γ s) {P : Ideal CoeffRin
   let U := Γ.filter fun γ => (s γ).eval x = a
   let part (Q : Ideal CoeffRing) := U.filter fun γ => coeffPoint (extend (s γ)) ∈ zeroLocus Geom Q
   have hdegree (γ : K) (hγ : γ ∈ Γ) : (s γ).natDegree ≤ 133671 :=
-    (h.degree γ hγ).trans (by decide : 133429 ≤ 133671)
+    (h.degree γ hγ).trans (by decide : 133430 ≤ 133671)
   have hproper : cut ∉ P := by
     obtain ⟨γ, hγ, hv⟩ := hmiss
     intro hm
@@ -2751,7 +2751,7 @@ private theorem degree_trajectory {F : Type} [Field F] (k : Geom →+* F) {U : (
       (Nat.sub_le_sub_right (Nat.le_of_lt_succ hU) _))
   exact (Polynomial.natDegree_mul_le_of_le Polynomial.natDegree_map_le hprod).trans (hf m hm)
 private theorem separant_regular_contracted (f : Row 3) (hf : Irreducible f) (hd : 0 < f.degreeOf 2)
-    (hmax : f.degreeOf 2 ≤ 28) : freshRow (separant f) ∉ chartIdeal f := by
+    (hmax : f.degreeOf 2 ≤ 29) : freshRow (separant f) ∉ chartIdeal f := by
   change separant f ∉ (chartIdeal f).comap rowMap
   rw [chart_contract f hf hd]
   have : CharP Geom K1.p := charP_of_injective_ringHom embed.injective K1.p
@@ -2760,7 +2760,7 @@ private theorem separant_regular_contracted (f : Row 3) (hf : Irreducible f) (hd
   have hcast : (f.degreeOf 2 : (Polynomial Geom)) ≠ 0 := by
     intro h
     have hp := (CharP.cast_eq_zero_iff (Polynomial Geom) K1.p (f.degreeOf 2)).mp h
-    exact (not_le_of_gt (hmax.trans_lt (by decide : 28 < K1.p))) (Nat.le_of_dvd hd hp)
+    exact (not_le_of_gt (hmax.trans_lt (by decide : 29 < K1.p))) (Nat.le_of_dvd hd hp)
   have hsep : separant f ≠ 0 := MvPolynomial.pderiv_ne_zero_of_natCast_ne_zero 2 f hcast
   intro hmem
   obtain ⟨g, hg⟩ := Ideal.mem_span_singleton.mp hmem
@@ -2773,7 +2773,7 @@ private theorem separant_regular_contracted (f : Row 3) (hf : Irreducible f) (hd
   change (separant f).degreeOf 2 ≤ f.degreeOf 2 - 1 at hdeg
   omega
 theorem chart_of_whole (f : Row 3) (hf : Irreducible f)
-    (hd : 0 < f.degreeOf 2) (hmax : f.degreeOf 2 ≤ 28)
+    (hd : 0 < f.degreeOf 2) (hmax : f.degreeOf 2 ≤ 29)
     (hw : TrueWeightLE f anchorCutoff) (hwhole : Whole f) :
     ∃ P : Ideal CoeffRing, FreshChart P (freshRow f) (freshRow (separant f)) ∧
       LowSupport P ∧ ∀ S : (Polynomial Geom), S.natDegree ≤ physicalDegree → RegularAt 2 f S →
@@ -3011,16 +3011,16 @@ theorem proof : Low6960Leading.c2 top := by
   classical
   intro w Γ s hm n f hf hcover
   let part (i : Fin n) := Γ.filter fun γ => RegularAt 2 (f i) (extend (s γ)) ∧ Whole (f i)
-  let cap (i : Fin n) := 133429 * (f i).totalDegree
+  let cap (i : Fin n) := 133430 * (f i).totalDegree
   have hsub (i : Fin n) : part i ⊆ Γ := filter_subset _ _
   have hlocal (i : Fin n) : NodeCapacity w (part i) s (cap i) := by
     by_cases hi : Whole (f i)
-    · have htop : (f i).degreeOf 2 ≤ 28 :=
+    · have htop : (f i).degreeOf 2 ≤ 29 :=
         (single_le_sum (f := fun j => (f j).degreeOf 2) (fun _ _ => Nat.zero_le _) (mem_univ i)).trans
           (hf.coordinate.trans (by fin_cases top <;> decide))
       obtain ⟨P, hp, hsupport, hall⟩ := chart_of_whole _ (hf.irreducible i) (hf.positive i) htop (hf.weight i) hi
       obtain ⟨hdim, hdeg⟩ := chart_degree _ _ _ hp hsupport
-      change 2 * affineDegree P ≤ (133429 : ℚ) * ((freshRow (f i)).totalDegree : ℚ) at hdeg
+      change 2 * affineDegree P ≤ (133430 : ℚ) * ((freshRow (f i)).totalDegree : ℚ) at hdeg
       apply surface_nodeCapacity (hm.mono (hsub i)) hp.prime hdim
       · intro γ hγ
         have hγΓ := hsub i hγ
@@ -3044,7 +3044,7 @@ theorem proof : Low6960Leading.c2 top := by
       _ ≤ ∑ i, (f i).totalDegree := sum_le_sum fun i _ =>
         (hf.positive i).trans_le (degreeOf_le_totalDegree _ _)
       _ ≤ Low6960Prices.lowerWidth top := hf.total
-  · change (∑ i, 133429 * (f i).totalDegree) ≤ 133429 * Low6960Prices.lowerWidth top
+  · change (∑ i, 133430 * (f i).totalDegree) ≤ 133430 * Low6960Prices.lowerWidth top
     rw [← mul_sum]
     exact Nat.mul_le_mul_left _ hf.total
 end

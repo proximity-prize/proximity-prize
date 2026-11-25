@@ -159,7 +159,7 @@ private def firstReceipt : Receipt first :=
     20130931984877, by decide, by decide, FadicGate.Final54W0.loss,
     fun _ h h' => KoalaFarBridge.FarCharge0.fits h h', KoalaFarBridge.FarCharge0.tail⟩
 
-private theorem cut {w Γ s} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFactor f) (hact : ActiveFits f 169)
+private theorem cut {w Γ s} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFactor f) (hact : ActiveFits f 171)
     {p : Envelope} (d : Receipt p) (u : Rate) (hu : Pays p (shape f) u) :
     Low6960WeightedTally.Cut (Γ := Γ) (s := s) f u (Low6960WeightedCut.order f (u.split+1)) := by
   intro P hP hs
@@ -184,13 +184,13 @@ private theorem cut {w Γ s} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFacto
         (KoalaFarBridge.depth_at _ hd ha hbox) hEq hproper
         (restrictSupport_mono _ (FadicGate.taperBox_subset_slopeBox _ _ _ _) hC) P hs hcontact
 
-theorem count {w Γ s} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFactor f) (hact : ActiveFits f 169)
+theorem count {w Γ s} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFactor f) (hact : ActiveFits f 171)
     (hon : ∀ γ ∈ Γ, K1_13.OnFactor f (K1_13.extend (s γ))) (l : ℕ) (hl : 0 < l) (hcut : ProperCut f Γ s l)
     (u : Rate) (hu : Low6960WeightedRate.Allowed (shape f) u) (hn : ¬ Low6960SharedPrice.RateFits (shape f) u) :
-    Γ.card ≤ Low6960SharedPrice.price (shape f) l 169 u := by
+    Γ.card ≤ Low6960SharedPrice.price (shape f) l 171 u := by
   have h (p : Envelope) (d : Receipt p) (paid : Pays p (shape f) u) :
-      Γ.card ≤ Low6960SharedPrice.price (shape f) l 169 u := by
-    apply Low6960WeightedTally.count hm f hf 169 hact hon l hl hcut u paid.2.1 paid.2.2.2.2.1
+      Γ.card ≤ Low6960SharedPrice.price (shape f) l 171 u := by
+    apply Low6960WeightedTally.count hm f hf 171 hact hon l hl hcut u paid.2.1 paid.2.2.2.2.1
       (Low6960WeightedCut.order f (u.split+1))
     · intro q hq hmem
       exact (Low6960WeightedCut.order_spec f _ (by omega) q hq hmem).2
@@ -222,12 +222,12 @@ open Low6960AllocTotal (retainedShape)
 open Low6960RetainedCut (Bank)
 open scoped BigOperators Polynomial
 
-private theorem start_floor (k : Band) (hk : k.val < 6) : floorShape k.val = start k := by
+private theorem start_floor (k : Band) (hk : k.val < 10) : floorShape k.val = start k := by
   fin_cases k <;> first | (exfalso; revert hk; decide) | decide +kernel
 
 private theorem allocation (receipts : ∀ k : Band, Receipt k) {G : Shape → ℕ}
     (htab : GateTable (fun k => (receipts k).orders) G) :
-    Low6960RetainedCut.Allocation budget 169 G := by
+    Low6960RetainedCut.Allocation budget 171 G := by
   intro w Γ s hmsg top htop E d
   let f := d.f
   let l := d.orders
@@ -239,7 +239,7 @@ private theorem allocation (receipts : ∀ k : Band, Receipt k) {G : Shape → �
       retainedShape (fun i=>shape (f i)) l := by
     rw [hz]
     rfl
-  have active (i : Fin d.n) : ActiveFits (f i) 169 := (Final50GeoCover.activeFits_iff _ _).mpr
+  have active (i : Fin d.n) : ActiveFits (f i) 171 := (Final50GeoCover.activeFits_iff _ _).mpr
     ((Finset.single_le_sum (fun j _=>Nat.zero_le (Final50GeoCover.activeDegree (f j)))
       (Finset.mem_univ i)).trans d.active_budget)
   have count : (∑ i,(parts i).card)≤Low6960Allocation.factorCap top := by
@@ -251,14 +251,14 @@ private theorem allocation (receipts : ∀ k : Band, Receipt k) {G : Shape → �
       have floor : K1_13.InBox (Low6960Allocation.start k)
           (Low6960RetainedCut.sumShape d.zeros (fun j=>shape (f j))) :=
         hr.symm ▸ Low6960Allocation.admits_floor hk
-      exact d.contracted i hn m hm hml 169 (active i) _ floor
+      exact d.contracted i hn m hm hml 171 (active i) _ floor
     · intro i m u hm hml allowed
       obtain ⟨Q,proper,box,weight,ha,horder⟩ := d.proper i (hm.trans_le hml)
       have cut : ProperCut (f i) (parts i) s m :=
         ⟨Q,proper,box,weight,ha,fun γ hγ e he=>hml.trans (horder γ (d.subset i hγ) e he)⟩
       by_cases stock : Low6960SharedPrice.RateFits (shape (f i)) u
       · exact Low6960SharedCount.proof w (parts i) s (hmsg.mono (d.subset i)) (f i)
-          (d.small i) 169 (active i) (d.on_factor i) m hm cut u stock
+          (d.small i) 171 (active i) (d.on_factor i) m hm cut u stock
       · exact Low6960WeightedProof.count (hmsg.mono (d.subset i)) (f i) (d.small i)
           (active i) (d.on_factor i) m hm cut u allowed stock
     · intro i m hm hml k hk hg
@@ -267,7 +267,7 @@ private theorem allocation (receipts : ∀ k : Band, Receipt k) {G : Shape → �
       have floor : K1_13.InBox (Low6960Allocation.start k)
           (Low6960RetainedCut.sumShape d.zeros (fun j=>shape (f j))) :=
         hr.symm ▸ Low6960Allocation.admits_floor hk
-      exact d.gated i hn m hm hml 169 (active i) k.val
+      exact d.gated i hn m hm hml 171 (active i) k.val
         (by rw [start_floor k hg.1]; exact floor) hg
     · intro i eligible
       exact Low6960FatCount.proof w (parts i) s (hmsg.mono (d.subset i)) (f i) (d.small i)
@@ -282,9 +282,9 @@ analytic pricing theorems supplied by the guarded 69.60 modules. -/
 theorem count_with_receipts (receipts : ∀ k : Band, Receipt k) {G : Shape → ℕ}
     (htab : GateTable (fun k => (receipts k).orders) G) (gate : Low6960RetainedCut.GateBank G)
     {cap u del Γ}
-    (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179818 M Γ)
-    (lo : 1≤M.overhead) (hi : M.overhead≤2358) :
-    Γ.card≤266228295297719504 := by
+    (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179808 M Γ)
+    (lo : 1≤M.overhead) (hi : M.overhead≤2359) :
+    Γ.card≤265963255385514628 := by
   have messages := Low6960Order.messages_of_family M F hi
   obtain ⟨P,nz,box,active,weight,zero⟩ := Low6960Anchor.anchor_of_family M F hi
   have hw : TrueWeightLE P anchorCutoff := by

@@ -285,7 +285,7 @@ def rescueDegrees (G : Jet) : Prop :=
 theorem prepare_6960 {ι : Type*} [Fintype ι] (P : ι→Jet) (s : ι→Shape) (ks : ι→ℕ)
     (proper : ∀ i,P i≠0) (caps : ∀ i,K1_14_2_2.RowCaps (P i) (s i))
     {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
-    (lo : 2359≤h) (hi : h≤33579) :
+    (lo : 2383≤h) (hi : h≤33599) :
     let V := evaluated Crt word helperBank.shape (helperCutoff h)
     ∃ out : Prepared P s ks V helperBank.shape, out.exception=1 ∨ rescueDegrees out.exception := by
   obtain ⟨out⟩ := prepare P s ks _ helperBank.shape proper caps
@@ -300,14 +300,14 @@ theorem prepare_6960 {ι : Type*} [Fintype ι] (P : ι→Jet) (s : ι→Shape) (
   omega
 #print axioms prepare_6960
 theorem native_at_6960 {ι : Type*} {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
-    (lo : 2359≤h) (hi : h≤33579) {P : ι→Jet} {s : ι→Shape} {ks : ι→ℕ}
+    (lo : 2383≤h) (hi : h≤33599) {P : ι→Jet} {s : ι→Shape} {ks : ι→ℕ}
     (out : Prepared P s ks (evaluated Crt word helperBank.shape (helperCutoff h)) helperBank.shape)
     (i : ι) (W r : ℕ) (inside : P i∈evaluated Crt word (s i) W)
-    (width : W+2*h*r<(s i).m*179818) (power : r+1≤ks i*11)
+    (width : W+2*h*r<(s i).m*179808) (power : r+1≤ks i*11)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (z : K1.K) (S : (Polynomial K1.K)) (residues : MarkResidues D z S)
     (degree : (liftPoly S).natDegree ≤ 131071+h)
-    (hits : Finset K1.I) (many : 179818≤hits.card)
+    (hits : Finset K1.I) (many : 179808≤hits.card)
     (agree : ∀ i ∈ hits, (liftPoly S).eval (nodeL i) = word i)
     (regular : toJet out.exception∉RingHom.ker (jetMarkHom z S)) :
     Native (RingHom.ker (jetMarkHom z S)) (r+1) (out.free i) ∧
@@ -317,7 +317,7 @@ theorem native_at_6960 {ι : Type*} {h : ℕ} {D : PoleData h} (Crt : CRTLift D)
   · intro H member
     have wh := helper_width lo hi
     unfold WidthGuard cutoffCount at wh
-    have fit : helperCutoff h + 2*h*10 < helperBank.shape.m*179818 := by
+    have fit : helperCutoff h + 2*h*10 < helperBank.shape.m*179808 := by
       unfold helperCutoff cutoffCount
       omega
     exact contact_of_crt Crt word helperBank.shape H member fit noPole z S residues degree hits many agree

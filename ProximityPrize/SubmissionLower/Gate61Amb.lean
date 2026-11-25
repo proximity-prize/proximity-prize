@@ -21,7 +21,7 @@ def fitsBox (b j t : ℕ) (m : JetExp) : Prop :=
 noncomputable instance (b j t : ℕ) (m : JetExp) : Decidable (fitsBox b j t m) := by
   unfold fitsBox; infer_instance
 
-theorem fits_eq (r : ℕ) (m : JetExp) : Low6960ShapeGate.fits r m ↔ fitsBox (r*62) (r*26) (r*7) m :=
+theorem fits_eq (r : ℕ) (m : JetExp) : Low6960ShapeGate.fits r m ↔ fitsBox (r*63) (r*26) (r*7) m :=
   Iff.rfl
 
 noncomputable def ambCount (b j t : ℕ) : ℕ := (jetColumns.filter (fitsBox b j t)).card
@@ -39,9 +39,9 @@ theorem boxSpace_dim (b j t : ℕ) : Module.finrank GenericField (boxSpace b j t
   rw [(Submodule.comapSubtypeEquivOfLe hle).finrank_eq, finrank_restrictSupport_finset]
   rfl
 
-theorem cutoff_eq_box (r : ℕ) : Low6960SharedShapeRank.cutoff r = boxSpace (r*62) (r*26) (r*7) := rfl
+theorem cutoff_eq_box (r : ℕ) : Low6960SharedShapeRank.cutoff r = boxSpace (r*63) (r*26) (r*7) := rfl
 
-theorem ambCount_cutoff (r : ℕ) : ambCount (r*62) (r*26) (r*7) = Low6960ShapeGate.width r := rfl
+theorem ambCount_cutoff (r : ℕ) : ambCount (r*63) (r*26) (r*7) = Low6960ShapeGate.width r := rfl
 
 theorem boxSpace_mono {b j t b' j' t' : ℕ} (hb : b ≤ b') (hj : j ≤ j') (ht : t ≤ t') :
     boxSpace b j t ≤ boxSpace b' j' t' := by

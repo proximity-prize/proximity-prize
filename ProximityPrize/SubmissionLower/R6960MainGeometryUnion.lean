@@ -25,7 +25,7 @@ def Initial.rankMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) : Finset K :=
   R.marks.filter (fun γ=>∃ J∈ini.rankExit,OnMark R.family J γ)
 theorem Initial.rank_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) (hi : M.overhead.toNat≤33579) :
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) (hi : M.overhead.toNat≤33599) :
     (ini.rankMarks.card : ℚ)≤dotQ rankWeight (massQ ini.rankExit)+rankRound := by
   let S := ini.rankExit
   let B := max 2 (mass S 2)
@@ -76,7 +76,7 @@ private theorem card_round {a : ℕ} {q : ℚ} (bound : (a : ℚ)≤q) : a≤q.c
   exact_mod_cast bound.trans (Rat.le_ceil.trans ceil_cast)
 theorem CutBooks.curve_bin_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hiM : M.overhead.toNat≤33579) {i : ℕ} (hi : i<17) :
+    (C : CutBooks ini) (hiM : M.overhead.toNat≤33599) {i : ℕ} (hi : i<17) :
     ((curveMarks R.family (C.cover i)).card : ℚ)≤
       dotQ (lossWeight i) (massQ (ini.lost i))+((C.cover i).cost 0 : ℚ) := by
   have global : ((C.cover i).cost 0 : ℚ)≤seedLimit :=
@@ -103,7 +103,7 @@ def CutBooks.lossMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     Finset K := ini.rankMarks ∪ (range 17).biUnion (fun i=>curveMarks R.family (C.cover i))
 theorem CutBooks.loss_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hi : M.overhead.toNat≤33579) : C.lossMarks.card ≤ (lossLimit).ceil.toNat := by
+    (C : CutBooks ini) (hi : M.overhead.toNat≤33599) : C.lossMarks.card ≤ (lossLimit).ceil.toNat := by
   apply card_round
   have cum : (C.lossMarks.card : ℚ) ≤ (ini.rankMarks.card : ℚ) +
       ∑ i∈range 17,((curveMarks R.family (C.cover i)).card : ℚ) := by
@@ -134,7 +134,7 @@ def CutBooks.paid {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
   (C.lossMarks ∪ C.pointMarks) ∪ (ini.seedMarks ∪ ini.ordinateMarks) ∪ (R.fixedMarks ∪ ini.contentMarks)
 theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hi : M.overhead.toNat≤33579) : C.paid.card≤mainFee := by
+    (C : CutBooks ini) (hi : M.overhead.toNat≤33599) : C.paid.card≤mainFee := by
   have combined := card_union_le
     ((C.lossMarks ∪ C.pointMarks) ∪ (ini.seedMarks ∪ ini.ordinateMarks)) (R.fixedMarks ∪ ini.contentMarks)
   have left := card_union_le (C.lossMarks ∪ C.pointMarks) (ini.seedMarks ∪ ini.ordinateMarks)
@@ -151,10 +151,10 @@ theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M
   omega
 theorem Rows.main_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt)
-    (hi : M.overhead.toNat≤33579) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
+    (hi : M.overhead.toNat≤33599) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ (paid : Finset K) (S : Finset Surface),
-      paid.card≤116835760512599839 ∧ (∀ q∈S,Parent q ∧ SurfacePass Crt (word M) q) ∧
+      paid.card≤116235894919433582 ∧ (∀ q∈S,Parent q ∧ SurfacePass Crt (word M) q) ∧
       ∀ γ∈R.marks,γ∈paid ∨ ∃ q∈S,OnSurface F q γ := by
   obtain ⟨ini⟩ := R.initial_cover
   obtain ⟨C⟩ := ini.cutBooks noPole residues
@@ -196,10 +196,10 @@ open K1_14_1 (PoleData CRTLift MarkResidues nodeL)
 open K1_14_3 (Surface Parent ProjectedProduct)
 open RescueGeometry (Model Family OnSurface SurfacePass word exceptional_prefix)
 open scoped Classical
-def prefixCap : ℕ := 235296504696168815
+def prefixCap : ℕ := 228618552416513000
 theorem Rows.combined_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt)
-    (lo : 2359≤M.overhead.toNat) (hi : M.overhead.toNat≤33579)
+    (lo : 2383≤M.overhead.toNat) (hi : M.overhead.toNat≤33599)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ (paid : Finset K) (S : Finset Surface),paid.card≤prefixCap ∧
@@ -231,7 +231,7 @@ theorem Rows.combined_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family 
           (cover γ (mem_filter.mpr ⟨hγ,e⟩))
 theorem combined_prefix {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2359≤M.overhead.toNat) (hi : M.overhead.toNat≤33579)
+    (lo : 2383≤M.overhead.toNat) (hi : M.overhead.toNat≤33599)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ (paid : Finset K) (S : Finset Surface),paid.card≤prefixCap ∧

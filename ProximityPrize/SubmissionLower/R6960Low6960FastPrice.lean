@@ -30,7 +30,7 @@ structure Envelope where
 
 def Fits (p : Envelope) (x : Shape) : Prop :=
   p.widthLow ≤ x.b ∧ x.b ≤ p.widthHigh ∧ p.indexLow ≤ x.j ∧ x.j ≤ p.indexHigh ∧
-    p.topLow ≤ x.t ∧ p.taperLow ≤ 26*x.b ∧ min (26*x.b+25*x.j) (x.b+25*169) ≤ p.taperHigh
+    p.topLow ≤ x.t ∧ p.taperLow ≤ 26*x.b ∧ min (26*x.b+25*x.j) (x.b+25*171) ≤ p.taperHigh
 
 def RayBounds (p : Envelope) (x : Shape) (amount : ℕ) : Prop :=
   let w := weights .tilted x

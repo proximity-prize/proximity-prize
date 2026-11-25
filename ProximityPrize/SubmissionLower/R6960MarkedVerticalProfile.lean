@@ -144,7 +144,7 @@ set_option backward.isDefEq.respectTransparency.types false
 namespace Lower6960.MarkedEvaluation
 open K1_14 (L)
 open MonicChart (ChartField Scalar)
-open RetainedCompression (Curve ordinate view view_y height heightCap wordDegree)
+open RetainedCompression (Curve ordinate view view_y height heightCap TameBand tame_vertical_bound)
 open RetainedRestrictionTorus RetainedSurfaceClass CollisionMarked Polynomial LineEuler Algebra Module Submodule Horner
 open scoped Polynomial BigOperators Lower6960.MarkedEvaluation Lower6960.Horner Lower6960.RetainedSurfaceClass
 local instance profileScalarDecidable : DecidableEq Scalar := Classical.decEq _
@@ -156,8 +156,9 @@ local instance profileNodeRing (x z:L) : CommRing (Crossing E x z) :=
 
 /-- The vertical deficit of this precise surface is positive on the nonlinear
 branch, is tame at the profile prime, and supplies the physical function rank. -/
-theorem vertical_profile (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
-    (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (nonlin:¬RetainedLinear.GeometricallyLinear (view f))
+theorem vertical_profile (degD : ℕ) (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
+    (hi:TameBand (f.degreeOf ordinate) degD)
+    (bounded:height degD f≤heightCap (f.degreeOf ordinate) degD) (nonlin:¬RetainedLinear.GeometricallyLinear (view f))
     (b:PowerBasis ChartField E) (dim:b.dim=(view f).natDegree)
     (root:aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)] [FiniteDimensional L (Crossing E x z)]
@@ -184,18 +185,18 @@ theorem vertical_profile (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.d
     letI:Nonempty (Fin (finrank ChartField E)):=⟨⟨0,pos⟩⟩
     exact nonlin (actual_geometric_of_constants (view f) ((MulEquiv.irreducible_iff view).mpr ir)
       (by omega) b root w ind (Fintype.card_fin _) integ)
-  have width (j:ℕ):(Q.coeff j).natDegree≤heightCap (f.degreeOf ordinate) wordDegree := by
+  have width (j:ℕ):(Q.coeff j).natDegree≤heightCap (f.degreeOf ordinate) degD := by
     have d:(Q.coeff j).natDegree=((view f).coeff j).natDegree:=by
       simp only [Q,RetainedLinear.toSeed,Polynomial.coe_mapRingHom,coeff_map,natDegree_map_eq_of_injective (RetainedLinear.incl_injective L)]
     rw [d]
     by_cases z:(view f).coeff j=0
     · rw [z,natDegree_zero];omega
-    · exact (Nat.le_add_right _ _).trans ((RetainedCompression.abscissa_coeff_height f wordDegree j z).trans bounded)
+    · exact (Nat.le_add_right _ _).trans ((RetainedCompression.abscissa_coeff_height f degD j z).trans bounded)
   have hr (n':ℕ) (eq:n'=Q.natDegree)
       (F':Basis (Fin n') (Polynomial Scalar) (chartOrder (k:=Scalar) (E:=E) false))
       (I':Basis (Fin n') (Polynomial Scalar) (chartOrder (k:=Scalar) (E:=E) true))
       (dd:(normalizedTransition F' I').det.degree=((-(s:ℤ):ℤ):WithBot ℤ)) :
-      s≤(Q.natDegree-1)*heightCap (f.degreeOf ordinate) wordDegree := by
+      s≤(Q.natDegree-1)*heightCap (f.degreeOf ordinate) degD := by
     subst n'
     obtain ⟨d,dg,db⟩:=actual_horner_budget Q _ (by omega) width b.gen root
       (b.natDegree_minpoly.trans (dim.trans e0.symm)) F' I'
@@ -204,8 +205,7 @@ theorem vertical_profile (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.d
     exact_mod_cast db
   have cap:=hr _ (rank.trans e0.symm) F I det
   have tame:2*s<K1.p := by
-    have h:2*((f.degreeOf ordinate-1)*heightCap (f.degreeOf ordinate) wordDegree)<K1.p := by
-      exact (by decide +kernel : ∀j:Fin 48,2*((j.val-1)*heightCap j.val wordDegree)<K1.p) ⟨_,hi⟩
+    have h:=tame_vertical_bound hi
     rw [e0,e1] at cap;omega
   refine ⟨positive,tame,fun U m v regular=>?_⟩
   have bound:=actual_vertical_rank F I s positive det U m v regular

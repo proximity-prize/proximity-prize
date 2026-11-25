@@ -451,7 +451,7 @@ theorem fixed_numerator (O : Offset F anchor) (W : (Polynomial K)) (hW : F.den =
     have hheight := F.height
     change F.U.natDegree + F.s + deleted.card ≤ heightCap at hheight
     have hmargin : k + heightCap ≤ agreement := by
-      change 164651 ≤ 179818
+      change 164671 ≤ 179808
       decide
     have hdeg : diff.natDegree ≤ max (l.natDegree + a.natDegree + P.natDegree)
         (r.natDegree + a.natDegree + P.natDegree) := by
@@ -507,10 +507,10 @@ theorem offset_of_anchor {u deleted} (F : Direction u deleted) (H : CrossLift F)
     change 0 < 131072
     decide
   have hagMargin : k + heightCap ≤ agreement := by
-    change 164651 ≤ 179818
+    change 164671 ≤ 179808
     decide
   have hdetMargin : k + 2 * heightCap ≤ blockLength := by
-    change 198230 ≤ 262144
+    change 198270 ≤ 262144
     decide
   have hpos : 0 < d := by dsimp only [d]; omega
   have hA1 : (F.A 1).natDegree ≤ F.s := le_max_right _ _

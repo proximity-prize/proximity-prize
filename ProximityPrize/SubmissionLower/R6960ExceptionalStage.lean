@@ -35,7 +35,7 @@ theorem hasse_at_mark {z : K1.K} {S : (Polynomial K1.K)} {P : Jet} {r : ℕ}
   rw [rep,seed_iter,map_nsmul,nsmul_eq_mul,K1_14_2.eval_toJet] at van
   exact (mul_eq_zero.mp van).resolve_left (factorial_ne_zero small)
 theorem rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
-    (lo : 2359≤h) (hi : h≤33579) :
+    (lo : 2383≤h) (hi : h≤33599) :
     ∃ (P : Fin 17→Jet) (out : Prepared P (fun i=>(bank i).shape) copies
           (evaluated Crt word helperBank.shape (helperCutoff h)) helperBank.shape),
       (out.exception=1 ∨ rescueDegrees out.exception) ∧
@@ -43,7 +43,7 @@ theorem rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
       ∀ (_noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
         (z : K1.K) (S : (Polynomial K1.K)), MarkResidues D z S →
         (liftPoly S).natDegree ≤ 131071+h →
-        ∀ hits : Finset K1.I, 179818≤hits.card →
+        ∀ hits : Finset K1.I, 179808≤hits.card →
         (∀ i ∈ hits,(liftPoly S).eval (nodeL i)=word i) →
         toJet out.exception∉RingHom.ker (jetMarkHom z S) →
         ∀ i, Native (RingHom.ker (jetMarkHom z S)) (reserve i+1) (out.free i) ∧
@@ -130,7 +130,7 @@ open K1_14_1 (PoleData CRTLift evaluated nodeL MarkResidues)
 open MainPrefixSource (copies)
 open PrefixRows (Prepared rescueDegrees)
 theorem all_stages {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
-    (lo : 2359≤h) (hi : h≤33579) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0) :
+    (lo : 2383≤h) (hi : h≤33599) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0) :
     ∃ (P : Fin 17→Jet) (out : Prepared P (fun i=>(bank i).shape) copies
           (evaluated Crt word helperBank.shape (helperCutoff h)) helperBank.shape),
       (out.exception=1 ∨ rescueDegrees out.exception) ∧
@@ -140,7 +140,7 @@ theorem all_stages {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L
       ∃ C : Jet, (RowCaps C (bank i).shape ∨ RowCaps C (HelperPrefix.timesShape (copies i) helperBank.shape)) ∧
         toJet C∉J ∧ ∀ z S, OnJet J z S → MarkResidues D z S →
           (liftPoly S).natDegree≤131071+h →
-          ∀ hits : Finset K1.I, 179818≤hits.card →
+          ∀ hits : Finset K1.I, 179808≤hits.card →
           (∀ j∈hits,(liftPoly S).eval (nodeL j)=word j) →
           toJet out.exception∉RingHom.ker (jetMarkHom z S) → jetAt C z S=0 := by
   obtain ⟨P,out,kind,_,contact⟩ := MainPrefixSource.rows Crt word lo hi

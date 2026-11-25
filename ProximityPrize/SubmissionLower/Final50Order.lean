@@ -56,8 +56,8 @@ abbrev layerNeed := Final50Price.layerNeed
 abbrev Messages := Final50Price.Messages
 abbrev ProperCut := Final50Price.ProperCut
 abbrev LayerBudget := @Final50Price.LayerBudget
-theorem sourceRank_eq : sourceRank = 993533597967758343 := by decide
-theorem certified_layers : sourceRank / layerWidth + 1 = 21410054907182 := by decide
+theorem sourceRank_eq : sourceRank = 999145034344608775 := by decide
+theorem certified_layers : sourceRank / layerWidth + 1 = 21530978005487 := by decide
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
     ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧

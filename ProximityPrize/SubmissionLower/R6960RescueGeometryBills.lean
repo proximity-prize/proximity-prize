@@ -47,14 +47,14 @@ theorem checked (rect : Fin 4) (i : Fin 17) :
   · exact group6_checked rect 0
   · exact group7_checked rect 0
 
-theorem cutoff_fit {h : ℕ} (lo : 2359≤h) (hi : h≤33579) (rect : Fin 4) (i : Fin 17) :
-    cutoff h rect i+2*h*(reserve i)<(bank rect i).shape.m*179818 :=
+theorem cutoff_fit {h : ℕ} (lo : 2383≤h) (hi : h≤33599) (rect : Fin 4) (i : Fin 17) :
+    cutoff h rect i+2*h*(reserve i)<(bank rect i).shape.m*179808 :=
   (checked rect i).cutoff_fit lo hi
 
 /-- Each stage of each rectangle supplies a native avoiding row throughout
 the high interval. The lower degree bounds refer to the single exceptional prime. -/
 theorem rescue_row {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
-    (lo : 2359≤h) (hi : h≤33579) (rect : Fin 4) (i : Fin 17) {G : Jet}
+    (lo : 2383≤h) (hi : h≤33599) (rect : Fin 4) (i : Fin 17) {G : Jet}
     (irr : Irreducible G) (seeded : UsesSeed G) (slope : 1≤G.natDegree)
     (hs : seed rect≤seedDegree G) (hj : G.natDegree+excess rect≤jetDegree G) :
     ∃ Q ∈ evaluated Crt word (bank rect i).shape (cutoff h rect i), ¬ G∣Q :=
@@ -108,7 +108,7 @@ private theorem fits_rectangle {j u : ℕ} (loJ : 1≤j) (hiJ : j≤7)
 /-- A common moving prime in the powered helper determines one rescue schedule
 for all 17 stages. Its actual degrees fit that rectangle's geometry caps. -/
 theorem exceptional_rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
-    (lo : 2359≤h) (hi : h≤33579) {G : Jet} (irr : Irreducible G) (seeded : UsesSeed G)
+    (lo : 2383≤h) (hi : h≤33599) {G : Jet} (irr : Irreducible G) (seeded : UsesSeed G)
     (slope : 0<G.natDegree)
     (common : ∀ P ∈ evaluated Crt word helperBank.shape (helperCutoff h), G∣P) :
     ∃ rect : Fin 4, G.natDegree=1 ∧ jetDegree G≤jetCap rect ∧ seedDegree G≤seedCap rect ∧
@@ -147,8 +147,8 @@ open scoped Classical
 open K1_14_2_2_3 (shiftedWord)
 open P0_10R_1 (seed_projection section_bound component_height)
 open P1_7_4_1 (irreducible_cut)
-abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33579 u deleted
-abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179818 M Γ
+abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33599 u deleted
+abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179808 M Γ
 def word {u deleted} (M : Model u deleted) : I→L := fun i => algebraMap K L (M.word i)
 def OnMark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (A : Ideal Ambient) (γ : K) : Prop := OnJet A (M.label γ) (F.scalar γ)
@@ -167,7 +167,7 @@ theorem contact_at_mark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {s : Shape} {W r : ℕ} {P : Jet} (inside : P∈evaluated Crt (word M) s W)
-    (width : W+2*M.overhead.toNat*r<s.m*179818)
+    (width : W+2*M.overhead.toNat*r<s.m*179808)
     (γ : K) (hγ : γ∈Γ) :
     Native (RingHom.ker (jetMarkHom (M.label γ) (F.scalar γ))) (r+1) P := by
   let B := F.mark γ hγ
@@ -423,7 +423,7 @@ structure Run {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
       ∀ γ∈Γ,jetAt C (M.label γ) (F.scalar γ)=0
 theorem prepare {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2359≤M.overhead.toNat) (hi : M.overhead.toNat≤33579)
+    (lo : 2383≤M.overhead.toNat) (hi : M.overhead.toNat≤33599)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (common : PrefixRows.Common
@@ -479,7 +479,7 @@ open scoped Classical
 open HighCore82258_3 (envelope_caps)
 open K1_14_2_2_7 (seed_value_eq)
 def terminalShape : Shape := ⟨4500,6286,1329,748778⟩
-def terminalCutoff : ℕ := terminalShape.m*179818-1
+def terminalCutoff : ℕ := terminalShape.m*179808-1
 def TerminalPass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (J : Ideal Ambient) : Prop :=
   ∀ P∈evaluated Crt w terminalShape terminalCutoff,toJet P∈J
 def Run.final {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
@@ -843,7 +843,7 @@ theorem Run.joint_bill {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     | succ i => exact R.live_history (by omega) k
 theorem inventory {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2359≤M.overhead.toNat) (hi : M.overhead.toNat≤33579)
+    (lo : 2383≤M.overhead.toNat) (hi : M.overhead.toNat≤33599)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (common : PrefixRows.Common
