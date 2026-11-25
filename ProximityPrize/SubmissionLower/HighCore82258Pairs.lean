@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.GoldBranch7N4
 import ProximityPrize.SubmissionLower.FrontCore82258Model
 import ProximityPrize.SubmissionLower.HighCore82258Source
 
+set_option Elab.async false
+
 -- merged module UpperBranch2
 section Merged_UpperBranch2
 set_option Elab.async false

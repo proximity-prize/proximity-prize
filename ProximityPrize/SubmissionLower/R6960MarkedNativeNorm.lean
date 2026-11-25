@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
 import ProximityPrize.SubmissionLower.R6960MarkedPhysicalRows
 import ProximityPrize.SubmissionLower.R6960MarkedTranslatedEquation
 
+set_option Elab.async false
+
 -- merged module R6960MarkedFamilyFrame
 section Merged_R6960MarkedFamilyFrame
 

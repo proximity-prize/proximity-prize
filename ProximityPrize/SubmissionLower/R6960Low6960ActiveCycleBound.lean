@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.Low48BentCycle
 import ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
 
+set_option Elab.async false
+
 set_option autoImplicit false
 set_option Elab.async false
 

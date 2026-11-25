@@ -4,6 +4,8 @@ import ProximityPrize.SubmissionLower.R6960RetainedAxisTransition
 import Mathlib.RingTheory.Localization.BaseChange
 import Mathlib.RingTheory.Localization.LocalizationLocalization
 
+set_option Elab.async false
+
 -- merged module R6960CollisionMarkedAxis
 section Merged_R6960CollisionMarkedAxis
 set_option synthInstance.maxHeartbeats 200000

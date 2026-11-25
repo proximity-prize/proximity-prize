@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.R6960Low6960Rectangle
-import ProximityPrize.SubmissionLower.R6960Low6960AllocTotal
 import ProximityPrize.SubmissionLower.R6960Low6960RetainedCount
 import ProximityPrize.SubmissionLower.R6960Low6960Mass0
 import ProximityPrize.SubmissionLower.R6960Low6960Mass1
@@ -19,120 +18,81 @@ import ProximityPrize.SubmissionLower.R6960Low6960Mass14
 import ProximityPrize.SubmissionLower.R6960Low6960Mass15
 import ProximityPrize.SubmissionLower.R6960Low6960Mass16
 import ProximityPrize.SubmissionLower.R6960Low6960Mass17
-import ProximityPrize.SubmissionLower.R6960Low6960Mass18
-import ProximityPrize.SubmissionLower.R6960Low6960Mass19
-import ProximityPrize.SubmissionLower.R6960Low6960Mass20
-import ProximityPrize.SubmissionLower.R6960Low6960Mass21
-import ProximityPrize.SubmissionLower.R6960Low6960Mass22
-import ProximityPrize.SubmissionLower.R6960Low6960Mass23
-import ProximityPrize.SubmissionLower.R6960Low6960Mass24
-import ProximityPrize.SubmissionLower.R6960Low6960Mass25
-import ProximityPrize.SubmissionLower.R6960Low6960Mass26
-import ProximityPrize.SubmissionLower.R6960Low6960Mass27
-import ProximityPrize.SubmissionLower.R6960Low6960Mass28
-import ProximityPrize.SubmissionLower.R6960Low6960Mass29
-import ProximityPrize.SubmissionLower.R6960Low6960Mass30
-import ProximityPrize.SubmissionLower.R6960Low6960Mass31
-import ProximityPrize.SubmissionLower.R6960Low6960Mass32
-import ProximityPrize.SubmissionLower.R6960Low6960Mass33
-import ProximityPrize.SubmissionLower.R6960Low6960Mass34
-import ProximityPrize.SubmissionLower.R6960Low6960Mass35
-import ProximityPrize.SubmissionLower.R6960Low6960Mass36
-import ProximityPrize.SubmissionLower.R6960Low6960Mass37
-import ProximityPrize.SubmissionLower.R6960Low6960Mass38
-import ProximityPrize.SubmissionLower.R6960Low6960Mass39
-import ProximityPrize.SubmissionLower.R6960Low6960Mass40
-import ProximityPrize.SubmissionLower.R6960Low6960Mass41
-import ProximityPrize.SubmissionLower.R6960Low6960Mass42
 
--- merged module R6960Low6960Mass43
-section Merged_R6960Low6960Mass43
 set_option Elab.async false
-set_option maxRecDepth 22000
-set_option maxHeartbeats 6000000
 
-namespace Low6960Allocation.Group43
+-- merged module R6960Low6960Mass18
+section Merged_R6960Low6960Mass18
 
-private def m0 : MassCell 43 :=
-  ⟨⟨1,3,93⟩,mass_cell 43 1 3 93 242 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 835676644964, 540847436560, 315094039636, 163399092584, 70745964940, 22329623296, 3556631300, 63676486, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m1 : MassCell 43 :=
-  ⟨⟨1,6,105⟩,mass_cell 43 1 6 105 221 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 594825206747, 324263964803, 139134544711, 42964394347, 6430019567, 85980741, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m2 : MassCell 43 :=
-  ⟨⟨2,9,111⟩,mass_cell 43 2 9 111 207 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 357404664411, 129998815268, 28306925240, 1561211570, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m3 : MassCell 43 :=
-  ⟨⟨3,12,114⟩,mass_cell 43 3 12 114 195 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 377232902965, 121788681762, 17921450994, 219397559, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m4 : MassCell 43 :=
-  ⟨⟨1,14,115⟩,mass_cell 43 1 14 115 189 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 382893940074, 115041572041, 12564875533, 23943775, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m5 : MassCell 43 :=
-  ⟨⟨1,16,116⟩,mass_cell 43 1 16 116 183 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 389294800785, 110509522484, 8927866868, 217973, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m6 : MassCell 43 :=
-  ⟨⟨1,18,117⟩,mass_cell 43 1 18 117 179 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 396227795871, 108868262967, 6606891955, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m7 : MassCell 43 :=
-  ⟨⟨1,21,118⟩,mass_cell 43 1 21 118 173 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 402438934288, 104774407610, 3963065596, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m8 : MassCell 43 :=
-  ⟨⟨1,24,119⟩,mass_cell 43 1 24 119 169 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 408581689404, 104849889412, 2531011308, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m9 : MassCell 43 :=
-  ⟨⟨1,29,120⟩,mass_cell 43 1 29 120 163 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 413495640412, 101883148642, 1001039317, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m10 : MassCell 43 :=
-  ⟨⟨4,36,121⟩,mass_cell 43 4 36 121 157 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 416846202882, 100225762404, 206907785, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m11 : MassCell 43 :=
-  ⟨⟨2,48,122⟩,mass_cell 43 2 48 122 150 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 416846202882, 100408164070, 222395, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m12 : MassCell 43 :=
-  ⟨⟨86,32,121⟩,mass_cell 43 86 32 121 161 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 416846202882, 99853904338, 503439971, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m13 : MassCell 43 :=
-  ⟨⟨67,45,122⟩,mass_cell 43 67 45 122 152 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 416846202882, 100394753106, 8486756, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m14 : MassCell 43 :=
-  ⟨⟨58,26,120⟩,mass_cell 43 58 26 120 167 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 413358134833, 102224063536, 1670233364, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m15 : MassCell 43 :=
-  ⟨⟨106,43,122⟩,mass_cell 43 106 43 122 153 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 416846202882, 100389605786, 23141180, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m16 : MassCell 43 :=
-  ⟨⟨38,22,119⟩,mass_cell 43 38 22 119 173 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 408348119543, 105334224340, 3423555021, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m17 : MassCell 43 :=
-  ⟨⟨120,30,121⟩,mass_cell 43 120 30 121 163 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 416846202882, 99762406278, 665793239, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m18 : MassCell 43 :=
-  ⟨⟨126,12,118⟩,mass_cell 43 126 12 118 199 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 402054513924, 108122611854, 6997576624, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m19 : MassCell 43 :=
-  ⟨⟨105,18,119⟩,mass_cell 43 105 18 119 181 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 407991678543, 104346840817, 4634929725, 4962, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m20 : MassCell 43 :=
-  ⟨⟨124,3,115⟩,mass_cell 43 124 3 115 264 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 384930545879, 121521431996, 10083280847, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m21 : MassCell 43 :=
-  ⟨⟨122,9,117⟩,mass_cell 43 122 9 117 213 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 395775960400, 111703662578, 9206959535, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m22 : MassCell 43 :=
-  ⟨⟨94,24,120⟩,mass_cell 43 94 24 120 170 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 413277618086, 101743948894, 2062670638, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m23 : MassCell 43 :=
-  ⟨⟨118,17,119⟩,mass_cell 43 118 17 119 184 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 407984138094, 104346771714, 4700092638, 99708, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
-private def m24 : MassCell 43 :=
-  ⟨⟨125,42,122⟩,mass_cell 43 125 42 122 154 (by decide)
-    (by decide +kernel) [4451345034738, 3680112320386, 3005541912594, 2420639567778, 1918524288562, 1492428323778, 1135697168466, 841789563874, 604277497458, 416846202882, 100322574629, 33524705, 0] (by decide +kernel) (by decide +kernel)⟩
+set_option Elab.async false
+set_option maxRecDepth 18000
+set_option maxHeartbeats 4000000
 
-def orders : List (MassCell 43) := [m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15, m16, m17, m18, m19, m20, m21, m22, m23, m24]
+namespace Low6960Allocation.Group18
 
-end Low6960Allocation.Group43
-end Merged_R6960Low6960Mass43
+private def m0 : MassCell 18 :=
+  ⟨⟨1,3,106⟩,mass_cell 18 1 3 106 255 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 640747628067, 399721405901, 217188725917, 100868875957, 35995503893, 7572260797, 372940536, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m1 : MassCell 18 :=
+  ⟨⟨1,6,117⟩,mass_cell 18 1 6 117 233 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 439644681925, 221193898873, 81306558869, 18154699729, 1071590701, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m2 : MassCell 18 :=
+  ⟨⟨2,9,122⟩,mass_cell 18 2 9 122 218 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 238498087150, 70366677706, 9246831134, 62085636, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m3 : MassCell 18 :=
+  ⟨⟨1,12,124⟩,mass_cell 18 1 12 124 205 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 245547758103, 58641084802, 3941036498, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m4 : MassCell 18 :=
+  ⟨⟨1,13,125⟩,mass_cell 18 1 13 125 202 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 252478079751, 58115134516, 3250704010, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m5 : MassCell 18 :=
+  ⟨⟨1,15,126⟩,mass_cell 18 1 15 126 196 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 257360433742, 53308328810, 1843357669, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m6 : MassCell 18 :=
+  ⟨⟨1,17,127⟩,mass_cell 18 1 17 127 192 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 263342966429, 50525365774, 1076814346, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m7 : MassCell 18 :=
+  ⟨⟨1,20,128⟩,mass_cell 18 1 20 128 185 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 268743700286, 45878546062, 404005388, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m8 : MassCell 18 :=
+  ⟨⟨1,24,129⟩,mass_cell 18 1 24 129 179 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 274279328478, 41097920144, 77123682, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m9 : MassCell 18 :=
+  ⟨⟨1,29,130⟩,mass_cell 18 1 29 130 173 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 280185693751, 37531495850, 2520490, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m10 : MassCell 18 :=
+  ⟨⟨1,38,131⟩,mass_cell 18 1 38 131 165 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 285530161318, 31779047231, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m11 : MassCell 18 :=
+  ⟨⟨111,33,131⟩,mass_cell 18 111 33 131 170 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 285243362131, 32990705830, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m12 : MassCell 18 :=
+  ⟨⟨94,49,132⟩,mass_cell 18 94 49 132 159 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 290787737268, 27503495766, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m13 : MassCell 18 :=
+  ⟨⟨47,27,130⟩,mass_cell 18 47 27 130 176 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 279923457917, 38344508709, 19490981, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m14 : MassCell 18 :=
+  ⟨⟨115,14,128⟩,mass_cell 18 115 14 128 202 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 267844553088, 48732720033, 1536973989, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m15 : MassCell 18 :=
+  ⟨⟨57,21,129⟩,mass_cell 18 57 21 129 184 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 274161167970, 43717126838, 307874833, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m16 : MassCell 18 :=
+  ⟨⟨124,3,124⟩,mass_cell 18 124 3 124 273 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 248376735830, 65019708820, 4093598468, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m17 : MassCell 18 :=
+  ⟨⟨118,18,129⟩,mass_cell 18 118 18 129 191 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 273640043652, 43939415536, 586315408, 0, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+private def m18 : MassCell 18 :=
+  ⟨⟨94,25,130⟩,mass_cell 18 94 25 130 179 (by decide)
+    (by decide +kernel) [4468671078718, 3721807051950, 3062166708510, 2484603354766, 1983913673982, 1554837726318, 1192058948830, 890204155470, 643843537086, 447490661422, 279588348674, 38533198146, 59195114, 0, 0] (by decide +kernel) (by decide +kernel)⟩
+
+def orders : List (MassCell 18) := [m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15, m16, m17, m18]
+
+end Low6960Allocation.Group18
+
+end Merged_R6960Low6960Mass18
 
 -- merged module R6960Low6960Gates
 section Merged_R6960Low6960Gates
@@ -159,32 +119,7 @@ def bandOrders : ∀ k : Band, List (MassCell k)
   | ⟨16,_⟩ => Low6960Allocation.Group16.orders
   | ⟨17,_⟩ => Low6960Allocation.Group17.orders
   | ⟨18,_⟩ => Low6960Allocation.Group18.orders
-  | ⟨19,_⟩ => Low6960Allocation.Group19.orders
-  | ⟨20,_⟩ => Low6960Allocation.Group20.orders
-  | ⟨21,_⟩ => Low6960Allocation.Group21.orders
-  | ⟨22,_⟩ => Low6960Allocation.Group22.orders
-  | ⟨23,_⟩ => Low6960Allocation.Group23.orders
-  | ⟨24,_⟩ => Low6960Allocation.Group24.orders
-  | ⟨25,_⟩ => Low6960Allocation.Group25.orders
-  | ⟨26,_⟩ => Low6960Allocation.Group26.orders
-  | ⟨27,_⟩ => Low6960Allocation.Group27.orders
-  | ⟨28,_⟩ => Low6960Allocation.Group28.orders
-  | ⟨29,_⟩ => Low6960Allocation.Group29.orders
-  | ⟨30,_⟩ => Low6960Allocation.Group30.orders
-  | ⟨31,_⟩ => Low6960Allocation.Group31.orders
-  | ⟨32,_⟩ => Low6960Allocation.Group32.orders
-  | ⟨33,_⟩ => Low6960Allocation.Group33.orders
-  | ⟨34,_⟩ => Low6960Allocation.Group34.orders
-  | ⟨35,_⟩ => Low6960Allocation.Group35.orders
-  | ⟨36,_⟩ => Low6960Allocation.Group36.orders
-  | ⟨37,_⟩ => Low6960Allocation.Group37.orders
-  | ⟨38,_⟩ => Low6960Allocation.Group38.orders
-  | ⟨39,_⟩ => Low6960Allocation.Group39.orders
-  | ⟨40,_⟩ => Low6960Allocation.Group40.orders
-  | ⟨41,_⟩ => Low6960Allocation.Group41.orders
-  | ⟨42,_⟩ => Low6960Allocation.Group42.orders
-  | ⟨43,_⟩ => Low6960Allocation.Group43.orders
-  | ⟨n+44,h⟩ => absurd h (by omega)
+  | ⟨n+19,h⟩ => absurd h (by omega)
 def Gates : Prop :=
   ∃ G : Shape → ℕ, Low6960RetainedCut.GateBank G ∧ GateTable bandOrders G
 end Low6960Allocation

@@ -2,6 +2,8 @@ import ProximityPrize.Benchmark.TargetLower
 import Mathlib.Tactic
 import ProximityPrize.SubmissionLower.FrontBranch12
 
+set_option Elab.async false
+
 -- merged module R6960Front6960Radius
 section Merged_R6960Front6960Radius
 set_option Elab.async false
@@ -9,16 +11,16 @@ set_option maxRecDepth 12000
 namespace ProximityPrize.SubmissionLower.Front6960Radius
 open ProximityPrize.Benchmark ToyProblem CoreDefinitions ProximityGap
 open scoped NNReal
-abbrev p : ℕ := 2897327488399042352
-abbrev q : ℕ := 9223372036854755587
+abbrev p : ℕ := 2896623800957216602
+abbrev q : ℕ := 9223372036854599207
 theorem larger_radius :
-    claimedRadius 337293311 1073741824 < claimedRadius p q := by
+    claimedRadius 337211391 1073741824 < claimedRadius p q := by
   norm_num [claimedRadius]
 theorem maximal_in_cell (a b : ℕ) (size : b ≤ 9223372036854775807)
-    (below : a * 262144 < 82347 * b) : a * q ≤ p * b := by
+    (below : a * 262144 < 82327 * b) : a * q ≤ p * b := by
   by_contra! above
   have h₁ : (p : ℤ) * b + 1 ≤ (a : ℤ) * q := by exact_mod_cast above
-  have h₂ : (a : ℤ) * 262144 + 1 ≤ 82347 * (b : ℤ) := by exact_mod_cast below
+  have h₂ : (a : ℤ) * 262144 + 1 ≤ 82327 * (b : ℤ) := by exact_mod_cast below
   have join := add_le_add (mul_le_mul_of_nonneg_left h₁ (by decide : (0 : ℤ) ≤ 262144))
     (mul_le_mul_of_nonneg_left h₂ (by decide : (0 : ℤ) ≤ q))
   norm_num [p, q] at join
@@ -31,61 +33,61 @@ private theorem of_cross_power {x : ℝ≥0} {a d : ℕ} (hd : 0 < d)
     NNReal.rpow_neg, NNReal.rpow_natCast, ← one_div]
   exact (le_div_iff₀ (by positivity)).mpr h
 theorem fine_score :
-    (1 - claimedRadius p q) ^ IRSProfile.repetitions ≤ (2 : ℝ≥0) ^ (-((6963 : ℝ) / 100)) := by
+    (1 - claimedRadius p q) ^ IRSProfile.repetitions ≤ (2 : ℝ≥0) ^ (-((6961 : ℝ) / 100)) := by
   let x : ℝ≥0 := (1 - claimedRadius p q) ^ 128
   have small : claimedRadius p q ≤ 1 := by
     unfold claimedRadius
     exact (div_le_one (by positivity)).mpr (by norm_num)
-  have diff : 1 - claimedRadius p q = (6326044548455713235 : ℝ≥0) / q := by
+  have diff : 1 - claimedRadius p q = (6326748235897382605 : ℝ≥0) / q := by
     apply NNReal.coe_injective
     rw [NNReal.coe_sub small]
     norm_num [claimedRadius]
-  have upper : x * 2 ^ 69 ≤ (645820973044 : ℝ≥0) / 1000000000000 := by
+  have upper : x * 2 ^ 69 ≤ (655081609055 : ℝ≥0) / 1000000000000 := by
     dsimp only [x]
     rw [diff, div_pow, div_mul_eq_mul_div, div_le_div_iff₀ (by positivity) (by positivity)]
-    exact_mod_cast (show (6326044548455713235 : ℕ) ^ 128 * 2 ^ 69 * 1000000000000 ≤
-      645820973044 * q ^ 128 by decide +kernel)
+    exact_mod_cast (show (6326748235897382605 : ℕ) ^ 128 * 2 ^ 69 * 1000000000000 ≤
+      655081609055 * q ^ 128 by decide +kernel)
   change x ≤ _
   rw [← neg_div]
-  apply of_cross_power (a := 6963) (d := 100) (by decide)
+  apply of_cross_power (a := 6961) (d := 100) (by decide)
   calc
-    x ^ 100 * 2 ^ 6963 = (x * 2 ^ 69) ^ 100 * 2 ^ 63 := by
+    x ^ 100 * 2 ^ 6961 = (x * 2 ^ 69) ^ 100 * 2 ^ 61 := by
       rw [mul_pow, mul_assoc, ← pow_mul (2 : ℝ≥0), ← pow_add]
-    _ ≤ ((645820973044 : ℝ≥0) / 1000000000000) ^ 100 * 2 ^ 63 :=
+    _ ≤ ((655081609055 : ℝ≥0) / 1000000000000) ^ 100 * 2 ^ 61 :=
       mul_le_mul_of_nonneg_right (pow_le_pow_left' upper _) (by positivity)
     _ ≤ 1 := by
       rw [div_pow, div_mul_eq_mul_div, div_le_one (by positivity)]
-      exact_mod_cast (show (645820973044 : ℕ) ^ 100 * 2 ^ 63 ≤ 1000000000000 ^ 100 by decide +kernel)
+      exact_mod_cast (show (655081609055 : ℕ) ^ 100 * 2 ^ 61 ≤ 1000000000000 ^ 100 by decide +kernel)
 theorem dyadic_score :
-    (1 - claimedRadius 337293311 1073741824) ^ IRSProfile.repetitions ≤ (2 : ℝ≥0) ^ (-((6963 : ℝ) / 100)) := by
-  let x : ℝ≥0 := (1 - claimedRadius 337293311 1073741824) ^ 128
-  have small : claimedRadius 337293311 1073741824 ≤ 1 := by
+    (1 - claimedRadius 337211391 1073741824) ^ IRSProfile.repetitions ≤ (2 : ℝ≥0) ^ (-((6961 : ℝ) / 100)) := by
+  let x : ℝ≥0 := (1 - claimedRadius 337211391 1073741824) ^ 128
+  have small : claimedRadius 337211391 1073741824 ≤ 1 := by
     unfold claimedRadius
     exact (div_le_one (by positivity)).mpr (by norm_num)
-  have diff : 1 - claimedRadius 337293311 1073741824 = (736448513 : ℝ≥0) / 1073741824 := by
+  have diff : 1 - claimedRadius 337211391 1073741824 = (736530433 : ℝ≥0) / 1073741824 := by
     apply NNReal.coe_injective
     rw [NNReal.coe_sub small]
     norm_num [claimedRadius]
-  have upper : x * 2 ^ 69 ≤ (645821085292 : ℝ≥0) / 1000000000000 := by
+  have upper : x * 2 ^ 69 ≤ (655081722900 : ℝ≥0) / 1000000000000 := by
     dsimp only [x]
     rw [diff, div_pow, div_mul_eq_mul_div, div_le_div_iff₀ (by positivity) (by positivity)]
-    exact_mod_cast (show (736448513 : ℕ) ^ 128 * 2 ^ 69 * 1000000000000 ≤
-      645821085292 * 1073741824 ^ 128 by decide +kernel)
+    exact_mod_cast (show (736530433 : ℕ) ^ 128 * 2 ^ 69 * 1000000000000 ≤
+      655081722900 * 1073741824 ^ 128 by decide +kernel)
   change x ≤ _
   rw [← neg_div]
-  apply of_cross_power (a := 6963) (d := 100) (by decide)
+  apply of_cross_power (a := 6961) (d := 100) (by decide)
   calc
-    x ^ 100 * 2 ^ 6963 = (x * 2 ^ 69) ^ 100 * 2 ^ 63 := by
+    x ^ 100 * 2 ^ 6961 = (x * 2 ^ 69) ^ 100 * 2 ^ 61 := by
       rw [mul_pow, mul_assoc, ← pow_mul (2 : ℝ≥0), ← pow_add]
-    _ ≤ ((645821085292 : ℝ≥0) / 1000000000000) ^ 100 * 2 ^ 63 :=
+    _ ≤ ((655081722900 : ℝ≥0) / 1000000000000) ^ 100 * 2 ^ 61 :=
       mul_le_mul_of_nonneg_right (pow_le_pow_left' upper _) (by positivity)
     _ ≤ 1 := by
       rw [div_pow, div_mul_eq_mul_div, div_le_one (by positivity)]
-      exact_mod_cast (show (645821085292 : ℕ) ^ 100 * 2 ^ 63 ≤ 1000000000000 ^ 100 by decide +kernel)
-theorem extend (h : ProtocolClaim 6963 337293311 1073741824) : ProtocolClaim 6963 p q where
+      exact_mod_cast (show (655081722900 : ℕ) ^ 100 * 2 ^ 61 ≤ 1000000000000 ^ 100 by decide +kernel)
+theorem extend (h : ProtocolClaim 6961 337211391 1073741824) : ProtocolClaim 6961 p q where
   admissible := by constructor <;> norm_num [claimedRadius, IRSProfile.minRelativeDistance]
   reduction := by
-    let old := claimedRadius 337293311 1073741824
+    let old := claimedRadius 337211391 1073741824
     let newRadius := claimedRadius p q
     have cell : ⌊newRadius * (Fintype.card IRSProfile.Index : ℝ≥0)⌋₊ =
         ⌊old * (Fintype.card IRSProfile.Index : ℝ≥0)⌋₊ := by
@@ -124,11 +126,11 @@ abbrev node := P3.node
 abbrev k := P3.k
 open scoped NNReal
 
-abbrev agreement : ℕ := 179798
-abbrev radiusNumerator : ℕ := 337293311
+abbrev agreement : ℕ := 179818
+abbrev radiusNumerator : ℕ := 337211391
 abbrev radiusDenominator : ℕ := 1073741824
-abbrev listCap : ℕ := 41238516566198
-abbrev scalarCap : ℕ := 274939489594828889
+abbrev listCap : ℕ := 8609338830670119
+abbrev scalarCap : ℕ := 266371389280724968
 def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
 def radius : ℝ := queryRadius
 def BadFamily (u : Words) (Γ : Finset K) : Prop :=
@@ -137,9 +139,9 @@ def BadFamily (u : Words) (Γ : Finset K) : Prop :=
 theorem agreement_of_threshold {s : ℕ}
     (hs : (Fintype.card I : ℝ) * (1-radius) ≤ s) : agreement ≤ s := by
   rw [IRSProfile.card_index] at hs
-  have p : (179797 : ℝ) < 262144*(1-radius) := by norm_num [radius, queryRadius, claimedRadius]
-  exact (show 179797 < s by exact_mod_cast p.trans_le hs)
-theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6963 := by
+  have p : (179817 : ℝ) < 262144*(1-radius) := by norm_num [radius, queryRadius, claimedRadius]
+  exact (show 179817 < s by exact_mod_cast p.trans_le hs)
+theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6961 := by
   simpa [queryRadius, claimedError] using ProximityPrize.SubmissionLower.Front6960Radius.dyadic_score
 theorem query_admissible : queryRadius ∈ Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance := by
   constructor <;> norm_num [queryRadius, claimedRadius, IRSProfile.minRelativeDistance]
@@ -232,7 +234,7 @@ theorem gamma_error_le_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
       norm_num [reductionTarget, ProximityGap.prizeThreshold]
 theorem protocol_claim_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
     (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6963 radiusNumerator radiusDenominator where
+    ProtocolClaim 6961 radiusNumerator radiusDenominator where
   admissible := query_admissible
   reduction := gamma_error_le_of_scalar_cap hlist hscalar
   score := query_score
@@ -241,7 +243,7 @@ theorem protocol_claim_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
 theorem of_bad_slopes (hlist : CJ0.ScalarList agreement listCap)
     (bound : ∀ (u : Words) (Γ : Finset K),
     (∀ γ ∈ Γ, Principal.BadSlope node (u 0) (u 1) k agreement γ) → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6963 337293311 1073741824 := by
+    ProtocolClaim 6961 337211391 1073741824 := by
   apply protocol_claim_of_scalar_cap hlist
   intro u Γ hΓ
   apply bound u Γ
@@ -272,7 +274,7 @@ export P0 (K I Words node p blockLength k Frac Bivar TypeAtMostOne coefficientBl
   extendSeed IsCommonGCD atSlope seed liftX twist amplitudeDegree sixNorm columnRank
   threeU threeV sameDirection relationOn)
 abbrev Rung := P1.Rung
-abbrev target : Rung := ⟨179798, 337293311, 1073741824, 2367, 274939489594828889, 41238516566198⟩
+abbrev target : Rung := ⟨179818, 337211391, 1073741824, 2358, 266371389280724968, 8609338830670119⟩
 abbrev agreement := target.agreement
 abbrev radiusNumerator := target.numerator
 abbrev radiusDenominator := target.denominator
@@ -282,8 +284,8 @@ abbrev listCap := target.listBound
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
-abbrev rankFee : ℕ := 71632219619753
-abbrev anchorFee : ℕ := 71632219900411
+abbrev rankFee : ℕ := 71546991362453
+abbrev anchorFee : ℕ := 71546991643011
 abbrev budget : ℕ := 0x3d0ed83eb28710f
 def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
 def radius : ℝ := queryRadius
@@ -414,8 +416,8 @@ abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.labe
 abbrev AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) := ModelAt.amplitude M
 abbrev AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K} (B : BadMark u γ) :=
   ModelAt.decoder M B
-abbrev lowCap : ℕ := 274796225155308725
-abbrev highCap : ℕ := 274796225155308725
+abbrev lowCap : ℕ := 266228295297719504
+abbrev highCap : ℕ := 266228295297719504
 end
 end Front6960
 end
@@ -649,8 +651,8 @@ theorem relation_height_le {u : Words} (hu : FrontRemainder u) (T : TwoActive u)
     T.height ≤ heightCap := by
   have h := relation_height_balance T
   have hr := hu.1
-  change 48726 + T.height + nullity u = 82347 at h
-  change T.height ≤ 33619
+  change 48746 + T.height + nullity u = 82327 at h
+  change T.height ≤ 33579
   omega
 def relation_of_two_active {u : Words} (hu : FrontRemainder u) (T : TwoActive u) :
     Relation T := by
@@ -677,7 +679,7 @@ theorem rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K) :
       exact (Finset.mem_filter.mp hγ).2)
   have hs : t + 1 - nullity u - L ≤ heightCap := by
     have hr := hu.1
-    change 82347 - nullity u - 48726 ≤ 33619
+    change 82327 - nullity u - 48746 ≤ 33579
     omega
   exact h.trans ((Nat.add_le_add_left (Nat.mul_le_mul_left p hs) L).trans_eq rank_fee_exact)
 open P0 (type_one_bad_count_of_syndromes)
@@ -687,14 +689,14 @@ theorem type_one_count (u : Words) (htype : TypeAtMostOne u)
   exact type_one_bad_count_of_syndromes node (u 0) (u 1) node.injective
     k agreement p hk (by decide) htype Γ (fun γ hγ => bad_slope u γ (hΓ γ hγ))
 theorem deficient_count (u : Words) (Γ : Finset K) (hrank : firstRank u < L)
-    (hΓ : BadFamily u Γ) : Γ.card ≤ 310869 := by
+    (hΓ : BadFamily u Γ) : Γ.card ≤ 310889 := by
   have h := K1_3.deficient_hankel_count node (u 0) (u 1) node.injective
     k L t (firstRank u) (by rw [IRSProfile.card_index]; decide) hrank rfl Γ
     (fun γ hγ => bad_slope u γ (hΓ γ hγ))
   rw [IRSProfile.card_index] at h
   exact h.trans (Nat.add_le_add_left (Nat.le_of_lt_succ hrank) blockLength)
 theorem principal_count (u : Words) (Γ : Finset K) (hprincipal : HomogeneousPrincipal u)
-    (hΓ : BadFamily u Γ) : Γ.card ≤ 734007059104170 := by
+    (hΓ : BadFamily u Γ) : Γ.card ≤ 733964444975510 := by
   obtain ⟨a, g, hg, hga, ha, hkernel⟩ := hprincipal
   have hsum : a + (t - a) = t := by omega
   let φ := algebraMap (Polynomial K) Frac
@@ -723,7 +725,7 @@ theorem principal_count (u : Words) (Γ : Finset K) (hprincipal : HomogeneousPri
   exact h.trans ((Nat.mul_le_mul_left p (Nat.add_le_add_left ha blockLength)).trans (by decide))
 open P0 (constantRankCount nativeMoments independent_nativeMoments)
 theorem constant_count (u : Words) (Γ : Finset K) (hu : ConstantKernel u)
-    (hΓ : BadFamily u Γ) : Γ.card ≤ 175457282638251 := by
+    (hΓ : BadFamily u Γ) : Γ.card ≤ 175414668509591 := by
   let φ := algebraMap (Polynomial K) Frac
   have hrank : ((twoBlock u).map φ).rank = stackRank u := rfl
   have hconstant : (coefficientBlocks p node (u 0) (u 1) L t).rank = stackRank u := hu.symm
@@ -787,14 +789,14 @@ private theorem bad_excludes_full_rank (u : Words) (γ : K) (M : BadMark u γ) :
     dsimp [S]
     rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index]
     have := M.agreement
-    change 179798 ≤ _ at this
-    change 262144 - _ ≤ 82346
+    change 179818 ≤ _ at this
+    change 262144 - _ ≤ 82326
     omega
   exact excludes_full_rank p node node.injective Native.native_domain_fixed (u 0) (u 1) γ k L t
     (by rw [IRSProfile.card_index]; decide) M.decoder M.degree S hs
     (fun i hi => (M.hits i (by simpa [S] using hi)).symm)
 theorem full_column_count (u : Words) (Γ : Finset K) (hfirst : firstRank u = L)
-    (hz : nullity u = 0) (hΓ : BadFamily u Γ) : Γ.card ≤ 71636481032619 := by
+    (hz : nullity u = 0) (hΓ : BadFamily u Γ) : Γ.card ≤ 71551252775319 := by
   have hr := actual_stackRank u
   rw [hz] at hr
   apply (Strata.two_block_rank_exception_count p node (u 0) (u 1) L t 0 hr hfirst Γ ?_).trans_eq
@@ -807,8 +809,8 @@ theorem shortened_guards {u T R} (D : Reduction u T R) (hu : FrontRemainder u) :
     k + D.height ≤ agreement ∧ D.height < p - 1 := by
   have hb := relation_height_le hu T
   have he := D.height_eq
-  change T.height ≤ 33619 at hb
-  change 131072 + 3 * D.height ≤ 262144 - _ ∧ 131072 + D.height ≤ 179798 ∧ D.height < 0x7f000000
+  change T.height ≤ 33579 at hb
+  change 131072 + 3 * D.height ≤ 262144 - _ ∧ 131072 + D.height ≤ 179818 ∧ D.height < 0x7f000000
   omega
 end
 end Front6960
@@ -975,12 +977,12 @@ private theorem certificate_shifts_annihilate {u : Words} {T : TwoActive u} (R :
     (s : ℕ) (hL : T.height + s = L) :
     (K1_6.shifts (fun b => Principal.assemble (fun j => R.coefficients (b, j))) L s).transpose *
       twoBlock u = 0 := by
-  have hsize : k + (48725 + 1) + t ≤ Fintype.card I := by
+  have hsize : k + (48745 + 1) + t ≤ Fintype.card I := by
     rw [IRSProfile.card_index]
     decide
   exact certificate_shifts_annihilate_generic p node (u 0) (u 1) IRSProfile.domain.injective
     Native.native_domain_fixed (algebraMap (Polynomial K) Frac) (IsFractionRing.injective (Polynomial K) Frac)
-    k T.height 48725 t s hL hsize R _ (fun _ => rfl)
+    k T.height 48745 t s hL hsize R _ (fun _ => rfl)
 private theorem moving_has_new_node {u : Words} {T : TwoActive u} (R : Relation T)
     (hMoving : MovingGCD R) {γ : K} {M : BadMark u γ} (hSat : SaturatedAt R M) :
     ∃ i ∉ fixedNodes R,
@@ -1017,18 +1019,18 @@ private theorem moving_has_new_node {u : Words} {T : TwoActive u} (R : Relation 
   exact ⟨i, hiFixed, by rw [hAU, eval_mul, hi, zero_mul], by rw [hBV, eval_mul, hi, zero_mul]⟩
 open P1 (count_bound)
 private theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation T)
-    (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6872363917)
+    (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6847986802)
     (hMoving : MovingGCD R) (hSat : NormalSaturation R) (Γ : Finset K)
     (hBad : BadFamily u Γ) (hNormal : ∀ γ ∈ Γ, Normal u γ) :
-    Γ.card ≤ 1801548966658048 := by
+    Γ.card ≤ 1795158652223488 := by
   classical
   let U (i : I) := (leftU R).eval (C (node i))
   let V (i : I) := (leftV R).eval (C (node i))
-  have hU (i) : (U i).natDegree ≤ 6872363917 := by
+  have hU (i) : (U i).natDegree ≤ 6847986802 := by
     dsimp only [U, leftU]
     rw [Strata.assemble_nodePolynomial]
     exact Principal.nodePolynomial_natDegree_le _ (fun j => hHeight (0, j)) _
-  have hV (i) : (V i).natDegree ≤ 6872363917 := by
+  have hV (i) : (V i).natDegree ≤ 6847986802 := by
     dsimp only [V, leftV]
     rw [Strata.assemble_nodePolynomial]
     exact Principal.nodePolynomial_natDegree_le _ (fun j => hHeight (1, j)) _
@@ -1041,26 +1043,26 @@ private theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation 
     exact ⟨i, hNZ, (eval_atSlope (leftU R) γ (node i)).symm.trans hu,
       (eval_atSlope (leftV R) γ (node i)).symm.trans hv⟩
   exact count_bound (c := Γ.card) (n := Fintype.card I) (n' := 262144)
-    (H := 6872363917) (b := 1801548966658048) IRSProfile.card_index
-    (common_node_count U V 6872363917 Γ hU hV hNew) rfl
+    (H := 6847986802) (b := 1795158652223488) IRSProfile.card_index
+    (common_node_count U V 6847986802 Γ hU hV hNew) rfl
 theorem moving_count (u : Words) (front : FrontRemainder u) (T : TwoActive u)
     (R : Relation T) (moving : MovingGCD R) (saturated : NormalSaturation R)
     (Γ : Finset K) (bad : BadFamily u Γ) (normal : ∀ γ ∈ Γ, Normal u γ) :
-    Γ.card ≤ 1801548966658048 := by
+    Γ.card ≤ 1795158652223488 := by
   let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
   let s := L - T.height
   have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
   have hBalance := relation_height_balance T
   have hHeight := relation_height_le front T
-  change T.height ≤ 33619 at hHeight
-  have hsDef : s = 48726 - T.height := rfl
-  have hSum : T.height + s = L := by change T.height + s = 48726; omega
-  have hs : 15107 ≤ s := by omega
+  change T.height ≤ 33579 at hHeight
+  have hsDef : s = 48746 - T.height := rfl
+  have hSum : T.height + s = L := by change T.height + s = 48746; omega
+  have hs : 15167 ≤ s := by omega
   have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * L := by
     change stackRank u + s = _
     rw [actual_stackRank u]
-    change 48726 + T.height + nullity u = 82347 at hBalance
-    change 82347 - nullity u + s = 97452
+    change 48746 + T.height + nullity u = 82327 at hBalance
+    change 82327 - nullity u + s = 97492
     omega
   have hCoordinates : K1_6.pairCoordinates P T.height = R.coefficients := by
     funext i
@@ -1074,10 +1076,10 @@ theorem moving_count (u : Words) (front : FrontRemainder u) (T : TwoActive u)
   have hBound := K1_6_2.proof K L (t + 1) s p (twoBlock u) (K1_6.shifts P L s)
     (by decide) hRank hKernel (stacked_entry_natDegree p node (u 0) (u 1) L t) hMinors rows
   rw [hRows] at hBound
-  have hProduct : 15107 * H ≤ s * H := Nat.mul_le_mul_right H hs
-  have hCeiling : L * (p + 1) = 103820801703084 := rfl
+  have hProduct : 15167 * H ≤ s * H := Nat.mul_le_mul_right H hs
+  have hCeiling : L * (p + 1) = 103863415831764 := rfl
   rw [hCeiling] at hBound
-  have hCap : H ≤ 6872363917 := by omega
+  have hCap : H ≤ 6847986802 := by omega
   apply normal_growth_count R _ moving saturated Γ bad normal
   intro i
   rw [← hCoordinates]
@@ -1135,8 +1137,8 @@ theorem add_rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K)
   classical
   rw [← Finset.card_filter_add_card_filter_not (s := Γ) (p := Normal u)]
   exact Nat.add_le_add hb (rank_exceptions u hu Γ)
-theorem low_with_reserve : lowCap + anchorFee + rankFee = 274939489594828889 := by decide
-theorem nonpositive_with_reserve : listCap + anchorFee + rankFee = 184502956086362 := by decide
+theorem low_with_reserve : lowCap + anchorFee + rankFee = 266371389280724968 := by decide
+theorem nonpositive_with_reserve : listCap + anchorFee + rankFee = 8752432813675583 := by decide
 private theorem coherent_count (h5 : c5) (h6 : c6) (h7 : c7) (hlist : CJ0.ScalarList agreement listCap)
     (u : Words) (hu : FrontRemainder u) (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) (B : RankThree u T R D) (hsat : NormalSaturation R)
@@ -1212,9 +1214,9 @@ private theorem scalar_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
           (by decide)
   · exact hnone (Finset.not_nonempty_iff_eq_empty.mp hne)
 
-/-- The seven rank and height cases suffice for the protocol at 82,336 errors. -/
+/-- The seven rank and height cases suffice for the protocol at 82,326 errors. -/
 theorem of_children (hlist : CJ0.ScalarList agreement listCap) (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) (h7 : c7) :
-    ProtocolClaim 6963 337293311 1073741824 :=
+    ProtocolClaim 6961 337211391 1073741824 :=
   Front6960ProtocolTarget.protocol_claim_of_scalar_cap hlist
     (scalar_count h1 h2 h3 h4 h5 h6 h7 hlist)
 end
@@ -1305,10 +1307,10 @@ theorem proof : Front6960.c1 := by
       IRSProfile.card_index] at h
     exact h.trans (Nat.sub_le_sub_left M.agreement blockLength)
   have hheight : T.height ≤ heightCap := relation_height_le hfront T
-  have hH : T.height < L := hheight.trans_lt (by change 33619 < 48726; decide)
+  have hH : T.height < L := hheight.trans_lt (by change 33579 < 48746; decide)
   have hfit : k + T.height ≤ M.support.card :=
     have hcap : k + heightCap ≤ agreement := by
-      change 164691 ≤ 179798
+      change 164651 ≤ 179818
       decide
     ((Nat.add_le_add_left hheight k).trans hcap).trans M.agreement
   have hfix (i : I) : frobenius K p (node i) = node i := Native.native_domain_fixed i
@@ -1748,8 +1750,8 @@ private theorem pencil_count {u : Words} (Γ : Finset K)
   have he := Finset.card_erase_add_one hr
   have hS : agreement ≤ S.card := (M r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index] at hcard
-  change 179798 ≤ S.card at hS
-  change Γ.card ≤ 82347
+  change 179818 ≤ S.card at hS
+  change Γ.card ≤ 82327
   omega
 theorem proof : Front6960.c2 := by
   intro u hu T R D B _ hp hn Γ hΓ _

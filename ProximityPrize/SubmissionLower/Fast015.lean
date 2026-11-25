@@ -5,6 +5,8 @@ import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Flat.TorsionFree
 import Mathlib.RingTheory.TotallySplit
 
+set_option Elab.async false
+
 -- merged module Fast014
 section Merged_Fast014
 set_option Elab.async false

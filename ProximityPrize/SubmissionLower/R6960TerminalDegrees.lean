@@ -1,9 +1,9 @@
 import Mathlib.Data.Nat.Basic
-import ProximityPrize.SubmissionLower.FrontCore82258Model
-import ProximityPrize.SubmissionLower.HighCore82258TerminalArithmetic
-import ProximityPrize.SubmissionLower.KoalaRectPosition
+import ProximityPrize.SubmissionLower.KoalaRectReceipts
 import ProximityPrize.SubmissionLower.R6960MainGeometryUnion
 import ProximityPrize.SubmissionLower.R6960TerminalReceipts
+
+set_option Elab.async false
 
 -- merged module HighCore82258RectangleOrder
 section Merged_HighCore82258RectangleOrder
@@ -119,26 +119,26 @@ open KoalaRectAxes (swap)
 open RescueGeometry (Model Family SurfacePass OnSurface terminalShape word)
 open TerminalReceipts (terminalBank witness bank_checked positive)
 private theorem reject {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : K1.I→L)
-    (lo : 2402≤h) (hi : h≤33619) {S : Finset Surface}
+    (lo : 2359≤h) (hi : h≤33579) {S : Finset Surface}
     (parents : ∀ q∈S,Parent q ∧ SurfacePass Crt w q)
     {f : Equation} (product : ProjectedProduct S f) (i : Fin 49)
     (e : max 1 i.val≤f.natDegree) (U d : Fin 2→ℕ)
     (box : U 0+U 1≤terminalShape.U)
     (gain : rectDebit h terminalBank.nodeRows terminalBank.poleMoment U <
-      rectGain 179798 h terminalShape (max 1 i.val) U d)
+      rectGain 179818 h terminalShape (max 1 i.val) U d)
     (slots : ∀ r,rectSlots U (axisDegree f) r≤rectSlots U d r) : False := by
-  have width : terminalShape.B*(131071-h)≤terminalShape.m*179798 :=
+  have width : terminalShape.B*(131071-h)≤terminalShape.m*179818 :=
     (Nat.mul_le_mul_left _ (Nat.sub_le_sub_left lo 131071)).trans (by decide +kernel)
   have fn : f≠0 := fun zero => by have := product.positive; simp [zero] at this
   exact (not_le_of_gt gain) (KoalaRect.rectLoss (h:=h) (by omega) (by omega)
-    (lt_of_le_of_lt hi (by decide)) Crt w 179798 terminalShape U d (by decide) (by decide)
+    (lt_of_le_of_lt hi (by decide)) Crt w 179818 terminalShape U d (by decide) (by decide)
     box bank_checked.moment.2 width bank_checked.nodes.le bank_checked.moment.1 (by omega)
-    (fun q hq=>(parents q hq).1) (fun q hq=>(parents q hq).2) fn e product slots)
+    (fun q hq=>(parents q hq).1) (fun q hq=>(parents q hq).2.original) fn e product slots)
 private theorem box_guard (i : Fin 49) : (witness i.val).U 0+(witness i.val).U 1≤terminalShape.U := by
   fin_cases i <;> decide +kernel
 private theorem one_sided : ∀ i : Fin 49, 0 < i.val → (witness i.val).order 0 = 0 := by decide +kernel
 theorem degrees {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : K1.I→L)
-    (lo : 2402≤h) (hi : h≤33619) {S : Finset Surface}
+    (lo : 2359≤h) (hi : h≤33579) {S : Finset Surface}
     (parents : ∀ q∈S,Parent q ∧ SurfacePass Crt w q) {f : Equation} (product : ProjectedProduct S f) :
     f.natDegree<48 ∧ axisDegree f 0+axisDegree f 1≤2400 ∧
     ∀ j : Fin 2,axisDegree f j<(witness f.natDegree).order 1 := by
@@ -189,8 +189,8 @@ theorem degrees {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : K1.I→L)
       change _≤_+1-r*t.order 0
       rw [z0,Nat.mul_zero,Nat.sub_zero]; exact Nat.sub_le _ _
 theorem retained_equation {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    {D : PoleData M.overhead.toNat} (Crt : CRTLift D) (lo : 2402≤M.overhead.toNat)
-    (hi : M.overhead.toNat≤33619) (regular : ∀ j i,(D.block j).eval (nodeL i)≠0)
+    {D : PoleData M.overhead.toNat} (Crt : CRTLift D) (lo : 2359≤M.overhead.toNat)
+    (hi : M.overhead.toNat≤33579) (regular : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     Γ.card≤MainGeometry.prefixCap ∨
       ∃ (paid : Finset K1.K) (f : Equation), paid.card≤MainGeometry.prefixCap ∧

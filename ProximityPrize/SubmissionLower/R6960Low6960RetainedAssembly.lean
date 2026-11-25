@@ -2,8 +2,9 @@ import ProximityPrize.SubmissionLower.R6960Low6960GeometryCut
 import ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleMixed
 import ProximityPrize.SubmissionLower.R6960Low6960SharedCycleBound
 import ProximityPrize.SubmissionLower.R6960Low6960SharedCycleFour
-import ProximityPrize.SubmissionLower.R6960Low6960SharedBentCaps
 import ProximityPrize.SubmissionLower.R6960Low6960RetainedWitness
+
+set_option Elab.async false
 
 -- merged module R6960Low6960SharedCycleLegacy
 section Merged_R6960Low6960SharedCycleLegacy

@@ -1,0 +1,214 @@
+import ProximityPrize.SubmissionLower.Gate6966Assm
+
+set_option Elab.async false
+
+-- merged module Witness6966DatETr5
+section Merged_Witness6966DatETr5
+set_option autoImplicit false
+set_option maxRecDepth 400000
+set_option Elab.async false
+namespace Witness6966DatETr5
+open Gate6966Cell
+def G : Gt := { m00 := 0, m01 := 39251835991215360, m02 := 155160962561491200, m11 := 149980979443347840, m12 := 795447676052641920, m22 := 2461153937333616000, xb := 142, xj := 58, xt := 10, lb := 98, lj := 51, lt := 2, A := 233880000000000000, sc := 1920, lift := false }
+def ws : List ℕ := [0x0,0x0,0x0,0x0,0x0,0x57e40301,0x4c4b4301,0x439e8301,0x3ccc0301,0x37422301,0x6275d3032a8c302,0x57e40302ec62302,0x51a00300fa67402,0x4c4b4300d6a2402,0x47acf300ba04402,0x439e8300a2c3402,0x5cc10304004f3008f9d403,0x57e40303ccc03007fa8403,0x539883039e463007238403,0x4fc1d303742230066cc403,0x4c4b43034db83005d02403,0x6275d30492573032a8c300548e404,0x5b7a330464453030a373004d33404,0x57e4030439e8302ec6230046c4404,0x549f730412c83010c9e400411b404,0x51a00303ee81300fa674003c19404,0x4edbd303ccc0300e53c40037a6404,0x5eb5f304c4b4303ad40300d6a240033ac405,0x5abb53049e803038fc7300c5e5400301c405,0x57e403047acf3037422300ba044002ce7405,0x5540e304595a3035a24300ac8d4002a01405,0x52cb630439e830341a8300a2c34002761405,0x6275d30507e13041c483032a8c30097c740024fe406,0x5cc10304e54a304004f30314b33008f9d40022d1406,0x5a3e2304c4b4303e5d73030002300868840020d4406,0x57e40304a5ef303ccc0302ec623007fa84001f01406,0x55ae130488cd303b4ee302d9be30078104001d54406,0x539883046d2b3039e46301045840072384001bc9406,0x51a0030452e930388b4300fa674006bce4001a5c406,0x5c04e304fc1d30439e83037422300ebfc40066cc400190b407,0x59e5c304dfb93042212303607e300dec4400615540017d2407,0x57e40304c4b43040b4f3034db8300d6a24005d0240016b0407,0x55fce304aaf1303f58c3033bc2300cb40400584f40015a2407,0x6275d30542dd3049257303e0b73032a8c300c0bf400548e40014a6408,0x5dd06305274d3047acf303ccc03031a0d300ba04400507d40013bb408,0x5b7a33050cff3046445303b9993030a37300b0e04004d3340012df408,0x59a40304f3db3044ea8303a734302fb01300a86340049a94001212408,0x6958a3057e40304dbc930439e83039585302ec62300a2c340046c44001151409,0x64a993056386304c4b430425f73038483302de503009b5040043aa400109c409,0x6058230549f7304ae8d30412c830374223010c9e400945c400411b4000ff2409,0x5cc10305317c3049942304004f303645930100594008f9d4003e5f4000f52409,0x5b0fb3051a0030484c4303ee813035521300fa6740089764003c194000ebb409,0x5971330503703047108303dd543034671300ef7840083b140039ad4000e2d409,0x57e40304edbd3045e01303ccc03033842300e53c4007fa840037a64000da7409,0x6275d305666f304d8d93044ba4303bcbc3032a8c300dba34007a84400357d4000d2840a,0x5eb5f3054f8d304c4b430439e8303ad403031d4c300d6a240075ae40033ac4000caf40a,0x70676305c3cf3053988304b14530428c43039e463031079300ce02400723840031be4000c3d40b,0x805f0306c122305abb530524513049e8030418303038fc7303040f300c5e54006de2400301c4000bd140c,0x943d4307ba17306807b305948b3050fdc3048c5c304082430381bd302f809300be3f40069c94002e614000b6b40d,0x8e87f307a12030644163057e40304fc1d3047acf303f8993037422302ec62300ba0440066cc4002ce74000b0940d,0xa37ea308937130757673060b9030568c6304e90730469d1303e98830366f1302e115300b318400631b4002b574000aad40e,0xcb73630baae3309d28630844163071280305d696305540e304d692304595a303daed3035a2430111c5400ac8d4005f9b4002a014000a55410,0xcb73630b32fc309740e307f9ea306d202305bd23305400c304c4b43044964303ccc03034db8301079b400a65c4005d0240028984000a01410,0xd178f30cb73630ac3673091be0307b479306958a305a76d3052cb6304b36630439e8303befd30341a8300fdff400a2c340059d6400276140009b1411,0xe94b130cb73630c345d30a5b5e308c96e307a1203065cc2305927b3051a00304a29e3042ae1303b19f30335f0300fa674009d2040056d3400261a4000964412,0xe01d130cb73630bba80309fa363087c363075ce5306275d3057e4030507e130492573041c48303a4a23032a8c300f19940097c7400548e40024fe400091c412,0xf8ba630d796b30cb73630b48cf3099f5230833c63071cce305f5143056ab2304f652304828a3040e1930398013031f79300e93f40092b140051cf40023d440008d6413,0x11381930eeef230cfa8030cb73630ade903094a28307efb7306e085305cc1030557c5304e54a3047330304004f3038bb930314b3300e1524008f9d4004f3240022d14000893414,0x192a1221084e730e5d4b30cb73630c3bce30a7b1c308fa3d307afaf306a7bd305b7a33054570304d4c23046445303f2e53037fc53030a37300d9ca4008af64004d3340021c14000854415,0x1a4969218b09c20fde8030dd5a930cb73630bc86630a1de1308af21307a120306722e305a3e230533ab304c4b430455c3303e5d730374223030002300d6a240086884004ad040020d44000817416,0x19c7ae211800030f43b230d572330cb73630b5c50309c65a308687130761a03063f9b30590c5305226e304b51a30447a6303d92130368cd302f611300cfb1400824f40048884001fdb40007dd416,0x1ae4642194c40210d00f30eb36b30ce0e830cb73630af6ed309740e30825d230725b83060fc83057e4030511b1304a5ef30439e8303ccc03035dc2302ec62300c9154007fa840046c44001f0140007a5417,0x1c07be21a60a82127c853102c3a30e2cbb30cb73630c427230a97b13092693307e6f4306ed22305e2833056c4d305016e304972c3042c87303c0b030353003011e62400c2c84007bc640044ad4001e1d400076f418,0x1d32bb21b7b00219e353211c33830f936830daec930cb73630bd4d930a3e1c308dd88307ab8d306b79f305c5b43055ae1304f1a030488cd3041f7d303b4ee3034882301154a400bcc5400781040042ac4001d54400073c419,0x1e665b21c9c3821af5562137a11311168230f04a130d38d530cb73630b6dd8309e9bb3089895307a12030684f4305b30530549f7304e23f3047acf30412c8303a9763033e463010c9e400ba044007484400411b4001c82400070a41a,0x1dc54021c0d8721a7627212b79b310754430e7f0730cca3130cb73630b0ce83099a28308576b30765bf30654ee305a0e73053988304d3483046d2b30406643039e46303344b3010458400b47240072384003f434001bc940006db41a,0x196e6b31d2cca21b85fe2147847312022f30fde8030e01d130cb73630c486830ab18f3094f0530819c23072d83306275d3058f53305298c304c4b43045fe0303fa4d303935c3032a8c300fc72400af204006ef14003d7f4001b0740006ad41b,0x196e6b31c9c3821b0506213acde31158aa30f515130d8c4d30cb73630be01130a5b5e30907fb307df58306f833305fc143057e403051a00304b68130452e9303ee8130388b43032109300fa67400aa094006bce4003c194001a5c400068241b,0x196e6b31db9ac21c12e121576cf312eeec310ba0730eccea31400dc61188a860f4d1a70a09f4308c4bf307a7f2306c59a305d2ed3056da93050adc304a8a93044642303e2fc3037e4c30317bf300f308400a52a40068cc4003a7740019aa400065741c,0x196e6b3196e6b31d274d21b902e214a2af3123d48318d822515f42c61354be610f44860ecdba70cdc7970b1c50807a120306958a305c04e3055d87304fc1d3049b2830439e8303d7bd303742230143d8400ebfc400a2c340066cc40038e6400190b400062f41d,0x196e6b3196e6b31c9c38216755c31e691951b0d36517feb56153746612b128610672470e547670c74c770ac41f8093ede907e1b1905af173054dd3304edbd3048dfc3042dd9303ccc03036a333013a54400e53c4009e3b400640240037a64001865400060841d,0x196e6b3196e6b3196e6b31c17d8220e45d51d5a5551a2078517303f61483bd612158e60fe0c770de0ee70c11e880a6ff8808f7b0907a5ea90677c4a053e8a304dfb930481203042212303c203303607e3013139400dec440099e24006155400363240017d240005e241e,0x196e6b3196e6b31d2236223788a51fbf8151c59745193fa95166c05613d8f6611816b60f60c370d72c470bb39080a1f9d808b3ab9076cc0a06481fa054342b04d20d3047491304168f303b78430357003012880400d89240095b64005ec240034cc400173940005be41e,0x196e6b3196e6b3196e6b32625a04223cb851ea9a951b65865186a00515b15d6133662610f44860ee6b370d09a670b597a809d2d480872a2907360ea061a80a051d93b04c4b4304684c3040b4f303ad403034db830127ee400d6a240091b54005d0240033ac40016b0400059b41f,0x196e6b3196e6b328eba1424d1fb521111851da1d351a7db05179ec3614ffab6129b7b6106db570e723a70ca54670b03658098968808346790701b0a05eeccb04f974c041f8cd045c4f304004f303a33730344a43011fb8400d0d34008f9d4005a9d40032604001621400057941f,0x196e6b3196e6b32bca8a4277f494238fbf51ff49251ca712519a129516dd48614565e61207c960fed4b70e030270c455d80ab1158094328907f8d1906cf85a05c4e7b04d6cdc040336d034848e03f58c30399643016b8140117d8400cb404008be0400584f400312040015a24000558420,0x196e6b32ec25e42a44a442625a04225dc351ee62851bb88c518cf3751624f0613b4f06117adb60f72ad70d98bc70be9a680a6252808ffe4907bfbc9069f6ca059cb7b04b58cc03e800d033250e03eb053038fc7301631e4011048400c5e540088474005618400301c400151d4000539420,0x3865f301631e4010906400c0bf40084d1400548e4002ef240014a6400051b409,0x1598c401020c400bbcb400817d400527c4002dd2400142a40004fd408,0x1505b400fb58400ba044007fa8400507d4002ce740013bb40004e1408,0xfa67400b55c4007c894004e904002bda400134840004c6407,0xb0e040079874004d334002ad740012df40004ab406,0xac8d40076a04004b664002a0140012744000491406,0x73d340049a9400290e40012124000478405,0x47fa400282440011ad4000460404,0x46c4400276140011514000449404,0x268540010f24000432403,0x25b0400109c400041c403,0x10434000407402,0xff240003f3402,0x3df401,0x3cb401,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0]
+def lv : Lv := [(90,28,4,14365),(180,56,9,201155),(274,84,13,929791),(368,112,19,3434037),(461,140,23,7816807),(551,166,31,16843314),(598,199,35,28012417),(681,229,42,54324146),(767,252,50,77839021),(887,277,55,127166412),(972,310,52,172991521),(1060,335,57,222265379),(1159,362,62,309299284),(1222,389,68,372193353),(1308,421,74,551126129),(1395,451,81,776686236),(1475,481,86,1013348989),(1579,505,95,1317439413),(1689,524,99,1457854499),(1772,559,100,1888043202),(1860,589,101,2224218283),(1940,613,106,2459400683),(2028,646,110,3136136605),(2132,673,116,3853909108),(2197,698,120,4051123763),(2284,725,127,4797059585),(2371,752,136,5789568450),(2461,779,141,6667619324),(2569,798,153,7672012049),(2657,833,153,9150105130),(2759,864,155,10743717747),(2823,899,152,11609239248),(2911,927,156,12994436273),(2989,955,163,14734830623),(3087,978,169,16138370279),(3175,1005,174,17901806918),(3263,1032,179,19804958763),(3334,1059,191,22704854751),(3456,1087,196,26430845877),(3548,1116,198,29001296331),(3634,1143,202,31501581795),(3722,1173,203,34065486959),(3814,1197,209,36729557446),(3875,1234,208,39949882529),(3983,1262,216,45912286106),(4012,1287,222,46071260683),(4012,1325,230,50270740252),(4012,1367,236,55474180251),(4012,1409,241,60490286983),(4012,1452,257,70934398699),(4012,1488,261,73320188782),(4007,1528,267,78123291725),(4012,1571,272,84952880405),(4012,1615,280,94041155352),(4012,1648,284,94707368102),(4012,1650,308,89970399947),(4012,1650,329,82127670758),(4012,1650,343,71849350469),(4012,1650,351,60593203350),(4012,1650,360,51152232554),(4012,1650,367,42391991568),(4012,1650,369,33572119623),(4012,1650,381,28548705290),(4012,1650,394,24316428427),(4012,1650,404,20074408264),(4012,1650,414,16424526120),(4012,1650,427,13680112211),(4012,1650,435,10747591425),(4012,1650,444,8391966240),(4012,1650,454,6511305522),(4012,1650,464,4968923041),(4012,1650,472,3596838924),(4012,1650,480,2521103989),(4012,1650,489,1727253727),(4012,1650,498,1125934767),(4012,1650,518,865365849),(4012,1650,535,608772833),(4012,1650,539,397401034),(4012,1650,541,246993062),(4012,1650,542,144682812),(4012,1650,544,79156362),(4012,1650,547,39525697),(4012,1650,547,16999186),(4012,1650,548,5948493),(4012,1650,549,1467764),(4012,1650,550,172229),(4012,1650,550,1274),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0),(4012,1650,550,0)]
+def n : ℕ := 243
+def ru : ℕ := 244
+def rho0 : ℕ := 212
+def amax : ℕ := 32
+theorem T0 : tabAll 1 ws 0 8 = true := by decide +kernel
+theorem T1 : tabAll 1 ws 8 8 = true := by decide +kernel
+theorem T2 : tabAll 1 ws 16 8 = true := by decide +kernel
+theorem T3 : tabAll 1 ws 24 8 = true := by decide +kernel
+theorem T4 : tabAll 1 ws 32 8 = true := by decide +kernel
+theorem T5 : tabAll 1 ws 40 8 = true := by decide +kernel
+theorem T6 : tabAll 1 ws 48 8 = true := by decide +kernel
+theorem T7 : tabAll 1 ws 56 8 = true := by decide +kernel
+theorem T8 : tabAll 1 ws 64 8 = true := by decide +kernel
+theorem T9 : tabAll 1 ws 72 8 = true := by decide +kernel
+theorem T10 : tabAll 1 ws 80 8 = true := by decide +kernel
+theorem T11 : tabAll 1 ws 88 8 = true := by decide +kernel
+theorem T12 : tabAll 1 ws 96 8 = true := by decide +kernel
+theorem T13 : tabAll 1 ws 104 8 = true := by decide +kernel
+theorem T14 : tabAll 1 ws 112 8 = true := by decide +kernel
+theorem T15 : tabAll 1 ws 120 8 = true := by decide +kernel
+theorem T16 : tabAll 1 ws 128 8 = true := by decide +kernel
+theorem T17 : tabAll 1 ws 136 8 = true := by decide +kernel
+theorem T18 : tabAll 1 ws 144 8 = true := by decide +kernel
+theorem T19 : tabAll 1 ws 152 8 = true := by decide +kernel
+theorem T20 : tabAll 1 ws 160 8 = true := by decide +kernel
+theorem T21 : tabAll 1 ws 168 8 = true := by decide +kernel
+theorem T22 : tabAll 1 ws 176 8 = true := by decide +kernel
+theorem T23 : tabAll 1 ws 184 8 = true := by decide +kernel
+theorem T24 : tabAll 1 ws 192 8 = true := by decide +kernel
+theorem T25 : tabAll 1 ws 200 8 = true := by decide +kernel
+theorem T26 : tabAll 1 ws 208 8 = true := by decide +kernel
+theorem T27 : tabAll 1 ws 216 8 = true := by decide +kernel
+theorem T28 : tabAll 1 ws 224 8 = true := by decide +kernel
+theorem T29 : tabAll 1 ws 232 8 = true := by decide +kernel
+theorem T30 : tabAll 1 ws 240 3 = true := by decide +kernel
+theorem tabOK : Gate6966ClassTable.tableOK 1 ws = true := tableOK_of_all ws 1 0 (by simpa [ws] using (tabAll_add 1 ws 0 240 3 (tabAll_add 1 ws 0 232 8 (tabAll_add 1 ws 0 224 8 (tabAll_add 1 ws 0 216 8 (tabAll_add 1 ws 0 208 8 (tabAll_add 1 ws 0 200 8 (tabAll_add 1 ws 0 192 8 (tabAll_add 1 ws 0 184 8 (tabAll_add 1 ws 0 176 8 (tabAll_add 1 ws 0 168 8 (tabAll_add 1 ws 0 160 8 (tabAll_add 1 ws 0 152 8 (tabAll_add 1 ws 0 144 8 (tabAll_add 1 ws 0 136 8 (tabAll_add 1 ws 0 128 8 (tabAll_add 1 ws 0 120 8 (tabAll_add 1 ws 0 112 8 (tabAll_add 1 ws 0 104 8 (tabAll_add 1 ws 0 96 8 (tabAll_add 1 ws 0 88 8 (tabAll_add 1 ws 0 80 8 (tabAll_add 1 ws 0 72 8 (tabAll_add 1 ws 0 64 8 (tabAll_add 1 ws 0 56 8 (tabAll_add 1 ws 0 48 8 (tabAll_add 1 ws 0 40 8 (tabAll_add 1 ws 0 32 8 (tabAll_add 1 ws 0 24 8 (tabAll_add 1 ws 0 16 8 (tabAll_add 1 ws 0 8 8 (tabAll_add 1 ws 0 0 8 (tabAll_nil 1 ws 0) T0) T1) T2) T3) T4) T5) T6) T7) T8) T9) T10) T11) T12) T13) T14) T15) T16) T17) T18) T19) T20) T21) T22) T23) T24) T25) T26) T27) T28) T29) T30))
+theorem C0 : allOK G 1 ws lv 0 8 = true := by decide +kernel
+theorem C1 : allOK G 1 ws lv 8 4 = true := by decide +kernel
+theorem C2 : allOK G 1 ws lv 12 3 = true := by decide +kernel
+theorem C3 : allOK G 1 ws lv 15 3 = true := by decide +kernel
+theorem C4 : allOK G 1 ws lv 18 3 = true := by decide +kernel
+theorem C5 : allOK G 1 ws lv 21 2 = true := by decide +kernel
+theorem C6 : allOK G 1 ws lv 23 2 = true := by decide +kernel
+theorem C7 : allOK G 1 ws lv 25 2 = true := by decide +kernel
+theorem C8 : allOK G 1 ws lv 27 2 = true := by decide +kernel
+theorem C9 : allOK G 1 ws lv 29 2 = true := by decide +kernel
+theorem C10 : allOK G 1 ws lv 31 1 = true := by decide +kernel
+theorem C11 : allOK G 1 ws lv 32 1 = true := by decide +kernel
+theorem C12 : allOK G 1 ws lv 33 1 = true := by decide +kernel
+theorem C13 : allOK G 1 ws lv 34 1 = true := by decide +kernel
+theorem C14 : allOK G 1 ws lv 35 1 = true := by decide +kernel
+theorem C15 : allOK G 1 ws lv 36 1 = true := by decide +kernel
+theorem C16 : allOK G 1 ws lv 37 1 = true := by decide +kernel
+theorem C17 : allOK G 1 ws lv 38 1 = true := by decide +kernel
+theorem C18 : allOK G 1 ws lv 39 1 = true := by decide +kernel
+theorem C19 : allOK G 1 ws lv 40 1 = true := by decide +kernel
+theorem C20 : allOK G 1 ws lv 41 1 = true := by decide +kernel
+theorem C21 : allOK G 1 ws lv 42 1 = true := by decide +kernel
+theorem C22 : allOK G 1 ws lv 43 1 = true := by decide +kernel
+theorem C23 : allOK G 1 ws lv 44 1 = true := by decide +kernel
+theorem C24 : allOK G 1 ws lv 45 1 = true := by decide +kernel
+theorem C25 : allOK G 1 ws lv 46 1 = true := by decide +kernel
+theorem C26 : allOK G 1 ws lv 47 1 = true := by decide +kernel
+theorem C27 : allOK G 1 ws lv 48 2 = true := by decide +kernel
+theorem C28 : allOK G 1 ws lv 50 2 = true := by decide +kernel
+theorem C29 : allOK G 1 ws lv 52 2 = true := by decide +kernel
+theorem C30 : allOK G 1 ws lv 54 2 = true := by decide +kernel
+theorem C31 : allOK G 1 ws lv 56 2 = true := by decide +kernel
+theorem C32 : allOK G 1 ws lv 58 2 = true := by decide +kernel
+theorem C33 : allOK G 1 ws lv 60 2 = true := by decide +kernel
+theorem C34 : allOK G 1 ws lv 62 2 = true := by decide +kernel
+theorem C35 : allOK G 1 ws lv 64 2 = true := by decide +kernel
+theorem C36 : allOK G 1 ws lv 66 3 = true := by decide +kernel
+theorem C37 : allOK G 1 ws lv 69 3 = true := by decide +kernel
+theorem C38 : allOK G 1 ws lv 72 3 = true := by decide +kernel
+theorem C39 : allOK G 1 ws lv 75 3 = true := by decide +kernel
+theorem C40 : allOK G 1 ws lv 78 2 = true := by decide +kernel
+theorem C41 : allOK G 1 ws lv 80 2 = true := by decide +kernel
+theorem C42 : allOK G 1 ws lv 82 3 = true := by decide +kernel
+theorem C43 : allOK G 1 ws lv 85 6 = true := by decide +kernel
+theorem C44 : allOK G 1 ws lv 91 8 = true := by decide +kernel
+theorem C45 : allOK G 1 ws lv 99 22 = true := by decide +kernel
+theorem C46 : allOK G 1 ws lv 121 122 = true := by decide +kernel
+theorem allOKn : allOK G 1 ws lv 0 n = true := allOK_add G 1 ws lv 0 121 122 (allOK_add G 1 ws lv 0 99 22 (allOK_add G 1 ws lv 0 91 8 (allOK_add G 1 ws lv 0 85 6 (allOK_add G 1 ws lv 0 82 3 (allOK_add G 1 ws lv 0 80 2 (allOK_add G 1 ws lv 0 78 2 (allOK_add G 1 ws lv 0 75 3 (allOK_add G 1 ws lv 0 72 3 (allOK_add G 1 ws lv 0 69 3 (allOK_add G 1 ws lv 0 66 3 (allOK_add G 1 ws lv 0 64 2 (allOK_add G 1 ws lv 0 62 2 (allOK_add G 1 ws lv 0 60 2 (allOK_add G 1 ws lv 0 58 2 (allOK_add G 1 ws lv 0 56 2 (allOK_add G 1 ws lv 0 54 2 (allOK_add G 1 ws lv 0 52 2 (allOK_add G 1 ws lv 0 50 2 (allOK_add G 1 ws lv 0 48 2 (allOK_add G 1 ws lv 0 47 1 (allOK_add G 1 ws lv 0 46 1 (allOK_add G 1 ws lv 0 45 1 (allOK_add G 1 ws lv 0 44 1 (allOK_add G 1 ws lv 0 43 1 (allOK_add G 1 ws lv 0 42 1 (allOK_add G 1 ws lv 0 41 1 (allOK_add G 1 ws lv 0 40 1 (allOK_add G 1 ws lv 0 39 1 (allOK_add G 1 ws lv 0 38 1 (allOK_add G 1 ws lv 0 37 1 (allOK_add G 1 ws lv 0 36 1 (allOK_add G 1 ws lv 0 35 1 (allOK_add G 1 ws lv 0 34 1 (allOK_add G 1 ws lv 0 33 1 (allOK_add G 1 ws lv 0 32 1 (allOK_add G 1 ws lv 0 31 1 (allOK_add G 1 ws lv 0 29 2 (allOK_add G 1 ws lv 0 27 2 (allOK_add G 1 ws lv 0 25 2 (allOK_add G 1 ws lv 0 23 2 (allOK_add G 1 ws lv 0 21 2 (allOK_add G 1 ws lv 0 18 3 (allOK_add G 1 ws lv 0 15 3 (allOK_add G 1 ws lv 0 12 3 (allOK_add G 1 ws lv 0 8 4 (allOK_add G 1 ws lv 0 0 8 (allOK_nil G 1 ws lv 0) C0) C1) C2) C3) C4) C5) C6) C7) C8) C9) C10) C11) C12) C13) C14) C15) C16) C17) C18) C19) C20) C21) C22) C23) C24) C25) C26) C27) C28) C29) C30) C31) C32) C33) C34) C35) C36) C37) C38) C39) C40) C41) C42) C43) C44) C45) C46
+end Witness6966DatETr5
+
+end Merged_Witness6966DatETr5
+
+-- merged module Witness6966SumETr5
+section Merged_Witness6966SumETr5
+set_option Elab.async false
+set_option maxRecDepth 100000
+namespace Witness6966DatETr5
+open Gate6966Cell
+theorem S0 : psum lv 0 10 = 4067297040896 := by decide +kernel
+theorem P0 : psum lv 0 10 = 4067297040896 := S0
+theorem S1 : psum lv 10 10 = 4046926938135 := by decide +kernel
+theorem P1 : psum lv 0 20 = 8114223979031 := by
+  have h : psum lv 0 20 = psum lv 0 10 + psum lv 10 10 := psum_add lv 0 10 10
+  rw [h, P0, S1]; rfl
+theorem S2 : psum lv 20 10 = 3930824461066 := by decide +kernel
+theorem P2 : psum lv 0 30 = 12045048440097 := by
+  have h : psum lv 0 30 = psum lv 0 20 + psum lv 20 10 := psum_add lv 0 20 10
+  rw [h, P1, S2]; rfl
+theorem S3 : psum lv 30 10 = 3572082566919 := by decide +kernel
+theorem P3 : psum lv 0 40 = 15617131007016 := by
+  have h : psum lv 0 40 = psum lv 0 30 + psum lv 30 10 := psum_add lv 0 30 10
+  rw [h, P2, S3]; rfl
+theorem S4 : psum lv 40 10 = 2757150839798 := by decide +kernel
+theorem P4 : psum lv 0 50 = 18374281846814 := by
+  have h : psum lv 0 50 = psum lv 0 40 + psum lv 40 10 := psum_add lv 0 40 10
+  rw [h, P3, S4]; rfl
+theorem S5 : psum lv 50 10 = 1368232615797 := by decide +kernel
+theorem P5 : psum lv 0 60 = 19742514462611 := by
+  have h : psum lv 0 60 = psum lv 0 50 + psum lv 50 10 := psum_add lv 0 50 10
+  rw [h, P4, S5]; rfl
+theorem S6 : psum lv 60 10 = 296428232134 := by decide +kernel
+theorem P6 : psum lv 0 70 = 20038942694745 := by
+  have h : psum lv 0 70 = psum lv 0 60 + psum lv 60 10 := psum_add lv 0 60 10
+  rw [h, P5, S6]; rfl
+theorem S7 : psum lv 70 10 = 31600836905 := by decide +kernel
+theorem P7 : psum lv 0 80 = 20070543531650 := by
+  have h : psum lv 0 80 = psum lv 0 70 + psum lv 70 10 := psum_add lv 0 70 10
+  rw [h, P6, S7]; rfl
+theorem S8 : psum lv 80 10 = 5435218299 := by decide +kernel
+theorem P8 : psum lv 0 90 = 20075978749949 := by
+  have h : psum lv 0 90 = psum lv 0 80 + psum lv 80 10 := psum_add lv 0 80 10
+  rw [h, P7, S8]; rfl
+theorem S9 : psum lv 90 10 = 0 := by decide +kernel
+theorem P9 : psum lv 0 100 = 20075978749949 := by
+  have h : psum lv 0 100 = psum lv 0 90 + psum lv 90 10 := psum_add lv 0 90 10
+  rw [h, P8, S9]; rfl
+theorem S10 : psum lv 100 10 = 0 := by decide +kernel
+theorem P10 : psum lv 0 110 = 20075978749949 := by
+  have h : psum lv 0 110 = psum lv 0 100 + psum lv 100 10 := psum_add lv 0 100 10
+  rw [h, P9, S10]; rfl
+theorem S11 : psum lv 110 10 = 0 := by decide +kernel
+theorem P11 : psum lv 0 120 = 20075978749949 := by
+  have h : psum lv 0 120 = psum lv 0 110 + psum lv 110 10 := psum_add lv 0 110 10
+  rw [h, P10, S11]; rfl
+theorem S12 : psum lv 120 10 = 0 := by decide +kernel
+theorem P12 : psum lv 0 130 = 20075978749949 := by
+  have h : psum lv 0 130 = psum lv 0 120 + psum lv 120 10 := psum_add lv 0 120 10
+  rw [h, P11, S12]; rfl
+theorem S13 : psum lv 130 10 = 0 := by decide +kernel
+theorem P13 : psum lv 0 140 = 20075978749949 := by
+  have h : psum lv 0 140 = psum lv 0 130 + psum lv 130 10 := psum_add lv 0 130 10
+  rw [h, P12, S13]; rfl
+theorem S14 : psum lv 140 10 = 0 := by decide +kernel
+theorem P14 : psum lv 0 150 = 20075978749949 := by
+  have h : psum lv 0 150 = psum lv 0 140 + psum lv 140 10 := psum_add lv 0 140 10
+  rw [h, P13, S14]; rfl
+theorem S15 : psum lv 150 10 = 0 := by decide +kernel
+theorem P15 : psum lv 0 160 = 20075978749949 := by
+  have h : psum lv 0 160 = psum lv 0 150 + psum lv 150 10 := psum_add lv 0 150 10
+  rw [h, P14, S15]; rfl
+theorem S16 : psum lv 160 10 = 0 := by decide +kernel
+theorem P16 : psum lv 0 170 = 20075978749949 := by
+  have h : psum lv 0 170 = psum lv 0 160 + psum lv 160 10 := psum_add lv 0 160 10
+  rw [h, P15, S16]; rfl
+theorem S17 : psum lv 170 10 = 0 := by decide +kernel
+theorem P17 : psum lv 0 180 = 20075978749949 := by
+  have h : psum lv 0 180 = psum lv 0 170 + psum lv 170 10 := psum_add lv 0 170 10
+  rw [h, P16, S17]; rfl
+theorem S18 : psum lv 180 10 = 0 := by decide +kernel
+theorem P18 : psum lv 0 190 = 20075978749949 := by
+  have h : psum lv 0 190 = psum lv 0 180 + psum lv 180 10 := psum_add lv 0 180 10
+  rw [h, P17, S18]; rfl
+theorem S19 : psum lv 190 10 = 0 := by decide +kernel
+theorem P19 : psum lv 0 200 = 20075978749949 := by
+  have h : psum lv 0 200 = psum lv 0 190 + psum lv 190 10 := psum_add lv 0 190 10
+  rw [h, P18, S19]; rfl
+theorem S20 : psum lv 200 10 = 0 := by decide +kernel
+theorem P20 : psum lv 0 210 = 20075978749949 := by
+  have h : psum lv 0 210 = psum lv 0 200 + psum lv 200 10 := psum_add lv 0 200 10
+  rw [h, P19, S20]; rfl
+theorem S21 : psum lv 210 10 = 0 := by decide +kernel
+theorem P21 : psum lv 0 220 = 20075978749949 := by
+  have h : psum lv 0 220 = psum lv 0 210 + psum lv 210 10 := psum_add lv 0 210 10
+  rw [h, P20, S21]; rfl
+theorem S22 : psum lv 220 10 = 0 := by decide +kernel
+theorem P22 : psum lv 0 230 = 20075978749949 := by
+  have h : psum lv 0 230 = psum lv 0 220 + psum lv 220 10 := psum_add lv 0 220 10
+  rw [h, P21, S22]; rfl
+theorem S23 : psum lv 230 10 = 0 := by decide +kernel
+theorem P23 : psum lv 0 240 = 20075978749949 := by
+  have h : psum lv 0 240 = psum lv 0 230 + psum lv 230 10 := psum_add lv 0 230 10
+  rw [h, P22, S23]; rfl
+theorem S24 : psum lv 240 3 = 0 := by decide +kernel
+theorem P24 : psum lv 0 243 = 20075978749949 := by
+  have h : psum lv 0 243 = psum lv 0 240 + psum lv 240 3 := psum_add lv 0 240 3
+  rw [h, P23, S24]; rfl
+theorem sumLt : (∑ i ∈ Finset.range n, lsum lv i) < Low6966Prices.layerNeed := by
+  rw [← psum_eq]
+  have h := P24
+  have e : n = 243 := rfl
+  rw [e, h]; decide
+end Witness6966DatETr5
+
+end Merged_Witness6966SumETr5

@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.R6960Low6960Retained
 import ProximityPrize.SubmissionLower.KoalaAllocationWeight
 
+set_option Elab.async false
+
 -- merged module Final50PriceRetained
 section Merged_Final50PriceRetained
 

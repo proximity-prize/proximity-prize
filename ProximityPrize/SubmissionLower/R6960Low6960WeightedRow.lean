@@ -1,6 +1,8 @@
-import ProximityPrize.SubmissionLower.FadicDegree
+import ProximityPrize.SubmissionLower.FadicChunk
 import ProximityPrize.SubmissionLower.R6960Low6960FractionContact
 import ProximityPrize.SubmissionLower.R6960Low6960WeightedCut
+
+set_option Elab.async false
 
 -- merged module ChargeTable
 section Merged_ChargeTable

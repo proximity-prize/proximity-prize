@@ -6,6 +6,8 @@ import ProximityPrize.SubmissionLower.R6960MarkedZeroDegree
 import ProximityPrize.SubmissionLower.R6960MarkedConstantDescent
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericMeasure
 
+set_option Elab.async false
+
 -- merged module R6960CollisionMarkedGenericCoordinates
 section Merged_R6960CollisionMarkedGenericCoordinates
 set_option synthInstance.maxHeartbeats 200000

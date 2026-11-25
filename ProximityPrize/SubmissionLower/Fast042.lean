@@ -9,6 +9,8 @@ import Mathlib.RingTheory.Artinian.Algebra
 import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.RingTheory.Localization.NormTrace
 
+set_option Elab.async false
+
 -- merged module Numeric2Aux
 section Merged_Numeric2Aux
 set_option Elab.async false

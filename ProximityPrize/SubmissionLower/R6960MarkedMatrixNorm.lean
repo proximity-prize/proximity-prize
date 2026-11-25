@@ -1,7 +1,9 @@
 import ProximityPrize.SubmissionLower.R6960ChartIntegrality
-import ProximityPrize.SubmissionLower.R6960MonicFourChartDescent
+import ProximityPrize.SubmissionLower.R6966ProofFarChart
 import Mathlib.Algebra.Field.Subfield.Basic
 import ProximityPrize.SubmissionLower.R6960MarkedScalarPlace
+
+set_option Elab.async false
 
 -- merged module R6960ChartTraceTests
 section Merged_R6960ChartTraceTests

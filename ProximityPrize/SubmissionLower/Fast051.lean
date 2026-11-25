@@ -2134,9 +2134,9 @@ private theorem coeff_jetVariables (P : Jet) (d : Fin 2 →₀ ℕ) :
 private theorem jetVariables_injective : Function.Injective jetVariables :=
   (MvPolynomial.finSuccEquiv Seeds 1).symm.injective.comp
     (Polynomial.map_injective _ (MvPolynomial.uniqueAlgEquiv Seeds (Fin 1)).symm.injective)
-private def seedVariables : Jet →+* MvPolynomial (Fin 2) (MvPolynomial (Fin 2) FX) :=
+def seedVariables : Jet →+* MvPolynomial (Fin 2) (MvPolynomial (Fin 2) FX) :=
   (MvPolynomial.commAlgEquiv FX (Fin 2) (Fin 2)).toRingHom.comp jetVariables
-private theorem coeff_seedVariables (P : Jet) (e d : Fin 2 →₀ ℕ) :
+theorem coeff_seedVariables (P : Jet) (e d : Fin 2 →₀ ℕ) :
     ((seedVariables P).coeff e).coeff d = ((P.coeff (d 0)).coeff (d 1)).coeff e := by
   rw [← coeff_jetVariables]
   change ((MvPolynomial.commAlgEquiv FX (Fin 2) (Fin 2) (jetVariables P)).coeff e).coeff d =
@@ -2144,7 +2144,7 @@ private theorem coeff_seedVariables (P : Jet) (e d : Fin 2 →₀ ℕ) :
   simp [MvPolynomial.commAlgEquiv, AddMonoidAlgebra.commAlgEquiv,
     AddMonoidAlgebra.curryAlgEquiv, AddMonoidAlgebra.curryRingEquiv,
     AddMonoidAlgebra.curryAddEquiv, AddMonoidAlgebra.coeff_domCongr]
-private theorem seedVariables_injective : Function.Injective seedVariables :=
+theorem seedVariables_injective : Function.Injective seedVariables :=
   (MvPolynomial.commAlgEquiv FX (Fin 2) (Fin 2)).injective.comp jetVariables_injective
 def jetDegree (P : Jet) : ℕ := (jetVariables P).totalDegree
 def seedDegree (P : Jet) : ℕ := (seedVariables P).totalDegree

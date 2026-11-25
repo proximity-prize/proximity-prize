@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.R6960RetainedPairedResidues
 import ProximityPrize.SubmissionLower.R6960CollisionTameBranch
 import ProximityPrize.SubmissionLower.R6960RetainedAxisTransition
 
+set_option Elab.async false
+
 -- merged module R6960RetainedLineEvaluation
 section Merged_R6960RetainedLineEvaluation
 noncomputable section

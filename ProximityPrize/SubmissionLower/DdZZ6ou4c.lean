@@ -70,7 +70,7 @@ private theorem avr (P:af 3) (S U:(Polynomial ao)) (T:ℕ)
     have hu: (jet U i).natDegree≤weight i+step:= by
       refine (natDegree_hasseDeriv_le U i.val).trans ((zIu hU _).trans ?_)
       have hi:=i.isLt
-      change 179800 - i.val≤(131071 - i.val)+48729
+      change 179771 - i.val≤(131071 - i.val)+48700
       omega
     change ((z1z (jet S i)+Polynomial.C (jet U i) *
       Polynomial.X).coeff k).natDegree≤weight i+step*k

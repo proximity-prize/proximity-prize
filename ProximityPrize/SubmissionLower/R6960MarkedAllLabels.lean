@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.R6960MarkedEvaluationLedger
 import ProximityPrize.SubmissionLower.R6960MonicChartActual
 import ProximityPrize.SubmissionLower.R6960MarkedActualCount
 
+set_option Elab.async false
+
 -- merged module R6960MarkedEvaluationEndpoint
 section Merged_R6960MarkedEvaluationEndpoint
 
@@ -22,22 +24,22 @@ single-determinant estimate. The protocol, scalar list, and all other cases
 are supplied by the verified 69.61 pipeline. -/
 def NonlinearPrice : Prop :=
   ∀ {u deleted} {M:Model u deleted} {Γ} (F:Family M Γ) (T:Finset K), T⊆Γ →
-    Word 179798 wordDegree M.word F.scalar T →
+    Word 179818 wordDegree M.word F.scalar T →
     ∀ f:Curve (Polynomial L),Irreducible f → 3≤f.degreeOf ordinate → f.degreeOf ordinate<48 →
       0<f.degreeOf parameter → height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
       ¬GeometricallyLinear (view f) →
       (∀ γ∈T,MarkedFiber (view f) (scalar M γ) (liftPoly (F.scalar γ))) →
       T.card≤rate (f.degreeOf ordinate)*f.degreeOf parameter+(f.degreeOf ordinate-1)*f.degreeOf ordinate
 
-theorem protocol_of_price (gates : Low6960Allocation.Gates) (loc : Lower6960.LoCount) (price:NonlinearPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6963 ProximityPrize.SubmissionLower.Front6960Radius.p
+theorem protocol_of_price (gates : Low6960Allocation.Gates) (price:NonlinearPrice) :
+    ProximityPrize.Benchmark.ProtocolClaim 6961 ProximityPrize.SubmissionLower.Front6960Radius.p
       ProximityPrize.SubmissionLower.Front6960Radius.q := by
   have mono:Monotone rate:=by
     intro e n en
     exact Nat.sub_le_sub_right (Nat.add_le_add
       (Nat.mul_le_mul (Nat.add_le_add_right (Nat.mul_le_mul_left 9 en) _) (Nat.sub_le_sub_right en 1))
       (Nat.mul_le_mul_left 2 en)) 1
-  apply Lower6960.protocol_claim_of_retained gates loc
+  apply Lower6960.protocol_claim_of_retained gates
   have proper (e:ℕ) (he:3≤e) (hi:e<48) : 12*e≤rate e :=
     (by decide +kernel : ∀ i:Fin 48, 3 ≤ i.val → 12*i.val≤rate i.val) ⟨e,hi⟩ he
   apply retained_of_tariff rate mono (by decide) proper budget

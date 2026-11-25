@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleBound
 
+set_option Elab.async false
+
 set_option autoImplicit false
 set_option Elab.async false
 

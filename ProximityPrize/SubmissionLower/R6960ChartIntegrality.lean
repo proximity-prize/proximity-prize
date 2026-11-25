@@ -7,6 +7,8 @@ import Mathlib.RingTheory.Finiteness.Cardinality
 import Mathlib.RingTheory.Ideal.Quotient.Basic
 import Mathlib.RingTheory.Localization.NumDen
 
+set_option Elab.async false
+
 -- merged module R6960NormalizedFiber
 section Merged_R6960NormalizedFiber
 noncomputable section

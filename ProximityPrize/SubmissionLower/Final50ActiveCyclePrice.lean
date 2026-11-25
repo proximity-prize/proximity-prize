@@ -7,6 +7,8 @@ import ProximityPrize.SubmissionLower.Low48BentCyclePrice
 import ProximityPrize.SubmissionLower.R6960Low6960ActiveCyclePrice
 import Mathlib.Algebra.MvPolynomial.Coeff
 
+set_option Elab.async false
+
 -- merged module Final50FatPad
 section Merged_Final50FatPad
 

@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.Fast077
 import ProximityPrize.SubmissionLower.RungSplit
 import ProximityPrize.SubmissionLower.PortHighFinish
 
+set_option Elab.async false
+
 -- merged module UpperBase
 section Merged_UpperBase
 set_option Elab.async false

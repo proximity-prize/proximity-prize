@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50Price
 
+set_option Elab.async false
+
 -- merged module Final50SharedPrice
 section Merged_Final50SharedPrice
 set_option Elab.async false

@@ -5,6 +5,8 @@ import ProximityPrize.SubmissionLower.RingHomShortcuts
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisMultiples
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisIndex
 
+set_option Elab.async false
+
 -- merged module R6960CollisionMarkedAxisWord
 section Merged_R6960CollisionMarkedAxisWord
 set_option Elab.async false

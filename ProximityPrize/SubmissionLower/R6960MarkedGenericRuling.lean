@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.R6960HornerNative
 import ProximityPrize.SubmissionLower.R6960MonicChartInfinityRing
 import ProximityPrize.SubmissionLower.R6960MarkedNativeNorm
 
+set_option Elab.async false
+
 -- merged module R6960LineEulerCrossing
 section Merged_R6960LineEulerCrossing
 set_option Elab.async false

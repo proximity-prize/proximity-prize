@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.R6960CollisionTameLineDegree
 import Mathlib.RingTheory.Localization.Algebra
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedPlaneOverlap
 
+set_option Elab.async false
+
 -- merged module R6960CollisionTameLocalizedDegree
 section Merged_R6960CollisionTameLocalizedDegree
 set_option Elab.async false

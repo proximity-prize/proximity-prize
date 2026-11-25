@@ -1,0 +1,471 @@
+import ProximityPrize.SubmissionLower.Low6966AllocTotal
+import ProximityPrize.SubmissionLower.Low6966Mass0
+
+set_option Elab.async false
+set_option maxRecDepth 22000
+set_option maxHeartbeats 6000000
+
+namespace Low6966Allocation.Group0
+open K1_13 (Shape InBox)
+open K1_13_8 (Valid)
+open Low6966Encoding (checks checks_join)
+
+namespace Top14
+private abbrev P := PaidBatch orders 14
+
+private def priceBatch0 : P :=
+  ⟨unpack [17752959033, 4884905025, 4851418181, 52292, 52296, 53320], by decide +kernel⟩
+private def priceBatch1 : P :=
+  ⟨unpack [54344, 55368, 52300, 53324, 54348, 55372], by decide +kernel⟩
+private def priceBatch2 : P :=
+  ⟨unpack [56396, 9431670861, 167142423616937658747112530, 53328, 54352, 55376], by decide +kernel⟩
+private def priceBatch3 : P :=
+  ⟨unpack [56400, 165621525384118469277699158, 53332, 54356, 55380, 56404], by decide +kernel⟩
+private def priceBatch4 : P :=
+  ⟨unpack [489344089, 53336, 54360, 55384, 56408, 53340], by decide +kernel⟩
+private def priceBatch5 : P :=
+  ⟨unpack [54364, 55388, 56412, 168822996716981500659814498, 54368, 55392], by decide +kernel⟩
+private def priceBatch6 : P :=
+  ⟨unpack [56416, 167210195868535712071209062, 54372, 55396, 56420, 165597395020089923482603626], by decide +kernel⟩
+private def priceBatch7 : P :=
+  ⟨unpack [173305716274326236964836458, 55400, 56424, 163984594171644134893998190, 171597879006948588440507502, 55404], by decide +kernel⟩
+private def priceBatch8 : P :=
+  ⟨unpack [56428, 162371793323198346305392754, 169890041739570939916178546, 55408, 56432, 160758992474752557716787318], by decide +kernel⟩
+private def priceBatch9 : P :=
+  ⟨unpack [168182204472193291391849590, 55412, 56436, 159146191626306769128181882, 166474367204815642867520634, 173913267319314494046066810], by decide +kernel⟩
+private def priceBatch10 : P :=
+  ⟨unpack [56440, 157533390777860980539576446, 164766529937437994343191678, 173554183961296645862971518, 56444, 355192961], by decide +kernel⟩
+private def priceBatch11 : P :=
+  ⟨unpack [164171920247490636199744642, 173554183961296645862971522, 56448, 164171920247490636199744646, 173554183961296645862971526, 56452], by decide +kernel⟩
+private def priceBatch12 : P :=
+  ⟨unpack [164171920247490636199744650, 173554183961296645862971530, 56456, 164171920247490636199744654, 173554183961296645862971534, 56460], by decide +kernel⟩
+private def priceBatch13 : P :=
+  ⟨unpack [288085137, 173554183961296645862971538, 56464, 173554183961296645862971542, 56468, 173554183961296645862971546], by decide +kernel⟩
+private def priceBatch14 : P :=
+  ⟨unpack [56472, 173554183961296645862971550, 183247382097062257402567838, 173554183961296645862971554, 183247382097062257402567842, 173554183961296645862971558], by decide +kernel⟩
+private def priceBatch15 : P :=
+  ⟨unpack [183247382097062257402567846, 173554183961296645862971562, 183247382097062257402567850, 173554183961296645862971566, 183247382097062257402567854, 173554183961296645862971570], by decide +kernel⟩
+private def priceBatch16 : P :=
+  ⟨unpack [183247382097062257402567858, 173554183961296645862971574, 183247382097062257402567862, 137091257, 183247382097062257402567866, 183247382097062257402567870], by decide +kernel⟩
+private def priceBatch17 : P :=
+  ⟨unpack [183247382097062257402567874, 13156067525, 13038696645, 183247382097062257402567878, 183247382097062257402567882, 4432054477], by decide +kernel⟩
+private def priceBatch18 : P :=
+  ⟨unpack [183247382097062257402567886, 183247382097062257402567890, 183247382097062257402567894, 86757593, 69981401, 183247382097062257402567898], by decide +kernel⟩
+private def priceBatch19 : P :=
+  ⟨unpack [19650781, 183247382097062257402567902, 2874592, 2873573, 2874596, 2873576], by decide +kernel⟩
+private def priceBatch20 : P :=
+  ⟨unpack [2874600, 4448762093, 4381655277, 2872557, 2873580, 2874604], by decide +kernel⟩
+private def priceBatch21 : P :=
+  ⟨unpack [86755569, 53202161, 19648753, 2872560, 2873584, 2874608], by decide +kernel⟩
+private def priceBatch22 : P :=
+  ⟨unpack [2872564, 2873588, 201261631889349113618881782, 2871544, 2872568, 2873592], by decide +kernel⟩
+private def priceBatch23 : P :=
+  ⟨unpack [204264006854730256321600762, 2871548, 2872572, 199614895099464809917962494, 207266381820111399024319742, 2870529], by decide +kernel⟩
+private def priceBatch24 : P :=
+  ⟨unpack [2871552, 2872576, 202510529670372383701850370, 155325683509671410604432642, 103530757, 53200133], by decide +kernel⟩
+private def priceBatch25 : P :=
+  ⟨unpack [2870532, 2871556, 2872580, 205406164241279957485738246, 157548684673302302626143494, 8760502537], by decide +kernel⟩
+private def priceBatch26 : P :=
+  ⟨unpack [4415206665, 19646729, 2870536, 2871560, 200448411081277048070329610, 153848767300047630129420554], by decide +kernel⟩
+private def priceBatch27 : P :=
+  ⟨unpack [159771685836933193574112522, 2870540, 2871564, 203238910376183695137297678, 155992253768075128118958350, 161994687000564085595823374], by decide +kernel⟩
+private def priceBatch28 : P :=
+  ⟨unpack [2869520, 2870544, 2871568, 206029409671090342204265746, 158135740236102626108496146, 164217688164194976543792402], by decide +kernel⟩
+private def priceBatch29 : P :=
+  ⟨unpack [53132565, 19645717, 2869524, 2870548, 200776658613367428493332758, 154209727130172511199417622], by decide +kernel⟩
+private def priceBatch30 : P :=
+  ⟨unpack [160279226704130124098033942, 166440689327825868565503254, 2869528, 2870552, 203463627750745791045292314, 156274902657227535457965338], by decide +kernel⟩
+private def priceBatch31 : P :=
+  ⟨unpack [162422713172157622087571738, 168663690491456759513472282, 4365017369, 19720473, 2868508, 2869532], by decide +kernel⟩
+private def priceBatch32 : P :=
+  ⟨unpack [2870556, 152210132919326344462717214, 158340078184282558642771230, 164566199640185120077109534, 170886691655087651535183134, 19644705], by decide +kernel⟩
+private def priceBatch33 : P :=
+  ⟨unpack [2868512, 2869536, 200616491439698694307040546, 154198201260039813143974178, 160405253711337582901318946, 166709686108212618066647330], by decide +kernel⟩
+private def priceBatch34 : P :=
+  ⟨unpack [173109692818718542483152162, 2943264, 53198117, 2868516, 2869540, 203201535538021414545902886], by decide +kernel⟩
+private def priceBatch35 : P :=
+  ⟨unpack [156186269600753281825231142, 162470429238392606086124838, 168853172576240116056185126, 175332693982349434504863014, 2943268, 86684969], by decide +kernel⟩
+private def priceBatch36 : P :=
+  ⟨unpack [53131561, 2867496, 2868520, 2869544, 151914664204271356056685866, 158174337941466750506488106], by decide +kernel⟩
+private def priceBatch37 : P :=
+  ⟨unpack [164535604765447630344672554, 170996659044267614045722922, 177555695145980325452897578, 2943272, 2867500, 2868524], by decide +kernel⟩
+private def priceBatch38 : P :=
+  ⟨unpack [199984763304233588631521582, 153826829113274189461835054, 160162406282180219187745070, 166600780292502653529478446, 173140145512295112035260718, 179778696309611217474608430], by decide +kernel⟩
+private def priceBatch39 : P :=
+  ⟨unpack [36495661, 2942252, 2943276, 2867504, 2868528, 202469487481973308759198002], by decide +kernel⟩
+private def priceBatch40 : P :=
+  ⟨unpack [155738994022277021793242418, 162150474622893687869002034, 168665955819557677788026162, 175283631980322610024798514, 182001697473242108422577458, 2942256], by decide +kernel⟩
+private def priceBatch41 : P :=
+  ⟨unpack [274196743286684984313440562, 4431980853, 103461173, 2866485, 2867508, 2868532], by decide +kernel⟩
+private def priceBatch42 : P :=
+  ⟨unpack [204954211659713028886874422, 157651158931279855198391606, 164138542963607156550258998, 170731131346612700972832054, 177427118448350108014336310, 184224698636873000444288310], by decide +kernel⟩
+private def priceBatch43 : P :=
+  ⟨unpack [2942260, 277528970146322686984120630, 2799929, 2866488, 2867512, 2868536], by decide +kernel⟩
+private def priceBatch44 : P :=
+  ⟨unpack [153108250113500289356777786, 159563323840282687529798970, 166126611304320625231515962, 172796306873667725231379770, 179570604916377606003874106, 186447699800503891392257338], by decide +kernel⟩
+private def priceBatch45 : P :=
+  ⟨unpack [2941240, 2942264, 207677709181917379257231674, 2799932, 2866492, 2867516], by decide +kernel⟩
+private def priceBatch46 : P :=
+  ⟨unpack [201284337326564216805246270, 154945715345423405639518526, 161475488749285520934948158, 168114679645034093912772926, 174861482400722748416185662, 181714091384405103993411902], by decide +kernel⟩
+private def priceBatch47 : P :=
+  ⟨unpack [188670700964134783413968190, 2941244, 274430976759724696469824830, 210146476960143966592624958, 19576129, 19642689], by decide +kernel⟩
+private def priceBatch48 : P :=
+  ⟨unpack [2866496, 2867520, 203670346702193579023648066, 156783180577346521922259266, 163387653658288353266355522, 170102747985747562594029890], by decide +kernel⟩
+private def priceBatch49 : P :=
+  ⟨unpack [176926657927777772674733378, 183857577852432601982949698, 56640, 2941248, 277651647869470903615939906, 212615244738370553928018242], by decide +kernel⟩
+private def priceBatch50 : P :=
+  ⟨unpack [2866500, 2867524, 152055103684342767401289030, 158620645809269638205000006, 165299818567291186671504710, 172090816326461031275286854], by decide +kernel⟩
+private def priceBatch51 : P :=
+  ⟨unpack [178991833454832795859539270, 55620, 56644, 2941252, 207659983021411465299813702, 215084012516597141263411526], by decide +kernel⟩
+private def priceBatch52 : P :=
+  ⟨unpack [2798921, 2865480, 2866504, 2867528, 153819072993817086862804298, 160458111041192754487740746], by decide +kernel⟩
+private def priceBatch53 : P :=
+  ⟨unpack [167211983476294019002912074, 174078884667174499956543818, 181057008981887820118086986, 188144550788487597962090826, 56648, 2941256], by decide +kernel⟩
+private def priceBatch54 : P :=
+  ⟨unpack [210045624840141901994452298, 217552780294823728598804810, 2798924, 2865484, 2866508, 201951838507748528315154766], by decide +kernel⟩
+private def priceBatch55 : P :=
+  ⟨unpack [155583042303291405250577742, 162295576273115870770481486, 169124148385296852408061262, 176066953007887968637800782, 183122184508942843302892878, 55628], by decide +kernel⟩
+private def priceBatch56 : P :=
+  ⟨unpack [56652, 277243375247334987287814478, 212431266658872337615349070, 220021548073050315934198094, 36352337, 2798928], by decide +kernel⟩
+private def priceBatch57 : P :=
+  ⟨unpack [2865488, 2866512, 204240738199740174826193234, 157347011612765724712093010, 164133041505038987053222226, 171036313294299684739468626], by decide +kernel⟩
+private def priceBatch58 : P :=
+  ⟨unpack [178055021348601437319057746, 54608, 55632, 56656, 207248103577291426123014482, 214816908477602774309987666], by decide +kernel⟩
+private def priceBatch59 : P :=
+  ⟨unpack [222490315851276903269591378, 2798932, 2865492, 2866516, 152371706391082714666877270, 159110980922240043099866454], by decide +kernel⟩
+private def priceBatch60 : P :=
+  ⟨unpack [165970506736962103335962966, 172948478203302518144617814, 180043089689314906000314710, 54612, 55636, 56660], by decide +kernel⟩
+private def priceBatch61 : P :=
+  ⟨unpack [209551823191156630330597718, 217202550296333209930884438, 224959083629503490604984662, 120236377, 69905753, 2864473], by decide +kernel⟩
+private def priceBatch62 : P :=
+  ⟨unpack [2865496, 2866520, 154063383532739155460866394, 160874950231714362561381722, 167807971968885219618703706, 174860643112305350476025178], by decide +kernel⟩
+private def priceBatch63 : P :=
+  ⟨unpack [182031158030028374681571674, 54616, 55640, 56664, 211855542805021834538180954, 219588192115063646625523034], by decide +kernel⟩
+private def priceBatch64 : P :=
+  ⟨unpack [227427851407730077940377946, 2797917, 2864476, 2865500, 202008935947167192887049566, 155755060674395596254855518], by decide +kernel⟩
+private def priceBatch65 : P :=
+  ⟨unpack [162638919541188680949155166, 169645437200808335901444446, 176772808021308183881174366, 184019226370741843362828638, 54620, 55644], by decide +kernel⟩
+private def priceBatch66 : P :=
+  ⟨unpack [56668, 214159262418887038745764190, 221973833933794082246419806, 229896619185956665275771230, 177652863244796739524931938, 2864480], by decide +kernel⟩
+private def priceBatch67 : P :=
+  ⟨unpack [2865504, 204202331073993765892636002, 157446737816052037048844642, 164402888850663000410670434, 171482902432731452184185186, 178684972930311016212581730], by decide +kernel⟩
+private def priceBatch68 : P :=
+  ⟨unpack [53600, 54624, 55648, 56672, 216462982032752242953347426, 224359475752524518941058402], by decide +kernel⟩
+private def priceBatch69 : P :=
+  ⟨unpack [232365386964183252611164514, 179569375386963945225630054, 2864484, 2865508, 152236843689314426051870054, 159138414957708477842833766], by decide +kernel⟩
+private def priceBatch70 : P :=
+  ⟨unpack [166166858160137318798443878, 173320367664654568466925926, 180597137839313849617730918, 53604, 54628, 55652], by decide +kernel⟩
+private def priceBatch71 : P :=
+  ⟨unpack [56676, 218766701646617447160930662, 226745117571254954561955174, 234834154742409839946557798, 181485887529131150926328170, 2864488], by decide +kernel⟩
+private def priceBatch72 : P :=
+  ⟨unpack [2865512, 153857432417783907405774186, 160830092099364918636822890, 167930827469611638259959146, 175157832896577684749666666, 182509302748316681949138282], by decide +kernel⟩
+private def priceBatch73 : P :=
+  ⟨unpack [53608, 54632, 55656, 56680, 221070421260482651368513898, 229130759389985391256593770], by decide +kernel⟩
+private def priceBatch74 : P :=
+  ⟨unpack [59752, 19574125, 183402399671298356627026286, 2864492, 2865516, 155478021146253389833420142], by decide +kernel⟩
+private def priceBatch75 : P :=
+  ⟨unpack [162521769241021359430812014, 169694796779085956647732590, 176995298128500801032407406, 184421467657319515354287470, 53612, 54636], by decide +kernel⟩
+private def priceBatch76 : P :=
+  ⟨unpack [55660, 56684, 223374140874347855576097134, 231516401208715826877490542, 59756, 185318911813465562327724402], by decide +kernel⟩
+private def priceBatch77 : P :=
+  ⟨unpack [2864496, 203576794424335021948778866, 157098609874722871187324274, 164213446382677800224801138, 171458766088560276109247858, 178832763360423917315148146], by decide +kernel⟩
+private def priceBatch78 : P :=
+  ⟨unpack [52592, 53616, 54640, 55664, 56688, 225677860488213059783680370], by decide +kernel⟩
+private def priceBatch79 : P :=
+  ⟨unpack [233902043027446263572129138, 59760, 178292389765871766281563510, 187235423955632768028488054, 2864500, 205676290104469163650824566], by decide +kernel⟩
+private def priceBatch80 : P :=
+  ⟨unpack [158719198603192353614970230, 165905123524334241018790262, 173222735398034594497021302, 180670228592347033597888886, 52596, 53620], by decide +kernel⟩
+private def priceBatch81 : P :=
+  ⟨unpack [54644, 55668, 56692, 227981580102078263991263606, 236287684846176699193025910, 59764], by decide +kernel⟩
+private def priceBatch82 : P :=
+  ⟨unpack [36350329, 180119817816764467284454778, 189151936097799973729186170, 2864504, 153217470336468750657370490, 160339787331661834968874362], by decide +kernel⟩
+private def priceBatch83 : P :=
+  ⟨unpack [167596800665990681812779386, 174986704707508913958536570, 182507693824270149880629626, 52600, 53624, 54648], by decide +kernel⟩
+private def priceBatch84 : P :=
+  ⟨unpack [55672, 56696, 230285299715943468198846842, 58744, 59768, 181947245867657168287346046], by decide +kernel⟩
+private def priceBatch85 : P :=
+  ⟨unpack [191068448239967179429884286, 2864508, 154768174406382192872372606, 161960376060131317396520318, 169288477807647122606768510, 176750674016983232346310014], by decide +kernel⟩
+private def priceBatch86 : P :=
+  ⟨unpack [184345159056193266163370366, 52604, 53628, 54652, 55676, 56700], by decide +kernel⟩
+private def priceBatch87 : P :=
+  ⟨unpack [232589019329808672406430078, 58748, 59772, 183774673918549869290237314, 192984960382134385130582402, 2864512], by decide +kernel⟩
+private def priceBatch88 : P :=
+  ⟨unpack [156318878476295635087374722, 163580964788600798750424450, 170980154949303563400757634, 178514643326457551807825282, 51584, 52608], by decide +kernel⟩
+private def priceBatch89 : P :=
+  ⟨unpack [53632, 54656, 55680, 56704, 234892738943673876614013314, 58752], by decide +kernel⟩
+private def priceBatch90 : P :=
+  ⟨unpack [59776, 19573125, 185602101969442570293128582, 194901472524301590831280518, 204392998702058965320840582, 157869582546209077302376838], by decide +kernel⟩
+private def priceBatch91 : P :=
+  ⟨unpack [165201553517070281178070406, 172671832090960004194746758, 180278612635931870195598726, 51588, 52612, 53636], by decide +kernel⟩
+private def priceBatch92 : P :=
+  ⟨unpack [54660, 55684, 56708, 57732, 58756, 59780], by decide +kernel⟩
+private def priceBatch93 : P :=
+  ⟨unpack [187429530020335271296019850, 196817984666468796531978634, 206400200053973317921256842, 159420286616122519517378954, 166822142245539762531974538, 174363509232616444988735882], by decide +kernel⟩
+private def priceBatch94 : P :=
+  ⟨unpack [182042581945406189657113994, 51592, 52616, 53640, 54664, 55688], by decide +kernel⟩
+private def priceBatch95 : P :=
+  ⟨unpack [56712, 57736, 58760, 59784, 179984772597493141462493582, 189256958071227972298976654], by decide +kernel⟩
+private def priceBatch96 : P :=
+  ⟨unpack [45452, 153641771142299417626523022, 160970990686035961732381070, 168442730974009244959620494, 176055186374272885782725006, 183806551254880508044887438], by decide +kernel⟩
+private def priceBatch97 : P :=
+  ⟨unpack [51596, 52620, 53644, 54668, 55692, 56716], by decide +kernel⟩
+private def priceBatch98 : P :=
+  ⟨unpack [57740, 58764, 59788, 181724810848832457586420114, 191084386122120673301867922, 45456], by decide +kernel⟩
+private def priceBatch99 : P :=
+  ⟨unpack [155123794308287739930064274, 162521694755949403947383186, 170063319702478726313524626, 177746863515929326576714130, 185570520564354827506402706, 51600], by decide +kernel⟩
+private def priceBatch100 : P :=
+  ⟨unpack [52624, 53648, 54672, 55696, 56720, 57744], by decide +kernel⟩
+private def priceBatch101 : P :=
+  ⟨unpack [58768, 59792, 183464849100171773710346646, 192911814173013374304759190, 45460, 156605817474276061159863702], by decide +kernel⟩
+private def priceBatch102 : P :=
+  ⟨unpack [164072398825862846162385302, 171683908430948208741170582, 179438540657585767370703254, 50580, 51604, 52628], by decide +kernel⟩
+private def priceBatch103 : P :=
+  ⟨unpack [53652, 54676, 55700, 56724, 57748, 58772], by decide +kernel⟩
+private def priceBatch104 : P :=
+  ⟨unpack [59796, 185204887351511089834273178, 194739242223906075307650458, 45464, 158087840640264383463404954, 165623102895776288377387418], by decide +kernel⟩
+private def priceBatch105 : P :=
+  ⟨unpack [173304497159417690095074714, 181130217799242208164692378, 50584, 51608, 52632, 53656], by decide +kernel⟩
+private def priceBatch106 : P :=
+  ⟨unpack [54680, 55704, 56728, 57752, 58776, 59800], by decide +kernel⟩
+private def priceBatch107 : P :=
+  ⟨unpack [186944925602850405958199710, 196566670274798776310541726, 45468, 159569863806252704693204382, 167173806965689730592389534, 174925085887887172522720670], by decide +kernel⟩
+private def priceBatch108 : P :=
+  ⟨unpack [182821894940898648958681502, 50588, 51612, 52636, 53660, 54684], by decide +kernel⟩
+private def priceBatch109 : P :=
+  ⟨unpack [55708, 56732, 57756, 58780, 59804, 188684963854189722082191778], by decide +kernel⟩
+private def priceBatch110 : P :=
+  ⟨unpack [198394098325691477313432994, 45472, 161051886972241026996745634, 168724511035603172807391650, 176545674616356653876624802, 184513572082555089752670626], by decide +kernel⟩
+private def priceBatch111 : P :=
+  ⟨unpack [50592, 51616, 52640, 53664, 54688, 55712], by decide +kernel⟩
+private def priceBatch112 : P :=
+  ⟨unpack [56736, 57760, 58784, 59808, 190425002105529038206118310, 44452], by decide +kernel⟩
+private def priceBatch113 : P :=
+  ⟨unpack [45476, 162533910138229348226545062, 170275215105516615022393766, 178166263344826136304270758, 186205249224211530546659750, 50596], by decide +kernel⟩
+private def priceBatch114 : P :=
+  ⟨unpack [51620, 52644, 53668, 54692, 55716, 56740], by decide +kernel⟩
+private def priceBatch115 : P :=
+  ⟨unpack [57764, 58788, 59812, 192165040356868354330044842, 44456, 45480], by decide +kernel⟩
+private def priceBatch116 : P :=
+  ⟨unpack [164015933304217670530086314, 171825919175430057237395882, 179786852073295617658174890, 49576, 50600, 51624], by decide +kernel⟩
+private def priceBatch117 : P :=
+  ⟨unpack [52648, 53672, 54696, 55720, 56744, 57768], by decide +kernel⟩
+private def priceBatch118 : P :=
+  ⟨unpack [58792, 59816, 193905078608207670453971374, 44460, 45484, 165497956470205991759885742], by decide +kernel⟩
+private def priceBatch119 : P :=
+  ⟨unpack [173376623245343499452397998, 181407440801765100085820846, 49580, 50604, 51628, 52652], by decide +kernel⟩
+private def priceBatch120 : P :=
+  ⟨unpack [53676, 54700, 55724, 56748, 57772, 58796], by decide +kernel⟩
+private def priceBatch121 : P :=
+  ⟨unpack [59820, 195645116859546986577897906, 44464, 45488, 166979979636194314063426994, 174927327315256941667400114], by decide +kernel⟩
+private def priceBatch122 : P :=
+  ⟨unpack [183028029530234581439724978, 49584, 50608, 51632, 52656, 53680], by decide +kernel⟩
+private def priceBatch123 : P :=
+  ⟨unpack [54704, 55728, 56752, 57776, 58800, 59824], by decide +kernel⟩
+private def priceBatch124 : P :=
+  ⟨unpack [197385155110886302701824438, 44468, 45492, 168462002802182635293226422, 176478031385170383882402230, 184648618258704063867370934], by decide +kernel⟩
+private def priceBatch125 : P :=
+  ⟨unpack [49588, 50612, 51636, 52660, 53684, 54708], by decide +kernel⟩
+private def priceBatch126 : P :=
+  ⟨unpack [55732, 56756, 57780, 58804, 59828, 199125193362225618825750970], by decide +kernel⟩
+private def priceBatch127 : P :=
+  ⟨unpack [44472, 45496, 169944025968170957596767674, 178028735455083826097404346, 186269206987173545221275066, 49592], by decide +kernel⟩
+private def priceBatch128 : P :=
+  ⟨unpack [50616, 51640, 52664, 53688, 54712, 55736], by decide +kernel⟩
+private def priceBatch129 : P :=
+  ⟨unpack [56760, 57784, 58808, 59832, 43452, 44476], by decide +kernel⟩
+private def priceBatch130 : P :=
+  ⟨unpack [45500, 171426049134159278826567102, 179579439524997268312406462, 48572, 49596, 50620], by decide +kernel⟩
+private def priceBatch131 : P :=
+  ⟨unpack [51644, 52668, 53692, 54716, 55740, 56764], by decide +kernel⟩
+private def priceBatch132 : P :=
+  ⟨unpack [57788, 58812, 59836, 43456, 44480, 45504], by decide +kernel⟩
+private def priceBatch133 : P :=
+  ⟨unpack [172908072300147601130108354, 181130143594910710527408578, 48576, 49600, 50624, 51648], by decide +kernel⟩
+private def priceBatch134 : P :=
+  ⟨unpack [52672, 53696, 54720, 55744, 56768, 57792], by decide +kernel⟩
+private def priceBatch135 : P :=
+  ⟨unpack [58816, 59840, 43460, 44484, 45508, 174390095466135922359907782], by decide +kernel⟩
+private def priceBatch136 : P :=
+  ⟨unpack [182680847664824152742410694, 48580, 49604, 50628, 51652, 52676], by decide +kernel⟩
+private def priceBatch137 : P :=
+  ⟨unpack [53700, 54724, 55748, 56772, 57796, 58820], by decide +kernel⟩
+private def priceBatch138 : P :=
+  ⟨unpack [59844, 43464, 44488, 45512, 175872118632124244663449034, 184231551734737594957412810], by decide +kernel⟩
+private def priceBatch139 : P :=
+  ⟨unpack [48584, 49608, 50632, 51656, 52680, 53704], by decide +kernel⟩
+private def priceBatch140 : P :=
+  ⟨unpack [54728, 55752, 56776, 57800, 58824, 59848], by decide +kernel⟩
+private def priceBatch141 : P :=
+  ⟨unpack [43468, 44492, 45516, 177354141798112565893248462, 185782255804651037172414926, 48588], by decide +kernel⟩
+private def priceBatch142 : P :=
+  ⟨unpack [49612, 50636, 51660, 52684, 53708, 54732], by decide +kernel⟩
+private def priceBatch143 : P :=
+  ⟨unpack [55756, 56780, 57804, 58828, 59852, 43472], by decide +kernel⟩
+private def priceBatch144 : P :=
+  ⟨unpack [44496, 45520, 178836164964100888196789714, 187332959874564479387417042, 48592, 49616], by decide +kernel⟩
+private def priceBatch145 : P :=
+  ⟨unpack [50640, 51664, 52688, 53712, 54736, 55760], by decide +kernel⟩
+private def priceBatch146 : P :=
+  ⟨unpack [56784, 57808, 58832, 59856, 43476, 44500], by decide +kernel⟩
+private def priceBatch147 : P :=
+  ⟨unpack [45524, 180318188130089209426589142, 188883663944477921602419158, 48596, 49620, 50644], by decide +kernel⟩
+private def priceBatch148 : P :=
+  ⟨unpack [51668, 52692, 53716, 54740, 55764, 56788], by decide +kernel⟩
+private def priceBatch149 : P :=
+  ⟨unpack [57812, 58836, 59860, 43480, 44504, 45528], by decide +kernel⟩
+private def priceBatch150 : P :=
+  ⟨unpack [181800211296077531730130394, 47576, 48600, 49624, 50648, 51672], by decide +kernel⟩
+private def priceBatch151 : P :=
+  ⟨unpack [52696, 53720, 54744, 55768, 56792, 57816], by decide +kernel⟩
+private def priceBatch152 : P :=
+  ⟨unpack [58840, 59864, 43484, 44508, 45532, 183282234462065852959929822], by decide +kernel⟩
+private def priceBatch153 : P :=
+  ⟨unpack [47580, 48604, 49628, 50652, 51676, 52700], by decide +kernel⟩
+private def priceBatch154 : P :=
+  ⟨unpack [53724, 54748, 55772, 56796, 57820, 58844], by decide +kernel⟩
+private def priceBatch155 : P :=
+  ⟨unpack [59868, 43488, 44512, 45536, 184764257628054175263471074, 47584], by decide +kernel⟩
+private def priceBatch156 : P :=
+  ⟨unpack [48608, 49632, 50656, 51680, 52704, 53728], by decide +kernel⟩
+private def priceBatch157 : P :=
+  ⟨unpack [54752, 55776, 56800, 57824, 58848, 59872], by decide +kernel⟩
+private def priceBatch158 : P :=
+  ⟨unpack [43492, 44516, 45540, 186246280794042496493270502, 47588, 48612], by decide +kernel⟩
+private def priceBatch159 : P :=
+  ⟨unpack [49636, 50660, 51684, 52708, 53732, 54756], by decide +kernel⟩
+private def priceBatch160 : P :=
+  ⟨unpack [55780, 56804, 57828, 58852, 59876, 43496], by decide +kernel⟩
+private def priceBatch161 : P :=
+  ⟨unpack [44520, 45544, 187728303960030818796811754, 47592, 48616, 49640], by decide +kernel⟩
+private def priceBatch162 : P :=
+  ⟨unpack [50664, 51688, 52712, 53736, 54760, 55784], by decide +kernel⟩
+private def priceBatch163 : P :=
+  ⟨unpack [56808, 57832, 58856, 59880, 43500, 44524], by decide +kernel⟩
+private def priceBatch164 : P :=
+  ⟨unpack [45548, 189210327126019140026611182, 47596, 48620, 49644, 50668], by decide +kernel⟩
+private def priceBatch165 : P :=
+  ⟨unpack [51692, 52716, 53740, 54764, 55788, 56812], by decide +kernel⟩
+private def priceBatch166 : P :=
+  ⟨unpack [57836, 58860, 59884, 43504, 44528, 45552], by decide +kernel⟩
+private def priceBatch167 : P :=
+  ⟨unpack [190692350292007462195934706, 47600, 48624, 49648, 50672, 51696], by decide +kernel⟩
+private def priceBatch168 : P :=
+  ⟨unpack [52720, 53744, 54768, 55792, 56816, 57840], by decide +kernel⟩
+private def priceBatch169 : P :=
+  ⟨unpack [58864, 59888, 43508, 44532, 45556, 46580], by decide +kernel⟩
+private def priceBatch170 : P :=
+  ⟨unpack [47604, 48628, 49652, 50676, 51700, 52724], by decide +kernel⟩
+private def priceBatch171 : P :=
+  ⟨unpack [53748, 54772, 55796, 56820, 57844, 58868], by decide +kernel⟩
+private def priceBatch172 : P :=
+  ⟨unpack [59892, 43512, 44536, 45560, 46584, 47608], by decide +kernel⟩
+private def priceBatch173 : P :=
+  ⟨unpack [48632, 49656, 50680, 51704, 52728, 53752], by decide +kernel⟩
+private def priceBatch174 : P :=
+  ⟨unpack [54776, 55800, 56824, 57848, 58872, 59896], by decide +kernel⟩
+private def priceBatch175 : P :=
+  ⟨unpack [43516, 44540, 45564, 46588, 47612, 48636], by decide +kernel⟩
+private def priceBatch176 : P :=
+  ⟨unpack [49660, 50684, 51708, 52732, 53756, 54780], by decide +kernel⟩
+private def priceBatch177 : P :=
+  ⟨unpack [55804, 56828, 57852, 58876, 59900, 43520], by decide +kernel⟩
+private def priceBatch178 : P :=
+  ⟨unpack [44544, 45568, 46592, 47616, 48640, 49664], by decide +kernel⟩
+private def priceBatch179 : P :=
+  ⟨unpack [50688, 51712, 52736, 53760, 54784, 55808], by decide +kernel⟩
+private def priceBatch180 : P :=
+  ⟨unpack [56832, 57856, 58880, 59904, 43524, 44548], by decide +kernel⟩
+private def priceBatch181 : P :=
+  ⟨unpack [45572, 46596, 47620, 48644, 49668, 50692], by decide +kernel⟩
+private def priceBatch182 : P :=
+  ⟨unpack [51716, 52740, 53764, 54788, 55812, 56836], by decide +kernel⟩
+private def priceBatch183 : P :=
+  ⟨unpack [57860, 58884, 59908, 43528, 44552, 45576], by decide +kernel⟩
+private def priceBatch184 : P :=
+  ⟨unpack [46600, 47624, 48648, 49672, 50696, 51720], by decide +kernel⟩
+private def priceBatch185 : P :=
+  ⟨unpack [52744, 53768, 54792, 55816, 56840, 57864], by decide +kernel⟩
+private def priceBatch186 : P :=
+  ⟨unpack [58888, 59912, 43532, 44556, 45580, 46604], by decide +kernel⟩
+private def priceBatch187 : P :=
+  ⟨unpack [47628, 48652, 49676, 50700, 51724, 52748], by decide +kernel⟩
+private def priceBatch188 : P :=
+  ⟨unpack [53772, 54796, 55820, 56844, 57868, 58892], by decide +kernel⟩
+private def priceBatch189 : P :=
+  ⟨unpack [59916, 43536, 44560, 45584, 46608, 47632], by decide +kernel⟩
+private def priceBatch190 : P :=
+  ⟨unpack [48656, 49680, 50704, 51728, 52752, 53776], by decide +kernel⟩
+private def priceBatch191 : P :=
+  ⟨unpack [54800, 55824, 56848, 57872, 58896, 59920], by decide +kernel⟩
+private def priceBatch192 : P :=
+  ⟨unpack [43540, 44564, 45588, 46612, 47636, 48660], by decide +kernel⟩
+private def priceBatch193 : P :=
+  ⟨unpack [49684, 50708, 51732, 52756, 53780, 54804], by decide +kernel⟩
+private def priceBatch194 : P :=
+  ⟨unpack [55828, 56852, 57876, 58900, 59924, 43544], by decide +kernel⟩
+private def priceBatch195 : P :=
+  ⟨unpack [44568, 45592, 46616, 47640, 48664, 49688], by decide +kernel⟩
+private def priceBatch196 : P :=
+  ⟨unpack [50712, 51736, 52760, 53784, 54808, 55832], by decide +kernel⟩
+private def priceBatch197 : P :=
+  ⟨unpack [56856, 57880, 58904, 59928, 43548, 44572], by decide +kernel⟩
+private def priceBatch198 : P :=
+  ⟨unpack [45596, 46620, 47644, 48668, 49692, 50716], by decide +kernel⟩
+private def priceBatch199 : P :=
+  ⟨unpack [51740, 52764, 53788, 54812, 55836, 56860], by decide +kernel⟩
+private def priceBatch200 : P :=
+  ⟨unpack [57884, 58908, 59932, 43552, 44576, 45600], by decide +kernel⟩
+private def priceBatch201 : P :=
+  ⟨unpack [46624, 47648, 48672, 49696, 50720, 51744], by decide +kernel⟩
+private def priceBatch202 : P :=
+  ⟨unpack [52768, 53792, 54816, 55840, 56864, 57888], by decide +kernel⟩
+private def priceBatch203 : P :=
+  ⟨unpack [58912, 59936, 43556, 44580, 45604, 46628], by decide +kernel⟩
+private def priceBatch204 : P :=
+  ⟨unpack [47652, 48676, 49700, 50724, 51748, 52772], by decide +kernel⟩
+private def priceBatch205 : P :=
+  ⟨unpack [53796, 54820, 55844, 56868, 57892, 58916], by decide +kernel⟩
+private def priceBatch206 : P :=
+  ⟨unpack [59940, 43560, 44584, 45608, 46632, 47656], by decide +kernel⟩
+private def priceBatch207 : P :=
+  ⟨unpack [48680, 49704, 50728, 51752, 52776, 53800], by decide +kernel⟩
+private def priceBatch208 : P :=
+  ⟨unpack [54824, 55848, 56872, 57896, 58920, 59944], by decide +kernel⟩
+private def priceBatch209 : P :=
+  ⟨unpack [43564, 44588, 45612, 46636, 47660, 48684], by decide +kernel⟩
+private def priceBatch210 : P :=
+  ⟨unpack [49708, 50732, 51756, 52780, 53804, 54828], by decide +kernel⟩
+private def priceBatch211 : P :=
+  ⟨unpack [55852, 56876, 57900, 58924, 59948, 43568], by decide +kernel⟩
+private def priceBatch212 : P :=
+  ⟨unpack [44592, 45616, 46640, 47664, 48688, 49712], by decide +kernel⟩
+private def priceBatch213 : P :=
+  ⟨unpack [50736, 51760, 52784, 53808, 54832, 55856], by decide +kernel⟩
+private def priceBatch214 : P :=
+  ⟨unpack [56880, 57904, 58928, 59952, 43572, 44596], by decide +kernel⟩
+private def priceBatch215 : P :=
+  ⟨unpack [45620, 46644, 47668, 48692, 49716, 50740], by decide +kernel⟩
+private def priceBatch216 : P :=
+  ⟨unpack [51764, 52788, 53812, 54836, 55860, 56884], by decide +kernel⟩
+private def priceBatch217 : P :=
+  ⟨unpack [57908, 58932, 59956, 43576, 44600, 45624], by decide +kernel⟩
+private def priceBatch218 : P :=
+  ⟨unpack [46648, 47672, 48696, 49720, 50744, 51768], by decide +kernel⟩
+private def priceBatch219 : P :=
+  ⟨unpack [52792, 53816, 54840, 55864, 56888, 57912], by decide +kernel⟩
+private def priceBatch220 : P :=
+  ⟨unpack [58936, 59960], by decide +kernel⟩
+private def batches : List P := [priceBatch0, priceBatch1, priceBatch2, priceBatch3, priceBatch4, priceBatch5, priceBatch6, priceBatch7, priceBatch8, priceBatch9, priceBatch10, priceBatch11, priceBatch12, priceBatch13, priceBatch14, priceBatch15, priceBatch16, priceBatch17, priceBatch18, priceBatch19, priceBatch20, priceBatch21, priceBatch22, priceBatch23, priceBatch24, priceBatch25, priceBatch26, priceBatch27, priceBatch28, priceBatch29, priceBatch30, priceBatch31, priceBatch32, priceBatch33, priceBatch34, priceBatch35, priceBatch36, priceBatch37, priceBatch38, priceBatch39, priceBatch40, priceBatch41, priceBatch42, priceBatch43, priceBatch44, priceBatch45, priceBatch46, priceBatch47, priceBatch48, priceBatch49, priceBatch50, priceBatch51, priceBatch52, priceBatch53, priceBatch54, priceBatch55, priceBatch56, priceBatch57, priceBatch58, priceBatch59, priceBatch60, priceBatch61, priceBatch62, priceBatch63, priceBatch64, priceBatch65, priceBatch66, priceBatch67, priceBatch68, priceBatch69, priceBatch70, priceBatch71, priceBatch72, priceBatch73, priceBatch74, priceBatch75, priceBatch76, priceBatch77, priceBatch78, priceBatch79, priceBatch80, priceBatch81, priceBatch82, priceBatch83, priceBatch84, priceBatch85, priceBatch86, priceBatch87, priceBatch88, priceBatch89, priceBatch90, priceBatch91, priceBatch92, priceBatch93, priceBatch94, priceBatch95, priceBatch96, priceBatch97, priceBatch98, priceBatch99, priceBatch100, priceBatch101, priceBatch102, priceBatch103, priceBatch104, priceBatch105, priceBatch106, priceBatch107, priceBatch108, priceBatch109, priceBatch110, priceBatch111, priceBatch112, priceBatch113, priceBatch114, priceBatch115, priceBatch116, priceBatch117, priceBatch118, priceBatch119, priceBatch120, priceBatch121, priceBatch122, priceBatch123, priceBatch124, priceBatch125, priceBatch126, priceBatch127, priceBatch128, priceBatch129, priceBatch130, priceBatch131, priceBatch132, priceBatch133, priceBatch134, priceBatch135, priceBatch136, priceBatch137, priceBatch138, priceBatch139, priceBatch140, priceBatch141, priceBatch142, priceBatch143, priceBatch144, priceBatch145, priceBatch146, priceBatch147, priceBatch148, priceBatch149, priceBatch150, priceBatch151, priceBatch152, priceBatch153, priceBatch154, priceBatch155, priceBatch156, priceBatch157, priceBatch158, priceBatch159, priceBatch160, priceBatch161, priceBatch162, priceBatch163, priceBatch164, priceBatch165, priceBatch166, priceBatch167, priceBatch168, priceBatch169, priceBatch170, priceBatch171, priceBatch172, priceBatch173, priceBatch174, priceBatch175, priceBatch176, priceBatch177, priceBatch178, priceBatch179, priceBatch180, priceBatch181, priceBatch182, priceBatch183, priceBatch184, priceBatch185, priceBatch186, priceBatch187, priceBatch188, priceBatch189, priceBatch190, priceBatch191, priceBatch192, priceBatch193, priceBatch194, priceBatch195, priceBatch196, priceBatch197, priceBatch198, priceBatch199, priceBatch200, priceBatch201, priceBatch202, priceBatch203, priceBatch204, priceBatch205, priceBatch206, priceBatch207, priceBatch208, priceBatch209, priceBatch210, priceBatch211, priceBatch212, priceBatch213, priceBatch214, priceBatch215, priceBatch216, priceBatch217, priceBatch218, priceBatch219, priceBatch220]
+private theorem i42 : checks (tilesOf batches) 142 42 8 = true := by
+  decide +kernel
+private theorem i50 : checks (tilesOf batches) 142 50 8 = true := by
+  decide +kernel
+private theorem i58 : checks (tilesOf batches) 142 58 1 = true := by
+  decide +kernel
+theorem exact (a : Shape) (ha : Valid a) (ht : a.t=14)
+    (hb : a.b≤142) (hj : a.j≤58) :
+    Covered orders a ∨ Low6966Gate.Gated ((0 : Band).val) a :=
+  cover_at (batches:=batches) (checks_join i42 (checks_join i50 (i58))) a ha ht hb hj
+end Top14
+
+end Low6966Allocation.Group0

@@ -1,12 +1,14 @@
 import ProximityPrize.SubmissionLower.Fast063
 import Mathlib.GroupTheory.MonoidLocalization.UniqueFactorization
 import Mathlib.RingTheory.RegularLocalRing.Polynomial
-import ProximityPrize.SubmissionLower.R6960Low6960VariableSelect
+import ProximityPrize.SubmissionLower.R6960Low6960FractionContact
 import ProximityPrize.SubmissionLower.Shared50OrderDivision
 import ProximityPrize.SubmissionLower.R6960Low6960RetainedAssembly
-import ProximityPrize.SubmissionLower.R6960Low6960SharedBentCaps
+import ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleMixed
 import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
-import ProximityPrize.SubmissionLower.R6960Low6960TiltedRectangle
+import ProximityPrize.SubmissionLower.R6960Low6960FastPrice
+
+set_option Elab.async false
 
 -- merged module Shared50MultiplicityLocal
 section Merged_Shared50MultiplicityLocal

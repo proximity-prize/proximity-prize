@@ -1,5 +1,7 @@
-import ProximityPrize.SubmissionLower.KoalaRectPosition
-import ProximityPrize.SubmissionLower.PortHighBase
+import ProximityPrize.SubmissionLower.KoalaRectCutoff
+import ProximityPrize.SubmissionLower.PortLowBase
+
+set_option Elab.async false
 
 -- merged module KoalaRectPhysical
 section Merged_KoalaRectPhysical

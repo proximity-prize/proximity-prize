@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
 import ProximityPrize.SubmissionLower.R6960LineEulerFree
+
+set_option Elab.async false
 noncomputable section
 set_option Elab.async false
 set_option backward.isDefEq.respectTransparency.types false

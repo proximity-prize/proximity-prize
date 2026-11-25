@@ -1021,9 +1021,6 @@ noncomputable section
 open Finset
 
 open scoped BigOperators
-
-
-
 end
 end DdP1
 end
@@ -1032,32 +1029,6 @@ set_option backward.isDefEq.respectTransparency false
 namespace DdP1
 noncomputable section
 open Polynomial gR ProximityPrize.Benchmark
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end DdP1
 end

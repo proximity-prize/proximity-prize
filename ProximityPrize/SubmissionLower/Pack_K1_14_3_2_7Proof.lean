@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.Fast042
 import ProximityPrize.SubmissionLower.Fast029
 
+set_option Elab.async false
+
 -- merged module Numeric6Defs
 section Merged_Numeric6Defs
 set_option Elab.async false

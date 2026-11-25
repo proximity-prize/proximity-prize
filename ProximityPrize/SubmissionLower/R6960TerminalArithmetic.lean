@@ -1,12 +1,12 @@
 import ProximityPrize.SubmissionLower.FrontCore82258Model
-import ProximityPrize.SubmissionLower.HighCore82258TerminalArithmetic
-import ProximityPrize.SubmissionLower.KoalaRectPosition
+import ProximityPrize.SubmissionLower.HighCore82258Terminal
+import ProximityPrize.SubmissionLower.KoalaRectCutoff
 set_option Elab.async false
 set_option autoImplicit true
 set_option maxRecDepth 18000
 section
 namespace Lower6960.TerminalArithmetic
-abbrev agreement : ℕ := 179798
+abbrev agreement : ℕ := 179818
 open P1_7_6 (Quad linearEnd intervalProduct yStart)
 open KoalaRect (rectGain rectDebit rectSlots_antitone)
 open Finset

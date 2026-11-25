@@ -1,6 +1,8 @@
-import ProximityPrize.SubmissionLower.R6960MonicFourChartDescent
+import ProximityPrize.SubmissionLower.R6966ProofFarChart
 import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
 import Mathlib.RingTheory.Localization.Integral
+
+set_option Elab.async false
 
 -- merged module R6960ChartOverlapTests
 section Merged_R6960ChartOverlapTests

@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.Low48BentSupport
 import ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleBound
 import ProximityPrize.SubmissionLower.Low48BentCycleCap
 
+set_option Elab.async false
+
 -- merged module Low49ActiveSupport
 section Merged_Low49ActiveSupport
 

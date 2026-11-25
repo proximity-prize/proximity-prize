@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.Fast056
 import ProximityPrize.SubmissionLower.Fast057
 import ProximityPrize.SubmissionLower.Fast058
 
+set_option Elab.async false
+
 -- merged module Fast059
 section Merged_Fast059
 set_option Elab.async false

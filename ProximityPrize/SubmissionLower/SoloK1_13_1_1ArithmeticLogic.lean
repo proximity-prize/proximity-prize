@@ -7,6 +7,8 @@ import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.RingTheory.Localization.NormTrace
 import ProximityPrize.SubmissionLower.Fast042
 
+set_option Elab.async false
+
 -- merged module Fast040
 section Merged_Fast040
 set_option Elab.async false

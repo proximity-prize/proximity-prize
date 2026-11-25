@@ -4,6 +4,8 @@ import ProximityPrize.SubmissionLower.UpperBranch1
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedFibreIndex
 import Mathlib.LinearAlgebra.TensorProduct.Basis
 
+set_option Elab.async false
+
 -- merged module R6960BranchIndex
 section Merged_R6960BranchIndex
 noncomputable section

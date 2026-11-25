@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part0
+import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part1
 
 set_option Elab.async false
 set_option maxHeartbeats 0

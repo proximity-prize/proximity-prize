@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50ActiveCyclePrice
 
+set_option Elab.async false
+
 set_option autoImplicit false
 set_option Elab.async false
 

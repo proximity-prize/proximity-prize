@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960MarkedGenericRuling
 import Mathlib.Algebra.Polynomial.Basis
+
+set_option Elab.async false
 set_option synthInstance.maxHeartbeats 200000
 
 noncomputable section

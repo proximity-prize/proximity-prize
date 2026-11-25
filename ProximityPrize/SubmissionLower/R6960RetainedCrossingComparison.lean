@@ -4,6 +4,8 @@ import Mathlib.RingTheory.Ideal.Quotient.Operations
 import ProximityPrize.SubmissionLower.R6960RetainedSurfaceClass
 import Mathlib.RingTheory.Polynomial.Ideal
 
+set_option Elab.async false
+
 -- merged module R6960RetainedFibreQuotient
 section Merged_R6960RetainedFibreQuotient
 

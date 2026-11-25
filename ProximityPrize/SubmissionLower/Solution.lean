@@ -1,9 +1,5 @@
-import ProximityPrize.SubmissionLower.R6960MarkedProtocol
-import ProximityPrize.SubmissionLower.Gate61Table
-import ProximityPrize.SubmissionLower.R6963LoHighCount
+import ProximityPrize.SubmissionLower.R6966ProofEndpoint6966
+set_option Elab.async false
 
-theorem ProximityPrize.Benchmark.candidate : ProximityPrize.Benchmark.ProtocolClaim 6963 2897327488399042352 9223372036854755587 :=
-  Lower6960.MarkedEvaluation.candidate_of_gates Gate61Fin.gates
-    (fun M F l h => Lower6961.lo_band_count_6963 M F l h)
-
+theorem ProximityPrize.Benchmark.candidate : ProximityPrize.Benchmark.ProtocolClaim 6966 2898347835189620169 9223372036854760969 := Research6966.Endpoint6966.protocol
 #print axioms ProximityPrize.Benchmark.candidate

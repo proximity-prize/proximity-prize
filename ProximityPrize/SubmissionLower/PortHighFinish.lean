@@ -1,6 +1,7 @@
-import ProximityPrize.SubmissionLower.PortHighBase
 import ProximityPrize.SubmissionLower.PortLowBase
 import ProximityPrize.SubmissionLower.Fast077
+
+set_option Elab.async false
 
 -- merged module PortFrontA
 section Merged_PortFrontA

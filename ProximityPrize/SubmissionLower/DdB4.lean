@@ -67,15 +67,7 @@ namespace aZw
 noncomputable section
 open Polynomial
 
-
-
 open scoped BigOperators
-
-
-
-
-
-
 end
 end aZw
 end
@@ -128,15 +120,8 @@ set_option backward.isDefEq.respectTransparency false
 namespace atp
 noncomputable section
 
-
-
 open Polynomial
 open scoped Polynomial
-
-
-
-
-
 end
 end atp
 end
@@ -145,69 +130,8 @@ set_option backward.isDefEq.respectTransparency false
 set_option maxSynthPendingDepth 16
 namespace atp
 noncomputable section
-
-
 open Polynomial
-
 open scoped Polynomial BigOperators
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end atp
 end
@@ -217,88 +141,8 @@ set_option maxSynthPendingDepth 16
 namespace atp
 noncomputable section
 open DdK1 (I)
-
 open Polynomial
-
-
 open scoped Polynomial BigOperators
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end atp
 end
@@ -308,74 +152,8 @@ set_option maxSynthPendingDepth 16
 namespace atp
 noncomputable section
 open DdK1 (I)
-
 open Polynomial
 open scoped Polynomial BigOperators
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end atp
 end
@@ -386,97 +164,21 @@ namespace dnG
 noncomputable section
 open cu Polynomial
 open scoped BigOperators Polynomial
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end dnG
 end
 section
 namespace bjU
 
-
 open Finset
 open scoped BigOperators
-
-
-
-
-
 end bjU
 end
 section
 namespace bjU
 
-
 open Finset
 open scoped BigOperators
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end bjU
 end
 section
@@ -485,26 +187,6 @@ set_option maxSynthPendingDepth 8
 namespace dnk
 noncomputable section
 open cu
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end dnk
 end

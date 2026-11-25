@@ -19,59 +19,57 @@ local notation:65 s:65 " +[" len "," val "]" => extendSum (n:=len) (y :=val) s r
 private theorem excluded {b j n v :ℕ}
     (h:Gq ⟨b,j,0⟩ = ∑ i∈range n,capRow b j i)
     (hs : (∑ i∈range n,capRow b j i)=v)
-    (hv :48729*v<0x60a5bb93bf610c) :
+    (hv :48700*v<0x5e3ebe4653e55c) :
     (i4.gap A+2)*Gq ⟨b,j,0⟩<donorMargin:= by
   rw [h,hs]
   exact hv
-private theorem r0: (gap A+2)*Gq ⟨24,0,0⟩<donorMargin:= by
-  refine excluded (n:=260) (v :=0x81cb446b5c) (cofactor_zero 24) ?_ (by decide)
-  exact emptySum (capRow 24 0)
-    +[32,0x22edf94c40] +[32,0x1d6db3cc40] +[32,0x17ed6e4c40]
-    +[32,0x126d28cc40] +[32,0xcece34c40] +[32,0x76dcf9620]
-    +[32,0x28064611c] +[32,0x39e6b100] +[4,0x245e0]
-private theorem r1: (gap A+2)*Gq ⟨23,1,0⟩<donorMargin:= by
-  refine excluded (n:=271) (v :=0x7f7b569af0) (cofactor_index 23 1 (by decide)) ?_ (by decide)
-  exact emptySum (capRow 23 1)
-    +[32,0x228882b8b0] +[32,0x1c80365eb0] +[32,0x16d00af4b0]
-    +[32,0x1175e47ab0] +[32,0xc6fa6f0b0] +[32,0x7bb3656b0]
-    +[32,0x36a3bd5b4] +[32,0x95e63a84] +[15,0x1aebc98]
-private theorem r2: (gap A+2)*Gq ⟨21,2,0⟩<donorMargin:= by
-  refine excluded (n:=297) (v :=0x8138a6a33e) (cofactor_index 21 2 (by decide)) ?_ (by decide)
-  exact emptySum (capRow 21 2)
-    +[32,0x223f9c3810] +[32,0x1bdf01d010] +[32,0x1620d5e810]
-    +[32,0x10fd988010] +[32,0xc6dc99810] +[32,0x869e93010]
-    +[32,0x4ea774810] +[32,0x1f6e3e418] +[32,0x42612bf4]
-    +[9,0x2b12c2]
-private theorem r3: (gap A+2)*Gq ⟨19,3,0⟩<donorMargin:= by
-  refine excluded (n:=329) (v :=0x80f327d84b) (cofactor_index 19 3 (by decide)) ?_ (by decide)
-  exact emptySum (capRow 19 3)
-    +[32,0x21f5157428] +[32,0x1b320fb728] +[32,0x1550144a28]
-    +[32,0x10405f2d28] +[32,0xbf42c6028] +[32,0x85cb7e328]
-    +[32,0x56b3db628] +[32,0x310f9d928] +[32,0x140dda630]
-    +[32,0x2d7dfcf8] +[9,0x17bfe3]
-private theorem r4: (gap A+2)*Gq ⟨16,4,0⟩<donorMargin:= by
-  refine excluded (n:=390) (v :=0x81b178e76c) (cofactor_index 16 4 (by decide)) ?_ (by decide)
-  exact emptySum (capRow 16 4)
-    +[32,0x21c4a30bd0] +[32,0x1ac1f0cfd0] +[32,0x14c84893d0]
-    +[32,0xfc2aa57d0] +[32,0xb9c161bd0] +[32,0x83f8bdfd0]
-    +[32,0x5980ba3d0] +[32,0x3909567d0] +[32,0x214292bd0]
-    +[32,0x10dc6efd0] +[32,0x686eb3d0] +[32,0x114c3464]
-    +[6,0x41518]
-private theorem r5: (gap A+2)*Gq ⟨11,5,0⟩<donorMargin:= by
-  refine excluded (n:=391) (v :=0x814fe087f4) (cofactor_index 11 5 (by decide)) ?_ (by decide)
-  exact emptySum (capRow 11 5)
-    +[32,0x21c775b790] +[32,0x1ac727f590] +[32,0x14cc28e390]
-    +[32,0xfc28c8190] +[32,0xb9666cf90] +[32,0x833cbcd90]
-    +[32,0x586cf7b90] +[32,0x37b85d990] +[32,0x1fe02e790]
-    +[32,0xfa5aa590] +[32,0x5ca11390] +[32,0x10ea3190]
-    +[7,0x1cb134]
-private theorem r6: (gap A+2)*Gq ⟨2,6,0⟩<donorMargin:= by
-  refine excluded (n:=326) (v :=0x81fa628376) (cofactor_index 2 6 (by decide)) ?_ (by decide)
-  exact emptySum (capRow 2 6)
-    +[32,0x222eaf7b30] +[32,0x1bab1b8d30] +[32,0x15cf069f30]
-    +[32,0x109dd0b130] +[32,0xc1ad9c330] +[32,0x84981d530]
-    +[32,0x52d28e730] +[32,0x2c92ef930] +[32,0x120f40b30]
-    +[32,0x37d81d30] +[6,0x408996]
+private theorem r0: (gap A+2)*Gq ⟨25,0,0⟩<donorMargin:= by
+  refine excluded (n:=250) (v :=0x7c9424b32c) (cofactor_zero 25) ?_ (by decide)
+  exact emptySum (capRow 25 0)
+    +[32,0x22cfb7ce00] +[32,0x1d14c4be00] +[32,0x1759d1ae00]
+    +[32,0x119ede9e00] +[32,0xbe3eb8e00] +[32,0x63040ed77]
+    +[32,0x19216a38d] +[26,0x10b4bc28]
+private theorem r1: (gap A+2)*Gq ⟨24,1,0⟩<donorMargin:= by
+  refine excluded (n:=260) (v :=0x7a7717d471) (cofactor_index 24 1 (by decide)) ?_ (by decide)
+  exact emptySum (capRow 24 1)
+    +[32,0x226aeb5208] +[32,0x1c2bc6d908] +[32,0x1648737008]
+    +[32,0x10bebd1708] +[32,0xb8c6fce08] +[32,0x6af60c3e9]
+    +[32,0x2637b9980] +[32,0x39e6b100] +[4,0x245e0]
+private theorem r2: (gap A+2)*Gq ⟨22,2,0⟩<donorMargin:= by
+  refine excluded (n:=284) (v :=0x7c27efbcf4) (cofactor_index 22 2 (by decide)) ?_ (by decide)
+  exact emptySum (capRow 22 2)
+    +[32,0x2222acc900] +[32,0x1b8ef2f300] +[32,0x15a4bf1d00]
+    +[32,0x105c314700] +[32,0xbad697100] +[32,0x790879b00]
+    +[32,0x3fddc6052] +[32,0x129f3792a] +[28,0xf9eb778]
+private theorem r3: (gap A+2)*Gq ⟨20,3,0⟩<donorMargin:= by
+  refine excluded (n:=312) (v :=0x7c21880666) (cofactor_index 20 3 (by decide)) ?_ (by decide)
+  exact emptySum (capRow 20 3)
+    +[32,0x21d8cbdbb0] +[32,0x1ae6429fb0] +[32,0x14def9d3b0]
+    +[32,0xfb35577b0] +[32,0xb53b98bb0] +[32,0x7b08a0fb0]
+    +[32,0x4ba2b03b0] +[32,0x2610133e7] +[32,0xa9f9d67f]
+    +[24,0x6c09630]
+private theorem r4: (gap A+2)*Gq ⟨17,4,0⟩<donorMargin:= by
+  refine excluded (n:=367) (v :=0x7d76de8363) (cofactor_index 17 4 (by decide)) ?_ (by decide)
+  exact emptySum (capRow 17 4)
+    +[32,0x21a8fd29f0] +[32,0x1a7a469df0] +[32,0x1461a611f0]
+    +[32,0xf489b85f0] +[32,0xb18a6f9f0] +[32,0x7bb486df0]
+    +[32,0x519ffe1f0] +[32,0x31e4d55f0] +[32,0x1b1b0c9f0]
+    +[32,0xbdaa3df0] +[32,0x2d15a21b] +[15,0xabd9e8]
+private theorem r5: (gap A+2)*Gq ⟨12,5,0⟩<donorMargin:= by
+  refine excluded (n:=391) (v :=0x7e715a5a8a) (cofactor_index 12 5 (by decide)) ?_ (by decide)
+  exact emptySum (capRow 12 5)
+    +[32,0x21ac716b48] +[32,0x1a8381c648] +[32,0x146f79f148]
+    +[32,0xf5a15ec48] +[32,0xb2d11b748] +[32,0x7d2295248]
+    +[32,0x53318bd48] +[32,0x3399bf848] +[32,0x1cf6f0348]
+    +[32,0xde4dde48] +[32,0x4ff48948] +[32,0xe1f0448]
+    +[7,0x171d2a]
+private theorem r6: (gap A+2)*Gq ⟨4,6,0⟩<donorMargin:= by
+  refine excluded (n:=326) (v :=0x7dfe37533e) (cofactor_index 4 6 (by decide)) ?_ (by decide)
+  exact emptySum (capRow 4 6)
+    +[32,0x21f9e5cdd0] +[32,0x1b2b9973d0] +[32,0x15288719d0]
+    +[32,0xfed4ebfd0] +[32,0xb769065d0] +[32,0x7c0ec0bd0]
+    +[32,0x4c901b1d0] +[32,0x28b7157d0] +[32,0x104dafdd0]
+    +[32,0x31dea3d0] +[6,0x391b1e]
 private theorem r7: (gap A+2)*Gq ⟨1,7,0⟩<donorMargin:= by
   refine excluded (n:=279) (v :=0x71470d1c82) (cofactor_index 1 7 (by decide)) ?_ (by decide)
   exact emptySum (capRow 1 7)
@@ -79,13 +77,13 @@ private theorem r7: (gap A+2)*Gq ⟨1,7,0⟩<donorMargin:= by
     +[32,0xe4847e978] +[32,0x97fc6f678] +[32,0x5a4675378]
     +[32,0x2c1a50078] +[32,0xe2fbfd78] +[23,0x130f5cc2]
 private def cutoff :ℕ→ℕ
-  | 0=>24
-  | 1=>23
-  | 2=>21
-  | 3=>19
-  | 4=>16
-  | 5=>11
-  | 6=>2
+  | 0=>25
+  | 1=>24
+  | 2=>22
+  | 3=>20
+  | 4=>17
+  | 5=>12
+  | 6=>4
   | _=>1
 private theorem reject {a :Jn} (ha :Allocation a) {b j:ℕ}
     (hp:0<b) (hB:b≤a.B) (hJ:j≤a.J)
@@ -110,8 +108,8 @@ private theorem limits {b j c:ℕ} (ha :Allocation ⟨b,j,c⟩) :j≤6∧b<cutof
     · exact r6
   have hp:0<cutoff j:= by interval_cases j <;> decide
   exact ⟨hj,Nat.lt_of_not_ge fun hb=>reject ha hp hb le_rfl hc⟩
-private theorem ee8:gap A=48727:=rfl
-private theorem d1C:errors A=82346:=rfl
+private theorem ee8:gap A=48698:=rfl
+private theorem d1C:errors A=82375:=rfl
 private theorem chart_eq :chartCaps=⟨21495235,6160222,2752440⟩:= by
   have ha :a₀ small = 21495235:=rfl
   have hd:D small=6160222 :=rfl
@@ -122,7 +120,7 @@ private theorem chart_eq :chartCaps=⟨21495235,6160222,2752440⟩:= by
     exact min_eq_left (by decide)
   unfold chartCaps
   rw [ha,hd,he]
-private theorem low_eq :lowFee small=0x4030ad3e5189c2:= by
+private theorem low_eq :lowFee small=0x403676b8ec7789:= by
   have hH :H small=1622 :=rfl
   have hI:I₁ small = 283:=rfl
   have ha :a₁ small=0x1953e058:=rfl
@@ -130,135 +128,134 @@ private theorem low_eq :lowFee small=0x4030ad3e5189c2:= by
   have hr :R₁ small=0x33160a2d17:= by rw [R₁,hH,hd,hI,ha]
   rw [lowFee,d1C,ee8,hr,hH]
   rfl
-private def HE (r n:ℕ) :=82346*r+48727*n
+private def HE (r n:ℕ) :=82375*r+48698*n
 private def jX (a :Jn) :ℕ :=
   let s :=tariffShape a
   HE (R₁ s) (H s^2)+(if a.C=0 then 0 else HE (2*R₂ s) s.B) +
     HE (tW (smallCaps.wD a).repair (donorCaps.wD a).repair
-      ⟨21495235,6160222,2752440⟩) (componentCap a)+0x4030ad3e5189c2
+      ⟨21495235,6160222,2752440⟩) (componentCap a)+0x403676b8ec7789
 private theorem eNY (a :Jn) :commonFee a+c5H a+lowFee small=jX a := by
   rw [low_eq]
   simp only [jX,commonFee,c5H,properDegree,chart_eq,lowFee,regularFee,
     d1C,ee8,HE]
 private def fO (b stop j c:ℕ) :Prop :=
-  ∀ i,b≤ i→i<stop→jX ⟨i,j,c⟩≤0x1be2ed353fdc34b1
+  ∀ i,b≤ i→i<stop→jX ⟨i,j,c⟩≤0x1f80ba7d6c82de08
 private theorem done {b j c:ℕ} : fO b b j c:= by
   intro i hl hu
   omega
 private theorem bandCons {b stop j c v :ℕ}
-    (he :jX ⟨b,j,c⟩=v) (hv :v≤0x1be2ed353fdc34b1)
+    (he :jX ⟨b,j,c⟩=v) (hv :v≤0x1f80ba7d6c82de08)
     (ht:fO (b+1) stop j c) :fO b stop j c:= by
   intro i hl hu
   by_cases h:i=b
   · rwa [h,he]
   · exact ht i (by omega) hu
 local notation:65 val:66 " |+| " tail:65=>bandCons (v :=val) rfl (by decide) tail
-private theorem r00 :fO 0 24 0 0 :=
-  0x1b5c8f2821d9dbd |+| 0x1b3ff608318511a |+| 0x1b235ce84148125 |+|
-  0x1b06c4e1c4dcaf1 |+| 0x1aea2cdb48a0e19 |+| 0x1acd94d4cc94a9d |+|
-  0x1ab0fcce50b807d |+| 0x1a9464c7d50afb9 |+| 0x1a77ccc1598d851 |+|
-  0x1a5b34bade3fa45 |+| 0x1a3e9cb46321595 |+| 0x1a2204ade832a41 |+|
-  0x1a056ca76d73849 |+| 0x19e8d4a0f2e3fad |+| 0x19cc3c9a788406d |+|
-  0x19afa493fe53a89 |+| 0x19930c8d8452e01 |+| 0x197674870a81ad5 |+|
-  0x1959dc8090e0105 |+| 0x193d447a176e091 |+| 0x1920ac739e2b979 |+|
-  0x1904146d2518bbd |+| 0x18e77c66ac3575d |+| 0x18cae4603381c59 |+|
+private theorem cost_0_0 :fO 0 25 0 0 :=
+  0x1b5f06a8ac96b9f |+| 0x1b426af4b120511 |+| 0x1b25cf40b5c1af7 |+| 0x1b0934a64794803 |+|
+  0x1aec9a0bd996df7 |+| 0x1acfff716bc8cd3 |+| 0x1ab364d6fe2a497 |+| 0x1a96ca3c90bb543 |+|
+  0x1a7a2fa2237bed7 |+| 0x1a5d9507b66c153 |+| 0x1a40fa6d498bcb7 |+| 0x1a245fd2dcdb103 |+|
+  0x1a07c5387059e37 |+| 0x19eb2a9e0408453 |+| 0x19ce900397e6357 |+| 0x19b1f5692bf3b43 |+|
+  0x19955acec030c17 |+| 0x1978c034549d5d3 |+| 0x195c2599e939877 |+| 0x193f8aff7e05403 |+|
+  0x1922f0651300877 |+| 0x190655caa82b5d3 |+| 0x18e9bb303d85c17 |+| 0x18cd2095d30fb43 |+|
+  0x18b085fb68c9357 |+|
   done
-private theorem dz :fO 1 23 1 0 :=
-  0x1ab41cbbc2e726e |+| 0x1a978a3483db2d9 |+| 0x1a7af8c6b8a0d05 |+|
-  0x1a5e6758ed9608d |+| 0x1a41d5eb22bad71 |+| 0x1a25447d580f3b1 |+|
-  0x1a08b30f8d9334d |+| 0x19ec21a1c346c45 |+| 0x19cf9033f929e99 |+|
-  0x19b2fec62f3ca49 |+| 0x19966d58657ef55 |+| 0x1979dbea9bf0dbd |+|
-  0x195d4a7cd292581 |+| 0x1940b90f09636a1 |+| 0x192427a1406411d |+|
-  0x1907963377944f5 |+| 0x18eb04c5aef4229 |+| 0x18ce7357e6838b9 |+|
-  0x18b1e1ea1e428a5 |+| 0x1895507c56311ed |+| 0x1878bf0e8e4f491 |+|
-  0x185c2da0c69d091 |+| done
-private theorem jV :fO 2 21 2 0 :=
-  0x1a0b64431c1e8a3 |+| 0x19eeda370aeb53b |+| 0x19d2502af9e7b2f |+|
-  0x19b5c61ee913a7f |+| 0x19993c12d86f32b |+| 0x197cb206c7fa533 |+|
-  0x196027fab7b5097 |+| 0x19439deea79f557 |+| 0x192713e297b9373 |+|
-  0x190a89d68802aeb |+| 0x18edffca787bbbf |+| 0x18d175be69245ef |+|
-  0x18b4ebb259fc97b |+| 0x189861a64b04663 |+| 0x187bd79a3c3bca7 |+|
-  0x185f4d8e2da2c47 |+| 0x1842c3821f39543 |+| 0x1826397610ff79b |+|
-  0x1809af6a02f534f |+| done
-private theorem lp :fO 1 21 2 1 :=
-  0x1c4a9277dd313b4 |+| 0x1c2e081b6102897 |+| 0x1ee53760736442a |+|
-  0x219c66a585f5919 |+| 0x245395ea98b6764 |+| 0x270ac52faba6f0b |+|
-  0x29c1f474bec700e |+| 0x2c7923b9d216a6d |+| 0x2f3052fee595e28 |+|
-  0x31e78243f944b3f |+| 0x349eb1890d231b2 |+| 0x3755e0ce2131181 |+|
-  0x3a0d1013356eaac |+| 0x3cc43f5849dbd33 |+| 0x3f7b6e9d5e78916 |+|
-  0x42329de27344e55 |+| 0x44e9cd278840cf0 |+| 0x47a0fc6c9d6c4e7 |+|
-  0x4a582bb1b2c763a |+| 0x4d0f5af6c8520e9 |+| done
-private theorem xM :fO 3 19 3 0 :=
-  0x196316bf5fe2dd3 |+| 0x194693ecd447383 |+| 0x192a111a48db28f |+|
-  0x190d8e47bd9eaf7 |+| 0x18f10b753291cbb |+| 0x18d488a2a7b47db |+|
-  0x18b805d01d06c57 |+| 0x189b82fd9288a2f |+| 0x187f002b083a163 |+|
-  0x18627d587e1b1f3 |+| 0x1845fa85f42bbdf |+| 0x182977b36a6bf27 |+|
-  0x180cf4e0e0dbbcb |+| 0x17f0720e577b1cb |+| 0x17d3ef3bce4a127 |+|
-  0x17b76c6945489df |+| done
-private theorem xd :fO 2 19 3 1 :=
-  0x29c4e24828d32bf |+| 0x29a85e845ded4b0 |+| 0x361c5c0ab2f5c93 |+|
-  0x42905991082ddd2 |+| 0x4f0457175d9586d |+| 0x5b78549db32cc64 |+|
-  0x67ec522408f39b7 |+| 0x74604faa5eea066 |+| 0x80d44d30b510071 |+|
-  0x8d484ab70b659d8 |+| 0x99bc483d61eac9b |+| 0xa63045c3b89f8ba |+|
-  0xb2a4434a0f83e35 |+| 0xbf1840d06697d0c |+| 0xcb8c3e56bddb53f |+|
-  0xd8003bdd154e6ce |+| 0xe47439636cf11b9 |+| done
-private theorem Hz :fO 4 16 4 0 :=
-  0x18aa7092e857de3 |+| 0x188df68bf4000c3 |+| 0x18717c84ffd7cff |+|
-  0x1855027e0bdf297 |+| 0x18388877181618b |+| 0x181c0e70247c9db |+|
-  0x17ff94693112b87 |+| 0x17e31a623dd868f |+| 0x17c6a05b4acdaf3 |+|
-  0x17aa265457f28b3 |+| 0x178dac4d6546fcf |+| 0x1771324672cb047 |+|
+private theorem cost_1_0 :fO 1 24 1 0 :=
+  0x1ab6850c8d44d9f |+| 0x1a99eff1db56395 |+| 0x1a7d5bf0b6990b1 |+| 0x1a60c7ef920b6b5 |+|
+  0x1a4433ee6dad5a1 |+| 0x1a279fed497ed75 |+| 0x1a0b0bec257fe31 |+| 0x19ee77eb01b07d5 |+|
+  0x19d1e3e9de10a61 |+| 0x19b54fe8baa05d5 |+| 0x1998bbe7975fa31 |+| 0x197c27e6744e775 |+|
+  0x195f93e5516cda1 |+| 0x1942ffe42ebacb5 |+| 0x19266be30c384b1 |+| 0x1909d7e1e9e5595 |+|
+  0x18ed43e0c7c1f61 |+| 0x18d0afdfa5ce215 |+| 0x18b41bde8409db1 |+| 0x189787dd6275235 |+|
+  0x187af3dc410ffa1 |+| 0x185e5fdb1fda5f5 |+| 0x1841cbd9fed4531 |+|
   done
-private theorem ID :fO 3 16 4 1 :=
-  0x419c86d2403ed30 |+| 0x41800a702f77e3b |+| 0x5801408f911e1ca |+|
-  0x6e8276aef2f3eb5 |+| 0x8503acce54f94fc |+| 0x9b84e2edb72e49f |+|
-  0xb206190d1992d9e |+| 0xc8874f2c7c26ff9 |+| 0xdf08854bdeeabb0 |+|
-  0xf589bb6b41de0c3 |+| 0x10c0af18aa500f32 |+| 0x1228c27aa08536fd |+|
-  0x1390d5dc96bd5824 |+| done
-private theorem LU :fO 2 16 4 2 :=
-  0x54817c6bc7cf8bd |+| 0x546500d2bfc6f26 |+| 0x54488539b7d623d |+|
-  0x752755f6fc82890 |+| 0x960626b4421cdaf |+| 0xb6e4f77188a519a |+|
-  0xd7c3c82ed01b451 |+| 0xf8a298ec187f5d4 |+| 0x1198169a961d1623 |+|
-  0x13a603a66ac1153e |+| 0x15b3f0b23f73f325 |+| 0x17c1ddbe1435afd8 |+|
-  0x19cfcac9e9064b57 |+| 0x1bddb7d5bde5c5a2 |+| done
-private theorem Db :fO 5 11 5 0 :=
-  0x18025e6d661b1df |+| 0x17e5eb9ff75add7 |+| 0x17c978d288ca32b |+|
-  0x17ad06051a691db |+| 0x17909337ac379e7 |+| 0x1774206a3e35b4f |+|
+private theorem cost_2_0 :fO 2 22 2 0 :=
+  0x1a0dbd5dd56860c |+| 0x19f130bf151133a |+| 0x19d4a42054e9950 |+| 0x19b8178194f184e |+|
+  0x199b8ae2d529034 |+| 0x197efe441590102 |+| 0x196271a55626ab8 |+| 0x1945e50696ecd56 |+|
+  0x19295867d7e28dc |+| 0x190ccbc91907d4a |+| 0x18f03f2a5a5caa0 |+| 0x18d3b28b9be10de |+|
+  0x18b725ecdd95004 |+| 0x189a994e1f78812 |+| 0x187e0caf618b908 |+| 0x18618010a3ce2e6 |+|
+  0x1844f371e6405ac |+| 0x182866d328e215a |+| 0x180bda346bb35f0 |+| 0x17ef4d95aeb436e |+|
   done
-private theorem LB :fO 4 11 5 1 :=
-  0x6381c646ebf8b19 |+| 0x6365507d8c7a932 |+| 0x83f3be6cf1e8661 |+|
-  0xa4822c5c5785cec |+| 0xc5109a4bbd52cd3 |+| 0xe59f083b234f616 |+|
-  0x1062d762a897b8b5 |+| done
-private theorem De :fO 3 11 5 2 :=
-  0x9dfab9175e10206 |+| 0x9dde4417075057d |+| 0x9dc1cf16b0a85a2 |+|
-  0xd7713656249eb0d |+| 0x111209d959982f44 |+| 0x14ad004d50f55247 |+|
-  0x1847f6c148615416 |+| 0x1be2ed353fdc34b1 |+| done
+private theorem cost_2_1 :fO 1 22 2 1 :=
+  0x1c4d1f6dbda24d7 |+| 0x1c30927e8b0fae1 |+| 0x1ee8007076ad80f |+| 0x219f6e62627ae25 |+|
+  0x2456dc544e77d23 |+| 0x270e4a463aa4509 |+| 0x29c5b83827005d7 |+| 0x2c7d262a138bf8d |+|
+  0x2f34941c004722b |+| 0x31ec020ded31db1 |+| 0x34a36fffda4c21f |+| 0x375addf1c795f75 |+|
+  0x3a124be3b50f5b3 |+| 0x3cc9b9d5a2b84d9 |+| 0x3f8127c79090ce7 |+| 0x423895b97e98ddd |+|
+  0x44f003ab6cd07bb |+| 0x47a7719d5b37a81 |+| 0x4a5edf8f49ce62f |+| 0x4d164d813894ac5 |+|
+  0x4fcdbb73278a843 |+|
+  done
+private theorem cost_3_0 :fO 3 20 3 0 :=
+  0x196560adaca7bfe |+| 0x1948db4918a705e |+| 0x192c55e484d5da6 |+| 0x190fd07ff1343d6 |+|
+  0x18f34b1b5dc22ee |+| 0x18d6c5b6ca7faee |+| 0x18ba4052376cbd6 |+| 0x189dbaeda4895a6 |+|
+  0x1881358911d585e |+| 0x1864b0247f513fe |+| 0x18482abfecfc886 |+| 0x182ba55b5ad75f6 |+|
+  0x180f1ff6c8e1c4e |+| 0x17f29a92371bb8e |+| 0x17d6152da5853b6 |+| 0x17b98fc9141e4c6 |+|
+  0x179d0a6482e6ebe |+|
+  done
+private theorem cost_3_1 :fO 2 20 3 1 :=
+  0x29c8a64f299fac2 |+| 0x29ac1ff94094d50 |+| 0x36213cea565a6e4 |+| 0x429659db6c4f960 |+|
+  0x4f0b76cc82744c4 |+| 0x5b8093bd98c8910 |+| 0x67f5b0aeaf4c644 |+| 0x746acd9fc5ffc60 |+|
+  0x80dfea90dce2b64 |+| 0x8d550781f3f5350 |+| 0x99ca24730b37424 |+| 0xa63f416422a8de0 |+|
+  0xb2b45e553a4a084 |+| 0xbf297b46521ac10 |+| 0xcb9e98376a1b084 |+| 0xd813b528824ade0 |+|
+  0xe488d2199aaa424 |+| 0xf0fdef0ab339350 |+|
+  done
+private theorem cost_4_0 :fO 4 17 4 0 :=
+  0x18aca9db82bef6e |+| 0x18902d435100b04 |+| 0x1873b0ab1f71f82 |+| 0x18573412ee12ce8 |+|
+  0x183ab77abce3336 |+| 0x181e3ae28be326c |+| 0x1801be4a5b12a8a |+| 0x17e541b22a71b90 |+|
+  0x17c8c519fa0057e |+| 0x17ac4881c9be854 |+| 0x178fcbe999ac412 |+| 0x17734f5169c98b8 |+|
+  0x1756d2b93a16646 |+|
+  done
+private theorem cost_4_1 :fO 3 17 4 1 :=
+  0x41a27121347436c |+| 0x4185f22dafe7280 |+| 0x58092fb5b62b6b4 |+| 0x6e8c6d3dbc9f3d0 |+|
+  0x850faac5c3429d4 |+| 0x9b92e84dca158c0 |+| 0xb21625d5d118094 |+| 0xc899635dd84a150 |+|
+  0xdf1ca0e5dfabaf4 |+| 0xf59fde6de73cd80 |+| 0x10c231bf5eefd8f4 |+| 0x122a6597df6edd50 |+|
+  0x139299705ff0da94 |+| 0x14facd48e075d0c0 |+|
+  done
+private theorem cost_4_2 :fO 2 17 4 2 :=
+  0x54891acfa83291b |+| 0x546c9ca53e83bbd |+| 0x54501e7ad4ecad3 |+| 0x7531e5ddde592a5 |+|
+  0x9613ad40e8b36ff |+| 0xb6f574a3f3fb7e1 |+| 0xd7d73c07003154b |+| 0xf8b9036a0d54f3d |+|
+  0x1199acacd1b665b7 |+| 0x13a7c92302a658b9 |+| 0x15b5e59933a52843 |+| 0x17c4020f64b2d455 |+|
+  0x19d21e8595cf5cef |+| 0x1be03afbc6fac211 |+| 0x1dee5771f83503bb |+|
+  done
+private theorem cost_5_0 :fO 5 12 5 0 :=
+  0x1804888eee33ede |+| 0x17e81330e8cc1a6 |+| 0x17cb9dd2e393d56 |+| 0x17af2874de8b1ee |+|
+  0x1792b316d9b1f6e |+| 0x17763db8d5085d6 |+| 0x1759c85ad08e526 |+|
+  done
+private theorem cost_5_1 :fO 4 12 5 1 :=
+  0x638abee494a8258 |+| 0x636e468a59a2df0 |+| 0x83ffa3e0356fcc2 |+| 0xa4910136116c47c |+|
+  0xc5225e8bed9851e |+| 0xe5b3bbe1c9f3ea8 |+| 0x106451937a67f11a |+| 0x126d6768d8339c74 |+|
+  done
+private theorem cost_5_2 :fO 3 12 5 2 :=
+  0x9e08f7400d13ee8 |+| 0x9dec7faeecece0e |+| 0x9dd0081dccdd9a8 |+| 0xd784a2bc9f18864 |+|
+  0x111393d5b72413a8 |+| 0x14aedd7fa4657b74 |+| 0x184a272991b5bfc8 |+| 0x1be570d37f14e0a4 |+|
+  0x1f80ba7d6c82de08 |+|
+  done
+private theorem cost_6_3 :fO 3 4 6 3 :=
+  0x11e91f9a9bdf3dd1 |+|
+  done
 private theorem eNX {b j c:ℕ} (hj:j≤6) (hb:b<cutoff j)
-    (hc:2*c≤j) (ht:c≤b) (hi:j≤b+c) :
-    jX ⟨b,j,c⟩≤0x1be2ed353fdc34b1:= by
+    (hc:2*c≤j) (ht:c≤b) (hi:j≤b+c) : jX ⟨b,j,c⟩≤0x1f80ba7d6c82de08:= by
   have hc' : c≤j/2 := by omega
   interval_cases j
   all_goals interval_cases c
-  · exact r00 b (by omega) hb
-  · exact dz b (by omega) hb
-  · exact jV b (by omega) hb
-  · exact lp b (by omega) hb
-  · exact xM b (by omega) hb
-  · exact xd b (by omega) hb
-  · exact Hz b (by omega) hb
-  · exact ID b (by omega) hb
-  · exact LU b (by omega) hb
-  · exact Db b (by omega) hb
-  · exact LB b (by omega) hb
-  · exact De b (by omega) hb
-  · have h2 : b<2 := hb
+  · exact cost_0_0 b (by omega) hb
+  · exact cost_1_0 b (by omega) hb
+  · exact cost_2_0 b (by omega) hb
+  · exact cost_2_1 b (by omega) hb
+  · exact cost_3_0 b (by omega) hb
+  · exact cost_3_1 b (by omega) hb
+  · exact cost_4_0 b (by omega) hb
+  · exact cost_4_1 b (by omega) hb
+  · exact cost_4_2 b (by omega) hb
+  · exact cost_5_0 b (by omega) hb
+  · exact cost_5_1 b (by omega) hb
+  · exact cost_5_2 b (by omega) hb
+  · have stop : b<4 := hb
     omega
-  · have h2 : b<2 := hb
+  · have stop : b<4 := hb
     omega
-  · have h2 : b<2 := hb
+  · have stop : b<4 := hb
     omega
-  · have h2 : b<2 := hb
-    omega
-private theorem dEV:gap A*P6.LM=0x1be2ed353fdc89da:=rfl
+  · exact cost_6_3 b (by omega) hb
+private theorem dEV:gap A*P6.LM=0x1f80ba7d6c838a84:=rfl
 theorem uq : ∀ a :Jn,Allocation a →
     commonFee a+c5H a+lowFee small≤gap A*P6.LM:= by
   rintro ⟨b,j,c⟩ ha

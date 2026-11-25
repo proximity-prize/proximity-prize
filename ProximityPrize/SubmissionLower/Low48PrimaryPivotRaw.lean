@@ -1,4 +1,3 @@
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part0
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part1
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part2
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part3
@@ -22,6 +21,8 @@ import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part4
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part5
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part6
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow3Part7
+
+set_option Elab.async false
 
 -- merged module Low48PrimaryPivotRawWindow3Part8
 section Merged_Low48PrimaryPivotRawWindow3Part8

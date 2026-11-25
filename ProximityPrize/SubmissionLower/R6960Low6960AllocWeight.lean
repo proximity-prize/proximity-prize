@@ -1,17 +1,17 @@
-import ProximityPrize.SubmissionLower.R6960Low6960Inventory
+import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
 
 set_option Elab.async false
 
-/-! Low-side copy of `KoalaAllocationWeight` for the 69.61 box (136, 57, 14): full charge from index 55, denominator 554. -/
+/-! Low-side copy of `KoalaAllocationWeight` for the 69.61 box (136, 57, 14): full charge from index 55, denominator 364. -/
 namespace Low6960AllocWeight
 open K1_13 (Shape)
 open scoped BigOperators
 
-def fullCharge (j t : ℕ) : Prop := 57 ≤ j ∨ 14 ≤ t
+def fullCharge (j t : ℕ) : Prop := 55 ≤ j ∨ 14 ≤ t
 
 instance (j t : ℕ) : Decidable (fullCharge j t) := by unfold fullCharge; infer_instance
 
-def weight (b j t : ℕ) : ℕ := if fullCharge j t then 554 else min (b+7*j) 554
+def weight (b j t : ℕ) : ℕ := if fullCharge j t then 364 else min (b+4*j) 364
 
 theorem mono {b j t B J T : ℕ} (hb : b ≤ B) (hj : j ≤ J) (ht : t ≤ T) :
     weight b j t ≤ weight B J T := by
@@ -19,12 +19,12 @@ theorem mono {b j t B J T : ℕ} (hb : b ≤ B) (hj : j ≤ J) (ht : t ≤ T) :
   · have h' : fullCharge J T := h.imp (fun k => k.trans hj) (fun k => k.trans ht)
     simp [weight, h, h']
   · by_cases h' : fullCharge J T
-    · simpa [weight, h, h'] using (min_le_right (b+7*j) 554)
+    · simpa [weight, h, h'] using (min_le_right (b+4*j) 364)
     · simpa [weight, h, h'] using
-        (min_le_min (Nat.add_le_add hb (Nat.mul_le_mul_left 7 hj)) (le_refl 554))
+        (min_le_min (Nat.add_le_add hb (Nat.mul_le_mul_left 4 hj)) (le_refl 364))
 
 theorem sum_le {top n : ℕ} (htop : top ≤ 14) (a : Fin n → Shape) (hfits : Lower6960.Low.Fits top a)
-    (s : Finset (Fin n)) : (∑ i ∈ s, weight (a i).b (a i).j (a i).t) ≤ 554 := by
+    (s : Finset (Fin n)) : (∑ i ∈ s, weight (a i).b (a i).j (a i).t) ≤ 364 := by
   classical
   have part (f : Fin n → ℕ) : ∑ i ∈ s, f i ≤ ∑ i, f i :=
     Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _) (fun _ _ _ => Nat.zero_le _)
@@ -43,13 +43,13 @@ theorem sum_le {top n : ℕ} (htop : top ≤ 14) (a : Fin n → Shape) (hfits : 
       exact only j hne⟩
     rw [he, Finset.sum_singleton]
     simp [weight, hc]
-  · have hw : ∀ i ∈ s, weight (a i).b (a i).j (a i).t ≤ (a i).b+7*(a i).j := by
+  · have hw : ∀ i ∈ s, weight (a i).b (a i).j (a i).t ≤ (a i).b+4*(a i).j := by
       intro i hi
       simp [weight, show ¬ fullCharge (a i).j (a i).t from fun h => hall ⟨i,hi,h⟩]
     refine (Finset.sum_le_sum hw).trans ?_
     rw [Finset.sum_add_distrib, ← Finset.mul_sum]
     exact Nat.add_le_add ((part _).trans hfits.2.1)
-      (Nat.mul_le_mul_left 7 ((part _).trans hfits.2.2.1))
+      (Nat.mul_le_mul_left 4 ((part _).trans hfits.2.2.1))
 
 #print axioms sum_le
 end Low6960AllocWeight

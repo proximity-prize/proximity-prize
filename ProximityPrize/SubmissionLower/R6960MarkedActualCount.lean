@@ -1,9 +1,11 @@
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisIndex
-import ProximityPrize.SubmissionLower.R6960CollisionTameOverlapUnit
+import ProximityPrize.SubmissionLower.R6960CollisionTameOverlapFreeTrace
 import ProximityPrize.SubmissionLower.R6960RetainedCompressionProjection
 import ProximityPrize.SubmissionLower.R6960MarkedNativeNorm
 import ProximityPrize.SubmissionLower.R6960MarkedEvaluationLedger
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisFamily
+
+set_option Elab.async false
 
 -- merged module R6960CollisionMarkedGlobalSum
 section Merged_R6960CollisionMarkedGlobalSum

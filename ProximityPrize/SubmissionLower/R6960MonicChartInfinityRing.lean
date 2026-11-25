@@ -8,6 +8,8 @@ import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
 import Mathlib.RingTheory.LocalRing.ResidueField.Basic
 import Mathlib.FieldTheory.RatFunc.AsPolynomial
 
+set_option Elab.async false
+
 -- merged module R6960DifferentialPoles
 section Merged_R6960DifferentialPoles
 noncomputable section
@@ -187,14 +189,14 @@ theorem pole_budget {K E : Type*} [Field K] [DecidableEq (RatFunc K)] [Field E]
 #print axioms pole_budget
 private def rawDegree (e : ℕ) :=
   let m:=e+1
-  let H:=164690*(10*(2*e)*(2*e+1)-9*m*(m-1))/(18*m)
-  (2*e-2)*H-e*(e-1)*164690
+  let H:=164650*(10*(2*e)*(2*e+1)-9*m*(m-1))/(18*m)
+  (2*e-2)*H-e*(e-1)*164650
 theorem profile_room :
-    (∀ e : Fin 48,3≤e.val → 2*rawDegree e.val≤1707768032) ∧
-    rawDegree 47=853884016 ∧ 1707768032+422938401=K1.p := by decide +kernel
+    (∀ e : Fin 48,3≤e.val → 2*rawDegree e.val≤1707353296) ∧
+    rawDegree 47=853676648 ∧ 1707353296+423353137=K1.p := by decide +kernel
 theorem coarse_room : ∀ e : Fin 48,3≤e.val →
-    2*((e.val-1)*(3*e.val-2)*164690+(e.val-1))≤2106055812 ∧
-    2106055812+24650621=K1.p := by decide +kernel
+    2*((e.val-1)*(3*e.val-2)*164650+(e.val-1))≤2105544292 ∧
+    2105544292+25162141=K1.p := by decide +kernel
 #print axioms profile_room
 end Lower6960.DifferentialPoles
 

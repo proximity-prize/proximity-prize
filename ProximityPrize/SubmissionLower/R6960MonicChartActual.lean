@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6960Low6960AllocTotal
+import ProximityPrize.SubmissionLower.R6960Low6960RetainedCount
 import ProximityPrize.SubmissionLower.R6960Low6960Gates
 import ProximityPrize.SubmissionLower.R6960Low6960CountCore
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles0
@@ -19,31 +19,6 @@ import ProximityPrize.SubmissionLower.R6960Low6960Tiles14
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles15
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles16
 import ProximityPrize.SubmissionLower.R6960Low6960Tiles17
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles18
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles19
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles20
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles21
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles22
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles23
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles24
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles25
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles26
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles27
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles28
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles29
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles30
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles31
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles32
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles33
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles34
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles35
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles36
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles37
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles38
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles39
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles40
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles41
-import ProximityPrize.SubmissionLower.R6960Low6960Tiles42
 import ProximityPrize.SubmissionLower.R6960Front6960List
 import ProximityPrize.SubmissionLower.R6960MarkedEvaluationLedger
 import ProximityPrize.SubmissionLower.R6960Front6960Rank2
@@ -60,13 +35,16 @@ import ProximityPrize.SubmissionLower.R6960MonicChartInfinityRing
 import ProximityPrize.SubmissionLower.R6960ChartIntegrality
 import Mathlib.LinearAlgebra.Basis.SMul
 
--- merged module R6960Low6960Tiles43
-section Merged_R6960Low6960Tiles43
+set_option Elab.async false
+
+-- merged module R6960Low6960Tiles18
+section Merged_R6960Low6960Tiles18
+
 set_option Elab.async false
 set_option maxRecDepth 22000
 set_option maxHeartbeats 6000000
 
-namespace Low6960Allocation.Group43
+namespace Low6960Allocation.Group18
 open K1_13 (Shape InBox)
 open K1_13_8 (Valid)
 open Compact50Cover (checks checks_join)
@@ -75,53 +53,47 @@ namespace Top1
 private abbrev P := PaidBatch orders 1
 
 private def p0 : P :=
-  ⟨unpack [36513319943, 58006319123, 87450675239, 19201113155, 56412891547, 43494515099], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [38762909195, 55875876379, 38679454239], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i3 : checks (tilesOf batches) 136 3 8 = true := by
+  ⟨unpack [45104106503, 83659405335, 66463107123, 81696668163, 47303101963], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i3 : checks (tilesOf batches) 133 3 8 = true := by
   decide +kernel
-private theorem i11 : checks (tilesOf batches) 136 11 8 = true := by
+private theorem i11 : checks (tilesOf batches) 133 11 8 = true := by
   decide +kernel
-private theorem i19 : checks (tilesOf batches) 136 19 8 = true := by
+private theorem i19 : checks (tilesOf batches) 133 19 8 = true := by
   decide +kernel
-private theorem i27 : checks (tilesOf batches) 136 27 8 = true := by
+private theorem i27 : checks (tilesOf batches) 133 27 8 = true := by
   decide +kernel
-private theorem i35 : checks (tilesOf batches) 136 35 8 = true := by
+private theorem i35 : checks (tilesOf batches) 133 35 8 = true := by
   decide +kernel
-private theorem i43 : checks (tilesOf batches) 136 43 8 = true := by
-  decide +kernel
-private theorem i51 : checks (tilesOf batches) 136 51 1 = true := by
+private theorem i43 : checks (tilesOf batches) 133 43 7 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=1)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i3 (checks_join i11 (checks_join i19 (checks_join i27 (checks_join i35 (checks_join i43 (i51))))))) a ha ht hb hj
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
+  cover_at (batches:=batches) (checks_join i3 (checks_join i11 (checks_join i19 (checks_join i27 (checks_join i35 (i43)))))) a ha ht hb hj
 end Top1
 
 namespace Top2
 private abbrev P := PaidBatch orders 2
 
 private def p0 : P :=
-  ⟨unpack [45204707339, 57956123675, 87282973743, 47923625339, 30777388411, 712691067], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [55892723223, 47269379615], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i6 : checks (tilesOf batches) 136 6 8 = true := by
+  ⟨unpack [58040064011, 83676385311, 40659820603, 77351440911, 42991853071], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i6 : checks (tilesOf batches) 133 6 8 = true := by
   decide +kernel
-private theorem i14 : checks (tilesOf batches) 136 14 8 = true := by
+private theorem i14 : checks (tilesOf batches) 133 14 8 = true := by
   decide +kernel
-private theorem i22 : checks (tilesOf batches) 136 22 8 = true := by
+private theorem i22 : checks (tilesOf batches) 133 22 8 = true := by
   decide +kernel
-private theorem i30 : checks (tilesOf batches) 136 30 8 = true := by
+private theorem i30 : checks (tilesOf batches) 133 30 8 = true := by
   decide +kernel
-private theorem i38 : checks (tilesOf batches) 136 38 8 = true := by
+private theorem i38 : checks (tilesOf batches) 133 38 8 = true := by
   decide +kernel
-private theorem i46 : checks (tilesOf batches) 136 46 6 = true := by
+private theorem i46 : checks (tilesOf batches) 133 46 4 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=2)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i6 (checks_join i14 (checks_join i22 (checks_join i30 (checks_join i38 (i46)))))) a ha ht hb hj
 end Top2
 
@@ -129,25 +101,23 @@ namespace Top3
 private abbrev P := PaidBatch orders 3
 
 private def p0 : P :=
-  ⟨unpack [53694374927, 61999568931, 61697791031, 34854245807, 21969418671, 51815864803], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [38931107299, 51614393875], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i9 : checks (tilesOf batches) 136 9 8 = true := by
+  ⟨unpack [66613552143, 79347934247, 23463178303, 73056544271, 25811987983], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i9 : checks (tilesOf batches) 133 9 8 = true := by
   decide +kernel
-private theorem i17 : checks (tilesOf batches) 136 17 8 = true := by
+private theorem i17 : checks (tilesOf batches) 133 17 8 = true := by
   decide +kernel
-private theorem i25 : checks (tilesOf batches) 136 25 8 = true := by
+private theorem i25 : checks (tilesOf batches) 133 25 8 = true := by
   decide +kernel
-private theorem i33 : checks (tilesOf batches) 136 33 8 = true := by
+private theorem i33 : checks (tilesOf batches) 133 33 8 = true := by
   decide +kernel
-private theorem i41 : checks (tilesOf batches) 136 41 8 = true := by
+private theorem i41 : checks (tilesOf batches) 133 41 8 = true := by
   decide +kernel
-private theorem i49 : checks (tilesOf batches) 136 49 3 = true := by
+private theorem i49 : checks (tilesOf batches) 133 49 1 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=3)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i9 (checks_join i17 (checks_join i25 (checks_join i33 (checks_join i41 (i49)))))) a ha ht hb hj
 end Top3
 
@@ -155,23 +125,21 @@ namespace Top4
 private abbrev P := PaidBatch orders 4
 
 private def p0 : P :=
-  ⟨unpack [57905655827, 66059724839, 40390731835, 47739070895, 30559279535, 17489902043], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [310037979, 55976538627], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i12 : checks (tilesOf batches) 136 12 8 = true := by
+  ⟨unpack [70891876371, 75019482155, 10561502275, 68778358283, 12943866379], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i12 : checks (tilesOf batches) 133 12 8 = true := by
   decide +kernel
-private theorem i20 : checks (tilesOf batches) 136 20 8 = true := by
+private theorem i20 : checks (tilesOf batches) 133 20 8 = true := by
   decide +kernel
-private theorem i28 : checks (tilesOf batches) 136 28 8 = true := by
+private theorem i28 : checks (tilesOf batches) 133 28 8 = true := by
   decide +kernel
-private theorem i36 : checks (tilesOf batches) 136 36 8 = true := by
+private theorem i36 : checks (tilesOf batches) 133 36 8 = true := by
   decide +kernel
-private theorem i44 : checks (tilesOf batches) 136 44 8 = true := by
+private theorem i44 : checks (tilesOf batches) 133 44 6 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=4)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i12 (checks_join i20 (checks_join i28 (checks_join i36 (i44))))) a ha ht hb hj
 end Top4
 
@@ -179,23 +147,21 @@ namespace Top5
 private abbrev P := PaidBatch orders 5
 
 private def p0 : P :=
-  ⟨unpack [57905724439, 65959130155, 27589719103, 43511215515, 26348200347, 13094272499], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [209374707, 51664797191, 43075006983, 25777774115], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i15 : checks (tilesOf batches) 136 15 8 = true := by
+  ⟨unpack [75086314519, 70623855663, 64567346679, 142919159, 73089957383], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i15 : checks (tilesOf batches) 133 15 8 = true := by
   decide +kernel
-private theorem i23 : checks (tilesOf batches) 136 23 8 = true := by
+private theorem i23 : checks (tilesOf batches) 133 23 8 = true := by
   decide +kernel
-private theorem i31 : checks (tilesOf batches) 136 31 8 = true := by
+private theorem i31 : checks (tilesOf batches) 133 31 8 = true := by
   decide +kernel
-private theorem i39 : checks (tilesOf batches) 136 39 8 = true := by
+private theorem i39 : checks (tilesOf batches) 133 39 8 = true := by
   decide +kernel
-private theorem i47 : checks (tilesOf batches) 136 47 5 = true := by
+private theorem i47 : checks (tilesOf batches) 133 47 3 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=5)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i15 (checks_join i23 (checks_join i31 (checks_join i39 (i47))))) a ha ht hb hj
 end Top5
 
@@ -203,45 +169,39 @@ namespace Top6
 private abbrev P := PaidBatch orders 6
 
 private def p0 : P :=
-  ⟨unpack [57889081371, 65824915503, 14855880771, 39350534527, 22153898367, 51664865799], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [38780108295, 8631534107, 41602587, 21482875427], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i18 : checks (tilesOf batches) 136 18 8 = true := by
+  ⟨unpack [75086383131, 57873174579, 73073248779], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i18 : checks (tilesOf batches) 133 18 8 = true := by
   decide +kernel
-private theorem i26 : checks (tilesOf batches) 136 26 8 = true := by
+private theorem i26 : checks (tilesOf batches) 133 26 8 = true := by
   decide +kernel
-private theorem i34 : checks (tilesOf batches) 136 34 8 = true := by
+private theorem i34 : checks (tilesOf batches) 133 34 8 = true := by
   decide +kernel
-private theorem i42 : checks (tilesOf batches) 136 42 8 = true := by
-  decide +kernel
-private theorem i50 : checks (tilesOf batches) 136 50 2 = true := by
+private theorem i42 : checks (tilesOf batches) 133 42 8 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=6)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i18 (checks_join i26 (checks_join i34 (checks_join i42 (i50))))) a ha ht hb hj
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
+  cover_at (batches:=batches) (checks_join i18 (checks_join i26 (checks_join i34 (i42)))) a ha ht hb hj
 end Top6
 
 namespace Top7
 private abbrev P := PaidBatch orders 7
 
 private def p0 : P :=
-  ⟨unpack [53711623199, 57318869043, 14822326339, 34954906007, 21986127255, 17255018003], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [8665088531, 75157011], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i21 : checks (tilesOf batches) 136 21 8 = true := by
+  ⟨unpack [75036120095, 44971564087, 68811838979, 47337150979], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i21 : checks (tilesOf batches) 133 21 8 = true := by
   decide +kernel
-private theorem i29 : checks (tilesOf batches) 136 29 8 = true := by
+private theorem i29 : checks (tilesOf batches) 133 29 8 = true := by
   decide +kernel
-private theorem i37 : checks (tilesOf batches) 136 37 8 = true := by
+private theorem i37 : checks (tilesOf batches) 133 37 8 = true := by
   decide +kernel
-private theorem i45 : checks (tilesOf batches) 136 45 7 = true := by
+private theorem i45 : checks (tilesOf batches) 133 45 5 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=7)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i21 (checks_join i29 (checks_join i37 (i45)))) a ha ht hb hj
 end Top7
 
@@ -249,21 +209,19 @@ namespace Top8
 private abbrev P := PaidBatch orders 8
 
 private def p0 : P :=
-  ⟨unpack [53611028515, 57201497143, 2004536391, 30760605055, 17825445247, 4990880127], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [47319638547, 30139847187, 12926498331, 4336567835], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i24 : checks (tilesOf batches) 136 24 8 = true := by
+  ⟨unpack [70825107491, 36364854331], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i24 : checks (tilesOf batches) 133 24 8 = true := by
   decide +kernel
-private theorem i32 : checks (tilesOf batches) 136 32 8 = true := by
+private theorem i32 : checks (tilesOf batches) 133 32 8 = true := by
   decide +kernel
-private theorem i40 : checks (tilesOf batches) 136 40 8 = true := by
+private theorem i40 : checks (tilesOf batches) 133 40 8 = true := by
   decide +kernel
-private theorem i48 : checks (tilesOf batches) 136 48 4 = true := by
+private theorem i48 : checks (tilesOf batches) 133 48 2 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=8)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i24 (checks_join i32 (checks_join i40 (i48)))) a ha ht hb hj
 end Top8
 
@@ -271,41 +229,35 @@ namespace Top9
 private abbrev P := PaidBatch orders 9
 
 private def p0 : P :=
-  ⟨unpack [53460036647, 48661897275, 26348200335, 13463371151, 628805007, 47437082099], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [25979100659, 12926499355, 4336568859, 42957565475, 25777773091], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i27 : checks (tilesOf batches) 136 27 8 = true := by
+  ⟨unpack [70690892839, 23463178303, 64533720575, 25879096831], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i27 : checks (tilesOf batches) 133 27 8 = true := by
   decide +kernel
-private theorem i35 : checks (tilesOf batches) 136 35 8 = true := by
+private theorem i35 : checks (tilesOf batches) 133 35 8 = true := by
   decide +kernel
-private theorem i43 : checks (tilesOf batches) 136 43 8 = true := by
-  decide +kernel
-private theorem i51 : checks (tilesOf batches) 136 51 1 = true := by
+private theorem i43 : checks (tilesOf batches) 133 43 7 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=9)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
-  cover_at (batches:=batches) (checks_join i27 (checks_join i35 (checks_join i43 (i51)))) a ha ht hb hj
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
+  cover_at (batches:=batches) (checks_join i27 (checks_join i35 (i43))) a ha ht hb hj
 end Top9
 
 namespace Top10
 private abbrev P := PaidBatch orders 10
 
 private def p0 : P :=
-  ⟨unpack [49198692395, 40189405243, 21952571819, 13278822827, 43108628991, 21633803775], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [8698642955, 108711435, 8614755871], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i30 : checks (tilesOf batches) 136 30 8 = true := by
+  ⟨unpack [66446325803, 14856468547, 60171647503, 17222055439], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i30 : checks (tilesOf batches) 133 30 8 = true := by
   decide +kernel
-private theorem i38 : checks (tilesOf batches) 136 38 8 = true := by
+private theorem i38 : checks (tilesOf batches) 133 38 8 = true := by
   decide +kernel
-private theorem i46 : checks (tilesOf batches) 136 46 6 = true := by
+private theorem i46 : checks (tilesOf batches) 133 46 4 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=10)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i30 (checks_join i38 (i46))) a ha ht hb hj
 end Top10
 
@@ -313,19 +265,17 @@ namespace Top11
 private abbrev P := PaidBatch orders 11
 
 private def p0 : P :=
-  ⟨unpack [53191672879, 23210866755, 39098877371, 21885529531, 8816084451, 4336567835], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [41602587, 17204686367, 8614756895], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i33 : checks (tilesOf batches) 136 33 8 = true := by
+  ⟨unpack [62134584367, 6266536003, 60171716111], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i33 : checks (tilesOf batches) 133 33 8 = true := by
   decide +kernel
-private theorem i41 : checks (tilesOf batches) 136 41 8 = true := by
+private theorem i41 : checks (tilesOf batches) 133 41 8 = true := by
   decide +kernel
-private theorem i49 : checks (tilesOf batches) 136 49 3 = true := by
+private theorem i49 : checks (tilesOf batches) 133 49 1 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=11)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i33 (checks_join i41 (i49))) a ha ht hb hj
 end Top11
 
@@ -333,25 +283,23 @@ namespace Top12
 private abbrev P := PaidBatch orders 12
 
 private def p0 : P :=
-  ⟨unpack [53074300979, 10560914503, 34887799203, 17708004771, 4319791647, 30072738339], by decide +kernel⟩
-private def p1 : P :=
-  ⟨unpack [17187910179, 4303013411], by decide +kernel⟩
-private def batches : List P := [p0, p1]
-private theorem i36 : checks (tilesOf batches) 136 36 8 = true := by
+  ⟨unpack [57806065715, 51598561803, 59033099], by decide +kernel⟩
+private def batches : List P := [p0]
+private theorem i36 : checks (tilesOf batches) 133 36 8 = true := by
   decide +kernel
-private theorem i44 : checks (tilesOf batches) 136 44 8 = true := by
+private theorem i44 : checks (tilesOf batches) 133 44 6 = true := by
   decide +kernel
 theorem exact (a : Shape) (ha : Valid a) (ht : a.t=12)
-    (hb : a.b≤136) (hj : a.j≤51) :
-    Covered orders a ∨ Low6960Gate.Gated ((43 : Band).val) a :=
+    (hb : a.b≤133) (hj : a.j≤49) :
+    Covered orders a ∨ Low6960Gate.Gated ((18 : Band).val) a :=
   cover_at (batches:=batches) (checks_join i36 (i44)) a ha ht hb hj
 end Top12
 
-def receipt : Receipt 43 where
+def receipt : Receipt 18 where
   orders := orders
   covers := by
     intro a ha box
-    change 5+a.b≤141 ∧ 8+a.j≤59 ∧ 2+a.t≤14 at box
+    change 3+a.b≤136 ∧ 8+a.j≤57 ∧ 2+a.t≤14 at box
     have pos := ha.1
     have cases : a.t=1 ∨ a.t=2 ∨ a.t=3 ∨ a.t=4 ∨ a.t=5 ∨ a.t=6 ∨ a.t=7 ∨ a.t=8 ∨ a.t=9 ∨ a.t=10 ∨ a.t=11 ∨ a.t=12 := by omega
     rcases cases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 | h11 | h12
@@ -367,8 +315,9 @@ def receipt : Receipt 43 where
     · exact Top10.exact a ha h10 (by omega) (by omega)
     · exact Top11.exact a ha h11 (by omega) (by omega)
     · exact Top12.exact a ha h12 (by omega) (by omega)
-end Low6960Allocation.Group43
-end Merged_R6960Low6960Tiles43
+end Low6960Allocation.Group18
+
+end Merged_R6960Low6960Tiles18
 
 -- merged module R6960Low6960Count
 section Merged_R6960Low6960Count
@@ -398,41 +347,16 @@ private def receipts : ∀ k : Band, Receipt k
   | ⟨16,_⟩ => Low6960Allocation.Group16.receipt
   | ⟨17,_⟩ => Low6960Allocation.Group17.receipt
   | ⟨18,_⟩ => Low6960Allocation.Group18.receipt
-  | ⟨19,_⟩ => Low6960Allocation.Group19.receipt
-  | ⟨20,_⟩ => Low6960Allocation.Group20.receipt
-  | ⟨21,_⟩ => Low6960Allocation.Group21.receipt
-  | ⟨22,_⟩ => Low6960Allocation.Group22.receipt
-  | ⟨23,_⟩ => Low6960Allocation.Group23.receipt
-  | ⟨24,_⟩ => Low6960Allocation.Group24.receipt
-  | ⟨25,_⟩ => Low6960Allocation.Group25.receipt
-  | ⟨26,_⟩ => Low6960Allocation.Group26.receipt
-  | ⟨27,_⟩ => Low6960Allocation.Group27.receipt
-  | ⟨28,_⟩ => Low6960Allocation.Group28.receipt
-  | ⟨29,_⟩ => Low6960Allocation.Group29.receipt
-  | ⟨30,_⟩ => Low6960Allocation.Group30.receipt
-  | ⟨31,_⟩ => Low6960Allocation.Group31.receipt
-  | ⟨32,_⟩ => Low6960Allocation.Group32.receipt
-  | ⟨33,_⟩ => Low6960Allocation.Group33.receipt
-  | ⟨34,_⟩ => Low6960Allocation.Group34.receipt
-  | ⟨35,_⟩ => Low6960Allocation.Group35.receipt
-  | ⟨36,_⟩ => Low6960Allocation.Group36.receipt
-  | ⟨37,_⟩ => Low6960Allocation.Group37.receipt
-  | ⟨38,_⟩ => Low6960Allocation.Group38.receipt
-  | ⟨39,_⟩ => Low6960Allocation.Group39.receipt
-  | ⟨40,_⟩ => Low6960Allocation.Group40.receipt
-  | ⟨41,_⟩ => Low6960Allocation.Group41.receipt
-  | ⟨42,_⟩ => Low6960Allocation.Group42.receipt
-  | ⟨43,_⟩ => Low6960Allocation.Group43.receipt
-  | ⟨n+44,h⟩ => absurd h (by omega)
+  | ⟨n+19,h⟩ => absurd h (by omega)
 
 private theorem receipts_orders : (fun k => (receipts k).orders) = bandOrders :=
   funext fun k => by fin_cases k <;> rfl
 
-/-- The 69.61 low count for the actual family at every positive height through 2367, given the
+/-- The 69.61 low count for the actual family at every positive height through 2358, given the
 payment `gates` of the gated shapes (empty band and bands `(w,3,1)`, `w ≤ 5`) by the two-cut gates. -/
 theorem count (gates : Gates) {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179798 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2367) :
-    Γ.card≤274796225155308725 := by
+    (F : P1.FamilyAt 179818 M Γ) (lo : 1≤M.overhead) (hi : M.overhead≤2358) :
+    Γ.card≤266228295297719504 := by
   obtain ⟨G,gate,htab⟩ := gates
   rw [← receipts_orders] at htab
   exact count_with_receipts receipts htab gate M F lo hi
@@ -451,33 +375,20 @@ open ProximityPrize.SubmissionLower.Front6960Radius (p q)
 theorem low_front_count (gates : Low6960Allocation.Gates) : Front6960.c6 := by
   intro _ _ M _ F lo hi
   exact Low.count gates M F lo hi
-/-- The Lo-band count on [2368, 2401] (patternrecognition9's two-jet split, ported in
-`R6963LoHighCount`). It is taken as a hypothesis here and supplied in `Solution`, because the
-Lo-band modules import this file. -/
-def LoCount : Prop :=
-  ∀ {u deleted Γ} (M : P1.ModelAt 33619 u deleted) (_F : P1.FamilyAt 179798 M Γ),
-    2368 ≤ M.overhead → M.overhead ≤ 2401 → Γ.card ≤ 274796225155308725
 theorem protocol_claim (gates : Low6960Allocation.Gates)
-    (lo : ∀ {u deleted Γ} (M : P1.ModelAt 33619 u deleted) (_F : P1.FamilyAt 179798 M Γ),
-      2368 ≤ M.overhead → M.overhead ≤ 2401 → Γ.card ≤ 274796225155308725)
-    (high : ∀ {u deleted Γ} (M : P1.ModelAt 33619 u deleted) (_F : P1.FamilyAt 179798 M Γ),
-      2402 ≤ M.overhead → M.overhead ≤ 33619 → Γ.card ≤ 274796225155308725) :
-    ProtocolClaim 6963 p q := by
+    (high : ∀ {u deleted Γ} (M : P1.ModelAt 33579 u deleted) (_F : P1.FamilyAt 179818 M Γ),
+      2359 ≤ M.overhead → M.overhead ≤ 33579 → Γ.card ≤ 266228295297719504) :
+    ProtocolClaim 6961 p q := by
   apply ProximityPrize.SubmissionLower.Front6960Radius.extend
   apply Front6960.of_children Front6960ListBank.scalar_list
     Front6960_1.proof Front6960_2.proof
     (Front6960_3.of_children Front6960_3_1.proof Front6960_3_2.proof)
     (Front6960_4.of_children Front6960_4_1.proof Front6960_4_2.proof)
     Front6960_5.proof (low_front_count gates)
-  intro _ _ M _ F lo' hi'
-  have hc : Front6960.lowCutoff = 2367 := rfl
-  have lo3 : Front6960.lowCutoff + 1 ≤ P1.ModelAt.overhead M := lo'
-  have lo2 : (2368 : ℤ) ≤ P1.ModelAt.overhead M := by rw [hc] at lo3; omega
-  by_cases h : P1.ModelAt.overhead M ≤ 2401
-  · exact lo M F lo2 h
-  · exact high M F (by have h3 : ¬ P1.ModelAt.overhead M ≤ 2401 := h; omega) hi'
-theorem protocol_claim_of_retained (gates : Low6960Allocation.Gates) (loc : LoCount) (retained : RetainedCount) : ProtocolClaim 6963 p q :=
-  protocol_claim gates (fun M F l h => loc M F l h) (fun M F lo hi => high_count_of_retained retained M F lo hi)
+  intro _ _ M _ F lo hi
+  exact high M F lo hi
+theorem protocol_claim_of_retained (gates : Low6960Allocation.Gates) (retained : RetainedCount) : ProtocolClaim 6961 p q :=
+  protocol_claim gates (fun M F lo hi => high_count_of_retained retained M F lo hi)
 #print axioms protocol_claim_of_retained
 #print axioms low_front_count
 #print axioms protocol_claim
@@ -493,11 +404,11 @@ namespace Lower6960
 
 /-- The 69.61 claim reduces to the remaining bounded-weight,
 positive-seed, nonpure marked-factor estimate. -/
-theorem protocol_claim_of_nonpure (gates : Low6960Allocation.Gates) (loc : LoCount) (count : RetainedCompression.NonPureFactorPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6963
+theorem protocol_claim_of_nonpure (gates : Low6960Allocation.Gates) (count : RetainedCompression.NonPureFactorPrice) :
+    ProximityPrize.Benchmark.ProtocolClaim 6961
       ProximityPrize.SubmissionLower.Front6960Radius.p
       ProximityPrize.SubmissionLower.Front6960Radius.q :=
-  protocol_claim_of_retained gates loc (RetainedCompression.retained_of_nonpure count)
+  protocol_claim_of_retained gates (RetainedCompression.retained_of_nonpure count)
 
 #print axioms protocol_claim_of_nonpure
 end Lower6960
@@ -1095,7 +1006,7 @@ theorem pure_of_geometrically_linear (w : I→K) (P : Ordinate)
   exact formula
 def NonlinearFactorPrice : Prop :=
   ∀ {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) (T : Finset K), T⊆Γ →
-    Word 179798 wordDegree M.word F.scalar T→
+    Word 179818 wordDegree M.word F.scalar T→
     ∀ f : Curve (Polynomial L), Irreducible f →
       3≤f.degreeOf ordinate → f.degreeOf ordinate<48 → 0<f.degreeOf parameter →
       height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree →
@@ -1111,11 +1022,11 @@ theorem nonpure_of_nonlinear (price : NonlinearFactorPrice) : NonPureFactorPrice
   have irr : Irreducible (view f) := (MulEquiv.irreducible_iff view).mpr ir
   have pos : 0<(view f).natDegree := by rw [view_y]; omega
   exact pure_of_geometrically_linear M.word _ irr pos linear
-theorem protocol_claim_of_nonlinear (gates : Low6960Allocation.Gates) (loc : Lower6960.LoCount) (price : NonlinearFactorPrice) :
-    ProximityPrize.Benchmark.ProtocolClaim 6963
+theorem protocol_claim_of_nonlinear (gates : Low6960Allocation.Gates) (price : NonlinearFactorPrice) :
+    ProximityPrize.Benchmark.ProtocolClaim 6961
       ProximityPrize.SubmissionLower.Front6960Radius.p
       ProximityPrize.SubmissionLower.Front6960Radius.q :=
-  Lower6960.protocol_claim_of_nonpure gates loc (nonpure_of_nonlinear price)
+  Lower6960.protocol_claim_of_nonpure gates (nonpure_of_nonlinear price)
 #print axioms toSeed_irreducible
 #print axioms pure_of_geometrically_linear
 #print axioms protocol_claim_of_nonlinear

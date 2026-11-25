@@ -3,6 +3,7 @@ import ArkLib.ToMathlib.RingTheory.MvPolynomial.MonomialMap
 import ProximityPrize.SubmissionLower.KoalaCutGeometry
 import ArkLib.Data.MvPolynomial.WeightAtMost
 import Mathlib.LinearAlgebra.Matrix.Rank
+set_option Elab.async false
 
 -- merged module KoalaBoxDegree
 section Merged_KoalaBoxDegree

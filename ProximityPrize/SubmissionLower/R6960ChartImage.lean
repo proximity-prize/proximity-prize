@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.R6960MonicChartInfinityRing
 import Mathlib.LinearAlgebra.Projection
 import Mathlib.LinearAlgebra.Matrix.ToLin
 
+set_option Elab.async false
+
 noncomputable section
 set_option Elab.async false
 namespace Lower6960.ChartImage

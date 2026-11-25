@@ -5,6 +5,8 @@ import ProximityPrize.SubmissionLower.UpperBranch3
 import ProximityPrize.SubmissionLower.GoldBranch4
 import ProximityPrize.SubmissionLower.HighCore82258ScheduleData
 
+set_option Elab.async false
+
 -- merged module HighCore82258UpperGeometry
 section Merged_HighCore82258UpperGeometry
 set_option Elab.async false

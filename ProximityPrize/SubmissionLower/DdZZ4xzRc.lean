@@ -236,7 +236,6 @@ noncomputable section
 open i4 P5_8 P5_8_3 PolynomialDifferential ReedSolomon.HiddenDerivative MvPolynomial
 open i4 (bYf)
 
-
 set_option backward.isDefEq.respectTransparency false
 theorem finiteWeighted {d:ℕ} (v :JetVariable d→ℕ) (hv : ∀ i,v i≠0) (T:ℕ) :
   oy K (restrictWeightedDegree v T:oq K (DifferentialPolynomial K d)) :=

@@ -71,17 +71,8 @@ set_option maxHeartbeats 12000000
 section
 set_option autoImplicit true
 namespace qyV6B3d
-
-
-
 set_option quotPrecheck false in
 local notation "kU" => receipt 2542 rfl (by decide +kernel) (by decide +kernel)
-
-
-
-
-
-
 end qyV6B3d
 end
 section

@@ -4,6 +4,8 @@ import Mathlib.RingTheory.Discriminant
 import Mathlib.RingTheory.AdjoinRoot
 import Mathlib.LinearAlgebra.Matrix.BilinearForm
 
+set_option Elab.async false
+
 -- merged module R6960CollisionMarkedMonicTrace
 section Merged_R6960CollisionMarkedMonicTrace
 set_option Elab.async false

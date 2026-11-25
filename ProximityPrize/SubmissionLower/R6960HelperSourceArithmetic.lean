@@ -5,6 +5,8 @@ import Mathlib.Algebra.Order.Sub.Prod
 import ProximityPrize.SubmissionLower.UpperBranch3
 import ProximityPrize.SubmissionLower.HighCore82258Pairs
 
+set_option Elab.async false
+
 -- merged module PortLow7
 section Merged_PortLow7
 set_option Elab.async false
@@ -1407,24 +1409,35 @@ private theorem pay_one (v : ℕ → Mass) (hist : ℕ → Mass) (i : ℕ)
     _ = _ := hsplit
     _ = _ := running_succ_dot v i _
     _ ≤ _ := add_le_add le_rfl (dotQ_mono_mass (jump_nonneg v i) hcap)
+/-- Unspent weight on the final components is available for their terminal count. -/
+theorem bill_bound_with_final (n : ℕ) (v hist : ℕ → Mass)
+    (live lost : ℕ → Finset (Ideal Ambient))
+    (next : ∀ i < n, live (i+1) ⊆ live i)
+    (fail : ∀ i < n, lost i ⊆ live i \ live (i+1))
+    (cap : ∀ i < n, ∀ k, massQ (live i) k ≤ hist i k) :
+    (∑ i ∈ Finset.range n, dotQ (v i) (massQ (lost i))) +
+      dotQ (running v n) (massQ (live n)) ≤ weightedBill n v hist := by
+  induction n with
+  | zero => simp [running, dotQ, weightedBill]
+  | succ n ih =>
+    have old := ih (fun i hi => next i (by omega)) (fun i hi => fail i (by omega))
+      (fun i hi => cap i (by omega))
+    have step := pay_one v hist n (next n (by omega)) (fail n (by omega)) (cap n (by omega))
+    unfold weightedBill at old ⊢
+    rw [Finset.sum_range_succ, Finset.sum_range_succ]
+    linarith
+
+theorem final_credit_nonneg (n : ℕ) (v : ℕ → Mass) (S : Finset (Ideal Ambient)) :
+    0 ≤ dotQ (running v n) (massQ S) :=
+  dotQ_nonneg (running_nonneg v n) (massQ_nonneg S)
+
 theorem bill_bound (n : ℕ) (v hist : ℕ → Mass)
     (live lost : ℕ → Finset (Ideal Ambient))
     (next : ∀ i < n, live (i+1) ⊆ live i)
     (fail : ∀ i < n, lost i ⊆ live i \ live (i+1))
     (cap : ∀ i < n, ∀ k, massQ (live i) k ≤ hist i k) :
     (∑ i ∈ Finset.range n, dotQ (v i) (massQ (lost i))) ≤ weightedBill n v hist := by
-  have h :
-      (∑ i ∈ Finset.range n, dotQ (v i) (massQ (lost i))) +
-        dotQ (running v n) (massQ (live n)) ≤ weightedBill n v hist := by
-    induction n with
-    | zero => simp [running, dotQ, weightedBill]
-    | succ n ih =>
-      have old := ih (fun i hi => next i (by omega)) (fun i hi => fail i (by omega))
-        (fun i hi => cap i (by omega))
-      have step := pay_one v hist n (next n (by omega)) (fail n (by omega)) (cap n (by omega))
-      unfold weightedBill at old ⊢
-      rw [Finset.sum_range_succ, Finset.sum_range_succ]
-      linarith
+  have h := bill_bound_with_final n v hist live lost next fail cap
   exact (le_add_of_nonneg_right (dotQ_nonneg (running_nonneg v n) (massQ_nonneg _))).trans h
 end
 end P1_7_4

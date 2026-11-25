@@ -1,8 +1,10 @@
-import ProximityPrize.SubmissionLower.AnchorPivotRank82180
+import ProximityPrize.SubmissionLower.AnchorNinth82190
 import ProximityPrize.SubmissionLower.Fast068
 import ProximityPrize.SubmissionLower.PrimaryTaperBudget
 import Mathlib.Data.Int.Interval
 import Mathlib.Algebra.BigOperators.Intervals
+
+set_option Elab.async false
 
 -- merged module Low48PrimaryPivotRows
 section Merged_Low48PrimaryPivotRows

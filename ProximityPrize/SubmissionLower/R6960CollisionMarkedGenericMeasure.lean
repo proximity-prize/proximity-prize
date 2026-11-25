@@ -7,6 +7,8 @@ import ProximityPrize.SubmissionLower.R6960CollisionMarkedPlaneOverlap
 import ProximityPrize.SubmissionLower.R6960MarkedActualCount
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericFrames
 
+set_option Elab.async false
+
 -- merged module R6960CollisionMarkedLineTrace
 section Merged_R6960CollisionMarkedLineTrace
 set_option synthInstance.maxHeartbeats 200000

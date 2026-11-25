@@ -10,6 +10,8 @@ import ProximityPrize.SubmissionLower.R6960LineEulerPolynomial
 import Mathlib.RingTheory.Localization.Integral
 import Mathlib.RingTheory.Localization.Module
 
+set_option Elab.async false
+
 -- merged module R6960LineEulerCharts
 section Merged_R6960LineEulerCharts
 set_option Elab.async false

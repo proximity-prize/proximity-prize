@@ -68,10 +68,7 @@ section
 set_option autoImplicit true
 namespace P1_6_4_1
 
-
-
 open scoped BigOperators
-
 end P1_6_4_1
 end
 section
@@ -248,7 +245,7 @@ open i4 PolynomialDifferential MvPolynomial
 open P5_8 (Jn Equation caps bo8 smallCaps donorCaps Gq tariffShape properDegree componentCap)
 open scoped Polynomial BigOperators
 abbrev A:=P6.dw
-abbrev donorMargin:ℕ:=0x60a5bb93bf610c
+abbrev donorMargin:ℕ:=0x5e3ebe4653e55c
 def DonorSurplus (w:Node→K) :Prop :=
   Vv A bo8 w+donorMargin≤Fintype.card (apU A bo8)
 structure Allocation (a :Jn) :Prop where

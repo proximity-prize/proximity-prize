@@ -10,6 +10,8 @@ import Mathlib.RingTheory.Etale.Field
 import ProximityPrize.SubmissionLower.R6960MonicChartActual
 import Mathlib.RingTheory.Localization.Integral
 
+set_option Elab.async false
+
 -- merged module R6960FrobeniusConstants
 section Merged_R6960FrobeniusConstants
 noncomputable section

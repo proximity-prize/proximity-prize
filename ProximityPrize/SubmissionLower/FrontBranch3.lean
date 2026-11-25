@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.PortLowBase
 import ProximityPrize.SubmissionLower.Fast077
 import ProximityPrize.SubmissionLower.RungSplit
 
+set_option Elab.async false
+
 -- merged module PortLow5
 section Merged_PortLow5
 set_option Elab.async false

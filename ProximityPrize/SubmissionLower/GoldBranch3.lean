@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.FrontBranch3
 import ProximityPrize.SubmissionLower.FrontBranch12
 
+set_option Elab.async false
+
 -- merged module FrontBranch5
 section Merged_FrontBranch5
 set_option Elab.async false

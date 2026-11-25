@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.HighCore82258PrefixProcess
 
+set_option Elab.async false
+
 -- merged module HighCore82258JointRank
 section Merged_HighCore82258JointRank
 

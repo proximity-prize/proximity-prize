@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.Low48BentSupport
 import ProximityPrize.SubmissionLower.Low48BentCycleCap
 
+set_option Elab.async false
+
 -- merged module Low48BentCount
 section Merged_Low48BentCount
 

@@ -1,5 +1,169 @@
+import ProximityPrize.SubmissionLower.R6960HelperSourceArithmetic
 import ProximityPrize.SubmissionLower.R6960HelperPrefix
-import ProximityPrize.SubmissionLower.R6960HelperSource6960
+
+set_option Elab.async false
+
+-- merged module R6960HelperSource6960
+section Merged_R6960HelperSource6960
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 18000
+namespace Lower6960.HelperSource
+open Finset Polynomial
+open K1_14 (FX L Jet)
+open K1_14_1 (PoleData CRTLift evaluated evaluated_mono evaluated_shape)
+open K1_14_2 (UsesSeed)
+open K1_14_2_2_2_1 (seedDegree jetDegree jetDegree_le)
+open P1_7 (Bank debit)
+def helperBank : Bank := ⟨⟨294,408,89,7376⟩,777085255680,779461982⟩
+theorem helper_bank_checked : P3_7_1.BankOK helperBank := by
+  have moment : P1_7_1_3.momentEstimate 408 89 = 779461982 := by
+    refine P1_7_1_3_2.moment_from_blocks
+      [(128,109021770),(128,353396160),(128,272672821),(113,44371231)] ?_ rfl rfl
+    exact ⟨rfl,rfl,rfl,rfl,True.intro⟩
+  exact P3_7_1.checked helperBank rfl rfl rfl rfl rfl
+    (by decide) (by decide) (by decide +kernel) (by decide) moment
+inductive HelperTest where
+  | twoSlopes | seedBoundary | mixedBoundary | jetBoundary
+def HelperTest.slope : HelperTest → ℕ
+  | .twoSlopes => 2
+  | _ => 1
+def HelperTest.excess : HelperTest → ℕ
+  | .mixedBoundary => 1
+  | .jetBoundary => 7
+  | _ => 0
+def HelperTest.seed : HelperTest → ℕ
+  | .seedBoundary => 86
+  | .mixedBoundary => 79
+  | _ => 1
+private def compressedSurplus (h : ℕ) (test : HelperTest) : ℤ :=
+  (compressedPhase helperBank.shape 179818 h 10 test.slope test.excess test.seed 0 -
+    compressedPhase helperBank.shape 179818 h 10 test.slope test.excess test.seed 1 : ℕ) - (debit h helperBank : ℤ)
+private theorem compressedSurplus_eq (h : ℕ) (test : HelperTest) :
+    compressedSurplus h test = surplus helperBank 179818 h 10 test.slope test.excess test.seed := by
+  unfold compressedSurplus surplus
+  rw [gain_eq_compressed _ _ _ _ _ _ _ (by cases test <;> decide)]
+private theorem twoSlopes_first :
+    compressedSurplus 2359 .twoSlopes = 1315756893570 := by rfl
+private theorem twoSlopes_next :
+    compressedSurplus 2360 .twoSlopes = 135642678453300 := by rfl
+private theorem seedBoundary_first :
+    compressedSurplus 2359 .seedBoundary = 951451442183972 := by rfl
+private theorem seedBoundary_next :
+    compressedSurplus 2360 .seedBoundary = 1086170799811930 := by rfl
+private theorem mixedBoundary_first :
+    compressedSurplus 2359 .mixedBoundary = 765760703428686 := by rfl
+private theorem mixedBoundary_next :
+    compressedSurplus 2360 .mixedBoundary = 900411679649940 := by rfl
+private theorem jetBoundary_first :
+    compressedSurplus 2359 .jetBoundary = 6850472265407568 := by rfl
+private theorem jetBoundary_next :
+    compressedSurplus 2360 .jetBoundary = 6987702602189220 := by rfl
+theorem helper_surplus (test : HelperTest) {h : ℕ} (lo : 2359≤h) (hi : h≤33579) :
+    debit h helperBank < gain helperBank.shape 179818 h 10 test.slope test.excess test.seed := by
+  apply surplus_positive _ _ 2359 _ _ _ _ _ lo (by omega)
+  · rw [← compressedSurplus_eq]
+    cases test
+    · rw [twoSlopes_first]; decide
+    · rw [seedBoundary_first]; decide
+    · rw [mixedBoundary_first]; decide
+    · rw [jetBoundary_first]; decide
+  · change surplus helperBank 179818 2359 10 test.slope test.excess test.seed ≤
+      surplus helperBank 179818 2360 10 test.slope test.excess test.seed
+    rw [← compressedSurplus_eq, ← compressedSurplus_eq]
+    cases test
+    · rw [twoSlopes_first, twoSlopes_next]; decide
+    · rw [seedBoundary_first, seedBoundary_next]; decide
+    · rw [mixedBoundary_first, mixedBoundary_next]; decide
+    · rw [jetBoundary_first, jetBoundary_next]; decide
+theorem helper_width {h : ℕ} (lo : 2359≤h) (hi : h≤33579) :
+    WidthGuard helperBank 179818 h 10 :=
+  width_at_height _ _ 2359 _ _ lo (by omega) (by decide) (by unfold WidthGuard; decide +kernel)
+def helperCutoff (h : ℕ) : ℕ := cutoffCount helperBank.shape 179818 h 10-1
+theorem helper_avoids {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
+    (lo : 2359≤h) (hi : h≤33579) (test : HelperTest) {G : Jet} (irr : Irreducible G)
+    (seeded : UsesSeed G) (slope : test.slope≤G.natDegree) (seed : test.seed≤seedDegree G)
+    (excess : G.natDegree+test.excess≤jetDegree G) :
+    ∃ Q ∈ evaluated Crt word helperBank.shape (helperCutoff h), ¬ G∣Q :=
+  crt_avoiding_row Crt word helperBank 179818 10 test.slope test.excess test.seed
+    (by omega) (by omega) (by cases test <;> decide)
+    helper_bank_checked.nodes helper_bank_checked.moment.1 helper_bank_checked.moment.2
+    (by decide) (helper_width lo hi) (helper_surplus test lo hi) irr seeded slope seed excess
+theorem helper_nonzero {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
+    (lo : 2359≤h) (hi : h≤33579) :
+    ∃ P ∈ evaluated Crt word helperBank.shape (helperCutoff h), P≠0 := by
+  have sup := crt_supply Crt word helperBank 179818 10 2 0 1 (by omega) (by omega) (by decide)
+    helper_bank_checked.nodes helper_bank_checked.moment.1 helper_bank_checked.moment.2
+    (helper_width lo hi) (helper_surplus .twoSlopes lo hi)
+  exact nonzero_of_supply Crt word helperBank.shape _ (lt_of_le_of_lt (Nat.zero_le _) sup)
+private theorem shape_lower_bound {G : Jet} (nz : G≠0) : G.natDegree≤jetDegree G := by
+  have coeff : ((G.coeff G.natDegree).coeff G.leadingCoeff.natDegree) ≠ 0 := by
+    rw [coeff_natDegree,coeff_natDegree]
+    exact leadingCoeff_ne_zero.mpr (leadingCoeff_ne_zero.mpr nz)
+  have cap := (jetDegree_le G _).1 le_rfl _ _ coeff
+  omega
+theorem helper_common_caps {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
+    (lo : 2359≤h) (hi : h≤33579) {G : Jet} (irr : Irreducible G)
+    (seeded : UsesSeed G) (slope : 0<G.natDegree)
+    (common : ∀ Q ∈ evaluated Crt word helperBank.shape (helperCutoff h), G∣Q) :
+    G.natDegree=1 ∧ 1≤jetDegree G ∧ jetDegree G≤7 ∧
+      1≤seedDegree G ∧ seedDegree G≤85 ∧ (2≤jetDegree G → seedDegree G≤78) := by
+  have sb : 1≤seedDegree G := by
+    obtain ⟨j,i,hs⟩ := seeded
+    have ge := (K1_14_2_2_2_1.seedDegree_le G _).1 le_rfl j i
+    omega
+  have jb := shape_lower_bound irr.ne_zero
+  have not_test (test : HelperTest) (a : test.slope≤G.natDegree)
+      (b : test.seed≤seedDegree G) (c : G.natDegree+test.excess≤jetDegree G) : False := by
+    obtain ⟨Q,hQ,avoid⟩ := helper_avoids Crt word lo hi test irr seeded a b c
+    exact avoid (common Q hQ)
+  have linear : G.natDegree=1 := by
+    by_contra! bad
+    exact not_test .twoSlopes (by change 2≤G.natDegree; omega) sb (by simpa [HelperTest.excess] using jb)
+  refine ⟨linear, by omega, ?_, sb, ?_, ?_⟩
+  · by_contra! bad
+    exact not_test .jetBoundary (by change 1≤G.natDegree; omega) sb
+      (by change G.natDegree+7≤jetDegree G; omega)
+  · by_contra! bad
+    exact not_test .seedBoundary (by change 1≤G.natDegree; omega) (by change 86≤seedDegree G; omega)
+      (by simpa [HelperTest.excess] using jb)
+  · intro j
+    by_contra! bad
+    exact not_test .mixedBoundary (by change 1≤G.natDegree; omega) (by change 79≤seedDegree G; omega)
+      (by change G.natDegree+1≤jetDegree G; omega)
+theorem helper_not_two {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
+    (lo : 2359≤h) (hi : h≤33579) {G H : Jet} (g : Irreducible G) (i : Irreducible H)
+    (cop : IsRelPrime G H) (gs : 0<G.natDegree) (hs : 0<H.natDegree)
+    (gu : UsesSeed G) (hu : UsesSeed H)
+    (allG : ∀ Q ∈ evaluated Crt word helperBank.shape (helperCutoff h), G∣Q)
+    (allH : ∀ Q ∈ evaluated Crt word helperBank.shape (helperCutoff h), H∣Q) : False := by
+  have supply := crt_supply Crt word helperBank 179818 10 2 0 1 (by omega) (by omega) (by decide)
+    helper_bank_checked.nodes helper_bank_checked.moment.1 helper_bank_checked.moment.2
+    (helper_width lo hi) (helper_surplus .twoSlopes lo hi)
+  obtain ⟨P,hP,np⟩ := helper_nonzero Crt word lo hi
+  have hpc (j i : ℕ) : ((P.coeff j).coeff i).totalDegree ≤ helperBank.shape.U := by
+    by_cases zero : ((P.coeff j).coeff i)=0
+    · simp [zero]
+    · exact (evaluated_shape Crt word hP j i zero).2.2
+  exact HelperPrefix.not_two_common helperBank.shape h (cutoffCount helperBank.shape 179818 h 10)
+    (by omega) (evaluated Crt word helperBank.shape) G H P g i cop gs hs gu hu np hP
+    (by decide) hpc (fun _ _ _ hR => evaluated_shape Crt word hR)
+    (fun W _ R hR hnR => P0_10_1.leading_bound (by omega) (by omega) Crt word helperBank.shape W R hR hnR)
+    (fun _ _ _ hR j a hshift => evaluated_mono Crt word rfl rfl rfl le_rfl hshift
+      (P0_10_1.evaluated_shift Crt word hR j a))
+    supply allG allH
+#print axioms helper_bank_checked
+#print axioms helper_surplus
+#print axioms helper_avoids
+#print axioms helper_nonzero
+#print axioms helper_common_caps
+#print axioms helper_not_two
+end Lower6960.HelperSource
+
+end Merged_R6960HelperSource6960
+
+-- merged module R6960PrefixReceipt
+section Merged_R6960PrefixReceipt
 
 -- merged module R6960DifferentialContact
 section Merged_R6960DifferentialContact
@@ -285,7 +449,7 @@ def rescueDegrees (G : Jet) : Prop :=
 theorem prepare_6960 {ι : Type*} [Fintype ι] (P : ι→Jet) (s : ι→Shape) (ks : ι→ℕ)
     (proper : ∀ i,P i≠0) (caps : ∀ i,K1_14_2_2.RowCaps (P i) (s i))
     {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
-    (lo : 2402≤h) (hi : h≤33619) :
+    (lo : 2359≤h) (hi : h≤33579) :
     let V := evaluated Crt word helperBank.shape (helperCutoff h)
     ∃ out : Prepared P s ks V helperBank.shape, out.exception=1 ∨ rescueDegrees out.exception := by
   obtain ⟨out⟩ := prepare P s ks _ helperBank.shape proper caps
@@ -300,14 +464,14 @@ theorem prepare_6960 {ι : Type*} [Fintype ι] (P : ι→Jet) (s : ι→Shape) (
   omega
 #print axioms prepare_6960
 theorem native_at_6960 {ι : Type*} {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
-    (lo : 2402≤h) (hi : h≤33619) {P : ι→Jet} {s : ι→Shape} {ks : ι→ℕ}
+    (lo : 2359≤h) (hi : h≤33579) {P : ι→Jet} {s : ι→Shape} {ks : ι→ℕ}
     (out : Prepared P s ks (evaluated Crt word helperBank.shape (helperCutoff h)) helperBank.shape)
     (i : ι) (W r : ℕ) (inside : P i∈evaluated Crt word (s i) W)
-    (width : W+2*h*r<(s i).m*179798) (power : r+1≤ks i*11)
+    (width : W+2*h*r<(s i).m*179818) (power : r+1≤ks i*11)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (z : K1.K) (S : (Polynomial K1.K)) (residues : MarkResidues D z S)
     (degree : (liftPoly S).natDegree ≤ 131071+h)
-    (hits : Finset K1.I) (many : 179798≤hits.card)
+    (hits : Finset K1.I) (many : 179818≤hits.card)
     (agree : ∀ i ∈ hits, (liftPoly S).eval (nodeL i) = word i)
     (regular : toJet out.exception∉RingHom.ker (jetMarkHom z S)) :
     Native (RingHom.ker (jetMarkHom z S)) (r+1) (out.free i) ∧
@@ -317,7 +481,7 @@ theorem native_at_6960 {ι : Type*} {h : ℕ} {D : PoleData h} (Crt : CRTLift D)
   · intro H member
     have wh := helper_width lo hi
     unfold WidthGuard cutoffCount at wh
-    have fit : helperCutoff h + 2*h*10 < helperBank.shape.m*179798 := by
+    have fit : helperCutoff h + 2*h*10 < helperBank.shape.m*179818 := by
       unfold helperCutoff cutoffCount
       omega
     exact contact_of_crt Crt word helperBank.shape H member fit noPole z S residues degree hits many agree
@@ -325,4 +489,6 @@ theorem native_at_6960 {ι : Type*} {h : ℕ} {D : PoleData h} (Crt : CRTLift D)
 end Lower6960.PrefixRows
 
 end
+end Merged_R6960PrefixReceipt
+
 end Merged_R6960PrefixReceipt

@@ -3,6 +3,8 @@ import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Tactic.Abel
 import ProximityPrize.SubmissionLower.R6960RetainedPairedResidues
 
+set_option Elab.async false
+
 -- merged module R6960RetainedNodalIndex
 section Merged_R6960RetainedNodalIndex
 noncomputable section

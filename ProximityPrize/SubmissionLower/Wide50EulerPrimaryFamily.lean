@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.PrimaryTaperBudget
 import ProximityPrize.SubmissionLower.GoldBranch6N8
 import ProximityPrize.SubmissionLower.KoalaTaperTransferReceipt
 
+set_option Elab.async false
+
 -- merged module PrimaryTaperMoments
 section Merged_PrimaryTaperMoments
 

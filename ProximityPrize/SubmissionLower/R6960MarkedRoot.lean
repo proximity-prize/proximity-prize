@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.R6960QuadraticProjection
 import Mathlib.RingTheory.AdjoinRoot
 import ArkLib.Data.Polynomial.FractionFieldResultant
 
+set_option Elab.async false
+
 -- merged module R6960BranchCollisions
 section Merged_R6960BranchCollisions
 noncomputable section

@@ -1,4 +1,6 @@
 import ProximityPrize.SubmissionLower.Low48BentCycle
+
+set_option Elab.async false
 set_option autoImplicit false
 set_option Elab.async false
 namespace Low48BentCycle

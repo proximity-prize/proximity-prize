@@ -11,6 +11,8 @@ import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
 import ProximityPrize.SubmissionLower.R6960RetainedAxisTransition
 import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 
+set_option Elab.async false
+
 -- merged module R6960CollisionMarkedFibreBaseChange
 section Merged_R6960CollisionMarkedFibreBaseChange
 set_option Elab.async false

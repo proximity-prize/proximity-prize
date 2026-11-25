@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.FrontCore82258Model
-import ProximityPrize.SubmissionLower.HighCore82258TerminalArithmetic
-import ProximityPrize.SubmissionLower.KoalaRectPosition
+import ProximityPrize.SubmissionLower.HighCore82258Terminal
+import ProximityPrize.SubmissionLower.KoalaRectCutoff
+
+set_option Elab.async false
 
 -- merged module KoalaRectArithmetic
 section Merged_KoalaRectArithmetic

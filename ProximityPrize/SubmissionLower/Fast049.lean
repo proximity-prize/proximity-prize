@@ -29,6 +29,8 @@ import Mathlib.RingTheory.RingHom.Unramified
 import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
 import Mathlib.Topology.Algebra.MvPolynomial
 
+set_option Elab.async false
+
 -- merged module FiltrationLift
 section Merged_FiltrationLift
 set_option Elab.async false

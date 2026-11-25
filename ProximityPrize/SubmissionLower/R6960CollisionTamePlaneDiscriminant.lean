@@ -7,6 +7,8 @@ import Mathlib.RingTheory.IntegralClosure.IntegralRestrict
 import Mathlib.RingTheory.Nullstellensatz
 import Mathlib.Algebra.Polynomial.Bivariate
 
+set_option Elab.async false
+
 -- merged module R6960CollisionTameFrames
 section Merged_R6960CollisionTameFrames
 set_option Elab.async false

@@ -5,6 +5,8 @@ import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericMeasure
 import ProximityPrize.SubmissionLower.R6960MarkedVerticalProfile
 import ProximityPrize.SubmissionLower.R6960MarkedAllLabels
 
+set_option Elab.async false
+
 -- merged module R6960CollisionMarkedRootTransport
 section Merged_R6960CollisionMarkedRootTransport
 set_option synthInstance.maxHeartbeats 200000
@@ -282,9 +284,9 @@ theorem nonlinear_price : NonlinearPrice := by
   rwa [show S.card=T.card from card_image_of_injective _ (RetainedCompression.scalar_injective M),degP] at bound
 
 /-- Unconditional 69.61 lower-track protocol claim. -/
-theorem candidate_of_gates (gates : Low6960Allocation.Gates) (loc : Lower6960.LoCount) :
-    ProximityPrize.Benchmark.ProtocolClaim 6963 ProximityPrize.SubmissionLower.Front6960Radius.p
-      ProximityPrize.SubmissionLower.Front6960Radius.q := protocol_of_price gates loc nonlinear_price
+theorem candidate_of_gates (gates : Low6960Allocation.Gates) :
+    ProximityPrize.Benchmark.ProtocolClaim 6961 ProximityPrize.SubmissionLower.Front6960Radius.p
+      ProximityPrize.SubmissionLower.Front6960Radius.q := protocol_of_price gates nonlinear_price
 
 #print axioms candidate_of_gates
 end Lower6960.MarkedEvaluation

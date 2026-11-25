@@ -1,5 +1,976 @@
+import ProximityPrize.SubmissionLower.Fast042
+import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
+import ProximityPrize.SubmissionLower.Final50Order
+import ProximityPrize.SubmissionLower.R6960Low6960FatBanks
+import ProximityPrize.SubmissionLower.R6960Low6960FatFactors
+import ProximityPrize.SubmissionLower.R6960Low6960FatContacts
+import ProximityPrize.SubmissionLower.R6960Low6960FatPadding
+import ProximityPrize.SubmissionLower.Wide50EulerPrimaryFamily
 import ProximityPrize.SubmissionLower.Final50Price
-import ProximityPrize.SubmissionLower.R6960Low6960Order
+
+set_option Elab.async false
+
+-- merged module R6960Low6960Fat
+section Merged_R6960Low6960Fat
+
+-- merged module ModelExactPole
+section Merged_ModelExactPole
+
+set_option Elab.async false
+namespace ModelExactPole
+noncomputable section
+open P1 (I K node)
+open K1_13 (Geom embed extend)
+open Polynomial
+open scoped Polynomial
+
+/-- A common shift by a multiple of the pole preserves all labeled residues. -/
+theorem exists_shifted {cap u del Γ A n} (M : P1.ModelAt cap u del) (F : P1.FamilyAt A M Γ)
+    (T : (Polynomial K)) (multiple : M.E ∣ T) (positive : 1 ≤ n) (small : n ≤ 2600)
+    (available : n ≤ M.E.natDegree) (degree : ∀ γ ∈ Γ, (F.scalar γ - T).natDegree ≤ 131071 + n) :
+    ∃ P : K1_13.PoleData Γ (fun γ => F.scalar γ - T), P.H.natDegree = n := by
+  have hmax : n ≤ (extend M.E).natDegree := by simpa only [extend, natDegree_map] using available
+  obtain ⟨H, hm, hd, hdiv⟩ := K1_13.trim_divisor _ (M.E_monic.map embed) _ hmax
+  let z := fun γ => embed (M.label γ)
+  have unit {P : (Polynomial K)} (hp : IsCoprime P M.E) : IsCoprime (extend P) H :=
+    (hp.map (Polynomial.mapRingHom embed)).of_isCoprime_of_dvd_right hdiv
+  have amp (γ : K) : extend (M.amplitude γ) = extend M.A₀ + C (z γ) * extend M.A₁ := by
+    simp [P1.ModelAt.amplitude, z]
+  refine ⟨⟨H, hm, ?_, ?_, ?_, z, ?_, extend M.factor, extend M.Q, extend M.A₀,
+    extend M.A₁, unit M.coprime_factor.symm, unit M.offset_reduced,
+    unit M.first_amplitude_unit, ?_, ?_⟩, ?_⟩
+  · rw [hd]
+    exact ⟨positive, small⟩
+  · intro i hz
+    obtain ⟨U, hU⟩ := hdiv
+    have he : (extend M.E).eval (embed (node i)) ≠ 0 := by
+      rw [Polynomial.eval_map_apply]
+      exact (map_ne_zero embed).mpr (M.E_nodes i)
+    apply he
+    change (M.E.map embed).eval _ = 0
+    rw [hU, Polynomial.eval_mul, hz, zero_mul]
+  · intro γ hγ
+    rw [hd]
+    exact degree γ hγ
+  · intro a b hab
+    exact sub_left_inj.mp (embed.injective hab)
+  · intro γ hγ
+    rw [← amp]
+    exact unit (F.mark γ hγ).pole_unit
+  · intro γ hγ
+    have eqn := (F.mark γ hγ).identity
+    have orig : M.factor * M.amplitude γ * F.scalar γ + C (M.label γ) * M.Q =
+        M.E * M.decoder (F.mark γ hγ).bad := by rw [← eqn]; ring
+    have mapped := congrArg (Polynomial.map embed) orig
+    simp only [Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C] at mapped
+    rw [← amp]
+    have residue := mapped ▸ hdiv.trans (dvd_mul_right (extend M.E) (extend (M.decoder (F.mark γ hγ).bad)))
+    have shift := hdiv.trans (Polynomial.map_dvd embed multiple)
+    have sub := dvd_sub residue (shift.mul_left (extend M.factor * extend (M.amplitude γ)))
+    simpa only [extend, Polynomial.map_sub, mul_sub, sub_add_eq_add_sub] using sub
+  · exact hd
+
+/-- Trim the pole to the actual overhead without changing any marked residue. -/
+theorem exists_pole {cap u D Γ A} (M : P1.ModelAt cap u D) (F : P1.FamilyAt A M Γ)
+    (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2600) :
+    ∃ P : K1_13.PoleData Γ F.scalar, P.H.natDegree = M.overhead.toNat := by
+  have hmax : M.overhead.toNat ≤ (extend M.E).natDegree := by
+    rw [Polynomial.natDegree_map]
+    change M.overhead.toNat ≤ M.E.natDegree
+    unfold P1.ModelAt.overhead
+    omega
+  have degree : ∀ γ ∈ Γ, (F.scalar γ - 0).natDegree ≤ 131071 + M.overhead.toNat := by
+    intro γ hg
+    rw [sub_zero]
+    rcases (F.mark γ hg).scalar_degree with zero | h
+    · simp [zero]
+    · change ((F.scalar γ).natDegree : ℤ) ≤ 131071 + M.overhead at h
+      omega
+  let HasPole (s : K → (Polynomial K)) : Prop :=
+    ∃ P : K1_13.PoleData Γ s, P.H.natDegree = M.overhead.toNat
+  have eq : (fun γ => F.scalar γ - 0) = F.scalar := funext fun γ => sub_zero _
+  apply (congrArg HasPole eq).mp
+  exact exists_shifted M F 0 (dvd_zero _) (by omega : 1 ≤ M.overhead.toNat)
+    (by omega) (by simpa only [extend, natDegree_map] using hmax) degree
+
+#print axioms exists_shifted
+#print axioms exists_pole
+end
+end ModelExactPole
+
+end Merged_ModelExactPole
+
+-- merged module R6960Low6960Primary
+section Merged_R6960Low6960Primary
+
+noncomputable section
+set_option Elab.async false
+namespace Lower6960.Low
+open P3 (I K node)
+open K1_13 (Row Geom Shape shape InBox Contact)
+open Wide50EulerPrimary (primary_family sourceRank layerNeed)
+open scoped Polynomial
+
+abbrev agreement : ℕ := 179818
+abbrev physicalDegree : ℕ := 133429
+abbrev primaryCutoff : ℕ := 3000*agreement-1
+abbrev primaryRank : ℕ := sourceRank agreement physicalDegree
+abbrev need : ℕ := layerNeed agreement physicalDegree
+
+theorem certified_layers : need = 20767888279330 := by decide +kernel
+
+/-- The common endpoint supplies all physical degree and agreement data
+for every actual low-height mark. -/
+theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
+    (F : P1.FamilyAt 179818 M Γ) (hi : M.overhead ≤ 2358) :
+    Set.InjOn F.scalar (Γ : Set K) ∧
+      (∀ γ∈Γ,(F.scalar γ).natDegree≤physicalDegree) ∧
+      ∀ γ∈Γ,∃ T : Finset I,agreement≤T.card ∧ ∀ i∈T,(F.scalar γ).eval (node i)=M.word i := by
+  refine ⟨F.distinct,?_,?_⟩
+  · intro γ hγ
+    rcases (F.mark γ hγ).scalar_degree with zero | deg
+    · simp [zero]
+    · change ((F.scalar γ).natDegree : ℤ)≤131071+M.overhead at deg
+      change (F.scalar γ).natDegree≤133429
+      omega
+  · intro γ hγ
+    let Mγ := F.mark γ hγ
+    exact ⟨Mγ.bad.support,Mγ.bad.agreement,Mγ.scalar_hits⟩
+
+/-- The native generic primary producer instantiated at the concrete 69.60
+low endpoint. -/
+theorem primary_at_endpoint (word : I→K) :
+    ∃ e : Fin primaryRank→Row 4,LinearIndependent Geom e ∧
+      ∀ i,InBox (shape (e i)) PrimaryTaper.primaryBox ∧
+        PrimaryTaper.TrueWeightLE physicalDegree (e i) primaryCutoff ∧
+        PrimaryTaper.JetsBounded (e i) ∧ Contact word (e i) :=
+  primary_family agreement physicalDegree (by decide) (by decide) (by decide +kernel) word le_rfl
+
+#print axioms certified_layers
+#print axioms primary_at_endpoint
+end Lower6960.Low
+
+end
+end Merged_R6960Low6960Primary
+
+-- merged module R6960Low6960Fat
+section Merged_R6960Low6960Fat
+
+
+set_option Elab.async false
+section
+namespace Low6960Fat
+noncomputable section
+open K1 K1_13
+open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
+open P0_9_4 (clear_denominators)
+open scoped Polynomial BigOperators
+open P3_6_4 (eval_cleared order_cleared)
+set_option maxRecDepth 2400 in
+/-- Fat equations through height 2,358 at 179,818 agreements. -/
+theorem fat_equations : Equations := by
+  have h1 := Low6960FatBanks.proof
+  have h2 := Low6960FatFactors.proof
+  have h3 := Low6960FatContacts.proof
+  intro w Γ s _ hhits P hheight
+  have hw : Messages w Γ s := ⟨hhits⟩
+  obtain ⟨L⟩ := K1_13_4_1.proof Γ s P
+  obtain ⟨⟨F, neF, hF⟩, rank2⟩ := h1 w Γ s P L hheight
+  obtain ⟨vanishes1, vanishes2⟩ := h3 w Γ s hw P L hheight
+  obtain ⟨G, hG, ⟨D⟩⟩ := h2 w Γ s P L F neF ⟨hF.1.1, hF.2⟩ rank2
+  have hOrders : ∀ γ ∈ Γ, PairOrders (toGeneric F) (toGeneric G)
+      (inclConst (P.z γ)) (trajectory (extend (s γ))) := fun γ hγ =>
+    ⟨vanishes1 F hF γ hγ, vanishes2 G hG γ hγ⟩
+  obtain ⟨book, Q, hcard, hQ, htQ, hiQ, hcover⟩ :=
+    eliminate_common Γ P.z (fun γ => extend (s γ)) P.injective D hOrders
+  obtain ⟨J⟩ := padded27 D.left_ne D.right_ne D.proper D.left_caps D.right_caps
+  let R := seedResultant27 (pad D.left J.a) (pad D.right J.b)
+  obtain ⟨_, Q', _, suppQ, mapQ⟩ := clear_denominators Q
+  obtain ⟨_, R', _, suppR, mapR⟩ := clear_denominators R
+  have neQ : Q' ≠ 0 := by
+    intro h
+    rw [h, MvPolynomial.support_zero, eq_comm, MvPolynomial.support_eq_empty] at suppQ
+    exact hQ suppQ
+  have neR : R' ≠ 0 := by
+    intro h
+    rw [h, MvPolynomial.support_zero, eq_comm, MvPolynomial.support_eq_empty] at suppR
+    exact J.nonzero suppR
+  have totalQ : Q'.totalDegree ≤ 2502 := by
+    simpa only [MvPolynomial.totalDegree, suppQ] using htQ
+  have indexQ : indexDegree Q' ≤ 811 := by
+    simpa only [K1_13.indexDegree, lowerIndex, suppQ] using hiQ
+  have totalR : R'.totalDegree ≤ 367443000 := by
+    have htR : R.totalDegree ≤ 367443000 := J.total
+    simpa only [MvPolynomial.totalDegree, suppR] using htR
+  have indexR : indexDegree R' ≤ 124200000 := by
+    have hiR : lowerIndex R ≤ 124200000 := J.index
+    simpa only [K1_13.indexDegree, lowerIndex, suppR] using hiR
+  refine ⟨book, ⟨Q', R', neQ, neR, totalQ, indexQ, totalR, indexR⟩, hcard, ?_⟩
+  intro γ hγ hb
+  rcases hcover γ hγ hb with he | ho
+  · exact Or.inl (eval_cleared mapQ _ he)
+  · refine Or.inr (order_cleared mapR _ ?_)
+    have hres : LowerOrder R (trajectory (extend (s γ))) 23893 :=
+      resultant_order (pad D.left J.a) (pad D.right J.b) (inclConst (P.z γ)) _
+        J.degree_left.le J.degree_right.le ⟨mixedOrder_pad J.a ho.1, mixedOrder_pad J.b ho.2⟩
+    exact hres
+end
+end Low6960Fat
+end
+
+#print axioms Low6960Fat.fat_equations
+
+namespace Lower6960.Low
+open K1_13 (extend)
+open Low6960Fat (Holds)
+
+/-- The actual low family supplies common and resultant equations with the
+revised resultant order. -/
+theorem fat_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
+    (F : P1.FamilyAt 179818 M Γ) (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2358) :
+    ∃ (book : Finset P1.K) (E : Low6960Fat.FatEquations), book.card≤140000 ∧
+      ∀ γ∈Γ,γ∉book → Holds E (extend (F.scalar γ)) := by
+  obtain ⟨_,deg,hits⟩ := messages_of_family M F hi
+  obtain ⟨pole,hpole⟩ := ModelExactPole.exists_pole M F lo (hi.trans (by decide))
+  have small : pole.H.natDegree≤2358 := by rw [hpole]; omega
+  exact Low6960Fat.fat_equations M.word Γ F.scalar deg hits pole small
+
+#print axioms fat_of_family
+end Lower6960.Low
+
+end Merged_R6960Low6960Fat
+
+end Merged_R6960Low6960Fat
+
+-- merged module R6960Low6960Order
+section Merged_R6960Low6960Order
+
+-- merged module R6960Low6960Profile
+section Merged_R6960Low6960Profile
+
+set_option Elab.async false
+
+namespace Lower6960.Low
+open P3 (I K node)
+open K1_13 (Row Shape InBox shape OrderAt extend)
+open scoped Polynomial BigOperators
+
+abbrev layerWidth : ℕ := agreement-physicalDegree+3
+abbrev layerCount : ℕ := 1+primaryCutoff/layerWidth
+abbrev TrueWeightLE {n : ℕ} (P : Row n) (T : ℕ) := PrimaryTaper.TrueWeightLE physicalDegree P T
+
+structure Messages (w : I→K) (Γ : Finset K) (s : K→(Polynomial K)) : Prop where
+  distinct : Set.InjOn s (Γ : Set K)
+  degree : ∀ γ∈Γ,(s γ).natDegree≤physicalDegree
+  hits : ∀ γ∈Γ,∃ T : Finset I,agreement≤T.card ∧ ∀ i∈T,(s γ).eval (node i)=w i
+
+theorem Messages.mono {w Γ s Δ} (h : Messages w Γ s) (hΔ : Δ⊆Γ) : Messages w Δ s :=
+  ⟨h.distinct.mono hΔ,fun γ mem=>h.degree γ (hΔ mem),fun γ mem=>h.hits γ (hΔ mem)⟩
+
+def ProperCut (f : Row 4) (Γ : Finset K) (s : K→(Polynomial K)) (l : ℕ) : Prop :=
+  ∃ Q : Row 4, (¬f∣Q) ∧ InBox (shape Q) PrimaryTaper.primaryBox ∧ TrueWeightLE Q primaryCutoff ∧
+    Final50Price.ActiveFits Q 5164 ∧ ∀ γ∈Γ,OrderAt Q (extend (s γ)) l
+
+def LayerBudget {n : ℕ} (a : Fin n→Shape) (l : Fin n→ℕ) : Prop :=
+  need ≤ ∑ r∈Finset.range layerCount,
+    Final50Price.remaining (∑ i,(r+1-l i)*(a i).b) (∑ i,(r+1-l i)*(a i).j)
+end Lower6960.Low
+
+end Merged_R6960Low6960Profile
+
+-- merged module R6960Low6960Order
+section Merged_R6960Low6960Order
+set_option Elab.async false
+namespace Low6960Order
+noncomputable section
+open K1_13 (Geom Row shape InBox Contact)
+open P3 (I K)
+abbrev TrueWeightLE {n : ℕ} (P : Row n) (D : ℕ) := Lower6960.Low.TrueWeightLE P D
+abbrev physicalDegree := Lower6960.Low.physicalDegree
+abbrev agreement := Lower6960.Low.agreement
+abbrev primaryBox := PrimaryTaper.primaryBox
+abbrev primaryCutoff := Lower6960.Low.primaryCutoff
+abbrev sourceRank := Wide50EulerPrimary.sourceRank agreement physicalDegree
+abbrev layerWidth := Lower6960.Low.layerWidth
+abbrev layerNeed := Lower6960.Low.need
+abbrev Messages := Lower6960.Low.Messages
+abbrev ProperCut := Lower6960.Low.ProperCut
+abbrev LayerBudget := @Lower6960.Low.LayerBudget
+theorem sourceRank_eq : sourceRank = 963463873054672528 := by decide
+theorem certified_layers : sourceRank / layerWidth + 1 = 20767888279330 := by decide
+def PrimaryRank (w : I → K) : Prop :=
+  ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
+    ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧
+      PrimaryTaper.JetsBounded (e i) ∧ Contact w (e i)
+end
+end Low6960Order
+section
+namespace Low6960OrderProof
+noncomputable section
+open P3 (I K)
+open Low6960Order (TrueWeightLE primaryBox primaryCutoff layerWidth)
+open K1_13 (Row InBox shape Contact)
+def requiredOrder (T : ℕ) : ℕ :=
+  (primaryCutoff - T) / layerWidth + 1
+def BankRow (w : I → K) (T : ℕ) (P : Row 4) : Prop :=
+  InBox (shape P) primaryBox ∧ TrueWeightLE P T ∧
+    PrimaryTaper.JetsBounded P ∧ Contact w P
+end
+end Low6960OrderProof
+end
+section
+namespace Low6960OrderProof
+noncomputable section
+open Polynomial
+open P3 (I K node)
+open Low6960Order (agreement)
+open Low6960Order (Messages ProperCut TrueWeightLE physicalDegree primaryBox
+  PrimaryRank primaryCutoff layerWidth layerNeed sourceRank)
+open K1_13 (Geom embed extend Row shape InBox OrderAt indexDegree)
+open K1_13_3 (symbolAt symbolIndex cofactor_rank)
+open scoped BigOperators
+open P0_9_3 (exists_fresh specialization_bounds sum_by_layer)
+def c1 : Prop :=
+  ∀ (w : I → K) (T : ℕ) (P : Row 4), T ≤ primaryCutoff → BankRow w T P →
+    ∀ S : (Polynomial Geom), S.natDegree ≤ physicalDegree →
+      (∃ H : Finset I, agreement ≤ H.card ∧
+        ∀ i ∈ H, S.eval (embed (node i)) = embed (w i)) →
+      OrderAt P S (requiredOrder T)
+def c2 : Prop :=
+  ∀ (f P : Row 4) (Γ : Finset K) (s : K → (Polynomial K)) (d a : ℕ),
+    Irreducible f → 0 < (shape f).t → (shape f).t < K1.p →
+    InBox (shape P) primaryBox → TrueWeightLE P primaryCutoff →
+    Final50Price.ActiveFits P 5164 →
+    (∀ γ ∈ Γ, OrderAt P (extend (s γ)) d) →
+    a < d → f ^ a ∣ P → (¬ f ^ (a + 1) ∣ P) →
+    ProperCut f Γ s (d - a)
+def c3 : Prop :=
+  ∀ (w : I → K) (x : Geom), PrimaryRank w →
+    (∀ i : I, x ≠ embed (node i)) →
+    ∃ r : ℕ → ℕ, sourceRank ≤ ∑ T ∈ Finset.range (primaryCutoff + 1), r T ∧
+      ∀ T ≤ primaryCutoff, ∃ e : Fin (r T) → Row 4,
+        (∀ i, BankRow w T (e i)) ∧
+        LinearIndependent Geom (fun i => symbolAt x (e i))
+private theorem exists_availability (hc : c1) (hd : c2)
+    {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} (hm : Messages w Γ s)
+    {f : Row 4} (hirr : Irreducible f) (hpos : 0 < (shape f).t) (htop : (shape f).t < K1.p) :
+    ∃ l : ℕ, (∀ T ≤ primaryCutoff, ∀ P, BankRow w T P → f ^ (requiredOrder T - l) ∣ P) ∧
+      (0 < l → ProperCut f Γ s l) := by
+  classical
+  let admissible (l : ℕ) : Prop :=
+    ∀ T ≤ primaryCutoff, ∀ P, BankRow w T P → f ^ (requiredOrder T - l) ∣ P
+  have hex : ∃ l, admissible l := by
+    refine ⟨primaryCutoff / layerWidth + 1, fun T _ P _ => ?_⟩
+    have hle : requiredOrder T ≤ primaryCutoff / layerWidth + 1 :=
+      Nat.add_le_add_right (Nat.div_le_div_right (Nat.sub_le _ _)) _
+    rw [Nat.sub_eq_zero_of_le hle, pow_zero]
+    exact one_dvd P
+  let l := Nat.find hex
+  have hl : admissible l := Nat.find_spec hex
+  refine ⟨l, hl, fun hlpos => ?_⟩
+  have hbad : ¬ admissible (l - 1) := Nat.find_min hex (by omega)
+  dsimp only [admissible] at hbad
+  push Not at hbad
+  obtain ⟨T, hT, P, hP, hnext⟩ := hbad
+  have hle : l ≤ requiredOrder T := by
+    by_contra! hlt
+    have heq : requiredOrder T - (l - 1) = 0 := by omega
+    exact hnext (by rw [heq, pow_zero]; exact one_dvd P)
+  have hstep : requiredOrder T - (l - 1) = (requiredOrder T - l) + 1 := by omega
+  have horder : ∀ γ ∈ Γ, OrderAt P (extend (s γ)) (requiredOrder T) := by
+    intro γ hγ
+    apply hc w T P hT hP
+    · simpa only [extend, natDegree_map_eq_of_injective (RingHom.injective embed)] using
+        hm.degree γ hγ
+    · obtain ⟨H, hcard, hH⟩ := hm.hits γ hγ
+      refine ⟨H, hcard, fun i hi => ?_⟩
+      rw [extend, eval_map, eval₂_at_apply, hH i hi]
+  have hweight : TrueWeightLE P primaryCutoff := fun m hm => (hP.2.1 m hm).trans hT
+  have hactive : Final50Price.ActiveFits P 5164 :=
+    fun m hm => (PrimaryTaperActive.of_jets hP.2.2.1 m hm).trans (by decide)
+  have hcut := hd f P Γ s (requiredOrder T) (requiredOrder T - l) hirr hpos htop hP.1
+    hweight hactive horder (by omega) (hl T hT P hP) (by rwa [hstep] at hnext)
+  have heq : requiredOrder T - (requiredOrder T - l) = l := by omega
+  rwa [heq] at hcut
+theorem of_children (h1 : c1) (h2 : c2) (h3 : c3)
+    {w Γ s n} {f : Fin n → Row 4} (hm : Messages w Γ s) (hr : PrimaryRank w)
+    (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
+    (htop : ∀ i, (shape (f i)).t < K1.p)
+    (hdiff : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)) :
+    ∃ l : Fin n → ℕ, Low6960Order.LayerBudget (fun i => shape (f i)) l ∧
+      ∀ i, 0 < l i → ProperCut (f i) Γ s (l i) := by
+  classical
+  choose l hl hcut using fun i => exists_availability h1 h2 hm (hirr i) (hpos i) (htop i)
+  obtain ⟨x, hx, hsup⟩ := exists_fresh f
+  obtain ⟨r, hrank, hfamilies⟩ := h3 w x hr hx
+  have hnz : ∀ i, symbolAt x (f i) ≠ 0 := by
+    intro i hz
+    have hzero := hsup i
+    rw [hz, MvPolynomial.support_zero, eq_comm, MvPolynomial.support_eq_empty] at hzero
+    exact (hirr i).ne_zero hzero
+  let cost (k : ℕ) :=
+    Final50Price.remaining (∑ i, (k + 1 - l i) * (shape (f i)).b)
+      (∑ i, (k + 1 - l i) * (shape (f i)).j)
+  have hcost : ∀ T ≤ primaryCutoff, r T ≤ cost ((primaryCutoff - T) / layerWidth) := by
+    intro T hT
+    obtain ⟨e, he, hei⟩ := hfamilies T hT
+    let a (i : Fin n) := requiredOrder T - l i
+    have hdiv (i : Fin (r T)) : (∏ j, f j ^ a j) ∣ e i := by
+      apply Fintype.prod_dvd_of_isRelPrime
+      · intro j k hjk
+        have hj := hirr j
+        have hk := hirr k
+        exact (hj.isRelPrime_iff_not_dvd.mpr
+          (fun h => hdiff j k hjk (hj.associated_of_dvd hk h))).pow
+      · intro j
+        exact hl j T hT (e i) (he i)
+    have hbound := cofactor_rank n (fun i => symbolAt x (f i)) a hnz (r T)
+      (fun i => symbolAt x (e i)) hei (fun i => by
+        obtain ⟨hb, hj⟩ := specialization_bounds x (e i) (he i).1
+        exact ⟨hb, hj, by simpa only [map_prod, map_pow] using map_dvd (symbolAt x) (hdiv i)⟩)
+    have hb (i : Fin n) : (symbolAt x (f i)).totalDegree = (shape (f i)).b := by
+      change (symbolAt x (f i)).totalDegree = (f i).totalDegree
+      unfold MvPolynomial.totalDegree
+      rw [hsup]
+    have hj (i : Fin n) : symbolIndex (symbolAt x (f i)) = (shape (f i)).j := by
+      change symbolIndex (symbolAt x (f i)) = indexDegree (f i)
+      unfold symbolIndex indexDegree
+      rw [hsup]
+    have hs : r T ≤ Final50Price.symbolCount :=
+      PrimaryTaper.symbol_rank x e (fun i => (he i).2.2.1) hei
+    dsimp only [cost, Final50Price.remaining]
+    apply le_min hs
+    simpa only [a, requiredOrder, hb, hj] using hbound
+  have hsum : sourceRank ≤ layerWidth * ∑ k ∈ Finset.range (1 + primaryCutoff / layerWidth), cost k :=
+    hrank.trans ((Finset.sum_le_sum fun T hT =>
+      hcost T (Nat.le_of_lt_succ (Finset.mem_range.mp hT))).trans (sum_by_layer primaryCutoff layerWidth (by decide) cost))
+  refine ⟨l, ?_, hcut⟩
+  change layerNeed ≤ ∑ k ∈ Finset.range (1 + primaryCutoff / layerWidth), cost k
+  have hceil : layerWidth * (layerNeed - 1) < sourceRank := by decide
+  by_contra! hsmall
+  have hpred : (∑ k ∈ Finset.range (1 + primaryCutoff / layerWidth), cost k) ≤
+      layerNeed - 1 := by omega
+  exact (not_le_of_gt hceil) (hsum.trans (Nat.mul_le_mul_left layerWidth hpred))
+end
+end Low6960OrderProof
+end
+section
+set_option maxRecDepth 12000
+namespace Low6960OrderProof_1
+noncomputable section
+open Polynomial FrobeniusLocator ProximityPrize.Benchmark
+open P3 (I K node)
+open Low6960Order (agreement)
+open Low6960Order (TrueWeightLE physicalDegree primaryCutoff layerWidth)
+open Low6960OrderProof (BankRow requiredOrder)
+open K1_13 (Geom embed Row jet Contact)
+open K1_13_3_1 (line)
+open scoped BigOperators
+open K1_13_3_1 (eval_line line_contacts_zero)
+open K1_13_3_1 (order_of_locator_lines)
+private def Bounded (Q : Polynomial (Polynomial Geom)) (b : ℕ) : Prop :=
+  ∀ j, (Q.coeff j).natDegree ≤ b + layerWidth * j
+private theorem bounded_mul {F G : Polynomial (Polynomial Geom)} {a b : ℕ}
+    (hF : Bounded F a) (hG : Bounded G b) : Bounded (F * G) (a + b) := by
+  intro j
+  rw [Polynomial.coeff_mul]
+  apply natDegree_sum_le_of_forall_le
+  intro ij hij
+  have hsum := Finset.HasAntidiagonal.mem_antidiagonal.mp hij
+  refine natDegree_mul_le.trans ((Nat.add_le_add (hF ij.1) (hG ij.2)).trans ?_)
+  rw [← hsum, Nat.mul_add]
+  omega
+private theorem bounded_C (f : (Polynomial Geom)) {a : ℕ} (hf : f.natDegree ≤ a) :
+    Bounded (Polynomial.C f) a := by
+  intro j
+  by_cases h : j = 0
+  · simpa [h] using hf
+  · simp [Polynomial.coeff_C, h]
+private theorem bounded_prod {ι : Type*} (A : Finset ι)
+    (f : ι → Polynomial (Polynomial Geom)) (b : ι → ℕ) (hf : ∀ i ∈ A, Bounded (f i) (b i)) :
+    Bounded (∏ i ∈ A, f i) (∑ i ∈ A, b i) := by
+  classical
+  induction A using Finset.induction_on with
+  | empty => simpa using bounded_C (1 : (Polynomial Geom)) (a := 0) (by simp)
+  | insert i A hi ih =>
+    rw [Finset.prod_insert hi, Finset.sum_insert hi]
+    exact bounded_mul (hf i (Finset.mem_insert_self _ _))
+      (ih fun k hk => hf k (Finset.mem_insert_of_mem hk))
+private theorem bounded_pow {f : Polynomial (Polynomial Geom)} {b : ℕ} (hf : Bounded f b) (n : ℕ) :
+    Bounded (f ^ n) (b * n) := by
+  induction n with
+  | zero => simpa using bounded_C (1 : (Polynomial Geom)) (a := 0) (by simp)
+  | succ n ih =>
+    rw [pow_succ, Nat.mul_succ]
+    exact bounded_mul ih hf
+private theorem line_degree (P : Row 4) (S U : (Polynomial Geom)) (T : ℕ)
+    (hP : TrueWeightLE P T) (hS : S.natDegree ≤ physicalDegree)
+    (hU : U.natDegree ≤ agreement + 3) (j : ℕ) :
+    ((line P S U).coeff j).natDegree ≤ T + layerWidth * j := by
+  let b (i : Fin 4) : ℕ := physicalDegree - i.val
+  let F (i : Fin 4) : Polynomial (Polynomial Geom) :=
+    Polynomial.C (jet S i) + Polynomial.C (jet U i) * Polynomial.X
+  have hF (i : Fin 4) : Bounded (F i) (b i) := by
+    intro k
+    have hs : (jet S i).natDegree ≤ b i :=
+      (natDegree_hasseDeriv_le S i.val).trans (Nat.sub_le_sub_right hS _)
+    have hu : (jet U i).natDegree ≤ b i + layerWidth := by
+      refine (natDegree_hasseDeriv_le U i.val).trans ((Nat.sub_le_sub_right hU _).trans ?_)
+      have hi : i.val ≤ physicalDegree := (Nat.le_of_lt_succ i.isLt).trans (by decide)
+      have hwidth : agreement + 3 = layerWidth + physicalDegree := by decide
+      change agreement + 3 - i.val ≤ (physicalDegree - i.val) + layerWidth
+      rw [hwidth, Nat.add_sub_assoc hi, Nat.add_comm layerWidth]
+    change ((Polynomial.C (jet S i) + Polynomial.C (jet U i) *
+      Polynomial.X).coeff k).natDegree ≤ b i + layerWidth * k
+    rw [Polynomial.coeff_add, Polynomial.coeff_C, Polynomial.coeff_C_mul_X]
+    by_cases h0 : k = 0
+    · simpa [h0] using hs
+    · by_cases h1 : k = 1
+      · simpa [h1] using hu
+      · simp [h0, h1]
+  unfold line
+  rw [MvPolynomial.eval₂_eq, Polynomial.finsetSum_coeff]
+  apply natDegree_sum_le_of_forall_le
+  intro m hm
+  have hterm := bounded_mul (bounded_C (P.coeff m) le_rfl)
+    (bounded_prod m.support (fun i => F i ^ m i) (fun i => b i * m i)
+      (fun i _ => bounded_pow (hF i) (m i))) j
+  exact hterm.trans (Nat.add_le_add_right (hP m hm) _)
+private theorem line_coeff_zero (w : I → K) (T : ℕ) (P : Row 4) (S : (Polynomial Geom))
+    (hw : TrueWeightLE P T) (hc : Contact w P) (hS : S.natDegree ≤ physicalDegree)
+    (A : Finset I) (hA : A.card = agreement)
+    (hhit : ∀ i ∈ A, S.eval (embed (node i)) = embed (w i))
+    (V : (Polynomial Geom)) (hV : V.natDegree ≤ 3) (j : ℕ)
+    (hj : T + layerWidth * j ≤ primaryCutoff) :
+    (line P S (locator (fun i => embed (node i)) A * V)).coeff j = 0 := by
+  classical
+  let x (i : I) : Geom := embed (node i)
+  let L := locator x A
+  let U := L * V
+  have hU : U.natDegree ≤ agreement + 3 := by
+    exact natDegree_mul_le.trans (by rw [locator_natDegree, hA]; exact Nat.add_le_add_left hV _)
+  let Q := line P S U
+  have hcontact (i : I) (hi : i ∈ A) (c : Geom) :
+      (Polynomial.X - C (x i)) ^ 3000 ∣ Q.eval (C c) := by
+    rw [show Q = line P S U from rfl, eval_line]
+    apply hc
+    have hL : L.eval (x i) = 0 := locator_eval_zero x A i hi
+    have hU0 : U.eval (x i) = 0 := by simp [U, hL]
+    simpa [x, eval_smul, hU0] using hhit i hi
+  have hx : Function.Injective x :=
+    (RingHom.injective embed).comp IRSProfile.domain.injective
+  have hb := (line_degree P S U T hw hS hU j).trans hj
+  have hdegree : (Q.coeff j).natDegree < 3000 * A.card := by
+    rw [hA]
+    exact hb.trans_lt (Nat.sub_lt (Nat.mul_pos (by decide) (by decide)) (by decide))
+  exact line_contacts_zero Q A x hx 3000 hcontact j hdegree
+theorem order_of_contact (w : I → K) (P : Row 4) {T : ℕ} (hT : T ≤ primaryCutoff)
+    (hw : TrueWeightLE P T) (hc : Contact w P) {S : (Polynomial Geom)} (hS : S.natDegree ≤ physicalDegree)
+    {H : Finset I} (hH : agreement ≤ H.card)
+    (hits : ∀ i ∈ H, S.eval (embed (node i)) = embed (w i)) :
+    K1_13.OrderAt P S (requiredOrder T) := by
+  obtain ⟨A, hAH, hA⟩ := Finset.exists_subset_card_eq hH
+  let x (i : I) := embed (node i)
+  apply order_of_locator_lines P S (locator x A) (locator_monic x A).ne_zero
+  intro V hV j hj
+  apply line_coeff_zero w T P S hw hc hS A hA (fun i hi => hits i (hAH hi)) V hV j
+  have hj' : j ≤ (primaryCutoff - T) / layerWidth := Nat.lt_succ_iff.mp hj
+  have hq := Nat.div_mul_le_self (primaryCutoff - T) layerWidth
+  rw [Nat.mul_comm _ layerWidth] at hq
+  calc
+    T + layerWidth * j ≤ T + layerWidth * ((primaryCutoff - T) / layerWidth) :=
+      Nat.add_le_add_left (Nat.mul_le_mul_left layerWidth hj') T
+    _ ≤ T + (primaryCutoff - T) := Nat.add_le_add_left hq T
+    _ = primaryCutoff := Nat.add_sub_of_le hT
+theorem proof : Low6960OrderProof.c1 := by
+  intro w T P hT hP S hS hits
+  obtain ⟨H, hH, hhits⟩ := hits
+  exact order_of_contact w P hT hP.2.1 hP.2.2.2 hS hH hhits
+end
+end Low6960OrderProof_1
+end
+section
+namespace Low6960OrderProof_2
+noncomputable section
+open Polynomial
+open Low6960Order (TrueWeightLE physicalDegree primaryBox primaryCutoff)
+open K1_13 (Geom embed extend Row Shape shape InBox indexDegree)
+open P0_9_3_2 (translateTop topHasse topHasse_coeff source_support sum_add_top total_add_top apply_add_top erase_top_add topHasse_order topHasse_zero exact_hasse_not_dvd)
+private theorem topHasse_bounds (box : Shape) (T a : ℕ) (P : Row 4)
+    (hb : InBox (shape P) box) (hw : TrueWeightLE P T) :
+    InBox (shape (topHasse a P)) box ∧ TrueWeightLE (topHasse a P) T := by
+  refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
+  · change (topHasse a P).totalDegree ≤ box.b
+    apply Finset.sup_le
+    intro m hm
+    have hp := (MvPolynomial.le_totalDegree (source_support hm)).trans hb.1
+    rw [total_add_top] at hp
+    exact (Nat.le_add_right _ _).trans hp
+  · change indexDegree (topHasse a P) ≤ box.j
+    apply Finset.sup_le
+    intro m hm
+    have hp := (Finset.le_sup (f := fun u : Fin 4 →₀ ℕ => u.sum (fun i k => i.val * k))
+      (source_support hm)).trans hb.2.1
+    rw [sum_add_top Fin.val] at hp
+    exact (Nat.le_add_right _ _).trans hp
+  · change (topHasse a P).degreeOf 3 ≤ box.t
+    apply MvPolynomial.degreeOf_le_iff.mpr
+    intro m hm
+    have hp := (MvPolynomial.le_degreeOf_of_mem_support 3 (source_support hm)).trans hb.2.2
+    rw [apply_add_top] at hp
+    exact (Nat.le_add_right _ _).trans hp
+  · intro m hm
+    have hp := hw _ (source_support hm)
+    rw [sum_add_top (fun i => physicalDegree - i.val)] at hp
+    rw [topHasse_coeff]
+    have hc := Polynomial.natDegree_mul_le
+      (p := (↑((m 3 + a).choose a) : (Polynomial Geom))) (q := P.coeff (m + Finsupp.single 3 a))
+    rw [Polynomial.natDegree_natCast, zero_add] at hc
+    exact (Nat.add_le_add_right hc _).trans ((Nat.add_le_add_left (Nat.le_add_right _ _) _).trans hp)
+private theorem topHasse_one_not_dvd (f : Row 4) (hf : Irreducible f)
+    (hpos : 0 < f.degreeOf 3) (hsmall : f.degreeOf 3 < K1.p) : ¬ f ∣ topHasse 1 f := by
+  classical
+  have hdeg : (topHasse 1 f).degreeOf 3 ≤ f.degreeOf 3 - 1 := by
+    apply MvPolynomial.degreeOf_le_iff.mpr
+    intro m hm
+    have h := MvPolynomial.le_degreeOf_of_mem_support 3 (source_support hm)
+    rw [apply_add_top] at h
+    omega
+  have hnz : topHasse 1 f ≠ 0 := by
+    have hsup : 0 < f.support.sup (fun m => m (3 : Fin 4)) := by
+      rwa [← MvPolynomial.degreeOf_eq_sup]
+    obtain ⟨u, hu, htop⟩ := (Finset.le_sup_iff hsup).mp (le_refl _)
+    rw [← MvPolynomial.degreeOf_eq_sup] at htop
+    have hupos : 0 < u 3 := hpos.trans_le htop
+    have hult : u 3 < K1.p := (MvPolynomial.le_degreeOf_of_mem_support 3 hu).trans_lt hsmall
+    let m := u.erase 3 + Finsupp.single 3 (u 3 - 1)
+    have hsum : m + Finsupp.single 3 1 = u := by
+      dsimp [m]
+      rw [add_assoc, ← Finsupp.single_add, Nat.sub_add_cancel hupos, erase_top_add]
+    have hm : m 3 + 1 = u 3 := by
+      rw [← apply_add_top, hsum]
+    have hc : (↑(u 3) : (Polynomial Geom)) ≠ 0 := by
+      have : CharP Geom K1.p :=
+        charP_of_injective_ringHom (RingHom.injective embed) K1.p
+      intro hz
+      have hz' : (↑(u 3) : Geom) = 0 := by
+        simpa only [map_natCast, map_zero] using congrArg (Polynomial.evalRingHom (0 : Geom)) hz
+      exact (not_le_of_gt hult)
+        (Nat.le_of_dvd hupos ((CharP.cast_eq_zero_iff Geom K1.p _).mp hz'))
+    have hcoeff : (topHasse 1 f).coeff m ≠ 0 := by
+      rw [topHasse_coeff, hm, hsum, Nat.choose_one_right]
+      exact mul_ne_zero hc (MvPolynomial.mem_support_iff.mp hu)
+    intro hz
+    exact hcoeff (by rw [hz]; rfl)
+  rintro ⟨g, hg⟩
+  have hg0 : g ≠ 0 := by
+    intro h
+    exact hnz (by rw [hg, h, mul_zero])
+  have h := MvPolynomial.degreeOf_mul_eq (n := (3 : Fin 4)) hf.ne_zero hg0
+  rw [hg, h] at hdeg
+  omega
+theorem proof : Low6960OrderProof.c2 := by
+  intro f P Γ s d a hirr hpos htop hb hw ha hord _ hdiv hexact
+  obtain ⟨hbox, hweight⟩ := topHasse_bounds primaryBox primaryCutoff a P hb hw
+  have hp : Prime f := UniqueFactorizationMonoid.irreducible_iff_prime.mp hirr
+  have hproper : ¬ f ∣ topHasse a P :=
+    exact_hasse_not_dvd translateTop topHasse_zero f P a hp
+      (topHasse_one_not_dvd f hirr hpos htop) hdiv hexact
+  have hactive : Final50Price.ActiveFits (topHasse a P) 5164 := by
+    intro m hm
+    have hh := ha _ (source_support hm)
+    simp [Finsupp.add_apply] at hh
+    omega
+  exact ⟨topHasse a P, hproper, hbox, hweight, hactive, fun γ hγ =>
+    topHasse_order a d P (extend (s γ)) (hord γ hγ)⟩
+end
+end Low6960OrderProof_2
+end
+section
+namespace Low6960OrderProof_3
+noncomputable section
+open Polynomial
+open P3 (I K node)
+open Low6960Order (TrueWeightLE physicalDegree primaryCutoff)
+open Low6960OrderProof (BankRow)
+open K1_13 (Geom embed Row InBox shape indexDegree Contact atJet)
+open K1_13_3 (Symbol symbolAt)
+open P0_9_3 (jetEval jetEval_apply dvd_smul_poly coefficientArray symbolLinear linearFactor linearFactor_ne linearFactor_degree divide_specialization support_linear_mul)
+open scoped BigOperators
+set_option maxRecDepth 1024
+set_option maxHeartbeats 650000
+set_option backward.isDefEq.respectTransparency false
+private abbrev Exponent := Fin 4 →₀ ℕ
+private def jetWeight (m : Exponent) : ℕ :=
+  m.sum (fun i a => (physicalDegree - i.val) * a)
+private theorem bankRow_iff {w : I → K} {T : ℕ} {P : Row 4} :
+    BankRow w T P ↔
+      (∀ m ∈ P.support, m.sum (fun _ a => a) ≤ 4012 ∧
+        m.sum (fun i a => i.val * a) ≤ 1650 ∧ m 3 ≤ 550 ∧
+        (P.coeff m).natDegree + jetWeight m ≤ T ∧ m ∈ TaperColumns.jetExponents) ∧ Contact w P := by
+  simp only [BankRow, InBox, shape, indexDegree, MvPolynomial.totalDegree,
+    MvPolynomial.degreeOf_le_iff, Finset.sup_le_iff, TrueWeightLE, PrimaryTaper.JetsBounded]
+  constructor
+  · rintro ⟨⟨hb, hj, ht⟩, hT, hs, hc⟩
+    exact ⟨fun m hm => ⟨hb m hm, hj m hm, ht m hm, hT m hm, hs m hm⟩, hc⟩
+  · rintro ⟨h, hc⟩
+    exact ⟨⟨fun m hm => (h m hm).1, fun m hm => (h m hm).2.1, fun m hm => (h m hm).2.2.1⟩,
+      fun m hm => (h m hm).2.2.2.1, fun m hm => (h m hm).2.2.2.2, hc⟩
+private def bank (w : I → K) (T : ℕ) : Submodule Geom (Row 4) where
+  carrier := {P | BankRow w T P}
+  zero_mem' := by
+    apply bankRow_iff.mpr
+    simp [Contact, atJet]
+  add_mem' {P Q} hP hQ := by
+    obtain ⟨hP, hp⟩ := bankRow_iff.mp hP
+    obtain ⟨hQ, hq⟩ := bankRow_iff.mp hQ
+    apply bankRow_iff.mpr
+    constructor
+    · intro m hm
+      have hor := Finset.mem_union.mp (MvPolynomial.support_add hm)
+      have bounds :
+          m.sum (fun _ a => a) ≤ 4012 ∧ m.sum (fun i a => i.val * a) ≤ 1650 ∧
+            m 3 ≤ 550 ∧ jetWeight m ≤ T ∧ m ∈ TaperColumns.jetExponents := by
+        rcases hor with h | h
+        · obtain ⟨hb, hj, ht, hw, hjets⟩ := hP m h
+          exact ⟨hb, hj, ht, by omega, hjets⟩
+        · obtain ⟨hb, hj, ht, hw, hjets⟩ := hQ m h
+          exact ⟨hb, hj, ht, by omega, hjets⟩
+      obtain ⟨hb, hj, ht, hw, hjets⟩ := bounds
+      refine ⟨hb, hj, ht, ?_, hjets⟩
+      have hsum : ((P + Q).coeff m).natDegree ≤
+          max (P.coeff m).natDegree (Q.coeff m).natDegree := by
+        change ((P.coeff m) + (Q.coeff m)).natDegree ≤ _
+        exact natDegree_add_le _ _
+      have hdegree (R : Row 4) (hR : m ∈ R.support → (R.coeff m).natDegree + jetWeight m ≤ T) :
+          (R.coeff m).natDegree ≤ T - jetWeight m := by
+        by_cases h : m ∈ R.support
+        · have := hR h
+          omega
+        · have hz : R.coeff m = 0 := by
+            by_contra hnz
+            exact h (MvPolynomial.mem_support_iff.mpr hnz)
+          rw [hz, natDegree_zero]
+          exact Nat.zero_le _
+      have hp' := hdegree P (fun h => (hP m h).2.2.2.1)
+      have hq' := hdegree Q (fun h => (hQ m h).2.2.2.1)
+      have := hsum.trans (max_le hp' hq')
+      omega
+    · intro i S hS
+      rw [← jetEval_apply, map_add, jetEval_apply, jetEval_apply]
+      exact dvd_add (hp i S hS) (hq i S hS)
+  smul_mem' c P hP := by
+    obtain ⟨hP, hp⟩ := bankRow_iff.mp hP
+    apply bankRow_iff.mpr
+    constructor
+    · intro m hm
+      obtain ⟨hb, hj, ht, hw, hjets⟩ := hP m (MvPolynomial.support_smul hm)
+      refine ⟨hb, hj, ht, ?_, hjets⟩
+      rw [MvPolynomial.coeff_smul]
+      exact (Nat.add_le_add_right (natDegree_smul_le c (P.coeff m)) _).trans hw
+    · intro i S hS
+      have h : jetEval S (c • P) = c • jetEval S P := (jetEval S).map_smul c P
+      rw [jetEval_apply, jetEval_apply] at h
+      rw [h]
+      exact dvd_smul_poly _ _ c (hp i S hS)
+private instance finiteBank (w : I → K) (T : ℕ) : Module.Finite Geom (bank w T) := by
+  classical
+  let f : bank w T →ₗ[Geom] (((Fin 4 → Fin 4013) × Fin (T + 1)) → Geom) :=
+    (coefficientArray T).comp (bank w T).subtype
+  have hzero (Q : bank w T) (hQ : f Q = 0) : Q = 0 := by
+    obtain ⟨P, hP⟩ := Q
+    change BankRow w T P at hP
+    apply Subtype.ext
+    change P = 0
+    apply MvPolynomial.ext
+    intro m
+    change _ = 0
+    by_contra hnz
+    have hm := MvPolynomial.mem_support_iff.mpr hnz
+    have hT : (P.coeff m).natDegree ≤ T := (Nat.le_add_right _ _).trans (hP.2.1 m hm)
+    let u : Fin 4 → Fin 4013 := fun i => ⟨m i, Nat.lt_succ_of_le <|
+      (MvPolynomial.le_degreeOf_of_mem_support i hm).trans <|
+        (P.degreeOf_le_totalDegree i).trans hP.1.1⟩
+    apply hnz
+    ext k
+    rw [Polynomial.coeff_zero]
+    by_cases hk : k < T + 1
+    · have hval := congrFun hQ (u, ⟨k, hk⟩)
+      change (P.coeff (Finsupp.equivFunOnFinite.symm (fun i => (u i).val))).coeff k = 0 at hval
+      have heq : Finsupp.equivFunOnFinite.symm (fun i => (u i).val) = m :=
+        Finsupp.equivFunOnFinite.symm_apply_apply m
+      rwa [heq] at hval
+    · exact coeff_eq_zero_of_natDegree_lt (by omega)
+  apply Module.Finite.of_injective f
+  intro P Q h
+  apply sub_eq_zero.mp
+  have hz := f.map_sub P Q
+  rw [h, sub_self] at hz
+  exact hzero (P - Q) hz
+private def bankEval (w : I → K) (x : Geom) (T : ℕ) : bank w T →ₗ[Geom] Symbol :=
+  (symbolLinear x).comp (bank w T).subtype
+private theorem mul_cutoff_iff (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (node i))
+    (T : ℕ) (P : Row 4) :
+    BankRow w (T + 1) (MvPolynomial.C (linearFactor x) * P) ↔ BankRow w T P := by
+  rw [bankRow_iff, bankRow_iff, support_linear_mul]
+  apply and_congr
+  · refine forall_congr' fun m => forall_congr' fun hm => ?_
+    rw [MvPolynomial.coeff_C_mul, natDegree_mul (linearFactor_ne x)
+      (MvPolynomial.mem_support_iff.mp hm), linearFactor_degree]
+    constructor <;> rintro ⟨hb, hj, ht, hw, hJets⟩ <;>
+      exact ⟨hb, hj, ht, by omega, hJets⟩
+  · simp only [Contact, atJet, map_mul, MvPolynomial.eval_C]
+    apply forall_congr'
+    intro i
+    apply forall_congr'
+    intro S
+    apply forall_congr'
+    intro hS
+    generalize (3000 : ℕ) = m
+    have hc : IsCoprime (linearFactor (embed (node i))) (linearFactor x) :=
+      isCoprime_X_sub_C_of_isUnit_sub (sub_ne_zero.mpr (hx i).symm).isUnit
+    have hd : IsCoprime (linearFactor (embed (node i)) ^ m) (linearFactor x) := hc.pow_left
+    exact hd.dvd_mul_left_iff
+private theorem zero_cutoff_kernel (w : I → K) (x : Geom) :
+    LinearMap.ker (bankEval w x 0) = ⊥ := by
+  apply LinearMap.ker_eq_bot'.mpr
+  intro P hP
+  change symbolAt x P.val = 0 at hP
+  obtain ⟨Q, hQ⟩ := divide_specialization P.val x hP
+  have hp : TrueWeightLE P.val 0 := P.property.2.1
+  apply Subtype.ext
+  change P.val = 0
+  rw [← hQ]
+  suffices Q = 0 by simp [this]
+  apply MvPolynomial.ext
+  intro m
+  change _ = 0
+  by_contra hnz
+  have hm : m ∈ P.val.support := by
+    rw [← hQ, support_linear_mul]
+    exact MvPolynomial.mem_support_iff.mpr hnz
+  have h := hp m hm
+  rw [← hQ, MvPolynomial.coeff_C_mul, natDegree_mul (linearFactor_ne x) hnz,
+    linearFactor_degree] at h
+  omega
+private theorem kernel_finrank (w : I → K) (x : Geom) (hx : ∀ i : I, x ≠ embed (node i))
+    (T : ℕ) : Module.finrank Geom (LinearMap.ker (bankEval w x (T + 1))) =
+      Module.finrank Geom (bank w T) := by
+  let L : bank w T →ₗ[Geom] (LinearMap.ker (bankEval w x (T + 1))) :=
+    LinearMap.codRestrict _ (LinearMap.codRestrict (bank w (T + 1))
+      ((LinearMap.mulLeft Geom (MvPolynomial.C (linearFactor x))).comp (bank w T).subtype)
+      (fun P => (mul_cutoff_iff w x hx T P.val).mpr P.property)) (fun P => by
+        rw [LinearMap.mem_ker]
+        simp only [bankEval, LinearMap.comp_apply, Submodule.subtype_apply,
+          LinearMap.codRestrict_apply, LinearMap.mulLeft_apply]
+        change symbolAt x (MvPolynomial.C (linearFactor x) * P.val) = 0
+        have h0 : symbolAt x (MvPolynomial.C (linearFactor x)) = 0 := by
+          simp only [symbolAt, linearFactor, MvPolynomial.map_C, Polynomial.coe_evalRingHom,
+            Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C, sub_self, map_zero]
+        rw [RingHom.map_mul, h0, zero_mul])
+  have hL : Function.Bijective L := by
+    have hnz : (MvPolynomial.C (linearFactor x) : Row 4) ≠ 0 := by
+      simpa only [ne_eq, MvPolynomial.C_eq_zero] using linearFactor_ne x
+    constructor
+    · intro P Q h
+      apply Subtype.ext
+      have heq := congrArg (fun V : LinearMap.ker (bankEval w x (T + 1)) => V.val.val) h
+      change MvPolynomial.C (linearFactor x) * P.val = MvPolynomial.C (linearFactor x) * Q.val at heq
+      exact mul_left_cancel₀ hnz heq
+    · intro P
+      have h : symbolAt x P.val.val = 0 := LinearMap.mem_ker.mp P.property
+      obtain ⟨Q, hQ⟩ := divide_specialization P.val.val x h
+      have hmem : BankRow w (T + 1) (MvPolynomial.C (linearFactor x) * Q) := by
+        rw [hQ]
+        exact P.val.property
+      refine ⟨⟨Q, (mul_cutoff_iff w x hx T Q).mp hmem⟩, Subtype.ext (Subtype.ext hQ)⟩
+  exact (LinearEquiv.ofBijective L hL).finrank_eq.symm
+theorem proof : Low6960OrderProof.c3 := by
+  classical
+  intro w x hr hx
+  let r (T : ℕ) := Module.finrank Geom (LinearMap.range (bankEval w x T))
+  refine ⟨r, ?_, fun T _ => ?_⟩
+  · have heq (T : ℕ) : Module.finrank Geom (bank w T) =
+        ∑ V ∈ Finset.range (T + 1), r V := by
+      induction T with
+      | zero =>
+        have h := LinearMap.finrank_range_add_finrank_ker
+          (K := Geom) (V := bank w 0) (V₂ := Symbol) (bankEval w x 0)
+        rw [zero_cutoff_kernel, finrank_bot, Nat.add_zero] at h
+        simpa only [Nat.zero_add, Finset.sum_range_one] using h.symm
+      | succ T ih =>
+        have h := LinearMap.finrank_range_add_finrank_ker
+          (K := Geom) (V := bank w (T + 1)) (V₂ := Symbol) (bankEval w x (T + 1))
+        rw [kernel_finrank w x hx, ih, Nat.add_comm] at h
+        rw [Finset.sum_range_succ]
+        exact h.symm
+    obtain ⟨e, he, hmem⟩ := hr
+    have hi : LinearIndependent Geom (fun i => (⟨e i, hmem i⟩ : bank w primaryCutoff)) :=
+      LinearIndependent.of_comp (bank w primaryCutoff).subtype he
+    rw [← heq]
+    simpa only [Fintype.card_fin] using hi.fintype_card_le_finrank
+  · let b := Module.finBasis Geom (LinearMap.range (bankEval w x T))
+    choose e he using fun i : Fin (r T) => LinearMap.mem_range.mp (b i).property
+    refine ⟨fun i => (e i).val, fun i => (e i).property, ?_⟩
+    have h : LinearIndependent Geom (fun i => (b i).val) :=
+      b.linearIndependent.map' (LinearMap.range (bankEval w x T)).subtype
+        (LinearMap.ker_eq_bot.mpr Subtype.val_injective)
+    have heq : (fun i => symbolAt x (e i).val) = fun i => (b i).val := funext he
+    rwa [heq]
+end
+end Low6960OrderProof_3
+end
+namespace Low6960Order
+noncomputable section
+open K1_13 (Row shape)
+open P3 (K)
+open scoped Polynomial
+export Low6960OrderProof (BankRow requiredOrder)
+export Low6960OrderProof_1 (order_of_contact)
+theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2358) :
+    Messages M.word Γ F.scalar := by
+  refine ⟨F.distinct, ?_, ?_⟩
+  · intro γ hγ
+    obtain hz | hd := (F.mark γ hγ).scalar_degree
+    · simp [hz]
+    · change ((F.scalar γ).natDegree : ℤ) ≤ (131072 : ℤ) - 1 + M.overhead at hd
+      change (F.scalar γ).natDegree ≤ 133429
+      omega
+  · intro γ hγ
+    let m := F.mark γ hγ
+    exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
+theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
+    (hm : Messages w Γ s) (hr : PrimaryRank w)
+    (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
+    (htop : ∀ i, (shape (f i)).t < K1.p)
+    (hdiff : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)) :
+    ∃ l : Fin n → ℕ, LayerBudget (fun i => shape (f i)) l ∧
+      ∀ i, 0 < l i → ProperCut (f i) Γ s (l i) :=
+  Low6960OrderProof.of_children Low6960OrderProof_1.proof
+    Low6960OrderProof_2.proof Low6960OrderProof_3.proof
+    hm hr hirr hpos htop hdiff
+theorem primary_rank (w : P3.I → K) : PrimaryRank w :=
+  Wide50EulerPrimary.primary_family agreement physicalDegree (by decide) (by decide)
+    (by decide) w (n := sourceRank) le_rfl
+theorem symbol_families : Low6960OrderProof.c3 := Low6960OrderProof_3.proof
+theorem proper_layers {w Γ s n} {f : Fin n → Row 4}
+    (hm : Messages w Γ s)
+    (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
+    (htop : ∀ i, (shape (f i)).t < K1.p)
+    (hdiff : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)) :
+    ∃ l : Fin n → ℕ, LayerBudget (fun i => shape (f i)) l ∧
+      ∀ i, 0 < l i → ProperCut (f i) Γ s (l i) :=
+  proper_layers_of_rank hm (primary_rank w) hirr hpos htop hdiff
+end
+end Low6960Order
+
+end Merged_R6960Low6960Order
+
+end Merged_R6960Low6960Order
+
+-- merged module R6960Low6960Retained
+section Merged_R6960Low6960Retained
 
 -- merged module Final50PriceLayer
 section Merged_Final50PriceLayer
@@ -112,141 +1083,146 @@ open P3_6_8_1 (sumBelow term mass_eq extend)
 
 
 def Box (a : Shape) : Prop :=
-  a.b ≤ 27 ∧ a.j ≤ 8 ∧ (4 ≤ a.j → a.b ≤ 25) ∧ (5 ≤ a.j → a.b ≤ 22) ∧
-  (6 ≤ a.j → a.b ≤ 19) ∧ (7 ≤ a.j → a.b ≤ 14) ∧ (8 ≤ a.j → a.b ≤ 6)
+  a.b ≤ 26 ∧ a.j ≤ 8 ∧ (4 ≤ a.j → a.b ≤ 24) ∧ (5 ≤ a.j → a.b ≤ 21) ∧
+  (6 ≤ a.j → a.b ≤ 17) ∧ (7 ≤ a.j → a.b ≤ 12) ∧ (8 ≤ a.j → a.b ≤ 4)
 def combined {n : ℕ} (a : Fin n → Shape) (z : Finset (Fin n)) := P3_6_8.shapeSum a z
 
 local notation "row!" h "," len "," nxt "," v "," z =>
   P3_6_8_1.extend (n := len) (N := nxt) (y := v) (total := z) h rfl rfl rfl
 
-private theorem reject3 : zeroMass 28 3 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 28) (j := 3) (m := 143) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 28 3) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4487333727686,4487333727686
-  have r2 := row! r1,12,24,3762659771402,8249993499088
-  have r3 := row! r2,12,36,3108192642446,11358186141534
-  have r4 := row! r3,12,48,2519763922706,13877950064240
-  have r5 := row! r4,12,60,1993324446806,15871274511046
-  have r6 := row! r5,12,72,1524944302106,17396218813152
-  have r7 := row! r6,12,84,1110812828702,18507031641854
-  have r8 := row! r7,12,96,747238668280,19254270310134
-  have r9 := row! r8,12,108,431539940145,19685810250279
-  have r10 := row! r9,12,120,176240195865,19862050446144
-  have r11 := row! r10,12,132,30699448338,19892749894482
-  have r12 := row! r11,11,143,773590642,19893523485124
-  rw [r12]
-  decide
-
-private theorem reject4 : zeroMass 26 4 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 26) (j := 4) (m := 154) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 26 4) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4457924221828,4457924221828
-  have r2 := row! r1,12,24,3694139357412,8152063579240
-  have r3 := row! r2,12,36,3020291191620,11172354770860
-  have r4 := row! r3,12,48,2429554428580,13601909199440
-  have r5 := row! r4,12,60,1915360345860,15517269545300
-  have r6 := row! r5,12,72,1471396794468,16988666339768
-  have r7 := row! r6,12,84,1091608198852,18080274538620
-  have r8 := row! r7,12,96,770195556900,18850470095520
-  have r9 := row! r8,12,108,501616440976,19352086536496
-  have r10 := row! r9,12,120,280971568492,19633058104988
-  have r11 := row! r10,12,132,111555751260,19744613856248
-  have r12 := row! r11,12,144,18384312204,19762998168452
-  have r13 := row! r12,10,154,359753742,19763357922194
+private theorem reject3 : zeroMass 27 3 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 27) (j := 3) (m := 148) (by decide) (Or.inl (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 27 3) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4496691934585,4496691934585
+  have r2 := row! r1,12,24,3787735676545,8284427611130
+  have r3 := row! r2,12,36,3146856001777,11431283612907
+  have r4 := row! r3,12,48,2570029638985,14001313251892
+  have r5 := row! r4,12,60,2053348090633,16054661342525
+  have r6 := row! r5,12,72,1593017632945,17647678975470
+  have r7 := row! r6,12,84,1185359315905,18833038291375
+  have r8 := row! r7,12,96,826808963257,19659847254632
+  have r9 := row! r8,12,108,514063060931,20173910315563
+  have r10 := row! r9,12,120,250519872085,20424430187648
+  have r11 := row! r10,12,132,68168387085,20492598574733
+  have r12 := row! r11,12,144,4897672803,20497496247536
+  have r13 := row! r12,4,148,5416761,20497501664297
   rw [r13]
   decide
 
-private theorem reject5 : zeroMass 23 5 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 23) (j := 5) (m := 174) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 23 5) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4437425025303,4437425025303
-  have r2 := row! r1,12,24,3647721777551,8085146802854
-  have r3 := row! r2,12,36,2963031374519,11048178177373
-  have r4 := row! r3,12,48,2373948326607,13422126503980
-  have r5 := row! r4,12,60,1871496552215,15293623056195
-  have r6 := row! r5,12,72,1447129377743,16740752433938
-  have r7 := row! r6,12,84,1092729537591,17833481971529
-  have r8 := row! r7,12,96,800609174159,18634091145688
-  have r9 := row! r8,12,108,563509837847,19197600983535
-  have r10 := row! r9,12,120,374602487055,19572203470590
-  have r11 := row! r10,12,132,227487489219,19799690959809
-  have r12 := row! r11,12,144,116378050133,19916069009942
-  have r13 := row! r12,12,156,39557489286,19955626499228
-  have r14 := row! r13,12,168,4378437247,19960004936475
-  have r15 := row! r14,6,174,18369367,19960023305842
-  rw [r15]
+private theorem reject4 : zeroMass 25 4 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 25) (j := 4) (m := 160) (by decide) (Or.inl (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 25 4) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4467140139628,4467140139628
+  have r2 := row! r1,12,24,3718326140156,8185466279784
+  have r3 := row! r2,12,36,3056708133004,11242174412788
+  have r4 := row! r3,12,48,2475713442076,13717887854864
+  have r5 := row! r4,12,60,1969015347884,15686903202748
+  have r6 := row! r5,12,72,1530533087548,17217436290296
+  have r7 := row! r6,12,84,1154431854796,18371868145092
+  have r8 := row! r7,12,96,835122799964,19206990945056
+  have r9 := row! r8,12,108,567263029996,19774253975052
+  have r10 := row! r9,12,120,345783007790,20120036982842
+  have r11 := row! r10,12,132,168356316089,20288393298931
+  have r12 := row! r11,12,144,47413035334,20335806334265
+  have r13 := row! r12,12,156,3484477592,20339290811857
+  have r14 := row! r13,4,160,3496480,20339294308337
+  rw [r14]
   decide
 
-private theorem reject6 : zeroMass 20 6 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 20) (j := 6) (m := 200) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 20 6) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4416491788049,4416491788049
-  have r2 := row! r1,12,24,3598518638333,8015010426382
-  have r3 := row! r2,12,36,2898523609481,10913534035863
-  have r4 := row! r3,12,48,2304691473845,13218225509708
-  have r5 := row! r4,12,60,1805825102465,15024050612173
-  have r6 := row! r5,12,72,1391345465069,16415396077242
-  have r7 := row! r6,12,84,1051291630073,17466687707315
-  have r8 := row! r7,12,96,776320764581,18243008471896
-  have r9 := row! r8,12,108,557708134385,18800716606281
-  have r10 := row! r9,12,120,387347103965,19188063710246
-  have r11 := row! r10,12,132,257749136489,19445812846735
-  have r12 := row! r11,12,144,162043793813,19607856640548
-  have r13 := row! r12,12,156,93978736481,19701835377029
-  have r14 := row! r13,12,168,47919723725,19749755100754
-  have r15 := row! r14,12,180,18887896997,19768642997751
-  have r16 := row! r15,12,192,3562975968,19772205973719
-  have r17 := row! r16,8,200,49565740,19772255539459
-  rw [r17]
+private theorem reject5 : zeroMass 22 5 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 22) (j := 5) (m := 182) (by decide) (Or.inl (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 22 5) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4446500290178,4446500290178
+  have r2 := row! r1,12,24,3671041428870,8117541719048
+  have r3 := row! r2,12,36,2997291875042,11114833594090
+  have r4 := row! r3,12,48,2416232390294,13531065984384
+  have r5 := row! r4,12,60,1919252408226,15450318392610
+  have r6 := row! r5,12,72,1498150034438,16948468427048
+  have r7 := row! r6,12,84,1145132046530,18093600473578
+  have r8 := row! r7,12,96,852813894102,18946414367680
+  have r9 := row! r8,12,108,614219698754,19560634066434
+  have r10 := row! r9,12,120,422782254086,19983416320520
+  have r11 := row! r10,12,132,272343025698,20255759346218
+  have r12 := row! r11,12,144,157154045616,20412913391834
+  have r13 := row! r12,12,156,72455558497,20485368950331
+  have r14 := row! r13,12,168,18878847395,20504247797726
+  have r15 := row! r14,12,180,1036779119,20505284576845
+  have r16 := row! r15,2,182,46871,20505284623716
+  rw [r16]
   decide
 
-private theorem reject7 : zeroMass 15 7 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 15) (j := 7) (m := 235) (by decide) (Or.inr (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 15 7) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4412735849268,4412735849268
-  have r2 := row! r1,12,24,3590013950096,8002749799364
-  have r3 := row! r2,12,36,2887936043876,10890685843240
-  have r4 := row! r3,12,48,2294106149808,13184791993048
-  have r5 := row! r4,12,60,1796799228020,14981591221068
-  have r6 := row! r5,12,72,1384961179568,16366552400636
-  have r7 := row! r6,12,84,1048208846436,17414761247072
-  have r8 := row! r7,12,96,776830011536,18191591258608
-  have r9 := row! r8,12,108,561783398708,18753374657316
-  have r10 := row! r9,12,120,394698672720,19148073330036
-  have r11 := row! r10,12,132,267876439268,19415949769304
-  have r12 := row! r11,12,144,174288244976,19590238014280
-  have r13 := row! r12,12,156,107576577396,19697814591676
-  have r14 := row! r13,12,168,62054865008,19759869456684
-  have r15 := row! r14,12,180,32707477220,19792576933904
-  have r16 := row! r15,12,192,15189724368,19807766658272
-  have r17 := row! r16,12,204,5827857716,19813594515988
-  have r18 := row! r17,12,216,1619069456,19815213585444
-  have r19 := row! r18,12,228,231492708,19815445078152
-  have r20 := row! r19,7,235,4535960,19815449614112
+private theorem reject6 : zeroMass 18 6 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 18) (j := 6) (m := 222) (by decide) (Or.inl (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 18 6) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4434364264099,4434364264099
+  have r2 := row! r1,12,24,3643467092743,8077831356842
+  have r3 := row! r2,12,36,2962907954635,11040739311477
+  have r4 := row! r3,12,48,2381959640047,13422698951524
+  have r5 := row! r4,12,60,1890441374323,15313140325847
+  have r6 := row! r5,12,72,1478718817879,16791859143726
+  have r7 := row! r6,12,84,1137704066203,17929563209929
+  have r8 := row! r7,12,96,858855649855,18788418859784
+  have r9 := row! r8,12,108,634178534467,19422597394251
+  have r10 := row! r9,12,120,456224120743,19878821514994
+  have r11 := row! r10,12,132,318090244459,20196911759453
+  have r12 := row! r11,12,144,213421176463,20410332935916
+  have r13 := row! r12,12,156,136407622675,20546740558591
+  have r14 := row! r13,12,168,81786724087,20628527282678
+  have r15 := row! r14,12,180,44842056763,20673369339441
+  have r16 := row! r15,12,192,21403631839,20694772971280
+  have r17 := row! r16,12,204,7850275839,20702623247119
+  have r18 := row! r17,12,216,1352786874,20703976033993
+  have r19 := row! r18,6,222,10163916,20703986197909
+  rw [r19]
+  decide
+
+private theorem reject7 : zeroMass 13 7 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 13) (j := 7) (m := 235) (by decide) (Or.inr (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 13 7) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4430333503446,4430333503446
+  have r2 := row! r1,12,24,3633314403210,8063647906656
+  have r3 := row! r2,12,36,2948356230022,11012004136678
+  have r4 := row! r3,12,48,2364510724938,13376514861616
+  have r5 := row! r4,12,60,1871386770774,15247901632390
+  have r6 := row! r5,12,72,1459150392106,16707052024496
+  have r7 := row! r6,12,84,1118524755270,17825576779766
+  have r8 := row! r7,12,96,840790168362,18666366948128
+  have r9 := row! r8,12,108,617784081238,19284151029366
+  have r10 := row! r9,12,120,441901085514,19726052114880
+  have r11 := row! r10,12,132,306092914566,20032145029446
+  have r12 := row! r11,12,144,203868443530,20236013472976
+  have r13 := row! r12,12,156,129293689302,20365307162278
+  have r14 := row! r13,12,168,76991810538,20442298972816
+  have r15 := row! r14,12,180,42143107654,20484442080470
+  have r16 := row! r15,12,192,20485022826,20504927103296
+  have r17 := row! r16,12,204,8312139990,20513239243286
+  have r18 := row! r17,12,216,2476184842,20515715428128
+  have r19 := row! r18,12,228,386024838,20516101452966
+  have r20 := row! r19,7,235,8374990,20516109827956
   rw [r20]
   decide
 
-private theorem reject8 : zeroMass 7 8 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 7) (j := 8) (m := 206) (by decide) (Or.inr (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 7 8) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4434018990758,4434018990758
-  have r2 := row! r1,12,24,3638417588822,8072436579580
-  have r3 := row! r2,12,36,2948917116678,11021353696258
-  have r4 := row! r3,12,48,2356675780790,13378029477048
-  have r5 := row! r4,12,60,1853134903142,15231164380190
-  have r6 := row! r5,12,72,1430018921238,16661183301428
-  have r7 := row! r6,12,84,1079335388102,17740518689530
-  have r8 := row! r7,12,96,793374972278,18533893661808
-  have r9 := row! r8,12,108,564711457830,19098605119638
-  have r10 := row! r9,12,120,386201744342,19484806863980
-  have r11 := row! r10,12,132,250985846918,19735792710898
-  have r12 := row! r11,12,144,152486896182,19888279607080
-  have r13 := row! r12,12,156,84411138278,19972690745358
-  have r14 := row! r13,12,168,40747934870,20013438680228
-  have r15 := row! r14,12,180,15769763142,20029208443370
-  have r16 := row! r15,12,192,4032215798,20033240659168
-  have r17 := row! r16,12,204,374001062,20033614660230
-  have r18 := row! r17,2,206,182693,20033614842923
+private theorem reject8 : zeroMass 5 8 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b := 5) (j := 8) (m := 206) (by decide) (Or.inr (by decide))]
+  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 5 8) 0 = 0 := rfl
+  have r1 := row! r0,12,12,4451345034738,4451345034738
+  have r2 := row! r1,12,24,3680112320386,8131457355124
+  have r3 := row! r2,12,36,3005541912594,11136999267718
+  have r4 := row! r3,12,48,2420639567778,13557638835496
+  have r5 := row! r4,12,60,1918524288562,15476163124058
+  have r6 := row! r5,12,72,1492428323778,16968591447836
+  have r7 := row! r6,12,84,1135697168466,18104288616302
+  have r8 := row! r7,12,96,841789563874,18946078180176
+  have r9 := row! r8,12,108,604277497458,19550355677634
+  have r10 := row! r9,12,120,416846202882,19967201880516
+  have r11 := row! r10,12,132,273294160018,20240496040534
+  have r12 := row! r11,12,144,167533094946,20408029135480
+  have r13 := row! r12,12,156,93587979954,20501617115434
+  have r14 := row! r13,12,168,45597033538,20547214148972
+  have r15 := row! r14,12,180,17811720402,20565025869374
+  have r16 := row! r15,12,192,4596751458,20569622620832
+  have r17 := row! r16,12,204,430083826,20570052704658
+  have r18 := row! r17,2,206,211811,20570052916469
   rw [r18]
   decide
 
@@ -335,5 +1311,7 @@ theorem no_cut_shape {n : ℕ} (a : Fin n → Shape) (l : Fin n → ℕ)
 
 #print axioms no_cut_shape
 end Low6960Retained
+
+end Merged_R6960Low6960Retained
 
 end Merged_R6960Low6960Retained

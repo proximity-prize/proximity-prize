@@ -7,6 +7,8 @@ import Mathlib.FieldTheory.Galois.Basic
 import ProximityPrize.SubmissionLower.R6960CollisionTameBranch
 import Mathlib.RingTheory.Valuation.LocalSubring
 
+set_option Elab.async false
+
 -- merged module R6960SheetDeterminant
 section Merged_R6960SheetDeterminant
 noncomputable section

@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960Low6960RetainedCount
-import ProximityPrize.SubmissionLower.R6960Low6960Order
+import ProximityPrize.SubmissionLower.R6960Low6960Retained
+
+set_option Elab.async false
 
 -- merged module R6960Low6960RetainedPhysicalBank
 section Merged_R6960Low6960RetainedPhysicalBank

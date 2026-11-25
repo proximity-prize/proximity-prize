@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.PortLowBase
 
+set_option Elab.async false
+
 -- merged module Primary82170
 section Merged_Primary82170
 

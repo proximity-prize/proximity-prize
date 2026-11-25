@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.R6960RetainedGlobalEvaluation
 import ProximityPrize.SubmissionLower.R6960RetainedTwoLineBound
+
+set_option Elab.async false
 set_option synthInstance.maxHeartbeats 200000
 noncomputable section
 set_option Elab.async false

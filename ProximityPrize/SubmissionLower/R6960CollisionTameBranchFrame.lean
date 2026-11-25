@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.R6960CollisionTamePlaneDiscriminant
 import Mathlib.RingTheory.Localization.Integral
 import ProximityPrize.SubmissionLower.R6960CollisionTameBranch
 
+set_option Elab.async false
+
 -- merged module R6960CollisionTameDiscriminantLocalization
 section Merged_R6960CollisionTameDiscriminantLocalization
 

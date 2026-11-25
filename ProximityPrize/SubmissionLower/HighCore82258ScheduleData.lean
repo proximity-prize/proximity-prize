@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.R6960HelperSourceArithmetic
 import ProximityPrize.SubmissionLower.HighCore82258PrefixHelpers
 import ProximityPrize.SubmissionLower.GoldBranch7N3
 
+set_option Elab.async false
+
 -- merged module HighCore82268JointRankBase
 section Merged_HighCore82268JointRankBase
 

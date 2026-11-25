@@ -1,9 +1,10 @@
-import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisGeneric
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedCommonAxis
 import ProximityPrize.SubmissionLower.R6960ChartIntegrality
 import Mathlib.Algebra.Polynomial.Reverse
 import Mathlib.Algebra.Squarefree.Basic
-import ProximityPrize.SubmissionLower.R6960CollisionMarkedCommonAxis
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisField
+
+set_option Elab.async false
 
 -- merged module R6960CollisionMarkedInfinitySeeds
 section Merged_R6960CollisionMarkedInfinitySeeds

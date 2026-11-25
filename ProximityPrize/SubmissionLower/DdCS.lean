@@ -474,18 +474,6 @@ def c8:Prop :=
     ∃ G:yJ (Polynomial K),G≠0∧G.natDegree≤H s*(H s-1) ∧
       ∀ f :(Polynomial K),f.degree<k→ oZ Q₁ f=0 →
         ¬ ae8 Q₁ f→G.eval f=0
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end i4
 end
@@ -2169,170 +2157,6 @@ namespace anj
 noncomputable section
 open aR MvPolynomial
 open scoped Polynomial BigOperators
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end anj
 end
@@ -2341,31 +2165,6 @@ namespace anj
 noncomputable section
 open DdK1 aR
 open scoped Polynomial BigOperators
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end anj
 end
@@ -2373,29 +2172,6 @@ section
 namespace anj
 open Polynomial
 open scoped Polynomial BigOperators
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end anj
 end
 section
@@ -2404,57 +2180,6 @@ noncomputable section
 open aR Polynomial
 open scoped BigOperators
 set_option maxRecDepth 4000
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end anj
 end
@@ -2483,40 +2208,6 @@ theorem bdm (Q:af 3) (T U:(Polynomial ao)) (c:ao) :
    simp only [coe_evalRingHom,eval_mul,eval_C,eval_X,jet,qG]
    rw [(vZ i.val).map_smul,Algebra.smul_def,algebraMap_eq,p9]
  rw [heq]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 private theorem b2g (L:(Polynomial ao)) (x :ao) (hx :L.eval x≠0)
    (v :Fin 3→ao) :
    ∃ V:(Polynomial ao),V.natDegree≤2 ∧ ∀ i:Fin 3,(jet (L*V) i).eval x=v i:= by
@@ -2616,19 +2307,6 @@ theorem bfX (P:af 3) (S L:(Polynomial ao)) (hL:L≠0) (d:ℕ)
     intro x hx
     exact hz x hx
   exact MvPolynomial.mem_support_iff.mp hm hzero
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end anj
 end
@@ -2637,52 +2315,6 @@ namespace anj
 noncomputable section
 open DdK1 aR
 open scoped Polynomial BigOperators
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end
 end anj
 end

@@ -12,6 +12,8 @@ import ArkLib.Data.Polynomial.ResultantDegree
 import Mathlib.Data.Int.Star
 import ProximityPrize.SubmissionLower.Fast006
 
+set_option Elab.async false
+
 -- merged module Fast008
 section Merged_Fast008
 set_option Elab.async false

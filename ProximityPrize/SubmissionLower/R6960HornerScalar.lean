@@ -3,6 +3,8 @@ import Mathlib.Algebra.Polynomial.Div
 import Mathlib.RingTheory.Valuation.LocalSubring
 import ProximityPrize.SubmissionLower.R6960MonicChartInfinityRing
 
+set_option Elab.async false
+
 -- merged module R6960HornerIntegral
 section Merged_R6960HornerIntegral
 set_option Elab.async false

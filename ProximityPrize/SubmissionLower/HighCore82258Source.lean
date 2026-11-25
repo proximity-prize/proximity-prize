@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.FrontCore82258Model
 import ProximityPrize.SubmissionLower.UpperBranch1
 
+set_option Elab.async false
+
 -- merged module GoldBranch7N1
 section Merged_GoldBranch7N1
 set_option Elab.async false

@@ -1,6 +1,7 @@
-import ProximityPrize.SubmissionLower.R6960Low6960Monotone
+import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
 import ProximityPrize.SubmissionLower.KoalaRetainedCut
-import ProximityPrize.SubmissionLower.R6960Low6960Inventory
+
+set_option Elab.async false
 set_option autoImplicit false
 set_option Elab.async false
 namespace Low6960RetainedCut

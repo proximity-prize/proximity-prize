@@ -4,6 +4,8 @@ import ProximityPrize.SubmissionLower.R6960ThirdPole
 import ProximityPrize.SubmissionLower.R6960QuadraticProjection
 import Mathlib.RingTheory.Localization.Integer
 
+set_option Elab.async false
+
 -- merged module R6960TerminalMarked
 section Merged_R6960TerminalMarked
 noncomputable section
@@ -16,9 +18,9 @@ open K1_14_1 (PoleData CRTLift nodeL MarkResidues)
 open KoalaRect (axisDegree axisDegree_le_iff)
 open RescueGeometry (Model Family)
 open scoped Polynomial Classical
-private def determinant (f : Equation) : Seeds :=
+def determinant (f : Equation) : Seeds :=
   f.resultant f.derivative f.natDegree (f.natDegree-1)
-private theorem det_axis (f : Equation) (i : Fin 2) :
+theorem det_axis (f : Equation) (i : Fin 2) :
     (determinant f).degreeOf i≤(2*f.natDegree-1)*axisDegree f i := by
   have coeffs := (axisDegree_le_iff f i _).mp le_rfl
   have der (j : ℕ) : (f.derivative.coeff j).degreeOf i≤axisDegree f i := by
@@ -59,8 +61,8 @@ def simpleSheet (f : Equation) (label : K) (word : (Polynomial K)) : Prop :=
 def excCap : ℕ := 93*2400*K1.p
 def paidCap : ℕ := MainGeometry.prefixCap+TerminalSmall.smallCap+excCap
 theorem good_remainder {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    {D : PoleData M.overhead.toNat} (Crt : CRTLift D) (lo : 2402≤M.overhead.toNat)
-    (hi : M.overhead.toNat≤33619) (regular : ∀ j i,(D.block j).eval (nodeL i)≠0)
+    {D : PoleData M.overhead.toNat} (Crt : CRTLift D) (lo : 2359≤M.overhead.toNat)
+    (hi : M.overhead.toNat≤33579) (regular : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     Γ.card≤paidCap ∨ ∃ (T : Finset K) (f : Equation),T⊆Γ ∧ Γ.card≤paidCap+T.card ∧
       3≤f.natDegree ∧ f.natDegree<48 ∧ axisDegree f 0+axisDegree f 1≤2400 ∧
@@ -214,9 +216,10 @@ private theorem z_coeff (P : Ordinate) (i j : ℕ) :
     (Bivariate.swap (P.coeff i)).coeff j
   rw [CurvatureSquares.coeff_swap, coeff_map]
   rfl
-theorem integral_project (f : Equation) (nz : f≠0) (small : axisDegree f 0<p) :
+theorem integral_project_with_width (f : Equation) (nz : f≠0) (small : axisDegree f 0<p)
+    (width : ℕ) (coeffs : ∀ i,((project f).coeff i).natDegree≤width) :
     ∃ (d : (Polynomial L)) (P : Ordinate), d≠0 ∧ P≠0 ∧ P.natDegree=f.natDegree ∧
-      (zView P).natDegree≤axisDegree f 0+p*axisDegree f 1 ∧
+      (zView P).natDegree≤width ∧
       ∀ z : K, (specialize P (algebraMap K L z)).map incl = C (incl d)*f.map (graphEval z) := by
   obtain ⟨d,P,hd,eq⟩ := clear_abscissa (project f)
   have dn : incl d≠0 := (map_ne_zero_iff incl incl_inj).mpr hd
@@ -240,11 +243,16 @@ theorem integral_project (f : Equation) (nz : f≠0) (small : axisDegree f 0<p) 
     rw [z_coeff,coeff_zero]
     apply incl_inj
     rw [← coeff_into,eq,coeff_C_mul,coeff_C_mul,coeff_eq_zero_of_natDegree_lt
-      ((projected_coeff f i).trans_lt hj),mul_zero,map_zero]
+      ((coeffs i).trans_lt hj),mul_zero,map_zero]
   · intro z
     have label : incl (C (algebraMap K L z))=seedEmbedding z := rfl
     rw [← specialize_into, label, eq, Polynomial.map_mul, Polynomial.map_C, specialize_project]
     simp only [coe_evalRingHom, eval_C]
+theorem integral_project (f : Equation) (nz : f≠0) (small : axisDegree f 0<p) :
+    ∃ (d : (Polynomial L)) (P : Ordinate), d≠0 ∧ P≠0 ∧ P.natDegree=f.natDegree ∧
+      (zView P).natDegree≤axisDegree f 0+p*axisDegree f 1 ∧
+      ∀ z : K, (specialize P (algebraMap K L z)).map incl = C (incl d)*f.map (graphEval z) :=
+  integral_project_with_width f nz small _ (projected_coeff f)
 #print axioms integral_project
 end
 end Lower6960.RetainedCompression

@@ -2348,6 +2348,21 @@ private theorem sliced_natDegree (P : Seeds) (hP : P ≠ 0) :
     exact fun hz => MvPolynomial.mem_support_iff.mp he (by rw [← hc, hz, Polynomial.coeff_zero])
   rw [hcoeff]
   exact fun hz => hslope (slope_eval_injective (hz.trans (map_zero _).symm))
+/-- Substitution on the generic seed line, viewed as a polynomial in its free coordinate. -/
+def genericSeedLineMap : Seeds →+* SeedField[X] := substitute.toRingHom.comp liftCoeffs
+
+theorem genericSeedLine_degree (P : Seeds) (nz : P ≠ 0) :
+    (genericSeedLineMap P).natDegree=P.totalDegree := sliced_natDegree P nz
+
+@[simp] theorem genericSeedLine_C (x:FX) : genericSeedLineMap (MvPolynomial.C x)=C (algebraMap FX SeedField x) := by
+  simp [genericSeedLineMap,substitute,liftCoeffs]
+
+@[simp] theorem genericSeedLine_X0 : genericSeedLineMap (MvPolynomial.X 0)=C (generic 1)-C (generic 0)*Polynomial.X := by
+  simp [genericSeedLineMap,substitute,liftCoeffs,intercept]
+
+@[simp] theorem genericSeedLine_X1 : genericSeedLineMap (MvPolynomial.X 1)=Polynomial.X := by
+  simp [genericSeedLineMap,substitute,liftCoeffs]
+
 private def planeEquiv (P : Seeds) :
     PlaneSeedSection (Ideal.span {P}) ≃ₐ[SeedField] ((Polynomial SeedField) ⧸ Ideal.span {sliced P}) := by
   let J : Ideal (MvPolynomial (Fin 2) SeedField) :=

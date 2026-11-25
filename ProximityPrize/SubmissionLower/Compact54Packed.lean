@@ -4,6 +4,8 @@ import ProximityPrize.SubmissionLower.KoalaWeightedRate
 import ProximityPrize.SubmissionLower.Final50PriceCaps
 import ProximityPrize.SubmissionLower.Final50SurfaceLinearFour
 
+set_option Elab.async false
+
 -- merged module Final50PriceMonotone
 section Merged_Final50PriceMonotone
 set_option Elab.async false

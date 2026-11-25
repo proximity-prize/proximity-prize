@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.R6960RetainedCrossingComparison
 import ProximityPrize.SubmissionLower.R6960LineEulerFree
 
+set_option Elab.async false
+
 -- merged module R6960RetainedAxisCharts
 section Merged_R6960RetainedAxisCharts
 noncomputable section

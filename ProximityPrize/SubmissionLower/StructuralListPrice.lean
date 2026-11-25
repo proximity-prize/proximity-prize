@@ -1,5 +1,7 @@
 import ProximityPrize.SubmissionLower.RungSplit
 
+set_option Elab.async false
+
 -- merged module StructuralListDefs
 section Merged_StructuralListDefs
 set_option Elab.async false

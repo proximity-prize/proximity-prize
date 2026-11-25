@@ -2,8 +2,9 @@ import ProximityPrize.SubmissionLower.Final50ActiveCyclePrice
 import ProximityPrize.SubmissionLower.Final50ActiveCycleMixed
 import ProximityPrize.SubmissionLower.Shared50CycleBound
 import ProximityPrize.SubmissionLower.Shared50CycleFour
-import ProximityPrize.SubmissionLower.Shared50BentCaps
-import ProximityPrize.SubmissionLower.R6960Low6960Inventory
+import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
+
+set_option Elab.async false
 
 -- merged module Shared50CycleLegacy
 section Merged_Shared50CycleLegacy

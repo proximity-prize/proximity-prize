@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.R6960LineEulerFree
 import ProximityPrize.SubmissionLower.R6960HornerScalar
 
+set_option Elab.async false
+
 -- merged module R6960HornerDeterminant
 section Merged_R6960HornerDeterminant
 set_option Elab.async false

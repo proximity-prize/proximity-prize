@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.Low48BentCyclePrice
 import ProximityPrize.SubmissionLower.R6960Low6960ActiveCycleCaps
 import Mathlib.Algebra.MvPolynomial.Coeff
 
+set_option Elab.async false
+
 -- merged module Low49ActiveCount
 section Merged_Low49ActiveCount
 

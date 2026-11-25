@@ -1,0 +1,71 @@
+import ProximityPrize.SubmissionLower.High6966Main20142Books
+import ProximityPrize.SubmissionLower.High6966RescueCharge
+
+set_option Elab.async false
+section Merged_R6960MainGeometryInvoice
+
+noncomputable section
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 18000
+
+namespace Lower6960.High6966Main20142
+open Finset
+open K1 (p)
+open P1_7_4 (Mass dotQ weightedBill)
+open Rescue6966 (RateOK beforeCuts lambda mu tau)
+open Lower6960.Rescue6966 (heightBound height_spec)
+open scoped Classical BigOperators
+
+def degreeRates : List ℕ := [346029043, 346029043, 346029043, 346029043, 346029043, 346029043, 346029043, 173014522, 90465997, 173014522, 146945236, 51305480, 84174451, 115778956, 115778956, 162018735, 213267719]
+
+def heightRates : List ℕ := [998806, 998806, 998806, 998806, 998806, 998806, 998806, 2197371, 4394742, 2197371, 2619402, 7895398, 4737239, 3383742, 3383742, 2368620, 1751363]
+
+def degreeRate (i : ℕ) : ℕ := degreeRates.getD i 0
+
+def heightRate (i : ℕ) : ℕ := heightRates.getD i 0
+
+private theorem checked_rates (i : Fin 17) :
+    ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate i.val : ℚ) ∧
+      min seedLimit (dotQ (cutWeight 0 i.val) (history i.val)) ≤ (degreeRate i.val : ℚ) ∧
+      heightBound (degreeRate i.val) ≤ (heightRate i.val : ℚ) := by
+  fin_cases i <;> decide +kernel
+
+theorem rate_spec {i : ℕ} (hi : i<17) :
+    RateOK (degreeRate i) (heightRate i) ∧
+      min seedLimit (dotQ (cutWeight 0 i) (history i)) ≤ degreeRate i := by
+  obtain ⟨base,degree,height⟩ := checked_rates ⟨i,hi⟩
+  exact ⟨⟨base,Nat.cast_nonneg _,fun g hp hg=>(height_spec _ g hp hg).trans height⟩,degree⟩
+
+def rankB : ℕ := initialCap 2+2
+
+def rankJ : ℕ := initialCap 1+1
+
+def pivot : ℚ := min (47843/5) (tau*rankB)
+
+def rankWeight : Mass :=
+  ![0,4*lambda*rankB*tau+mu-4*lambda*pivot,4*lambda*rankJ*(1-tau)+rankB,0]
+
+def rankRound : ℚ := rankWeight 1+2*rankWeight 2+2*lambda*pivot^2+1
+
+def lossWeight (i : ℕ) : Mass :=
+  fun k=>(degreeRate i : ℚ)*cutWeight 0 i k+(heightRate i : ℚ)*cutWeight 1 i k
+
+def lossLimit : ℚ :=
+  weightedBill 18 (beforeCuts rankWeight lossWeight) (beforeCuts initialMass history)+seedLimit+rankRound
+
+def mainFee : ℕ := lossLimit.ceil.toNat+pointLimit.ceil.toNat+initialSeedLimit+initialCap 0+
+  fixedLimit+contentLimit
+
+theorem main_fee_bound : mainFee ≤ 240122305198674767 := by decide +kernel
+
+theorem credit_guard : (1828374077815:ℚ)≤P1_7_4.running (beforeCuts rankWeight lossWeight) 18 1 := by decide +kernel
+
+theorem rank_guard : rankB<p ∧ 0≤rankWeight 1 ∧ 0≤rankWeight 2 := by decide +kernel
+
+#print axioms main_fee_bound
+#print axioms rate_spec
+end Lower6960.High6966Main20142
+
+end
+end Merged_R6960MainGeometryInvoice

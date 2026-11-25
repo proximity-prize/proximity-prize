@@ -6,11 +6,14 @@ import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt4
 import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt5
 import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt6
 import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt7
-import ProximityPrize.SubmissionLower.R6960HelperSource6960
+import ProximityPrize.SubmissionLower.R6960PrefixReceipt
 import ProximityPrize.SubmissionLower.R6960ExceptionalStage
+
+set_option Elab.async false
 
 -- merged module R6960RescueSource6960
 section Merged_R6960RescueSource6960
+
 set_option Elab.async false
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 18000
@@ -46,14 +49,14 @@ theorem checked (rect : Fin 4) (i : Fin 17) :
   · exact group6_checked rect 0
   · exact group7_checked rect 0
 
-theorem cutoff_fit {h : ℕ} (lo : 2402≤h) (hi : h≤33619) (rect : Fin 4) (i : Fin 17) :
-    cutoff h rect i+2*h*(reserve i)<(bank rect i).shape.m*179798 :=
+theorem cutoff_fit {h : ℕ} (lo : 2359≤h) (hi : h≤33579) (rect : Fin 4) (i : Fin 17) :
+    cutoff h rect i+2*h*(reserve i)<(bank rect i).shape.m*179818 :=
   (checked rect i).cutoff_fit lo hi
 
 /-- Each stage of each rectangle supplies a native avoiding row throughout
 the high interval. The lower degree bounds refer to the single exceptional prime. -/
 theorem rescue_row {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
-    (lo : 2402≤h) (hi : h≤33619) (rect : Fin 4) (i : Fin 17) {G : Jet}
+    (lo : 2359≤h) (hi : h≤33579) (rect : Fin 4) (i : Fin 17) {G : Jet}
     (irr : Irreducible G) (seeded : UsesSeed G) (slope : 1≤G.natDegree)
     (hs : seed rect≤seedDegree G) (hj : G.natDegree+excess rect≤jetDegree G) :
     ∃ Q ∈ evaluated Crt word (bank rect i).shape (cutoff h rect i), ¬ G∣Q :=
@@ -64,6 +67,7 @@ theorem rescue_row {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I →
 #print axioms rescue_row
 
 end Lower6960.RescueSource
+
 end Merged_R6960RescueSource6960
 
 -- merged module R6960RescueSourceException
@@ -106,7 +110,7 @@ private theorem fits_rectangle {j u : ℕ} (loJ : 1≤j) (hiJ : j≤7)
 /-- A common moving prime in the powered helper determines one rescue schedule
 for all 17 stages. Its actual degrees fit that rectangle's geometry caps. -/
 theorem exceptional_rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
-    (lo : 2402≤h) (hi : h≤33619) {G : Jet} (irr : Irreducible G) (seeded : UsesSeed G)
+    (lo : 2359≤h) (hi : h≤33579) {G : Jet} (irr : Irreducible G) (seeded : UsesSeed G)
     (slope : 0<G.natDegree)
     (common : ∀ P ∈ evaluated Crt word helperBank.shape (helperCutoff h), G∣P) :
     ∃ rect : Fin 4, G.natDegree=1 ∧ jetDegree G≤jetCap rect ∧ seedDegree G≤seedCap rect ∧
@@ -145,8 +149,8 @@ open scoped Classical
 open K1_14_2_2_3 (shiftedWord)
 open P0_10R_1 (seed_projection section_bound component_height)
 open P1_7_4_1 (irreducible_cut)
-abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33619 u deleted
-abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179798 M Γ
+abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33579 u deleted
+abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179818 M Γ
 def word {u deleted} (M : Model u deleted) : I→L := fun i => algebraMap K L (M.word i)
 def OnMark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (A : Ideal Ambient) (γ : K) : Prop := OnJet A (M.label γ) (F.scalar γ)
@@ -165,7 +169,7 @@ theorem contact_at_mark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {s : Shape} {W r : ℕ} {P : Jet} (inside : P∈evaluated Crt (word M) s W)
-    (width : W+2*M.overhead.toNat*r<s.m*179798)
+    (width : W+2*M.overhead.toNat*r<s.m*179818)
     (γ : K) (hγ : γ∈Γ) :
     Native (RingHom.ker (jetMarkHom (M.label γ) (F.scalar γ))) (r+1) P := by
   let B := F.mark γ hγ
@@ -421,7 +425,7 @@ structure Run {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
       ∀ γ∈Γ,jetAt C (M.label γ) (F.scalar γ)=0
 theorem prepare {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2402≤M.overhead.toNat) (hi : M.overhead.toNat≤33619)
+    (lo : 2359≤M.overhead.toNat) (hi : M.overhead.toNat≤33579)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (common : PrefixRows.Common
@@ -476,10 +480,28 @@ open RescueSource (bank reserve)
 open scoped Classical
 open HighCore82258_3 (envelope_caps)
 open K1_14_2_2_7 (seed_value_eq)
-def terminalShape : Shape := ⟨4500,6286,1329,778757⟩
-def terminalCutoff : ℕ := terminalShape.m*179798-1
+def terminalShape : Shape := ⟨4500,6286,1329,748778⟩
+def terminalCutoff : ℕ := terminalShape.m*179818-1
+def TerminalFits (s : Shape) : Prop :=
+  0<s.m ∧ s.B≤terminalShape.B ∧ s.J≤terminalShape.J ∧ s.U≤terminalShape.U
 def TerminalPass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (J : Ideal Ambient) : Prop :=
-  ∀ P∈evaluated Crt w terminalShape terminalCutoff,toJet P∈J
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179818-1),toJet P∈J
+
+/-- A parent that fails any terminal bank provides a proper row inside
+the single envelope used by the geometric cut bill. -/
+theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L)
+    {J : Ideal Ambient} (failed : ¬ TerminalPass Crt w J) :
+    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179818-1) ∧
+      RowCaps P terminalShape ∧ toJet P∉J := by
+  classical
+  unfold TerminalPass at failed
+  push Not at failed
+  obtain ⟨s,⟨sm,sb,sj,su⟩,P,inside,proper⟩ := failed
+  refine ⟨s,P,sm,inside,?_,proper⟩
+  intro j i nz
+  obtain ⟨b,v,u⟩ := evaluated_shape Crt w inside j i nz
+  exact ⟨b.trans sb,v.trans sj,u.trans su⟩
+
 def Run.final {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} (R : Run F Crt G) :
     Finset (Ideal Ambient) :=
@@ -543,14 +565,13 @@ theorem Run.marked_cutter {u deleted} {M : Model u deleted} {Γ} {F : Family M �
     rw [Run.live,ite_eq_right hn] at lost
     have hf : ¬ TerminalPass Crt (word M) J := fun pass =>
       lost (mem_filter.mpr ⟨eq ▸ prev,pass⟩)
-    unfold TerminalPass at hf
-    push Not at hf
-    obtain ⟨C,inside,proper⟩ := hf
+    obtain ⟨s,C,sm,inside,cap,proper⟩ := terminal_failure Crt (word M) hf
     rw [cutShape,dite_eq_right hn]
-    refine ⟨C,evaluated_shape Crt (word M) inside,proper,?_⟩
+    refine ⟨C,cap,proper,?_⟩
     intro γ hγ
     apply zero_of_contact (r:=0)
-    exact contact_at_mark F Crt noPole residues inside (by simp only [Nat.mul_zero,Nat.add_zero]; decide +kernel) γ hγ
+    exact contact_at_mark F Crt noPole residues inside
+      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179818)) (by decide : 0<1)) γ hγ
 private theorem mark_on_cut {J : Ideal Ambient} {P : Jet} {z : K} {S : (Polynomial K)}
     (on : OnJet J z S) (zero : jetAt P z S=0) :
     ∃ Q∈cutComponents J P,OnJet Q z S := by
@@ -641,25 +662,41 @@ def OnSurface {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (q : Surface) (γ : K) : Prop :=
   ∀ P∈q.asIdeal,jetAt P (M.label γ) (F.scalar γ)=0
 def SurfacePass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (q : Surface) : Prop :=
-  ∀ P∈evaluated Crt w terminalShape terminalCutoff,P∈q.asIdeal
-theorem Run.terminal_surfaces {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179818-1),P∈q.asIdeal
+
+theorem SurfacePass.original {h : ℕ} {D : PoleData h} {Crt : CRTLift D} {w : I→L}
+    {q : Surface} (pass : SurfacePass Crt w q) :
+    ∀ P∈evaluated Crt w terminalShape terminalCutoff,P∈q.asIdeal :=
+  pass terminalShape ⟨by decide,le_rfl,le_rfl,le_rfl⟩
+theorem Run.terminal_surfaces_with_origins {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} (R : Run F Crt G) :
     ∃ S : Finset Surface,(∀ q∈S,Parent q ∧ SurfacePass Crt (word M) q) ∧
+      (∀ q∈S,∃ J∈R.final,q.asIdeal=J.comap K1_14_2.toJet) ∧
       ∀ γ∈Γ,(∃ J∈R.final,OnMark F J γ) → ∃ q∈S,OnSurface F q γ := by
   let getGeom (J : R.final) := R.parent_geom (mem_filter.mp J.property).1
   let surface (J : R.final) := surfaceOf J.val (getGeom J).1.prime
   let S := R.final.attach.image surface
-  refine ⟨S,?_,?_⟩
+  refine ⟨S,?_,?_,?_⟩
   · intro q hq
     obtain ⟨J,_,rfl⟩ := mem_image.mp hq
     have hJ := getGeom J
     exact ⟨parent_of_dual hJ.1 hJ.2.2.1 hJ.2.1,(mem_filter.mp J.property).2⟩
+  · intro q hq
+    obtain ⟨J,_,rfl⟩:=mem_image.mp hq
+    exact ⟨J.val,J.property,rfl⟩
   · rintro γ _ ⟨J,hJ,on⟩
     let q : R.final := ⟨J,hJ⟩
     refine ⟨surface q,mem_image.mpr ⟨q,mem_attach _ _,rfl⟩,?_⟩
     intro P mem
     rw [←eval_toJet]
     exact RingHom.mem_ker.mp (on mem)
+
+theorem Run.terminal_surfaces {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} (R : Run F Crt G) :
+    ∃ S : Finset Surface,(∀ q∈S,Parent q ∧ SurfacePass Crt (word M) q) ∧
+      ∀ γ∈Γ,(∃ J∈R.final,OnMark F J γ) → ∃ q∈S,OnSurface F q γ := by
+  obtain ⟨S,geom,_,marks⟩:=R.terminal_surfaces_with_origins
+  exact ⟨S,geom,marks⟩
 #print axioms Run.cutCover
 #print axioms Run.retained_or_lost
 #print axioms Run.terminal_surfaces
@@ -735,7 +772,7 @@ def pointLimit (rect : Fin 4) : ℚ := weightedBill 17 (cutWeight rect 2) (fun _
 def initialSeedLimit (rect : Fin 4) : ℕ := (K1.p+1)*initialCap rect 2+initialCap rect 3
 theorem seed_limit_small (rect : Fin 4) : seedLimit rect < (K1.p : ℚ) := by
   fin_cases rect <;> decide +kernel
-theorem point_limit_bound (rect : Fin 4) : pointLimit rect ≤ 218104903578 := by
+theorem point_limit_bound (rect : Fin 4) : pointLimit rect ≤ 206700957314 := by
   fin_cases rect <;> decide +kernel
 def Initial.seedMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {G Q₀ : Jet} {rect : Fin 4} (ini : Initial F G Q₀ rect) : Finset K :=
@@ -812,15 +849,17 @@ private def Run.jointLost {u deleted} {M : Model u deleted} {Γ} {F : Family M �
     ℕ→Finset (Ideal Ambient)
   | 0 => R.initial.rankExit
   | i+1 => R.lost i
-theorem Run.joint_bill {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
+theorem Run.joint_bill_with_final {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} (R : Run F Crt G)
     (rank : Mass) (cut : ℕ→Mass) :
-    dotQ rank (massQ R.initial.rankExit) + (∑ i∈range 17,dotQ (cut i) (massQ (R.lost i))) ≤
+    dotQ rank (massQ R.initial.rankExit) + (∑ i∈range 17,dotQ (cut i) (massQ (R.lost i))) +
+      dotQ (P1_7_4.running (beforeCuts rank cut) 18) (massQ R.final) ≤
       weightedBill 18 (beforeCuts rank cut) (beforeCuts (initialMass R.rect) (history R.rect)) := by
-  have bill := bill_bound 18 (beforeCuts rank cut) (beforeCuts (initialMass R.rect) (history R.rect))
+  have bill := P1_7_4.bill_bound_with_final 18 (beforeCuts rank cut) (beforeCuts (initialMass R.rect) (history R.rect))
     R.jointLive R.jointLost ?_ ?_ ?_
   · rw [show 18=17+1 by decide,sum_range_succ'] at bill
-    simpa only [beforeCuts,Run.jointLost,add_comm] using bill
+    have final : R.jointLive 18 = R.final := by simp [Run.jointLive,Run.live]
+    simpa only [beforeCuts,Run.jointLost,final,add_comm] using bill
   · intro i hi
     cases i with
     | zero => simpa only [Run.jointLive,R.live_start] using
@@ -839,9 +878,17 @@ theorem Run.joint_bill {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     cases i with
     | zero => exact (Nat.cast_le (α:=ℚ)).mpr (R.initial.fits k)
     | succ i => exact R.live_history (by omega) k
+theorem Run.joint_bill {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} (R : Run F Crt G)
+    (rank : Mass) (cut : ℕ→Mass) :
+    dotQ rank (massQ R.initial.rankExit) + (∑ i∈range 17,dotQ (cut i) (massQ (R.lost i))) ≤
+      weightedBill 18 (beforeCuts rank cut) (beforeCuts (initialMass R.rect) (history R.rect)) :=
+  (le_add_of_nonneg_right (P1_7_4.final_credit_nonneg 18 (beforeCuts rank cut) R.final)).trans
+    (R.joint_bill_with_final rank cut)
+
 theorem inventory {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2402≤M.overhead.toNat) (hi : M.overhead.toNat≤33619)
+    (lo : 2359≤M.overhead.toNat) (hi : M.overhead.toNat≤33579)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (common : PrefixRows.Common

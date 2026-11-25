@@ -19,6 +19,8 @@ import Mathlib.RingTheory.Valuation.Discrete.RankOne
 import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
 
+set_option Elab.async false
+
 -- merged module Pack_K1_13_6_1_4Geometry
 section Merged_Pack_K1_13_6_1_4Geometry
 set_option Elab.async false

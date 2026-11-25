@@ -3,6 +3,8 @@ import Mathlib.LinearAlgebra.Projection
 import ProximityPrize.SubmissionLower.R6960RetainedSurfaceDimension
 import ProximityPrize.SubmissionLower.R6960RetainedAxisTransition
 
+set_option Elab.async false
+
 -- merged module R6960RetainedCodimension
 section Merged_R6960RetainedCodimension
 

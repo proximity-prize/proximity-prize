@@ -31,9 +31,6 @@ open i4 (K N)
 
 open P5_8_3 (rows)
 
-
-
-
 private abbrev weight (i:Fin 3) :ℕ:=N - i.val
 abbrev coeffForm:=MvPolynomial.optionEquivRight ao (Fin 3)
 theorem specialize (Q:DifferentialPolynomial ao 2) (S:(Polynomial ao)) :

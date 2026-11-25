@@ -1,7 +1,9 @@
-import ProximityPrize.SubmissionLower.R6960Low6960Monotone
+import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
 import ProximityPrize.SubmissionLower.R6960Low6960RetainedAssembly
 import ProximityPrize.SubmissionLower.R6960Low6960AllocWeight
 import ProximityPrize.SubmissionLower.Final50PriceMass
+
+set_option Elab.async false
 
 -- merged module R6960Low6960AllocCore
 section Merged_R6960Low6960AllocCore
@@ -25,7 +27,7 @@ open Final50PriceMass (check check_sum mass_eq)
 open P3_6_8_1 (sumBelow)
 open scoped BigOperators Classical
 
-abbrev Band := Fin 44
+abbrev Band := Fin 19
 abbrev empty : Band := 0
 
 structure BandData where
@@ -38,49 +40,24 @@ structure BandData where
 private def bands : List BandData :=
   [
     ⟨0,0,0,0,0⟩,
-    ⟨1,1,3,1,2252345055298168⟩,
-    ⟨2,2,3,1,2252345055298168⟩,
-    ⟨3,3,3,1,2252345055298168⟩,
-    ⟨4,4,3,1,2595294277227010⟩,
-    ⟨5,5,3,1,2945543954852192⟩,
-    ⟨6,6,3,1,3305230804180235⟩,
-    ⟨7,7,3,1,3676491541217656⟩,
-    ⟨8,8,3,1,4061462881970979⟩,
-    ⟨9,9,3,1,4462281542446720⟩,
-    ⟨10,10,3,1,4881084238651403⟩,
-    ⟨11,11,3,1,5320007686591545⟩,
-    ⟨2,2,4,1,5164743203194047⟩,
-    ⟨3,3,4,1,5164743203194047⟩,
-    ⟨4,4,4,1,5164743203194047⟩,
-    ⟨5,5,4,1,6012565505776169⟩,
-    ⟨6,6,4,1,6869824980061151⟩,
-    ⟨12,19,3,1,9812148253371641⟩,
-    ⟨20,27,3,1,16822765350976698⟩,
-    ⟨7,11,4,1,11372464987257161⟩,
-    ⟨12,16,4,1,16431541688002672⟩,
-    ⟨17,25,4,1,27792649903690810⟩,
-    ⟨2,6,5,1,12452104681298693⟩,
-    ⟨7,11,5,1,20546890023107658⟩,
-    ⟨12,22,5,1,40690136953529139⟩,
-    ⟨2,10,6,1,27852982868694149⟩,
-    ⟨11,19,6,1,49691194429692356⟩,
-    ⟨3,8,7,1,31888397054288901⟩,
-    ⟨9,14,7,1,49852657116967959⟩,
-    ⟨3,6,8,1,41476878467192673⟩,
-    ⟨2,6,6,2,60804617390639601⟩,
-    ⟨7,9,6,2,86582793103835166⟩,
-    ⟨10,11,6,2,104111919380337495⟩,
-    ⟨12,13,6,2,121995761811106240⟩,
-    ⟨14,15,6,2,140302699407657561⟩,
-    ⟨16,17,6,2,159101111181507619⟩,
-    ⟨18,19,6,2,178459376144172572⟩,
-    ⟨3,6,7,2,109656907912538059⟩,
-    ⟨7,8,7,2,122585926352263508⟩,
-    ⟨9,10,7,2,148641621335898004⟩,
-    ⟨11,12,7,2,175017842968040836⟩,
-    ⟨13,14,7,2,201782970260208165⟩,
-    ⟨3,4,8,2,174429607242538494⟩,
-    ⟨5,6,8,2,174429607242538534⟩
+    ⟨1,1,3,1,1952879554821531⟩,
+    ⟨2,2,3,1,1952879554821531⟩,
+    ⟨3,3,3,1,1952879554821531⟩,
+    ⟨4,4,3,1,2264030333312493⟩,
+    ⟨5,5,3,1,2582480582752554⟩,
+    ⟨6,14,3,1,6129519605442608⟩,
+    ⟨15,26,3,1,14739727222783944⟩,
+    ⟨2,17,4,1,16005524698995846⟩,
+    ⟨18,24,4,1,24305329798473406⟩,
+    ⟨2,21,5,1,35451803568510358⟩,
+    ⟨2,17,6,1,40788674056635002⟩,
+    ⟨2,11,6,2,95236959055413996⟩,
+    ⟨12,17,6,2,145986486282605231⟩,
+    ⟨3,12,7,1,39934370655593437⟩,
+    ⟨3,10,7,2,136003299584452471⟩,
+    ⟨11,12,7,2,160254426018254432⟩,
+    ⟨3,4,8,1,37796815539383397⟩,
+    ⟨3,4,8,2,159588895902744127⟩
   ]
 
 def band (k : Band) : BandData := bands.get ⟨k.val,k.isLt⟩
@@ -104,37 +81,37 @@ theorem empty_admits : Admits empty zeroShape := by decide +kernel
 theorem admits_floor {k : Band} {r : Shape} (hr : Admits k r) : InBox (start k) r :=
   ⟨hr.1,hr.2.2.1.symm.le,hr.2.2.2.symm.le⟩
 
-private theorem checked_cover (b : Fin 28) :
+private theorem checked_cover (b : Fin 27) :
     ∀ (j : Fin 9) (t : Fin 3), 1≤t.val → 3*t.val≤j.val → j.val≤3*b.val →
       b.val≤lowDegreeCap j.val → ∃ k : Band, Admits k ⟨b.val,j.val,t.val⟩ := by
   fin_cases b <;> decide +kernel
 
 theorem choose_band (r : Shape) (v : Valid r) (box : Box r) : ∃ k : Band,Admits k r := by
   rcases r with ⟨b,j,t⟩
-  have hb : b<28 := Nat.lt_succ_of_le box.1
+  have hb : b<27 := Nat.lt_succ_of_le box.1
   have hj : j<9 := Nat.lt_succ_of_le box.2.1
   have ht : t<3 := by have := v.2.1; change 3*t≤j at this; omega
   exact checked_cover ⟨b,hb⟩ ⟨j,hj⟩ ⟨t,ht⟩ v.1 v.2.1 v.2.2 (degree_bound v box)
 
 private theorem checked_reserve (k : Band) :
-    ∀ b : Fin 28,(start k).b≤b.val → b.val≤endWidth k →
+    ∀ b : Fin 27,(start k).b≤b.val → b.val≤endWidth k →
       retainedTariff b.val (start k).j (start k).t≤reserve k := by
   fin_cases k <;> decide +kernel
 
 theorem admits_fee {k : Band} {r : Shape} (hr : Admits k r) :
     retainedTariff r.b r.j r.t≤reserve k := by
-  have hm : endWidth k<28 := by fin_cases k <;> decide +kernel
+  have hm : endWidth k<27 := by fin_cases k <;> decide +kernel
   rw [hr.2.2.1,hr.2.2.2]
   exact checked_reserve k ⟨r.b,hr.2.1.trans_lt hm⟩ hr.1 hr.2.1
 
-abbrev budget : ℕ := 274796225155168725
+abbrev budget : ℕ := 266228295297579504
 
 def factorCap (top : ℕ) : ℕ := budget-Low6960Prices.lowerCap top
 
 def pricingWeight (k : Band) (b j t : ℕ) : ℕ :=
   if k=empty then Low6960AllocWeight.weight b j t else j
 
-def pricingDenom (k : Band) : ℕ := if k=empty then 554 else 59-(start k).j
+def pricingDenom (k : Band) : ℕ := if k=empty then 364 else 57-(start k).j
 
 def allowance (k : Band) (top b j t : ℕ) : ℕ :=
   (factorCap top-reserve k)*pricingWeight k b j t/pricingDenom k
@@ -198,14 +175,8 @@ theorem order_valid {k : Band} (cells : List (MassCell k)) (x : Shape) : order c
 theorem layer_le_available {r y : Shape} {L : ℕ}
     (hr : r=zeroShape ∨ 0<r.j) (hj : 0<r.j+y.j) :
     (∑ k∈range layerCount,layerTerm r y L k)≤availableMass r y L := by
-  let N := max layerCount (L + 1650 / (r.j + y.j))
-  rw [← Final50PriceLayer.availableMass_eq_sum hr hj (N := N) (le_max_right _ _)]
-  refine K1_13_8.sum_range_mono (le_max_left _ _) fun k _ => ?_
-  unfold layerTerm Final50PriceLayer.fastLayer Final50Price.remaining
-  split
-  · exact min_le_left _ _
-  · rw [← P0_9_8.symbol_count]
-    exact min_le_right _ _
+  apply le_trans _ (Final50PriceLayer.layerSum_le_available hr hj)
+  exact sum_le_sum_of_subset (range_mono (by decide +kernel))
 
 #print axioms choose_band
 #print axioms order_valid
@@ -302,7 +273,7 @@ theorem four {k : Band} {cells : List (MassCell k)} {a : Shape} {bl jl bh jh t l
     (h : PaidFour cells t bl jl bh jh l)
     (hb : bl ≤ a.b) (hj : jl ≤ a.j) (hb' : a.b ≤ bh) (hj' : a.j ≤ jh)
     (ht : a.t = t) (ha : 3 * a.t ≤ a.j) :
-    ∃ l, 0 < l ∧ l ≤ order cells a ∧ contractedPrice a (start k) l 177 ≤
+    ∃ l, 0 < l ∧ l ≤ order cells a ∧ contractedPrice a (start k) l 169 ≤
       allowance k ((start k).t+a.t) a.b a.j a.t := by
   obtain ⟨hl, hlo, hq, hbill⟩ := h
   have hu : l ≤ order cells a := hlo.trans (order_mono cells hb hj)
@@ -324,7 +295,7 @@ theorem four {k : Band} {cells : List (MassCell k)} {a : Shape} {bl jl bh jh t l
       cutPrice ⟨bh,jh,t⟩ l 32 (fourSurface (Shape.chamber ⟨bh,jh,t⟩) (hullOf k l)) := by
     rw [cut_eq, cut_eq]
     exact charge_mono hbox ha hi l 32 hsurf
-  have hc : contractedPrice a (start k) l 177 ≤ cutPrice a l 32 (fourSurface a.chamber (hullOf k l)) := by
+  have hc : contractedPrice a (start k) l 169 ≤ cutPrice a l 32 (fourSurface a.chamber (hullOf k l)) := by
     unfold contractedPrice
     dsimp only
     rw [if_pos hq]

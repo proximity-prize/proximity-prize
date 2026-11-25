@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6960Low6960Monotone
+import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
 import ProximityPrize.SubmissionLower.R6960HelperSourceArithmetic
 
 set_option Elab.async false
@@ -18,7 +18,7 @@ open scoped BigOperators
 theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
     (hsection : ∀ i : I, (∃ γ ∈ Γ, (s γ).eval (node i) ≠ w i) →
       (Γ.filter fun γ => (s γ).eval (node i) = w i).card ≤ d) :
-    46360 * Γ.card ≤ 82346*d + 46360 := by
+    46389 * Γ.card ≤ 82326*d + 46389 := by
   classical
   by_cases hm : Γ.card ≤ 1
   · omega
@@ -28,11 +28,11 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
   have common_le (γ : K) (hγ : γ ∈ Γ) : common ⊆ hits γ := by
     intro i hi
     exact mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hi).2 γ hγ⟩
-  have hit_count (γ : K) (hγ : γ ∈ Γ) : 179798 ≤ (hits γ).card := by
+  have hit_count (γ : K) (hγ : γ ∈ Γ) : 179818 ≤ (hits γ).card := by
     obtain ⟨T, hT, ht⟩ := h.hits γ hγ
     exact hT.trans (card_le_card fun i hi => mem_filter.mpr ⟨mem_univ _, ht i hi⟩)
   have pair_count (a : K) (ha : a ∈ Γ) (b : K) (hb : b ∈ Γ) (hab : a ≠ b) :
-      (hits a ∩ hits b).card ≤ 133438 := by
+      (hits a ∩ hits b).card ≤ 133429 := by
     let P := s a - s b
     have hp : P ≠ 0 := sub_ne_zero.mpr fun eq => hab (h.distinct ha hb eq)
     refine (FrobeniusLocator.Strata.root_nodes_card_le node IRSProfile.domain.injective
@@ -41,14 +41,14 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
     rw [eval_sub, (mem_filter.mp (mem_inter.mp hi).1).2, (mem_filter.mp (mem_inter.mp hi).2).2,
       sub_self]
   obtain ⟨a, ha, b, hb, hab⟩ := one_lt_card.mp (by omega : 1 < Γ.card)
-  have hcommon : common.card ≤ 133438 :=
+  have hcommon : common.card ≤ 133429 :=
     (card_le_card (subset_inter (common_le a ha) (common_le b hb))).trans
       (pair_count a ha b hb hab)
-  let x := 179798 - common.card
-  let t := 133438 - common.card
-  have ht : t = x - 46360 := by dsimp [t, x]; omega
-  have hx : 46360 ≤ x := by dsimp [x]; omega
-  have hnodes : nodes.card = x + 82346 := by
+  let x := 179818 - common.card
+  let t := 133429 - common.card
+  have ht : t = x - 46389 := by dsimp [t, x]; omega
+  have hx : 46389 ≤ x := by dsimp [x]; omega
+  have hnodes : nodes.card = x + 82326 := by
     rw [card_sdiff_of_subset (subset_univ common), card_univ, IRSProfile.card_index]
     dsimp [x]
     omega
@@ -94,23 +94,23 @@ theorem section_capacity {w Γ s} (h : Messages w Γ s) (d : ℕ)
     (fun γ hγ => ⟨into_nodes γ hγ, (hT γ hγ).2⟩) overlap occ_le
   rw [hnodes, ht] at sec
   rw [hnodes] at first
-  exact incidence_arithmetic 82346 _ _ 46360 _ (by omega) (by decide) hx (by decide) sec first
+  exact incidence_arithmetic 82326 _ _ 46389 _ (by omega) (by decide) hx (by decide) sec first
 theorem curve_capacity {w Γ s d} (h : Messages w Γ s) (hc : CurveSections Γ s d) :
-    46360 * Γ.card ≤ 82346*d + 46360 :=
+    46389 * Γ.card ≤ 82326*d + 46389 :=
   section_capacity h d (fun i => hc (node i) (w i))
 theorem curve_capacity_integral {w Γ s d} (h : Messages w Γ s)
     (hc : CurveSections Γ s d) (hd : 0 < d) : Γ.card ≤ 2*d := by
   have := curve_capacity h hc
   omega
 theorem pieces_curve_capacity {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
-    (hc : C.curves s) : 46360 * C.union.card ≤ 82346 * C.total + 46360 * C.n := by
+    (hc : C.curves s) : 46389 * C.union.card ≤ 82326 * C.total + 46389 * C.n := by
   classical
   have hc' (i : Fin C.n) := Low6960FatPad.curve_capacity (Low6960Prices.Messages.mono h (C.subset i)) (hc i)
   calc
-    _ ≤ 46360 * ∑ i, (C.piece i).card :=
+    _ ≤ 46389 * ∑ i, (C.piece i).card :=
       Nat.mul_le_mul_left _ (by exact card_biUnion_le)
-    _ = ∑ i, 46360 * (C.piece i).card := by rw [mul_sum]
-    _ ≤ ∑ i : Fin C.n, (82346 * C.degree i + 46360) := sum_le_sum fun i _ => hc' i
+    _ = ∑ i, 46389 * (C.piece i).card := by rw [mul_sum]
+    _ ≤ ∑ i : Fin C.n, (82326 * C.degree i + 46389) := sum_le_sum fun i _ => hc' i
     _ = _ := by simp [Pieces.total, sum_add_distrib, mul_sum, Nat.mul_comm]
 theorem pieces_curve_capacity_integral {w Γ s} (C : Pieces Γ) (h : Messages w Γ s)
     (hc : C.curves s) (hd : ∀ i, 0 < C.degree i) : C.union.card ≤ 2*C.total := by
@@ -161,7 +161,7 @@ private theorem projective_height : K1_13_6_3_5_3.c3 :=
   K1_13_6_3_5_3_3.of_children K1_13_6_3_5_3_3_1.proof K1_13_6_3_5_3_3_2.proof
     K1_13_6_3_5_3_3_3.proof K1_13_6_3_5_3_3_4.proof
 private theorem degree_of_support {R : CoeffIdeal} (D : FreshCurve R) (hs : ShortSupport R) :
-    D.polynomial.natDegree ≤ 133438 := by
+    D.polynomial.natDegree ≤ 133429 := by
   by_contra h
   let i : Fin taylorLength := ⟨D.polynomial.natDegree, Nat.lt_succ_iff.mpr D.degree_le⟩
   have hi : Low6960Prices.taylorLength ≤ i.val := Nat.lt_of_not_ge h
@@ -184,9 +184,9 @@ private theorem multiplicity_bound {m n : ℕ} (hm : m ≤ n) (hn : 2 ≤ n) :
   · rw [min_eq_right (by omega), Nat.mul_comm n 2]
     exact Nat.mul_le_mul_left _ hm
 private theorem height_comparison {R : CoeffIdeal} (D : FreshCurve R)
-    (hshort : D.polynomial.natDegree ≤ 133438) (hdiv : PrincipalDivisors GeoField D.Fresh) :
+    (hshort : D.polynomial.natDegree ≤ 133429) (hdiv : PrincipalDivisors GeoField D.Fresh) :
     2 * tupleHeight GeoField D.Fresh D.coefficients ≤
-      133438 * tupleHeight GeoField D.Fresh (ratios (D.jets (n := 4)) 0) := by
+      133429 * tupleHeight GeoField D.Fresh (ratios (D.jets (n := 4)) 0) := by
   let : CharP D.Old K1.p := charP_of_injective_ringHom
     ((algebraMap Geom D.Old).comp K1_13.embed).injective K1.p
   have hdeg : D.polynomial.natDegree < taylorLength := Nat.lt_succ_iff.mpr D.degree_le
@@ -226,7 +226,7 @@ private theorem height_comparison {R : CoeffIdeal} (D : FreshCurve R)
     intro i
     rfl
   suffices hh : 2 * tupleHeight GeoField D.Fresh D.coefficients ≤
-      133438 * tupleHeight GeoField D.Fresh r₃ from
+      133429 * tupleHeight GeoField D.Fresh r₃ from
     hh.trans (Nat.mul_le_mul_left _ hmore)
   rw [hcoeff, hjet, Finset.mul_sum, Finset.mul_sum]
   apply Finset.sum_le_sum
@@ -239,7 +239,7 @@ theorem boundary_degree (R : CoeffIdeal) (hR : R.IsPrime) (hprime : (extendIdeal
     (hdim : dimension R = 2) (hs : ShortSupport R) :
     dimension (freshImage R) = 2 ∧
       2 * affineDegree (extendIdeal R) ≤
-        133438 * (residueDegree freshJetMap (extendIdeal R) : ℚ) * affineDegree (freshImage R) := by
+        133429 * (residueDegree freshJetMap (extendIdeal R) : ℚ) * affineDegree (freshImage R) := by
   obtain ⟨D⟩ := K1_13_6_3_5_3_1.proof R hR hprime hhom hdim
   have hdiv := principal_divisors GeoField D.Fresh D.freshCurve
   have hshort := degree_of_support D hs
@@ -265,7 +265,7 @@ theorem boundary_degree (R : CoeffIdeal) (hR : R.IsPrime) (hprime : (extendIdeal
     rwa [hu, hgen, IntermediateField.finrank_top, Nat.cast_one, one_mul, ← hcone] at h
   have hcmp := height_comparison D hshort hdiv
   have hjpos : 0 < tupleHeight GeoField D.Fresh (ratios v 0) := by
-    change 2 * tupleHeight GeoField D.Fresh u ≤ 133438 * tupleHeight GeoField D.Fresh
+    change 2 * tupleHeight GeoField D.Fresh u ≤ 133429 * tupleHeight GeoField D.Fresh
       (ratios v 0) at hcmp
     omega
   have himage : coneIdeal GeoField v = freshImage R := by
@@ -280,7 +280,7 @@ theorem boundary_degree (R : CoeffIdeal) (hR : R.IsPrime) (hprime : (extendIdeal
   rw [himage, ← hrank] at ht
   refine ⟨himage ▸ hdim', ?_⟩
   have hcmp' : 2 * (tupleHeight GeoField D.Fresh u : ℚ) ≤
-      133438 * (tupleHeight GeoField D.Fresh (ratios v 0) : ℚ) := by exact_mod_cast hcmp
+      133429 * (tupleHeight GeoField D.Fresh (ratios v 0) : ℚ) := by exact_mod_cast hcmp
   rw [hs, ht] at hcmp'
   simpa only [mul_assoc] using hcmp'
 end
@@ -303,7 +303,7 @@ private theorem boundary_support {A R : CoeffIdeal} (hs : ShortSupport A)
   exact homogeneousComponent_eq_self (isHomogeneous_X _ i)
 theorem padding (A : CoeffIdeal) (hA : A.IsPrime) (hAe : (extendIdeal A).IsPrime)
     (hdim : dimension A = 2) (hbir : FreshBirational A) (hs : ShortSupport A) :
-    2 * affineDegree A ≤ 133438 * affineDegree (freshImage A) := by
+    2 * affineDegree A ≤ 133429 * affineDegree (freshImage A) := by
   classical
   have h1 := K1_13_6_3_5_1.of_children K1_13_6_3_5_1_1.proof K1_13_6_3_5_1_2.proof
   have h2 := K1_13_6_3_5_2.proof
@@ -331,7 +331,7 @@ theorem padding (A : CoeffIdeal) (hA : A.IsPrime) (hAe : (extendIdeal A).IsPrime
   have hdimC' : dimension C = 2 := hdimC
   have hheight (P : Ideal FreshCoeffRing) (hP : P ∈ S) :
       dimension (image P) = 2 ∧
-      2 * affineDegree P ≤ 133438 * (rank P : ℚ) * affineDegree (image P) := by
+      2 * affineDegree P ≤ 133429 * (rank P : ℚ) * affineDegree (image P) := by
     have hp := Ideal.mem_minimalPrimesFinset.mp hP
     obtain ⟨R, hR, rfl⟩ := hdescend P hp
     obtain ⟨hd, hhom⟩ := (h1 _ _ A hA hdim).1 R hR
@@ -347,7 +347,7 @@ theorem padding (A : CoeffIdeal) (hA : A.IsPrime) (hAe : (extendIdeal A).IsPrime
   calc
     2 * affineDegree A = 2 * ∑ P ∈ S, (weight P : ℚ) * affineDegree P := by
       rw [hdegree, (h1 _ _ B hAe hdimB).2]
-    _ ≤ ∑ P ∈ S, 133438 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) := by
+    _ ≤ ∑ P ∈ S, 133429 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) := by
       rw [Finset.mul_sum]
       apply Finset.sum_le_sum
       intro P hP
@@ -355,28 +355,28 @@ theorem padding (A : CoeffIdeal) (hA : A.IsPrime) (hAe : (extendIdeal A).IsPrime
       calc
         2 * ((weight P : ℚ) * affineDegree P) =
             (weight P : ℚ) * (2 * affineDegree P) := by ring
-        _ ≤ (weight P : ℚ) * (133438 * (rank P : ℚ) * affineDegree (image P)) :=
+        _ ≤ (weight P : ℚ) * (133429 * (rank P : ℚ) * affineDegree (image P)) :=
           mul_le_mul_of_nonneg_left (hheight P hP).2 (by positivity)
         _ = _ := by ring
     _ = ∑ Q ∈ T, ∑ P ∈ S.filter (fun P => image P = Q),
-        133438 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) :=
+        133429 * ((weight P * rank P : ℕ) : ℚ) * affineDegree (image P) :=
       (Finset.sum_fiberwise_of_maps_to hmaps _).symm
-    _ ≤ ∑ Q ∈ T, 133438 * (boundaryWeight (boundaryIdeal C) Q : ℚ) * affineDegree Q := by
+    _ ≤ ∑ Q ∈ T, 133429 * (boundaryWeight (boundaryIdeal C) Q : ℚ) * affineDegree Q := by
       apply Finset.sum_le_sum
       intro Q hQ
       calc
         _ = ∑ P ∈ S.filter (fun P => image P = Q),
-            133438 * ((weight P * rank P : ℕ) : ℚ) * affineDegree Q := by
+            133429 * ((weight P * rank P : ℕ) : ℚ) * affineDegree Q := by
           apply Finset.sum_congr rfl
           intro P hP
           rw [(Finset.mem_filter.mp hP).2]
-        _ = 133438 * ((∑ P ∈ S.filter (fun P => image P = Q), weight P * rank P : ℕ) : ℚ) *
+        _ = 133429 * ((∑ P ∈ S.filter (fun P => image P = Q), weight P * rank P : ℕ) : ℚ) *
             affineDegree Q := by
           rw [Nat.cast_sum, Finset.mul_sum, Finset.sum_mul]
         _ ≤ _ := mul_le_mul_of_nonneg_right
           (mul_le_mul_of_nonneg_left (by exact_mod_cast hfibre Q hQ) (by positivity))
           (affineDegree_nonneg Q)
-    _ = 133438 * affineDegree C := by
+    _ = 133429 * affineDegree C := by
       rw [(h1 _ _ C hC hdimC').2, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun _ _ => mul_assoc ..)
 end

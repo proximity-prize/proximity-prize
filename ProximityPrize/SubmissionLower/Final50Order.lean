@@ -1,6 +1,8 @@
 import ProximityPrize.SubmissionLower.Wide50EulerPrimaryFamily
 import ProximityPrize.SubmissionLower.Final50Price
 
+set_option Elab.async false
+
 -- merged module PrimaryTaperActive
 section Merged_PrimaryTaperActive
 

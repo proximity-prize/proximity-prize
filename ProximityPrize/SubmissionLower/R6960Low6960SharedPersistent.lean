@@ -1,5 +1,5 @@
-import ProximityPrize.SubmissionLower.R6960Low6960Order
-import ProximityPrize.SubmissionLower.R6960Low6960Monotone
+import ProximityPrize.SubmissionLower.R6960Low6960Retained
+import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
 set_option Elab.async false
 
 namespace Low6960SharedPersistent

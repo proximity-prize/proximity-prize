@@ -462,24 +462,24 @@ theorem markedLift_residue {h : ℕ} {D : PoleData h} (Crt : CRTLift D)
     change D.block i ∣ residueAt D i (t i) * (liftPoly S - markedLift Crt t)
     simpa only [mul_sub, add_sub_add_right_eq_sub] using dvd_sub hactual hmark
   exact D.coprime.mul_dvd (hblock 0) (hblock 1)
-private def regularSeeds (t : Fin 2 → L) : Submonoid SeedPoly where
+def regularSeeds (t : Fin 2 → L) : Submonoid SeedPoly where
   carrier := {a | MvPolynomial.eval t a ≠ 0}
   one_mem' := by simp
   mul_mem' := by
     intro a b ha hb
     change MvPolynomial.eval t (a*b) ≠ 0
     exact (map_mul (MvPolynomial.eval t) a b).symm ▸ mul_ne_zero ha hb
-private abbrev RegularRing (t : Fin 2 → L) := Localization (regularSeeds t)
-private def specialize (t : Fin 2 → L) : RegularRing t →+* L :=
+abbrev RegularRing (t : Fin 2 → L) := Localization (regularSeeds t)
+def specialize (t : Fin 2 → L) : RegularRing t →+* L :=
   IsLocalization.lift (g := MvPolynomial.eval t)
     (fun a : regularSeeds t => isUnit_iff_ne_zero.mpr a.property)
-private def includeGeneric (t : Fin 2 → L) : RegularRing t →+* SeedField :=
+def includeGeneric (t : Fin 2 → L) : RegularRing t →+* SeedField :=
   IsLocalization.lift (g := algebraMap SeedPoly SeedField)
     (fun a : regularSeeds t => isUnit_iff_ne_zero.mpr
       (fun he => a.property (by
         have hzero := (IsFractionRing.injective SeedPoly SeedField) (he.trans (map_zero _).symm)
         simp [hzero])))
-private theorem includeGeneric_injective (t : Fin 2 → L) :
+theorem includeGeneric_injective (t : Fin 2 → L) :
     Function.Injective (includeGeneric t) := by
   unfold includeGeneric
   apply (IsLocalization.lift_injective_iff _).mpr
@@ -498,7 +498,7 @@ private theorem map_seedPolynomial (i : Fin 2) :
 private theorem eval_seedPolynomial (t : Fin 2 → L) (i : Fin 2) :
     (MvPolynomial.eval t).comp (seedPolynomial i) = evalRingHom (t i) := by
   apply Polynomial.ringHom_ext <;> simp [seedPolynomial, RingHom.comp_apply]
-private def localLift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (t : Fin 2 → L)
+def localLift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (t : Fin 2 → L)
     (hd : ∀ i, (Crt.denominator i).eval (t i) ≠ 0) : (Polynomial (RegularRing t)) :=
   ∑ i, C (IsLocalization.mk' (RegularRing t) 1
       (⟨seedPolynomial i (Crt.denominator i), by
@@ -506,7 +506,7 @@ private def localLift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (t : Fin 2 �
         rw [eval_seedPolynomial]
         exact hd i⟩ : regularSeeds t)) *
     (Crt.numerator i).map ((algebraMap SeedPoly (RegularRing t)).comp (seedPolynomial i))
-private theorem map_localLift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (t : Fin 2 → L)
+theorem map_localLift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (t : Fin 2 → L)
     (hd : ∀ i, (Crt.denominator i).eval (t i) ≠ 0) :
     (localLift Crt t hd).map (includeGeneric t) = crtPolynomial Crt := by
   rw [localLift, crtPolynomial, Polynomial.map_sum]
@@ -522,7 +522,7 @@ private theorem map_localLift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (t : 
   change C ((algebraMap SeedPoly SeedField (seedPolynomial i (Crt.denominator i)))⁻¹) * _ = _
   rw [he]
   rfl
-private theorem specialize_localLift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (t : Fin 2 → L)
+theorem specialize_localLift {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (t : Fin 2 → L)
     (hd : ∀ i, (Crt.denominator i).eval (t i) ≠ 0) :
     (localLift Crt t hd).map (specialize t) = markedLift Crt t := by
   rw [localLift, markedLift, Polynomial.map_sum]
@@ -4069,7 +4069,7 @@ private abbrev CentreJet := Polynomial (Polynomial CentreField)
 def doubleMap {A B : Type*} [Semiring A] [Semiring B] (f : A →+* B) :
     Polynomial (Polynomial A) →+* Polynomial (Polynomial B) :=
   mapRingHom (mapRingHom f)
-private theorem map_substitute {A B C' : Type*} [CommSemiring A] [CommSemiring B]
+theorem map_substitute {A B C' : Type*} [CommSemiring A] [CommSemiring B]
     [CommSemiring C'] (f : A →+* B) (g : B →+* C') (y v : Polynomial (Polynomial B)) :
     (doubleMap g).comp (substitute f y v) =
       substitute (g.comp f) (doubleMap g y) (doubleMap g v) := by
@@ -4079,7 +4079,7 @@ private theorem map_substitute {A B C' : Type*} [CommSemiring A] [CommSemiring B
       simp [substitute, doubleMap, jetConstant]
     · simp [substitute]
   · simp
-private theorem substitute_map {A B C' : Type*} [CommSemiring A] [CommSemiring B]
+theorem substitute_map {A B C' : Type*} [CommSemiring A] [CommSemiring B]
     [CommSemiring C'] (f : A →+* B) (g : B →+* C') (y v : Polynomial (Polynomial C')) :
     (substitute g y v).comp (doubleMap f) = substitute (g.comp f) y v := by
   apply Polynomial.ringHom_ext'
@@ -4091,16 +4091,16 @@ private theorem substitute_map {A B C' : Type*} [CommSemiring A] [CommSemiring B
 private def seedMap : SeedPoly →+* Seeds :=
   MvPolynomial.map (algebraMap L FX)
 private abbrev ξ : FX := algebraMap (Polynomial L) FX (Polynomial.X : (Polynomial L))
-private def centerBase : (Polynomial SeedPoly) →+* Seeds :=
+def centerBase : (Polynomial SeedPoly) →+* Seeds :=
   eval₂RingHom seedMap (MvPolynomial.C ξ)
-private theorem centerEval_apply (P : Source) : centerEval P = doubleMap centerBase P := rfl
+theorem centerEval_apply (P : Source) : centerEval P = doubleMap centerBase P := rfl
 private def liftSeeds : SeedField →+* CentreField :=
   IsFractionRing.lift (g := (algebraMap Seeds CentreField).comp seedMap)
     ((IsFractionRing.injective Seeds CentreField).comp
       (MvPolynomial.map_injective (algebraMap L FX) (FaithfulSMul.algebraMap_injective L FX)))
-private def evalRaw : (Polynomial SeedField) →+* CentreField :=
+def evalRaw : (Polynomial SeedField) →+* FractionRing Seeds :=
   eval₂RingHom liftSeeds (algebraMap FX CentreField ξ)
-private theorem evalRaw_generic :
+theorem evalRaw_generic :
     evalRaw.comp genericCoefficients.toRingHom = (algebraMap Seeds CentreField).comp centerBase := by
   apply Polynomial.ringHom_ext
   · intro a
@@ -4111,24 +4111,31 @@ private theorem evalRaw_generic :
       algebraMap Seeds CentreField (centerBase Polynomial.X)
     simp only [Polynomial.map_X, evalRaw, centerBase, coe_eval₂RingHom, eval₂_X]
     rfl
+theorem evalRaw_physical : evalRaw.comp (mapRingHom (algebraMap L SeedField)) =
+    (algebraMap FX CentreField).comp (algebraMap (Polynomial L) FX) := by
+  apply Polynomial.ringHom_ext
+  · intro a
+    change evalRaw ((C a).map (algebraMap L SeedField)) =
+      algebraMap FX CentreField (algebraMap (Polynomial L) FX (C a))
+    simp only [Polynomial.map_C, evalRaw, coe_eval₂RingHom, eval₂_C]
+    change liftSeeds (algebraMap SeedPoly SeedField (MvPolynomial.C a)) = _
+    simp only [liftSeeds, IsFractionRing.lift_algebraMap, RingHom.comp_apply, seedMap,
+      MvPolynomial.map_C]
+    rfl
+  · change evalRaw ((Polynomial.X : (Polynomial L)).map (algebraMap L SeedField)) =
+      algebraMap FX CentreField ξ
+    simp [evalRaw]
+
+theorem evalRaw_seed (i : Fin 2) :
+    evalRaw (C (algebraMap SeedPoly SeedField (MvPolynomial.X i))) =
+    algebraMap Seeds CentreField (MvPolynomial.X i) := by
+  simp only [evalRaw,coe_eval₂RingHom,eval₂_C,liftSeeds,IsFractionRing.lift_algebraMap,
+    RingHom.comp_apply,seedMap,MvPolynomial.map_X]
+
 private theorem evalRaw_block {h} (D : PoleData h) :
     evalRaw (rawBlock D) = algebraMap FX CentreField (algebraMap (Polynomial L) FX (poleProduct D)) := by
-  have he : evalRaw.comp (mapRingHom (algebraMap L SeedField)) =
-      (algebraMap FX CentreField).comp (algebraMap (Polynomial L) FX) := by
-    apply Polynomial.ringHom_ext
-    · intro a
-      change evalRaw ((C a).map (algebraMap L SeedField)) =
-        algebraMap FX CentreField (algebraMap (Polynomial L) FX (C a))
-      simp only [Polynomial.map_C, evalRaw, coe_eval₂RingHom, eval₂_C]
-      change liftSeeds (algebraMap SeedPoly SeedField (MvPolynomial.C a)) = _
-      simp only [liftSeeds, IsFractionRing.lift_algebraMap, RingHom.comp_apply, seedMap,
-        MvPolynomial.map_C]
-      rfl
-    · change evalRaw ((Polynomial.X : (Polynomial L)).map (algebraMap L SeedField)) =
-        algebraMap FX CentreField ξ
-      simp [evalRaw]
-  exact RingHom.congr_fun he (poleProduct D)
-private theorem evalRaw_block_ne_zero {h} (D : PoleData h) : evalRaw (rawBlock D) ≠ 0 := by
+  exact RingHom.congr_fun evalRaw_physical (poleProduct D)
+theorem evalRaw_block_ne_zero {h} (D : PoleData h) : evalRaw (rawBlock D) ≠ 0 := by
   rw [evalRaw_block]
   have hne := ((IsFractionRing.injective (Polynomial L) FX).ne ((D.monic 0).mul (D.monic 1)).ne_zero)
   exact (map_ne_zero (algebraMap FX CentreField)).2 (by simpa only [poleProduct, map_zero] using hne)
@@ -4163,7 +4170,7 @@ private theorem substitute_affine {A B : Type*} [CommSemiring A] [CommSemiring B
   rw [eval₂_map]
   congr 1
   apply Polynomial.ringHom_ext <;> simp [innerEval, jetConstant]
-private theorem affine_leading {A B : Type*} [CommRing A] [CommRing B] [IsDomain B]
+theorem affine_leading {A B : Type*} [CommRing A] [CommRing B] [IsDomain B]
     (f : A →+* B) (hf : Function.Injective f) {a b : B} (ha : a ≠ 0)
     (c : (Polynomial B)) {P : Polynomial (Polynomial A)} (hP : P ≠ 0) :
     let Q := substitute f (C (C a * Polynomial.X + C b)) (C (C a) * Polynomial.X + C c) P
@@ -4199,6 +4206,24 @@ private theorem affine_leading {A B : Type*} [CommRing A] [CommRing B] [IsDomain
   rw [hlead]
   apply mul_ne_zero _ (C_ne_zero.mpr (pow_ne_zero _ ha))
   simpa only [map_zero] using ev_inj.ne (leadingCoeff_ne_zero.mpr hP)
+theorem specialized_formula {h} {D:PoleData h} (Crt:CRTLift D) :
+    (specialized Crt).toRingHom=substitute (algebraMap Seeds (FractionRing Seeds))
+      (C (C (evalRaw (rawBlock D))*Polynomial.X+C (evalRaw (crtPolynomial Crt))))
+      (C (C (evalRaw (rawBlock D)))*Polynomial.X+
+        C (C (evalRaw (rawBlock D).derivative)*Polynomial.X+C (evalRaw (crtPolynomial Crt).derivative))) := by
+  change substitute _ (doubleMap evalRaw (rawOrdinate D Crt)) (doubleMap evalRaw (rawVelocity D Crt))=_
+  simp [rawOrdinate,rawVelocity,jetConstant,doubleMap,map_add,map_mul,add_assoc]
+
+/-- The generic physical chart, with all four scalars available for extension
+of the coefficient field. The diagonal stays nonzero before any extension. -/
+theorem specialized_affine_form {h} {D : PoleData h} (Crt : CRTLift D) :
+    ∃ a b u d : FractionRing Seeds, a≠0 ∧ (specialized Crt).toRingHom =
+      substitute (algebraMap Seeds (FractionRing Seeds)) (C (C a * Polynomial.X + C b))
+        (C (C a) * Polynomial.X + C (C u * Polynomial.X + C d)) := by
+  refine ⟨evalRaw (rawBlock D),evalRaw (crtPolynomial Crt),evalRaw (rawBlock D).derivative,
+    evalRaw (crtPolynomial Crt).derivative,evalRaw_block_ne_zero D,?_⟩
+  exact specialized_formula Crt
+
 theorem specialized_leading {h} {D : PoleData h} (Crt : CRTLift D) {P : Jet}
     (hP : P ≠ 0) :
     (specialized Crt P).natDegree = P.natDegree ∧

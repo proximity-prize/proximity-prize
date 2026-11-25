@@ -3,6 +3,8 @@ import ProximityPrize.SubmissionLower.HighCore82258Pairs
 import ProximityPrize.SubmissionLower.HighCore82258Terminal
 import ProximityPrize.SubmissionLower.R6960HelperSourceArithmetic
 
+set_option Elab.async false
+
 -- merged module HighFamilyBase82180
 section Merged_HighFamilyBase82180
 set_option Elab.async false

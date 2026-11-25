@@ -3,6 +3,8 @@ import Mathlib.LinearAlgebra.TensorProduct.Basis
 import Mathlib.RingTheory.TensorProduct.Basic
 import ProximityPrize.SubmissionLower.R6960RetainedCrossingLift
 
+set_option Elab.async false
+
 -- merged module R6960RetainedCrossingBasis
 section Merged_R6960RetainedCrossingBasis
 

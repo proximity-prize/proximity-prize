@@ -8,6 +8,8 @@ import Mathlib.RingTheory.DedekindDomain.PID
 import Mathlib.RingTheory.Trace.Quotient
 import Mathlib.RingTheory.DiscreteValuationRing.TFAE
 
+set_option Elab.async false
+
 -- merged module R6960TraceSpecialization
 section Merged_R6960TraceSpecialization
 noncomputable section

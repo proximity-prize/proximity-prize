@@ -1,7 +1,9 @@
-import ProximityPrize.SubmissionLower.R6960CollisionTameOverlapUnit
+import ProximityPrize.SubmissionLower.R6960CollisionTameOverlapFreeTrace
 import ProximityPrize.SubmissionLower.R6960CollisionTameBranchFrame
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisIndex
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedDiscTransport
+
+set_option Elab.async false
 
 -- merged module R6960CollisionTameOverlapDiscriminant
 section Merged_R6960CollisionTameOverlapDiscriminant

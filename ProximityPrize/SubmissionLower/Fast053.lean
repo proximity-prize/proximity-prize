@@ -150,10 +150,19 @@ private theorem eval_at_fibre_C (f : Equation) (y v : SeedClosure) :
   change (eval₂RingHom (eval₂RingHom seedGeneric y) v) (C f) = _
   rw [coe_eval₂RingHom, eval₂_C, coe_eval₂RingHom, aeval_def, eval₂_map]
   rfl
-theorem proof : K1_14_3.c7 := by
+/-- The squarefree projected equation records one copy of the minimal
+polynomial of each distinct chosen ordinate. -/
+def ordinateProduct {E : Type*} [Field E] [Algebra SeedField E]
+    (qs : Finset Surface) (y : ↥qs → E) : Polynomial SeedField := by
   classical
-  intro qs hqs hparents
-  choose y v hpoint hy _hv using fun q : ↥qs => (hparents q q.property).seed_side
+  exact ∏ u ∈ qs.attach.image (fun q=>minpoly SeedField (y q)), u
+
+theorem projected_from_points (qs : Finset Surface) (hqs : qs.Nonempty)
+    (y v : ↥qs → SeedClosure) (hpoint : ∀ q,OnSeedFibre q.val (y q) (v q))
+    (hy : ∀ q,IsSeparable SeedField (y q)) :
+    ∃ f : Equation, ProjectedProduct qs f ∧
+      Associated (f.map (algebraMap Seeds SeedField)) (ordinateProduct qs y) := by
+  classical
   let m (q : ↥qs) := minpoly SeedField (y q)
   let factors : Finset ((Polynomial SeedField)) := qs.attach.image m
   have hmem (q : ↥qs) : m q ∈ factors :=
@@ -184,7 +193,7 @@ theorem proof : K1_14_3.c7 := by
   obtain ⟨f, hprim, hassoc⟩ := primitive_model g hg
   have hfmap : f.map toSeed ≠ 0 :=
     (Polynomial.map_ne_zero_iff toSeed_injective).mpr hprim.ne_zero
-  refine ⟨f, ⟨?_, hprim, hsep.of_dvd hassoc.dvd, ?_, ?_⟩⟩
+  refine ⟨f, ⟨?_, hprim, hsep.of_dvd hassoc.dvd, ?_, ?_⟩,hassoc⟩
   · obtain ⟨q, hq⟩ := hqs
     have hdeg := natDegree_le_of_dvd ((hm_dvd ⟨q, hq⟩).trans hassoc.dvd') hfmap
     rw [natDegree_map_eq_of_injective toSeed_injective] at hdeg
@@ -213,6 +222,13 @@ theorem proof : K1_14_3.c7 := by
     apply (hpow n).dvd_of_fraction_map_dvd_fraction_map (K := SeedField)
     rw [Polynomial.map_pow]
     exact hassoc.pow_pow.dvd.trans hdiv
+
+theorem proof : K1_14_3.c7 := by
+  classical
+  intro qs hqs hparents
+  choose y v hpoint hy _hv using fun q : ↥qs => (hparents q q.property).seed_side
+  obtain ⟨f,product,_⟩ := projected_from_points qs hqs y v hpoint hy
+  exact ⟨f,product⟩
 end
 end K1_14_3_7
 end

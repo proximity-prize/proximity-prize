@@ -2,6 +2,8 @@ import ProximityPrize.SubmissionLower.R6960QuadraticProjection
 import Mathlib.RingTheory.EuclideanDomain
 import Mathlib.GroupTheory.GroupAction.Basic
 
+set_option Elab.async false
+
 -- merged module R6960CubicOdd
 section Merged_R6960CubicOdd
 noncomputable section
@@ -311,14 +313,14 @@ theorem endpoint :
 #print axioms omission
 #print axioms good_price
 #print axioms endpoint
-private def paidOrder : Array ℕ := #[0,1180,1175,1170,1165,1160,1155,1150,1145,1139,1134,1129,1123,1117,1112,1106,1100,1094,1088,1082,1076,1069,1063,1056,1049,1042,1035,1028,1021,1013,1005,997,989,980,971,962,952,941,930,918,904,888,855,780,671,536,377,198,0]
+private def paidOrder : Array ℕ := #[0,1167,1162,1157,1152,1147,1142,1137,1132,1126,1121,1115,1110,1104,1099,1093,1087,1081,1075,1069,1063,1056,1050,1043,1037,1030,1023,1015,1008,1000,993,984,976,967,958,949,939,928,917,905,891,874,835,757,649,516,362,189,0]
 theorem graded_endpoint :
     (∀ e : Fin 48, 3≤e.val →
       rate e.val * (2130706433+1) * (paidOrder[e.val]!-1) + e.val*(e.val-1) ≤
-        27903923223244782) ∧
-    rate 42 * (2130706433+1) * (paidOrder[42]!-1) + 42*41 = 27903923223244782 ∧
-    94307694686881833 + 152441151042393522 + 143456202788540 + 48 +
-      27903923223244782 = 274796225155308725 := by decide +kernel
+        27250435559936982) ∧
+    rate 42 * (2130706433+1) * (paidOrder[42]!-1) + 42*41 = 27250435559936982 ∧
+    95520157607632002 + 143314245927361932 + 143456202788540 + 48 +
+      27250435559936982 = 266228295297719504 := by decide +kernel
 #print axioms graded_endpoint
 end Lower6960.MarkedSheet
 
