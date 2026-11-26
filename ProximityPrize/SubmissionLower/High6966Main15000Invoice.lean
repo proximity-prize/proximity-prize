@@ -1,5 +1,9 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.High6966Main15000Books
-import ProximityPrize.SubmissionLower.High6966RescueCharge
+import ProximityPrize.SubmissionLower.High6966Main13200
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 section Merged_R6960MainGeometryInvoice
@@ -17,9 +21,9 @@ open Rescue6966 (RateOK beforeCuts lambda mu tau)
 open Lower6960.Rescue6966 (heightBound height_spec)
 open scoped Classical BigOperators
 
-def degreeRates : List ℕ := [280211443, 280211443, 280211443, 280211443, 280211443, 280211443, 280211443, 140105722, 72401517, 140105722, 170456467, 46751052, 76805308, 105940326, 105940326, 147811582, 196180823]
+def degreeRates : List ℕ := [241715024, 240810775, 234510598, 237061080, 240851470, 180554299, 34489997, 34489997, 38845549, 38217945, 60369283, 61466906, 103291491, 73937253, 73997839, 126148452, 176265517]
 
-def heightRates : List ℕ := [1292414, 1292414, 1292414, 1292414, 1292414, 1292414, 1292414, 2769456, 5538912, 2769456, 2228239, 8683294, 5209977, 3721412, 3721412, 2604989, 1917832]
+def heightRates : List ℕ := [1517666, 1525107, 1576952, 1555964, 1524772, 2106872, 11841239, 11841239, 10490604, 10667349, 6682421, 6555966, 3819133, 5418009, 5413190, 3094385, 2158635]
 
 def degreeRate (i : ℕ) : ℕ := degreeRates.getD i 0
 
@@ -41,7 +45,9 @@ def rankB : ℕ := initialCap 2+2
 
 def rankJ : ℕ := initialCap 1+1
 
-def pivot : ℚ := min (47843/5) (tau*rankB)
+def tau : ℚ := 1043/2500
+
+def pivot : ℚ := 3468161/25
 
 def rankWeight : Mass :=
   ![0,4*lambda*rankB*tau+mu-4*lambda*pivot,4*lambda*rankJ*(1-tau)+rankB,0]
@@ -57,9 +63,9 @@ def lossLimit : ℚ :=
 def mainFee : ℕ := lossLimit.ceil.toNat+pointLimit.ceil.toNat+initialSeedLimit+initialCap 0+
   fixedLimit+contentLimit
 
-theorem main_fee_bound : mainFee ≤ 185233047747540462 := by decide +kernel
+theorem main_fee_bound : mainFee ≤ 130933022881678518 := by decide +kernel
 
-theorem credit_guard : (1838347228855:ℚ)≤P1_7_4.running (beforeCuts rankWeight lossWeight) 18 1 := by decide +kernel
+theorem credit_guard : (1729199597045:ℚ)≤P1_7_4.running (beforeCuts rankWeight lossWeight) 18 1 := by decide +kernel
 
 theorem rank_guard : rankB<p ∧ 0≤rankWeight 1 ∧ 0≤rankWeight 2 := by decide +kernel
 

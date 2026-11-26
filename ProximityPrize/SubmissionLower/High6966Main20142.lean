@@ -1,6 +1,11 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.High6966FreeSources
 import ProximityPrize.SubmissionLower.High6966RescueGeometry
-import ProximityPrize.SubmissionLower.R6960MainGeometryInvoice
+import ProximityPrize.SubmissionLower.Compact54Packed
+set_option Elab.async false
+
+
+
 
 set_option Elab.async false
 section Merged_R6960MainGeometry
@@ -28,8 +33,8 @@ open PrefixRows (Prepared)
 open P1_7_4 (ODEGuard degreeVector introJump introWeight)
 open scoped Classical
 
-def helperBank : P1_7.Bank := ⟨⟨294,408,89,20142⟩,777085255680,779461982⟩
-def helperCutoff (h:ℕ) := helperBank.shape.m*179769-2*h*10-1
+def helperBank : P1_7.Bank := ⟨⟨382,531,115,10280⟩,1691195277312,2213398351⟩
+def helperCutoff (h:ℕ) := helperBank.shape.m*179759-2*h*10-1
 def copies (i:Fin 17) := (reserve i+11)/11
 theorem reserve_small (i:Fin 17) : reserve i<K1.p := by fin_cases i <;> decide
 def freeShape (i : Fin 17) : Shape := (bank i).shape
@@ -97,7 +102,7 @@ structure Rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
 
 theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2330≤M.overhead.toNat) (hi : M.overhead.toNat≤33677)
+    (lo : 2317≤M.overhead.toNat) (hi : M.overhead.toNat≤33697)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) 
     (nonzero : ∃ H∈evaluated Crt (word M) helperBank.shape (helperCutoff M.overhead.toNat), H≠0)
@@ -118,8 +123,8 @@ theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
       simpa only [K1_14_2.eval_toJet] using RingHom.mem_ker.mp van
     · exact contact_at_mark F Crt noPole residues (inside i) (Free6966.cutoff_fit lo hi i) γ mem
     · intro H hm
-      have width : helperCutoff M.overhead.toNat+2*M.overhead.toNat*10 < helperBank.shape.m*179769 := by
-        change 294*179769-2*M.overhead.toNat*10-1+2*M.overhead.toNat*10<294*179769
+      have width : helperCutoff M.overhead.toNat+2*M.overhead.toNat*10 < helperBank.shape.m*179759 := by
+        change 382*179759-2*M.overhead.toNat*10-1+2*M.overhead.toNat*10<382*179759
         omega
       exact contact_at_mark F Crt noPole residues hm width γ mem
   · intro i
@@ -618,7 +623,7 @@ theorem Initial.marked_cutter {u deleted} {M : Model u deleted} {Γ} {F : Family
     apply zero_of_contact (r:=0)
     exact contact_at_mark R.family Crt noPole
       (fun δ hd=>residues δ (mem_filter.mp hd).1) inside
-      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179769)) (by decide : 0<1)) γ hγ
+      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179759)) (by decide : 0<1)) γ hγ
 
 theorem Initial.cutCover {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R)
@@ -731,23 +736,23 @@ open scoped Classical BigOperators
 def initialMass : Mass := fun k=>initialCap k
 
 private def historyTable : List Mass := [
-  ![10597, 181529, 839062, 5830971],
-  ![5756, 181529, 839062, 5830971],
-  ![22349/9, 816731/9, 605080, 4836318],
-  ![13715/8, 914827/16, 1383152/3, 2819041],
-  ![5216/5, 942984/25, 537759/2, 2819041],
-  ![4699/6, 1009373/36, 445155/2, 10131426/5],
-  ![34803/64, 72975/4, 296197/2, 1262232],
-  ![39209/121, 1343009/121, 3072813/32, 28893699/32],
-  ![39209/121, 1343009/121, 3072813/32, 28893699/32],
-  ![39209/121, 1343009/121, 3060981/32, 877969],
-  ![11153/40, 50037/5, 1991636/25, 12175839/16],
-  ![253791/961, 8637834/961, 531907/8, 81877230/169],
-  ![38497/150, 8637834/961, 531907/8, 81877230/169],
-  ![38497/150, 8637834/961, 531907/8, 81877230/169],
-  ![1173662/4761, 39736340/4761, 175974204/3025, 6723649/16],
-  ![1140713/5184, 20052865/2592, 1583133/28, 6723649/16],
-  ![1140713/5184, 20052865/2592, 28358405/507, 202863049/484]]
+  ![11571, 151492, 703581, 4032417],
+  ![7468, 518135/4, 2353815/4, 4032417],
+  ![32615/9, 564500/9, 558920, 3168400],
+  ![8897/4, 604425/16, 2755289/9, 19110520/9],
+  ![38331/25, 26050, 1481369/8, 1283715],
+  ![6434/7, 737815/49, 673883/5, 873800],
+  ![11133/20, 177387/20, 81471, 24147720/49],
+  ![11133/20, 177387/20, 81471, 24147720/49],
+  ![151714/289, 2411800/289, 450623/6, 9960336/25],
+  ![63549/128, 2411800/289, 450623/6, 9960336/25],
+  ![15209/36, 2411800/289, 450623/6, 9960336/25],
+  ![15209/36, 2411800/289, 20346015/289, 1452025/4],
+  ![309869/961, 5981430/961, 6802896/121, 1452025/4],
+  ![309869/961, 5759031/961, 1166961/22, 22033636/81],
+  ![89249/350, 5759031/961, 1166961/22, 22033636/81],
+  ![89249/350, 135413114/26645, 3053149/72, 6968555/28],
+  ![917478/3721, 135413114/26645, 3053149/72, 6968555/28]]
 def history (i : ℕ) : Mass := historyTable.getD i initialMass
 
 theorem history_zero (k : Fin 4) : history 0 k=initialMass k := by

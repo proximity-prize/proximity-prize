@@ -1,4 +1,5 @@
-import ProximityPrize.SubmissionLower.Low6966Tiles0
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Low6966Gates
 import ProximityPrize.SubmissionLower.Low6966Tiles1
 import ProximityPrize.SubmissionLower.Low6966Tiles2
 import ProximityPrize.SubmissionLower.Low6966Tiles3
@@ -32,9 +33,46 @@ import ProximityPrize.SubmissionLower.Low6966Tiles30
 import ProximityPrize.SubmissionLower.Low6966Tiles31
 import ProximityPrize.SubmissionLower.Low6966Tiles32
 import ProximityPrize.SubmissionLower.Low6966Tiles33
-import ProximityPrize.SubmissionLower.Low6966Gates
 import ProximityPrize.SubmissionLower.Low6966CountCore
 import ProximityPrize.SubmissionLower.Front6966Rank2
+set_option Elab.async false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 set_option Elab.async false
 namespace LowProfile6966
 open Low6966Allocation

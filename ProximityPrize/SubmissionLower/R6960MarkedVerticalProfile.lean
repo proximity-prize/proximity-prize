@@ -1,10 +1,18 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericFrames
 import ProximityPrize.SubmissionLower.R6960HornerNative
 import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
-import ProximityPrize.SubmissionLower.R6960MarkedGenericRuling
-import ProximityPrize.SubmissionLower.R6960MarkedZeroDegree
-import ProximityPrize.SubmissionLower.R6960MarkedConstantDescent
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisIndex
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisFamily
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericMeasure
+set_option Elab.async false
+
+
+
+
+
+
+
 
 set_option Elab.async false
 

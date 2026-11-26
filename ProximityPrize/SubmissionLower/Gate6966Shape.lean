@@ -1,15 +1,21 @@
-import Mathlib.GroupTheory.CosetCover
-import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
-import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
-import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
-import Mathlib.RingTheory.Polynomial.UniqueFactorization
-import Mathlib.RingTheory.PrincipalIdealDomain
-import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import ArkLib.Data.MvPolynomial.WeightedDegree.Products
-import ArkLib.Data.MvPolynomial.WeightAtMost
-import Mathlib.RingTheory.MvPolynomial.Homogeneous
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.LibraryMathlib_GroupTheory_CosetCover
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_UniqueFactorizationDomain_Multiplicative
+import ProximityPrize.SubmissionLower.LibraryArkLib_Data_MvPolynomial_WeightedDegree_Products
+import ProximityPrize.SubmissionLower.LibraryArkLib_Data_MvPolynomial_WeightAtMost
+set_option Elab.async false
+
+
+
+
+
+
+
+
+
+
+
+
 set_option Elab.async false
 
 -- merged module Gate6966Coprime
@@ -171,20 +177,20 @@ theorem shp_mul {P Q : MvPolynomial (Fin 4) F} (hP : P ≠ 0) (hQ : Q ≠ 0) (i 
     shp i (P * Q) = shp i P + shp i Q :=
   weightedTotalDegree_mul _ _ _ hP hQ
 
-def freeSet (Y : Fin 3 → ℕ) : Set (Fin 4 →₀ ℕ) := {m | ∀ i, m.weight (wv i) ≤ Y i}
+def freeSet («Y» : Fin 3 → ℕ) : Set (Fin 4 →₀ ℕ) := {m | ∀ i, m.weight (wv i) ≤ «Y» i}
 
-theorem freeSet_finite (Y : Fin 3 → ℕ) : (freeSet Y).Finite := by
-  apply (Finsupp.finite_of_degree_le (Y 0)).subset
+theorem freeSet_finite («Y» : Fin 3 → ℕ) : (freeSet «Y»).Finite := by
+  apply (Finsupp.finite_of_degree_le («Y» 0)).subset
   intro m hm
   have h := hm 0
   have hd : m.degree = m.weight (wv 0) := by
     rw [Finsupp.degree_eq_weight_one]; rfl
   simpa [hd] using h
 
-noncomputable def free (Y : Fin 3 → ℕ) : ℕ := (freeSet_finite Y).toFinset.card
+noncomputable def free («Y» : Fin 3 → ℕ) : ℕ := (freeSet_finite «Y»).toFinset.card
 
-theorem mem_restrict_iff {P : MvPolynomial (Fin 4) F} {Y : Fin 3 → ℕ} :
-    P ∈ restrictSupport F (freeSet Y) ↔ ∀ i, shp i P ≤ Y i := by
+theorem mem_restrict_iff {P : MvPolynomial (Fin 4) F} {«Y» : Fin 3 → ℕ} :
+    P ∈ restrictSupport F (freeSet «Y») ↔ ∀ i, shp i P ≤ «Y» i := by
   rw [mem_restrictSupport_iff]
   constructor
   · intro h i
@@ -193,9 +199,9 @@ theorem mem_restrict_iff {P : MvPolynomial (Fin 4) F} {Y : Fin 3 → ℕ} :
   · intro h m hm i
     exact (Finset.le_sup (f := fun m => m.weight (wv i)) hm).trans (h i)
 
-theorem finrank_restrict (Y : Fin 3 → ℕ) :
-    Module.finrank F (restrictSupport F (freeSet Y)) = free Y := by
-  have h : (↑(freeSet_finite Y).toFinset : Set (Fin 4 →₀ ℕ)) = freeSet Y := Set.Finite.coe_toFinset _
+theorem finrank_restrict («Y» : Fin 3 → ℕ) :
+    Module.finrank F (restrictSupport F (freeSet «Y»)) = free «Y» := by
+  have h : (↑(freeSet_finite «Y»).toFinset : Set (Fin 4 →₀ ℕ)) = freeSet «Y» := Set.Finite.coe_toFinset _
   rw [← h, finrank_restrictSupport_finset]; rfl
 
 theorem dim_le_free [Infinite F] (V : Submodule F (MvPolynomial (Fin 4) F)) (g : MvPolynomial (Fin 4) F)

@@ -1,4 +1,7 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Final50PriceCaps
+set_option Elab.async false
+
 set_option Elab.async false
 set_option maxRecDepth 16000
 set_option maxHeartbeats 3000000

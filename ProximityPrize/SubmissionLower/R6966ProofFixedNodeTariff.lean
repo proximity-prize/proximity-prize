@@ -1,4 +1,7 @@
-import ProximityPrize.SubmissionLower.R6966ProofFixedNodeRows
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.R6960CollisionTameBranchFrame
+set_option Elab.async false
+
 
 set_option Elab.async false
 

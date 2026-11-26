@@ -1,30 +1,51 @@
-import ArkLib.Data.CodingTheory.ReedSolomon.MutualCorrelatedAgreement.Johnson.Agreement
-import ArkLib.Data.Finset.PairwiseIntersection
-import Mathlib.Algebra.AffineMonoid.Basic
-import Mathlib.Algebra.Order.Monoid.Prod
-import Mathlib.Algebra.Polynomial.Basis
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.BoxIntegral.UnitPartition
-import Mathlib.Analysis.Convex.Intrinsic
-import Mathlib.Analysis.Convex.Measure
-import Mathlib.Analysis.Convex.Visible
-import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Combinatorics.Nullstellensatz
-import Mathlib.Combinatorics.Pigeonhole
-import Mathlib.Data.Finsupp.Interval
-import Mathlib.Data.Set.Card.Arithmetic
-import Mathlib.Data.Sym.NatCard
-import Mathlib.LinearAlgebra.TensorProduct.Free
-import Mathlib.RingTheory.Finiteness.Descent
-import Mathlib.RingTheory.Flat.Equalizer
-import Mathlib.RingTheory.Ideal.IsPrincipalPowQuotient
-import Mathlib.RingTheory.KrullDimension.LocalRing
-import Mathlib.RingTheory.RingHom.Unramified
-import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
-import Mathlib.Topology.Algebra.MvPolynomial
-import ProximityPrize.SubmissionLower.Fast042
-import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.LibraryArkLib_Data_CodingTheory_ReedSolomon_MutualCorrelatedAgreement_Johnson_Agreement
+import ProximityPrize.SubmissionLower.LibraryArkLib_Data_Finset_PairwiseIntersection
+import ProximityPrize.SubmissionLower.LibraryMathlib_Algebra_Polynomial_Basis
+import ProximityPrize.SubmissionLower.LibraryMathlib_Analysis_BoxIntegral_UnitPartition
+import ProximityPrize.SubmissionLower.LibraryMathlib_Analysis_Convex_Measure
+import ProximityPrize.SubmissionLower.LibraryMathlib_Analysis_Convex_Visible
+import ProximityPrize.SubmissionLower.LibraryMathlib_Combinatorics_Pigeonhole
+import ProximityPrize.SubmissionLower.LibraryMathlib_Data_Finsupp_Interval
+import ProximityPrize.SubmissionLower.LibraryMathlib_Data_Set_Card_Arithmetic
+import ProximityPrize.SubmissionLower.LibraryMathlib_Data_Sym_NatCard
+import ProximityPrize.SubmissionLower.LibraryMathlib_LinearAlgebra_TensorProduct_Free
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_Finiteness_Descent
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_Flat_Equalizer
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_Ideal_IsPrincipalPowQuotient
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_RingHom_Unramified
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_Spectrum_Prime_Homeomorph
+import ProximityPrize.SubmissionLower.LibraryMathlib_Topology_Algebra_MvPolynomial
+import ProximityPrize.SubmissionLower.DdZ3EWiUc
+import ProximityPrize.SubmissionLower.DdA2
+set_option Elab.async false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 set_option Elab.async false
 set_option autoImplicit true
 section

@@ -1,5 +1,9 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R6960Low6960Retained
-import ProximityPrize.SubmissionLower.KoalaAllocationWeight
+import ProximityPrize.SubmissionLower.Final50Order
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 

@@ -1,6 +1,15 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Fast055
-import ProximityPrize.SubmissionLower.RingHomShortcuts
-import ProximityPrize.SubmissionLower.Fast056
+import ProximityPrize.SubmissionLower.R6966ProofProtocolProfile
+import ProximityPrize.SubmissionLower.DdB6
+set_option Elab.async false
+local instance (priority := 2300) {k σ : Type*} [Field k] : FaithfulSMul k (MvPolynomial σ k) :=
+  (faithfulSMul_iff_algebraMap_injective k _).2 (MvPolynomial.C_injective σ k)
+local instance (priority := 2300) {k : Type*} [Field k] : FaithfulSMul k (Polynomial k) :=
+  (faithfulSMul_iff_algebraMap_injective k _).2 Polynomial.C_injective
+
+
+
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -1807,7 +1816,7 @@ theorem proof : K1_14_2_2_2_6.c1 := by
   rw [restriction_map, he, Algebra.smul_def, IsScalarTower.algebraMap_apply Params SectionField,
     Polynomial.algebraMap_eq] at hdiv
   have hdunit : IsUnit (algebraMap Params SectionField d) := isUnit_iff_ne_zero.mpr (by
-    simpa using (IsFractionRing.injective Params SectionField).ne
+    simpa only [map_zero] using (IsFractionRing.injective Params SectionField).ne
       (mem_nonZeroDivisors_iff_ne_zero.mp hd))
   exact Ideal.Quotient.eq_zero_iff_mem.mpr
     (Ideal.mem_span_singleton.mpr ((hdunit.map Polynomial.C).dvd_mul_left.mp hdiv))
@@ -2479,6 +2488,9 @@ private theorem affine_dimension (k A : Type) [Field k] [CommRing A] [IsDomain A
     simpa [R, trdeg_eq_zero (R := R) (A := A), Cardinal.mk_fin] using
       (trdeg_add_eq (A := A) k R).symm
 private theorem trdeg_seedField : Algebra.trdeg FX SeedField = 2 := by
+  let : FaithfulSMul Seeds SeedField :=
+    (faithfulSMul_iff_algebraMap_injective Seeds SeedField).2
+      (IsFractionRing.injective Seeds SeedField)
   let : Algebra.IsAlgebraic Seeds SeedField := IsLocalization.isAlgebraic SeedField Seeds⁰
   simpa [Seeds, trdeg_eq_zero (R := Seeds) (A := SeedField), Cardinal.mk_fin] using
     (trdeg_add_eq (A := SeedField) FX Seeds).symm
@@ -2547,6 +2559,8 @@ theorem proof : K1_14_2_2_7_2.c1 := by
     norm_num
   let : FaithfulSMul SeedField S :=
     (faithfulSMul_iff_algebraMap_injective SeedField S).mpr (algebraMap SeedField S).injective
+  let : FaithfulSMul FX SeedField :=
+    (faithfulSMul_iff_algebraMap_injective FX SeedField).2 (algebraMap FX SeedField).injective
   have htower := trdeg_add_eq (A := S) FX SeedField
   rw [trdeg_seedField, htotal] at htower
   have hrel : Algebra.trdeg SeedField S = 1 := by

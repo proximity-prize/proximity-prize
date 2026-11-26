@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.Low6966RetainedAssembly
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Compact54Packed
 import ProximityPrize.SubmissionLower.Low6966ActiveCycleMixed
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 

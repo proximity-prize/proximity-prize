@@ -1,11 +1,21 @@
-import ProximityPrize.SubmissionLower.Low6966WeightedTally
-import ProximityPrize.SubmissionLower.Low6966SurfaceLinearFour
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Low6966Gates
+import ProximityPrize.SubmissionLower.Low48BentCycleCap
 import ProximityPrize.SubmissionLower.Gate6966Rows
 import ProximityPrize.SubmissionLower.Gate6966CertCF
 import ProximityPrize.SubmissionLower.Gate6966Gate
 import ProximityPrize.SubmissionLower.Gate6966Amb
 import ProximityPrize.SubmissionLower.Gate6966Hb
 import ProximityPrize.SubmissionLower.Gate6966Tail
+set_option Elab.async false
+
+
+
+
+
+
+
+
 
 set_option Elab.async false
 

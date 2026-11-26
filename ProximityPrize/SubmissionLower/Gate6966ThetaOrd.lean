@@ -1,8 +1,15 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Gate6966Bilinear
 import ProximityPrize.SubmissionLower.Gate6966Tail
 import ProximityPrize.SubmissionLower.Gate6966Assm
 import ProximityPrize.SubmissionLower.Gate6966Amb
-import ProximityPrize.SubmissionLower.Low6966WeightedCut
+import ProximityPrize.SubmissionLower.Low6966CountCore
+set_option Elab.async false
+
+
+
+
+
 
 set_option Elab.async false
 

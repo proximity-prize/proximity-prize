@@ -1,8 +1,15 @@
-import ProximityPrize.SubmissionLower.Low6966VariableSelect
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Low6966AllocTotal
 import ProximityPrize.SubmissionLower.Gate6966Tilted
 import ProximityPrize.SubmissionLower.Gate6966Shape
 import ProximityPrize.SubmissionLower.Gate6966CertCF
-import ProximityPrize.SubmissionLower.Low6966SharedTallyNew
+import ProximityPrize.SubmissionLower.Low6966RetainedCount
+set_option Elab.async false
+
+
+
+
+
 
 set_option Elab.async false
 

@@ -1,4 +1,7 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R6960Low6960Rectangle
+set_option Elab.async false
+
 
 set_option Elab.async false
 set_option maxRecDepth 18000

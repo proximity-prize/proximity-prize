@@ -1,6 +1,11 @@
-import ProximityPrize.SubmissionLower.Fast077
-import ProximityPrize.SubmissionLower.RungSplit
-import ProximityPrize.SubmissionLower.PortHighFinish
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.A6966FinalRankBlocks
+import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup50
+import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup58
+set_option Elab.async false
+
+
+
 
 set_option Elab.async false
 

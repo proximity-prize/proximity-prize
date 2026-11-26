@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.R6966ProofNearTerminalGeometry
-import ProximityPrize.SubmissionLower.R6966ProofNearTerminalWords
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.R6966ProofNearCases
+import ProximityPrize.SubmissionLower.R6966ProofNearTerminalFacts
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 
@@ -34,21 +38,24 @@ private theorem grade_cap (q : Quote) (b : Band) (a : ℕ) : q.degreeCap b a≤b
   · exact le_rfl
   · exact min_le_left _ _
 
-private theorem content_of_first (b : Fin 4) (lo : (band b).low=19) : (band b).content=7 := by
-  fin_cases b <;> simp [band] at lo ⊢
+private theorem content_at19 (b : Fin 7) : (band b).low=19 → (band b).content=8 := by
+  fin_cases b <;> decide
 
-private theorem high_seven (b : Fin 4) : 7≤(band b).high := by fin_cases b <;> decide
+private theorem content_at21 (b : Fin 7) : (band b).low=21 → (band b).content=8 := by
+  fin_cases b <;> decide
+
+private theorem high_seven (b : Fin 7) : 7≤(band b).high := by fin_cases b <;> decide
 
 /-- A concentrated graph is charged with the exact method selected by
 the verified quote. The off-graph source mass is charged separately. -/
 private theorem graph_count {u deleted} {M : Model u deleted} {Γ T : Finset K} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2330≤M.overhead.toNat) (hi : M.overhead.toNat≤2499)
+    (lo : 2317≤M.overhead.toNat) (hi : M.overhead.toNat≤2522)
     (P Q : Packet M Crt) (r : Fin 58) (bill : Invoice (branch r))
     (main_mass : bill.primaryMass=mass P.sources 1) (rescue_mass : bill.rescueMass=mass Q.sources 1)
     (sub : T⊆Γ) (marks : ∀ γ∈T,∃ q∈parents P Q,OnSurface F q γ)
     {f : Equation} (full : ProjectedProduct (parents P Q) f) (nonempty : (parents P Q).Nonempty)
-    (b : Fin 4) (lower : (band b).low≤f.natDegree) (upper : f.natDegree≤(band b).high)
+    (b : Fin 7) (lower : (band b).low≤f.natDegree) (upper : f.natDegree≤(band b).high)
     {G : Pade.Row SeedField} (gp : G.primitive) (bounded : G.graphDegree≤(band b).maxGraph)
     (control : Pade.Controls (G.map (algebraMap SeedField Pade.Native.Sep))
       (Pade.Native.sheets (parents P Q)) (band b).content) : bill.paid+T.card≤core := by
@@ -93,7 +100,10 @@ private theorem graph_count {u deleted} {M : Model u deleted} {Γ T : Finset K} 
     (subset_degree (filter_subset _ _) witness.1 full).trans upper
   have feeV : V.card≤density (bnd.off a)*VMass+bnd.high^2 := by
     rcases other with pr | ⟨empty,_⟩
-    · have below : bnd.off a≤7 := (Nat.sub_le _ _).trans (band_props b).2.2.1
+    · have below : bnd.off a≤7 := by
+        have limited : bnd.content≤8 := (band_props b).2.2.1
+        unfold Band.off
+        omega
       have count := (small_degree_count F Vsub hi pr (bnd.off a) VMass (by omega)
         jDegree smallV (outside_cap P Q N.poly pr) off_marks).1
       have enough := below.trans (high_seven b)
@@ -131,7 +141,7 @@ private theorem graph_count {u deleted} {M : Model u deleted} {Γ T : Finset K} 
     have pad := round_le degH gcap (band_props b).2.2.2
     exact ⟨native.trans (Nat.add_le_add_left pad _),axis.trans (Nat.add_le_add_left pad _)⟩
   have physical : (131071:ℤ)+M.overhead≤wordDegree := by
-    change (131071:ℤ)+M.overhead≤133570
+    change (131071:ℤ)+M.overhead≤133593
     omega
   have wordPrice (which : q.method=.surface ∨ q.method=.affine ∨ q.method=.single ∨ q.method=.fixed) :
       T.card≤q.wordPrice bnd a i j+density (bnd.off a)*VMass+bnd.additive := by
@@ -170,17 +180,28 @@ private theorem graph_count {u deleted} {M : Model u deleted} {Γ T : Finset K} 
   · simpa only [Quote.Demand,mode] using wordPrice (Or.inr (Or.inr (Or.inr mode)))
   · simp only [Quote.Paid,mode] at pay
     simp only [Quote.Demand,mode]
-    have degree : 19≤f.natDegree := by rw [←pay.1]; exact lower
-    have seven := content_of_first b pay.1
-    rw [seven] at control
-    exact large_graph lo hi Crt (word M) nonempty parent pass full
-      degree N gp pay.2.1 (pay.2.2.trans in₁.1) control
+    rcases pay with p0 | p1 | p2
+    · obtain ⟨low,grade,axis⟩ := p0
+      have degree : 19≤f.natDegree := low ▸ lower
+      have content : (band b).content=8 := content_at19 b low
+      rw [content] at control
+      exact large_graph19g5 lo hi Crt (word M) nonempty parent pass full degree N gp grade (axis.trans in₁.1) control
+    · obtain ⟨low,grade,axis⟩ := p1
+      have degree : 19≤f.natDegree := low ▸ lower
+      have content : (band b).content=8 := content_at19 b low
+      rw [content] at control
+      exact large_graph19g6 lo hi Crt (word M) nonempty parent pass full degree N gp grade (axis.trans in₁.1) control
+    · obtain ⟨low,grade,axis⟩ := p2
+      have degree : 21≤f.natDegree := low ▸ lower
+      have content : (band b).content=8 := content_at21 b low
+      rw [content] at control
+      exact large_graph21g5 lo hi Crt (word M) nonempty parent pass full degree N gp grade (axis.trans in₁.1) control
 
 /-- The retained marks of the actual near packets, together with both
 prefix invoices, fit the 69.66 budget at every transition height. -/
 theorem count {u deleted} {M : Model u deleted} {Γ T : Finset K} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2330≤M.overhead.toNat) (hi : M.overhead.toNat≤2499)
+    (lo : 2317≤M.overhead.toNat) (hi : M.overhead.toNat≤2522)
     (b c : NearBook.Packet M Crt) (r : Fin 58) (I : NearLedger.Invoice (NearLedger.branch r))
     (m₀ : I.primaryMass=mass b.sources 1) (m₁ : I.rescueMass=mass c.sources 1)
     (d₀ : mass b.sources 0≤(branch r).primary.grade) (d₁ : mass c.sources 0≤(branch r).rescue.grade)

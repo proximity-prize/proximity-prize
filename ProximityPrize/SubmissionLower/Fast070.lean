@@ -1,7 +1,25 @@
-import ProximityPrize.SubmissionLower.Fast063
-import ProximityPrize.SubmissionLower.Fast064
-import ProximityPrize.SubmissionLower.Fast065
-import ProximityPrize.SubmissionLower.Fast066
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.DdZQtCuFa
+import ProximityPrize.SubmissionLower.Fast058
+import ProximityPrize.SubmissionLower.DdZCUPQZb
+import ProximityPrize.SubmissionLower.LibraryMathlib_MeasureTheory_Measure_Lebesgue_EqHaar
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_RingHom_Flat
+set_option Elab.async false
+section
+open MeasureTheory
+open scoped Interval
+private theorem integralIdentity6967 (a b : ℝ) :
+    (∫ x in a..b, x) = (b ^ 2 - a ^ 2) / 2 := by
+  have hd (x : ℝ) : HasDerivAt (fun t : ℝ => t ^ 2 / 2) x x := by
+    convert ((hasDerivAt_id x).pow 2).div_const 2 using 1 <;> simp
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (f := fun t : ℝ => t ^ 2 / 2)
+    (fun x _ => hd x) (continuous_id.intervalIntegrable a b)]
+  ring
+end
+
+
+
+
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -3894,7 +3912,7 @@ private theorem lintegral_affine {a b d : ℝ} (hd : 0 ≤ d)
     intervalIntegral.integral_add
       (show IntervalIntegrable (fun _ : ℝ => a) volume 0 d from intervalIntegrable_const)
       ((show Continuous (fun x : ℝ => b * x) by fun_prop).intervalIntegrable 0 d),
-    intervalIntegral.integral_const, intervalIntegral.integral_const_mul, integral_id]
+    intervalIntegral.integral_const, intervalIntegral.integral_const_mul, integralIdentity6967]
   simp only [sub_zero, smul_eq_mul, zero_pow (by decide : (2 : ℕ) ≠ 0)]
   ring
 private abbrev splitLast {n : ℕ} : (Fin (n + 1) → ℝ) ≃ᵐ ℝ × (Fin n → ℝ) :=

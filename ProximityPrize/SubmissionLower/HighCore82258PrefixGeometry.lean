@@ -1,4 +1,7 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.HighCore82258PrefixProcess
+set_option Elab.async false
+
 
 set_option Elab.async false
 

@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.KoalaRectCutoff
-import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.FadicChunk
+import ProximityPrize.SubmissionLower.DdZZ6ou4c
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 

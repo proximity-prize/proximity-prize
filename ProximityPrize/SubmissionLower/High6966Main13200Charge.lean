@@ -1,5 +1,9 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.High6966Main13200Invoice
-import ProximityPrize.SubmissionLower.High6966RescueCharge
+import ProximityPrize.SubmissionLower.High6966Main13200
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 section Merged_R6960MainGeometryFee
@@ -19,14 +23,14 @@ open K1_14_3 (Surface Parent)
 open P1_7_4 (ODEGuard Mass massQ dotQ dotQ_mono_mass massQ_mono dotQ_scale_add)
 open HighCore82268JointRank (fixed_fee_linear)
 open Rescue6966 (Model Family OnMark OnSurface SurfacePass word curveMarks mem_curveMarks
-  curve_tariff rated_curve_count fixedFee lambda mu tau)
+  curve_tariff rated_curve_count fixedFee lambda mu)
 open Lower6960.Rescue6966 (fixedFee_eq)
 open scoped Classical BigOperators
 def Initial.rankMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) : Finset K :=
   R.marks.filter (fun γ=>∃ J∈ini.rankExit,OnMark R.family J γ)
 theorem Initial.rank_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) (hi : M.overhead.toNat≤2499) :
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) (hi : M.overhead.toNat≤2522) :
     (ini.rankMarks.card : ℚ)≤dotQ rankWeight (massQ ini.rankExit)+rankRound := by
   let S := ini.rankExit
   let B := max 2 (mass S 2)
@@ -77,7 +81,7 @@ private theorem card_round {a : ℕ} {q : ℚ} (bound : (a : ℚ)≤q) : a≤q.c
   exact_mod_cast bound.trans (Rat.le_ceil.trans ceil_cast)
 theorem CutBooks.curve_bin_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hiM : M.overhead.toNat≤2499) {i : ℕ} (hi : i<17) :
+    (C : CutBooks ini) (hiM : M.overhead.toNat≤2522) {i : ℕ} (hi : i<17) :
     ((curveMarks R.family (C.cover i)).card : ℚ)≤
       dotQ (lossWeight i) (massQ (ini.lost i))+((C.cover i).cost 0 : ℚ) := by
   have global : ((C.cover i).cost 0 : ℚ)≤seedLimit :=
@@ -104,7 +108,7 @@ def CutBooks.lossMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     Finset K := ini.rankMarks ∪ (range 17).biUnion (fun i=>curveMarks R.family (C.cover i))
 theorem CutBooks.loss_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hi : M.overhead.toNat≤2499) : C.lossMarks.card + 1849635312035*K1_14_2_2.mass ini.final 1 ≤ (lossLimit).ceil.toNat := by
+    (C : CutBooks ini) (hi : M.overhead.toNat≤2522) : C.lossMarks.card + 1729755992975*K1_14_2_2.mass ini.final 1 ≤ (lossLimit).ceil.toNat := by
   apply card_round
   have cum : (C.lossMarks.card : ℚ) ≤ (ini.rankMarks.card : ℚ) +
       ∑ i∈range 17,((curveMarks R.family (C.cover i)).card : ℚ) := by
@@ -118,7 +122,7 @@ theorem CutBooks.loss_count {u deleted} {M : Model u deleted} {Γ} {F : Family M
   have joint := ini.joint_bill_with_final rankWeight lossWeight
   have seed := C.seed_bill
   have total := cum.trans both
-  have keep:=Lower6960.Rescue6966.credit_one (Lower6960.Rescue6966.beforeCuts rankWeight lossWeight) 18 (1849635312035) ini.final credit_guard
+  have keep:=Lower6960.Rescue6966.credit_one (Lower6960.Rescue6966.beforeCuts rankWeight lossWeight) 18 (1729755992975) ini.final credit_guard
   norm_num only [Nat.cast_ofNat] at keep
   push_cast
   unfold lossLimit
@@ -138,7 +142,7 @@ def CutBooks.paid {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
   (C.lossMarks ∪ C.pointMarks) ∪ (ini.seedMarks ∪ ini.ordinateMarks) ∪ (R.fixedMarks ∪ ini.contentMarks)
 theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hi : M.overhead.toNat≤2499) : C.paid.card+1849635312035*K1_14_2_2.mass ini.final 1≤mainFee := by
+    (C : CutBooks ini) (hi : M.overhead.toNat≤2522) : C.paid.card+1729755992975*K1_14_2_2.mass ini.final 1≤mainFee := by
   have combined := card_union_le
     ((C.lossMarks ∪ C.pointMarks) ∪ (ini.seedMarks ∪ ini.ordinateMarks)) (R.fixedMarks ∪ ini.contentMarks)
   have left := card_union_le (C.lossMarks ∪ C.pointMarks) (ini.seedMarks ∪ ini.ordinateMarks)
@@ -155,7 +159,7 @@ theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M
   omega
 theorem Rows.main_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt)
-    (hi : M.overhead.toNat≤2499) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
+    (hi : M.overhead.toNat≤2522) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ (ini : Initial R) (C : CutBooks ini) (S : Finset Surface),
       (∀ q∈S,Parent q ∧ SurfacePass Crt (word M) q) ∧

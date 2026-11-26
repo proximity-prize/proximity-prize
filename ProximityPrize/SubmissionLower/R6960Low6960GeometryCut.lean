@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.R6960Low6960SurfaceLinearFour
-import ProximityPrize.SubmissionLower.R6960Low6960FatPad
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.R6960Front6960Rank4
+import ProximityPrize.SubmissionLower.R6960Low6960AllocWeight
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 set_option autoImplicit true

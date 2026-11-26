@@ -1,5 +1,9 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.StructuralListPrice
-import ProximityPrize.SubmissionLower.ListProofA
+import ProximityPrize.SubmissionLower.A6966FinalAnchorSpace
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 

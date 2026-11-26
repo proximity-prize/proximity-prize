@@ -1,9 +1,20 @@
-import ProximityPrize.SubmissionLower.R6966ProofNearLedgerBudget
-import ProximityPrize.SubmissionLower.R6966ProofNearAffineHelper
-import ProximityPrize.SubmissionLower.R6966ProofQuadraticHelper6966
-import ProximityPrize.SubmissionLower.R6966ProofHelperRescueCatalogue
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Gate6966Gate
+import ProximityPrize.SubmissionLower.High6966Main13200Books
 import ProximityPrize.SubmissionLower.High6966Packets
-import ProximityPrize.SubmissionLower.High6966WideRows
+import ProximityPrize.SubmissionLower.R6960ChartGlobalTests
+import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
+import ProximityPrize.SubmissionLower.R6960RetainedCrossingLift
+import ProximityPrize.SubmissionLower.R6966ProofNearTerminalFacts
+
+section Merged6967_R6966ProofNearCases
+set_option Elab.async false
+
+
+
+
+
+
 
 set_option Elab.async false
 
@@ -108,19 +119,19 @@ private theorem either_marks {V:Submodule FX Jet} {G H:Jet} (g:Common V G) (kind
 
 private def high (i:Fin 54) : Fin 58 := ⟨4+i.val,by have:=i.isLt;omega⟩
 private theorem high_books (i:Fin 54) :
-    (branch (high i)).primary=⟨167997887646643864,1849635312035,5608,220⟩ ∧
+    (branch (high i)).primary=⟨127815628075157321,1729755992975,4460,246⟩ ∧
     (branch (high i)).rescue=⟨Rescue6966.paidCap i,Rescue6966.retainedCredit i,
       (Rescue6966Source.data i).bound 1,(Rescue6966Source.data i).bound 0⟩ := by
   fin_cases i <;> exact ⟨rfl,rfl⟩
 
 private theorem high_pair {v:ℕ} (pos:0<v) (small:v≤92) :
-    ∃ i:Fin 12,(Pair6966.row i).cap=13200 ∧ (Pair6966.row i).degree=2 ∧
+    ∃ i:Fin 12,(Pair6966.row i).cap=8418 ∧ (Pair6966.row i).degree=2 ∧
       (Pair6966.row i).wt=(QuadraticBudget.band v).2 ∧ (Pair6966.row i).seed≤v :=
-  (by decide +kernel : ∀ n:Fin 93,0<n.val → ∃ i:Fin 12,(Pair6966.row i).cap=13200 ∧
+  (by decide +kernel : ∀ n:Fin 93,0<n.val → ∃ i:Fin 12,(Pair6966.row i).cap=8418 ∧
     (Pair6966.row i).degree=2 ∧ (Pair6966.row i).wt=(QuadraticBudget.band n.val).2 ∧
     (Pair6966.row i).seed≤n.val) ⟨v,by omega⟩ pos
 
-theorem exists_cover (F:Family M Γ) (Crt:CRTLift D) (lo:2330≤M.overhead.toNat) (hi:M.overhead.toNat≤2499)
+theorem exists_cover (F:Family M Γ) (Crt:CRTLift D) (lo:2317≤M.overhead.toNat) (hi:M.overhead.toNat≤2522)
     (nop:∀ j i,(D.block j).eval (nodeL i)≠0)
     (res:∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) : Nonempty (Cover F Crt) := by
   classical
@@ -136,15 +147,15 @@ theorem exists_cover (F:Family M Γ) (Crt:CRTLift D) (lo:2330≤M.overhead.toNat
     apply Or.inr
     apply cover γ (mem_filter.mpr ⟨hγ,?_⟩)
     simp [one,jetAt]
-  have known:Common (Pair6966.space Crt (word M) 20142) G:=owner
+  have known:Common (Pair6966.space Crt (word M) 10280) G:=owner
   obtain ⟨slope,jp,jmax,sp,smax,smix⟩:=Wide6966Helper.helper_common_caps Crt (word M) lo (hi.trans (by decide))
     known.1 known.2.2.1 known.2.1 known.2.2.2
   obtain ⟨phys⟩:=HelperPhysicalModel.exists_model Crt known.1 known.2.1
   let w:=131071-M.overhead.toNat
   let weight:=RawPhysicalDegree.weight w (w-1) phys.raw
-  have base (n:ℕ) (le:n≤jetDegree G) : 128572*n-1≤weight := by
+  have base (n:ℕ) (le:n≤jetDegree G) : 128549*n-1≤weight := by
     have a:=HelperWeightCap.weight_lower phys known.1.ne_zero w (by dsimp [w];omega)
-    have low:128572≤w:=by dsimp [w];omega
+    have low:128549≤w:=by dsimp [w];omega
     have b:=Nat.mul_le_mul low le
     change w*jetDegree G≤weight+G.natDegree at a
     omega
@@ -152,15 +163,15 @@ theorem exists_cover (F:Family M Γ) (Crt:CRTLift D) (lo:2330≤M.overhead.toNat
     by_cases z:jetAt G (M.label γ) (F.scalar γ)=0
     · exact Or.inl (mem_filter.mpr ⟨hg,z⟩)
     · exact Or.inr (mem_filter.mpr ⟨hg,z⟩)
-  have medium (k:Fin 12) (cap:(Pair6966.row k).cap=15000) (deg:(Pair6966.row k).degree≤jetDegree G)
+  have medium (k:Fin 12) (cap:(Pair6966.row k).cap=8813) (deg:(Pair6966.row k).degree≤jetDegree G)
       (seed:(Pair6966.row k).seed≤seedDegree G) (wt:(Pair6966.row k).wt≤weight) (index:Fin 58)
-      (pay:(branch index).primary=⟨185233047747540462,1838347228855,6160,220⟩)
+      (pay:(branch index).primary=⟨130933022881678518,1729199597045,4592,246⟩)
       (count:T.card≤(branch index).extra) : Nonempty (Cover F Crt) := by
     obtain ⟨Q⟩:=Pair6966.chosen15000 F Crt k cap lo hi nop res known phys deg wt seed
     have uniq:=Pair6966.unique Crt (word M) k lo hi known phys deg wt seed
     rw [cap] at uniq
-    have on:Common (Pair6966.space Crt (word M) 15000) G :=
-      ⟨known.1,known.2.1,known.2.2.1,fun P hp=>known.2.2.2 P (Pair6966.space_mono Crt (word M) (by decide : 15000≤20142) hp)⟩
+    have on:Common (Pair6966.space Crt (word M) 8813) G :=
+      ⟨known.1,known.2.1,known.2.2.1,fun P hp=>known.2.2.2 P (Pair6966.space_mono Crt (word M) (by decide : 8813≤10280) hp)⟩
     obtain ⟨b,paid,cover⟩:=NearPacket.main15000 Q hi nop res
     apply solo index b T (by unfold Fits;rw [pay];exact paid) count
     intro γ hg
@@ -191,7 +202,7 @@ theorem exists_cover (F:Family M Γ) (Crt:CRTLift D) (lo:2330≤M.overhead.toNat
     exact medium 1 rfl two sp (base 2 two) 3 rfl count
   have wtQuad : jetDegree G=2 → (QuadraticBudget.band (seedDegree G)).2≤weight :=
     fun q=>Nat.le_of_not_gt (fun l=>light ⟨q,l⟩)
-  obtain ⟨k,cap,degree,seed,wt⟩ : ∃ k:Fin 12,(Pair6966.row k).cap=13200 ∧
+  obtain ⟨k,cap,degree,seed,wt⟩ : ∃ k:Fin 12,(Pair6966.row k).cap=8418 ∧
       (Pair6966.row k).degree≤jetDegree G ∧ (Pair6966.row k).seed≤seedDegree G ∧ (Pair6966.row k).wt≤weight := by
     by_cases quad:jetDegree G=2
     · obtain ⟨k,h,deg,ww,ss⟩:=high_pair sp seed92
@@ -201,8 +212,8 @@ theorem exists_cover (F:Family M Γ) (Crt:CRTLift D) (lo:2330≤M.overhead.toNat
   obtain ⟨Q⟩:=Pair6966.chosen13200 F Crt k cap lo hi nop res known phys degree wt seed
   have uniq:=Pair6966.unique Crt (word M) k lo hi known phys degree wt seed
   rw [cap] at uniq
-  have on:Common (Pair6966.space Crt (word M) 13200) G :=
-    ⟨known.1,known.2.1,known.2.2.1,fun P hp=>known.2.2.2 P (Pair6966.space_mono Crt (word M) (by decide : 13200≤20142) hp)⟩
+  have on:Common (Pair6966.space Crt (word M) 8418) G :=
+    ⟨known.1,known.2.1,known.2.2.1,fun P hp=>known.2.2.2 P (Pair6966.space_mono Crt (word M) (by decide : 8418≤10280) hp)⟩
   obtain ⟨S,_⟩:=HelperRescueCatalogue.selected F Crt lo hi nop res phys known.1 slope two jmax sp seed92 wtQuad
   obtain ⟨b,bp,bc⟩:=NearPacket.main13200 Q hi nop res
   obtain ⟨c,cp,cc⟩:=NearPacket.rescue S hi nop res
@@ -221,3 +232,237 @@ theorem exists_cover (F:Family M Γ) (Crt:CRTLift D) (lo:2330≤M.overhead.toNat
 #print axioms exists_cover
 end
 end Research6966.NearCases
+
+end Merged6967_R6966ProofNearCases
+
+section Merged6967_R6966ProofNearTerminalGeometry
+set_option Elab.async false
+
+
+
+set_option Elab.async false
+
+namespace Research6966.NearTerminal
+open Finset Polynomial
+open K1 (p I)
+open K1_14 (Jet Equation L)
+open K1_14_1 (PoleData CRTLift)
+open K1_14_2_2_2_1 (seedDegree seedDegree_le)
+open K1_14_3 (Surface Parent ProjectedProduct SeedField SeedClosure)
+open PadeNativeQuotient (Native axis axis_le)
+open NearLedger
+open NearBook
+open Lower6960.Rescue6966 (terminalShape)
+open scoped Polynomial Classical
+noncomputable section
+set_option maxHeartbeats 6500000
+set_option maxRecDepth 6500
+set_option backward.isDefEq.respectTransparency false
+
+theorem axis_seed (P : Jet) (z : Fin 2) : axis P z≤seedDegree P :=
+  (axis_le ..).mpr (fun j i=>
+    (MvPolynomial.degreeOf_le_totalDegree ..).trans ((seedDegree_le P _).mp le_rfl j i))
+
+theorem seeded_of_positive {P : Jet} (pos : 0<seedDegree P) : K1_14_2.UsesSeed P := by
+  unfold K1_14_2.UsesSeed
+  by_contra! none
+  exact (Nat.not_le_of_lt pos) ((seedDegree_le P 0).mpr none)
+
+private theorem catalogue_lower (k : Fin 264) : 0<(HelperWindowCatalogue.ordinary k).lower := by
+  fin_cases k <;> decide
+
+theorem quotient_bound {h : ℕ} (lo : 2317≤h) (hi : h≤2522) {D : PoleData h}
+    (Crt : CRTLift D) (word : I→L)
+    {G : Pade.Row SeedField} (N : Native G) (gp : G.primitive)
+    (phys : HelperPhysicalModel.Model Crt N.poly)
+    {S : Finset Surface} {H : Equation} (witness : NativeWitnessBank.witnessed N S H)
+    (geo : ∀ q∈S,Parent q) (pass : ∀ q∈S,TerminalBanks.Pass Crt word agreement terminalShape q)
+    {i j : Fin 55} (bin₀ : InBin i (axis N.poly 0)) (bin₁ : InBin j (axis N.poly 1))
+    (pick : Pick) (legal : pick.Valid G.graphDegree i j) :
+    (pick.bank.reserve+1)*H.natDegree≤pick.bank.B+(G.graphDegree-1)*pick.bank.J ∧
+      ∀ z u, upper (binAt i j z)=some u →
+        (pick.bank.reserve+1)*KoalaRect.axisDegree H z≤pick.seedBudget z+pick.bank.J*u := by
+  have bins (z : Fin 2) : InBin (binAt i j z) (axis N.poly z) := by
+    fin_cases z
+    · exact bin₀
+    · exact bin₁
+  have lower : if pick.bank.rect then pick.bank.lower≤axis N.poly pick.narrow
+      else pick.bank.lower≤seedDegree N.poly := by
+    have admission := legal.2
+    cases tag : pick.bank.rect
+    · simp only [tag,Bool.false_eq_true,ite_false] at admission ⊢
+      exact admission.trans (max_le (bin₀.1.trans (axis_seed ..)) (bin₁.1.trans (axis_seed ..)))
+    · simp only [tag,ite_true] at admission ⊢
+      exact admission.trans (bins pick.narrow).1
+  have seed : pick.bank.lower≤seedDegree N.poly := by
+    split at lower
+    · exact lower.trans (axis_seed ..)
+    · exact lower
+  have seeded := seeded_of_positive ((catalogue_lower pick.index).trans_le seed)
+  have fits : TerminalBanks.inside pick.bank.shape terminalShape :=
+    HelperWindowNative.shape_inside pick.verified terminalShape (by decide) (by decide) (by decide)
+  have est := HelperWindowNative.projected_bounds pick.verified lo hi Crt word N gp phys legal.1.symm seeded
+    witness fits (axis N.poly) pick.narrow
+    (fun j i z => (axis_le ..).mp le_rfl j i) lower geo pass
+  refine ⟨est.1,fun z u hu => (est.2 z).trans ?_⟩
+  exact Nat.add_le_add_left (Nat.mul_le_mul_left _ ((bins z).2 u hu)) _
+
+/-- A witness of high second-axis degree on a degree-five graph forces
+17 distinct actual on-graph ordinates into the physical exclusion. -/
+theorem large_graph19g5 {h : ℕ} (lo : 2317≤h) (hi : h≤2522) {D : PoleData h} (Crt : CRTLift D)
+    (word : I→L) {S : Finset Surface} (has : S.Nonempty) (geo : ∀ q∈S,Parent q)
+    (pass : ∀ q∈S,TerminalBanks.Pass Crt word agreement terminalShape q)
+    {f : Equation} (full : ProjectedProduct S f) (degree : 19≤f.natDegree)
+    {G : Pade.Row SeedField} (N : Native G) (gp : G.primitive)
+    (graphDegree : G.graphDegree=5) (large : 4096≤axis N.poly 1)
+    (control : Pade.Controls (G.map (algebraMap SeedField Pade.Native.Sep)) (Pade.Native.sheets S) 8) :
+    False := by
+  classical
+  obtain ⟨f',T,v,pr,size,sheets⟩:=Pade.Native.projected_sheets S has geo
+  let on := T.filter (fun y=>(G.map (algebraMap SeedField Pade.Native.Sep)).err v y=0)
+  let off := T\on
+  have miss := control off v (by
+    intro y hy
+    obtain ⟨mem,bad⟩:=mem_sdiff.mp hy
+    exact ⟨sheets y mem,fun zero=>bad (mem_filter.mpr ⟨mem,zero⟩)⟩)
+  rw [Pade.Row.degree_map,graphDegree] at miss
+  have total : on.card+off.card=T.card := by
+    rw [Nat.add_comm]
+    exact card_sdiff_add_card_eq_card (filter_subset _ _)
+  have many : 19≤T.card := degree.trans_eq ((same_degree full pr).trans size.symm)
+  obtain ⟨kept,subset,keepSize⟩:=exists_subset_card_eq (show 16≤on.card by omega)
+  let emb : Pade.Native.Sep→+*SeedClosure := (separableClosure SeedField SeedClosure).val.toRingHom
+  let pts := kept.image emb
+  let slope (z : SeedClosure) := if H:∃y∈kept,emb y=z then emb (v H.choose) else 0
+  have atPoint (y : Pade.Native.Sep) (hy : y∈kept) : slope (emb y)=emb (v y) := by
+    have H : ∃ z∈kept,emb z=emb y := ⟨y,hy,rfl⟩
+    simp only [slope,dite_eq_left H,emb.injective H.choose_spec.2]
+  have n : pts.card=16 := (card_image_of_injective _ emb.injective).trans keepSize
+  have fit : TerminalBanks.inside LargeSeed19g5.shape terminalShape := by unfold TerminalBanks.inside; decide
+  have sheets0 : ∀ y∈pts, (∃ q∈S, K1_14_3.OnSeedFibre q y (slope y)) ∧ (G.map (algebraMap SeedField SeedClosure)).err slope y=0 := by
+    intro y hy
+    obtain ⟨z,hz,rfl⟩:=mem_image.mp hy
+    have picked : z∈on := subset hz
+    obtain ⟨tz,ok⟩:=mem_filter.mp picked
+    rw [atPoint z hz]
+    refine ⟨(Pade.Native.sheets_iff S z (v z)).mp (sheets z tz),?_⟩
+    change (G.a.map (algebraMap SeedField SeedClosure)).eval (emb z)*slope (emb z)-
+      (G.b.map (algebraMap SeedField SeedClosure)).eval (emb z)=0
+    rw [atPoint z hz]
+    have lifted (Q : SeedField[X]) :
+        emb ((Q.map (algebraMap SeedField Pade.Native.Sep)).eval z)=
+          (Q.map (algebraMap SeedField SeedClosure)).eval (emb z) := by
+      rw [eval_map,eval_map]
+      exact (Polynomial.aeval_algHom_apply (separableClosure SeedField SeedClosure).val z Q).symm
+    have law := congrArg emb ok
+    simp only [Pade.Row.err,Pade.Row.map,map_sub,map_mul,map_zero] at law
+    rwa [lifted,lifted] at law
+  exact LargeSeed19g5At2317.excluded (by omega) (by omega) Crt word fit geo pass full (by omega : 19≤f.natDegree) gp graphDegree N large pts slope n sheets0
+
+theorem large_graph19g6 {h : ℕ} (lo : 2317≤h) (hi : h≤2522) {D : PoleData h} (Crt : CRTLift D)
+    (word : I→L) {S : Finset Surface} (has : S.Nonempty) (geo : ∀ q∈S,Parent q)
+    (pass : ∀ q∈S,TerminalBanks.Pass Crt word agreement terminalShape q)
+    {f : Equation} (full : ProjectedProduct S f) (degree : 19≤f.natDegree)
+    {G : Pade.Row SeedField} (N : Native G) (gp : G.primitive)
+    (graphDegree : G.graphDegree=6) (large : 3968≤axis N.poly 1)
+    (control : Pade.Controls (G.map (algebraMap SeedField Pade.Native.Sep)) (Pade.Native.sheets S) 8) :
+    False := by
+  classical
+  obtain ⟨f',T,v,pr,size,sheets⟩:=Pade.Native.projected_sheets S has geo
+  let on := T.filter (fun y=>(G.map (algebraMap SeedField Pade.Native.Sep)).err v y=0)
+  let off := T\on
+  have miss := control off v (by
+    intro y hy
+    obtain ⟨mem,bad⟩:=mem_sdiff.mp hy
+    exact ⟨sheets y mem,fun zero=>bad (mem_filter.mpr ⟨mem,zero⟩)⟩)
+  rw [Pade.Row.degree_map,graphDegree] at miss
+  have total : on.card+off.card=T.card := by
+    rw [Nat.add_comm]
+    exact card_sdiff_add_card_eq_card (filter_subset _ _)
+  have many : 19≤T.card := degree.trans_eq ((same_degree full pr).trans size.symm)
+  obtain ⟨kept,subset,keepSize⟩:=exists_subset_card_eq (show 17≤on.card by omega)
+  let emb : Pade.Native.Sep→+*SeedClosure := (separableClosure SeedField SeedClosure).val.toRingHom
+  let pts := kept.image emb
+  let slope (z : SeedClosure) := if H:∃y∈kept,emb y=z then emb (v H.choose) else 0
+  have atPoint (y : Pade.Native.Sep) (hy : y∈kept) : slope (emb y)=emb (v y) := by
+    have H : ∃ z∈kept,emb z=emb y := ⟨y,hy,rfl⟩
+    simp only [slope,dite_eq_left H,emb.injective H.choose_spec.2]
+  have n : pts.card=17 := (card_image_of_injective _ emb.injective).trans keepSize
+  have fit : TerminalBanks.inside LargeSeed19g6.shape terminalShape := by unfold TerminalBanks.inside; decide
+  have sheets0 : ∀ y∈pts, (∃ q∈S, K1_14_3.OnSeedFibre q y (slope y)) ∧ (G.map (algebraMap SeedField SeedClosure)).err slope y=0 := by
+    intro y hy
+    obtain ⟨z,hz,rfl⟩:=mem_image.mp hy
+    have picked : z∈on := subset hz
+    obtain ⟨tz,ok⟩:=mem_filter.mp picked
+    rw [atPoint z hz]
+    refine ⟨(Pade.Native.sheets_iff S z (v z)).mp (sheets z tz),?_⟩
+    change (G.a.map (algebraMap SeedField SeedClosure)).eval (emb z)*slope (emb z)-
+      (G.b.map (algebraMap SeedField SeedClosure)).eval (emb z)=0
+    rw [atPoint z hz]
+    have lifted (Q : SeedField[X]) :
+        emb ((Q.map (algebraMap SeedField Pade.Native.Sep)).eval z)=
+          (Q.map (algebraMap SeedField SeedClosure)).eval (emb z) := by
+      rw [eval_map,eval_map]
+      exact (Polynomial.aeval_algHom_apply (separableClosure SeedField SeedClosure).val z Q).symm
+    have law := congrArg emb ok
+    simp only [Pade.Row.err,Pade.Row.map,map_sub,map_mul,map_zero] at law
+    rwa [lifted,lifted] at law
+  by_cases h2331 : h≤2331
+  · exact LargeSeed19g6At2317.excluded (by omega) (by omega) Crt word fit geo pass full (by omega : 19≤f.natDegree) gp graphDegree N large pts slope n sheets0
+  exact LargeSeed19g6At2332.excluded (by omega) (by omega) Crt word fit geo pass full (by omega : 19≤f.natDegree) gp graphDegree N large pts slope n sheets0
+
+theorem large_graph21g5 {h : ℕ} (lo : 2317≤h) (hi : h≤2522) {D : PoleData h} (Crt : CRTLift D)
+    (word : I→L) {S : Finset Surface} (has : S.Nonempty) (geo : ∀ q∈S,Parent q)
+    (pass : ∀ q∈S,TerminalBanks.Pass Crt word agreement terminalShape q)
+    {f : Equation} (full : ProjectedProduct S f) (degree : 21≤f.natDegree)
+    {G : Pade.Row SeedField} (N : Native G) (gp : G.primitive)
+    (graphDegree : G.graphDegree=5) (large : 4096≤axis N.poly 1)
+    (control : Pade.Controls (G.map (algebraMap SeedField Pade.Native.Sep)) (Pade.Native.sheets S) 8) :
+    False := by
+  classical
+  obtain ⟨f',T,v,pr,size,sheets⟩:=Pade.Native.projected_sheets S has geo
+  let on := T.filter (fun y=>(G.map (algebraMap SeedField Pade.Native.Sep)).err v y=0)
+  let off := T\on
+  have miss := control off v (by
+    intro y hy
+    obtain ⟨mem,bad⟩:=mem_sdiff.mp hy
+    exact ⟨sheets y mem,fun zero=>bad (mem_filter.mpr ⟨mem,zero⟩)⟩)
+  rw [Pade.Row.degree_map,graphDegree] at miss
+  have total : on.card+off.card=T.card := by
+    rw [Nat.add_comm]
+    exact card_sdiff_add_card_eq_card (filter_subset _ _)
+  have many : 21≤T.card := degree.trans_eq ((same_degree full pr).trans size.symm)
+  obtain ⟨kept,subset,keepSize⟩:=exists_subset_card_eq (show 17≤on.card by omega)
+  let emb : Pade.Native.Sep→+*SeedClosure := (separableClosure SeedField SeedClosure).val.toRingHom
+  let pts := kept.image emb
+  let slope (z : SeedClosure) := if H:∃y∈kept,emb y=z then emb (v H.choose) else 0
+  have atPoint (y : Pade.Native.Sep) (hy : y∈kept) : slope (emb y)=emb (v y) := by
+    have H : ∃ z∈kept,emb z=emb y := ⟨y,hy,rfl⟩
+    simp only [slope,dite_eq_left H,emb.injective H.choose_spec.2]
+  have n : pts.card=17 := (card_image_of_injective _ emb.injective).trans keepSize
+  have fit : TerminalBanks.inside LargeSeed21g5.shape terminalShape := by unfold TerminalBanks.inside; decide
+  have sheets0 : ∀ y∈pts, (∃ q∈S, K1_14_3.OnSeedFibre q y (slope y)) ∧ (G.map (algebraMap SeedField SeedClosure)).err slope y=0 := by
+    intro y hy
+    obtain ⟨z,hz,rfl⟩:=mem_image.mp hy
+    have picked : z∈on := subset hz
+    obtain ⟨tz,ok⟩:=mem_filter.mp picked
+    rw [atPoint z hz]
+    refine ⟨(Pade.Native.sheets_iff S z (v z)).mp (sheets z tz),?_⟩
+    change (G.a.map (algebraMap SeedField SeedClosure)).eval (emb z)*slope (emb z)-
+      (G.b.map (algebraMap SeedField SeedClosure)).eval (emb z)=0
+    rw [atPoint z hz]
+    have lifted (Q : SeedField[X]) :
+        emb ((Q.map (algebraMap SeedField Pade.Native.Sep)).eval z)=
+          (Q.map (algebraMap SeedField SeedClosure)).eval (emb z) := by
+      rw [eval_map,eval_map]
+      exact (Polynomial.aeval_algHom_apply (separableClosure SeedField SeedClosure).val z Q).symm
+    have law := congrArg emb ok
+    simp only [Pade.Row.err,Pade.Row.map,map_sub,map_mul,map_zero] at law
+    rwa [lifted,lifted] at law
+  exact LargeSeed21g5At2317.excluded (by omega) (by omega) Crt word fit geo pass full (by omega : 19≤f.natDegree) gp graphDegree N large pts slope n sheets0
+
+#print axioms quotient_bound
+end
+end Research6966.NearTerminal
+
+end Merged6967_R6966ProofNearTerminalGeometry

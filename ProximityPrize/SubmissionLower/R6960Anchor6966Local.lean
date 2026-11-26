@@ -1,21 +1,29 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup58
 import ProximityPrize.SubmissionLower.A6966FinalAnchorSpace
-import Mathlib.Algebra.BigOperators.Intervals
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup5
 import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup10
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup15
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup20
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup25
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup30
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup35
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup40
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup45
 import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup50
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup55
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup56
-import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup57
 import ProximityPrize.SubmissionLower.A6966FinalRankBlocks
-import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.DdZZ6ou4c
+set_option Elab.async false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 set_option Elab.async false
 
@@ -625,7 +633,7 @@ open K1_13_1_1 (exponent_le_of_mem_translation_monomial)
 def WideEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
   u.some.degree ≤ 142 ∧ u.some.weight (fun i => i.val) ≤ 58 ∧ u (some 3) ≤ 15 ∧
     u.some.degree ≤ gradeLimit (u (some 1) + u (some 2) + u (some 3)) ∧
-    u.weight (differentialWeight 133400) ≤ 106 * 179769 - 1 + 58
+    u.weight (differentialWeight 133387) ≤ 106 * 179759 - 1 + 58
 
 def wideSpace : Submodule Geom (DifferentialPolynomial Geom 3) :=
   MvPolynomial.restrictSupport Geom {u | WideEligible u}
@@ -750,12 +758,12 @@ theorem per_position (x y : Geom) :
   (rank_at_point_le_origin x y).trans A6966FinalRank.origin_rank
 
 theorem finiteWide : Module.Finite Geom wideSpace := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133400 j ≠ 0 := by
+  have hpositive (j : JetVariable 3) : differentialWeight 133387 j ≠ 0 := by
     cases j with
     | none => decide
     | some j =>
       have hj := j.isLt
-      change 133400 - j.val ≠ 0
+      change 133387 - j.val ≠ 0
       omega
   exact MvPolynomial.restrictSupport_finite <|
     (Finsupp.finite_of_nat_weight_le _ hpositive _).subset fun _ hu => hu.2.2.2.2
@@ -813,8 +821,8 @@ theorem active_bound (Q : wideSpace) :
   omega
 
 theorem rawWeight (Q : wideSpace) :
-    differentialWeightedDegree 133400 (Q : DifferentialPolynomial Geom 3) ≤
-      106 * 179769 - 1 + 58 := by
+    differentialWeightedDegree 133387 (Q : DifferentialPolynomial Geom 3) ≤
+      106 * 179759 - 1 + 58 := by
   rw [differentialWeightedDegree, MvPolynomial.weightedTotalDegree, Finset.sup_le_iff]
   exact fun m hm => (Q.property hm).2.2.2.2
 

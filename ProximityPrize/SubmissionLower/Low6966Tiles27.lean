@@ -1,5 +1,9 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Low6966AllocTotal
 import ProximityPrize.SubmissionLower.Low6966Mass27
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 set_option maxRecDepth 22000

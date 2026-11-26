@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.Final50SurfaceLinearFour
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Final50Order
 import ProximityPrize.SubmissionLower.Low48BentSupport
+set_option Elab.async false
+
+
 set_option Elab.async false
 set_option autoImplicit false
 set_option maxRecDepth 12000

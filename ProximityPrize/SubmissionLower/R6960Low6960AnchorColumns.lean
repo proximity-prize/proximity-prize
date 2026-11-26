@@ -1,5 +1,9 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R6960Low6960AnchorLocal
-import ProximityPrize.SubmissionLower.Low50Euler2367JetDegree
+import ProximityPrize.SubmissionLower.Gate6966Gate
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 set_option maxHeartbeats 3000000

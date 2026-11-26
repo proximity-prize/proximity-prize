@@ -1,4 +1,7 @@
-import ProximityPrize.SubmissionLower.Final50SurfaceLinearFour
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Final50Order
+set_option Elab.async false
+
 
 set_option Elab.async false
 

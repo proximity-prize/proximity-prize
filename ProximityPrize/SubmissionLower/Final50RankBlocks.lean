@@ -1,6 +1,11 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.AnchorNinth82190
-import ProximityPrize.SubmissionLower.Final50AnchorSpace
-import ProximityPrize.SubmissionLower.Fast063
+import ProximityPrize.SubmissionLower.Fast076
+import ProximityPrize.SubmissionLower.DdZQtCuFa
+set_option Elab.async false
+
+
+
 
 set_option Elab.async false
 

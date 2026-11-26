@@ -1,6 +1,10 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.High6966Main15000
-import ProximityPrize.SubmissionLower.High6966Rates
-import ProximityPrize.SubmissionLower.High6966RescueBills
+import ProximityPrize.SubmissionLower.Compact54Packed
+set_option Elab.async false
+
+
+
 
 set_option Elab.async false
 section Merged_R6960MainGeometryBills
@@ -66,7 +70,7 @@ theorem Initial.content_count {u deleted} {M : Model u deleted} {Γ} {F : Family
     |>.trans (Nat.mul_le_mul_left _ ini.content_cap)
 
 theorem Rows.fixed_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt) (hi : M.overhead.toNat≤2499) :
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt) (hi : M.overhead.toNat≤2522) :
     R.fixedMarks.card≤fixedLimit := by
   calc
     _ ≤ ∑ i : Fin 17, (R.fixedMarksOf (R.fixedFree i).equation ∪ R.fixedMarksOf (R.fixedMoving i).equation).card :=

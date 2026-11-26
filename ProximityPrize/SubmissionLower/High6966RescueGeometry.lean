@@ -1,4 +1,7 @@
-import ProximityPrize.SubmissionLower.High6966RescueData
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Final50ActiveCycleMixed
+set_option Elab.async false
+
 
 set_option Elab.async false
 -- merged module R6960Rescue6966
@@ -24,8 +27,8 @@ open scoped Classical
 open K1_14_2_2_3 (shiftedWord)
 open P0_10R_1 (seed_projection section_bound component_height)
 open P1_7_4_1 (irreducible_cut)
-abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33677 u deleted
-abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179769 M Γ
+abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33697 u deleted
+abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179759 M Γ
 def word {u deleted} (M : Model u deleted) : I→L := fun i => algebraMap K L (M.word i)
 def OnMark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (A : Ideal Ambient) (γ : K) : Prop := OnJet A (M.label γ) (F.scalar γ)
@@ -44,7 +47,7 @@ theorem contact_at_mark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {s : Shape} {W r : ℕ} {P : Jet} (inside : P∈evaluated Crt (word M) s W)
-    (width : W+2*M.overhead.toNat*r<s.m*179769)
+    (width : W+2*M.overhead.toNat*r<s.m*179759)
     (γ : K) (hγ : γ∈Γ) :
     Native (RingHom.ker (jetMarkHom (M.label γ) (F.scalar γ))) (r+1) P := by
   let B := F.mark γ hγ
@@ -300,7 +303,7 @@ structure Run {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
       ∀ γ∈Γ,jetAt C (M.label γ) (F.scalar γ)=0
 theorem prepare_from_rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (hi : M.overhead.toNat≤2499)
+    (hi : M.overhead.toNat≤2522)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (rect : Fin 54) (irreducible : Irreducible G) (capsG : RowCaps G (primeShape rect))
@@ -351,18 +354,18 @@ open Rescue6966Source (bank reserve)
 open scoped Classical
 open HighCore82258_3 (envelope_caps)
 open K1_14_2_2_7 (seed_value_eq)
-def terminalShape : Shape := ⟨4000,5585,1200,510000⟩
-def terminalCutoff : ℕ := terminalShape.m*179769-1
+def terminalShape : Shape := ⟨4000,5585,1200,443000⟩
+def terminalCutoff : ℕ := terminalShape.m*179759-1
 def TerminalFits (s : Shape) : Prop :=
   0<s.m ∧ s.B≤terminalShape.B ∧ s.J≤terminalShape.J ∧ s.U≤terminalShape.U
 def TerminalPass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (J : Ideal Ambient) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179769-1),toJet P∈J
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179759-1),toJet P∈J
 
 /-- A parent that fails any terminal bank provides a proper row inside
 the single envelope used by the geometric cut bill. -/
 theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L)
     {J : Ideal Ambient} (failed : ¬ TerminalPass Crt w J) :
-    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179769-1) ∧
+    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179759-1) ∧
       RowCaps P terminalShape ∧ toJet P∉J := by
   classical
   unfold TerminalPass at failed
@@ -442,7 +445,7 @@ theorem Run.marked_cutter {u deleted} {M : Model u deleted} {Γ} {F : Family M �
     intro γ hγ
     apply zero_of_contact (r:=0)
     exact contact_at_mark F Crt noPole residues inside
-      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179769)) (by decide : 0<1)) γ hγ
+      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179759)) (by decide : 0<1)) γ hγ
 private theorem mark_on_cut {J : Ideal Ambient} {P : Jet} {z : K} {S : (Polynomial K)}
     (on : OnJet J z S) (zero : jetAt P z S=0) :
     ∃ Q∈cutComponents J P,OnJet Q z S := by
@@ -533,7 +536,7 @@ def OnSurface {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (q : Surface) (γ : K) : Prop :=
   ∀ P∈q.asIdeal,jetAt P (M.label γ) (F.scalar γ)=0
 def SurfacePass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (q : Surface) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179769-1),P∈q.asIdeal
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179759-1),P∈q.asIdeal
 
 theorem SurfacePass.original {h : ℕ} {D : PoleData h} {Crt : CRTLift D} {w : I→L}
     {q : Surface} (pass : SurfacePass Crt w q) :

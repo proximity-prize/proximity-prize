@@ -1,4 +1,7 @@
-import ProximityPrize.SubmissionLower.RungSplit
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup50
+set_option Elab.async false
+
 
 set_option Elab.async false
 

@@ -1,4 +1,7 @@
-import ProximityPrize.SubmissionLower.R6966ProofPadeNativeQuotient
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.R6960Low6960Gates
+set_option Elab.async false
+
 
 set_option Elab.async false
 

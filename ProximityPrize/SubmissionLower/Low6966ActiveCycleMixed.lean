@@ -1,6 +1,11 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Low6966ActiveCycleCaps
 import ProximityPrize.SubmissionLower.Low6966GeometryCut
-import ProximityPrize.SubmissionLower.Low6966ActiveCyclePrice
+import ProximityPrize.SubmissionLower.Final50ActiveCycleMixed
+set_option Elab.async false
+
+
+
 
 set_option Elab.async false
 

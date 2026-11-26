@@ -1,15 +1,21 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Gate6966Assm
 import ProximityPrize.SubmissionLower.Gate6966ThetaOrd
 import ProximityPrize.SubmissionLower.Low6966AllocTotal
-import ProximityPrize.SubmissionLower.Witness6966SumETr5
-import ProximityPrize.SubmissionLower.Witness6966SumETr3x
-import ProximityPrize.SubmissionLower.Witness6966SumS48x
 import ProximityPrize.SubmissionLower.Witness6966SumETm
-import ProximityPrize.SubmissionLower.Witness6966SumO1j54
-import ProximityPrize.SubmissionLower.Witness6966SumO1j55
-import ProximityPrize.SubmissionLower.Witness6966SumO2b
-import ProximityPrize.SubmissionLower.Witness6966SumS1
-import ProximityPrize.SubmissionLower.Witness6966SumO2a
+set_option Elab.async false
+
+
+
+
+
+
+
+
+
+
+
+
 
 set_option Elab.async false
 

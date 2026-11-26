@@ -1,8 +1,21 @@
-import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Gate6966Gate
 import ProximityPrize.SubmissionLower.R6960ChartGlobalTests
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import ProximityPrize.SubmissionLower.R6960ChartImage
-import ProximityPrize.SubmissionLower.R6960ChartIntegrality
+import ProximityPrize.SubmissionLower.R6960CollisionTameBranchFrame
+import ProximityPrize.SubmissionLower.R6960CollisionTameLineDegree
+import ProximityPrize.SubmissionLower.R6960Low6960CountCore
+import ProximityPrize.SubmissionLower.R6960Low6960Rectangle
+import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
+import ProximityPrize.SubmissionLower.R6966ProofProtocolProfile
+
+section Merged6967_R6960RetainedCrossingLift
+set_option Elab.async false
+
+
+
+
+
 
 set_option Elab.async false
 
@@ -919,3 +932,485 @@ end
 end Merged_R6960RetainedCrossingLift
 
 end Merged_R6960RetainedCrossingLift
+
+end Merged6967_R6960RetainedCrossingLift
+
+section Merged6967_R6966ProofFarRescueInvoice
+set_option Elab.async false
+
+
+
+set_option Elab.async false
+
+
+noncomputable section
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 18000
+
+namespace Lower6960.FarRescueGeometry
+open Finset
+open K1 (p)
+open P1_7_4 (Mass dotQ weightedBill)
+open scoped Classical BigOperators
+
+def degreeRates : List (List ℕ) :=
+  [[250703355, 257411712, 209004978, 192250090, 151344180, 146945269, 129133574, 108902784, 133169153, 98027804, 107178122, 90561210, 111399090, 159856701, 155401324, 198768055, 150749576], [250703355, 257411712, 209004978, 192250090, 151344180, 146945269, 129133574, 108902784, 133169153, 98027804, 102814332, 87000554, 107157326, 154005122, 149641067, 191596945, 150749576], [250703355, 257411712, 209004978, 192250090, 151344180, 146945269, 129133574, 108902784, 133169153, 98027804, 97959228, 82217852, 103210618, 149781012, 144393038, 187541220, 150749576], [250703355, 257411712, 209004978, 192250090, 151344180, 146945269, 129133574, 108902784, 133169153, 98027804, 88312895, 79543745, 98079150, 149905130, 145594273, 194227079, 257834722]]
+
+def heightRates : List (List ℕ) :=
+  [[1780723, 1738358, 2203815, 2424425, 3141111, 3231396, 3713473, 4463927, 3604249, 4984598, 4537835, 5415597, 4356953, 2966396, 3057840, 2327400, 3153315], [1780723, 1738358, 2203815, 2424425, 3141111, 3231396, 3713473, 4463927, 3604249, 4984598, 4735218, 5637248, 4538726, 3086497, 3176066, 2434148, 3153315], [1780723, 1738358, 2203815, 2424425, 3141111, 3231396, 3713473, 4463927, 3604249, 4984598, 4988171, 5987463, 4714571, 3173194, 3300472, 2494521, 3153315], [1780723, 1738358, 2203815, 2424425, 3141111, 3231396, 3713473, 4463927, 3604249, 4984598, 5555555, 6193762, 4981923, 3170647, 3267961, 2394996, 1735687]]
+
+def degreeRate (rect : Fin 4) (i : ℕ) : ℕ := (degreeRates.getD rect.val []).getD i 0
+
+def heightRate (rect : Fin 4) (i : ℕ) : ℕ := (heightRates.getD rect.val []).getD i 0
+
+private def heightTerms (a : ℕ) : List ℚ :=
+  (List.range 80).map (fun i : ℕ =>
+    let g := i+1
+    max 0 (1-(a : ℚ)*(g : ℚ)/((p+1 : ℕ) : ℚ))*curveUnit g)
+
+def heightBound (a : ℕ) : ℚ := (heightTerms a).foldr max 0
+
+private theorem le_max_fold {q : ℚ} {terms : List ℚ} (mem : q∈terms) :
+    q ≤ terms.foldr max 0 := by
+  induction terms with
+  | nil => simp at mem
+  | cons a rest ih =>
+    rw [List.foldr_cons]
+    rcases List.mem_cons.mp mem with eq | h
+    · exact eq.symm ▸ le_max_left _ _
+    · exact (ih h).trans (le_max_right _ _)
+
+theorem height_spec (a g : ℕ) (pos : 0<g) (small : g≤80) :
+    max 0 (1-(a : ℚ)*g/((p+1 : ℕ) : ℚ))*curveUnit g≤heightBound a := by
+  apply le_max_fold
+  unfold heightTerms
+  apply List.mem_map.mpr
+  refine ⟨g-1,List.mem_range.mpr (by omega),?_⟩
+  dsimp only
+  rw [Nat.sub_add_cancel (by omega : 1≤g)]
+
+private theorem checked_rates (rect : Fin 4) (i : Fin 17) :
+    ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate rect i.val : ℚ) ∧
+    min (seedLimit rect) (dotQ (cutWeight rect 0 i.val) (history rect i.val)) ≤ (degreeRate rect i.val : ℚ) ∧
+    heightBound (degreeRate rect i.val) ≤ (heightRate rect i.val : ℚ) := by
+  fin_cases rect <;> fin_cases i <;> decide +kernel
+
+theorem rate_spec (rect : Fin 4) {i : ℕ} (hi : i<17) :
+    RateOK (degreeRate rect i) (heightRate rect i) ∧
+      min (seedLimit rect) (dotQ (cutWeight rect 0 i) (history rect i)) ≤ degreeRate rect i := by
+  obtain ⟨base,degree,height⟩ := checked_rates rect ⟨i,hi⟩
+  exact ⟨⟨base,Nat.cast_nonneg _,fun g hp hg=>(height_spec _ g hp hg).trans height⟩,degree⟩
+
+def lambda : ℚ := ((262144 : ℚ)/179759)*endpointDegree
+
+def mu : ℚ := ((262144-endpointDegree : ℕ) : ℚ)/(179759-endpointDegree : ℕ)
+
+def rankB (rect : Fin 4) : ℕ := initialCap rect 2+2
+
+def rankJ (rect : Fin 4) : ℕ := initialCap rect 1+1
+
+def tau : ℚ := 49/100
+
+def pivot (rect : Fin 4) : ℚ := min (47843/5) (tau*rankB rect)
+
+def rankWeight (rect : Fin 4) : Mass :=
+  ![0,4*lambda*rankB rect*tau+mu-4*lambda*pivot rect,
+    4*lambda*rankJ rect*(1-tau)+rankB rect,0]
+
+def rankRound (rect : Fin 4) : ℚ :=
+  rankWeight rect 1+2*rankWeight rect 2+2*lambda*pivot rect^2+1
+
+def lossWeight (rect : Fin 4) (i : ℕ) : Mass :=
+  fun k=>(degreeRate rect i : ℚ)*cutWeight rect 0 i k+(heightRate rect i : ℚ)*cutWeight rect 1 i k
+
+def lossLimit (rect : Fin 4) : ℚ :=
+  weightedBill 18 (beforeCuts (rankWeight rect) (lossWeight rect))
+    (beforeCuts (initialMass rect) (history rect))+seedLimit rect+rankRound rect
+
+def rescueFee (rect : Fin 4) : ℕ :=
+  (lossLimit rect).ceil.toNat+(pointLimit rect).ceil.toNat+initialSeedLimit rect+initialCap rect 0
+
+theorem rescue_fee_bound (rect : Fin 4) : rescueFee rect ≤ 121123436161956842 := by
+  fin_cases rect <;> decide +kernel
+
+theorem strict_rescue_fee (rect : Fin 4) : rescueFee rect < 121123436161956843 :=
+  (rescue_fee_bound rect).trans_lt (by decide)
+
+theorem rank_guard (rect : Fin 4) :
+    rankB rect < p ∧ 0≤rankWeight rect 1 ∧ 0≤rankWeight rect 2 := by
+  fin_cases rect <;> decide +kernel
+
+#print axioms rate_spec
+#print axioms strict_rescue_fee
+
+end Lower6960.FarRescueGeometry
+
+end
+end Merged6967_R6966ProofFarRescueInvoice
+
+section Merged6967_R6966ProofNearLedgerNormalize
+set_option Elab.async false
+
+
+
+set_option Elab.async false
+
+namespace Research6966.NearLedger
+
+abbrev gap : ℕ := agreement-wordDegree
+
+theorem upper_of_finite {i : Fin 55} (h : i.val<54) : upper i=some (inCap i) := by
+  have hi : i.val+1<55 := by omega
+  simp only [inCap,upper,dite_eq_left hi,Option.getD_some]
+
+theorem InBin.le_cap {i : Fin 55} {v : ℕ} (mem : InBin i v) (finite : i.val<54) :
+    v ≤ inCap i := mem.2 _ (upper_of_finite finite)
+
+private theorem side_mono {h H : ℕ} (hh : h≤H) : side h≤side H :=
+  Nat.add_le_add_right (Nat.mul_le_mul_left _ hh) _
+
+/-- Weaken an observed surface and its nodal degrees to the checked
+quote, then divide out the squared interpolation gap. -/
+theorem Quote.surface_of_scaled (q : Quote) (b : Band) (a : ℕ) (i j : Fin 55)
+    (selected : q.method=.surface) {marks g v₀ v₁ h₀ h₁ : ℕ}
+    (degree : g≤q.degreeCap b a) (x₀ : v₀≤q.axisCap i j 0) (x₁ : v₁≤q.axisCap i j 1)
+    (s₀ : h₀≤seedHeight a (inCap i)) (s₁ : h₁≤seedHeight a (inCap j))
+    (price : marks*gap^2≤singular a i j*gap^2+
+      2*(g*side h₀*side h₁+v₀*side (yHeight a)*side h₁+v₁*side (yHeight a)*side h₀)) :
+    marks≤q.wordPrice b a i j := by
+  unfold Quote.wordPrice
+  simp only [selected]
+  apply NativeAffineLedger.floor (by decide : 0<gap^2)
+  refine price.trans (Nat.add_le_add_left (Nat.mul_le_mul_left 2 (Nat.add_le_add (Nat.add_le_add ?_ ?_) ?_)) _)
+  · exact Nat.mul_le_mul (Nat.mul_le_mul degree (side_mono s₀)) (side_mono s₁)
+  · exact Nat.mul_le_mul (Nat.mul_le_mul_right _ x₀) (side_mono s₁)
+  · exact Nat.mul_le_mul (Nat.mul_le_mul_right _ x₁) (side_mono s₀)
+
+theorem Quote.affine_of_scaled (q : Quote) (b : Band) (i j : Fin 55)
+    (selected : q.method=.affine) {marks : ℕ}
+    (price : marks*gap^3≤singular 1 i j*gap^3+6*side 1*side (wordDegree*inCap i)*side (wordDegree*inCap j)) :
+    marks≤q.wordPrice b 1 i j := by
+  have counted := NativeAffineLedger.three_floor (n:=nodes) (a:=agreement) (d:=wordDegree)
+    (c:=6) (by decide) (by decide) price
+  simpa only [Quote.wordPrice,selected,seedHeight,ite_eq_left rfl,ite_true] using counted
+
+theorem Quote.single_affine_of_scaled (q : Quote) (b : Band) (i j : Fin 55)
+    (selected : q.method=.single) {marks width : ℕ}
+    (cap : width≤max (inCap i) (inCap j))
+    (price : marks*gap^2≤singular 1 i j*gap^2+2*side 1*side (wordDegree*width)) :
+    marks≤q.wordPrice b 1 i j := by
+  have counted := NativeAffineLedger.two_floor (n:=nodes) (a:=agreement) (d:=wordDegree)
+    (by decide) (by decide) price
+  have widths : max 1 (wordDegree*width)≤max (seedHeight 1 (inCap i)) (seedHeight 1 (inCap j)) := by
+    by_cases order : inCap i ≤ inCap j
+    · rw [max_eq_right order] at cap
+      exact (max_le_max le_rfl (Nat.mul_le_mul_left _ cap)).trans
+        (le_max_right (seedHeight 1 (inCap i)) (seedHeight 1 (inCap j)))
+    · rw [max_eq_left (by omega : inCap j ≤ inCap i)] at cap
+      exact (max_le_max le_rfl (Nat.mul_le_mul_left _ cap)).trans
+        (le_max_left (seedHeight 1 (inCap i)) (seedHeight 1 (inCap j)))
+  unfold Quote.wordPrice
+  simp only [selected,yHeight,Nat.sub_self,Nat.mul_zero,Nat.zero_add,Nat.mul_one]
+  exact counted.trans (Nat.add_le_add_left (Nat.div_le_div_right
+    (Nat.mul_le_mul_right _ (Nat.mul_le_mul_left 2 widths))) _)
+
+#print axioms Quote.surface_of_scaled
+#print axioms Quote.affine_of_scaled
+#print axioms Quote.single_affine_of_scaled
+end Research6966.NearLedger
+
+end Merged6967_R6966ProofNearLedgerNormalize
+
+section Merged6967_R6966ProofNearLedgerWordMethods
+set_option Elab.async false
+
+
+
+
+
+set_option Elab.async false
+
+namespace Research6966.NearLedgerWordMethods
+open Polynomial Finset NearLedger
+open K1 (K I p)
+open K1_14 (L FX Equation atX liftPoly graphEval seedEmbedding)
+open K1_14_3 (SeedField Surface)
+open PadeNativeQuotient (Native)
+open NativeGraphExceptional (den rhs)
+open NativeAffineRows (Owned seedPoint)
+open scoped Polynomial Differential
+attribute [local instance] GenericPhysicalCentre.physical
+noncomputable section
+set_option maxHeartbeats 1400000
+set_option maxRecDepth 6000
+set_option backward.isDefEq.respectTransparency false
+set_option maxSynthPendingDepth 18
+
+private theorem constant_power {R : Type*} [Field R] [Differential R] (x : R)
+    (fixed : Differential.deriv x=0) (n : ℕ) : Differential.deriv (x^n)=0 := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [pow_succ,Derivation.leibniz,fixed,ih,smul_zero,smul_zero,add_zero]
+
+private theorem constant_pair {R : Type*} [Field R] [Differential R] (x : R) (n : ℕ)
+    (fixed : Differential.deriv x=0) (i : Fin 2) :
+    Differential.deriv ((![x,x^n] : Fin 2→R) i)=0 := by
+  fin_cases i
+  · exact fixed
+  · exact constant_power x fixed n
+
+private theorem fixed_seed (z : K) (i : Fin 2) : Differential.deriv (seedPoint z i)=0 := by
+  apply constant_pair (seedEmbedding z) p _ i
+  change Differential.deriv (algebraMap L[X] FX (C (algebraMap K L z)))=0
+  rw [GenericPhysicalCentre.physical_poly,derivative_C,map_zero]
+
+private abbrev m : ℕ := 2*wordDegree-1
+private abbrev gap : ℕ := agreement-wordDegree
+private def fee (a : ℕ) (u : Fin 2→ℕ) := (2*a-1)*(u 0+p*u 1)
+
+private structure Rows (T : Finset K) (a : ℕ) (u : Fin 2→ℕ) where
+  good : Finset K
+  exceptional : T.card≤good.card+fee a u
+  test : I→MvPolynomial (Fin 3) FX
+  point : ↥good→Fin 3→FX
+  caps : ∀ i z, (test i).degreeOf z≤Fin.cons (α:=fun _ : Fin 3 => ℕ) (yHeight a) (fun z=>m*u z) z
+  enough : ∀ z, agreement≤(WordSurfaceMarks.hits (point z) test).card
+  shared : ∀ x y, x≠y →
+    ((WordSurfaceMarks.hits (point x) test)∩(WordSurfaceMarks.hits (point y) test)).card≤wordDegree
+
+private theorem prepare {u deleted maxHeight} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
+    (F : P1.FamilyAt agreement M Γ) (sub : T⊆Γ) {parents : Finset Surface}
+    {G : Pade.Row SeedField} (N : Native G) (gp : G.primitive) (nonlinear : 2≤G.graphDegree)
+    (width : Fin 2→ℕ) (axes : ∀ j i z, ((N.poly.coeff j).coeff i).degreeOf z≤width z)
+    (small : (2*G.graphDegree-1)*width 0<p)
+    (physical : (131071:ℤ)+M.overhead≤wordDegree) (owners : Owned F T parents N) :
+    Nonempty (Rows T G.graphDegree width) := by
+  classical
+  let val (z : K) (P : Equation) := P.eval₂ (graphEval (M.label z)) (atX (F.scalar z))
+  have law z (hz : z∈T) : val z (den N)*atX (F.scalar z).derivative=val z (rhs N) := by
+    obtain ⟨q,_,own,mark⟩:=owners z hz
+    exact NativeGraphMarks.mark_law N gp own mark
+  let bad := T.filter (fun z=>val z (den N)=0)
+  let good := T\bad
+  have gsub : good⊆T := sdiff_subset
+  have nz (z : ↥good) : val z (den N)≠0 := fun zero =>
+    (mem_sdiff.mp z.property).2 (mem_filter.mpr ⟨gsub z.property,zero⟩)
+  have bad_le := NativeGraphExceptional.singular_count N gp width axes small bad M.label
+    (NativeAffineRows.label_inj M).injOn (fun z=>atX (F.scalar z))
+    (fun z mem=>(mem_filter.mp mem).2) (by
+      intro z mem
+      obtain ⟨ht,zero⟩:=mem_filter.mp mem
+      have vz:=law z ht
+      rw [zero,zero_mul] at vz
+      exact vz.symm)
+  have size : good.card+bad.card=T.card := card_sdiff_add_card_eq_card (filter_subset _ _)
+  let words (z : ↥good) := liftPoly (F.scalar z.val)
+  have mark (z : ↥good) := F.mark z.val (sub (gsub z.property))
+  have deg (z : ↥good) : (words z).natDegree≤wordDegree := by
+    change ((F.scalar z.val).map (algebraMap K L)).natDegree≤wordDegree
+    rw [natDegree_map_eq_of_injective (algebraMap K L).injective]
+    rcases (mark z).scalar_degree with zero | bound
+    · simp [zero]
+    · change ((F.scalar z.val).natDegree:ℤ)≤131071+M.overhead at bound
+      omega
+  have distinct : Function.Injective words := fun x z eq => Subtype.ext
+    (F.distinct (sub (gsub x.property)) (sub (gsub z.property))
+      ((map_injective _ (algebraMap K L).injective) eq))
+  let ξ : FX := algebraMap L[X] FX Polynomial.X
+  let scalar := algebraMap L FX
+  let node (i : I) := scalar (algebraMap K L (K1.node i))
+  let recv (i : I) := scalar (algebraMap K L (M.word i))
+  let eqn (i : I) : Equation := NonlinearMarkRows.node (den N) (rhs N) wordDegree ξ (node i) (recv i)
+  let row (i : I) := OdeSurfaceBridge.coordinates (eqn i)
+  let point (z : ↥good) : Fin 3→FX := Fin.cons (atX (F.scalar z.val)) (seedPoint (M.label z.val))
+  have detect (z : ↥good) (i : I) :
+      MvPolynomial.eval (point z) (row i)=0 ↔ ((words z).map scalar).eval (node i)=recv i := by
+    rw [show MvPolynomial.eval (point z) (row i)=
+       NonlinearMarkRows.evaluate (seedPoint (M.label z.val)) (atX (F.scalar z.val)) (eqn i)
+       from OdeSurfaceBridge.read ..]
+    have ode : val z.val (den N)*algebraMap L[X] FX (words z).derivative=val z.val (rhs N) := by
+      simpa only [words,liftPoly,derivative_map,atX] using law z.val (gsub z.property)
+    exact NonlinearMarkRows.detects _ (fixed_seed (M.label z.val)) _ _ (words z) wordDegree (deg z)
+      (fun j hj=>K1_14_2_4_2.factorial_ne_zero (hj.trans_lt (by decide : wordDegree<p))) _ _ ode (nz z)
+  have caps (i : I) :
+      ∀ j, (row i).degreeOf j≤Fin.cons (α:=fun _ : Fin 3=>ℕ) (yHeight G.graphDegree) (fun z=>m*width z) j := by
+    obtain ⟨da,db⟩:=NativeGraphMarks.equation_degrees N gp
+    have D₁ : (rhs N).natDegree≤G.graphDegree-1+1 := by
+      rw [Nat.sub_add_cancel (by omega : 1≤G.graphDegree)]
+      exact db
+    apply OdeSurfaceBridge.degrees (eqn i) _ _ (NonlinearMarkDegrees.node_ordinate (by omega) da D₁ ..)
+    intro z l
+    have A := (OdeSurfaceBridge.axis_cap (den N) z (width z)).mpr (fun j=>axes 1 j z)
+    have B := (OdeSurfaceBridge.axis_cap (rhs N) z (width z)).mpr
+      (fun j=>by simpa [rhs,coeff_neg] using axes 0 j z)
+    exact NonlinearMarkDegrees.node_seeds A B wordDegree ξ (node i) (recv i) l
+  refine ⟨⟨good,?_,row,point,caps,?_,?_⟩⟩
+  · rw [←size]
+    exact Nat.add_le_add_left bad_le _
+  · intro z
+    let b:=mark z
+    apply b.bad.agreement.trans (card_le_card _)
+    intro i hi
+    apply WordSurfaceMarks.hit.mpr ((detect z i).mpr _)
+    exact (Polynomial.eval_map_apply scalar _).trans (congrArg scalar
+      ((Polynomial.eval_map_apply (algebraMap K L) _).trans (congrArg _ (b.scalar_hits i hi))))
+  · exact WordSurfacePrice.word_overlap point row node
+      (scalar.injective.comp ((algebraMap K L).injective.comp ProximityPrize.Benchmark.IRSProfile.domain.injective))
+      recv (fun z=>(words z).map scalar) ((map_injective _ scalar.injective).comp distinct)
+      wordDegree (fun z=>natDegree_map_le.trans (deg z)) detect
+
+private def keepTwo (seed : Fin 2) : Fin 2↪Fin 3 where
+  toFun := Fin.cons 0 (fun _=>seed.succ)
+  inj' := by
+    intro i j eq
+    fin_cases i <;> fin_cases j
+    · rfl
+    · exact (Fin.succ_ne_zero seed eq.symm).elim
+    · exact (Fin.succ_ne_zero seed eq).elim
+    · rfl
+
+private def keepOne : Fin 1↪Fin 3 :=
+  ⟨fun _=>0,fun i j _=>Subsingleton.elim i j⟩
+
+private theorem side_large (h : ℕ) :
+    WordSurfacePrice.side (Fintype.card I) agreement wordDegree h≤max 1 h*(nodes-wordDegree) := by
+  rw [ProximityPrize.Benchmark.IRSProfile.card_index]
+  exact NativeAffineLedger.side_ratio (by decide) (by decide)
+
+/-- The actual nonlinear slope graph with one active seed uses two
+coordinates in the nodal interpolation, including the initial value. -/
+theorem single {u deleted maxHeight} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
+    (F : P1.FamilyAt agreement M Γ) (sub : T⊆Γ) {parents : Finset Surface}
+    {G : Pade.Row SeedField} (N : Native G) (gp : G.primitive) (nonlinear : 2≤G.graphDegree)
+    (width : Fin 2→ℕ) (axes : ∀ j i z, ((N.poly.coeff j).coeff i).degreeOf z≤width z)
+    (small : (2*G.graphDegree-1)*width 0<p)
+    (active : Fin 2) (inactive : ∀ z, z≠active → width z=0)
+    (physical : (131071:ℤ)+M.overhead≤wordDegree) (owners : Owned F T parents N) :
+    T.card≤(2*G.graphDegree-1)*(width 0+p*width 1)+
+      2*yHeight G.graphDegree*max (seedHeight G.graphDegree (width 0)) (seedHeight G.graphDegree (width 1))*
+        (nodes-wordDegree)^2/gap^2 := by
+  obtain ⟨q⟩:=prepare F sub N gp nonlinear width axes small physical owners
+  let y:=yHeight G.graphDegree
+  let h : Fin 2→ℕ := Fin.cons y (fun _=>m*width active)
+  have selected (i:I) (j:Fin 2) : (q.test i).degreeOf (keepTwo active j)≤h j := by
+    fin_cases j
+    · exact q.caps i 0
+    · exact q.caps i active.succ
+  have discarded (i:I) (j:Fin 3) (out:j∉Set.range (keepTwo active)) : (q.test i).degreeOf j=0 := by
+    revert out
+    refine Fin.cases ?_ (fun z=>?_) j
+    · intro out; exact (out ⟨0,rfl⟩).elim
+    · intro out
+      have ne : z≠active := fun eq=>out ⟨1,by subst z;rfl⟩
+      exact Nat.eq_zero_of_le_zero (by simpa only [Fin.cons_succ,inactive z ne,Nat.mul_zero] using q.caps i z.succ)
+  have count:=WordAxisPrice.two q.point q.test (keepTwo active) h agreement wordDegree
+    (by decide) selected discarded q.enough q.shared
+  rw [Fintype.card_coe] at count
+  have hy : 1≤y:=Nat.le_add_left _ _
+  have bycap := side_large y
+  rw [max_eq_right hy] at bycap
+  have hx : max 1 (m*width active)≤max (seedHeight G.graphDegree (width 0)) (seedHeight G.graphDegree (width 1)) := by
+    have one : G.graphDegree≠1:=by omega
+    fin_cases active
+    · change max 1 ((2*wordDegree-1)*width 0)≤_
+      simpa only [seedHeight,ite_eq_right one] using
+        le_max_left (seedHeight G.graphDegree (width 0)) (seedHeight G.graphDegree (width 1))
+    · change max 1 ((2*wordDegree-1)*width 1)≤_
+      simpa only [seedHeight,ite_eq_right one] using
+        le_max_right (seedHeight G.graphDegree (width 0)) (seedHeight G.graphDegree (width 1))
+  have scaled : q.good.card*gap^2≤
+      2*y*max (seedHeight G.graphDegree (width 0)) (seedHeight G.graphDegree (width 1))*(nodes-wordDegree)^2 := by
+    refine count.trans ?_
+    change 2*WordSurfacePrice.side (Fintype.card I) agreement wordDegree y*
+      WordSurfacePrice.side (Fintype.card I) agreement wordDegree (m*width active) ≤ _
+    calc
+      _ ≤ 2*(y*(nodes-wordDegree))*
+          (max (seedHeight G.graphDegree (width 0)) (seedHeight G.graphDegree (width 1))*(nodes-wordDegree)) :=
+        Nat.mul_le_mul (Nat.mul_le_mul_left _ bycap)
+          ((side_large _).trans (Nat.mul_le_mul_right _ hx))
+      _ = _ := by ring
+  have good := (Nat.le_div_iff_mul_le (by decide : 0<gap^2)).mpr scaled
+  exact q.exceptional.trans ((Nat.add_le_add_right good _).trans_eq (Nat.add_comm _ _))
+
+/-- Seed-independent nonlinear graphs use only the initial-value
+coordinate. Their actual differential denominator has no exceptional labels. -/
+theorem fixed {u deleted maxHeight} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
+    (F : P1.FamilyAt agreement M Γ) (sub : T⊆Γ) {parents : Finset Surface}
+    {G : Pade.Row SeedField} (N : Native G) (gp : G.primitive) (nonlinear : 2≤G.graphDegree)
+    (axes : ∀ j i z, ((N.poly.coeff j).coeff i).degreeOf z≤0)
+    (physical : (131071:ℤ)+M.overhead≤wordDegree) (owners : Owned F T parents N) :
+    T.card≤yHeight G.graphDegree*(nodes-wordDegree)/gap := by
+  obtain ⟨q⟩:=prepare F sub N gp nonlinear (fun _=>0) axes
+    (by simpa only [Nat.mul_zero] using (show (0:ℕ)<p by decide)) physical owners
+  let y:=yHeight G.graphDegree
+  have discarded (i:I) (j:Fin 3) (out:j∉Set.range keepOne) : (q.test i).degreeOf j=0 := by
+    revert out
+    refine Fin.cases ?_ (fun z _=>?_) j
+    · intro out; exact (out ⟨0,rfl⟩).elim
+    · exact Nat.eq_zero_of_le_zero (by simpa only [Fin.cons_succ,Nat.mul_zero] using q.caps i z.succ)
+  have count:=WordAxisPrice.one q.point q.test keepOne y agreement wordDegree
+    (by decide) (fun i=>q.caps i 0) discarded q.enough q.shared
+  rw [Fintype.card_coe] at count
+  have bycap := side_large y
+  have hy : 1≤y := Nat.le_add_left _ _
+  rw [max_eq_right hy] at bycap
+  have good := (Nat.le_div_iff_mul_le (by decide : 0<gap)).mpr (count.trans bycap)
+  have size := q.exceptional
+  simp only [fee,Nat.mul_zero,Nat.add_zero] at size
+  exact size.trans good
+
+#print axioms single
+#print axioms fixed
+end
+end Research6966.NearLedgerWordMethods
+
+end Merged6967_R6966ProofNearLedgerWordMethods
+
+section Merged6967_R6966ProofQuadraticHelper6966
+set_option Elab.async false
+
+
+
+set_option Elab.async false
+
+namespace Research6966.QuadraticHelper6966
+open Polynomial Finset
+open K1 (I K p)
+open QuadraticBudget (band budget price fee votes from_votes)
+open K1_14 (Jet jetAt)
+open K1_14_1 (PoleData CRTLift MarkResidues poleProduct)
+
+noncomputable section
+set_option maxHeartbeats 800000
+set_option maxSynthPendingDepth 18
+set_option backward.isDefEq.respectTransparency false
+set_option maxRecDepth 5000
+
+/-- The low-physical-degree helper receives its paid twelve-quadrillion
+word bound throughout the transition. This includes exceptional labels. -/
+theorem low_count {u deleted maxHeight} {anchor:P1.ModelAt maxHeight u deleted} {Γ T:Finset K}
+    (fam:P1.FamilyAt 179759 anchor Γ) (sub:T⊆Γ) {h:ℕ} (lo:2317≤h) (hi:h≤2522)
+    {D:PoleData h} {Crt:CRTLift D} {N:Jet} (M:HelperPhysicalModel.Model Crt N)
+    (prime:Prime N) (ns:N.natDegree=1) (quad:K1_14_2_2_2_1.jetDegree N=2)
+    (width:ℕ) (sm:width≤92) (cap:∀ j i,((N.coeff j).coeff i).totalDegree≤width)
+    (low:RawPhysicalDegree.weight (131071-h) (131071-h-1) M.raw<(band width).2)
+    (height:anchor.overhead≤(h:ℤ))
+    (nodes:∀i:I,(poleProduct D).eval (algebraMap K K1_14.L (K1.node i))≠0)
+    (res:∀ γ∈T,MarkResidues D (anchor.label γ) (fam.scalar γ))
+    (belongs:∀ γ∈T,jetAt N (anchor.label γ) (fam.scalar γ)=0) :
+    T.card≤budget := by
+  obtain ⟨hp,hl,ch,dp,gap,maxD⟩:=QuadraticBudget.numeric lo hi sm
+  have height' : (131071:ℤ)+anchor.overhead≤((131071+h:ℕ):ℤ) := by
+    rw [Nat.cast_add]
+    exact add_le_add (le_refl (131071:ℤ)) height
+  apply QuadraticBudget.from_family (length:=Fintype.card I) (char:=p)
+    ProximityPrize.Benchmark.IRSProfile.card_index rfl hi sm maxD low
+  exact PhysicalHelperTariff.price (a:=179759) fam sub hp hl M prime ns quad width (131071+h)
+    cap ch height' le_rfl dp gap nodes res belongs
+
+#print axioms low_count
+end
+end Research6966.QuadraticHelper6966
+
+end Merged6967_R6966ProofQuadraticHelper6966

@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.R6966ProofFarSurface
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedFibreNormalization
 import ProximityPrize.SubmissionLower.R6960MarkedProtocol
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 
@@ -25,7 +29,7 @@ local notation "ι" => algebraMap ChartField E
 open RetainedCompression (Curve ordinate view height heightCap)
 
 theorem initial_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
-    (bounded:height 164748 f≤heightCap (f.degreeOf ordinate) 164748) (basis:PowerBasis ChartField E)
+    (bounded:height 164768 f≤heightCap (f.degreeOf ordinate) 164768) (basis:PowerBasis ChartField E)
     (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) [FiniteDimensional L (Paired E x z)] {b:ℕ}
     (size:finrank L (Paired E x z)≤b) : Budget E 0 b := by
@@ -45,7 +49,7 @@ theorem initial_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degree
 /-- Uniform surface bound for every positive abscissa twist of the same actual
 factor. The degrees s,t are measured on its own two specialized chart orders. -/
 theorem actual_all_twists_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
-    (bounded:height 164748 f≤heightCap (f.degreeOf ordinate) 164748) (basis:PowerBasis ChartField E)
+    (bounded:height 164768 f≤heightCap (f.degreeOf ordinate) 164768) (basis:PowerBasis ChartField E)
     (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
     ∃ (x z:L) (nx:x≠0) (nz:z≠0) (m n s t:ℕ),
       ∃ (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
@@ -106,7 +110,7 @@ local instance profileNodeRing_far (x z:L) : CommRing (Crossing E x z) :=
 /-- The vertical deficit of this precise surface is positive on the nonlinear
 branch, is tame at the profile prime, and supplies the physical function rank. -/
 theorem vertical_profile_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
-    (bounded:height 164748 f≤heightCap (f.degreeOf ordinate) 164748) (nonlin:¬RetainedLinear.GeometricallyLinear (view f))
+    (bounded:height 164768 f≤heightCap (f.degreeOf ordinate) 164768) (nonlin:¬RetainedLinear.GeometricallyLinear (view f))
     (b:PowerBasis ChartField E) (dim:b.dim=(view f).natDegree)
     (root:aeval b.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
     (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)] [FiniteDimensional L (Crossing E x z)]
@@ -133,18 +137,18 @@ theorem vertical_profile_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3�
     letI:Nonempty (Fin (finrank ChartField E)):=⟨⟨0,pos⟩⟩
     exact nonlin (actual_geometric_of_constants (view f) ((MulEquiv.irreducible_iff view).mpr ir)
       (by omega) b root w ind (Fintype.card_fin _) integ)
-  have width (j:ℕ):(Q.coeff j).natDegree≤heightCap (f.degreeOf ordinate) 164748 := by
+  have width (j:ℕ):(Q.coeff j).natDegree≤heightCap (f.degreeOf ordinate) 164768 := by
     have d:(Q.coeff j).natDegree=((view f).coeff j).natDegree:=by
       simp only [Q,RetainedLinear.toSeed,Polynomial.coe_mapRingHom,coeff_map,natDegree_map_eq_of_injective (RetainedLinear.incl_injective L)]
     rw [d]
     by_cases z:(view f).coeff j=0
     · rw [z,natDegree_zero];omega
-    · exact (Nat.le_add_right _ _).trans ((RetainedCompression.abscissa_coeff_height f 164748 j z).trans bounded)
+    · exact (Nat.le_add_right _ _).trans ((RetainedCompression.abscissa_coeff_height f 164768 j z).trans bounded)
   have hr (n':ℕ) (eq:n'=Q.natDegree)
       (F':Basis (Fin n') (Polynomial Scalar) (chartOrder (k:=Scalar) (E:=E) false))
       (I':Basis (Fin n') (Polynomial Scalar) (chartOrder (k:=Scalar) (E:=E) true))
       (dd:(normalizedTransition F' I').det.degree=((-(s:ℤ):ℤ):WithBot ℤ)) :
-      s≤(Q.natDegree-1)*heightCap (f.degreeOf ordinate) 164748 := by
+      s≤(Q.natDegree-1)*heightCap (f.degreeOf ordinate) 164768 := by
     subst n'
     obtain ⟨d,dg,db⟩:=actual_horner_budget Q _ (by omega) width b.gen root
       (b.natDegree_minpoly.trans (dim.trans e0.symm)) F' I'
@@ -153,8 +157,8 @@ theorem vertical_profile_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3�
     exact_mod_cast db
   have cap:=hr _ (rank.trans e0.symm) F I det
   have tame:2*s<K1.p := by
-    have h:2*((f.degreeOf ordinate-1)*heightCap (f.degreeOf ordinate) 164748)<K1.p := by
-      exact (by decide +kernel : ∀j:Fin 48,2*((j.val-1)*heightCap j.val 164748)<K1.p) ⟨_,hi⟩
+    have h:2*((f.degreeOf ordinate-1)*heightCap (f.degreeOf ordinate) 164768)<K1.p := by
+      exact (by decide +kernel : ∀j:Fin 48,2*((j.val-1)*heightCap j.val 164768)<K1.p) ⟨_,hi⟩
     rw [e0,e1] at cap;omega
   refine ⟨positive,tame,fun U m v regular=>?_⟩
   have bound:=actual_vertical_rank F I s positive det U m v regular
@@ -190,7 +194,7 @@ local instance protocolNodeRing_far {E:Type} [Field E] [Algebra ChartField E] (x
 theorem nonlinear_far (T : Finset K) (label : K → L) (inj : Function.Injective label)
     (word : K → Polynomial L) (f : Curve (Polynomial L)) (ir : Irreducible f)
     (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48) (seed : 0<f.degreeOf parameter)
-    (bounded : height 164748 f≤heightCap (f.degreeOf ordinate) 164748)
+    (bounded : height 164768 f≤heightCap (f.degreeOf ordinate) 164768)
     (nonlin : ¬RetainedLinear.GeometricallyLinear (view f))
     (marks : ∀ γ∈T, MarkedFiber (view f) (label γ) (word γ)) :
     T.card≤rate (f.degreeOf ordinate)*f.degreeOf parameter+(f.degreeOf ordinate-1)*f.degreeOf ordinate := by

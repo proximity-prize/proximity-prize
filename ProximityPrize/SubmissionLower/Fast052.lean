@@ -1,4 +1,12 @@
-import ProximityPrize.SubmissionLower.Fast049
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.DdB4
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_Polynomial_IsIntegral
+set_option Elab.async false
+local instance (priority := 2300) {k σ : Type*} [Field k] : FaithfulSMul k (MvPolynomial σ k) :=
+  (faithfulSMul_iff_algebraMap_injective k _).2 (MvPolynomial.C_injective σ k)
+local instance (priority := 2300) {k : Type*} [Field k] : FaithfulSMul k (Polynomial k) :=
+  (faithfulSMul_iff_algebraMap_injective k _).2 Polynomial.C_injective
+
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -4713,6 +4721,9 @@ private theorem trdeg_section_over_constants (I : Ideal Ambient) (hp : I.IsPrime
     (hLoc := localization_of_section I) (section_algebraMap I)
   exact hloc.trans (trdeg_polynomial FX (CoordinateRing I))
 private theorem trdeg_seedField : Algebra.trdeg FX SeedField = 2 := by
+  let : FaithfulSMul Seeds SeedField :=
+    (faithfulSMul_iff_algebraMap_injective Seeds SeedField).2
+      (IsFractionRing.injective Seeds SeedField)
   let : Algebra.IsAlgebraic Seeds SeedField := IsLocalization.isAlgebraic SeedField Seeds⁰
   simpa [Seeds, trdeg_eq_zero (R := Seeds) (A := SeedField), Cardinal.mk_fin] using
     (trdeg_add_eq (A := SeedField) FX Seeds).symm

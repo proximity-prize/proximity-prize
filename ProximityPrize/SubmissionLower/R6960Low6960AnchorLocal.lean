@@ -1,20 +1,28 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup5
-import ProximityPrize.SubmissionLower.Final50AnchorSpace
-import Mathlib.Algebra.BigOperators.Intervals
+import ProximityPrize.SubmissionLower.Fast076
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup10
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup15
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup20
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup25
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup30
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup35
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup40
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup45
 import ProximityPrize.SubmissionLower.Final50RankReceiptGroup50
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup55
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup56
-import ProximityPrize.SubmissionLower.Final50RankReceiptGroup57
 import ProximityPrize.SubmissionLower.Final50RankBlocks
-import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.DdZZ6ou4c
+set_option Elab.async false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 set_option Elab.async false
 

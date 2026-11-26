@@ -1,5 +1,9 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R6966ProofPadePhysicalQuotient
-import ProximityPrize.SubmissionLower.R6966ProofPadeCutoff
+import ProximityPrize.SubmissionLower.R6960Low6960Rectangle
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 

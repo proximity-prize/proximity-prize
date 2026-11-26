@@ -1,0 +1,482 @@
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_Unramified_Basic
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_Ideal_IdempotentFG
+set_option Elab.async false
+/-
+Copyright (c) 2024 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
+
+
+
+
+
+
+
+
+/-!
+# Various results about unramified algebras
+
+We prove various theorems about unramified algebras. In fact we work in the more general setting
+of formally unramified algebras which are essentially of finite type.
+
+## Main definitions
+
+Let `S/R` be formally unramified and essentially of finite type.
+
+- `Algebra.FormallyUnramified.elem R S`: the idempotent of the diagonal.
+- `Algebra.FormallyUnramified.sec R S M`: For an `S`-module `M`, this is an `S`-linear section of
+  the map `S ⊗[R] M →ₗ[S] M` defined by `s ⊗ m ↦ s • m`
+- `Algebra.FormallyUnramified.equalizerIdempotent f g`: For algebra homomorphisms `f g : S →ₐ[R] A`,
+  this is the idempotent defining the subset of `Spec A` where `f` and `g` agree.
+
+## Main results
+
+- `Algebra.FormallyUnramified.iff_exists_tensorProduct`:
+  A finite-type `R`-algebra `S` is (formally) unramified iff
+  there exists a `t : S ⊗[R] S` satisfying
+  1. `t` annihilates every `1 ⊗ s - s ⊗ 1`.
+  2. the image of `t` is `1` under the map `S ⊗[R] S → S`.
+- `Algebra.FormallyUnramified.finite_of_free`: An unramified free algebra is finitely generated.
+- `Algebra.FormallyUnramified.flat_of_restrictScalars`:
+  If `S` is an unramified `R`-algebra, then `R`-flat implies `S`-flat.
+
+## References
+
+- [B. Iversen, *Generic Local Structure of the Morphisms in Commutative Algebra*][iversen]
+-/
+
+section
+
+open Algebra Module
+open scoped TensorProduct
+
+variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
+variable (L : Type*) [AddCommGroup L] [Module R L] [Module S L] [IsScalarTower R S L]
+variable (M : Type*) [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower R S M]
+variable (N : Type*) [AddCommGroup N] [Module R N] [Module S N] [IsScalarTower R S N]
+
+namespace Algebra.FormallyUnramified
+
+/--
+Proposition I.2.3 + I.2.6 of [iversen]
+A finite-type `R`-algebra `S` is (formally) unramified iff there exists a `t : S ⊗[R] S` satisfying
+1. `t` annihilates every `1 ⊗ s - s ⊗ 1`.
+2. the image of `t` is `1` under the map `S ⊗[R] S → S`.
+-/
+theorem iff_exists_tensorProduct [EssFiniteType R S] :
+    FormallyUnramified R S ↔ ∃ t : S ⊗[R] S,
+      (∀ s, ((1 : S) ⊗ₜ[R] s - s ⊗ₜ[R] (1 : S)) * t = 0) ∧ TensorProduct.lmul' R t = 1 := by
+  rw [formallyUnramified_iff, KaehlerDifferential,
+    Ideal.cotangent_subsingleton_iff, Ideal.isIdempotentElem_iff_of_fg _
+      (KaehlerDifferential.ideal_fg R S)]
+  have : ∀ t : S ⊗[R] S, TensorProduct.lmul' R t = 1 ↔ 1 - t ∈ KaehlerDifferential.ideal R S := by
+    intro t
+    simp only [KaehlerDifferential.ideal, RingHom.mem_ker, map_sub, map_one,
+      sub_eq_zero, @eq_comm S 1]
+  simp_rw [this, ← KaehlerDifferential.span_range_eq_ideal]
+  constructor
+  · rintro ⟨e, he₁, he₂ : _ = Ideal.span _⟩
+    refine ⟨1 - e, ?_, ?_⟩
+    · intro s
+      obtain ⟨x, hx⟩ : e ∣ 1 ⊗ₜ[R] s - s ⊗ₜ[R] 1 := by
+        rw [← Ideal.mem_span_singleton, ← he₂]
+        exact Ideal.subset_span ⟨s, rfl⟩
+      rw [hx, mul_comm, ← mul_assoc, sub_mul, one_mul, he₁.eq, sub_self, zero_mul]
+    · rw [sub_sub_cancel, he₂, Ideal.mem_span_singleton]
+  · rintro ⟨t, ht₁, ht₂⟩
+    use 1 - t
+    rw [← sub_sub_self 1 t] at ht₁; generalize 1 - t = e at *
+    constructor
+    · suffices e ∈ (Submodule.span (S ⊗[R] S) {1 - e}).annihilator by
+        simpa [IsIdempotentElem, mul_sub, sub_eq_zero, eq_comm,
+          Submodule.mem_annihilator_span_singleton] using this
+      exact (show Ideal.span _ ≤ _ by simpa only [Ideal.span_le, Set.range_subset_iff,
+        Submodule.mem_annihilator_span_singleton, SetLike.mem_coe]) ht₂
+    · apply le_antisymm <;> simp only [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ht₂,
+        Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Set.range_subset_iff]
+      intro s
+      use 1 ⊗ₜ[R] s - s ⊗ₜ[R] 1
+      linear_combination ht₁ s
+
+lemma finite_of_free_aux (I) [DecidableEq I] (b : Basis I R S)
+    (f : I →₀ S) (x : S) (a : I → I →₀ R) (ha : a = fun i ↦ b.repr (b i * x)) :
+    (1 ⊗ₜ[R] x * Finsupp.sum f fun i y ↦ y ⊗ₜ[R] b i) =
+      Finset.sum (f.support.biUnion fun i ↦ (a i).support) fun k ↦
+      Finsupp.sum (b.repr (f.sum fun i y ↦ a i k • y)) fun j c ↦ c • b j ⊗ₜ[R] b k := by
+  rw [Finsupp.sum, Finset.mul_sum]
+  subst ha
+  let a i := b.repr (b i * x)
+  conv_lhs =>
+    simp only [TensorProduct.tmul_mul_tmul, one_mul, mul_comm x (b _),
+      ← show ∀ i, Finsupp.linearCombination _ b (a i) = b i * x from
+          fun _ ↦ b.linearCombination_repr _]
+  conv_lhs => simp only [Finsupp.linearCombination, Finsupp.coe_lsum,
+    LinearMap.coe_smulRight, LinearMap.id_coe, id_eq, Finsupp.sum, TensorProduct.tmul_sum,
+    ← TensorProduct.smul_tmul]
+  have h₁ : ∀ k,
+    (Finsupp.sum (Finsupp.sum f fun i y ↦ a i k • b.repr y) fun j z ↦ z • b j ⊗ₜ[R] b k) =
+      (f.sum fun i y ↦ (b.repr y).sum fun j z ↦ a i k • z • b j ⊗ₜ[R] b k) := by
+    intro i
+    rw [Finsupp.sum_sum_index]
+    · congr
+      ext j s
+      rw [Finsupp.sum_smul_index]
+      · simp only [mul_smul, Finsupp.sum, ← Finset.smul_sum]
+      intro; simp only [zero_smul]
+    · intro; simp only [zero_smul]
+    · intros; simp only [add_smul]
+  have h₂ : ∀ (x : S), ((b.repr x).support.sum fun a ↦ b.repr x a • b a) = x := by
+    simpa only [Finsupp.linearCombination_apply, Finsupp.sum] using b.linearCombination_repr
+  simp only [a] at h₁
+  simp_rw [map_finsuppSum, map_smul, h₁, Finsupp.sum, Finset.sum_comm (t := f.support),
+    TensorProduct.smul_tmul', ← TensorProduct.sum_tmul, ← Finset.smul_sum, h₂]
+  apply Finset.sum_congr rfl
+  intro i hi
+  apply Finset.sum_subset_zero_on_sdiff
+  · exact Finset.subset_biUnion_of_mem (fun i ↦ (a i).support) hi
+  · simp only [a, Finset.mem_sdiff, Finset.mem_biUnion, Finsupp.mem_support_iff, ne_eq, not_not,
+      and_imp, forall_exists_index]
+    simp +contextual
+  · exact fun _ _ ↦ rfl
+
+variable [FormallyUnramified R S] [EssFiniteType R S]
+
+variable (R S) in
+/--
+A finite-type `R`-algebra `S` is (formally) unramified iff there exists a `t : S ⊗[R] S` satisfying
+1. `t` annihilates every `1 ⊗ s - s ⊗ 1`.
+2. the image of `t` is `1` under the map `S ⊗[R] S → S`.
+
+See `Algebra.FormallyUnramified.iff_exists_tensorProduct`.
+This is the choice of such a `t`.
+-/
+noncomputable
+def elem : S ⊗[R] S :=
+  (iff_exists_tensorProduct.mp inferInstance).choose
+
+lemma one_tmul_sub_tmul_one_mul_elem (s : S) : (1 ⊗ₜ s - s ⊗ₜ 1) * elem R S = 0 :=
+  (iff_exists_tensorProduct.mp inferInstance).choose_spec.1 s
+
+lemma one_tmul_mul_elem (s : S) : (1 ⊗ₜ s) * elem R S = (s ⊗ₜ 1) * elem R S := by
+  rw [← sub_eq_zero, ← sub_mul, one_tmul_sub_tmul_one_mul_elem]
+
+@[simp]
+lemma lmul_elem : TensorProduct.lmul' R (elem R S) = 1 :=
+  (iff_exists_tensorProduct.mp inferInstance).choose_spec.2
+
+variable (R S)
+
+lemma isIdempotentElem_elem : IsIdempotentElem (elem R S) := by
+  suffices h : ∀ t, t * elem R S = TensorProduct.lmul' R t ⊗ₜ[R] 1 * elem R S by
+    simpa [IsIdempotentElem, lmul_elem, ← Algebra.TensorProduct.one_def] using h (elem R S)
+  intro t
+  induction t using TensorProduct.inductionOn with
+  | tmul a b =>
+    calc a ⊗ₜ[R] b * elem R S = (a ⊗ₜ[R] 1) * (1 ⊗ₜ[R] b) * elem R S := by simp
+       _ = (a ⊗ₜ[R] 1) * (b ⊗ₜ[R] 1) * elem R S := by simp_rw [mul_assoc, one_tmul_mul_elem]
+       _ = TensorProduct.lmul' R (a ⊗ₜ[R] b) ⊗ₜ[R] 1 * elem R S := by simp
+  | add t₁ t₂ h₁ h₂ => rw [map_add, TensorProduct.add_tmul, add_mul, add_mul, h₁, h₂]
+
+/-- An unramified free algebra is finitely generated. Iversen I.2.8 -/
+lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
+  classical
+  let I := Module.Free.ChooseBasisIndex R S
+  -- Let `bᵢ` be an `R`-basis of `S`.
+  let b : Basis I R S := Module.Free.chooseBasis R S
+  -- Let `∑ₛ fᵢ ⊗ bᵢ : S ⊗[R] S` (summing over some finite `s`) be an element such that
+  -- `∑ₛ fᵢbᵢ = 1` and `∀ x : S, xfᵢ ⊗ bᵢ = aᵢ ⊗ xfᵢ` which exists since `S` is unramified over `R`.
+  have ⟨f, hf⟩ : ∃ (a : I →₀ S), elem R S = a.sum (fun i x ↦ x ⊗ₜ b i) := by
+    let b' := ((Basis.singleton PUnit.{1} S).tensorProduct b).reindex (Equiv.punitProd I)
+    use b'.repr (elem R S)
+    conv_lhs => rw [← b'.linearCombination_repr (elem R S), Finsupp.linearCombination_apply]
+    congr! with _ i x
+    simp [b', Basis.tensorProduct, TensorProduct.smul_tmul']
+  constructor
+  -- I claim that `{ fᵢbⱼ | i, j ∈ s }` spans `S` over `R`.
+  use Finset.image₂ (fun i j ↦ f i * b j) f.support f.support
+  rw [← top_le_iff]
+  -- For all `x : S`, let `bᵢx = ∑ aᵢⱼbⱼ`.
+  rintro x -
+  let a : I → I →₀ R := fun i ↦ b.repr (b i * x)
+  -- Consider `F` such that `fⱼx = ∑ Fᵢⱼbⱼ`.
+  let F : I →₀ I →₀ R := Finsupp.onFinset f.support (fun j ↦ b.repr (x * f j))
+    (fun j ↦ not_imp_comm.mp fun hj ↦ by simp [Finsupp.notMem_support_iff.mp hj])
+  have hG : ∀ j ∉ (Finset.biUnion f.support fun i ↦ (a i).support),
+      b.repr (f.sum (fun i y ↦ a i j • y)) = 0 := by
+    intro j hj
+    simp only [Finset.mem_biUnion, Finsupp.mem_support_iff, ne_eq, not_exists, not_and,
+      not_not] at hj
+    simp only [Finsupp.sum]
+    trans b.repr (f.support.sum (fun _ ↦ 0))
+    · congr! with i hi
+      rw [Finsupp.mem_support_iff] at hi
+      rw [hj i hi, zero_smul]
+    · simp only [Finset.sum_const_zero, map_zero]
+  -- And `G` such that `∑ₛ aᵢⱼfᵢ = ∑ Gᵢⱼbⱼ`, where `aᵢⱼ` are the coefficients `bᵢx = ∑ aᵢⱼbⱼ`.
+  let G : I →₀ I →₀ R := Finsupp.onFinset (Finset.biUnion f.support (fun i ↦ (a i).support))
+    (fun j ↦ b.repr (f.sum (fun i y ↦ a i j • y)))
+    (fun j ↦ not_imp_comm.mp (hG j))
+  -- Then `∑ Fᵢⱼ(bⱼ ⊗ bᵢ) = ∑ fⱼx ⊗ bᵢ = ∑ fⱼ ⊗ xbᵢ = ∑ aᵢⱼ(fⱼ ⊗ bᵢ) = ∑ Gᵢⱼ(bⱼ ⊗ bᵢ)`.
+  -- Since `bⱼ ⊗ bᵢ` forms an `R`-basis of `S ⊗ S`, we conclude that `F = G`.
+  have : F = G := by
+    apply Finsupp.curryEquiv.symm.injective
+    apply (Finsupp.equivCongrLeft (Equiv.prodComm I I)).injective
+    apply (b.tensorProduct b).repr.symm.injective
+    suffices (F.sum fun a f ↦ f.sum fun b' c ↦ c • b b' ⊗ₜ[R] b a) =
+        G.sum fun a f ↦ f.sum fun b' c ↦ c • b b' ⊗ₜ[R] b a by
+      simpa [Finsupp.linearCombination_apply, Finsupp.sum_uncurry_index]
+    have : ∀ i, ((b.repr (x * f i)).sum fun j k ↦ k • b j ⊗ₜ[R] b i) = (x * f i) ⊗ₜ[R] b i := by
+      intro i
+      simp_rw [Finsupp.sum, TensorProduct.smul_tmul', ← TensorProduct.sum_tmul]
+      congr 1
+      exact b.linearCombination_repr _
+    rw [Finsupp.onFinset_sum, Finsupp.onFinset_sum]
+    · trans (x ⊗ₜ 1) * elem R S
+      · simp_rw [this, hf, Finsupp.sum, Finset.mul_sum, TensorProduct.tmul_mul_tmul, one_mul]
+      · rw [← one_tmul_mul_elem, hf, finite_of_free_aux]
+        rfl
+    · intro; simp
+    · intro; simp
+  -- In particular, `fⱼx = ∑ Fᵢⱼbⱼ = ∑ Gᵢⱼbⱼ = ∑ₛ aᵢⱼfᵢ` for all `j`.
+  have : ∀ j, x * f j = f.sum fun i y ↦ a i j • y := by
+    intro j
+    apply b.repr.injective
+    congrm $this j
+  -- Since `∑ₛ fⱼbⱼ = 1`, `x = ∑ₛ aᵢⱼfᵢbⱼ` is indeed in the span of `{ fᵢbⱼ | i, j ∈ s }`.
+  rw [← mul_one x, ← @lmul_elem R, hf, map_finsuppSum, Finsupp.sum, Finset.mul_sum]
+  simp only [TensorProduct.lmul'_apply_tmul, Finset.coe_image₂, ← mul_assoc, this,
+    Finsupp.sum, Finset.sum_mul, smul_mul_assoc]
+  apply Submodule.sum_mem; intro i hi
+  apply Submodule.sum_mem; intro j hj
+  apply Submodule.smul_mem
+  apply Submodule.subset_span
+  use j, hj, i, hi
+
+/--
+Proposition I.2.3 of [iversen]
+If `S` is an unramified `R`-algebra, and `M` is an `S`-module, then the map
+`S ⊗[R] M →ₗ[S] M` taking `(b, m) ↦ b • m` admits an `S`-linear section. -/
+noncomputable
+def sec :
+    M →ₗ[S] S ⊗[R] M where
+  __ := ((TensorProduct.AlgebraTensorModule.mapBilinear R S S S S S M
+    LinearMap.id).flip (elem R S)).comp (lsmul R R M).toLinearMap.flip
+  map_smul' r m := by
+    simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearMap.coe_comp, Function.comp_apply,
+      LinearMap.flip_apply, TensorProduct.AlgebraTensorModule.mapBilinear_apply, RingHom.id_apply]
+    trans (TensorProduct.AlgebraTensorModule.map (LinearMap.id (R := S) (M := S))
+      ((LinearMap.flip (AlgHom.toLinearMap (lsmul R R M))) m)) ((1 ⊗ₜ r) * elem R S)
+    · induction elem R S using TensorProduct.inductionOn
+      · simp [smul_comm r]
+      · simp only [map_add, mul_add, *]
+    · have := one_tmul_sub_tmul_one_mul_elem (R := R) r
+      rw [sub_mul, sub_eq_zero] at this
+      rw [this]
+      induction elem R S using TensorProduct.inductionOn
+      · simp [TensorProduct.smul_tmul']
+      · simp only [map_add, smul_add, mul_add, *]
+
+variable {M} in
+lemma sec_apply (x : M) :
+    sec R S M x = ((LinearMap.toSpanSingleton S M x).restrictScalars R).baseChange S (elem R S) :=
+  rfl
+
+variable {M N} in
+lemma sec_comp (f : M →ₗ[S] N) :
+    (sec R S N).comp f = ((f.restrictScalars R).baseChange S).comp (sec R S M) := by
+  ext x
+  simp [sec_apply, ← f.comp_toSpanSingleton, LinearMap.baseChange_comp]
+
+variable {M N} in
+@[simp]
+lemma baseChange_sec (f : M →ₗ[S] N) (x : M) :
+    (f.restrictScalars R).baseChange S (sec R S M x) = sec R S N (f x) :=
+  (congr($(sec_comp R S f) x)).symm
+
+variable {M} in
+lemma sec_mem_baseChange (P : Submodule S M) {x : M} (hx : x ∈ P) :
+    sec R S M x ∈ (P.restrictScalars R).baseChange S :=
+  ⟨sec R S P ⟨x, hx⟩, baseChange_sec R S P.subtype ⟨x, hx⟩⟩
+
+lemma comp_sec :
+    (TensorProduct.AlgebraTensorModule.lift
+      ((lsmul S S M).toLinearMap.flip.restrictScalars R).flip).comp (sec R S M) =
+      LinearMap.id := by
+  ext x
+  simp only [sec_apply, LinearMap.coe_comp, Function.comp_apply,
+    TensorProduct.AlgebraTensorModule.lift_apply, LinearMap.id_coe, id_eq]
+  trans (TensorProduct.lmul' R (elem R S)) • x
+  · induction elem R S using TensorProduct.inductionOn with
+    | tmul r s => simp [mul_smul, smul_comm r s]
+    | add y z hy hz => simp [hy, hz, add_smul]
+  · rw [lmul_elem, one_smul]
+
+/-- If `S` is an unramified `R`-algebra, then `R`-flat implies `S`-flat. Iversen I.2.7 -/
+lemma flat_of_restrictScalars [Module.Flat R M] : Module.Flat S M :=
+  Module.Flat.of_retract _ _ (comp_sec R S M)
+
+/-- If `S` is an unramified `R`-algebra, then `R`-projective implies `S`-projective. -/
+lemma projective_of_restrictScalars [Module.Projective R M] : Module.Projective S M :=
+  Module.Projective.of_split _ _ (comp_sec R S M)
+
+section extendScalars
+
+variable {R S L M N}
+
+variable (S) in
+/-- A left inverse of `LinearMap.restrictScalars`. -/
+noncomputable def extendScalars : (M →ₗ[R] N) →ₗ[S] (M →ₗ[S] N) :=
+  ((sec R S M).lcomp S N).comp (LinearMap.liftBaseChangeEquiv S).toLinearMap
+
+variable (S) in
+lemma extendScalars_apply (f : M →ₗ[R] N) :
+    extendScalars S f = (f.liftBaseChange S).comp (sec R S M) :=
+  rfl
+
+variable (R S M) in
+@[simp]
+lemma extendScalars_zero : extendScalars S (0 : M →ₗ[R] N) = 0 :=
+  map_zero (extendScalars S)
+
+variable (R S M) in
+@[simp]
+lemma extendScalars_one : extendScalars S (1 : M →ₗ[R] M) = 1 :=
+  comp_sec R S M
+
+variable (R S M) in
+@[simp]
+lemma extendScalars_id : extendScalars S (LinearMap.id : M →ₗ[R] M) = LinearMap.id :=
+  extendScalars_one R S M
+
+@[simp]
+lemma extendScalars_apply_comp_restrictScalars (f : M →ₗ[R] N) (g : L →ₗ[S] M) :
+    extendScalars S (f.comp (g.restrictScalars R)) = (extendScalars S f).comp g := by
+  simp [extendScalars_apply, LinearMap.liftBaseChange_comp, LinearMap.comp_assoc, sec_comp]
+
+@[simp]
+lemma extendScalars_apply_restrictScalars_comp (f : M →ₗ[S] N) (g : L →ₗ[R] M) :
+    extendScalars S ((f.restrictScalars R).comp g) = f.comp (extendScalars S g) := by
+  simp [extendScalars_apply, LinearMap.comp_liftBaseChange, ← LinearMap.comp_assoc]
+
+variable (R) in
+@[simp]
+lemma extendScalars_restrictScalars (f : M →ₗ[S] N) :
+    extendScalars S (f.restrictScalars R) = f := by
+  simpa using extendScalars_apply_restrictScalars_comp f (LinearMap.id (R := R))
+
+@[simp]
+lemma extendScalars_comp_mulLeft (f : S →ₗ[R] M) (x : S) :
+    extendScalars S (f.comp (LinearMap.mulLeft R x)) =
+      (extendScalars S f).comp (LinearMap.mulLeft S x) :=
+  extendScalars_apply_comp_restrictScalars f (LinearMap.mulLeft S x)
+
+@[simp]
+lemma extendScalars_mulLeft_comp (f : M →ₗ[R] S) (x : S) :
+    extendScalars S ((LinearMap.mulLeft R x).comp f) =
+      (LinearMap.mulLeft S x).comp (extendScalars S f) :=
+  extendScalars_apply_restrictScalars_comp (LinearMap.mulLeft S x) f
+
+end extendScalars
+
+section equalizer
+
+open Algebra.TensorProduct
+
+variable {R S} {A : Type*} [CommRing A] [Algebra R A] (f g : S →ₐ[R] A)
+
+/-- The idempotent defining the subset of `Spec A` where `f` and `g` agree. -/
+noncomputable def equalizerIdempotent : A :=
+  productMap f g (elem R S)
+
+lemma isIdempotentElem_equalizerIdempotent : IsIdempotentElem (equalizerIdempotent f g) :=
+  (isIdempotentElem_elem R S).map (productMap f g)
+
+@[simp]
+lemma map_equalizerIdempotent {B : Type*} [CommRing B] [Algebra R B] (φ : A →ₐ[R] B) :
+    φ (equalizerIdempotent f g) = equalizerIdempotent (φ.comp f) (φ.comp g) := by
+  simp_rw [equalizerIdempotent, ← AlgHom.comp_apply, comp_productMap]
+
+variable {f g} in
+lemma equalizerIdempotent_mul_eq_iff {a : A} :
+    equalizerIdempotent f g * a = a ↔ ∀ x : S, f x * a = g x * a := by
+  unfold equalizerIdempotent
+  refine ⟨fun h x ↦ ?_, fun h ↦ ?_⟩
+  · simpa [mul_assoc, h] using congrArg (productMap f g · * a) (one_tmul_mul_elem x).symm
+  · suffices ∀ t, productMap f g t * a = f (lmul' R t) * a by simpa using this (elem R S)
+    intro t
+    induction t with
+    | tmul x y => simp [mul_assoc, h]
+    | add x y hx hy => simp [add_mul, hx, hy]
+
+theorem span_equalizerIdempotent_one_sub_eq :
+    Ideal.span {1 - equalizerIdempotent f g} = Ideal.span (Set.range fun x ↦ f x - g x) :=
+  eq_of_forall_ge_iff fun I ↦ by simpa [← map_equalizerIdempotent, ← Ideal.Quotient.eq,
+    Ideal.span_le, Set.range_subset_iff, eq_comm] using (equalizerIdempotent_mul_eq_iff
+      (a := 1) (f := (Ideal.Quotient.mkₐ R I).comp f) (g := (Ideal.Quotient.mkₐ R I).comp g))
+
+variable {f g} in
+@[simp]
+lemma equalizerIdempotent_eq_one_iff : equalizerIdempotent f g = 1 ↔ f = g := by
+  simpa [AlgHom.ext_iff] using equalizerIdempotent_mul_eq_iff (f := f) (g := g) (a := 1)
+
+@[simp]
+lemma equalizerIdempotent_self : equalizerIdempotent f f = 1 :=
+  equalizerIdempotent_eq_one_iff.mpr rfl
+
+lemma apply_mul_equalizerIdempotent (x : S) :
+    f x * equalizerIdempotent f g = g x * equalizerIdempotent f g :=
+  equalizerIdempotent_mul_eq_iff.mp (isIdempotentElem_equalizerIdempotent f g).eq x
+
+lemma equalizerIdempotent_comm : equalizerIdempotent f g = equalizerIdempotent g f := by
+  have hfg := equalizerIdempotent_mul_eq_iff.mpr fun x ↦ (apply_mul_equalizerIdempotent f g x).symm
+  have hgf := equalizerIdempotent_mul_eq_iff.mpr fun x ↦ (apply_mul_equalizerIdempotent g f x).symm
+  rw [← hfg, mul_comm, hgf]
+
+end equalizer
+
+section inertia
+
+open Algebra.TensorProduct
+
+variable {G : Type*} [Group G] [MulSemiringAction G S] [SMulCommClass G R S]
+
+/-- If `S/R` is formally unramified and essentially finite type, then the inertia idempotent
+of an algebra automorphism `g : G` is an idempotent element `e` of `S` with the property that
+`e ≡ 1 [MOD Q] ↔ g ∈ Q.inertia G`, see `mk_inertiaIdempotent_eq_one_iff`. -/
+noncomputable def inertiaIdempotent (g : G) : S :=
+  equalizerIdempotent (MulSemiringAction.toAlgHom R S g) (AlgHom.id R S)
+
+lemma isIdempotentElem_inertiaIdempotent (g : G) : IsIdempotentElem (inertiaIdempotent R S g) :=
+  isIdempotentElem_equalizerIdempotent (MulSemiringAction.toAlgHom R S g) (AlgHom.id R S)
+
+variable (G) in
+@[simp]
+lemma inertiaIdempotent_one : inertiaIdempotent R S (1 : G) = 1 := by
+  simp [inertiaIdempotent]
+
+variable {S} in
+lemma smul_mul_inertiaIdempotent (g : G) (x : S) :
+    (g • x) * inertiaIdempotent R S g = x * inertiaIdempotent R S g := by
+  simpa [inertiaIdempotent] using
+    apply_mul_equalizerIdempotent (MulSemiringAction.toAlgHom R S g) (AlgHom.id R S) x
+
+variable {S} in
+/-- The inertia idempotent of `g` is congruent to `1` modulo `Q` if and only `g ∈ Q.inertia G`. -/
+@[simp]
+lemma mk_inertiaIdempotent_eq_one_iff {Q : Ideal S} {g : G} :
+    Ideal.Quotient.mk Q (inertiaIdempotent R S g) = 1 ↔ g ∈ Q.inertia G := by
+  rw [inertiaIdempotent, ← Ideal.Quotient.mkₐ_eq_mk R, map_equalizerIdempotent]
+  simp [AlgHom.ext_iff, Ideal.Quotient.mk_eq_mk_iff_sub_mem]
+
+variable {S} in
+open Classical in
+lemma mk_inertiaIdempotent (Q : Ideal S) [Q.IsPrime] (g : G) :
+    Ideal.Quotient.mk Q (inertiaIdempotent R S g) = if g ∈ Q.inertia G then 1 else 0 := by
+  rw [← mk_inertiaIdempotent_eq_one_iff R]
+  grind [((isIdempotentElem_inertiaIdempotent R S g).map (Ideal.Quotient.mk Q)).eq_zero_or_one]
+
+end inertia
+
+end Algebra.FormallyUnramified

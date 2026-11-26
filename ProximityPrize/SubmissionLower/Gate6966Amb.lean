@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.Low6966VariableSelect
-import ProximityPrize.SubmissionLower.Low6966ShapeGate
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Low6966AllocTotal
+import ProximityPrize.SubmissionLower.Low48BentCyclePrice
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 

@@ -1,5 +1,8 @@
-import Mathlib.Tactic
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Gate6966Shape
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 
@@ -893,10 +896,10 @@ def freeE (b j t : ℕ) : ℕ :=
   Dq b j - (if mn t (mn b (j / 3)) + 1 ≤ mn (j / 3) b
     then Dq (b - mn t (mn b (j / 3)) - 1) (j - 3 * mn t (mn b (j / 3)) - 3) else 0)
 
-theorem free_le_freeE (Y : Fin 3 → ℕ) : free Y ≤ freeE (Y 0) (Y 1) (Y 2) := by
-  have hY : ![Y 0, Y 1, Y 2] = Y := by funext i; fin_cases i <;> rfl
-  have h1 := free_le_Dsum (Y 0) (Y 1) (Y 2)
-  have h2 := Dinf_split (Y 0) (Y 1) (min (Y 2) (min (Y 0) (Y 1 / 3))) (by omega)
+theorem free_le_freeE («Y» : Fin 3 → ℕ) : free «Y» ≤ freeE («Y» 0) («Y» 1) («Y» 2) := by
+  have hY : ![«Y» 0, «Y» 1, «Y» 2] = «Y» := by funext i; fin_cases i <;> rfl
+  have h1 := free_le_Dsum («Y» 0) («Y» 1) («Y» 2)
+  have h2 := Dinf_split («Y» 0) («Y» 1) (min («Y» 2) (min («Y» 0) («Y» 1 / 3))) (by omega)
   rw [hY] at h1
   unfold freeE
   simp only [mn_eq, Dq_eq]
@@ -1192,19 +1195,19 @@ theorem mx_eq (a b : ℕ) : mx a b = max a b := by
 
 def freeC (b j t : ℕ) : ℕ := (Ppos (mx b j) j (mn t (j / 3)) - Pneg (mx b j) j (mn t (j / 3))) / 32
 
-theorem free_mono {Y Y' : Fin 3 → ℕ} (h : ∀ i, Y i ≤ Y' i) : free Y ≤ free Y' := by
+theorem free_mono {«Y» «Y'» : Fin 3 → ℕ} (h : ∀ i, «Y» i ≤ «Y'» i) : free «Y» ≤ free «Y'» := by
   unfold free
   apply card_le_card
   intro m hm
-  have hm' := (freeSet_finite Y).mem_toFinset.mp hm
-  exact (freeSet_finite Y').mem_toFinset.mpr fun i => (hm' i).trans (h i)
+  have hm' := (freeSet_finite «Y»).mem_toFinset.mp hm
+  exact (freeSet_finite «Y'»).mem_toFinset.mpr fun i => (hm' i).trans (h i)
 
-theorem free_le_freeC (Y : Fin 3 → ℕ) : free Y ≤ freeC (Y 0) (Y 1) (Y 2) := by
-  have h1 : free Y ≤ free ![max (Y 0) (Y 1), Y 1, min (Y 2) (Y 1 / 3)] := by
+theorem free_le_freeC («Y» : Fin 3 → ℕ) : free «Y» ≤ freeC («Y» 0) («Y» 1) («Y» 2) := by
+  have h1 : free «Y» ≤ free ![max («Y» 0) («Y» 1), «Y» 1, min («Y» 2) («Y» 1 / 3)] := by
     unfold free
     apply card_le_card
     intro m hm
-    have hm' := (freeSet_finite Y).mem_toFinset.mp hm
+    have hm' := (freeSet_finite «Y»).mem_toFinset.mp hm
     apply (freeSet_finite _).mem_toFinset.mpr
     intro i
     have w1 := hm' 1
@@ -1215,10 +1218,10 @@ theorem free_le_freeC (Y : Fin 3 → ℕ) : free Y ≤ freeC (Y 0) (Y 1) (Y 2) :
     fin_cases i
     · exact w0.trans (le_max_left _ _)
     · exact w1
-    · show m.weight (wv 2) ≤ min (Y 2) (Y 1 / 3)
+    · show m.weight (wv 2) ≤ min («Y» 2) («Y» 1 / 3)
       exact le_min w2 (by omega)
-  have h2 := free_le_sum (max (Y 0) (Y 1)) (Y 1) (min (Y 2) (Y 1 / 3)) (by have := Nat.min_le_right (Y 2) (Y 1 / 3); omega) (le_max_right _ _)
-  have h3 := freeSum_closed (max (Y 0) (Y 1)) (Y 1) (le_max_right _ _) (min (Y 2) (Y 1 / 3)) (by have := Nat.min_le_right (Y 2) (Y 1 / 3); omega)
+  have h2 := free_le_sum (max («Y» 0) («Y» 1)) («Y» 1) (min («Y» 2) («Y» 1 / 3)) (by have := Nat.min_le_right («Y» 2) («Y» 1 / 3); omega) (le_max_right _ _)
+  have h3 := freeSum_closed (max («Y» 0) («Y» 1)) («Y» 1) (le_max_right _ _) (min («Y» 2) («Y» 1 / 3)) (by have := Nat.min_le_right («Y» 2) («Y» 1 / 3); omega)
   unfold freeC
   rw [mx_eq, mn_eq]
   omega
@@ -1305,10 +1308,10 @@ theorem sumQ (b : ℕ) : ∀ t, t ≤ b →
 def U3 (b t : ℕ) : ℕ :=
   ((b + 1) * (b + 2) * (b + 3) * (b + 4) - Qn b (mn t b)) / 24
 
-theorem free_le_U3 (Y : Fin 3 → ℕ) : free Y ≤ U3 (Y 0) (Y 2) := by
+theorem free_le_U3 («Y» : Fin 3 → ℕ) : free «Y» ≤ U3 («Y» 0) («Y» 2) := by
   classical
-  set b := Y 0
-  set t := Y 2
+  set b := «Y» 0
+  set t := «Y» 2
   have ht : mn t b = min t b := mn_eq t b
   let S : Finset (Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ) :=
     (range (min t b + 1)).sigma fun e3 => (range (b - e3 + 1)).sigma fun e2 =>
@@ -1326,11 +1329,11 @@ theorem free_le_U3 (Y : Fin 3 → ℕ) : free Y ≤ U3 (Y 0) (Y 2) := by
     intro e1 he1
     have := mem_range.mp he1
     omega
-  have hle : free Y ≤ S.card := by
+  have hle : free «Y» ≤ S.card := by
     unfold free
     apply card_le_card_of_injOn (fun m : Fin 4 →₀ ℕ => (⟨m 3, m 2, m 1, m 0⟩ : Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ))
     · intro m hm
-      have hm' := (freeSet_finite Y).mem_toFinset.mp (by simpa using hm)
+      have hm' := (freeSet_finite «Y»).mem_toFinset.mp (by simpa using hm)
       have w0 := hm' 0
       have w2 := hm' 2
       simp [Finsupp.weight_apply, Finsupp.sum_fintype, wv, Fin.sum_univ_four, Pi.single_apply] at w0 w2
@@ -1350,8 +1353,8 @@ theorem free_le_U3 (Y : Fin 3 → ℕ) : free Y ≤ U3 (Y 0) (Y 2) := by
 
 def freeD (b j t : ℕ) : ℕ := Witness6966Free.freeE b j t
 
-theorem free_le_freeD (Y : Fin 3 → ℕ) : free Y ≤ freeD (Y 0) (Y 1) (Y 2) :=
-  Witness6966Free.free_le_freeE Y
+theorem free_le_freeD («Y» : Fin 3 → ℕ) : free «Y» ≤ freeD («Y» 0) («Y» 1) («Y» 2) :=
+  Witness6966Free.free_le_freeE «Y»
 
 end Gate6966FreeU3
 
@@ -1731,12 +1734,12 @@ theorem level_sound (G : Gt) (hG : G.Ok) (hx : 3 * G.xt ≤ G.xj) (hpos : 0 < G.
   have g2 := Nat.mul_le_mul_left a hxl.2.2
   have hfd : Gate6966Shape.free (fun k => ![B0, B1, B2] k - (a * x k + η k)) ≤
       freeD (B0 - a * G.lb - η 0) (B1 - a * G.lj - η 1) (B2 - a * G.lt - η 2) := by
-    refine (Gate6966FreeCard.free_mono (Y' := ![B0 - a * G.lb - η 0, B1 - a * G.lj - η 1, B2 - a * G.lt - η 2])
+    refine (Gate6966FreeCard.free_mono («Y'» := ![B0 - a * G.lb - η 0, B1 - a * G.lj - η 1, B2 - a * G.lt - η 2])
       ?_).trans (free_le_freeD _)
     intro i; fin_cases i <;> simp <;> omega
   have hfd0 : Gate6966Shape.free (fun k => ![B0, B1, B2] k - (a * x k + η k)) ≤
       freeD (B0 - a * G.lb) (B1 - a * G.lj) (B2 - a * G.lt) := by
-    refine (Gate6966FreeCard.free_mono (Y' := ![B0 - a * G.lb, B1 - a * G.lj, B2 - a * G.lt]) ?_).trans (free_le_freeD _)
+    refine (Gate6966FreeCard.free_mono («Y'» := ![B0 - a * G.lb, B1 - a * G.lj, B2 - a * G.lt]) ?_).trans (free_le_freeD _)
     intro i; fin_cases i <;> simp <;> omega
   by_cases hra : r ≤ a
   · exfalso

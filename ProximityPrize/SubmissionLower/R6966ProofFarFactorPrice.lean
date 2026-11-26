@@ -1,5 +1,9 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R6966ProofFarNonlinear
-import ProximityPrize.SubmissionLower.R6966ProofFarPure
+import ProximityPrize.SubmissionLower.R6960MonicChartInfinityRing
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 
@@ -18,8 +22,8 @@ open scoped Polynomial
 set_option maxRecDepth 15000
 set_option maxHeartbeats 2500000
 
-abbrev agreement : ℕ := 179769
-abbrev wordDegree : ℕ := 164748
+abbrev agreement : ℕ := 179759
+abbrev wordDegree : ℕ := 164768
 abbrev rate := MarkedEvaluation.rate
 
 theorem rate_mono : Monotone rate := by

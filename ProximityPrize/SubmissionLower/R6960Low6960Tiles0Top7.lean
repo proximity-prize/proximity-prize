@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.R6960Low6960RetainedCount
-import ProximityPrize.SubmissionLower.R6960Low6960Mass0
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.R6960Low6960FractionContact
+import ProximityPrize.SubmissionLower.Compact54Packed
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 set_option maxRecDepth 22000

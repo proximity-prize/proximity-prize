@@ -1,6 +1,11 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.FrontBranch12
 import ProximityPrize.SubmissionLower.GoldBranch3
 import ProximityPrize.SubmissionLower.UpperBranch3
+set_option Elab.async false
+
+
+
 
 set_option Elab.async false
 

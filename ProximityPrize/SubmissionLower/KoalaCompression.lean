@@ -1,8 +1,12 @@
-import ArkLib.ToMathlib.RingTheory.MvPolynomial.AffineHilbertComap
-import ArkLib.ToMathlib.RingTheory.MvPolynomial.MonomialMap
-import ProximityPrize.SubmissionLower.KoalaCutGeometry
-import ArkLib.Data.MvPolynomial.WeightAtMost
-import Mathlib.LinearAlgebra.Matrix.Rank
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Gate6966Gate
+import ProximityPrize.SubmissionLower.LibraryArkLib_Data_MvPolynomial_WeightAtMost
+set_option Elab.async false
+
+
+
+
+
 set_option Elab.async false
 
 -- merged module KoalaBoxDegree

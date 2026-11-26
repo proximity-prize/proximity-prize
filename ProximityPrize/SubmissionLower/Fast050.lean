@@ -1,4 +1,8 @@
-import ProximityPrize.SubmissionLower.Fast048
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.DdB4
+import ProximityPrize.SubmissionLower.LibraryMathlib_RingTheory_PowerSeries_Inverse
+set_option Elab.async false
+
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -457,7 +461,7 @@ theorem separable_rank (h3 : c3) {Γ s} (P : PoleData Γ s) (L : ResidueChart P)
       exact Polynomial.isCoprime_X_sub_C_of_isUnit_sub
         (sub_ne_zero.mpr ((FaithfulSMul.algebraMap_injective Geom GenericSeed).ne hne)).isUnit
     have h := Finset.prod_dvd_of_coprime (t := T) (fun α _ β _ hne => hcop α β hne) hd
-    rw [Finset.prod_pow, ← map_prod MvPolynomial.C, hprod] at h
+    rw [Finset.prod_pow, ← map_prod (MvPolynomial.C : Polynomial GenericSeed →+* RawRow), hprod] at h
     exact (mem_poleCondition P L a _ _).mpr h
   have hdim := codim_finset_inf_le V T W (poleDebit a) hlocal
   rw [hcard] at hdim

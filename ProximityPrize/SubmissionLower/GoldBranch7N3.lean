@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.FrontCore82258Model
-import ProximityPrize.SubmissionLower.R6960HelperSourceArithmetic
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.Fat6966Bank24000
+import ProximityPrize.SubmissionLower.R6960Front6960Rank4
+set_option Elab.async false
+
+
 set_option Elab.async false
 set_option autoImplicit true
 section

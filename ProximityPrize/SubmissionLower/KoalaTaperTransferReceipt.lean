@@ -1,12 +1,17 @@
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins3Part1242
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins3Part1306
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins3Part1370
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins3Part1434
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins3Part1498
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins3Part1562
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotRawWindow2Part1
-import ProximityPrize.SubmissionLower.Low48PrimaryPivotRaw
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.A6966FinalRankReceiptGroup50
+import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins2Part972
 import ProximityPrize.SubmissionLower.Low48PrimaryPivotBins2
+set_option Elab.async false
+
+
+
+
+
+
+
+
+
 
 set_option Elab.async false
 

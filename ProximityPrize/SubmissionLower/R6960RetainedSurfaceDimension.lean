@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.R6960RetainedGlobalEvaluation
-import ProximityPrize.SubmissionLower.R6960RetainedTwoLineBound
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedIndexSpecialization
+import ProximityPrize.SubmissionLower.R6960CollisionMarkedFibreNormalization
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 set_option synthInstance.maxHeartbeats 200000

@@ -1,4 +1,7 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.Gate6966Tilted
+set_option Elab.async false
+
 
 set_option Elab.async false
 

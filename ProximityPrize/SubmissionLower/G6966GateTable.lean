@@ -1,16 +1,20 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.G6966Check0
 import ProximityPrize.SubmissionLower.G6966Check1
-import ProximityPrize.SubmissionLower.G6966Check2
-import ProximityPrize.SubmissionLower.G6966Check3
-import ProximityPrize.SubmissionLower.G6966Check4
-import ProximityPrize.SubmissionLower.G6966Check5
-import ProximityPrize.SubmissionLower.G6966Check6
-import ProximityPrize.SubmissionLower.G6966Check7
-import ProximityPrize.SubmissionLower.G6966Check8
-import ProximityPrize.SubmissionLower.G6966Check9
-import ProximityPrize.SubmissionLower.G6966Check10
-import ProximityPrize.SubmissionLower.G6966Check11
-import ProximityPrize.SubmissionLower.G6966Check12
+set_option Elab.async false
+
+
+
+
+
+
+
+
+
+
+
+
+
 set_option Elab.async false
 set_option maxRecDepth 16000
 namespace Gate6966Fin

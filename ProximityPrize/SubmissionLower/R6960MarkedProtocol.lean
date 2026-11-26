@@ -1,9 +1,16 @@
+import ProximityPrize.Benchmark.TargetLower
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedAxisFamily
 import ProximityPrize.SubmissionLower.R6960MarkedMatrixNorm
-import ProximityPrize.SubmissionLower.R6960MonicChartActual
+import ProximityPrize.SubmissionLower.R6960ChartImage
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedGenericMeasure
 import ProximityPrize.SubmissionLower.R6960MarkedVerticalProfile
-import ProximityPrize.SubmissionLower.R6960MarkedAllLabels
+set_option Elab.async false
+
+
+
+
+
+
 
 set_option Elab.async false
 

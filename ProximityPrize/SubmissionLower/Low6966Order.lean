@@ -1,10 +1,17 @@
-import ProximityPrize.SubmissionLower.Fast042
-import ProximityPrize.SubmissionLower.SoloK1_13_1_1ArithmeticLogic
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.DdZ3EWiUc
+import ProximityPrize.SubmissionLower.DdA2
 import ProximityPrize.SubmissionLower.Final50Order
 import ProximityPrize.SubmissionLower.Fat6966Factors
-import ProximityPrize.SubmissionLower.Fat6966Contacts
-import ProximityPrize.SubmissionLower.Fat6966Padding
-import ProximityPrize.SubmissionLower.Wide50EulerPrimaryFamily
+import ProximityPrize.SubmissionLower.FadicChunk
+set_option Elab.async false
+
+
+
+
+
+
+
 
 set_option Elab.async false
 
@@ -109,18 +116,18 @@ open K1_13 (Row Geom Shape shape InBox Contact)
 open Wide50EulerPrimary (primary_family sourceRank layerNeed)
 open scoped Polynomial
 
-abbrev agreement : ℕ := 179769
-abbrev physicalDegree : ℕ := 133400
+abbrev agreement : ℕ := 179759
+abbrev physicalDegree : ℕ := 133387
 abbrev primaryCutoff : ℕ := 3000*agreement-1
 abbrev primaryRank : ℕ := sourceRank agreement physicalDegree
 abbrev need : ℕ := layerNeed agreement physicalDegree
 
-theorem certified_layers : need = 20088974187454 := by decide +kernel
+theorem certified_layers : need = 20094227882250 := by decide +kernel
 
 /-- The common endpoint supplies all physical degree and agreement data
 for every actual low-height mark. -/
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179769 M Γ) (hi : M.overhead ≤ 2329) :
+    (F : P1.FamilyAt 179759 M Γ) (hi : M.overhead ≤ 2316) :
     Set.InjOn F.scalar (Γ : Set K) ∧
       (∀ γ∈Γ,(F.scalar γ).natDegree≤physicalDegree) ∧
       ∀ γ∈Γ,∃ T : Finset I,agreement≤T.card ∧ ∀ i∈T,(F.scalar γ).eval (node i)=M.word i := by
@@ -129,7 +136,7 @@ theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
     rcases (F.mark γ hγ).scalar_degree with zero | deg
     · simp [zero]
     · change ((F.scalar γ).natDegree : ℤ)≤131071+M.overhead at deg
-      change (F.scalar γ).natDegree≤133400
+      change (F.scalar γ).natDegree≤133387
       omega
   · intro γ hγ
     let Mγ := F.mark γ hγ
@@ -193,9 +200,9 @@ theorem fat_equations : Equations := by
     intro h
     rw [h, MvPolynomial.support_zero, eq_comm, MvPolynomial.support_eq_empty] at suppR
     exact J.nonzero suppR
-  have totalQ : Q'.totalDegree ≤ 2945 := by
+  have totalQ : Q'.totalDegree ≤ 1517 := by
     simpa only [MvPolynomial.totalDegree, suppQ] using htQ
-  have indexQ : indexDegree Q' ≤ 954 := by
+  have indexQ : indexDegree Q' ≤ 492 := by
     simpa only [K1_13.indexDegree, lowerIndex, suppQ] using hiQ
   have totalR : R'.totalDegree ≤ 380928000 := by
     have htR : R.totalDegree ≤ 380928000 := J.total
@@ -208,7 +215,7 @@ theorem fat_equations : Equations := by
   rcases hcover γ hγ hb with he | ho
   · exact Or.inl (eval_cleared mapQ _ he)
   · refine Or.inr (order_cleared mapR _ ?_)
-    have hres : LowerOrder R (trajectory (extend (s γ))) 22533 :=
+    have hres : LowerOrder R (trajectory (extend (s γ))) 21923 :=
       resultant_order (pad D.left J.a) (pad D.right J.b) (inclConst (P.z γ)) _
         J.degree_left.le J.degree_right.le ⟨mixedOrder_pad J.a ho.1, mixedOrder_pad J.b ho.2⟩
     exact hres
@@ -225,12 +232,12 @@ open Low6966Fat (Holds)
 /-- The actual low family supplies common and resultant equations with the
 revised resultant order. -/
 theorem fat_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt 179769 M Γ) (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2329) :
+    (F : P1.FamilyAt 179759 M Γ) (lo : 1 ≤ M.overhead) (hi : M.overhead ≤ 2316) :
     ∃ (book : Finset P1.K) (E : Low6966Fat.FatEquations), book.card≤56000 ∧
       ∀ γ∈Γ,γ∉book → Holds E (extend (F.scalar γ)) := by
   obtain ⟨_,deg,hits⟩ := messages_of_family M F hi
   obtain ⟨pole,hpole⟩ := ModelExactPole6966.exists_pole M F lo (hi.trans (by decide))
-  have small : pole.H.natDegree≤2329 := by rw [hpole]; omega
+  have small : pole.H.natDegree≤2316 := by rw [hpole]; omega
   exact Low6966Fat.fat_equations M.word Γ F.scalar deg hits pole small
 
 #print axioms fat_of_family
@@ -294,8 +301,8 @@ abbrev layerNeed := LowProfile6966.need
 abbrev Messages := LowProfile6966.Messages
 abbrev ProperCut := LowProfile6966.ProperCut
 abbrev LayerBudget := @LowProfile6966.LayerBudget
-theorem sourceRank_eq : sourceRank = 931565911020602571 := by decide
-theorem certified_layers : sourceRank / layerWidth + 1 = 20088974187454 := by decide
+theorem sourceRank_eq : sourceRank = 931869818039328142 := by decide
+theorem certified_layers : sourceRank / layerWidth + 1 = 20094227882250 := by decide
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
     ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧
@@ -926,14 +933,14 @@ open scoped Polynomial
 export Low6966OrderProof (BankRow requiredOrder)
 export Low6966OrderProof_1 (order_of_contact)
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2329) :
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2316) :
     Messages M.word Γ F.scalar := by
   refine ⟨F.distinct, ?_, ?_⟩
   · intro γ hγ
     obtain hz | hd := (F.mark γ hγ).scalar_degree
     · simp [hz]
     · change ((F.scalar γ).natDegree : ℤ) ≤ (131072 : ℤ) - 1 + M.overhead at hd
-      change (F.scalar γ).natDegree ≤ 133400
+      change (F.scalar γ).natDegree ≤ 133387
       omega
   · intro γ hγ
     let m := F.mark γ hγ

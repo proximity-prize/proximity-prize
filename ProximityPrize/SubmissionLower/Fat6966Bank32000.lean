@@ -1,5 +1,12 @@
+import ProximityPrize.Benchmark.TargetLower
+import ProximityPrize.SubmissionLower.R6960Front6960Rank5
+import ProximityPrize.SubmissionLower.R6966ProofProtocolProfile
 import ProximityPrize.SubmissionLower.UpperBranch5
-import ProximityPrize.SubmissionLower.RingHomShortcuts
+
+section Merged6967_Fat6966Bank32000
+set_option Elab.async false
+
+
 
 set_option Elab.async false
 
@@ -14,18 +21,18 @@ open K1 (I K)
 open K1_13 (Geom)
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
-abbrev firstOrder : ℕ := 4127574
-abbrev secondOrder : ℕ := 1857492
-abbrev firstCut : ℕ := 5000 * 179769 - firstOrder
-abbrev secondCut : ℕ := 5000 * 179769 - secondOrder
+abbrev firstOrder : ℕ := 4086972
+abbrev secondOrder : ℕ := 1814603
+abbrev firstCut : ℕ := 5000 * 179759 - firstOrder
+abbrev secondCut : ℕ := 5000 * 179759 - secondOrder
 abbrev bankRank : ℕ := 643975827135108623227
 def mixedWeight (a : SeedVar →₀ ℕ) : ℕ :=
-  6987 * a none + 48700 * a.some.degree
+  6948 * a none + 48690 * a.some.degree
 theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
     mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
   simp only [mixedWeight, Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
   ac_rfl
-/-- The low fat chain works with rows whose seed degree is at most 32,000. -/
+/-- The low fat chain works with rows whose seed degree is at most 32,0. -/
 abbrev seedCap : ℕ := 32000
 def Caps27 {R : Type*} [CommSemiring R] (a : K1_13.Shape) (F : SeedRow R) : Prop :=
   Caps a F ∧ seedDegree F ≤ seedCap
@@ -37,7 +44,7 @@ def HasRank27 {Γ s} (w : I → K) (P : K1_13.PoleData Γ s) (L : ResidueChart P
   ∃ e : Fin n → PhysicalRow, LinearIndependent Geom e ∧ ∀ i, Source27 w P L a t (e i)
 open K1_13 (PoleData)
 def c1 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2329 →
+  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2316 →
     (∃ F, F ≠ 0 ∧ Source27 w P L firstBox firstCut F) ∧
     HasRank27 w P L secondBox secondCut bankRank
 end
@@ -517,30 +524,30 @@ private theorem volume_eq (b : Bank) (h : ℕ) :
   simp only [width, rawVolume, moment, credit, jetSum, sum_mul, ← sum_add_distrib]
   refine sum_congr rfl fun q _ => sum_congr rfl fun k _ => sum_congr rfl fun l _ => ?_
   ring
-private theorem first_raw : rawVolume .first = 2816884657192836300 := by
-  change moment 6789 4876408 1 131071 0 = _
-  exact moment_eq 6789 4876408 1 131071 0 _ (by decide) (by decide +kernel)
-private theorem second_raw : rawVolume .second = 2834053866161056629 := by
-  change moment 6820 3083289 1 131071 0 = _
-  exact moment_eq 6820 3083289 1 131071 0 _ (by decide) (by decide +kernel)
+private theorem first_raw : rawVolume .first = 2816814436486775580 := by
+  change moment 6789 4867010 1 131071 0 = _
+  exact moment_eq 6789 4867010 1 131071 0 _ (by decide) (by decide +kernel)
+private theorem second_raw : rawVolume .second = 2834000441598701348 := by
+  change moment 6820 3076178 1 131071 0 = _
+  exact moment_eq 6820 3076178 1 131071 0 _ (by decide) (by decide +kernel)
 private theorem endpoint (b : Bank) :
-    targetRank b + 262144 * (32001 * b.nodeRank) + 2329 * extra b.box.b ≤
+    targetRank b + 262144 * (32001 * b.nodeRank) + 2316 * extra b.box.b ≤
       32001 * rawVolume b := by
   obtain ⟨_, _, hfirst, hsecond⟩ := bank_moments
   cases b
   · have he : extra Bank.first.box.b = 0x1cc973f372d9cdc := hfirst
-    have ha : (1 : ℕ) + 262144 * (32001 * 0x9bab8f5dfb7) + 2329 * 0x1cc973f372d9cdc ≤
-        32001 * 2816884657192836300 := by decide
+    have ha : (1 : ℕ) + 262144 * (32001 * 0x9bab8f5dfb7) + 2316 * 0x1cc973f372d9cdc ≤
+        32001 * 2816814436486775580 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
-      targetRank Bank.first + 262144 * (32001 * Bank.first.nodeRank) + 2329 * x ≤ 32001 * y)
+      targetRank Bank.first + 262144 * (32001 * Bank.first.nodeRank) + 2316 * x ≤ 32001 * y)
       he first_raw).mpr ha
   · have he : extra Bank.second.box.b = 0x1d32fca954a0ef7 := hsecond
     have ha : (643975827135108623227 : ℕ) + 262144 * (32001 * 0x9bac59312df) +
-        2329 * 0x1d32fca954a0ef7 ≤ 32001 * 2834053866161056629 := by decide
+        2316 * 0x1d32fca954a0ef7 ≤ 32001 * 2834000441598701348 := by decide
     exact (congrArg₂ (fun x y : ℕ =>
-      targetRank Bank.second + 262144 * (32001 * Bank.second.nodeRank) + 2329 * x ≤ 32001 * y)
+      targetRank Bank.second + 262144 * (32001 * Bank.second.nodeRank) + 2316 * x ≤ 32001 * y)
       he second_raw).mpr ha
-theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2329) :
+theorem budget (b : Bank) (h : ℕ) (hh : h ≤ 2316) :
     targetRank b + 262144 * (32001 * b.nodeRank) + h * Fat6966Bank32000Seed.poleDebit27 b.box ≤
       32001 * jetSum b.box.b (width b h) := by
   have he := endpoint b
@@ -562,7 +569,7 @@ private theorem simple_pole_bound : Fat6966Bank32000Seed.c3_27 :=
 private theorem deformation_bound : K1_13_4_2.c4 :=
   K1_13_4_2_4.of_children K1_13_4_2_4_1.proof K1_13_4_2_4_2.proof
 private theorem rank_of_bounds (b : Bank) (w : I → K) {Γ s}
-    (P : PoleData Γ s) (L : ResidueChart P) (hh : P.H.natDegree ≤ 2329) :
+    (P : PoleData Γ s) (L : ResidueChart P) (hh : P.H.natDegree ≤ 2316) :
     Fat6966Bank32000.HasRank27 w P L b.box (cut b) (targetRank b) := by
   classical
   obtain ⟨V, hV, hbox, hdimV⟩ := ambient b P.H.natDegree
@@ -611,3 +618,155 @@ end
 #print axioms Fat6966Bank32000Banks.proof
 
 end Merged_R6960Fat6966Bank32000Banks
+
+end Merged6967_Fat6966Bank32000
+
+section Merged6967_R6960Low6960Anchor
+set_option Elab.async false
+
+
+set_option Elab.async false
+set_option maxHeartbeats 300000
+set_option linter.style.haveILetI false
+set_option maxRecDepth 10000
+
+namespace Low6960Anchor
+noncomputable section
+open K1 K1_13 K1_13_1_1 Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative
+open Low6960AnchorColumns Low6960AnchorLocal
+open scoped BigOperators
+open K1_13_1 (atJet_unflatten)
+
+private abbrev Slot := {u : Ex // ColumnEligible u}
+
+private theorem independent_dp : LinearIndependent Geom (fun u : Slot => column u.val) := by
+  classical
+  apply linearIndependent_iff'.mpr
+  intro s c he i hi
+  by_contra hn
+  let F := s.filter (fun i => c i ≠ 0)
+  have hF : F.Nonempty := ⟨i, Finset.mem_filter.mpr ⟨hi, hn⟩⟩
+  obtain ⟨j, hj, hm⟩ := F.exists_max_image (fun u => jidx u.val) hF
+  have hj' := Finset.mem_filter.mp hj
+  have hcoeff := congrArg (fun p : DP => p.coeff j.val) he
+  change (∑ i ∈ s, c i • column i.val).coeff j.val = (0 : DP).coeff j.val at hcoeff
+  rw [MvPolynomial.coeff_sum, AddMonoidAlgebra.coeff_zero,
+    Finset.sum_eq_single_of_mem j hj'.1] at hcoeff
+  · rw [MvPolynomial.coeff_smul, smul_eq_mul] at hcoeff
+    exact (mul_ne_zero hj'.2 (column_coeff j.val)) hcoeff
+  · intro k hk hkj
+    rw [MvPolynomial.coeff_smul]
+    by_cases hc : c k = 0
+    · simp [hc]
+    · have hne : j.val ≠ k.val := fun h => hkj (Subtype.ext h.symm)
+      have hi := hm k (Finset.mem_filter.mpr ⟨hk,hc⟩)
+      simp [column_lower k.val j.val hne hi]
+
+private def source : Submodule Geom DP := Submodule.span Geom
+    (Set.range fun u : Slot => column u.val)
+
+private theorem source_le_wide : source ≤ wideSpace := by
+  apply Submodule.span_le.mpr
+  rintro _ ⟨u,rfl⟩
+  exact column_wide u.property
+
+private theorem dim_source : Module.finrank Geom source = 4936915165500 := by
+  classical
+  obtain ⟨e⟩ := Low6960AnchorDimension.eligible_card
+  letI : Fintype Slot := Fintype.ofEquiv _ e.symm
+  rw [source,finrank_span_eq_card independent_dp,Fintype.card_congr e,Fintype.card_fin]
+
+private theorem source_eval (Q : source) (S : (Polynomial Geom)) (hs : S.natDegree ≤ 133429) :
+    (differentialSpecialization (Q.val : DP) S).natDegree ≤ 101*179818-1 := by
+  change (differentialSpecializationHom S Q.val).natDegree ≤ _
+  let f := (differentialSpecializationHom (d := 3) S).toLinearMap
+  change (f Q.val).natDegree ≤ _
+  have hq : Q.val ∈ Submodule.span Geom (Set.range fun u : Slot => column u.val) := Q.property
+  refine Submodule.span_induction (p := fun p _ => (f p).natDegree ≤ 101 * 179818 - 1) ?_ ?_ ?_ ?_ hq
+  · rintro _ ⟨u,rfl⟩
+    exact column_eval_degree S u.property hs
+  · rw [map_zero]
+    simp
+  · intro a b _ _ ha hb
+    rw [map_add]
+    exact (Polynomial.natDegree_add_le (f a) (f b)).trans (max_le ha hb)
+  · intro a p _ hp
+    rw [map_smul]
+    exact (Polynomial.natDegree_smul_le _ _).trans hp
+
+private def row (w : I → K) (i : I) : source →ₗ[Geom] LocalPolynomial Geom 3 :=
+  (localConstraintAt 101 (embed (node i)) (embed (w i))).domRestrict _
+
+private theorem row_rank (w : I → K) (i : I) :
+    Module.finrank Geom (LinearMap.range (row w i)) ≤ 18832684 := by
+  letI : Module.Finite Geom wideSpace := finiteWide
+  let L := wideLocal (embed (node i)) (embed (w i))
+  have hle : LinearMap.range (row w i) ≤ LinearMap.range L := by
+    rintro _ ⟨Q,rfl⟩
+    exact ⟨⟨Q.val,source_le_wide Q.property⟩,rfl⟩
+  have hfin : Module.finrank Geom (LinearMap.range (row w i)) ≤
+      Module.finrank Geom (LinearMap.range L) := Submodule.finrank_mono hle
+  exact hfin.trans (per_position (embed (node i)) (embed (w i)))
+
+private theorem exists_local (w : I → K) :
+    ∃ Q : source, Q ≠ 0 ∧ ∀ i, row w i Q = 0 := by
+  have hr : (∑ i, Module.finrank Geom (LinearMap.range (row w i))) ≤ 262144 * 18832684 := calc
+    _ ≤ ∑ _ : I, (18832684 : ℕ) := Finset.sum_le_sum fun i _ => row_rank w i
+    _ = _ := by simp
+  have hroom : 262144 * 18832684 < Module.finrank Geom source := by
+    rw [dim_source]
+    decide
+  exact LinearMap.exists_ne_zero_of_sum_finrank_range_lt (row w) (hr.trans_lt hroom)
+
+/-- The Euler anchor at the actual low endpoint, using the published local-rank witnesses. -/
+theorem exists_anchor (w : I → K) :
+    ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨136,57,14⟩ ∧ Low50Anchor.ActiveFits P 169 ∧
+      differentialWeightedDegree 133429 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
+        101 * 179818 - 1 + 57 ∧
+      ∀ (S : (Polynomial K)) (T : Finset I), S.natDegree ≤ 133429 → 179818 ≤ T.card →
+        (∀ i ∈ T, S.eval (node i) = w i) → atJet P (extend S) = 0 := by
+  classical
+  obtain ⟨Q,hQ,hloc⟩ := exists_local w
+  let V : wideSpace := ⟨Q.val, source_le_wide Q.property⟩
+  let P : Row 4 := MvPolynomial.optionEquivRight Geom (Fin 4) Q.val
+  have hP : P ≠ 0 := by
+    intro h
+    exact hQ (Subtype.ext ((MvPolynomial.optionEquivRight Geom (Fin 4)).injective
+      (h.trans (map_zero _).symm)))
+  refine ⟨P,hP,shape_bound V,active_bound V,?_,?_⟩
+  · simpa only [P,AlgEquiv.symm_apply_apply] using rawWeight V
+  · intro S T hd hT hits
+    rw [atJet_unflatten]
+    have hS : (extend S).natDegree ≤ 133429 := Polynomial.natDegree_map_le.trans hd
+    have hdeg := (source_eval Q (extend S) hS).trans_lt (by decide : 101*179818-1 < 101*179818)
+    have heval (i : I) (hi : i ∈ T) : (extend S).eval (embed (node i)) = embed (w i) := by
+      rw [Polynomial.eval_map, Polynomial.eval₂_hom, hits i hi]
+    exact eq_zero_of_natDegree_lt_mul_of_pow_X_sub_C_dvd_at_injOn
+      (fun i => embed (node i)) T 101 179818
+      ((RingHom.injective embed).comp node.injective).injOn hT
+      (fun i hi => X_sub_C_pow_dvd_differentialSpecialization_of_contact
+        Q.val (extend S) (embed (node i)) (embed (w i)) (heval i hi) (hloc i)) hdeg
+
+/-- The actual low-band model and marks supply the same single anchor. -/
+theorem anchor_of_family {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179818 M Γ)
+    (hi : M.overhead ≤ 2358) :
+    ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨136,57,14⟩ ∧ Low50Anchor.ActiveFits P 169 ∧
+      differentialWeightedDegree 133429 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
+        101*179818-1+57 ∧ ∀ γ∈Γ,atJet P (extend (F.scalar γ))=0 := by
+  obtain ⟨P,nz,box,active,weight,zero⟩ := exists_anchor M.word
+  refine ⟨P,nz,box,active,weight,?_⟩
+  intro γ hγ
+  let mark := F.mark γ hγ
+  have degree : (F.scalar γ).natDegree ≤ 133429 := by
+    rcases mark.scalar_degree with z | h
+    · simp [z]
+    · change ((F.scalar γ).natDegree : ℤ) ≤ 131071 + M.overhead at h
+      omega
+  exact zero _ mark.bad.support degree mark.bad.agreement mark.scalar_hits
+
+#print axioms exists_anchor
+#print axioms anchor_of_family
+end
+end Low6960Anchor
+
+end Merged6967_R6960Low6960Anchor
