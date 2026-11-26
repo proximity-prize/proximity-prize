@@ -2,6 +2,10 @@ import ProximityPrize.SubmissionLower.R6966ProofNonlinearMarkRows
 
 set_option Elab.async false
 
+-- Source: ProximityPrize.SubmissionLower.R6966ProofNonlinearMarkDegrees
+set_option autoImplicit true
+set_option Elab.async false
+
 namespace Research6966.NonlinearMarkDegrees
 open Polynomial Finset
 open NonlinearMarkRows
@@ -125,9 +129,9 @@ theorem node_seeds {w:σ→ℕ} {u:ℕ} {A B:Eqn σ F} (ha:cap w u A) (hb:cap w 
         (common_seed ha hb d j (Nat.le_of_lt_succ (mem_range.mp hj)))) i
   · simpa only [zero_add] using cap_mul (cap_C w received) (cap_pow ha (2*d-1))
 
-theorem node_ordinate {r:ℕ} (rp:1≤r) {A B:Eqn σ F} (ha:A.natDegree≤r) (hb:B.natDegree≤r+1)
-    (d:ℕ) (c x received:F) : (node A B d c x received).natDegree≤(2*d-1)*r+1 := by
-  have bound (j:ℕ) (le:j≤d) : (coeffRow A B d j).natDegree≤(2*d-1)*r+1 := by
+private theorem common_ordinate {r:ℕ} (rp:1≤r) {A B:Eqn σ F}
+    (ha:A.natDegree≤r) (hb:B.natDegree≤r+1) (d j:ℕ) (le:j≤d) :
+    (coeffRow A B d j).natDegree≤(2*d-1)*r+1 := by
     cases j with
     | zero=>exact (natDegree_mul_le.trans (Nat.add_le_add natDegree_X.le
         ((natDegree_pow_le ..).trans (Nat.mul_le_mul_left _ ha)))).trans (by omega)
@@ -139,14 +143,39 @@ theorem node_ordinate {r:ℕ} (rp:1≤r) {A B:Eqn σ F} (ha:A.natDegree≤r) (hb
         by calc
           _ = ((2*j+1)+(2*d-1-(2*j+1)))*r+1 := by ring
           _ ≤ _ := by rw [add])
+theorem node_ordinate {r:ℕ} (rp:1≤r) {A B:Eqn σ F} (ha:A.natDegree≤r) (hb:B.natDegree≤r+1)
+    (d:ℕ) (c x received:F) : (node A B d c x received).natDegree≤(2*d-1)*r+1 := by
   unfold node
   apply (natDegree_sub_le ..).trans (max_le _ _)
   · apply natDegree_sum_le_of_forall_le
     intro j hj
-    exact (natDegree_C_mul_le _ _).trans (bound j (Nat.le_of_lt_succ (mem_range.mp hj)))
+    exact (natDegree_C_mul_le _ _).trans (common_ordinate rp ha hb d j (Nat.le_of_lt_succ (mem_range.mp hj)))
   · exact (natDegree_C_mul_le _ _).trans ((natDegree_pow_le ..).trans ((Nat.mul_le_mul_left _ ha).trans (by omega)))
 
-#print axioms node_seeds
-#print axioms node_ordinate
+theorem weightedRow_ordinate {r:ℕ} (rp:1≤r) {A B:Eqn σ F}
+    (ha:A.natDegree≤r) (hb:B.natDegree≤r+1) (t:ℕ) (c:F) (w:Fin (t+1) → F) :
+    (weightedRow A B t c w).natDegree≤(2*t-1)*r+1 := by
+  unfold weightedRow
+  apply (natDegree_add_le ..).trans (max_le _ _)
+  · exact (natDegree_C_mul_le _ _).trans ((natDegree_pow_le ..).trans ((Nat.mul_le_mul_left _ ha).trans (by omega)))
+  · apply natDegree_sum_le_of_forall_le
+    intro j _
+    exact (natDegree_C_mul_le _ _).trans (common_ordinate rp ha hb t j.val (Nat.le_of_lt_succ j.isLt))
+
+theorem weightedRow_seeds {axis:σ→ℕ} {u:ℕ} {A B:Eqn σ F}
+    (ha:cap axis u A) (hb:cap axis u B) (t:ℕ) (c:F) (w:Fin (t+1) → F) :
+    cap axis ((2*t-1)*u) (weightedRow A B t c w) := by
+  unfold weightedRow
+  apply cap_add
+  · simpa only [zero_add] using cap_mul (cap_C axis c) (cap_pow ha (2*t-1))
+  · intro i
+    rw [finsetSum_coeff]
+    apply Submodule.sum_mem
+    intro j _
+    exact (show cap axis ((2*t-1)*u) _ from by
+      simpa only [zero_add] using cap_mul (cap_C axis (w j))
+        (common_seed ha hb t j.val (Nat.le_of_lt_succ j.isLt))) i
+
+
 end
 end Research6966.NonlinearMarkDegrees

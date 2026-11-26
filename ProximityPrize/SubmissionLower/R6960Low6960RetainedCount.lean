@@ -240,7 +240,6 @@ def GateTable (orders : ∀ k : Band, List (MassCell k)) (G : Shape → ℕ) : P
   ∀ k : Band, ∀ x : Shape, Valid x → InBox ((start k).plus x) (Low6960Prices.fullCap 14) →
     Gated k.val x → ∃ l, 0<l ∧ l≤order (orders k) x ∧
       gatePrice G x l ≤ allowance k ((start k).t+x.t) x.b x.j x.t
-#print axioms cover_at
 end Low6960Allocation
 
 end Merged_R6960Low6960AllocTiles
@@ -415,7 +414,6 @@ theorem total (receipts : ∀ k : Band, Receipt k) (G : Shape → ℕ)
   dsimp [C] at hp
   omega
 
-#print axioms total
 end Low6960AllocTotal
 
 end Merged_R6960Low6960AllocTotal
@@ -584,11 +582,6 @@ theorem Bank.companion_price {w : I → K} {n : ℕ} (D : Bank Γ s) (hm : Messa
     Δ.card ≤ contractedPrice (shape (f i)) (shape (∏ j∈z, f j)) l active :=
   D.companion_price_floor hm f hf hdiff z hz hi hpos hl ha hchar Δ hsub hon hoff
     _ ⟨le_rfl,le_rfl,le_rfl⟩
-#print axioms Bank.proper_cut
-#print axioms shape_of_product
-#print axioms Bank.layer_budget
-#print axioms Bank.companion_price_floor
-#print axioms Bank.companion_price
 end
 end Low6960RetainedCut
 
@@ -709,7 +702,6 @@ theorem count_of_data {budget anchorK : ℕ} {G : Shape → ℕ} (gate : GateBan
   have counts := allocate hm top htop E data
   change lowerCap top + (∑ i, (pieces i).card) ≤ budget at counts
   exact total.trans (by omega)
-#print axioms count_of_data
 end
 end Low6960RetainedCut
 

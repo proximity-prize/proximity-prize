@@ -140,8 +140,5 @@ theorem coefficient_height {h} {D:PoleData h} {Crt:CRTLift D} {N:Jet} {M:HelperP
   rw [←deg,show MvPolynomial.map (algebraMap L[X] FX) T=_ from co]
   exact (MvPolynomial.totalDegree_mul ..).trans (by rw [(MvPolynomial.isUnit_iff_totalDegree_of_isReduced.mp unit).2,zero_add])
 
-#print axioms word_law
-#print axioms generically_regular
-#print axioms coefficient_height
 end
 end Research6966.PhysicalOriginal

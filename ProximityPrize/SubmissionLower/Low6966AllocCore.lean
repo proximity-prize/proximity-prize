@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.R6966ProofLowTierWeight
-import ProximityPrize.SubmissionLower.Low6966SurfaceLinearFour
+import ProximityPrize.SubmissionLower.Low6966Monotone
 import ProximityPrize.SubmissionLower.Low6966AllocWeight
 
 set_option Elab.async false
@@ -228,8 +228,6 @@ theorem layer_le_available {r y : Shape} {L : ℕ}
     (∑ k∈range layerCount,layerTerm r y L k)≤availableMass r y L := by
   exact Final50PriceLayer.layerSum_le_available_n _ hr hj
 
-#print axioms choose_band
-#print axioms order_valid
 
 end Low6966Allocation
 

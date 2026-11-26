@@ -679,5 +679,4 @@ theorem q2_2_ok (i j : Fin 23) : (q2_2 i j).Valid (band 2) 2 i j := by
   · exact q2_2_21_ok j
   · exact q2_2_22_ok j
 
-#print axioms q2_2_ok
 end Research6966.NearLedger

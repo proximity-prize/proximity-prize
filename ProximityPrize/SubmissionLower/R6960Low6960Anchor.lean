@@ -139,7 +139,5 @@ theorem anchor_of_family {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.Famil
       omega
   exact zero _ mark.bad.support degree mark.bad.agreement mark.scalar_hits
 
-#print axioms exists_anchor
-#print axioms anchor_of_family
 end
 end Low6960Anchor

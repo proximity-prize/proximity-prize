@@ -7,7 +7,7 @@ import ProximityPrize.SubmissionLower.Shared50OrderDivision
 import ProximityPrize.SubmissionLower.Low6966RetainedAssembly
 import ProximityPrize.SubmissionLower.Low6966ActiveCycleMixed
 import ProximityPrize.SubmissionLower.Low6966SurfaceLinearFour
-import ProximityPrize.SubmissionLower.Low6966Encoding
+import ProximityPrize.SubmissionLower.Low6966FastPrice
 
 set_option Elab.async false
 
@@ -146,7 +146,6 @@ theorem exists_cut {w Γ s} (hm : Low6966Prices.Messages w Γ s)
   have hmin := minimal_pair hf hind hdata.height hdata.contains (mem_of_order hres hGo)
   exact ⟨hmin,hGo,cycleLength_ge_order hdata.height hdata.contains hGo⟩
 
-#print axioms exists_cut
 end
 end Low6966SharedChooseCut
 
@@ -335,7 +334,6 @@ theorem count (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l)
       rw [hkind] at hcap
       exact hcap
 
-#print axioms count
 end
 end Low6966SharedTallyNew
 

@@ -132,9 +132,6 @@ theorem Model.physical_support {h W t:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData 
   have last:=own j i ((S.coeff j).coeff i).natDegree (leadingCoeff_ne_zero.mpr nonzero)
   omega
 
-#print axioms generic_prime
-#print axioms exists_model
-#print axioms Model.physical_support
 
 def Model.mul {h} {D:PoleData h} {Crt:CRTLift D} {A B:Jet} (left:Model Crt A) (right:Model Crt B) :
     Model Crt (A*B) where

@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.R6966ProofNativeAffineRows
-import ProximityPrize.SubmissionLower.R6966ProofWordAxisPrice
+import ProximityPrize.SubmissionLower.R6966ProofWordUnconstrainedPrice
 import ProximityPrize.SubmissionLower.R6966ProofNativeAffineLedger
 
 set_option Elab.async false
@@ -21,7 +21,7 @@ set_option maxSynthPendingDepth 18
 
 private abbrev side (a d : ℕ) := WordSurfacePrice.side (Fintype.card I) a d
 
-theorem side_explicit (a d h : ℕ) : side a d h=WordSurfacePrice.side (Fintype.card I) a d h := rfl
+
 
 private theorem add_fee {u deleted maxHeight a} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
     (F : P1.FamilyAt a M Γ) {G : Pade.Row SeedField} (N : Native G) (k bill extra : ℕ)
@@ -30,125 +30,125 @@ private theorem add_fee {u deleted maxHeight a} {M : P1.ModelAt maxHeight u dele
   rw [← sizes F N, Nat.add_mul, Nat.add_comm (extra*k)]
   exact Nat.add_le_add reg (Nat.mul_le_mul_right k exc)
 
-/-- Independent seed widths price the complete family on an actual affine
-native graph. Each height is the proved nodal degree in that coordinate. -/
-theorem rectangular {u deleted maxHeight a} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
-    (F : P1.FamilyAt a M Γ) (sub : T ⊆ Γ) {parents : Finset Surface} {G : Pade.Row SeedField}
-    (N : Native G) (gp : G.primitive) (affine : G.graphDegree = 1) (width : Fin 2 → ℕ)
-    (axes : ∀ j i z, ((N.poly.coeff j).coeff i).degreeOf z ≤ width z)
-    (small : width 0 < p) (d : ℕ) (physical : (131071 : ℤ)+M.overhead ≤ d) (dp : d < p)
-    (gap : d < a) (owners : Owned F T parents N) :
-    T.card*(a-d)^3 ≤ (width 0+p*width 1)*(a-d)^3+
-      6*side a d 1*side a d (d*width 0)*side a d (d*width 1) := by
-  obtain ⟨enough, shared⟩ := nodal_count_hypotheses F sub N gp affine d physical dp owners
-  have count := WordUnconstrainedPrice.three_axes (fun z : ↥(good F T N) => point F z.val)
-    (rows M N d) _ a d gap (row_caps M N width axes d) enough shared
-  rw [Fintype.card_coe, Fin.prod_univ_three] at count
-  have reg : (good F T N).card*(a-d)^3 ≤ 6*side a d 1*side a d (d*width 0)*side a d (d*width 1) := by
-    simpa only [show (1:Fin 3) = (0:Fin 2).succ from rfl, show (2:Fin 3) = (1:Fin 2).succ from rfl,
-      Fin.cons_zero, Fin.cons_succ, ← Nat.mul_assoc] using count
-  exact add_fee F N _ _ _ reg (fee F N gp affine width axes small owners)
 
-/-- The projected surface can give a lower price than the unconstrained
-three-coordinate affine family. Both prices use the same nodal rows. -/
-theorem projected {u deleted maxHeight a} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
-    (F : P1.FamilyAt a M Γ) (sub : T ⊆ Γ) {parents : Finset Surface} {H : Equation}
-    (project : ProjectedProduct parents H) {G : Pade.Row SeedField}
-    (N : Native G) (gp : G.primitive) (affine : G.graphDegree = 1) (width : Fin 2 → ℕ)
-    (axes : ∀ j i z, ((N.poly.coeff j).coeff i).degreeOf z ≤ width z)
-    (small : width 0 < p) (d : ℕ) (physical : (131071 : ℤ)+M.overhead ≤ d) (dp : d < p)
-    (gap : d < a) (owners : Owned F T parents N) :
-    T.card*(a-d)^2 ≤ (width 0+p*width 1)*(a-d)^2+2*
-      (H.natDegree*side a d (d*width 0)*side a d (d*width 1)+
-        KoalaRect.axisDegree H 0*side a d 1*side a d (d*width 1)+
-        KoalaRect.axisDegree H 1*side a d 1*side a d (d*width 0)) := by
-  obtain ⟨enough, shared⟩ := nodal_count_hypotheses F sub N gp affine d physical dp owners
-  let H' := OdeSurfaceBridge.coordinates H
-  let v : Fin 3 → ℕ := Fin.cons H.natDegree (KoalaRect.axisDegree H)
-  have hn : H' ≠ 0 :=
-    (map_ne_zero_iff _ (MvPolynomial.finSuccEquiv FX 2).symm.injective).mpr project.primitive.ne_zero
-  have vanish (z : ↥(good F T N)) : MvPolynomial.eval (point F z.val) H' = 0 := by
-    obtain ⟨q, hq, _, mark⟩ := owners z.val (good_subset F N z.property)
-    have killed := mark (C H) (project.vanishes q hq)
-    change MvPolynomial.eval (Fin.cons _ _) (OdeSurfaceBridge.coordinates H) = 0
-    rw [OdeSurfaceBridge.read]
-    simpa only [jetAt, coe_eval₂RingHom, eval₂_C, NonlinearMarkRows.evaluate,
-      K1_14.graphEval, seedPoint] using killed
-  have cap := OdeSurfaceBridge.degrees H H.natDegree (KoalaRect.axisDegree H) le_rfl
-    (fun z => (OdeSurfaceBridge.axis_cap ..).mpr ((KoalaRect.axisDegree_le_iff H z _).mp le_rfl))
-  have count := WordSurfacePrice.count (fun z : ↥(good F T N) => point F z.val) (rows M N d)
-    H' hn vanish v _ cap (row_caps M N width axes d) a d gap enough shared
-  rw [Fintype.card_coe] at count
-  apply add_fee F N _ _ _ _ (fee F N gp affine width axes small owners)
-  simpa only [WordSurfacePrice.mixed, v, show (1:Fin 3) = (0:Fin 2).succ from rfl,
-    show (2:Fin 3) = (1:Fin 2).succ from rfl, Fin.cons_zero, Fin.cons_succ] using count
 
-private def activeAxes (z : Fin 2) : Fin 2 ↪ Fin 3 where
-  toFun := Fin.cons 0 (fun _ => z.succ)
-  inj' := by
-    intro i j eq
-    fin_cases i <;> fin_cases j
-    · rfl
-    · exact (Fin.succ_ne_zero z eq.symm).elim
-    · exact (Fin.succ_ne_zero z eq).elim
-    · rfl
 
-/-- Removing the unused seed gives a two-coordinate price. The surviving
-seed may be the Frobenius coordinate. -/
-theorem single_seed {u deleted maxHeight a} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
-    (F : P1.FamilyAt a M Γ) (sub : T ⊆ Γ) {parents : Finset Surface} {G : Pade.Row SeedField}
-    (N : Native G) (gp : G.primitive) (affine : G.graphDegree = 1) (width : Fin 2 → ℕ)
-    (axes : ∀ j i z, ((N.poly.coeff j).coeff i).degreeOf z ≤ width z)
-    (small : width 0 < p) (active : Fin 2) (inactive : ∀ z, z ≠ active → width z = 0)
-    (d : ℕ) (physical : (131071 : ℤ)+M.overhead ≤ d) (dp : d < p)
-    (gap : d < a) (owners : Owned F T parents N) :
-    T.card*(a-d)^2 ≤ (width 0+p*width 1)*(a-d)^2+2*side a d 1*side a d (d*width active) := by
-  obtain ⟨enough, shared⟩ := nodal_count_hypotheses F sub N gp affine d physical dp owners
-  let h := Fin.cons (α := fun _ : Fin 2 => ℕ) 1 (fun _ => d*width active)
-  have cap := row_caps M N width axes d
-  have selected (i : I) (j : Fin 2) : (rows M N d i).degreeOf (activeAxes active j) ≤ h j := by
-    fin_cases j
-    · exact cap i 0
-    · exact cap i active.succ
-  have dropped (i : I) (j : Fin 3) (out : j ∉ Set.range (activeAxes active)) :
-      (rows M N d i).degreeOf j = 0 := by
-    revert out
-    refine Fin.cases ?_ (fun z => ?_) j
-    · intro out; exact (out ⟨0, rfl⟩).elim
-    · intro out
-      have ne : z ≠ active := fun eq => out ⟨1, by subst z; rfl⟩
-      exact Nat.eq_zero_of_le_zero (by simpa only [Fin.cons_succ, inactive z ne, Nat.mul_zero] using cap i z.succ)
-  have count := WordAxisPrice.two (fun z : ↥(good F T N) => point F z.val)
-    (rows M N d) (activeAxes active) h a d gap selected dropped enough shared
-  rw [Fintype.card_coe] at count
-  exact add_fee F N _ _ _ count (fee F N gp affine width axes small owners)
 
-private def ordinateAxis : Fin 1 ↪ Fin 3 :=
-  ⟨fun _ => 0, fun i j _ => Subsingleton.elim i j⟩
 
-/-- A fixed affine graph costs at most one agreement ratio, with no
-singular-label fee. -/
-theorem fixed {u deleted maxHeight a} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
-    (F : P1.FamilyAt a M Γ) (sub : T ⊆ Γ) {parents : Finset Surface} {G : Pade.Row SeedField}
-    (N : Native G) (gp : G.primitive) (affine : G.graphDegree = 1)
-    (axes : ∀ j i z, ((N.poly.coeff j).coeff i).degreeOf z ≤ 0)
-    (d : ℕ) (physical : (131071 : ℤ)+M.overhead ≤ d) (dp : d < p)
-    (gap : d < a) (owners : Owned F T parents N) :
-    T.card*(a-d) ≤ side a d 1 := by
-  obtain ⟨enough, shared⟩ := nodal_count_hypotheses F sub N gp affine d physical dp owners
-  have cap := row_caps M N (fun _ => 0) axes d
-  have dropped (i : I) (j : Fin 3) (out : j ∉ Set.range ordinateAxis) :
-      (rows M N d i).degreeOf j = 0 := by
-    revert out
-    refine Fin.cases ?_ (fun z _ => ?_) j
-    · intro out; exact (out ⟨0, rfl⟩).elim
-    · exact Nat.eq_zero_of_le_zero (by simpa only [Fin.cons_succ, Nat.mul_zero] using cap i z.succ)
-  have count := WordAxisPrice.one (fun z : ↥(good F T N) => point F z.val)
-    (rows M N d) ordinateAxis 1 a d gap (fun i => cap i 0) dropped enough shared
-  rw [Fintype.card_coe] at count
-  have exc : (bad F T N).card ≤ 0 := by
-    simpa only [Nat.mul_zero, Nat.add_zero] using fee F N gp affine (fun _ => 0) axes (by decide) owners
-  simpa only [Nat.zero_mul, Nat.zero_add] using add_fee F N _ _ _ count exc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 private theorem frobenius_total_count {E : Type*} [Field E] (q width : ℕ) (pos : 0 < q)
     (Q : MvPolynomial (Fin 2) E) (nonzero : Q ≠ 0)
@@ -270,11 +270,6 @@ theorem price {u deleted maxHeight a} {M : P1.ModelAt maxHeight u deleted} {Γ T
   rw [Fintype.card_coe] at result
   exact add_fee F N _ _ _ result (total_fee F N gp affine width hA small)
 
-#print axioms rectangular
-#print axioms projected
-#print axioms single_seed
-#print axioms fixed
-#print axioms price
 theorem price_floor {u deleted maxHeight a} {M:P1.ModelAt maxHeight u deleted} {Γ T:Finset K}
     (F:P1.FamilyAt a M Γ) (sub:T⊆Γ) {parents:Finset Surface} {G:Pade.Row SeedField}
     (N:Native G) (gp:G.primitive) (affine:G.graphDegree=1) (width:ℕ) (wp:0<width)
@@ -291,6 +286,5 @@ theorem price_floor {u deleted maxHeight a} {M:P1.ModelAt maxHeight u deleted} {
   have positive:1≤d*width:=Nat.mul_le_mul pos wp
   rw [max_eq_right positive] at c
   simpa only [pow_two,Nat.mul_assoc] using c
-#print axioms price_floor
 end
 end Research6966.NativeAffineTariff

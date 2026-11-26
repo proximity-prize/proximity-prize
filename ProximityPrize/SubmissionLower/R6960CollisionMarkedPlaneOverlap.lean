@@ -141,7 +141,6 @@ theorem actual_overlap_unit (δfin δinf : OverlapPlane k)
   rw [f,Ideal.map_span,Set.image_singleton] at a
   rw [i,Ideal.map_span,Set.image_singleton] at b
   exact plane_overlap_unit δfin δinf (a.trans b.symm)
-#print axioms actual_overlap_unit
 end
 end Lower6960.CollisionTame
 
@@ -348,8 +347,6 @@ theorem line_overlap_unit (j:Bool) (δf δi:Plane L)
   have di := (transport true).symm.trans (congrArg (Ideal.map Bivariate.swap.toRingHom) i)
   rw [Ideal.map_span,Set.image_singleton] at df di
   exact actual_overlap_unit L ChartField E _ _ df di
-#print axioms line_overlap_unit
-#print axioms line_discriminant_swap
 end
 end Lower6960.CollisionMarked
 

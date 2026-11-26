@@ -16,8 +16,9 @@ def good (d : ℕ) (r : Row) : Bool :=
   let x := r.bounds
   decide (x.deg = d ∧ r.index ≤ x.lo ∧ x.hi ≤ 57 ∧ x.top ≤ 14 ∧ r.ord ≤ x.ord ∧ x.tag = r.tag)
 private def pivot (i : Fin 9) : AnchorPivot82180.E :=
-  ![⟨1,0,0,0⟩, ⟨1,0,0,0⟩, ⟨1,0,0,0⟩, ⟨1,1,0,0⟩, ⟨1,1,0,0⟩,
-    ⟨1,0,1,0⟩, ⟨2,0,1,0⟩, ⟨1,3,0,0⟩, ⟨2,3,0,0⟩] i
+  match i.val with
+  | 0 => ⟨1,0,0,0⟩ | 1 => ⟨1,0,0,0⟩ | 2 => ⟨1,0,0,0⟩ | 3 => ⟨1,1,0,0⟩ | 4 => ⟨1,1,0,0⟩
+  | 5 => ⟨1,0,1,0⟩ | 6 => ⟨2,0,1,0⟩ | 7 => ⟨1,3,0,0⟩ | _ => ⟨2,3,0,0⟩
 private abbrev E := AnchorPivot82180.E
 private abbrev Factor := RankRows82190.Factor
 private def readFactors : ℕ → ℕ → List Factor × ℕ

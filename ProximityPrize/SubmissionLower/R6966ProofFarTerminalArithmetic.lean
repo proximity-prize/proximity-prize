@@ -726,5 +726,4 @@ theorem strict_of_checks {lo h E : ℕ} {b : Bank} {v : RectArgs}
   rw [blockSurplus_eq b lo E v (by omega) (by omega) he,
     blockSurplus_eq b (lo+1) E v hf hj he] at hc
   exact strict_of_first_difference hl hh (by omega) (by omega)
-#print axioms strict_of_checks
 end Lower6960.FarTerminalArithmetic

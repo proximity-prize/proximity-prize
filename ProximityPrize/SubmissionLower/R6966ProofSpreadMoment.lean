@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6966ProofHelperWindowMoments
+import ProximityPrize.SubmissionLower.R6966ProofHelperWindowMoment1
 
 set_option Elab.async false
 
@@ -227,6 +227,5 @@ private def poleBlocks5585_1200 : List Block := [pole5585_1200_0, pole5585_1200_
 theorem moment5585_1200 : P1_7_1.groupedPoleMoment 5585 1200 ≤ 26538075533683 := by
   refine grouped_from_blocks 5585 1200 _ poleBlocks5585_1200 ?_ (by decide) (by decide)
   exact ⟨pole5585_1200_0_checked, pole5585_1200_1_checked, pole5585_1200_2_checked, pole5585_1200_3_checked, pole5585_1200_4_checked, pole5585_1200_5_checked, pole5585_1200_6_checked, pole5585_1200_7_checked, pole5585_1200_8_checked, pole5585_1200_9_checked, pole5585_1200_10_checked, pole5585_1200_11_checked, pole5585_1200_12_checked, pole5585_1200_13_checked, pole5585_1200_14_checked, pole5585_1200_15_checked, pole5585_1200_16_checked, pole5585_1200_17_checked, pole5585_1200_18_checked, pole5585_1200_19_checked, pole5585_1200_20_checked, pole5585_1200_21_checked, pole5585_1200_22_checked, pole5585_1200_23_checked, pole5585_1200_24_checked, pole5585_1200_25_checked, pole5585_1200_26_checked, pole5585_1200_27_checked, pole5585_1200_28_checked, pole5585_1200_29_checked, pole5585_1200_30_checked, pole5585_1200_31_checked, pole5585_1200_32_checked, pole5585_1200_33_checked, pole5585_1200_34_checked, pole5585_1200_35_checked, pole5585_1200_36_checked, pole5585_1200_37_checked, pole5585_1200_38_checked, pole5585_1200_39_checked, pole5585_1200_40_checked, pole5585_1200_41_checked, pole5585_1200_42_checked, pole5585_1200_43_checked, pole5585_1200_44_checked, pole5585_1200_45_checked, pole5585_1200_46_checked, pole5585_1200_47_checked, pole5585_1200_48_checked, pole5585_1200_49_checked, pole5585_1200_50_checked, pole5585_1200_51_checked, pole5585_1200_52_checked, pole5585_1200_53_checked, True.intro⟩
-#print axioms moment5585_1200
 
 end Research6966.HelperWindowCatalogue

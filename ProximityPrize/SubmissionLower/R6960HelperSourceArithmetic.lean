@@ -2793,13 +2793,6 @@ theorem sum_layer_gains (N width shift layers : ℕ) (delta : ℕ→ℕ) :
   rw [←Finset.sum_filter,support,Finset.sum_const,Nat.card_Ico,nsmul_eq_mul]
   change (N-shift*i-width)*delta i=(N-width-shift*i)*delta i
   rw [Nat.sub_sub,Nat.sub_sub,Nat.add_comm (shift*i) width]
-#print axioms sum_layer_gains
-#print axioms net_convex
-#print axioms from_two_heights
-#print axioms avoiding_row
-#print axioms layer_rank
-#print axioms forced_power
-#print axioms quotient_rank
 end Lower6960.PowerLayers
 
 end
@@ -3034,9 +3027,6 @@ theorem crt_avoiding_row {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1
       (P0_10_1.evaluated_shift Crt word hR i a))
     supply
   exact hAvoid (shared Q hQ)
-#print axioms cutoff_total
-#print axioms crt_rank_floor
-#print axioms crt_avoiding_row
 def signedWidth (s : Shape) (A h r q j i : ℕ) : ℤ :=
   (s.m : ℤ)*A+j-(131071-(h : ℤ))*q-2*(h : ℤ)*(r+i)
 theorem width_cast (s : Shape) (A h r q j i : ℕ) (hk : h≤131071) :
@@ -3117,8 +3107,6 @@ theorem width_at_height (t : Bank) (A lo h r : ℕ) (hl : lo≤h) (hk : h≤1310
       Nat.mul_comm r 2, Nat.mul_comm (2*r) (h-lo)] at h₂'
     omega
   omega
-#print axioms surplus_positive
-#print axioms width_at_height
 end Lower6960.HelperSource
 
 end Merged_R6960HelperSource
@@ -3272,7 +3260,6 @@ theorem gain_eq_compressed (s : Shape) (A h r d c v : ℕ) (hd : 0<d) :
   have hj' := Nat.le_of_lt_succ (mem_range.mp hj)
   exact coordinate_phases s A h r d c v q j hd (Nat.le_of_lt_succ (mem_range.mp hq))
     (hj'.trans (min_le_left _ _)) (hj'.trans (min_le_right _ _))
-#print axioms gain_eq_compressed
 end Lower6960.HelperSource
 
 end Merged_R6960HelperSourceArithmetic

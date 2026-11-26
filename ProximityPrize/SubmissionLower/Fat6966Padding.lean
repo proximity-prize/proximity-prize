@@ -425,7 +425,6 @@ end
 end Low6966Fat
 end
 
-#print axioms Low6966Fat.resultant_order
 
 end Merged_R6960Low6966FatEliminate
 

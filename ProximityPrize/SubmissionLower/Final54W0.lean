@@ -345,7 +345,6 @@ theorem natSub_cast (a b : ℕ) : ((a - b : ℕ) : ℤ) = max 0 ((a : ℤ) - (b 
   · rw [Nat.sub_eq_zero_of_le (by omega), max_eq_left (by omega)]
     rfl
 end FadicGate
-#print axioms FadicGate.rCapped_cast
 
 end Merged_FadicCast
 
@@ -523,8 +522,6 @@ theorem varCertLoss_terminal (S : ℤ) (h bl bh jl jh tl L H Rt : ℕ) (plain : 
   rw [if_pos hi]
   rfl
 end FadicGate
-#print axioms FadicGate.loss_of_varCert
-#print axioms FadicGate.rVarLevelLoss_cast
 
 end Merged_FadicVarCert
 
@@ -900,6 +897,5 @@ theorem loss (N : ℕ) :
 
 end FadicGate.Final54W0
 
-#print axioms FadicGate.Final54W0.loss
 
 end Merged_Final54W0

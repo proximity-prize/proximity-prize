@@ -136,7 +136,5 @@ theorem detects (p:σ→E (K:=K)) (fixed:∀i,Differential.deriv (p i)=0) (A B C
   change ev (AffineODE.response d wt A _)*y+(ev (AffineODE.response d wt A _)-received*ev A^d)=0 ↔ _
   rw [←add_sub_assoc,←full,mul_comm received,←mul_sub,mul_eq_zero,or_iff_right (pow_ne_zero _ den),sub_eq_zero]
 
-#print axioms row_cap
-#print axioms detects
 end
 end Research6966.AffineMarkRows

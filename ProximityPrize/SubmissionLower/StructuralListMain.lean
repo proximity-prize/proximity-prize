@@ -313,7 +313,6 @@ theorem cutCap {A w} {V : Finset (Polynomial K)} (T : Chart 2) (hT : ChartOK T)
       rw [sum_add_distrib, ← mul_sum, sum_const, nsmul_eq_mul, mul_comm (Ps.card : ℚ)]
     _ ≤ _ := add_le_add (mul_le_mul_of_nonneg_left hpdeg (Nat.cast_nonneg _))
       (mul_le_mul_of_nonneg_left hcard (Nat.cast_nonneg _))
-#print axioms cutCap
 end
 end ScalarCutCapacity
 
@@ -526,7 +525,6 @@ end
 
 end StructuralList
 
-#print axioms StructuralList.scalar_list_of_shortening
 
 end Merged_StructuralListMain
 

@@ -140,7 +140,6 @@ theorem chart_finite [FiniteDimensional ChartField E] [Algebra.IsSeparable Chart
     have scalar:=eval_fixed E j c b p
     rw [show oriented j b p=r from (oriented j b).apply_symm_apply r] at scalar
     exact congrArg (·*_) scalar
-#print axioms chart_finite
 end Lower6960.RetainedSurfaceClass
 
 end
@@ -247,8 +246,6 @@ theorem chart_free [Algebra.IsSeparable ChartField E] (j:Bool) (c:L) (b:Bool) :
     rw [ew]
     exact congrArg Subtype.val hz
   infer_instance
-#print axioms no_axis_torsion
-#print axioms chart_free
 end Lower6960.RetainedSurfaceClass
 
 end
@@ -347,7 +344,6 @@ theorem native_localization (j:Bool) (c:L) (nc:c≠0) (b:Bool) : IsChartLocaliza
     simpa only [map_mul,map_pow,map_one] using congrArg (algebraMap L (Axis E j c)) scalar
   calc _ = 1*((π V)^n*π u) := (one_mul _).symm
        _ = _ := by rw [←cancel]; ring
-#print axioms native_localization
 end Lower6960.RetainedSurfaceClass
 
 end

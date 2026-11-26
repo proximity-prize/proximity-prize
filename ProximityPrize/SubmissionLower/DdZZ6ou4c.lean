@@ -15,131 +15,131 @@ open aR (ao embed extend af jet Z8 wU)
 open i4 (K Node node N gap close)
 open P5_8 (bo8 Equation)
 open P5_8_3 (rows)
-open P6_8 (A)
+
 open anj (line bdm bfX)
 open bzr (cX8)
 open qC8CERb (coeffForm specialize Yw shift_jetDerivative coeff_iterate_zero atJet_eq_const)
-def lastCut:ℕ:=bo8.m*A - 1
-def step:ℕ:=gap A+2
-private def Bounded (F:zM1 (Polynomial ao)) (b:ℕ) :Prop :=
-  ∀ j,(F.coeff j).natDegree≤b+step*j
-private theorem afg {F G:zM1 (Polynomial ao)} {a b:ℕ}
-    (hF:Bounded F a) (hG:Bounded G b) :Bounded (F*G) (a+b) := by
-  intro j
-  rw [Polynomial.coeff_mul]
-  apply natDegree_sum_le_of_forall_le
-  intro ij hij
-  have hsum:=Finset.HasAntidiagonal.mem_antidiagonal.mp hij
-  refine natDegree_mul_le.trans ((Nat.add_le_add (hF ij.1) (hG ij.2)).trans ?_)
-  rw [← hsum,Nat.mul_add]
-  omega
-private theorem aCs (f :(Polynomial ao)) {a :ℕ} (hf :f.natDegree≤a) :
-    Bounded (z1z f) a := by
-  intro j
-  by_cases h:j=0
-  · simpa [h] using hf
-  · simp [zFI,h]
-private theorem bmr {ι:Type*} (s :Finset ι)
-    (f :ι→zM1 (Polynomial ao)) (b:ι→ℕ) (hf : ∀ i∈s,Bounded (f i) (b i)) :
-    Bounded (∏ i∈s,f i) (∑ i∈s,b i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty=>simpa using aCs (1 :(Polynomial ao)) (a :=0) (by simp)
-  | insert i s hi ih =>
-    rw [Finset.prod_insert hi,Finset.sum_insert hi]
-    exact afg (hf i (Finset.mem_insert_self _ _))
-      (ih fun k hk=>hf k (Finset.mem_insert_of_mem hk))
-private theorem aMs {f :zM1 (Polynomial ao)} {b:ℕ} (hf :Bounded f b) (n:ℕ) :
-    Bounded (f^n) (b*n) := by
-  induction n with
-  | zero=>simpa using aCs (1 :(Polynomial ao)) (a :=0) (by simp)
-  | succ n ih =>
-    rw [pow_succ,Nat.mul_succ]
-    exact afg ih hf
-private abbrev weight (i:Fin 3) :ℕ:=N - i.val
-private theorem avr (P:af 3) (S U:(Polynomial ao)) (T:ℕ)
-    (hP : ∀ e∈P.support,(P.coeff e).natDegree+e.sum (fun i k=>weight i*k)≤T)
-    (hS:S.natDegree≤N) (hU:U.natDegree≤A+2) (j:ℕ) :
-    ((line P S U).coeff j).natDegree≤T+step*j:= by
-  let F (i:Fin 3) :zM1 (Polynomial ao) :=
-    z1z (jet S i)+Polynomial.C (jet U i)*Polynomial.X
-  have hF (i:Fin 3) :Bounded (F i) (weight i) := by
-    intro k
-    have hs : (jet S i).natDegree≤weight i :=
-      (natDegree_hasseDeriv_le S i.val).trans (zIu hS _)
-    have hu: (jet U i).natDegree≤weight i+step:= by
-      refine (natDegree_hasseDeriv_le U i.val).trans ((zIu hU _).trans ?_)
-      have hi:=i.isLt
-      change 179771 - i.val≤(131071 - i.val)+48700
-      omega
-    change ((z1z (jet S i)+Polynomial.C (jet U i) *
-      Polynomial.X).coeff k).natDegree≤weight i+step*k
-    rw [Polynomial.coeff_add,zFI,Polynomial.coeff_C_mul_X]
-    by_cases h0:k=0
-    · simpa [h0] using hs
-    · by_cases h1 :k=1
-      · simpa [h1] using hu
-      · simp [h0,h1]
-  unfold line
-  rw [MvPolynomial.eval₂_eq,Polynomial.finsetSum_coeff]
-  apply natDegree_sum_le_of_forall_le
-  intro m hm
-  have hterm :=afg (aCs (P.coeff m) le_rfl)
-    (bmr m.support (fun i=>F i^m i) (fun i=>weight i*m i)
-      (fun i _=>aMs (hF i) (m i))) j
-  exact hterm.trans (Nat.add_le_add_right (hP m hm) _)
-set_option maxRecDepth 12000 in
-theorem paid_root {w:Node→K} {T:ℕ} {R:Equation} {i:Fin 3} {r :ℕ}
-    (hR:R∈rows w T) (hcut:T+r*step≤lastCut) {f :(Polynomial K)}
-    (hf :f∈close A w) :differentialSpecialization (jetDerivative R i r) f=0:= by
-  classical
-  let P:=coeffForm (MvPolynomial.map embed R)
-  let S:=extend f
-  have hS:S.natDegree≤N := by
-    apply Polynomial.natDegree_map_le.trans
-    by_cases h:f=0
-    · simp [h]
-    · exact Nat.le_of_lt_succ ((natDegree_lt_iff_degree_lt h).2 hf.1)
-  obtain ⟨s,hsub,hs⟩:=Finset.exists_subset_card_eq hf.2
-  let x (k :Node) :ao:=embed (node k)
-  let L:=mL x s
-  have horder :wU P S (r+1) := by
-    apply bfX P S L (S8 x s).ne_zero
-    intro V hV j hj
-    have hU: (L*V).natDegree≤A+2 :=
-      natDegree_mul_le.trans (by
-        change (mL x s).natDegree+V.natDegree≤A+2
-        rw [ZQ,hs]
-        exact z3b hV _)
-    have hd: ((line P S (L*V)).coeff j).natDegree<bo8.m*s.card:= by
-      have hle :T+step*j≤lastCut:= by
-        rw [Nat.mul_comm r step] at hcut
-        exact (z3b (Nat.mul_le_mul_left step (Nat.lt_succ_iff.mp hj)) T).trans hcut
-      rw [hs]
-      exact ((avr P S _ T (Yw hR) hS hU j).trans hle).trans_lt
-        (Nat.sub_lt (Nat.mul_pos (by decide :0<bo8.m) (by decide :0<A)) Nat.one_pos)
-    have hx :Function.Injective x :=(zyB embed).comp node.injective
-    apply cX8 _ s x hx bo8.m _ j hd
-    intro k hk c
-    have hhit :=(Finset.mem_filter.mp (hsub hk)).2
-    have hag: (S+c•(L*V)).eval (x k)=embed (w k) := by
-      have hL:L.eval (x k)=0:=arK x s k hk
-      rw [eval_add,eval_smul,eval_mul,hL,zero_mul,smul_zero,add_zero]
-      change (f.map embed).eval (embed (node k))= _
-      rw [eval_map,eval₂_hom,hhit]
-    have hr :R ∈ ⨅ k :Node,(localConstraintAt (d:=2) bo8.m (node k) (w k)).ker :=hR.2
-    have hc:SatisfiesLocalConstraints bo8.m (node k) (w k) R :=
-      ((Submodule.mem_iInf _).mp hr k)
-    rw [bdm,specialize]
-    exact X_sub_C_pow_dvd_differentialSpecialization_of_contact _ _ _ _ hag
-      (hc.map embed _ _ _ _)
-  apply (Polynomial.map_injective embed (zyB embed))
-  rw [map_differentialSpecialization,Polynomial.map_zero,← specialize,atJet_eq_const,
-    shift_jetDerivative]
-  apply coeff_iterate_zero i (Z8 P S) (D:=r+1) _ r 0 (by simp)
-  intro e he
-  by_contra hne
-  exact (not_le_of_gt he) (horder e (MvPolynomial.mem_support_iff.mpr hne))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
 end P6_8_2
 end
@@ -151,7 +151,7 @@ open i4 PolynomialDifferential MvPolynomial Finset ReedSolomon.HiddenDerivative
 open ProximityPrize.Benchmark UniqueFactorizationMonoid
 open P5_8 (Equation small smallCaps bo8 donorCaps donor_shape Jn caps Gq)
 open P5_8_3 (rows nativeBand dM powerCaps layerBound layerCost mem_nativeBand actual_caps initial_caps repair_band c54)
-open P6_8 (A Allocation DonorSurplus donorMargin)
+
 open scoped Polynomial BigOperators
 open P5_8_3 (mem_rows derivative_band initial_mul)
 open P5_8_3 (cofactor_eq group_cutoffs)
@@ -159,154 +159,154 @@ open qmRQvQa (matrix_dimension)
 open qmRQvQa (S6 telescope caps_pow)
 set_option maxHeartbeats 500000
 set_option maxRecDepth 1800
-private def necessary (w:Node→K) :Set Equation :=
-  {P | ∃ (T:ℕ) (R:Equation) (i:Fin 3) (r :ℕ),
-    R∈rows w T∧T+r*step≤lastCut∧P=jetDerivative R i r}
-private def necessarySpace (w:Node→K) :Submodule K Equation :=
-  Submodule.span K (necessary w)
-private def powerAt (T:ℕ) :ℕ:=(lastCut - T)/step+1
-private theorem choose_row {w:Node→K} {Q:Equation} (hQ:ato small Q)
-    (hnonzero : ∃ P∈necessarySpace w,P≠0) :
-    ∃ P∈necessarySpace w,P≠0 ∧
-      ∀ F:Equation,Irreducible F→F∣Q→0<jetTotalDegree F→F∣P →
-        ∀ R∈necessarySpace w,F∣R:= by
-  classical
-  let S:=necessarySpace w
-  let _:StrongNormalizationMonoid Equation :=UniqueFactorizationMonoid.strongNormalizationMonoid
-  let factors :=normalizedFactors Q
-  let bad:=factors.toFinset.filter
-    (fun F=>0<jetTotalDegree F ∧ ∃ R∈S,¬ F∣R)
-  have hprod: (∏ F∈bad,F)∣Q :=
-    ((Finset.prod_dvd_prod_of_subset _ _ id (Finset.filter_subset _ _)).trans
-      (Multiset.toFinset_prod_dvd_prod factors)).trans (prod_normalizedFactors hQ.1).dvd
-  have hcard:bad.card≤83:= calc
-    bad.card = ∑ _F∈bad,(1 :ℕ) := by simp
-    _ ≤ ∑ F∈bad,jetTotalDegree F :=
-      Finset.sum_le_sum fun F hF=>(Finset.mem_filter.mp hF).2.1
-    _≤jetTotalDegree Q :=
-      sum_weightedTotalDegree_le_of_prod_dvd jetDegreeWeight bad id hQ.1 hprod
-    _≤83:=hQ.2.1
-  have hfield :83≤Nat.card K:= by
-    rw [Nat.card_eq_fintype_card]
-    exact (show 83≤Fintype.card Node by rw [IRSProfile.card_index]; decide).trans
-      (Fintype.card_le_of_injective node node.injective)
-  let blocked (F:Equation) :Submodule K S :=
-    ((Ideal.span ({F} : Set Equation)).restrictScalars K).comap S.subtype
-  have hmem (F:Equation) (R:S) :R∈blocked F↔F∣(R:Equation) :=
-    Ideal.mem_span_singleton
-  have hpick : ∃ P:S,(P:Equation)≠0 ∧ ∀ F∈bad,¬ F∣(P:Equation) := by
-    rcases bad.eq_empty_or_nonempty with hbad | ⟨F,hF⟩
-    · obtain ⟨P,hP,hP0⟩:=hnonzero
-      exact ⟨⟨P,hP⟩,hP0,by simp [hbad]⟩
-    · have hproper (G:Equation) (hG:G∈bad) :blocked G ≠ ⊤ := by
-        obtain ⟨R,hR,hnd⟩:=(Finset.mem_filter.mp hG).2.2
-        intro he
-        exact hnd ((hmem G ⟨R,hR⟩).mp (he ▸ Submodule.mem_top))
-      obtain ⟨P,hP⟩:=Submodule.exists_forall_notMem_of_card_le bad blocked hproper
-        (hcard.trans hfield)
-      have hav (G:Equation) (hG:G∈bad) : ¬ G∣(P:Equation) :=
-        fun hd=>hP G hG ((hmem G P).mpr hd)
-      exact ⟨P,fun hz=>hav F hF (hz ▸ dvd_zero F),hav⟩
-  obtain ⟨P,hP0,hP⟩:=hpick
-  refine ⟨P.val,P.property,hP0,?_⟩
-  intro F hF hdQ hdeg hdP R hR
-  by_contra hn
-  obtain ⟨G,hG,ha⟩:=exists_mem_normalizedFactors_of_dvd hQ.1 hF hdQ
-  have hdegG:0<jetTotalDegree G :=
-    hdeg.trans_le (weightedTotalDegree_le_of_dvd jetDegreeWeight ha.dvd
-      (ne_zero_of_mem_normalizedFactors hG))
-  have hbad:G∈bad:=Finset.mem_filter.mpr
-    ⟨Multiset.mem_toFinset.mpr hG,hdegG,R,hR,fun hd=>hn (ha.dvd.trans hd)⟩
-  exact hP G hbad (ha.dvd_iff_dvd_left.mp hdP)
-private theorem necessary_band (w:Node→K) :necessarySpace w≤nativeBand donorCaps := by
-  apply Submodule.span_le.mpr
-  rintro P ⟨T,R,i,r,hR,_,rfl⟩
-  exact derivative_band ((mem_rows.mp hR).1) i r
-private theorem necessary_root {w:Node→K} {P:Equation} (hP:P∈necessarySpace w)
-    {f :(Polynomial K)} (hf :f∈close A w) :differentialSpecialization P f=0:= by
-  have hle :necessarySpace w≤(differentialSpecializationHom (d:=2) f).toLinearMap.ker := by
-    apply Submodule.span_le.mpr
-    rintro _ ⟨T,R,i,r,hR,hp,rfl⟩
-    exact paid_root hR hp hf
-  exact hle hP
-private theorem necessary_nonzero {w:Node→K} (hs :DonorSurplus w) :
-    ∃ P∈necessarySpace w,P≠0:= by
-  have hp:0<donorMargin:= by decide
-  have hr :Vv A bo8 w<Fintype.card (apU A bo8) :=
-    (Nat.lt_add_of_pos_right hp).trans_le hs
-  obtain ⟨P,hP,hT,hloc⟩:=interpolant donor_shape P6_8.donor_width w hr
-  refine ⟨P,zBO ⟨lastCut,P,0,0,?_,?_,(jetDerivative_zero ..).symm⟩,hP.1⟩
-  · exact mem_rows.mpr ⟨mem_nativeBand.mpr hP.2,Nat.le_sub_one_of_lt hT,hloc⟩
-  · simp
-private theorem bound_cost (a :Jn) (l:ℕ) :layerBound a l≤layerCost a l:= by
-  by_cases hf :dM (powerCaps a l) donorCaps
-  · simpa only [layerBound,layerCost,ite_eq_left hf] using qfaXGOd.proof (donorCaps.wD (powerCaps a l))
-  · simp only [layerBound,layerCost,ite_eq_right hf,le_refl]
-private theorem cutoff_cost (a :Jn) (ha :0<a.B) :
-    (∑ T∈range (lastCut+1),layerCost a (powerAt T))≤ step*Gq a := by
-  rw [cofactor_eq a ha]
-  refine group_cutoffs lastCut step (donorCaps.B/a.B) (by decide) (fun i=>layerCost a (i+1)) ?_
-  intro i hi
-  exact ite_eq_right (fun h=>(Nat.not_succ_le_self i)
-    (((Nat.le_div_iff_mul_le ha).mpr h.1).trans hi))
-private theorem cutoff_rank (w:Node→K) (G:Equation) (hG:G≠0)
-    (hs :DonorSurplus w) (hd : ∀ T≤lastCut,∀ R∈rows w T,G^powerAt T∣R) :
-    donorMargin ≤ ∑ T∈range (lastCut+1),layerBound (caps G) (powerAt T) := by
-  have h:=matrix_dimension A bo8 donor_shape (by decide) (by decide) w (rows w lastCut)
-    (fun _ hc hw hl=>mem_rows.mpr ⟨hc,Nat.le_sub_one_of_lt hw,hl⟩)
-  have hdim:=Nat.le_of_add_le_add_left (hs.trans h)
-  refine hdim.trans (telescope w lastCut (fun T=>layerBound (caps G) (powerAt T)) ?_)
-  intro T hT
-  rw [layerBound,← caps_pow G hG]
-  exact S6 w T _ (pow_ne_zero _ hG) (hd T hT)
-theorem proof :P6_8.c2 := by
-  intro w Q hQ hroot hs
-  obtain ⟨P,hP,hPn,havoid⟩:=choose_row hQ (necessary_nonzero hs)
-  obtain ⟨d⟩:=qVHZuid.proof Q P hQ.1 hPn
-  have hn:d.divisor≠0:= fun hz=>hQ.1 (d.azo.trans (by rw [hz,zero_mul]))
-  have hR:d.right≠0:= fun hz=>hPn (d.az7.trans (by rw [hz,mul_zero]))
-  have hG:=ne_zero_of_dvd_ne_zero hn d.common_dvd
-  have hGQ:d.common∣Q:=d.common_dvd.trans ⟨d.left,d.azo⟩
-  have hCaps :dM (caps d.common) smallCaps :=(apQ.eHq hQ hGQ).2
-  obtain ⟨hcB,hcJ,hJC⟩:=actual_caps (apQ.initial d.common)
-  rw [initial_caps] at hcB hcJ hJC
-  have hpower (T:ℕ) (ht:T≤lastCut) (R:Equation) (hR:R∈rows w T) :
-      d.common^powerAt T∣R:= by
-    apply d.combine
-    intro F hF hFQ hFP hpos
-    apply qyOiD7d.proof F R (powerAt T) hF hpos (apQ.eHq hQ hFQ).2.1 (mem_rows.mp hR).1
-    intro i r hr
-    have hmul :=(Nat.le_div_iff_mul_le (show 0<step by decide)).mp
-      (Nat.le_of_lt_succ (show r<(lastCut - T)/step+1 from hr))
-    have hpaid :T+r*step≤lastCut:= by omega
-    exact havoid F hF hFQ hpos hFP _ (zBO ⟨T,R,i,r,hR,hpaid,rfl⟩)
-  have halloc:Allocation (caps d.common) := by
-    refine ⟨hCaps.1,hCaps.2.1,hCaps.2.2,hcB,hcJ,hJC,fun hb => ?_⟩
-    exact (cutoff_rank w d.common hG hs hpower).trans
-      ((sum_le_sum fun T _=>bound_cost (caps d.common) (powerAt T)).trans (cutoff_cost _ hb))
-  have hl:=(congrArg apQ.initial d.azo).trans (initial_mul _ _)
-  have hr :=(congrArg apQ.initial d.az7).trans (initial_mul _ _)
-  refine ⟨⟨d.common,hG,halloc,d.divisor,d.left,d.azo,d.support,
-    apQ.initial d.right,apQ.b6j hR,q0KdFsb.proof _ _ d.coprime,?_,?_,?_⟩⟩
-  · apply repair_band
-    rw [initial_caps]
-    exact c54 hQ.1 d.common_dvd d.azo hQ.2
-  · apply repair_band
-    rw [initial_caps]
-    exact c54 hPn d.common_dvd d.az7 (mem_nativeBand.mp (necessary_band w hP))
-  · intro f hf hgf
-    have hg:zY9 (apQ.ahT f) (apQ.initial d.common)≠0:= by
-      rw [apQ.bHS]
-      exact (map_ne_zero_iff _ apQ.bch).mpr hgf
-    obtain ⟨l,hd⟩:=d.support
-    have hd' := map_dvd (zY9 (apQ.ahT f)) hd
-    rw [map_pow] at hd'
-    have hdn:=ne_zero_of_dvd_ne_zero (pow_ne_zero l hg) hd'
-    have hzL:=congrArg (zY9 (apQ.ahT f)) hl
-    have hzR:=congrArg (zY9 (apQ.ahT f)) hr
-    rw [apQ.bHS,hroot f hf,map_zero,map_mul] at hzL
-    rw [apQ.bHS,necessary_root hP hf,map_zero,map_mul] at hzR
-    exact ⟨(mul_eq_zero.mp hzL.symm).resolve_left hdn,(mul_eq_zero.mp hzR.symm).resolve_left hdn⟩
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
 end P6_8_2
 end

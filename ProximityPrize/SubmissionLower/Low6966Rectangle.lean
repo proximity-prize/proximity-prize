@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Low6966SurfaceLinearFour
+import ProximityPrize.SubmissionLower.Low6966Monotone
 import ProximityPrize.SubmissionLower.Low6966RetainedAssembly
 import ProximityPrize.SubmissionLower.Low6966AllocWeight
 
@@ -124,7 +124,6 @@ theorem four {k : Band} {cells : List (MassCell k)} {a : Shape} {bl jl bh jh t l
     · exact min_le_right _ _
   exact hc.trans (hcut.trans (hbill.trans (by simpa only [ht] using hallow)))
 
-#print axioms four
 end Low6966Rectangle
 
 end Merged_R6960Low6966Rectangle

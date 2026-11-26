@@ -167,8 +167,6 @@ theorem Rows.failed_cut {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     obtain ⟨free,moving⟩ := R.main_contact i γ hγ
     exact zero _ _ on free moving
 
-#print axioms rows
-#print axioms Rows.failed_cut
 end Lower6960.High6966Main13200
 
 end
@@ -469,8 +467,6 @@ theorem Initial.rank_ode {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ
   rintro γ _ ⟨J,hJ,on⟩
   simpa only [K1_14_2_2.eval_fixed] using RingHom.mem_ker.mp (on (roots J hJ))
 
-#print axioms Rows.initial_cover
-#print axioms Initial.rank_ode
 end Lower6960.High6966Main13200
 
 end
@@ -700,9 +696,6 @@ theorem Initial.terminal_surfaces {u deleted} {M : Model u deleted} {Γ} {F : Fa
   obtain ⟨S,geom,_,marks⟩:=ini.terminal_surfaces_with_origins
   exact ⟨S,geom,marks⟩
 
-#print axioms Initial.stage_mass
-#print axioms Initial.cutCover
-#print axioms Initial.terminal_surfaces
 end Lower6960.High6966Main13200
 
 end
@@ -790,7 +783,6 @@ theorem Initial.live_initial {u deleted} {M : Model u deleted} {Γ} {F : Family 
   rw [Initial.live,ite_eq_left hi]
   exact ini.cap_initial _ k
 
-#print axioms Initial.cap_kept
 end Lower6960.High6966Main13200
 end
 end Merged_R6960MainGeometryBills

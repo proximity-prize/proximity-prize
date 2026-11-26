@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Low6966SurfaceLinearFour
+import ProximityPrize.SubmissionLower.Low6966Monotone
 import ProximityPrize.SubmissionLower.R6960HelperSourceArithmetic
 
 set_option Elab.async false
@@ -383,4 +383,3 @@ end
 end Low6966FatPad
 end
 
-#print axioms Low6966FatPad.padding

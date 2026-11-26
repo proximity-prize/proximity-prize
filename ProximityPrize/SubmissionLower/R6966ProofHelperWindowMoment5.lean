@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6966ProofHelperWindowMoments
+import ProximityPrize.SubmissionLower.R6966ProofHelperWindowMoment1
 
 set_option Elab.async false
 
@@ -183,7 +183,6 @@ private def poleBlocks4467_947 : List Block := [pole4467_947_0, pole4467_947_1, 
 theorem moment4467_947 : P1_7_1.groupedPoleMoment 4467 947 ≤ 10751150642307 := by
   refine grouped_from_blocks 4467 947 _ poleBlocks4467_947 ?_ (by decide) (by decide)
   exact ⟨pole4467_947_0_checked, pole4467_947_1_checked, pole4467_947_2_checked, pole4467_947_3_checked, pole4467_947_4_checked, pole4467_947_5_checked, pole4467_947_6_checked, pole4467_947_7_checked, pole4467_947_8_checked, pole4467_947_9_checked, pole4467_947_10_checked, pole4467_947_11_checked, pole4467_947_12_checked, pole4467_947_13_checked, pole4467_947_14_checked, pole4467_947_15_checked, pole4467_947_16_checked, pole4467_947_17_checked, pole4467_947_18_checked, pole4467_947_19_checked, pole4467_947_20_checked, pole4467_947_21_checked, pole4467_947_22_checked, pole4467_947_23_checked, pole4467_947_24_checked, pole4467_947_25_checked, pole4467_947_26_checked, pole4467_947_27_checked, pole4467_947_28_checked, pole4467_947_29_checked, pole4467_947_30_checked, pole4467_947_31_checked, pole4467_947_32_checked, pole4467_947_33_checked, pole4467_947_34_checked, pole4467_947_35_checked, pole4467_947_36_checked, pole4467_947_37_checked, pole4467_947_38_checked, pole4467_947_39_checked, pole4467_947_40_checked, pole4467_947_41_checked, pole4467_947_42_checked, True.intro⟩
-#print axioms moment4467_947
 
 private def pole5010_1065_0 : Block := ⟨128, 2180562610798485233998015299793373431442498833692245534550289807734923342677256418950718383800421383118436104903529833918200512877330874514248470607620290002756537086206214799849103947723173656032138664922679649882960453022358573578594669731908835584440699160177797918742449486648692973975576837279454869439756611851329740283230381825670166195382320663742578882996532625671515668344279560780829454915549875534656063677923349853116986643968924899692282412393211642081096093666052506018348231971940589271482944999864998693468598169619169281, 1758300960⟩
 private theorem pole5010_1065_0_checked :
@@ -381,6 +380,5 @@ private def poleBlocks5010_1065 : List Block := [pole5010_1065_0, pole5010_1065_
 theorem moment5010_1065 : P1_7_1.groupedPoleMoment 5010 1065 ≤ 17044071339464 := by
   refine grouped_from_blocks 5010 1065 _ poleBlocks5010_1065 ?_ (by decide) (by decide)
   exact ⟨pole5010_1065_0_checked, pole5010_1065_1_checked, pole5010_1065_2_checked, pole5010_1065_3_checked, pole5010_1065_4_checked, pole5010_1065_5_checked, pole5010_1065_6_checked, pole5010_1065_7_checked, pole5010_1065_8_checked, pole5010_1065_9_checked, pole5010_1065_10_checked, pole5010_1065_11_checked, pole5010_1065_12_checked, pole5010_1065_13_checked, pole5010_1065_14_checked, pole5010_1065_15_checked, pole5010_1065_16_checked, pole5010_1065_17_checked, pole5010_1065_18_checked, pole5010_1065_19_checked, pole5010_1065_20_checked, pole5010_1065_21_checked, pole5010_1065_22_checked, pole5010_1065_23_checked, pole5010_1065_24_checked, pole5010_1065_25_checked, pole5010_1065_26_checked, pole5010_1065_27_checked, pole5010_1065_28_checked, pole5010_1065_29_checked, pole5010_1065_30_checked, pole5010_1065_31_checked, pole5010_1065_32_checked, pole5010_1065_33_checked, pole5010_1065_34_checked, pole5010_1065_35_checked, pole5010_1065_36_checked, pole5010_1065_37_checked, pole5010_1065_38_checked, pole5010_1065_39_checked, pole5010_1065_40_checked, pole5010_1065_41_checked, pole5010_1065_42_checked, pole5010_1065_43_checked, pole5010_1065_44_checked, pole5010_1065_45_checked, pole5010_1065_46_checked, pole5010_1065_47_checked, True.intro⟩
-#print axioms moment5010_1065
 
 end Research6966.HelperWindowCatalogue

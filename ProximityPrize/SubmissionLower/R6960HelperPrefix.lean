@@ -1,4 +1,3 @@
-import ProximityPrize.SubmissionLower.UpperBranch1
 import ProximityPrize.SubmissionLower.KoalaRectPoleBalance
 import ProximityPrize.SubmissionLower.KoalaRectCutoff
 import ProximityPrize.SubmissionLower.KoalaRectRank
@@ -147,7 +146,6 @@ theorem local_of_children (hLocal : P1_7_1_1.c1) (hBasis : P1_7_1_1.c2) : LocalT
 theorem local_tests : LocalTests :=
   local_of_children P1_7_1_1_1.proof P1_7_1_1_2.proof
 
-#print axioms local_tests
 
 end
 end KoalaRectPole
@@ -340,7 +338,6 @@ theorem pole_bound {h : ℕ} (hpos : 0 < h) (hchar : h < K1.p) {D : PoleData h}
   change d ≤ poleDebit h s U + Module.finrank L B
   omega
 
-#print axioms pole_bound
 
 end
 end KoalaRectPole
@@ -368,7 +365,6 @@ theorem rectPole_bound {h : ℕ} (hpos : 0 < h) (hchar : h < K1.p) {D : PoleData
         Module.finrank L (rectComplete Crt word s W U) :=
   KoalaRectPole.pole_bound hpos hchar Crt word s hs W U (seedSupport U) (fun _ hp => hp)
 
-#print axioms rectPole_bound
 
 end KoalaRect
 
@@ -467,7 +463,6 @@ theorem rectLoss {h : ℕ} (hpos : 0 < h) (hraw : h ≤ 131070) (hchar : h < K1.
     area U * shapeSum s (fun q j => top+j-q*(131071-h)) at htotal
   omega
 
-#print axioms rectLoss
 end
 end KoalaRect
 
@@ -494,17 +489,17 @@ theorem product_power {R G H : Jet} {k : ℕ} (cop : IsRelPrime G H)
   let : UniqueFactorizationMonoid Jet := Polynomial.uniqueFactorizationMonoid (D:=Equation)
   rw [mul_pow]
   exact (cop.pow_left.pow_right).mul_dvd left right
-theorem powered_contact {R : Type*} [CommRing R] (I : Ideal R)
-    {a : R} {s k n : ℕ} (h : a∈I^s) (fit : n≤s*k) : a^k∈I^n := by
-  have p:=Ideal.pow_mem_pow h k
-  rw [←pow_mul] at p
-  exact Ideal.pow_le_pow_right fit p
-theorem strip_contact {K : Type*} [Field K] (g a : (Polynomial K)) {n k : ℕ}
-    (unit : g.eval 0≠0) (van : (Polynomial.X : (Polynomial K))^n∣g^k*a) :
-    (Polynomial.X : (Polynomial K))^n∣a := by
-  have nd : ¬ (Polynomial.X : (Polynomial K))∣g := fun h => unit ((coeff_zero_eq_eval_zero g).symm.trans (Polynomial.X_dvd_iff.mp h))
-  have cop : IsCoprime (Polynomial.X : (Polynomial K)) g := Polynomial.irreducible_X.coprime_iff_not_dvd.mpr nd
-  exact (cop.pow (m:=n) (n:=k)).dvd_of_dvd_mul_left van
+
+
+
+
+
+
+
+
+
+
+
 theorem proper_power_mass (G Q : Jet) (s t : Shape) (S : Finset (Ideal Ambient))
     (k : ℕ) (pos : 0<k) (index : Fin 4) (ng : G≠0) (nq : Q≠0)
     (cop : IsRelPrime (toJet G) (toJet Q))
@@ -525,17 +520,17 @@ theorem proper_power_mass (G Q : Jet) (s t : Shape) (S : Finset (Ideal Ambient))
   have len:=K1_14_2_2_4_4.proof (G^k) Q I act k pos ho hq
   rw [ite_eq_left hd,pow_two] at len
   exact ⟨act,fun _=>len⟩
-theorem union_terminal (rows : Banks) (s : Shape) (left right : Finset Surface)
-    (existsParent : (left∪right).Nonempty)
-    (gl : ∀ q∈left,Parent q) (gr : ∀ q∈right,Parent q)
-    (pl : ∀ q∈left,HighCore82258.BankPass rows s q)
-    (pr : ∀ q∈right,HighCore82258.BankPass rows s q) :
-    ∃ f, ProjectedProduct (left∪right) f ∧
-      ∀ q∈left∪right, HighCore82258.BankPass rows s q := by
-  classical
-  obtain ⟨f,prod⟩:=K1_14_3_7.proof (left∪right) existsParent (by
-    intro q mem; exact (mem_union.mp mem).elim (gl q) (gr q))
-  exact ⟨f,prod,fun q mem=>(mem_union.mp mem).elim (pl q) (pr q)⟩
+
+
+
+
+
+
+
+
+
+
+
 open K1_14_2_2_3
 open K1_14_2_2_3 (shiftedWord specialize_shiftedWord)
 theorem dual_order_of_tests {I : Ideal Ambient} (act : Active I) (dualI : dual I)
@@ -608,21 +603,21 @@ theorem one_helper {ι : Type*} [Fintype ι] (P : ι→Jet) (ks : ι→ℕ)
     (irr.prime.dvd_of_dvd_pow right)
 open P0_10R_1 (section_bound component_height)
 open P1_7_4_1 (irreducible_cut)
-theorem exceptional_initial (G Q : Jet) (s t : Shape) (irr : Irreducible G)
-    (nd : ¬G∣Q) (js : s.J≤s.B) (jt : t.J≤t.B)
-    (cg : K1_14_2_2.RowCaps G s) (cq : K1_14_2_2.RowCaps Q t) :
-    ∃ S : Finset (Ideal Ambient), P1_7_4_1.SectionGeometry S ∧
-      K1_14_2_2.Fits S (K1_14_2_2_2.residualBudget s t) ∧
-      (∀ I∈S,toJet G∈I) ∧
-      ∀ z R,K1_14.jetAt G z R=0 → K1_14.jetAt Q z R=0 →
-        ∃ I∈S,K1_14_2.OnJet I z R := by
-  have proper:=irreducible_cut irr nd
-  obtain ⟨S,hs,cover⟩:=K1_14_2_2_2_3.proof _ _ proper
-  obtain ⟨finite,fit⟩:=section_bound _ _ proper s t js jt cg cq S hs
-  refine ⟨S,?_,fit,fun I hi=>(hs I hi).2.2.1,cover⟩
-  intro I hi
-  obtain ⟨prime,dim,row,cut⟩:=hs I hi
-  exact ⟨prime,dim,component_height proper prime dim row cut,finite I hi⟩
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def timesShape (k : ℕ) (s : Shape) : Shape := ⟨k*s.m,k*s.B,k*s.J,k*s.U⟩
 theorem scaled_pair (k : ℕ) (s t : Shape) (i : Fin 4) :
     pairCap (timesShape k s) t i=k*pairCap s t i := by
@@ -639,20 +634,9 @@ theorem exceptional_history (G Q : Jet) (s t : Shape) (S : Finset (Ideal Ambient
     (Nat.mul_le_mul_left _ hs) ht hc hq on
   rw [scaled_pair,Nat.mul_assoc] at bound
   exact Nat.le_of_mul_le_mul_left bound hk
-theorem high_ledger :
-    116851670497542517 + 118687375614631597 + 27283109943102372 +
-    143456202788540 + 48 + 3730105881391565 = 266695718139456639 := by decide +kernel
-#print axioms exceptional_initial
-#print axioms exceptional_history
-#print axioms high_ledger
-#print axioms one_helper
-#print axioms not_two_common
-#print axioms dual_order_of_tests
-#print axioms product_power
-#print axioms powered_contact
-#print axioms strip_contact
-#print axioms proper_power_mass
-#print axioms union_terminal
+
+
+
 end Lower6960.HelperPrefix
 
 end

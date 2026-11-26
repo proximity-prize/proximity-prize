@@ -183,7 +183,6 @@ theorem inventory_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
   exact ⟨⟨top,htop,K1_13_1.anchorLead P,lower_of_anchor P hP hbox hw,low,lowSub,lowOn,
     n,f,small,different,fits,active,ord,layers,proper,zeros,zero_iff,retained,piece,sub,
     (fun i γ hγ=>(on i γ hγ).2),off,book,booked,E,(fun i γ hγ=>fat γ (sub i hγ) (on i γ hγ).1),total⟩⟩
-#print axioms inventory_of_family
 end
 end LowProfile6966
 

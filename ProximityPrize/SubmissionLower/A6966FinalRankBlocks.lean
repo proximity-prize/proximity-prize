@@ -217,7 +217,6 @@ theorem grade_bound (s d : ℕ) (rows : List Row) (hg : ∀ r ∈ rows, good d r
   change Module.finrank Geom (LinearMap.range (blockAt d s g)) ≤ (rows.map (charge s g)).sum
   omega
 
-#print axioms grade_bound
 
 end A6966FinalRankCore
 
@@ -490,7 +489,6 @@ theorem origin_le_blocks :
       rw [Module.finrank_pi_fintype, Fintype.sum_prod_type]
       rfl
 
-#print axioms origin_le_blocks
 
 end
 end A6966FinalRankBlocks

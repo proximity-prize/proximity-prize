@@ -260,8 +260,6 @@ theorem plain {f : Row 4} {p : Envelope} {u : Rate} {r R : ℕ}
   have hvan := contact_clear hQ (hcontact q hq)
   simpa only [hQC, mul_zero, add_zero] using hvan
 
-#print axioms adic
-#print axioms plain
 end
 end Low6960WeightedRow
 

@@ -65,7 +65,6 @@ theorem chosen15000 {u deleted} {anchor : Rescue6966.Model u deleted} {Γ} (F:Fa
   have unique0:=unique Crt (word anchor) i lo hi g M degree wt seed
   rw [cap] at unique0
   exact unique0
-#print axioms chosen15000
 theorem chosen13200 {u deleted} {anchor : Rescue6966.Model u deleted} {Γ} (F:Family anchor Γ)
     {D:PoleData anchor.overhead.toNat} (Crt:CRTLift D) (i:Fin 12) (cap:(row i).cap=13200)
     (lo:2330≤anchor.overhead.toNat) (hi:anchor.overhead.toNat≤2499)
@@ -79,6 +78,5 @@ theorem chosen13200 {u deleted} {anchor : Rescue6966.Model u deleted} {Γ} (F:Fa
   have unique0:=unique Crt (word anchor) i lo hi g M degree wt seed
   rw [cap] at unique0
   exact unique0
-#print axioms chosen13200
 end
 end Lower6960.Pair6966

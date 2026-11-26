@@ -130,7 +130,5 @@ def atLine {h} (D:PoleData h) (t:Fin 2→L) : Chart D t→+*FX :=
     rw [actual_H]
     exact ((map_ne_zero_iff _ (IsFractionRing.injective L[X] FX)).mpr ((D.monic 0).mul (D.monic 1)).ne_zero).isUnit)
 
-#print axioms generic_atSource
-#print axioms generic_clears
 end
 end Research6966.PhysicalChartAtMark

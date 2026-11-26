@@ -94,7 +94,5 @@ theorem Model.quotient {h A W r:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData h}
   rw [m.equation,mul_pow]
   exact (associated_unit_mul_left _ _ (unit.pow t)).dvd.trans transformed
 
-#print axioms exists_model
-#print axioms Model.quotient
 end
 end Research6966.PadeConcentration

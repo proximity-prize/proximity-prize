@@ -6,10 +6,10 @@ namespace P5_8_3
 noncomputable section
 open i4 P5_8 PolynomialDifferential MvPolynomial Finset ReedSolomon.HiddenDerivative
 open scoped Polynomial BigOperators
-def c1 :Prop :=
-  ∀ (w:Node→K) (T:ℕ) (R:Equation) (i:Fin 3) (r :ℕ),
-    R∈rows w T→T+r*step≤lastCut →
-      ∀ f∈close A w,differentialSpecialization (jetDerivative R i r) f=0
+
+
+
+
 def c3:Prop :=
   ∀ (F R:Equation) (l:ℕ),Irreducible F→0<jetTotalDegree F →
     jetTotalDegree F≤ smallCaps.B→R∈nativeBand donorCaps →

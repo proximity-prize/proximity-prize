@@ -95,7 +95,5 @@ theorem Model.raw_weight {h} {D:PoleData h} {Crt:CRTLift D} {N:Jet} {M:HelperPhy
     exact nz ((map_eq_zero_iff _ (IsFractionRing.injective K1_14_1.SeedPoly K1_14_1.SeedField)).mp eq)
   exact (RawPhysicalDegree.bounded_iff ..).mpr le_rfl j i n alive
 
-#print axioms exists_model
-#print axioms Model.raw_weight
 end
 end Research6966.IntegralGraphModels

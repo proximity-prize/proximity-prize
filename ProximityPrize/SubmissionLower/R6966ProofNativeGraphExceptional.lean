@@ -98,7 +98,5 @@ theorem singular_count {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (wid
         exact root)
     exact count.trans (by simpa only [one_mul] using Nat.mul_le_mul_right (width 0+K1.p*width 1) ep)
 
-#print axioms proper
-#print axioms singular_count
 end
 end Research6966.NativeGraphExceptional

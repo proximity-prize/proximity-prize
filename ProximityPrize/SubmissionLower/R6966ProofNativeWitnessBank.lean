@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.R6966ProofHelperWeightCap
-import ProximityPrize.SubmissionLower.R6966ProofNativeProjectedWitness
+import ProximityPrize.SubmissionLower.Z6969Pack0096
 
 set_option Elab.async false
 
@@ -102,7 +102,5 @@ theorem triangular {h agreement r top:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData 
   rw [←RectangularHelperShift.all_axes] at mem
   exact consume Crt word N gp chosen cut fits small _ width axisHigh geo pass Q mem avoid
 
-#print axioms rectangle
-#print axioms triangular
 end
 end Research6966.NativeWitnessBank

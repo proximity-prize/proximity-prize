@@ -56,7 +56,6 @@ import ProximityPrize.SubmissionLower.DdZ3EWiUc
 import ProximityPrize.SubmissionLower.DdZgdIx1d
 import ProximityPrize.SubmissionLower.DdBG
 import ProximityPrize.SubmissionLower.RingHomShortcuts
-import ProximityPrize.SubmissionLower.DdP6Defs
 import ProximityPrize.SubmissionLower.DdA2
 set_option Elab.async false
 set_option synthInstance.maxHeartbeats 400000

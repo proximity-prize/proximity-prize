@@ -101,7 +101,6 @@ theorem raw_eq_compute (w : Window) (hg : w.gradeHi ≤ 4013)
   rw [hfilter, Nat.Ico_eq_range']
   rfl
 
-#print axioms raw_eq_compute
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotBaseline
@@ -287,7 +286,6 @@ theorem node_rank_of_receipts (x y : Geom)
   unfold localRank
   omega
 
-#print axioms node_rank_of_receipts
 end KoalaTaperTransfer
 
 end Merged_KoalaTaperTransfer
@@ -754,7 +752,6 @@ theorem rawChunk_closed (w : Window) (start count : ℕ)
   have hr:=List.mem_range'_1.mp h
   exact (rawAt_fast w hg hl hh o (by omega)).trans (fast_closed w o hg hl hh)
 
-#print axioms rawChunk_closed
 end Low48PrimaryPivot.RawClosed
 
 end Merged_Low48PrimaryRawFastSum

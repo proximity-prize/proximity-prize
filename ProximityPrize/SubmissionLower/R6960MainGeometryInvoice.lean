@@ -167,7 +167,6 @@ theorem exceptional_prefix {u deleted} {M : Model u deleted} {Γ} (F : Family M 
       mem_biUnion.mpr ⟨i,mem_range.mpr hi,mem_curveMarks (F:=F) hγ mem on⟩
     exact Or.inl (mem_union_left _ (mem_union_left _ (mem_union_left _ (mem_union_right _ cuts))))
   · exact Or.inr retained
-#print axioms exceptional_prefix
 end Lower6960.RescueGeometry
 
 end
@@ -327,8 +326,6 @@ theorem Rows.failed_cut {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     obtain ⟨free,moving⟩ := R.main_contact i γ hγ
     exact zero _ _ on free moving
 
-#print axioms rows
-#print axioms Rows.failed_cut
 end Lower6960.MainGeometry
 
 end
@@ -629,8 +626,6 @@ theorem Initial.rank_ode {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ
   rintro γ _ ⟨J,hJ,on⟩
   simpa only [K1_14_2_2.eval_fixed] using RingHom.mem_ker.mp (on (roots J hJ))
 
-#print axioms Rows.initial_cover
-#print axioms Initial.rank_ode
 end Lower6960.MainGeometry
 
 end
@@ -860,9 +855,6 @@ theorem Initial.terminal_surfaces {u deleted} {M : Model u deleted} {Γ} {F : Fa
   obtain ⟨S,geom,_,marks⟩:=ini.terminal_surfaces_with_origins
   exact ⟨S,geom,marks⟩
 
-#print axioms Initial.stage_mass
-#print axioms Initial.cutCover
-#print axioms Initial.terminal_surfaces
 end Lower6960.MainGeometry
 
 end
@@ -1103,8 +1095,6 @@ theorem Initial.joint_bill_with_final {u deleted} {M : Model u deleted} {Γ} {F 
     | succ i => exact ini.cap_live (by omega) k
 
 
-#print axioms history_step
-#print axioms Rows.fixed_count
 theorem Initial.joint_bill {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R)
     (rank : Mass) (cut : ℕ→Mass) :
@@ -1113,8 +1103,6 @@ theorem Initial.joint_bill {u deleted} {M : Model u deleted} {Γ} {F : Family M 
   (le_add_of_nonneg_right (P1_7_4.final_credit_nonneg 18 (beforeCuts rank cut) ini.final)).trans
     (ini.joint_bill_with_final rank cut)
 
-#print axioms Initial.joint_bill
-#print axioms CutBooks.point_bill
 end Lower6960.MainGeometry
 
 end
@@ -1182,8 +1170,6 @@ theorem main_fee_bound : mainFee ≤ 116835760512599839 := by decide +kernel
 
 theorem rank_guard : rankB<p ∧ 0≤rankWeight 1 ∧ 0≤rankWeight 2 := by decide +kernel
 
-#print axioms main_fee_bound
-#print axioms rate_spec
 end Lower6960.MainGeometry
 
 end

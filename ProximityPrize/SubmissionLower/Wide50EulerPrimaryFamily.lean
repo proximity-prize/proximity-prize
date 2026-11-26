@@ -985,7 +985,6 @@ theorem exact_columns (A D : ℕ) (hA : 0<A) (hD : 3<D) (hBudget : D*4012 ≤ 30
   unfold compactCount
   push_cast at h
   omega
-#print axioms exact_columns
 end TaperColumns
 
 end Merged_PrimaryTaperColumnData
@@ -1134,7 +1133,6 @@ theorem symbol_rank {n : ℕ} (x : Geom) (e : Fin n → Row 4)
     exact_mod_cast jet_card_eq.trans sourceCount_eq
   simpa only [Fintype.card_fin, hd, hn] using hv.fintype_card_le_finrank
 
-#print axioms symbol_rank
 end
 end PrimaryTaper
 
@@ -1220,7 +1218,6 @@ theorem primary_family (A D : ℕ) (hA : 0<A) (hD : 3<D) (hBudget : D*4012 ≤ 3
 
 
 
-#print axioms primary_family
 end
 end Wide50EulerPrimary
 

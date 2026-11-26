@@ -178,8 +178,6 @@ theorem layer_le_available {r y : Shape} {L : ℕ}
   apply le_trans _ (Final50PriceLayer.layerSum_le_available hr hj)
   exact sum_le_sum_of_subset (range_mono (by decide +kernel))
 
-#print axioms choose_band
-#print axioms order_valid
 
 end Low6960Allocation
 
@@ -304,7 +302,6 @@ theorem four {k : Band} {cells : List (MassCell k)} {a : Shape} {bl jl bh jh t l
     · exact min_le_right _ _
   exact hc.trans (hcut.trans (hbill.trans (by simpa only [ht] using hallow)))
 
-#print axioms four
 end Low6960Rectangle
 
 end Merged_R6960Low6960Rectangle

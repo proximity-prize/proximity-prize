@@ -3,7 +3,7 @@ import ProximityPrize.SubmissionLower.Low6966SharedPersistent
 import ProximityPrize.SubmissionLower.Shared50ShapeRankBase
 import ProximityPrize.SubmissionLower.Low6966ShapeGate
 import ProximityPrize.SubmissionLower.FadicChunk
-import ProximityPrize.SubmissionLower.Low6966Encoding
+import ProximityPrize.SubmissionLower.Low6966FastPrice
 
 set_option Elab.async false
 
@@ -169,8 +169,6 @@ theorem exists_polynomial {w Γ s} (hm : Low6966Prices.Messages w Γ s)
     rw [← fraction_geometric,hQ,map_mul,toGeometric,MvPolynomial.map_C,hasse_C_mul]
     exact P.mul_mem_left _ (ho P hP a ha)
 
-#print axioms bank_layers
-#print axioms exists_polynomial
 end
 end Low6966SharedShapeRank
 
@@ -306,7 +304,6 @@ theorem select {w Γ s} (hm : Low6966Prices.Messages w Γ s)
   have uq : Q.val ∈ U i := hv0
   have nq : Q.val ≠ 0 := fun hz => hq (Subtype.ext hz)
   exact ⟨i+1, by omega, Q.val, nq, Q.2, hcontact, hs i _ uq nq⟩
-#print axioms select
 end
 end Low6966VariableSelect
 

@@ -157,10 +157,4 @@ theorem helper_not_two {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I
     (fun _ _ _ hR j a hshift => evaluated_mono Crt word rfl rfl rfl le_rfl hshift
       (P0_10_1.evaluated_shift Crt word hR j a))
     supply allG allH
-#print axioms helper_bank_checked
-#print axioms helper_surplus
-#print axioms helper_avoids
-#print axioms helper_nonzero
-#print axioms helper_common_caps
-#print axioms helper_not_two
 end Lower6960.Wide6966Helper

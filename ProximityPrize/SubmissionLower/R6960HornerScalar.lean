@@ -81,8 +81,6 @@ theorem coeff_tail [Nontrivial A] (p : (Polynomial A)) {d : ℕ} (pos : 0<d) (j 
   have eq := congrArg (fun f : (Polynomial A)=>f.coeff (d+j)) (modByMonic_add_div p (Polynomial.X ^ d))
   rw [coeff_add,rzero,zero_add,Nat.add_comm d j,coeff_X_pow_mul] at eq
   simpa only [Nat.add_comm j d] using eq
-#print axioms horner_integral
-#print axioms coeff_tail
 end
 end Lower6960.Horner
 
@@ -222,8 +220,6 @@ theorem sections_independent (ι : A→+* F) (inj : Function.Injective ι) (p : 
       rw [Polynomial.coeff_smul,coeff_eq_zero_of_natDegree_lt (mapdegree j |>.trans_lt jlt),smul_zero]
   · simp
 end Independence
-#print axioms scalar_horner_charts
-#print axioms sections_independent
 end
 end Lower6960.Horner
 

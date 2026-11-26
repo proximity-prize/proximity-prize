@@ -1,5 +1,4 @@
 import ProximityPrize.SubmissionLower.R6966ProofPhysicalMonitor
-import ProximityPrize.SubmissionLower.R6966ProofNativeSurfaceTariff
 
 set_option Elab.async false
 
@@ -141,6 +140,5 @@ theorem price {u deleted maxHeight a} {anchor:P1.ModelAt maxHeight u deleted} {Œ
   rw [‚Üêsize,Nat.add_mul]
   exact (Nat.add_le_add weights (Nat.mul_le_mul_right _ badBudget)).trans_eq (Nat.add_comm _ _)
 
-#print axioms price
 end
 end Research6966.PhysicalHelperTariff

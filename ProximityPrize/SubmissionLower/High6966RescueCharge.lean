@@ -53,272 +53,326 @@ private theorem rate0 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 0 i.val : ℚ) ∧
     min (seedLimit 0) (dotQ (cutWeight 0 0 i.val) (history 0 i.val)) ≤ (degreeRate 0 i.val : ℚ) ∧
     heightBound (degreeRate 0 i.val) ≤ (heightRate 0 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 0 = (3039012894213 / 10472 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate1 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 1 i.val : ℚ) ∧
     min (seedLimit 1) (dotQ (cutWeight 1 0 i.val) (history 1 i.val)) ≤ (degreeRate 1 i.val : ℚ) ∧
     heightBound (degreeRate 1 i.val) ≤ (heightRate 1 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 1 = (2094691531153 / 7480 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate2 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 2 i.val : ℚ) ∧
     min (seedLimit 2) (dotQ (cutWeight 2 0 i.val) (history 2 i.val)) ≤ (degreeRate 2 i.val : ℚ) ∧
     heightBound (degreeRate 2 i.val) ≤ (heightRate 2 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 2 = (22247900547721 / 85680 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate3 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 3 i.val : ℚ) ∧
     min (seedLimit 3) (dotQ (cutWeight 3 0 i.val) (history 3 i.val)) ≤ (degreeRate 3 i.val : ℚ) ∧
     heightBound (degreeRate 3 i.val) ≤ (heightRate 3 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 3 = (280423920587 / 1224 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate4 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 4 i.val : ℚ) ∧
     min (seedLimit 4) (dotQ (cutWeight 4 0 i.val) (history 4 i.val)) ≤ (degreeRate 4 i.val : ℚ) ∧
     heightBound (degreeRate 4 i.val) ≤ (heightRate 4 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 4 = (3000518655100553 / 13948704 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate5 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 5 i.val : ℚ) ∧
     min (seedLimit 5) (dotQ (cutWeight 5 0 i.val) (history 5 i.val)) ≤ (degreeRate 5 i.val : ℚ) ∧
     heightBound (degreeRate 5 i.val) ≤ (heightRate 5 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 5 = (245025020577 / 2380 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate6 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 6 i.val : ℚ) ∧
     min (seedLimit 6) (dotQ (cutWeight 6 0 i.val) (history 6 i.val)) ≤ (degreeRate 6 i.val : ℚ) ∧
     heightBound (degreeRate 6 i.val) ≤ (heightRate 6 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 6 = (713861083786297 / 16190460 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate7 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 7 i.val : ℚ) ∧
     min (seedLimit 7) (dotQ (cutWeight 7 0 i.val) (history 7 i.val)) ≤ (degreeRate 7 i.val : ℚ) ∧
     heightBound (degreeRate 7 i.val) ≤ (heightRate 7 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 7 = (9796456131619 / 278460 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate8 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 8 i.val : ℚ) ∧
     min (seedLimit 8) (dotQ (cutWeight 8 0 i.val) (history 8 i.val)) ≤ (degreeRate 8 i.val : ℚ) ∧
     heightBound (degreeRate 8 i.val) ≤ (heightRate 8 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 8 = (726426143291903 / 25185160 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate9 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 9 i.val : ℚ) ∧
     min (seedLimit 9) (dotQ (cutWeight 9 0 i.val) (history 9 i.val)) ≤ (degreeRate 9 i.val : ℚ) ∧
     heightBound (degreeRate 9 i.val) ≤ (heightRate 9 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 9 = (86075514658327 / 471240 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate10 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 10 i.val : ℚ) ∧
     min (seedLimit 10) (dotQ (cutWeight 10 0 i.val) (history 10 i.val)) ≤ (degreeRate 10 i.val : ℚ) ∧
     heightBound (degreeRate 10 i.val) ≤ (heightRate 10 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 10 = (171501477245957 / 942480 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate11 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 11 i.val : ℚ) ∧
     min (seedLimit 11) (dotQ (cutWeight 11 0 i.val) (history 11 i.val)) ≤ (degreeRate 11 i.val : ℚ) ∧
     heightBound (degreeRate 11 i.val) ≤ (heightRate 11 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 11 = (8999606782627 / 52360 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate12 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 12 i.val : ℚ) ∧
     min (seedLimit 12) (dotQ (cutWeight 12 0 i.val) (history 12 i.val)) ≤ (degreeRate 12 i.val : ℚ) ∧
     heightBound (degreeRate 12 i.val) ≤ (heightRate 12 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 12 = (46780103736761 / 314160 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate13 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 13 i.val : ℚ) ∧
     min (seedLimit 13) (dotQ (cutWeight 13 0 i.val) (history 13 i.val)) ≤ (degreeRate 13 i.val : ℚ) ∧
     heightBound (degreeRate 13 i.val) ≤ (heightRate 13 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 13 = (220645636039 / 1760 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate14 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 14 i.val : ℚ) ∧
     min (seedLimit 14) (dotQ (cutWeight 14 0 i.val) (history 14 i.val)) ≤ (degreeRate 14 i.val : ℚ) ∧
     heightBound (degreeRate 14 i.val) ≤ (heightRate 14 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 14 = (705685134251 / 8976 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate15 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 15 i.val : ℚ) ∧
     min (seedLimit 15) (dotQ (cutWeight 15 0 i.val) (history 15 i.val)) ≤ (degreeRate 15 i.val : ℚ) ∧
     heightBound (degreeRate 15 i.val) ≤ (heightRate 15 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 15 = (1461997293375737 / 32380920 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate16 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 16 i.val : ℚ) ∧
     min (seedLimit 16) (dotQ (cutWeight 16 0 i.val) (history 16 i.val)) ≤ (degreeRate 16 i.val : ℚ) ∧
     heightBound (degreeRate 16 i.val) ≤ (heightRate 16 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 16 = (6993864086195 / 179894 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate17 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 17 i.val : ℚ) ∧
     min (seedLimit 17) (dotQ (cutWeight 17 0 i.val) (history 17 i.val)) ≤ (degreeRate 17 i.val : ℚ) ∧
     heightBound (degreeRate 17 i.val) ≤ (heightRate 17 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 17 = (877067309519 / 27846 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate18 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 18 i.val : ℚ) ∧
     min (seedLimit 18) (dotQ (cutWeight 18 0 i.val) (history 18 i.val)) ≤ (degreeRate 18 i.val : ℚ) ∧
     heightBound (degreeRate 18 i.val) ≤ (heightRate 18 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 18 = (1792675682901199 / 17435880 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate19 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 19 i.val : ℚ) ∧
     min (seedLimit 19) (dotQ (cutWeight 19 0 i.val) (history 19 i.val)) ≤ (degreeRate 19 i.val : ℚ) ∧
     heightBound (degreeRate 19 i.val) ≤ (heightRate 19 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 19 = (1475757395124183 / 14391520 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate20 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 20 i.val : ℚ) ∧
     min (seedLimit 20) (dotQ (cutWeight 20 0 i.val) (history 20 i.val)) ≤ (degreeRate 20 i.val : ℚ) ∧
     heightBound (degreeRate 20 i.val) ≤ (heightRate 20 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 20 = (11464437405020191 / 113333220 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate21 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 21 i.val : ℚ) ∧
     min (seedLimit 21) (dotQ (cutWeight 21 0 i.val) (history 21 i.val)) ≤ (degreeRate 21 i.val : ℚ) ∧
     heightBound (degreeRate 21 i.val) ≤ (heightRate 21 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 21 = (4908882740467081 / 50370320 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate22 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 22 i.val : ℚ) ∧
     min (seedLimit 22) (dotQ (cutWeight 22 0 i.val) (history 22 i.val)) ≤ (degreeRate 22 i.val : ℚ) ∧
     heightBound (degreeRate 22 i.val) ≤ (heightRate 22 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 22 = (24825290015927 / 311355 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate23 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 23 i.val : ℚ) ∧
     min (seedLimit 23) (dotQ (cutWeight 23 0 i.val) (history 23 i.val)) ≤ (degreeRate 23 i.val : ℚ) ∧
     heightBound (degreeRate 23 i.val) ≤ (heightRate 23 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 23 = (2884254369546845 / 45333288 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate24 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 24 i.val : ℚ) ∧
     min (seedLimit 24) (dotQ (cutWeight 24 0 i.val) (history 24 i.val)) ≤ (degreeRate 24 i.val : ℚ) ∧
     heightBound (degreeRate 24 i.val) ≤ (heightRate 24 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 24 = (99619488094433 / 2042040 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate25 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 25 i.val : ℚ) ∧
     min (seedLimit 25) (dotQ (cutWeight 25 0 i.val) (history 25 i.val)) ≤ (degreeRate 25 i.val : ℚ) ∧
     heightBound (degreeRate 25 i.val) ≤ (heightRate 25 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 25 = (646084451980667 / 16190460 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate26 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 26 i.val : ℚ) ∧
     min (seedLimit 26) (dotQ (cutWeight 26 0 i.val) (history 26 i.val)) ≤ (degreeRate 26 i.val : ℚ) ∧
     heightBound (degreeRate 26 i.val) ≤ (heightRate 26 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 26 = (2543506502127053 / 75555480 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate27 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 27 i.val : ℚ) ∧
     min (seedLimit 27) (dotQ (cutWeight 27 0 i.val) (history 27 i.val)) ≤ (degreeRate 27 i.val : ℚ) ∧
     heightBound (degreeRate 27 i.val) ≤ (heightRate 27 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 27 = (260799969145609 / 3597880 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate28 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 28 i.val : ℚ) ∧
     min (seedLimit 28) (dotQ (cutWeight 28 0 i.val) (history 28 i.val)) ≤ (degreeRate 28 i.val : ℚ) ∧
     heightBound (degreeRate 28 i.val) ≤ (heightRate 28 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 28 = (157571512368317 / 2324784 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate29 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 29 i.val : ℚ) ∧
     min (seedLimit 29) (dotQ (cutWeight 29 0 i.val) (history 29 i.val)) ≤ (degreeRate 29 i.val : ℚ) ∧
     heightBound (degreeRate 29 i.val) ≤ (heightRate 29 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 29 = (2470968312656579 / 34871760 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate30 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 30 i.val : ℚ) ∧
     min (seedLimit 30) (dotQ (cutWeight 30 0 i.val) (history 30 i.val)) ≤ (degreeRate 30 i.val : ℚ) ∧
     heightBound (degreeRate 30 i.val) ≤ (heightRate 30 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 30 = (321835826656133 / 4649568 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate31 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 31 i.val : ℚ) ∧
     min (seedLimit 31) (dotQ (cutWeight 31 0 i.val) (history 31 i.val)) ≤ (degreeRate 31 i.val : ℚ) ∧
     heightBound (degreeRate 31 i.val) ≤ (heightRate 31 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 31 = (62817093976687 / 942480 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate32 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 32 i.val : ℚ) ∧
     min (seedLimit 32) (dotQ (cutWeight 32 0 i.val) (history 32 i.val)) ≤ (degreeRate 32 i.val : ℚ) ∧
     heightBound (degreeRate 32 i.val) ≤ (heightRate 32 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 32 = (12465351885882221 / 226666440 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate33 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 33 i.val : ℚ) ∧
     min (seedLimit 33) (dotQ (cutWeight 33 0 i.val) (history 33 i.val)) ≤ (degreeRate 33 i.val : ℚ) ∧
     heightBound (degreeRate 33 i.val) ≤ (heightRate 33 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 33 = (3482899944722651 / 75555480 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate34 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 34 i.val : ℚ) ∧
     min (seedLimit 34) (dotQ (cutWeight 34 0 i.val) (history 34 i.val)) ≤ (degreeRate 34 i.val : ℚ) ∧
     heightBound (degreeRate 34 i.val) ≤ (heightRate 34 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 34 = (27231757590593 / 622710 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate35 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 35 i.val : ℚ) ∧
     min (seedLimit 35) (dotQ (cutWeight 35 0 i.val) (history 35 i.val)) ≤ (degreeRate 35 i.val : ℚ) ∧
     heightBound (degreeRate 35 i.val) ≤ (heightRate 35 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 35 = (5885739186426083 / 151110960 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate36 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 36 i.val : ℚ) ∧
     min (seedLimit 36) (dotQ (cutWeight 36 0 i.val) (history 36 i.val)) ≤ (degreeRate 36 i.val : ℚ) ∧
     heightBound (degreeRate 36 i.val) ≤ (heightRate 36 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 36 = (412491890219549 / 7195760 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate37 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 37 i.val : ℚ) ∧
     min (seedLimit 37) (dotQ (cutWeight 37 0 i.val) (history 37 i.val)) ≤ (degreeRate 37 i.val : ℚ) ∧
     heightBound (degreeRate 37 i.val) ≤ (heightRate 37 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 37 = (579867624741785 / 10074064 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate38 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 38 i.val : ℚ) ∧
     min (seedLimit 38) (dotQ (cutWeight 38 0 i.val) (history 38 i.val)) ≤ (degreeRate 38 i.val : ℚ) ∧
     heightBound (degreeRate 38 i.val) ≤ (heightRate 38 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 38 = (1651297129104398 / 28333305 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate39 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 39 i.val : ℚ) ∧
     min (seedLimit 39) (dotQ (cutWeight 39 0 i.val) (history 39 i.val)) ≤ (degreeRate 39 i.val : ℚ) ∧
     heightBound (degreeRate 39 i.val) ≤ (heightRate 39 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 39 = (6432230807919713 / 113333220 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate40 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 40 i.val : ℚ) ∧
     min (seedLimit 40) (dotQ (cutWeight 40 0 i.val) (history 40 i.val)) ≤ (degreeRate 40 i.val : ℚ) ∧
     heightBound (degreeRate 40 i.val) ≤ (heightRate 40 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 40 = (10235951927427491 / 181333152 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate41 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 41 i.val : ℚ) ∧
     min (seedLimit 41) (dotQ (cutWeight 41 0 i.val) (history 41 i.val)) ≤ (degreeRate 41 i.val : ℚ) ∧
     heightBound (degreeRate 41 i.val) ≤ (heightRate 41 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 41 = (514492432988461 / 10074064 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate42 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 42 i.val : ℚ) ∧
     min (seedLimit 42) (dotQ (cutWeight 42 0 i.val) (history 42 i.val)) ≤ (degreeRate 42 i.val : ℚ) ∧
     heightBound (degreeRate 42 i.val) ≤ (heightRate 42 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 42 = (788382340194763 / 17435880 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate43 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 43 i.val : ℚ) ∧
     min (seedLimit 43) (dotQ (cutWeight 43 0 i.val) (history 43 i.val)) ≤ (degreeRate 43 i.val : ℚ) ∧
     heightBound (degreeRate 43 i.val) ≤ (heightRate 43 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 43 = (3181856151381289 / 75555480 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate44 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 44 i.val : ℚ) ∧
     min (seedLimit 44) (dotQ (cutWeight 44 0 i.val) (history 44 i.val)) ≤ (degreeRate 44 i.val : ℚ) ∧
     heightBound (degreeRate 44 i.val) ≤ (heightRate 44 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 44 = (168964806622709 / 4358970 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate45 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 45 i.val : ℚ) ∧
     min (seedLimit 45) (dotQ (cutWeight 45 0 i.val) (history 45 i.val)) ≤ (degreeRate 45 i.val : ℚ) ∧
     heightBound (degreeRate 45 i.val) ≤ (heightRate 45 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 45 = (41796519484312 / 765765 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate46 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 46 i.val : ℚ) ∧
     min (seedLimit 46) (dotQ (cutWeight 46 0 i.val) (history 46 i.val)) ≤ (degreeRate 46 i.val : ℚ) ∧
     heightBound (degreeRate 46 i.val) ≤ (heightRate 46 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 46 = (224665799281169 / 4317456 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate47 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 47 i.val : ℚ) ∧
     min (seedLimit 47) (dotQ (cutWeight 47 0 i.val) (history 47 i.val)) ≤ (degreeRate 47 i.val : ℚ) ∧
     heightBound (degreeRate 47 i.val) ≤ (heightRate 47 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 47 = (4495068559249469 / 90666576 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate48 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 48 i.val : ℚ) ∧
     min (seedLimit 48) (dotQ (cutWeight 48 0 i.val) (history 48 i.val)) ≤ (degreeRate 48 i.val : ℚ) ∧
     heightBound (degreeRate 48 i.val) ≤ (heightRate 48 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 48 = (491243016503563 / 9444435 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate49 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 49 i.val : ℚ) ∧
     min (seedLimit 49) (dotQ (cutWeight 49 0 i.val) (history 49 i.val)) ≤ (degreeRate 49 i.val : ℚ) ∧
     heightBound (degreeRate 49 i.val) ≤ (heightRate 49 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 49 = (1405341518785066 / 28333305 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate50 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 50 i.val : ℚ) ∧
     min (seedLimit 50) (dotQ (cutWeight 50 0 i.val) (history 50 i.val)) ≤ (degreeRate 50 i.val : ℚ) ∧
     heightBound (degreeRate 50 i.val) ≤ (heightRate 50 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 50 = (383072136242297 / 7749280 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate51 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 51 i.val : ℚ) ∧
     min (seedLimit 51) (dotQ (cutWeight 51 0 i.val) (history 51 i.val)) ≤ (degreeRate 51 i.val : ℚ) ∧
     heightBound (degreeRate 51 i.val) ≤ (heightRate 51 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 51 = (10100146801986173 / 226666440 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate52 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 52 i.val : ℚ) ∧
     min (seedLimit 52) (dotQ (cutWeight 52 0 i.val) (history 52 i.val)) ≤ (degreeRate 52 i.val : ℚ) ∧
     heightBound (degreeRate 52 i.val) ≤ (heightRate 52 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 52 = (1446643450099531 / 32380920 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem rate53 (i:Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate 53 i.val : ℚ) ∧
     min (seedLimit 53) (dotQ (cutWeight 53 0 i.val) (history 53 i.val)) ≤ (degreeRate 53 i.val : ℚ) ∧
     heightBound (degreeRate 53 i.val) ≤ (heightRate 53 i.val : ℚ) := by
-  fin_cases i <;> decide +kernel
+  have hs : seedLimit 53 = (7464861551383 / 181152 : ℚ) := by decide +kernel
+  fin_cases i <;> (rw [hs]; decide +kernel)
 private theorem checked_rates (rect : Fin 54) (i : Fin 17) :
     ((p+1 : ℕ) : ℚ)/81 ≤ (degreeRate rect i.val : ℚ) ∧
     min (seedLimit rect) (dotQ (cutWeight rect 0 i.val) (history rect i.val)) ≤ (degreeRate rect i.val : ℚ) ∧
@@ -425,9 +479,6 @@ theorem rank_guard (rect : Fin 54) :
     rankB rect < p ∧ 0≤rankWeight rect 1 ∧ 0≤rankWeight rect 2 := by
   fin_cases rect <;> decide +kernel
 
-#print axioms rate_spec
-#print axioms rescue_fee_bound
-#print axioms credit_guard
 
 end Lower6960.Rescue6966
 
@@ -450,7 +501,6 @@ theorem credit_one (v : ℕ → Mass) (n C : ℕ) (S : Finset (Ideal Ambient))
   exact (mul_le_mul_of_nonneg_right h (Nat.cast_nonneg _)).trans
     (Finset.single_le_sum (f:=fun k => running v n k * massQ S k)
       (fun k _ => mul_nonneg (nonneg _ _) (Nat.cast_nonneg _)) (Finset.mem_univ 1))
-#print axioms credit_one
 end Lower6960.Rescue6966
 
 end Merged_High6966Credit
@@ -622,8 +672,6 @@ theorem Run.paid_packet {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
       · have part : γ∈(range 17).biUnion (fun j => curveMarks F (C.cover j)) :=
           mem_biUnion.mpr ⟨i,mem_range.mpr hi,mem_curveMarks (F:=F) hγ hQ on⟩
         exact Or.inl (mem_union_left _ (mem_union_left _ (mem_union_left _ (mem_union_right _ part))))
-#print axioms CutBooks.paid_count
-#print axioms Run.paid_packet
 end Lower6960.Rescue6966
 end
 end Merged_R6960Rescue6966Fee

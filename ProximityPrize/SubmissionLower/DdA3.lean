@@ -56,7 +56,6 @@ import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.DdZ3EWiUc
 import ProximityPrize.SubmissionLower.DdZgdIx1d
 import ProximityPrize.SubmissionLower.RingHomShortcuts
-import ProximityPrize.SubmissionLower.DdP6Defs
 set_option Elab.async false
 set_option synthInstance.maxHeartbeats 400000
 set_option maxRecDepth 12000

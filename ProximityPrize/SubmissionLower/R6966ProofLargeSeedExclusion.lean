@@ -64,7 +64,6 @@ theorem root_cost (h:ℕ) (lo:2330≤h) (hi:h≤2499) :
   rw [charge,supply h lo hi]
   exact SpreadBucket.affine_pos lo hi first last0
 
-#print axioms root_cost
 end
 end Research6966.LargeSeedExclusion
 
@@ -178,7 +177,6 @@ theorem excluded {h:ℕ} (lo:2330≤h) (hi:h≤2499) {D:PoleData h} (Crt:CRTLift
   have pay:=root_cost h lo hi
   exact Nat.not_lt_of_ge (floor.trans (Nat.add_le_add_left sum _)) pay
 
-#print axioms excluded
 end
 end Research6966.LargeSeedExclusion
 

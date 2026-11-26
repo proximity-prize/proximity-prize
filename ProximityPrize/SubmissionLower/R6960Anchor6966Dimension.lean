@@ -166,5 +166,4 @@ theorem eligible_card : Nonempty (Eligible ≃ Fin 5829993068060) := by
     Equiv.ofBijective slotExponent ⟨slotExponent_injective, slotExponent_surjective⟩
   exact ⟨e.symm.trans ((Fintype.equivFin Slot).trans (finCongr (slot_card.trans totalCount)))⟩
 
-#print axioms eligible_card
 end Anchor6966Dimension

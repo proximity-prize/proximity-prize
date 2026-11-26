@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6966ProofHelperWindowIntervals
+import ProximityPrize.SubmissionLower.R6966ProofHelperWindowCertificate
 import ProximityPrize.SubmissionLower.R6960FreeSource6960
 
 set_option Elab.async false
@@ -127,6 +127,4 @@ theorem Checked.gain {q : Request} (cert : Checked q) {h : ℕ} (lo : firstHeigh
   rw [value_eq _ _ cert.positive_slope earlier,value_eq _ _ cert.positive_slope cert.narrow] at next
   exact Lower6960.HelperSource.surplus_positive _ _ _ _ _ _ _ _ lo (hi.trans (by decide)) pos next
 
-#print axioms fastPhase_eq
-#print axioms Checked.gain
 end Research6966.FarSourceArithmetic

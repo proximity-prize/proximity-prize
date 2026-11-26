@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt0
+import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt1
 
 set_option Elab.async false
 set_option maxHeartbeats 4000000
@@ -2419,6 +2419,5 @@ theorem group4_avoids {h : ℕ} {D : K1_14_1.PoleData h} (Crt : K1_14_1.CRTLift 
       (cutoff h rect (group4_stage i)), ¬ G∣Q :=
   (group4_checked rect i).avoids Crt word lo hi irr seeded slope hs hj
 
-#print axioms group4_avoids
 
 end Lower6960.RescueSource

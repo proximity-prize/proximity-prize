@@ -177,7 +177,6 @@ theorem residual_caps {h A W r:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData h}
     exact N.remaining_order gp t (r+1) rfl (TerminalBanks.retained_order Crt word (geo q hq) (pass q hq)
       fits small cut (KoalaRect.rectEvaluated_le Crt word s W U src))
 
-#print axioms residual_caps
 
 /-- The free-column count times the remaining native seed slots. If a
 coordinate budget is exhausted the whole residual space is zero. -/
@@ -252,6 +251,5 @@ theorem concentration_rank {h A W r e:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData 
         by omega,fun z=>(Nat.le_add_left _ _).trans (axes z)⟩) bot_le
     rw [trivial,finrank_bot]
 
-#print axioms concentration_rank
 end
 end Research6966.PadeResidualBank

@@ -250,8 +250,6 @@ theorem count {Γ : Finset K} {s : K → (Polynomial K)} {w : I → K} {f Q : Ro
   have hl := input.positive
   omega
 
-#print axioms cover
-#print axioms count
 end
 end Low6966SharedThirdCut
 
@@ -566,8 +564,6 @@ theorem proof : Low6966SharedPrice.cShared := by
   intro w Γ s hm f hf cap hcap hOn l hl hCut u hu
   exact count_of_low hm f hf cap hcap hOn l hl hCut u (fun _ input data => count_low hm data input u hu)
 
-#print axioms tilted_proof
-#print axioms proof
 end
 end Low6966SharedCount
 
@@ -741,8 +737,6 @@ theorem count {w} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFactor f)
         + u.split * u.amount := Nat.add_le_add (Nat.add_le_add hphys (Nat.mul_le_mul_left _ hbase)) hgap
     _ ≤ _ := Nat.le_add_right _ _
 
-#print axioms tilted
-#print axioms count
 end
 end Low6966WeightedTally
 

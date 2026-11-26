@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.UpperBranch1
+import ProximityPrize.SubmissionLower.KoalaRectPoleBalance
 import ProximityPrize.SubmissionLower.UpperBranch5
 
 set_option Elab.async false
@@ -383,7 +383,6 @@ theorem rectCapacity_total (A h : ℕ) (s : Shape) (E : ℕ) (U d : Fin 2 → �
   have hq : q ≤ q*(131071-h) := by simpa using Nat.mul_le_mul_left q hk
   exact rectPosition_sum (s.m*A) (2*h) (q*(131071-h)) j ((q-j)/E) U d (hjq.trans hq) hh
 
-#print axioms rectCapacity_total
 end KoalaRect
 
 end Merged_KoalaRectPosition
@@ -520,8 +519,6 @@ theorem rank_rect_multiples_le (C : Submodule FX Equation) {g : Equation} (hg : 
     _ ≤ Module.rank FX B := rank_range_le m
     _ ≤ _ := by rw [← Module.finrank_eq_rank]; exact_mod_cast hB
 
-#print axioms axisDegree_pow
-#print axioms rank_rect_multiples_le
 
 end
 end KoalaRect
@@ -618,7 +615,6 @@ theorem rectCutoff_finrank_le (A h : ℕ) (s : Shape) (E W : ℕ) (U d : Fin 2 �
   rw [← rectCapacity_eq _ _ _ _ _ _ _ hk he]
   exact rectContact_finrank_le _ _ _ _ _ _ U d V hf hE hk hrow haxis hlead hdvd hslots
 
-#print axioms rectCutoff_finrank_le
 end
 end KoalaRect
 

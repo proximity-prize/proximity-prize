@@ -144,8 +144,6 @@ theorem rawCompute_w3 : rawCompute w3 = 4498062550540 :=
 theorem rawWindow_w3 : rawWindow w3 = 4498062550540 :=
   raw_eq_compute_w3.trans rawCompute_w3
 
-#print axioms rawWindow_w2
-#print axioms rawWindow_w3
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotRaw

@@ -65,7 +65,6 @@ theorem local_minor (π : R) (gen : IsLocalRing.maximalIdeal R = Ideal.span {π}
   change π^_∣(lift V*M*lift U).det at dv
   rw [det_mul,det_mul] at dv
   exact (unit V v).dvd_mul_left.mp ((unit U u).dvd_mul_right.mp dv)
-#print axioms local_minor
 section
 variable {K I J : Type*} [Field K] [Fintype J] [DecidableEq J]
 omit [DecidableEq J] in
@@ -100,7 +99,6 @@ theorem omitted_corank (A : Matrix I (Option J) K) (constant : ∀ i,A i none=1)
   have equality : (A.submatrix rows id).rank + Module.finrank K (LinearMap.ker S) =
       Fintype.card (Option J) := by simpa [Module.finrank_pi_fintype] using rank
   omega
-#print axioms omitted_corank
 end
 section
 variable {G I J : Type*} [Group G] [Fintype G] [Fintype I] [DecidableEq I]
@@ -145,7 +143,6 @@ theorem orbit_order (π : R) (gen : IsLocalRing.maximalIdeal R=Ideal.span {π})
     change Fintype.card I*(∑ g : G,e g*d)=_
     rw [←sum_mul,←Nat.mul_assoc]
     exact congrArg (·*d) cnt
-#print axioms orbit_order
 end
 section
 variable {K : Type*} [Field K] {O : Type*} [CommRing O] [IsDomain O] [IsLocalRing O]
@@ -176,8 +173,6 @@ theorem base_order (φ : (Polynomial K) →+* O) (z : K) (π : O) (nonzero : π�
     π^n∣φ P ↔ n≤P.rootMultiplicity z :=
   base_parameter_order φ z π nonzero ((IsLocalRing.residue_eq_zero_iff _).mpr
     (gen.symm ▸ Ideal.subset_span (by simp))) uniform hn n
-#print axioms base_parameter_order
-#print axioms base_order
 end
 section
 variable {G I J K : Type*} [Group G] [Fintype G] [Fintype I] [DecidableEq I]
@@ -216,7 +211,6 @@ theorem marked_dimensions (row : Option J ↪ I) (room : Fintype.card (Option J)
        _ ≤ Fintype.card I*(Fintype.card G*budget) := Nat.mul_le_mul_left _
          ((ProximityPrize.SubmissionLower.MatrixRootMultiplicity.sum_rootMultiplicity_le_natDegree P T).trans deg)
        _ = _ := by ring
-#print axioms marked_dimensions
 end
 end Lower6960.SheetDeterminant
 
@@ -262,7 +256,6 @@ theorem polynomial_norm (m : E) (nz : m≠0) (finite : IsIntegral (Polynomial K)
     exact ⟨P,hn,hP,by simpa [W,d,Nat.mul_comm b] using atInfinity⟩
   · exact (RatFunc.inftyValuation K).pos_iff.mpr
       ((map_ne_zero_iff _ (IsFractionRing.injective (Polynomial K) (RatFunc K))).mpr wn)
-#print axioms polynomial_norm
 abbrev Aut (K E : Type*) [Field K] [Field E] [Algebra (RatFunc K) E] := E ≃ₐ[RatFunc K] E
 theorem count_quotient_directions [IsGalois (RatFunc K) E] {I J : Type*}
     [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
@@ -311,7 +304,6 @@ theorem count_quotient_directions [IsGalois (RatFunc K) E] {I J : Type*}
              ext i j
              exact (lift z hz _ _).trans (equivariant g⁻¹ _ _)
        _ = _ := Equiv.prod_comp (Equiv.inv (Aut K E)) (fun g=>g ((B.submatrix row id).det))
-#print axioms count_quotient_directions
 end Lower6960.SheetNorm
 
 end
@@ -385,9 +377,6 @@ theorem pole_degree {K G J : Type*} [Field K] [Group G] [Fintype G] [Fintype J] 
       ring
     nlinarith only [low,high,expand]
   exact Nat.le_of_mul_le_mul_left sh Fintype.card_pos
-#print axioms cleared_rows
-#print axioms row_average
-#print axioms pole_degree
 end Lower6960.MarkedEvaluation
 
 end
@@ -459,8 +448,6 @@ theorem conjugate_bound [IsGalois (RatFunc K) E] {J : Type*} [Fintype J] [Decida
   rw [RingHom.map_det,AlgEquiv.map_det]
   exact congrArg Matrix.det (Matrix.ext (fun i j=>(lift z hz g i j).symm))
 
-#print axioms norm_degree
-#print axioms conjugate_bound
 end Lower6960.MarkedEvaluation
 
 end
@@ -508,7 +495,6 @@ theorem primitive_minor (M:Matrix I J F) (full:∃ pick:I↪J,(M.submatrix id pi
   rw [Module.finrank_pi_fintype] at count
   simp only [dim,Finset.sum_add_distrib,Finset.sum_const,Finset.card_univ,nsmul_eq_mul,Nat.cast_id,mul_one] at count
   exact ⟨Q,T,B,pick,idQ,represent,back,nz,by omega⟩
-#print axioms primitive_minor
 end Lower6960.MarkedEvaluation
 
 end
@@ -569,7 +555,6 @@ theorem translated_minor (P:Matrix I J (Polynomial K)) (li:LinearIndependent K P
   apply good
   rw [←Matrix.det_transpose,←eq,←RingHom.map_det]
   exact (congrArg (evalRingHom (0:K)) vanish).trans (map_zero _)
-#print axioms translated_minor
 end Lower6960.MarkedEvaluation
 
 end
@@ -666,8 +651,6 @@ theorem sheet_minor {H B C : Type} [Field H] [Field B] [Algebra H B] [Fintype C]
   refine ⟨pick,?_⟩
   change (A.submatrix pick _root_.id).det≠0
   rw [←Matrix.det_transpose];exact good
-#print axioms section_coordinates
-#print axioms sheet_minor
 end Lower6960.MarkedEvaluation
 
 end
@@ -762,8 +745,6 @@ theorem horizontal_frame (b:PowerBasis F E) (simple:(minpoly F b.gen).Separable)
       (∀j a,ev j (algebraMap F E a)=algebraMap F p.SplittingField (translateField F (algebraMap k K (offsets j)) a)) ∧
       (Matrix.of (fun i j:J=>ev i (v j))).det≠0 :=
   horizontal_frame_over (RingEquiv.refl F) b simple v li
-#print axioms horizontal_frame_over
-#print axioms horizontal_frame
 end Lower6960.MarkedEvaluation
 
 end
@@ -842,8 +823,6 @@ theorem actual_unmarked_rows {J U:Type*} [Fintype J] [DecidableEq J] (e:ℕ)
   have unit : IsUnit (lift i (g • pick i)-word i) :=
     (IsLocalRing.residue_ne_zero_iff_isUnit _).mp (by rw [map_sub];exact sub_ne_zero.mpr nz)
   exact unit.dvd_mul_left.mp (annihilates g i j)
-#print axioms distinct_residues
-#print axioms actual_unmarked_rows
 end Lower6960.MarkedEvaluation
 
 end
@@ -925,8 +904,6 @@ theorem integral_mem [Algebra (Polynomial K) Ω] [IsScalarTower (Polynomial K) (
   obtain ⟨v,hv⟩:=IsIntegrallyClosed.isIntegral_iff.mp (hx.tower_top (A:=P.V))
   exact hv ▸ v.property
 end MarkPlace
-#print axioms markPlace
-#print axioms MarkPlace.integral_mem
 end Lower6960.MarkedEvaluation
 
 end

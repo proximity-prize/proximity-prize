@@ -39,5 +39,4 @@ theorem rescue3_16 : Checked (rescue 3 16) := by
   · rw [rescue3_16_first]; decide
   · rw [rescue3_16_first, rescue3_16_next]; decide
 
-#print axioms rescue3_16
 end Research6966.FarSourceData

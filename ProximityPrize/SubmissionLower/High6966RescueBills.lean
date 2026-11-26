@@ -29,8 +29,6 @@ theorem Run.terminal_ordinate {u deleted} {M:Model u deleted} {Γ} {F:Family M �
     {D:PoleData M.overhead.toNat} {Crt:CRTLift D} {G:Jet} (R:Run F Crt G) :
     mass R.final 0 ≤154 :=
   (R.terminal_cap 0).trans (data R.rect).degree_cap
-#print axioms Run.terminal_cap
-#print axioms Run.terminal_ordinate
 end Lower6960.Rescue6966
 
 end Merged_High6966RescueCaps
@@ -173,7 +171,6 @@ theorem Run.joint_bill {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
   (le_add_of_nonneg_right (P1_7_4.final_credit_nonneg 18 (beforeCuts rank cut) R.final)).trans
     (R.joint_bill_with_final rank cut)
 
-#print axioms Run.joint_bill_with_final
 end Lower6960.Rescue6966
 end
 end Merged_R6960Rescue6966Bills

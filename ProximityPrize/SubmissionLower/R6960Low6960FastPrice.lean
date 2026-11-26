@@ -47,7 +47,6 @@ theorem surface_tilted_eq_weights {f : Shape} (hf : Valid f) (ht : tiltedFits f)
   rw [Int.toNat_of_nonneg (hnonneg u)]
   exact signed_five_linear u _ _ _ _
 
-#print axioms surface_tilted_eq_weights
 end Low6960SharedPrice
 
 end Merged_R6960Low6960SurfaceLinearFive
@@ -175,7 +174,6 @@ theorem tilted_width_mono (q : Shape) {b B j t : ℕ} (hb : j+1≤b) (hB : b≤B
     exact_mod_cast Nat.sub_le_sub_right hB (j+1)
   exact add_le_add (le_refl (f 0)) (mul_le_mul_of_nonneg_right hw hs)
 
-#print axioms tilted_width_mono
 end Low6960WidthAffine
 
 end Merged_R6960Low6960WidthAffine
@@ -229,7 +227,6 @@ theorem tilted {k : Band} {cells : List (MassCell k)} {a : Shape} {b j B t l : �
       (hcut.trans (fee.trans (Nat.div_le_div_right
         (Nat.mul_le_mul_left _ (weight_mono k hb le_rfl le_rfl)))))⟩
 
-#print axioms tilted
 end Low6960Rectangle
 
 end Merged_R6960Low6960TiltedRectangle
@@ -351,7 +348,6 @@ theorem transfer {p : Envelope} {x : Shape} {u : Rate} (h : Pays p x u) (y : Sha
     _ ≤ cap*(split*unit*charge r a d e) := Nat.mul_le_mul_left _ hp
     _ = _ := by dsimp [cap]; ring
 
-#print axioms transfer
 end Low6960WeightedRate
 
 end Merged_R6960Low6960WeightedRate

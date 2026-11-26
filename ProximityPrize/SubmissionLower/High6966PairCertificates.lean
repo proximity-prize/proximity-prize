@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.R6966ProofHelperKnownPrime
-import ProximityPrize.SubmissionLower.R6966ProofHelperWindowIntervals
+import ProximityPrize.SubmissionLower.R6966ProofHelperWindowCertificate
 import ProximityPrize.SubmissionLower.High6966WideHelper
 
 set_option Elab.async false
@@ -168,5 +168,4 @@ theorem ready (i:Fin 12) {h:ℕ} (lo:2330≤h) (hi:h≤2499) : (row i).positive 
   · exact ready9 lo hi
   · exact ready10 lo hi
   · exact ready11 lo hi
-#print axioms ready
 end Lower6960.Pair6966

@@ -79,7 +79,6 @@ theorem function_frame (v:J→E) (li:LinearIndependent k v) :
     rw [back,sin,map_sum];simp only [map_smul,Matrix.map_apply,evaluation]
   · simpa only [Fintype.card_fin] using sz
 
-#print axioms function_frame
 end Lower6960.MarkedEvaluation
 
 end
@@ -186,7 +185,6 @@ theorem native_norm {J:Type} [Fintype J] (v:J→E) (li:LinearIndependent L v)
     (fun z hz=>by simpa only [locals,rows,dif_pos hz] using off z hz)
     (fun z hz=>by simpa only [rows,dif_pos hz] using freq z hz)
   exact ⟨r,_,rank,m,by simpa only [labels,card_image_of_injective _ inner.injective,Fintype.card_fin] using cost⟩
-#print axioms native_norm
 end Lower6960.MarkedEvaluation
 
 end

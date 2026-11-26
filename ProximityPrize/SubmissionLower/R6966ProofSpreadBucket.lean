@@ -121,6 +121,4 @@ theorem excluded_of_endpoints {s:Shape} {A e a n nodes moment lo hi h sum:ℕ} {
   change rectDebit h nodes moment U+area U*(2*h)*sum<area U*raw s A h
   rwa [charge,supply h left right]
 
-#print axioms sum_capacity
-#print axioms excluded_of_endpoints
 end Research6966.SpreadBucket

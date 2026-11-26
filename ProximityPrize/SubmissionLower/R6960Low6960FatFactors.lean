@@ -678,6 +678,5 @@ end
 end Low6960FatFactors
 end
 
-#print axioms Low6960FatFactors.proof
 
 end Merged_R6960Low6960FatFactors

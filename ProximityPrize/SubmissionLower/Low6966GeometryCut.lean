@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Low6966SurfaceLinearFour
+import ProximityPrize.SubmissionLower.Low6966Monotone
 import ProximityPrize.SubmissionLower.Low6966FatPad
 
 set_option Elab.async false
@@ -3398,6 +3398,3 @@ theorem proof (htilt : c2Tilted) (hactive : c2Active) : Low6966Prices.c6 :=
 
 end Low6966GeometryCut
 
-#print axioms Low6966GeometryCut.proof_old
-#print axioms Low6966GeometryCut_2_3_1.proof
-#print axioms Low6966GeometryCut_2_3_2.proof

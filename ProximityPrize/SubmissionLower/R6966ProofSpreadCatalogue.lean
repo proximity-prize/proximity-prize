@@ -234,8 +234,6 @@ theorem full19 {h a : ℕ} (lo : 2330 ≤ h) (hi : h ≤ 2499)
   · exact case19_11_19 lo hi
   · exact case19_12_19 lo hi
 
-#print axioms partial19
-#print axioms full19
 theorem partial21 {h a : ℕ} (lo : 2330 ≤ h) (hi : h ≤ 2499)
     (aLo : 4 < a) (aHi : a ≤ 7) :
     PadeCutoff.excluded 179769 h 21 a (21-7+a) shape box nodes moment := by
@@ -253,8 +251,6 @@ theorem full21 {h a : ℕ} (lo : 2330 ≤ h) (hi : h ≤ 2499)
   · exact case21_13_21 lo hi
   · exact case21_14_21 lo hi
 
-#print axioms partial21
-#print axioms full21
 theorem partial25 {h a : ℕ} (lo : 2330 ≤ h) (hi : h ≤ 2499)
     (aLo : 3 < a) (aHi : a ≤ 6) :
     PadeCutoff.excluded 179769 h 25 a (25-6+a) shape box nodes moment := by
@@ -275,8 +271,6 @@ theorem full25 {h a : ℕ} (lo : 2330 ≤ h) (hi : h ≤ 2499)
   · exact case25_18_25 lo hi
   · exact case25_19_25 lo hi
 
-#print axioms partial25
-#print axioms full25
 theorem partial34 {h a : ℕ} (lo : 2330 ≤ h) (hi : h ≤ 2499)
     (aLo : 2 < a) (aHi : a ≤ 6) :
     PadeCutoff.excluded 179769 h 34 a (34-6+a) shape box nodes moment := by
@@ -302,6 +296,4 @@ theorem full34 {h a : ℕ} (lo : 2330 ≤ h) (hi : h ≤ 2499)
   · exact case34_27_34 lo hi
   · exact case34_28_34 lo hi
 
-#print axioms partial34
-#print axioms full34
 end Research6966.SpreadCatalogue

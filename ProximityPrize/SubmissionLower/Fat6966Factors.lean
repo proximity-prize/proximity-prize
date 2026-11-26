@@ -13,7 +13,6 @@ theorem proof : Low6966Fat.c1 := by
   exact ⟨(Fat6966Bank24000Banks.proof w Γ s P L h).1,
     (Fat6966Bank32000Banks.proof w Γ s P L h).2⟩
 end Low6966FatBanks
-#print axioms Low6966FatBanks.proof
 
 end Merged_Fat6966Banks
 
@@ -696,7 +695,6 @@ end
 end Low6966FatFactors
 end
 
-#print axioms Low6966FatFactors.proof
 
 end Merged_R6960Low6966FatFactors
 

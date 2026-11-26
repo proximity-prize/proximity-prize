@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.Final50Price
 import ProximityPrize.SubmissionLower.KoalaRetainedAssembly
 import ProximityPrize.SubmissionLower.KoalaWeightedRate
-import ProximityPrize.SubmissionLower.Final50PriceCaps
+import ProximityPrize.SubmissionLower.Final50PriceMass
 import ProximityPrize.SubmissionLower.Final50SurfaceLinearFour
 
 set_option Elab.async false

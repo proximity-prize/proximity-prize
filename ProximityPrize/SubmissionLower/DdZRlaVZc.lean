@@ -58,7 +58,6 @@ import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.DdZ3EWiUc
 import ProximityPrize.SubmissionLower.DdZgdIx1d
 import ProximityPrize.SubmissionLower.RingHomShortcuts
-import ProximityPrize.SubmissionLower.DdP6Defs
 import ProximityPrize.SubmissionLower.DdA2
 import ProximityPrize.SubmissionLower.DdA3
 import ProximityPrize.SubmissionLower.DdB4
@@ -435,40 +434,40 @@ namespace P6_8
 noncomputable section
 open i4 PolynomialDifferential
 open P5_8 (Equation small bo8 Moments small_shape donor_shape)
-theorem agreement_ok :aRk A:=⟨by decide,by decide,by decide,by decide⟩
-theorem donor_width :bo8.m≤bo8.m*A-N*bo8.B:= by decide
-private theorem stack_le {a :ℕ} {s :Source} {r :ℕ} (hs :Rz s)
-    (hw:s.m≤ s.m*a-N*s.B) (hr :aWw s (s.B+1)≤ r) (w:Node→K) :
-    Vv a s w≤n*r := by
-  have ht:axY s (s.B+1) := by
-    intro j hj hj'
-    have :=(hs.support j hj).1
-    omega
-  exact (cw9.proof a s hs hw w).trans
-    (Nat.mul_le_mul_left _ ((a9M.proof a s (s.B+1) hs hw le_rfl ht).trans hr))
-theorem small_equation (w:Node→K) :
-    ∃ Q:Equation,ato small Q ∧ ∀ f∈close A w,differentialSpecialization Q f=0:= by
-  obtain ⟨hr,hm⟩:=P5_8_1.of_children q1EkR5c.proof qokZnNd.proof q2aXx2a.proof
-  have hw:small.m≤ small.m*A-N*small.B:= by decide
-  have hR:=stack_le small_shape hw hr w
-  have hdim:=cqa A small small_shape hw
-  rcases hm with ⟨hT,hS,hV⟩
-  rw [hT,hS,hV] at hdim
-  have hnum :n*232369+N*610160<small.m*A*12850+205216:= by decide
-  have hlt:Vv A small w<Fintype.card (apU A small) := by omega
-  obtain ⟨Q,hQ,hwt,hlocal⟩:=interpolant small_shape hw w hlt
-  exact ⟨Q,hQ,specializes hwt hlocal⟩
-theorem donor_surplus (hr :aWw bo8 6252≤0x62703852f02)
-    (hm:Moments bo8 0x12e20e912 0x1098bf757c00 0x5e143ee4d6c) (w:Node→K) :
-    DonorSurplus w:= by
-  have hR:=stack_le donor_shape donor_width hr w
-  have hdim:=cqa A bo8 donor_shape donor_width
-  rcases hm with ⟨hT,hS,hV⟩
-  rw [hT,hS,hV] at hdim
-  have hnum :n*0x62703852f02+donorMargin+N*0x1098bf757c00 =
-      bo8.m*A*0x12e20e912+0x5e143ee4d6c:= by decide
-  unfold DonorSurplus
-  omega
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
 end P6_8
 end

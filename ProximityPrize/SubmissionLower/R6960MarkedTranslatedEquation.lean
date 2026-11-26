@@ -97,8 +97,6 @@ def genericFibreAsTensor (z : k) :
   refine ⟨c.trans d,fun x=>?_⟩
   change d (1 ⊗ₜ[R] v.val (quotientMap E z x))=_
   rw [v.property,Algebra.TensorProduct.cancelBaseChange_tmul,one_smul]
-#print axioms fibreAsTensor
-#print axioms genericFibreAsTensor
 end
 end Lower6960.CollisionMarked
 
@@ -263,8 +261,6 @@ theorem actual_scaled_word_sheet (p : ℕ) [CharP (FractionRing (Polynomial k)) 
   rw [ey] at annih
   exact annih
 end Generic
-#print axioms integralNormalization_separable
-#print axioms actual_scaled_word_sheet
 end
 end Lower6960.CollisionMarked
 
@@ -320,7 +316,6 @@ theorem projected_word_sheet {E : Type} [Field E] [Algebra (Plane L) E]
     rw [projectedRaw_fibre,Polynomial.eval_map_apply,mark.root,map_zero]
   exact actual_scaled_word_sheet p (projectedRaw P) (projectedRaw_degree P ▸ large)
     (projectedRaw_degree P ▸ small) b (dim.trans (projectedRaw_degree P).symm) root z S full sep rt
-#print axioms projected_word_sheet
 end
 end Lower6960.CollisionMarked
 
@@ -409,9 +404,6 @@ theorem scaled_row_degree {F E Ω:Type} [Field F] [Field E] [Field Ω] [Algebra 
   rw [map_mul,base,←Algebra.smul_def,IsIntegrallyClosed.minpoly_smul ((map_ne_zero_iff _ σ.injective).mpr nz)
     (show IsIntegral F (ev b.gen) from ⟨Q,mon,zero⟩),natDegree_scaleRoots,←eq,
     show Q=q.map σ.toRingHom from rfl,natDegree_map_eq_of_injective σ.injective,b.natDegree_minpoly]
-#print axioms row_plane
-#print axioms marked_row_separable
-#print axioms scaled_row_degree
 end Lower6960.MarkedEvaluation
 
 end

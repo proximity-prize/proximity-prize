@@ -22,8 +22,6 @@ theorem node_eq : P1_7_1.nodeRows shape = nodes := by
 theorem pole_cap : P1_7_1.groupedPoleMoment shape.B shape.J ≤ moment :=
   Research6966.HelperWindowCatalogue.moment5585_1200
 
-#print axioms node_eq
-#print axioms pole_cap
 end Research6966.SpreadCatalogue
 
 end Merged_R6966ProofSpreadRanks

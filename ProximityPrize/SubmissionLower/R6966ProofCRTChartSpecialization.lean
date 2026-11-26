@@ -112,6 +112,5 @@ theorem chart_unit {h} {D:PoleData h} (Crt:CRTLift D) (t:Fin 2→L)
     (inc D t (H D t).derivative) (inc D t (localLift Crt t ok).derivative) pp qp ps qs
     (generic_pair Crt t ok M np rq)
 
-#print axioms chart_unit
 end
 end Research6966.CRTChartSpecialization

@@ -52,8 +52,6 @@ theorem step [FiniteDimensional k W] (P:Submodule k U) (Q:Submodule k V)
   rw [Module.finrank_prod] at b
   exact ⟨inferInstance,b.trans (Nat.add_le_add dim ((Submodule.finrank_le r.range).trans width))⟩
 
-#print axioms from_map
-#print axioms step
 
 theorem pullback [FiniteDimensional k U] (P:Submodule k V) (f:U→ₗ[k]V) {n:ℕ} (size:Fits P n) :
     finrank k U≤n+finrank k (P.comap f) := by
@@ -67,7 +65,6 @@ theorem pullback [FiniteDimensional k U] (P:Submodule k V) (f:U→ₗ[k]V) {n:�
   rw [ker] at r
   exact r ▸ Nat.add_le_add_right ((Submodule.finrank_le q.range).trans dim) _
 
-#print axioms pullback
 theorem large_subspace [FiniteDimensional k U] (P:Submodule k V) (f:U→ₗ[k]V) {n:ℕ} (size:Fits P n) :
     ∃ D:Submodule k U,finrank k U≤n+finrank k D ∧ ∀u:D,f u.val∈P :=
   ⟨P.comap f,pullback P f size,fun u=>u.property⟩
@@ -216,7 +213,6 @@ theorem descend_line [FiniteDimensional ChartField E] (i:ℕ) (x:L) (nx:x≠0) (
   · have inv:IsIntegral torus (fr s:E)⁻¹ := by rw [fr,←map_inv₀];exact isIntegral_algebraMap (x:=(⟨_,(torus_frame s false).2⟩:torus))
     exact (inv.pow _).mul ((icoef s).sub (icoef t))
 
-#print axioms descend_line
 end Lower6960.RetainedTwistedRestriction
 
 end
@@ -340,61 +336,58 @@ theorem grow [FiniteDimensional ChartField E] (i:ℕ) (x:L) (nx:x≠0)
   rw [eq,add_sub_cancel_right]
   exact lr s
 
-open RetainedCompression (Curve ordinate view height heightCap wordDegree)
+open RetainedCompression (Curve ordinate view height heightCap)
 
-theorem initial (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
-    (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (basis:PowerBasis ChartField E)
-    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
-    (x z:L) (nx:x≠0) (nz:z≠0) [FiniteDimensional L (Paired E x z)] {b:ℕ}
-    (size:finrank L (Paired E x z)≤b) : Budget E 0 b := by
-  have spaces:charts E 0=potentials E := by
-    ext u; change (∀s t,Over s t 0 _ )↔_
-    simp only [Over,pow_zero,one_mul]; rfl
-  let e:=LinearEquiv.ofEq _ _ spaces
-  let f₀:=(rawMap E x z).comp e.toLinearMap
-  apply RetainedCodimension.from_map f₀ _ _ size
-  ext u
-  change e u∈(rawMap E x z).ker ↔ ∃ c:E,∀s, Regular s 0 ((u.1 s:E)-c)
-  rw [restriction_kernel E f ir lo hi bounded basis root x z nx nz]
-  simp only [Regular,pow_zero,one_mul]; rfl
 
-#print axioms grow
-#print axioms initial
 
-/-- Uniform surface bound for every positive abscissa twist of the same actual
-factor. The degrees s,t are measured on its own two specialized chart orders. -/
-theorem actual_all_twists (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate) (hi:f.degreeOf ordinate<48)
-    (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree) (basis:PowerBasis ChartField E)
-    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
-    ∃ (x z:L) (nx:x≠0) (nz:z≠0) (m n s t:ℕ),
-      ∃ (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
-        (zf:Basis (Fin n) (Polynomial L) (chartImage E true z false)) (zi:Basis (Fin n) (Polynomial L) (chartImage E true z true)),
-        (transition E false x nx xf xi).det.degree=((-(t:ℤ):ℤ):WithBot ℤ) ∧
-        (transition E true z nz zf zi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ) ∧
-        Nonempty (Basis (Fin (f.degreeOf ordinate)) L (Crossing E x z)) ∧ IsReduced (Crossing E x z) ∧
-        ∀ i:ℕ, Budget E i (s+(i+1)*t) := by
-  have : FiniteDimensional ChartField E := basis.finite
-  have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi basis root
-  obtain ⟨x,z,nx,nz,⟨B⟩,red⟩:=actual_crossing E f ir lo hi basis root
-  have : FiniteDimensional L (Crossing E x z) := Module.Finite.of_basis B
-  obtain ⟨m,⟨xf⟩,⟨xi⟩⟩:=native_frames E false x nx
-  obtain ⟨n,⟨zf⟩,⟨zi⟩⟩:=native_frames E true z nz
-  obtain ⟨finite,s,t,dt,ds,base⟩:=paired_bound E x z nx nz xf xi zf zi
-  obtain ⟨fg,fo,d,ed,index⟩:=native_euler E false x nx xf xi
-  have de : d= -(t:ℤ) := WithBot.coe_injective (ed.symm.trans dt)
-  have : FiniteDimensional L (LineGlobals E false (atCoord false x z)) := fg
-  have inject:=global_eval_injective E false x z nx nz xf
-  have eRank := LinearMap.finrank_le_finrank_of_injective inject
-  change finrank L (LineGlobals E false x)≤finrank L (Crossing E x z) at eRank
-  have mrank:=node_rank_le E false x z nx nz xf
-  have line : finrank L (LineObstructions E false x)≤t := by omega
-  refine ⟨x,z,nx,nz,m,n,s,t,xf,xi,zf,zi,dt,ds,⟨B⟩,red,fun i=>?_⟩
-  induction i with
-  | zero => simpa only [zero_add,one_mul] using initial E f ir lo hi bounded basis root x z nx nz base
-  | succ i ih =>
-    simpa only [Nat.succ_eq_add_one,Nat.add_mul,one_mul,Nat.add_assoc] using grow E i x nx ih line
 
-#print axioms actual_all_twists
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end Lower6960.RetainedTwistedRestriction
 
 end
@@ -508,7 +501,6 @@ theorem lift_principal_parts (i n:ℕ) (budget:Budget E i n) (p:J→Chart→E)
   · simpa only [Module.finrank_pi] using count
   · exact fun v s=>ok v s
 
-#print axioms lift_principal_parts
 end Lower6960.MarkedEvaluation
 
 end
@@ -593,7 +585,6 @@ theorem word_principal_parts [FiniteDimensional ChartField E]
     change IsIntegral torus ((fr s)⁻¹^i*((w s:E)/D-(w t:E)/D))
     rw [←sub_div,rr,show ι (divisor true z)=D from rfl,mul_div_cancel_left₀ _ dn]
     exact (inv.pow _).mul ir
-#print axioms word_principal_parts
 end Lower6960.MarkedEvaluation
 
 end

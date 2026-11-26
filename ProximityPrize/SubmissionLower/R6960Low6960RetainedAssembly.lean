@@ -159,7 +159,6 @@ theorem bound_with_weights
   exact (mul_le_mul_of_nonneg_left (hcharge.trans hsumZ) (by norm_num)).trans
     (ambient_budget p hp)
 
-#print axioms bound_with_weights
 end
 end Low6960SharedCycleLegacy
 
@@ -437,8 +436,6 @@ theorem Data.pieces (D : Data Γ s f Q l S) (input : CutInput Γ s f Q l) :
       exact Nat.add_le_add_left hB _
     exact hpay
 
-#print axioms Data.pieces
-#print axioms Data.bent
 end
 end Low6960SharedTally
 
@@ -511,8 +508,6 @@ theorem smaller_four (hm : Messages w Γ s) (input : CutInput Γ s f Q l)
   obtain ⟨b,hb⟩ := Low6960GeometryCut_2.branch_of_mixed hmixed
   exact hcover γ hγ ⟨b,Set.mem_univ _,hb⟩
 
-#print axioms smaller_tilted
-#print axioms smaller_four
 
 end
 end Low6960RetainedCut
@@ -607,8 +602,6 @@ theorem price_of_witness {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)
   price_of_witness_floor hm hsmall hactive hchar hon hoff hP hH hc hpos hl hbox hweight
     htaper hord divH divF exactF (shape H) ⟨le_rfl,le_rfl,le_rfl⟩
 
-#print axioms price_of_witness_floor
-#print axioms price_of_witness
 
 end
 end Low6960RetainedCut

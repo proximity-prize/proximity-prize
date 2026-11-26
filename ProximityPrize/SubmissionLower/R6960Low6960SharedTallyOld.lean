@@ -168,7 +168,5 @@ theorem additive_le {x : Shape} {l a c d : ℕ} (hl : 0<l)
         Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
       omega
 
-#print axioms physical_bound
-#print axioms additive_le
 end
 end Low6960SharedTallyOld

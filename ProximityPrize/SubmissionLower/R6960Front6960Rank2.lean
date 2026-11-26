@@ -252,7 +252,6 @@ theorem of_bad_slopes (hlist : CJ0.ScalarList agreement listCap)
   exact Principal.isMCA_implies_badSlope node u k agreement radius
     (fun _ h => agreement_of_threshold h) γ (hΓ γ hγ)
 
-#print axioms of_bad_slopes
 end
 end Front6960ProtocolTarget
 

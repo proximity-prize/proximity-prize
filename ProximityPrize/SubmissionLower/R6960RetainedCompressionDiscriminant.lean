@@ -164,7 +164,5 @@ theorem derivative_resultant_nonzero (f : Curve (Polynomial L)) (ir : Irreducibl
   have result := Polynomial.resultant_derivative_ne_zero_of_irreducible P ip der
   rwa [dP] at result
 
-#print axioms derivative_resultant_nonzero
-#print axioms derivative_resultant_tame
 end
 end Lower6960.RetainedCompression

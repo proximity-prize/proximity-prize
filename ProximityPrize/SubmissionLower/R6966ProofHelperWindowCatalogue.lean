@@ -61,6 +61,4 @@ theorem ordinary_verified (i : Fin 39) : Verified (ordinary i) := by
 abbrev ordinary_projected_bounds (i : Fin 39) :=
   @HelperWindowNative.projected_bounds (ordinary i) (ordinary_verified i)
 
-#print axioms ordinary_verified
-#print axioms ordinary_projected_bounds
 end Research6966.HelperWindowCatalogue

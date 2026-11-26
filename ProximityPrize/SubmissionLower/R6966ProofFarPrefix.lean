@@ -178,7 +178,6 @@ theorem Rows.main_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ
       · have mark : γ∈(range 17).biUnion (fun i=>curveMarks R.family (C.cover i)) :=
           mem_biUnion.mpr ⟨i,mem_range.mpr hi,mem_curveMarks (F:=R.family) hγ hQ hmark⟩
         exact Or.inl (mem_union_left _ (mem_union_left _ (mem_union_left _ (mem_union_right _ mark))))
-#print axioms Rows.main_prefix
 end Lower6960.FarMainGeometry
 
 end
@@ -242,8 +241,6 @@ theorem combined_prefix {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
   obtain ⟨R⟩ := rows F Crt lo hi noPole residues
   obtain ⟨paid,S,fee,geom,cover⟩ := R.combined_prefix lo hi noPole residues
   exact ⟨paid,S,fee,geom,fun hs=>K1_14_3_7.proof S hs (fun q hq=>(geom q hq).1),cover⟩
-#print axioms Rows.combined_prefix
-#print axioms combined_prefix
 end Lower6960.FarMainGeometry
 
 end

@@ -255,7 +255,4 @@ theorem free_rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → 
   have c := checked i
   exact nonzero_row Crt word (bank i) 179769 (reserve i) (by omega) (by omega) c.debit_ok
     (free_width lo hi i) (rawGain_positive _ _ 2330 _ _ lo (by omega) c.first c.next)
-#print axioms checked
-#print axioms cutoff_fit
-#print axioms free_rows
 end Lower6960.Free6966

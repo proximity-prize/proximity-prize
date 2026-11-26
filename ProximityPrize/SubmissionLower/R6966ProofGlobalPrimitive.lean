@@ -87,7 +87,6 @@ theorem global_prime {R S:Type*} [CommRing R] [IsDomain R] [UniqueFactorizationM
   have nz:r≠0:=by intro z;rw [z,map_zero] at eq;exact (mul_ne_zero unit.ne_zero hp.ne_zero) eq.symm
   exact extract r nz (eq ▸ dvd_mul_left _ _)
 
-#print axioms global_prime
 
 theorem clear_comp {R S T:Type*} [CommRing R] [CommRing S] [CommRing T] (f:R→+*S) (g:S→+*T)
     (a:Clears f) (b:Clears g) : Clears (g.comp f) := by
@@ -165,6 +164,5 @@ theorem unit_constant {R:Type*} [CommRing R] [IsDomain R] {p:R[X][X]} (unit:IsUn
   obtain ⟨c,cu,cq⟩:=Polynomial.isUnit_iff.mp qu
   exact ⟨c,cu,id.symm.trans (congrArg C cq.symm)⟩
 
-#print axioms descend_jet
 end
 end Research6966.GlobalPrimitive

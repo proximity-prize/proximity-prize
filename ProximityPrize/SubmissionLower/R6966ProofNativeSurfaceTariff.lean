@@ -118,6 +118,5 @@ theorem price {u deleted maxHeight a} {M:P1.ModelAt maxHeight u deleted} {Γ T:F
   rw [←sizes,Nat.add_mul]
   exact (Nat.add_le_add result (Nat.mul_le_mul_right _ fee)).trans_eq (Nat.add_comm _ _)
 
-#print axioms price
 end
 end Research6966.NativeSurfaceTariff

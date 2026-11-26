@@ -58,7 +58,6 @@ import ProximityPrize.SubmissionLower.DdZ3EWiUc
 import ProximityPrize.SubmissionLower.DdZgdIx1d
 import ProximityPrize.SubmissionLower.DdBG
 import ProximityPrize.SubmissionLower.RingHomShortcuts
-import ProximityPrize.SubmissionLower.DdP6Defs
 import ProximityPrize.SubmissionLower.DdZZ0RELd
 set_option Elab.async false
 set_option synthInstance.maxHeartbeats 400000
@@ -244,48 +243,48 @@ noncomputable section
 open i4 PolynomialDifferential MvPolynomial
 open P5_8 (Jn Equation caps bo8 smallCaps donorCaps Gq tariffShape properDegree componentCap)
 open scoped Polynomial BigOperators
-abbrev A:=P6.dw
-abbrev donorMargin:ℕ:=0x5e3ebe4653e55c
-def DonorSurplus (w:Node→K) :Prop :=
-  Vv A bo8 w+donorMargin≤Fintype.card (apU A bo8)
-structure Allocation (a :Jn) :Prop where
-  total:a.B≤83
-  index :a.J≤25
-  top:a.C≤11
-  top_total:a.C≤a.B
-  top_index :2*a.C≤a.J
-  index_total:a.J≤a.B+a.C
-  capacity :0<a.B→donorMargin≤(gap A+2)*Gq a
-structure Companion (Q:Equation) (w:Node→K) where
-  common :Equation
-  common_ne :common≠0
-  allocation :Allocation (caps common)
-  jO:Equation
-  leftNative :Equation
-  azo:Q=jO*leftNative
-  removed_support : ∃ l:ℕ,apQ.initial jO∣apQ.initial common^l
-  right:BL 2
-  right_ne :right≠0
-  coprime :IsRelPrime (apQ.initial leftNative) right
-  left_band : let s := (smallCaps.wD (caps common)).repair
-              apQ.initial leftNative∈aFz.GS s.B s.J s.C
-  right_band : let s := (donorCaps.wD (caps common)).repair
-               right∈aFz.GS s.B s.J s.C
-  roots : ∀ f∈close A w,differentialSpecialization common f≠0 →
-    MvPolynomial.eval (apQ.ahT f) (apQ.initial leftNative)=0 ∧
-    MvPolynomial.eval (apQ.ahT f) right=0
-def Companion.left {Q:Equation} {w:Node→K} (d:Companion Q w) :=
-  apQ.initial d.leftNative
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 structure FactorCharts (L R:BL 2) where
   count:ℕ
   factor :Fin count→Equation
   bKQ: (∏ i,apQ.initial (factor i))∣L
   charts : ∀ i,P5_8.ProperCharts (apQ.initial (factor i)) R
-def lowFee (s :Source) :ℕ:=errors A*R₁ s+gap A*H s^2
-def regularFee (s :Source) :ℕ:=errors A*(2*R₂ s)+gap A*s.B
-def commonFee (a :Jn) :ℕ :=
-  lowFee (tariffShape a)+if a.C=0 then 0 else regularFee (tariffShape a)
-def c5H (a :Jn) :ℕ:=errors A*properDegree a+gap A*componentCap a
+
+
+
+
+
 end
 end P6_8
 end

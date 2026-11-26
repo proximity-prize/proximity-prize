@@ -96,8 +96,6 @@ theorem slice_full {b j a:ℕ} (room:j+a≤b+1) :
       omega
     _=_ := by simp [Nat.mul_comm]
 
-#print axioms slice_with_tail
-#print axioms slice_full
 end Research6966.SpreadStrip
 
 end Merged_R6966ProofSpreadStrip
@@ -196,7 +194,6 @@ theorem minSum_le (b s c t n:ℕ) :
     · exact split_le ..
     · simpa only [min_comm] using split_le c t b s n ((c-b+(t-s)-1)/(t-s))
 
-#print axioms minSum_le
 end Research6966.SpreadLines
 
 end Merged_R6966ProofSpreadLines
@@ -444,7 +441,6 @@ theorem lower_le (BL B J a n k : ℕ) (ap : 0 < a) (boxLe : BL ≤ B) :
       (SpreadLines.minSum (a*(BL-a*p)+1) (a*a) (n*(k-p)) n (m-p)-(m-p)*δ)-(p-f)*δ ≤ _
     omega
 
-#print axioms lower_le
 end Research6966.SpreadGain
 
 end Merged_R6966ProofSpreadGain

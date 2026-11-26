@@ -80,6 +80,5 @@ theorem pure_node_price_far {w s T} (W : Word 179769 164748 w s T)
       eval_C,coe_evalRingHom,eval_C] at hz
     exact (mul_eq_zero.mp hz).resolve_right (pow_ne_zero _ (sub_ne_zero.mpr (embed.injective.ne miss)))
 
-#print axioms pure_node_price_far
 end
 end Lower6960.RetainedCompression

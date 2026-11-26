@@ -89,7 +89,6 @@ theorem plane (p:ι→Fin 2→K) (rows:I→Pol (Fin 2) K) (h A d:ℕ) (gap:d<A)
     nlinarith only [Nat.mul_le_mul_right k sides,Nat.mul_le_mul_right β kb]
   exact Nat.le_of_mul_le_mul_left scaled (Nat.succ_pos _)
 
-#print axioms plane
 
 private def ordinate : Option (Fin 2)→ℕ:=fun i=>i.elim 1 (fun _=>0)
 private def seed : Option (Fin 2)→ℕ:=fun i=>i.elim 0 (fun _=>1)
@@ -149,7 +148,6 @@ theorem affine (p:ι→Option (Fin 2)→K) (rows:I→Pol (Option (Fin 2)) K) (y 
     nlinarith only [Nat.mul_le_mul_right (k^2) base,Nat.mul_le_mul_left (3*Y*S) ck]
   exact Nat.le_of_mul_le_mul_left scaled (by positivity)
 
-#print axioms affine
 
 /-- Independent seed ceilings give the rectangular three-parameter
 tariff. The common total-degree version above supplies the coefficient
@@ -180,6 +178,5 @@ theorem three_axes (p:ι→Fin 3→K) (rows:I→Pol (Fin 3) K) (h:Fin 3→ℕ) (
   change Fintype.card ι*k^3≤_
   nlinarith only [rhs,congrArg (Fintype.card ι*·) fact,Nat.mul_le_mul_left (Fintype.card ι) lower]
 
-#print axioms three_axes
 end
 end Research6966.WordUnconstrainedPrice

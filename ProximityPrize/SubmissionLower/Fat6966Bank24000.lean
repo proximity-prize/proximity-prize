@@ -608,6 +608,5 @@ end
 end Fat6966Bank24000Banks
 end
 
-#print axioms Fat6966Bank24000Banks.proof
 
 end Merged_R6960Fat6966Bank24000Banks

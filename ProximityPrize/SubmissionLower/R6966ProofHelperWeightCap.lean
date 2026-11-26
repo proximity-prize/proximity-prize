@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6966ProofHelperAvoidance
+import ProximityPrize.SubmissionLower.R6966ProofHelperWindowPrefix
 import ProximityPrize.SubmissionLower.R6966ProofNativeGraphMarks
 
 set_option Elab.async false
@@ -120,7 +120,5 @@ theorem native_degree {G:Pade.Row K1_14_3.SeedField} (N:PadeNativeQuotient.Nativ
     C_ne_zero.mpr (C_ne_zero.mpr N.nonzero)) ((G.map f).polynomial_ne ((G.primitive_map f).mpr gp)),
     total_constant,zero_add,(G.map f).total_polynomial ((G.primitive_map f).mpr gp),Pade.Row.degree_map]
 
-#print axioms weight_lower
-#print axioms slope_cost
 end
 end Research6966.HelperWeightCap

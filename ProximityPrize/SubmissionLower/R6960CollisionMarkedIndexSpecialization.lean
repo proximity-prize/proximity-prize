@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.R6960MarkedRoot
 import ProximityPrize.SubmissionLower.R6960CollisionTameBranch
-import ProximityPrize.SubmissionLower.UpperBranch1
+import ProximityPrize.SubmissionLower.KoalaRectPoleBalance
 import ProximityPrize.SubmissionLower.R6960CollisionMarkedFibreIndex
 import Mathlib.LinearAlgebra.TensorProduct.Basis
 
@@ -81,8 +81,6 @@ theorem clear_section {ι : Type*} [DecidableEq ι] [Fintype ι] (D : Matrix ι 
     ∃ u : ι→(Polynomial K),D.mulVec u=D.det • v := by
   refine ⟨D.adjugate.mulVec v,?_⟩
   rw [Matrix.mulVec_mulVec,Matrix.mul_adjugate,Matrix.smul_mulVec,Matrix.one_mulVec]
-#print axioms index_degree
-#print axioms clear_section
 end Lower6960.BranchIndex
 
 end
@@ -136,7 +134,6 @@ theorem index_le_discriminant_excess {A B : Type*} [CommRing A] [CommRing B]
   have pow : (D.det^2).rootMultiplicity x=2*D.det.rootMultiplicity x := by
     simp only [←count_roots,roots_pow,Multiset.count_nsmul]
   omega
-#print axioms index_le_discriminant_excess
 open P1_7_1_1_2 (exists_full_minor)
 theorem rank_le_generic {A F L : Type} [CommRing A] [Field F] [Field L]
     {m n : Type} [Fintype m] [Fintype n] (M : Matrix m n A)
@@ -167,7 +164,6 @@ theorem rank_le_generic {A F L : Type} [CommRing A] [Field F] [Field L]
   calc (M.map special).rank = (D.map generic).rank := by
          rw [Matrix.rank_of_det_ne_zero gd]; exact size.symm
        _ ≤ _ := Matrix.rank_submatrix_le (M.map generic) r c
-#print axioms rank_le_generic
 theorem transverse_unit {A B : Type*} [CommRing A] [CommRing B] [Algebra K A] [Algebra K B]
     {j : Type} [Fintype j] [DecidableEq j] (a : Basis j K A) (b : Basis j K B)
     (p : ℕ) [CharP K p] (small : Fintype.card j<p) (φ : A→ₐ[K]B) (x : K)
@@ -187,7 +183,6 @@ theorem transverse_unit {A B : Type*} [CommRing A] [CommRing B] [Algebra K A] [A
   have lower : 1≤D.det.rootMultiplicity x := (le_rootMultiplicity_iff dn).mpr
     (by rw [pow_one]; exact dvd_iff_isRoot.mpr zero)
   omega
-#print axioms transverse_unit
 end Lower6960.TraceIndex
 
 end
@@ -253,7 +248,6 @@ theorem comparison_transverse_unit {J : Type} [Fintype J] [DecidableEq J]
   exact TraceIndex.transverse_unit (b.baseChange k) (n.baseChange k) p small
     (Algebra.TensorProduct.map (AlgHom.id k k) φ) x D (traceMatrix (Polynomial k) n) dn nn dc nc raw
     along spec gen inj (trace ▸ point) (trace ▸ transverse)
-#print axioms comparison_transverse_unit
 end
 end Lower6960.CollisionMarked
 

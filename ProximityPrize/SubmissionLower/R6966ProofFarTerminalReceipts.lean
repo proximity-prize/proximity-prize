@@ -59,5 +59,4 @@ theorem positive {h : ℕ} (lo : 2500 ≤ h) (hi : h ≤ 33677) (i : Fin 41) (po
       KoalaRect.rectGain 179769 h terminalBank.shape i.val (witness i.val).U (witness i.val).order :=
   strict_of_checks lo (by omega) (by decide) (by decide) pos (checked i pos)
 
-#print axioms positive
 end Lower6960.FarTerminalReceipts

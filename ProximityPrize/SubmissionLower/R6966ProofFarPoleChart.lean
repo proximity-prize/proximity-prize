@@ -141,7 +141,6 @@ theorem of_family {u del} (M : Model u del) {Γ} (F : Family M Γ) :
   obtain ⟨D, _, regular, residues⟩ := chart_poles M F H chart
   exact ⟨D, P0_10_1.crt_lift D, regular, residues⟩
 
-#print axioms of_family
 end
 end Lower6960.FarPoleChart
 

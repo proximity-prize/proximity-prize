@@ -104,9 +104,6 @@ theorem transpose_agrees (P:R) :
       simp only [centerBase,coe_eval₂RingHom,eval₂_X]
   exact RingHom.congr_fun eq P
 
-#print axioms global_native
-#print axioms global_raw
-#print axioms transpose_agrees
 end
 end Research6966.PhysicalPrimitiveCoeffs
 
@@ -210,7 +207,6 @@ theorem comparison {S F:Type*} [IsDomain R] [CommRing S] [IsDomain S] [Field F]
   obtain ⟨c,unit,id⟩:=GlobalPrimitive.unit_constant scalar.isUnit
   exact ⟨c,unit,assoc.symm.trans (id ▸ mul_comm _ _)⟩
 
-#print axioms comparison
 end
 end Research6966.RegularPhysicalChart
 

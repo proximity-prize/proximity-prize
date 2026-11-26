@@ -78,7 +78,6 @@ theorem count (points:ι→Fin 3→K) (rows:I→Pol (Fin 3) K) (H:Pol (Fin 3) K)
     exact Nat.le_of_mul_le_mul_left scaled (by positivity)
   exact cancel
 
-#print axioms count
 
 theorem word_overlap {σ:Type*} [Fintype σ] [DecidableEq σ] (points:ι→σ→K) (rows:I→Pol σ K)
     (nodes:I→K) (distinct:Function.Injective nodes) (received:I→K)
@@ -118,6 +117,5 @@ theorem count_words (points:ι→Fin 3→K) (rows:I→Pol (Fin 3) K) (H:Pol (Fin
   apply count points rows H hn onSurface v height vp rp A d gap enough
   exact word_overlap points rows nodes distinct received words unique d degree detect
 
-#print axioms count_words
 end
 end Research6966.WordSurfacePrice

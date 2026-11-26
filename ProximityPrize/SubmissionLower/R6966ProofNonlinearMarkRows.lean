@@ -5,6 +5,10 @@ import Mathlib.Algebra.MvPolynomial.Polynomial
 
 set_option Elab.async false
 
+-- Source: ProximityPrize.SubmissionLower.R6966ProofNonlinearMarkRows
+set_option autoImplicit true
+set_option Elab.async false
+
 namespace Research6966.NonlinearMarkRows
 open Polynomial Finset
 open scoped Polynomial Differential
@@ -26,6 +30,12 @@ def node (A B:Eqn σ F) (d:ℕ) (centre x received:F) : Eqn σ F :=
 
 def evaluate (p:σ→F) (y:F) : Eqn σ F→+*F:=eval₂RingHom (MvPolynomial.eval p) y
 
+/-- A linear readout of the shortened jet, with the same common denominator
+as the standard Taylor evaluation. -/
+def weightedRow (A B : Eqn σ F) (t : ℕ) (c : F) (w : Fin (t+1) → F) : Eqn σ F :=
+  C (MvPolynomial.C c)*A^(2*t-1) +
+    ∑ j, C (MvPolynomial.C (w j))*coeffRow A B t j.val
+
 private theorem coeffRow_at (p:σ→F) (fixed:∀i,Differential.deriv (p i)=0) (y:F)
     (A B:Eqn σ F) (law:evaluate p y A*Differential.deriv y=evaluate p y B) (d j:ℕ) (le:j≤d) :
     evaluate p y (coeffRow A B d j)=(evaluate p y A)^(2*d-1)*Differential.deriv^[j] y := by
@@ -42,6 +52,24 @@ private theorem coeffRow_at (p:σ→F) (fixed:∀i,Differential.deriv (p i)=0) (
     rw [coeffRow,map_mul,map_pow,←step]
     have add:2*j+1+(2*d-1-(2*j+1))=2*d-1:=by omega
     rw [mul_right_comm,←pow_add,add]
+
+theorem weightedRow_at (p : σ → F) (fixed : ∀ i, Differential.deriv (p i)=0) (y : F)
+    (A B : Eqn σ F) (law : evaluate p y A * Differential.deriv y = evaluate p y B)
+    (t : ℕ) (c : F) (w : Fin (t+1) → F) :
+    evaluate p y (weightedRow A B t c w) =
+      (evaluate p y A)^(2*t-1) * (c + ∑ j, w j*Differential.deriv^[j.val] y) := by
+  classical
+  let ev:=evaluate p y
+  have scalar (v:F) : ev (C (MvPolynomial.C v)) = v := by simp [ev,evaluate]
+  change ev (weightedRow A B t c w) = _
+  rw [weightedRow, map_add, map_sum, map_mul, scalar, map_pow, mul_add, Finset.mul_sum]
+  congr 1
+  · exact mul_comm ..
+  · apply Finset.sum_congr rfl
+    intro j _
+    rw [map_mul, scalar, show ev (coeffRow A B t j.val) = _ from
+      coeffRow_at p fixed y A B law t j.val (Nat.le_of_lt_succ j.isLt)]
+    ring
 
 variable {K:Type*} [Field K]
 private abbrev Q:=GenericPhysicalCentre.Frac K
@@ -104,6 +132,5 @@ theorem detects (p:σ→GenericPhysicalCentre.Frac K) (fixed:∀i,Differential.d
     ring
   rw [sum,mul_comm received,←mul_sub,mul_eq_zero,or_iff_right (pow_ne_zero _ regular),sub_eq_zero]
 
-#print axioms detects
 end
 end Research6966.NonlinearMarkRows

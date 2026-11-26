@@ -57,7 +57,6 @@ import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.DdZ3EWiUc
 import ProximityPrize.SubmissionLower.DdZgdIx1d
 import ProximityPrize.SubmissionLower.RingHomShortcuts
-import ProximityPrize.SubmissionLower.DdP6Defs
 import ProximityPrize.SubmissionLower.DdA2
 import ProximityPrize.SubmissionLower.DdA3
 import ProximityPrize.SubmissionLower.DdB4

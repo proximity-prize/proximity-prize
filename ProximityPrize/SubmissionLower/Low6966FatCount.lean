@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.Low6966SurfaceLinearFour
+import ProximityPrize.SubmissionLower.Low6966Monotone
 import ProximityPrize.SubmissionLower.Low6966FatPad
 import ProximityPrize.SubmissionLower.FrontBranch3
 import ProximityPrize.SubmissionLower.Fat6966Chart
@@ -3647,4 +3647,3 @@ theorem proof : Low6966Prices.c7 :=
 
 end Low6966FatCount
 
-#print axioms Low6966FatCount.proof

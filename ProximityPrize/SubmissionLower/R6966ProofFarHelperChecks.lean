@@ -39,5 +39,4 @@ theorem helper_jetBoundary : Checked (helper .jetBoundary) := by
   · rw [helper_jetBoundary_first]; decide
   · rw [helper_jetBoundary_first, helper_jetBoundary_next]; decide
 
-#print axioms helper_jetBoundary
 end Research6966.FarSourceData

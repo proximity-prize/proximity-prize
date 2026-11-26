@@ -49,7 +49,6 @@ theorem localized_line_discriminant_degree (S : Submonoid A) [IsLocalization S (
   obtain ⟨d,dd,cap⟩ := normalized_line_discriminant_degree bf bi nonzero
   exact ⟨d,dd,(congrArg (fun n : ℕ=>(n:ℤ)) (natDegree_eq_of_degree_eq
     (degree_eq_degree_of_associated associated))).trans_le cap⟩
-#print axioms localized_line_discriminant_degree
 end
 end Lower6960.CollisionTame
 
@@ -222,8 +221,6 @@ theorem plane_generic_outer_degree (δ : PlaneRing k) (nz : δ≠0)
   change ((δ.map (algebraMap (Polynomial k) (GenericCoefficients k))).natDegree:ℤ)≤-2*d at cap
   rw [natDegree_map_eq_of_injective (IsFractionRing.injective _ _)] at cap
   exact ⟨bf,bi,d,dd,cap⟩
-#print axioms genericLine_basis
-#print axioms plane_generic_outer_degree
 end
 end Lower6960.CollisionTame
 
@@ -418,8 +415,6 @@ theorem generic_line_trace_associated (j b:Bool) (δ:Plane L)
     normalizationDiscriminant_basis (A:=R) (E:=E) ChartField aa
   rw [basisDisc] at loc
   exact Ideal.span_singleton_eq_span_singleton.mp loc.symm
-#print axioms generic_line_basis
-#print axioms generic_line_trace_associated
 end
 end Lower6960.CollisionMarked
 

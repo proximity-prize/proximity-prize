@@ -287,4 +287,3 @@ end
 end Low6966FatContacts
 end
 
-#print axioms Low6966FatContacts.proof

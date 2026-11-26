@@ -168,8 +168,5 @@ theorem prime_off_product {ι : Type*} [DecidableEq ι] (z : Finset ι)
   intro j hj
   exact (hfi i).isRelPrime_iff_not_dvd.mpr
     (fun hd => hdis i j (fun eq => hi (eq ▸ hj)) ((hfi i).associated_of_dvd (hfi j) hd))
-#print axioms residual_box
-#print axioms exists_divided_cut
-#print axioms retained_power_dvd
 end
 end Low6960RetainedCut

@@ -128,6 +128,5 @@ theorem count {w : I→K} {s : K→K[X]} {T : Finset K}
     _ ≤ _ := (Nat.add_le_add_right (Nat.mul_le_mul_left _ axisSum) _).trans
       (by simpa only [Nat.mul_assoc] using price)
 
-#print axioms count
 end
 end Research6966.FarRetained

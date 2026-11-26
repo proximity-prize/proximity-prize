@@ -83,6 +83,4 @@ theorem actual_geometric_of_constants {E I:Type} [Field E] [Algebra ChartField E
   have split:=splits_of_constant_basis j (algebraMap Scalar A) n co _ qp b root B (fun i=>bEq i ▸ ints i)
   rw [Polynomial.map_map,mapEq] at split
   exact split
-#print axioms splits_of_constant_basis
-#print axioms actual_geometric_of_constants
 end Lower6960.MarkedEvaluation

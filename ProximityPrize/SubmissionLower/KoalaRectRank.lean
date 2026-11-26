@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.KoalaRectCutoff
-import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.ListProofA
 
 set_option Elab.async false
 
@@ -162,7 +162,6 @@ theorem rectPhysical_bound (h : ℕ) (word : I → L) (s : Shape) (W : ℕ) (U :
   have hr := (LinearMap.range f).finrank_le.trans htarget
   omega
 
-#print axioms rectPhysical_bound
 end
 end KoalaRect
 
@@ -299,8 +298,6 @@ theorem rectAmbient_volume (h : ℕ) (s : Shape) (W : ℕ) (U : Fin 2 → ℕ)
   rw [hsum]
   ring
 
-#print axioms rectTelescope
-#print axioms rectAmbient_volume
 end
 end KoalaRect
 

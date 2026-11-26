@@ -39,9 +39,9 @@ def eval : Coefficients →ₗ[L] ChartField := Finsupp.linearCombination L mono
 theorem eval_apply (q : Coefficients) : eval q=q.sum fun m c=>constants c*monomial m := by
   simp only [eval,Finsupp.linearCombination_apply,Algebra.smul_def]
   rfl
-@[simp] theorem eval_single (m : Exponent) (c : L) :
-    eval (Finsupp.single m c)=constants c*monomial m := by
-  rw [eval_apply,Finsupp.sum_single_index (by rw [map_zero,zero_mul])]
+
+
+
 private def shift (m : Exponent) : Exponent ≃ Exponent where
   toFun n := n+m
   invFun n := n-m
@@ -169,8 +169,8 @@ theorem eval_injective : Function.Injective eval := by
   have az : a=0 := toPlane_injective (plane_zero.trans (by simp [toPlane]))
   apply (translate m).injective
   rw [←ha,az,Finsupp.embDomain_zero,map_zero]
-theorem monomial_linearIndependent : LinearIndependent L monomial :=
-  linearIndependent_iff_injective_finsuppLinearCombination.mpr eval_injective
+
+
 theorem mem_baseChart_iff (s : Chart) (r : ChartField) : r∈baseChart s ↔
     ∃ q : Coefficients, eval q=r ∧ ∀ m∈q.support, allowed 0 0 s m := by
   constructor
@@ -273,30 +273,25 @@ theorem frame_eval_mem_overlap_iff (a b : ℕ) (s t : Chart) (q : Coefficients) 
   simp only [fits_frame,overlap]
 section Relations
 variable {I J : Type*} [Fintype I]
-def relationCoefficients (column : I→J) (coefficient : I→L) (offset : I→Exponent)
-    (q : J→Coefficients) : Coefficients :=
-  ∑ i, coefficient i • translate (offset i) (q (column i))
-theorem relationCoefficients_apply (column : I→J) (coefficient : I→L) (offset : I→Exponent)
-    (q : J→Coefficients) (m : Exponent) :
-    relationCoefficients column coefficient offset q m=ChartSections.relation column coefficient offset q m := by
-  simp only [relationCoefficients,ChartSections.relation,Finsupp.finsetSum_apply,Finsupp.smul_apply,
-    translate_apply,smul_eq_mul]
-  rfl
-theorem eval_relationCoefficients (column : I→J) (coefficient : I→L) (offset : I→Exponent)
-    (q : J→Coefficients) : eval (relationCoefficients column coefficient offset q)=
-      ∑ i, constants (coefficient i)*monomial (offset i)*eval (q (column i)) := by
-  rw [relationCoefficients,map_sum]
-  apply Finset.sum_congr rfl
-  intro i _
-  rw [eval.map_smul,eval_translate]
-  change constants (coefficient i)*(monomial (offset i)*eval (q (column i)))=_
-  rw [mul_assoc]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end Relations
-#print axioms eval_injective
-#print axioms mem_baseChart_iff
-#print axioms mem_overlap_iff
-#print axioms frame_eval_mem_overlap_iff
-#print axioms eval_relationCoefficients
 end
 end Lower6960.MonicChartLaurent
 
@@ -365,9 +360,6 @@ theorem compatible_iterate {E : Type*} [Field E] [Algebra ChartField E]
   have powered := (h s t).pow (K1.p^n)
   rw [mul_pow,subpow,←map_pow,←frame_scale] at powered
   exact powered
-#print axioms scalar_coefficients
-#print axioms scalar_correction
-#print axioms compatible_iterate
 end
 end Lower6960.MonicScalarCorrection
 
@@ -381,7 +373,7 @@ set_option backward.isDefEq.respectTransparency.types false
 namespace Lower6960.RetainedChartGluing
 open ChartSections (Chart)
 open MonicChart MonicFourChartDescent MonicScalarCorrection ChartGlobalTests
-open RetainedCompression (Curve ordinate view height heightCap wordDegree)
+open RetainedCompression (Curve ordinate view height heightCap)
 open Polynomial
 open K1_14 (L)
 open Lower6960.MonicFourChartDescent (finite_inclusion infinity_inclusion)
@@ -441,37 +433,34 @@ theorem high_twist (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.d
   rw [←Algebra.smul_def,map_smul,map_sub,pv,Pi.smul_apply,smul_eq_mul,Pi.sub_apply,frames,
     mul_right_comm,mul_div_cancel_right₀ _ (frame_ne D D s)]
   exact sol r s
-theorem common_correction (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
-    (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
-    (a b : ℕ) (ha : 0<a) (hb : 0<b) (u : Chart→E) (compatible : Compatible a b u) :
-    ∃ c : E, Correction a b u c := by
-  obtain ⟨H,high⟩:=high_twist f ir lo hi basis root
-  have large : H<K1.p^H := Nat.lt_pow_self KoalaBear.is_prime.one_lt
-  have above {d : ℕ} (pos : 0<d) : H<d*K1.p^H :=
-    large.trans_le (Nat.le_mul_of_pos_left _ pos)
-  obtain ⟨c,hc⟩:=high _ _ (above ha) (above hb) _ (compatible_iterate a b u compatible H)
-  obtain ⟨d,_,hd⟩ := descend_iterate f ir lo hi bounded basis root a b ha u H c hc
-  exact ⟨d,hd⟩
-#print axioms high_twist
-#print axioms common_correction
-theorem split_cocycle (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
-    (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
-    (a b : ℕ) (ha : 0<a) (hb : 0<b) (g : Chart→Chart→E)
-    (add : ∀ s t r, g s t+g t r=g s r)
-    (regular : ∀ s t, IsIntegral (MonicChartLaurent.overlapRing s t)
-      (algebraMap ChartField E (frame a b s)*g s t)) :
-    ∃ w : Chart→E, (∀ s, IsIntegral (baseChart s) (algebraMap ChartField E (frame a b s)*w s)) ∧
-      ∀ s t, g s t=w s-w t := by
-  let u (s : Chart):=g s (false,false)
-  have diff (s t) : u s-u t=g s t := sub_eq_of_eq_add (add s t (false,false)).symm
-  obtain ⟨c,hc⟩:=common_correction f ir lo hi bounded basis root a b ha hb u
-    (fun s t=> by rw [diff]; exact regular s t)
-  exact ⟨fun s=>u s-c,hc,fun s t=>by rw [←diff]; ring⟩
-#print axioms split_cocycle
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end Lower6960.RetainedChartGluing
 
 end
@@ -487,19 +476,19 @@ open MonicFourChartDescent ChartSections MonicChart RetainedChartGluing
 open ChartGlobalTests (frame_ne)
 open MonicChartLaurent (overlapRing)
 open MonicChartProbes (planeMap planeMap_injective)
-open RetainedCompression (Curve ordinate view height heightCap wordDegree)
+open RetainedCompression (Curve ordinate view height heightCap)
 open Polynomial
 open K1_14 (L)
 def lines (x z : L) : ChartField :=
   (RatFunc.X-constants x)*(scalarCoordinate-constants z)
-private theorem lines_ne (x z : L) : lines x z≠0 := by
-  let m := planeMap (false,false)
-  have a : (Polynomial.X (R:=(Polynomial L)))-C (C x)≠0 := X_sub_C_ne_zero _
-  have b : (C (Polynomial.X (R:=L)) : (Polynomial (Polynomial L)))-C (C z)≠0 := by
-    rw [←map_sub]; exact C_ne_zero.mpr (X_sub_C_ne_zero _)
-  have good := (map_ne_zero_iff m (planeMap_injective _)).mpr (mul_ne_zero a b)
-  simpa only [m,map_mul,map_sub,MonicChartProbes.planeMap_constants,MonicChartProbes.planeMap_scalar,
-    MonicChartProbes.planeMap_abscissa,chartCoordinate,Bool.false_eq_true,ite_false,lines] using good
+
+
+
+
+
+
+
+
 private theorem linear_factor (A : Subring ChartField) (b : Bool) (v c : ChartField) (nz : v≠0)
     (var : chartCoordinate b v∈A) (constant : c∈A) :
     (v-c)/(if b then v else 1)∈A := by
@@ -517,42 +506,41 @@ theorem local_equation (x z : L) (s : Chart) : lines x z / frame 1 1 s∈baseCha
   exact (baseChart s).mul_mem (linear_factor _ _ _ _ RatFunc.X_ne_zero Xmem (constants_mem x))
     (linear_factor _ _ _ _ ChartOverlapTests.scalar_ne Zmem (constants_mem z))
 variable {E : Type*} [Field E] [Algebra ChartField E]
-theorem split_of_split_on_lines (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
-    (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial Scalar) ChartField))=0)
-    (x z : L) (g : Chart→Chart→E) (add : ∀ s t r, g s t+g t r=g s r)
-    (v : Chart→E) (localV : ∀ s, IsIntegral (baseChart s) (v s))
-    (restricted : ∀ s t, ∃ r : E, IsIntegral (overlapRing s t) r ∧
-      g s t-(v s-v t)=algebraMap ChartField E (lines x z / frame 1 1 s)*r) :
-    ∃ w : Chart→E, (∀ s,IsIntegral (baseChart s) (w s)) ∧ ∀ s t,g s t=w s-w t := by
-  let ι:=algebraMap ChartField E
-  let P:=ι (lines x z)
-  have pn : P≠0 := (map_ne_zero_iff ι ι.injective).mpr (lines_ne x z)
-  let h (s t:Chart):=(g s t-(v s-v t))/P
-  have coc (s t r) : h s t+h t r=h s r := by
-    dsimp [h]
-    rw [←add_div]
-    congr 1
-    linear_combination add s t r
-  have twist (s t) : IsIntegral (overlapRing s t) (ι (frame 1 1 s)*h s t) := by
-    obtain ⟨r,hr,eq⟩:=restricted s t
-    have nz := (map_ne_zero_iff ι ι.injective).mpr (frame_ne 1 1 s)
-    have recover : ι (frame 1 1 s)*h s t=r := by
-      dsimp only [h]; rw [eq,map_div₀]
-      change ι (frame 1 1 s)*(P/ι (frame 1 1 s)*r/P)=r
-      field_simp
-    rwa [recover]
-  obtain ⟨w,localW,diff⟩:=split_cocycle f ir lo hi bounded basis root 1 1 (by decide) (by decide) h coc twist
-  refine ⟨fun s=>v s+P*w s,fun s=>(localV s).add ?_,fun s t=>?_⟩
-  · have integral : IsIntegral (baseChart s) (ι (lines x z/frame 1 1 s)) :=
-      isIntegral_algebraMap (x:=(⟨_, local_equation x z s⟩ : baseChart s))
-    have eq : ι (lines x z / frame 1 1 s)*(ι (frame 1 1 s)*w s)=P*w s := by
-      rw [map_div₀,←mul_assoc,div_mul_cancel₀ _ ((map_ne_zero_iff ι ι.injective).mpr (frame_ne _ _ _))]
-    exact eq ▸ integral.mul (localW s)
-  · have eq := (div_eq_iff pn).mp (diff s t)
-    linear_combination eq
-#print axioms split_of_split_on_lines
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end Lower6960.RetainedLineRestriction
 
 end
@@ -584,79 +572,76 @@ theorem independent_denominators (a b : (Polynomial k)) (an : a≠0) (bn : b≠0
   rw [coeff_map,coeff_natDegree] at dvd
   exact isUnit_of_dvd_unit dvd (isUnit_C.mpr (leadingCoeff_ne_zero.mpr bn).isUnit)
 variable {E : Type*} [Field E] [Algebra (Plane k) E]
-theorem affine_iff (F : Type*) [Field F] [Algebra (Plane k) F] [IsFractionRing (Plane k) F]
-    [Algebra F E] [IsScalarTower (Plane k) F E] [FiniteDimensional F E] (x : E) :
-    IsIntegral (Plane k) x ↔
-      (∃ a:(Polynomial k), a≠0 ∧ IsIntegral (Plane k) (algebraMap (Plane k) E (C a)*x)) ∧
-      (∃ b:(Polynomial k), b≠0 ∧ IsIntegral (Plane k) (algebraMap (Plane k) E (b.map (C : k→+*(Polynomial k)))*x)) := by
-  constructor
-  · intro h
-    exact ⟨⟨1,one_ne_zero,by simpa using h⟩,⟨1,one_ne_zero,by simpa using h⟩⟩
-  · rintro ⟨⟨a,an,ai⟩,⟨b,bn,bi⟩⟩
-    exact NormalizedFiber.integral_of_coprime_clearings F (C_ne_zero.mpr an)
-      ((Polynomial.map_ne_zero_iff C_injective).mpr bn) (independent_denominators a b an bn) x ai bi
-#print axioms affine_iff
-def innerDenominators (k : Type*) [Field k] : Submonoid (Plane k) :=
-  (nonZeroDivisors (Polynomial k)).map (C : (Polynomial k)→+*Plane k).toMonoidHom
-def outerDenominators (k : Type*) [Field k] : Submonoid (Plane k) :=
-  (nonZeroDivisors (Polynomial k)).map (mapRingHom (C : k→+*(Polynomial k))).toMonoidHom
-theorem two_generic_lines (F : Type*) [Field F] [Algebra (Plane k) F] [IsFractionRing (Plane k) F]
-    [Algebra F E] [IsScalarTower (Plane k) F E] [FiniteDimensional F E]
-    (R S : Type*) [CommRing R] [CommRing S] [Algebra (Plane k) R] [Algebra (Plane k) S]
-    [IsLocalization (innerDenominators k) R] [IsLocalization (outerDenominators k) S]
-    [Algebra R E] [Algebra S E] [IsScalarTower (Plane k) R E] [IsScalarTower (Plane k) S E]
-    (x : E) : IsIntegral (Plane k) x ↔ IsIntegral R x ∧ IsIntegral S x := by
-  constructor
-  · intro i; exact ⟨i.tower_top,i.tower_top⟩
-  · rintro ⟨hR,hS⟩
-    apply (affine_iff F x).mpr
-    obtain ⟨d,good⟩ := IsIntegral.exists_multiple_integral_of_isLocalization (innerDenominators k) x hR
-    obtain ⟨a,ha,eq⟩ := d.property
-    obtain ⟨d',good'⟩ := IsIntegral.exists_multiple_integral_of_isLocalization (outerDenominators k) x hS
-    obtain ⟨b,hb,eq'⟩ := d'.property
-    refine ⟨⟨a,mem_nonZeroDivisors_iff_ne_zero.mp ha,?_⟩,
-      ⟨b,mem_nonZeroDivisors_iff_ne_zero.mp hb,?_⟩⟩
-    · change C a=d.val at eq
-      rw [eq]
-      simpa only [Submonoid.smul_def,Algebra.smul_def] using good
-    · change b.map C=d'.val at eq'
-      rw [eq']
-      simpa only [Submonoid.smul_def,Algebra.smul_def] using good'
-#print axioms two_generic_lines
-theorem ruling_basis (A F E : Type*) [CommRing A] [IsDomain A] [IsPrincipalIdealRing A]
-    [Field F] [Field E] [Algebra A F] [IsFractionRing A F]
-    [Algebra F E] [Algebra A E] [IsScalarTower A F E]
-    [FiniteDimensional F E] [Algebra.IsSeparable F E] :
-    ∃ (n : ℕ) (b : Module.Basis (Fin n) F E),n=Module.finrank F E ∧
-      ∀ x : E, IsIntegral A x ↔ ∀ i, b.repr x i∈Set.range (algebraMap A F) := by
-  classical
-  let S:=integralClosure A E
-  have : Module.IsTorsionFree A E := .trans_faithfulSMul A F E
-  have : Module.Free A S := IsIntegralClosure.module_free A F E S
-  have : Module.Finite A S := IsIntegralClosure.finite A F E S
-  have : IsLocalization (Algebra.algebraMapSubmonoid S (nonZeroDivisors A)) E :=
-    IsIntegralClosure.isLocalization A F E S
-  let j:=Module.Free.ChooseBasisIndex A S
-  let a:=(Module.Free.chooseBasis A S).reindex (Fintype.equivFin j)
-  let b:=Module.Basis.localizationLocalization F (nonZeroDivisors A) E a
-  refine ⟨Fintype.card j,b,by simpa using (Module.finrank_eq_card_basis b).symm,?_⟩
-  intro x
-  constructor
-  · intro hx i
-    let y : S:=⟨x,hx⟩
-    refine ⟨a.repr y i,?_⟩
-    exact (a.localizationLocalization_repr_algebraMap F (nonZeroDivisors A) E y i).symm
-  · intro all
-    choose c value using all
-    rw [←b.sum_repr x]
-    apply IsIntegral.sum
-    intro i _
-    rw [←value i,Algebra.smul_def,←IsScalarTower.algebraMap_apply]
-    have int : IsIntegral A (b i) := by
-      rw [show b i=algebraMap S E (a i) from a.localizationLocalization_apply F (nonZeroDivisors A) E i]
-      exact (a i).property
-    exact isIntegral_algebraMap.mul int
-#print axioms ruling_basis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end Lower6960.TwoRulings
 
 end
@@ -806,9 +791,6 @@ theorem cancel_both (s t : Chart) (x z : L) (nx:x≠0) (nz:z≠0) (u : E)
   simpa only [map_inv₀,map_pow,eqH,←mul_assoc,←mul_pow,
     inv_mul_cancel₀ ((map_ne_zero_iff _ (algebraMap ChartField E).injective).mpr (edge_ne s t)),one_pow,one_mul] using result
 
-#print axioms cuts_rel
-#print axioms boundary_rel
-#print axioms cancel_both
 end Lower6960.RetainedRestrictionTorus
 
 end
@@ -912,7 +894,6 @@ theorem lift_on_chart (s : Chart) (x z : L) (nx:x≠0) (nz:z≠0) (u v : E)
       calc _ = U-V-p*a' := by abel
            _ = _ := by rw [←sum,add_sub_cancel_left]
     exact congrArg (fun w:S=>(w:E)) lift
-#print axioms lift_on_chart
 end Lower6960.RetainedRestrictionTorus
 
 end

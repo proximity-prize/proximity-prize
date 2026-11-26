@@ -58,7 +58,6 @@ theorem determinant_budget (G : Matrix ι ι (Laurent k)) (unit : IsUnit G)
   have outside := AddMonoidAlgebra.mem_supported'.mp bounded _ near
   rw [eq,coeff_C_product,LineEuler.coeff_shift,outside,mul_zero] at coeff
   exact coeff rfl
-#print axioms determinant_budget
 end
 end Lower6960.Horner
 
@@ -233,7 +232,6 @@ theorem actual_horner_budget (p : (Polynomial (Polynomial k))) (v : ℕ) (ep : 0
     simp only [Finset.sum_ite_eq',Finset.mem_univ,ite_true,Int.natCast_one]
     ring
   exact ⟨d,hd,by rwa [sum] at bd⟩
-#print axioms actual_horner_budget
 end
 end Lower6960.Horner
 

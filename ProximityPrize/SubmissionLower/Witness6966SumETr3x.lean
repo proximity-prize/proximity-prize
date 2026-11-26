@@ -43,14 +43,14 @@ theorem T23 : tabAll 1 ws 184 8 = true := by decide +kernel
 theorem T24 : tabAll 1 ws 192 8 = true := by decide +kernel
 theorem T25 : tabAll 1 ws 200 8 = true := by decide +kernel
 theorem tabOK : Gate6966ClassTable.tableOK 1 ws = true := tableOK_of_all ws 1 0 (by simpa [ws] using (tabAll_add 1 ws 0 200 8 (tabAll_add 1 ws 0 192 8 (tabAll_add 1 ws 0 184 8 (tabAll_add 1 ws 0 176 8 (tabAll_add 1 ws 0 168 8 (tabAll_add 1 ws 0 160 8 (tabAll_add 1 ws 0 152 8 (tabAll_add 1 ws 0 144 8 (tabAll_add 1 ws 0 136 8 (tabAll_add 1 ws 0 128 8 (tabAll_add 1 ws 0 120 8 (tabAll_add 1 ws 0 112 8 (tabAll_add 1 ws 0 104 8 (tabAll_add 1 ws 0 96 8 (tabAll_add 1 ws 0 88 8 (tabAll_add 1 ws 0 80 8 (tabAll_add 1 ws 0 72 8 (tabAll_add 1 ws 0 64 8 (tabAll_add 1 ws 0 56 8 (tabAll_add 1 ws 0 48 8 (tabAll_add 1 ws 0 40 8 (tabAll_add 1 ws 0 32 8 (tabAll_add 1 ws 0 24 8 (tabAll_add 1 ws 0 16 8 (tabAll_add 1 ws 0 8 8 (tabAll_add 1 ws 0 0 8 (tabAll_nil 1 ws 0) T0) T1) T2) T3) T4) T5) T6) T7) T8) T9) T10) T11) T12) T13) T14) T15) T16) T17) T18) T19) T20) T21) T22) T23) T24) T25))
-theorem C0 : allOK G 1 ws lv 0 57 = true := by decide +kernel
-theorem C1 : allOK G 1 ws lv 57 5 = true := by decide +kernel
-theorem C2 : allOK G 1 ws lv 62 2 = true := by decide +kernel
-theorem C3 : allOK G 1 ws lv 64 2 = true := by decide +kernel
-theorem C4 : allOK G 1 ws lv 66 4 = true := by decide +kernel
-theorem C5 : allOK G 1 ws lv 70 8 = true := by decide +kernel
-theorem C6 : allOK G 1 ws lv 78 13 = true := by decide +kernel
-theorem C7 : allOK G 1 ws lv 91 117 = true := by decide +kernel
+theorem C0 : allOK G 1 ws lv 0 57 = true := by rw [allOK_eq_F]; decide +kernel
+theorem C1 : allOK G 1 ws lv 57 5 = true := by rw [allOK_eq_F]; decide +kernel
+theorem C2 : allOK G 1 ws lv 62 2 = true := by rw [allOK_eq_F]; decide +kernel
+theorem C3 : allOK G 1 ws lv 64 2 = true := by rw [allOK_eq_F]; decide +kernel
+theorem C4 : allOK G 1 ws lv 66 4 = true := by rw [allOK_eq_F]; decide +kernel
+theorem C5 : allOK G 1 ws lv 70 8 = true := by rw [allOK_eq_F]; decide +kernel
+theorem C6 : allOK G 1 ws lv 78 13 = true := by rw [allOK_eq_F]; decide +kernel
+theorem C7 : allOK G 1 ws lv 91 117 = true := by rw [allOK_eq_F]; decide +kernel
 theorem allOKn : allOK G 1 ws lv 0 n = true := allOK_add G 1 ws lv 0 91 117 (allOK_add G 1 ws lv 0 78 13 (allOK_add G 1 ws lv 0 70 8 (allOK_add G 1 ws lv 0 66 4 (allOK_add G 1 ws lv 0 64 2 (allOK_add G 1 ws lv 0 62 2 (allOK_add G 1 ws lv 0 57 5 (allOK_add G 1 ws lv 0 0 57 (allOK_nil G 1 ws lv 0) C0) C1) C2) C3) C4) C5) C6) C7
 end Witness6966DatETr3x
 

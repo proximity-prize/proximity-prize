@@ -333,8 +333,8 @@ set_option autoImplicit true
 namespace P5_8_3
 noncomputable section
 open i4 P5_8 PolynomialDifferential ReedSolomon.HiddenDerivative MvPolynomial
-def lastCut:ℕ:=bo8.m*A - 1
-def step:ℕ:=gap A+2
+
+
 def topWeight:JetVariable 2→ℕ:=Pi.single (some (zym 2)) 1
 def nativeBand (s :Jn) :Submodule K Equation :=
  restrictWeightedDegree jetDegreeWeight s.B ⊓

@@ -266,10 +266,7 @@ theorem selected_line_trace_nonzero (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
     Lower6960.RetainedSurfaceClass.vanishing_divides E j x z nx nz u hu
   exact trace_nonzero_over_actual_point (k:=L) (U:=U) (V:=V) p small
     (atCoord (!j) x z) b F onto scalar kernel
-#print axioms selected_line_trace_associated
-#print axioms selected_line_trace_transition
 end
-#print axioms selected_line_trace_nonzero
 end
 end Lower6960.CollisionMarked
 
@@ -420,7 +417,6 @@ theorem actual_measured_discriminants (x z:L) (nx:x≠0) (nz:z≠0)
   have cap := (boundary_seed_polynomial δi ni).2.1
   exact ⟨δf,δi,nf,ni,(line_discriminant_axis false).symm.trans df,
     (line_discriminant_axis true).symm.trans di,xcap,zcap,(cap.trans zi_le).trans zcap⟩
-#print axioms actual_measured_discriminants
 end
 end Lower6960.CollisionMarked
 
@@ -490,7 +486,6 @@ theorem generic_measure_eq_native (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
   have de : d=-(s:ℤ) := by omega
   exact ⟨f,i,de ▸ dd⟩
 
-#print axioms generic_measure_eq_native
 end
 end Lower6960.CollisionMarked
 

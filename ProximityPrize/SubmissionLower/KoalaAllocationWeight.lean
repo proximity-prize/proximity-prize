@@ -50,5 +50,4 @@ theorem sum_le {top n : ℕ} (htop : top ≤ 14) (a : Fin n → Shape) (hfits : 
     exact Nat.add_le_add ((part _).trans hfits.2.1)
       (Nat.mul_le_mul_left 4 ((part _).trans hfits.2.2.1))
 
-#print axioms sum_le
 end KoalaAllocationWeight

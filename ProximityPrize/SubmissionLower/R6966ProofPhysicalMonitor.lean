@@ -133,7 +133,5 @@ theorem witness {h} (hp:0<h) (hl:h≤131070) {D:PoleData h} {Crt:CRTLift D} {N:J
   rw [PhysicalOriginal.integral_slope]
   exact (detects data t ok (liftPoly S) T word (evalRingHom x) good).mp seen
 
-#print axioms detects
-#print axioms witness
 end
 end Research6966.PhysicalMonitor

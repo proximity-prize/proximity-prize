@@ -286,8 +286,6 @@ theorem Quote.finish {r : Fin 58} (I : Invoice (branch r)) {b : Band} {a : ℕ} 
     exact credit_word I off budget.2.2.1 budget.2.2.2 count
   · simp only [Quote.Demand,kind] at count
 
-#print axioms small
-#print axioms Quote.finish
 end Research6966.NearLedger
 
 end Merged_R6966ProofNearLedgerApply

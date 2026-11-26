@@ -382,8 +382,6 @@ theorem section_count (j f : ℕ) (q : ℤ) (hf : (f : ℤ) ≤ 1650-q) (hj : j 
       omega
   rw [hset,Int.card_Ico]
   omega
-#print axioms contact_ge_iff
-#print axioms section_count
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotThreshold
@@ -485,8 +483,6 @@ theorem ReceiptTree.sumPositive_eq (t : ReceiptTree Line) (s : Span) :
         omega
       simp [ReceiptTree.eval,hh]
 
-#print axioms Span.sumLine_eq
-#print axioms ReceiptTree.sumPositive_eq
 end KoalaLinearWindow
 
 namespace Low48PrimaryPivot
@@ -537,7 +533,6 @@ def binAt (w : Window) (j : ℕ) : ℤ :=
     let volume := binWeight w j q
     if volume = 0 then 0 else volume*(total-uncharged j q)).sum
 
-#print axioms countTree_at
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotSectionSum
@@ -601,8 +596,6 @@ theorem uncharged_eq (j q : ℤ) :
   rw [sum_by_parity]
   simp only [uncharged,ReceiptTree.sumPositive_eq,countTree_at,add_zero]
 
-#print axioms totalAtIndex_eq
-#print axioms uncharged_eq
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotBinParity

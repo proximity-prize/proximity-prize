@@ -260,6 +260,5 @@ theorem loss_bound (N : ℕ) :
   rw [Nat.cast_sum, ← computed_loss, intPrefix_eq]
   exact sum_le_sum fun i _ => row i
 
-#print axioms loss_bound
 
 end Low6960ShapeGate

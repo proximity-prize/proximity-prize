@@ -679,5 +679,4 @@ theorem q0_4_ok (i j : Fin 23) : (q0_4 i j).Valid (band 0) 4 i j := by
   · exact q0_4_21_ok j
   · exact q0_4_22_ok j
 
-#print axioms q0_4_ok
 end Research6966.NearLedger

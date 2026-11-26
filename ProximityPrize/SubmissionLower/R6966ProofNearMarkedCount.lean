@@ -50,6 +50,5 @@ theorem count {u deleted maxHeight} {M:P1.ModelAt maxHeight u deleted} {Γ T:Fin
       rw [show rate n+2*f.natDegree-1=rate n+(2*f.natDegree-1) by omega,Nat.add_mul]
       omega
 
-#print axioms count
 end
 end Research6966.NearMarkedCount

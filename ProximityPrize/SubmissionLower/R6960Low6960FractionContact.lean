@@ -172,8 +172,6 @@ theorem exists_polynomial {w Γ s} (hm : Low6960Prices.Messages w Γ s)
     rw [← fraction_geometric,hQ,map_mul,toGeometric,MvPolynomial.map_C,hasse_C_mul]
     exact P.mul_mem_left _ (ho P hP a ha)
 
-#print axioms bank_layers
-#print axioms exists_polynomial
 end
 end Low6960SharedShapeRank
 
@@ -309,7 +307,6 @@ theorem select {w Γ s} (hm : Low6960Prices.Messages w Γ s)
   have uq : Q.val ∈ U i := hv0
   have nq : Q.val ≠ 0 := fun hz => hq (Subtype.ext hz)
   exact ⟨i+1, by omega, Q.val, nq, Q.2, hcontact, hs i _ uq nq⟩
-#print axioms select
 end
 end Low6960VariableSelect
 

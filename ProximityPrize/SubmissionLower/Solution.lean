@@ -1,5 +1,9 @@
-import ProximityPrize.SubmissionLower.R6966ProofEndpoint6966
+import ProximityPrize.SubmissionLower.Z6969Pack0977
+
 set_option Elab.async false
 
-theorem ProximityPrize.Benchmark.candidate : ProximityPrize.Benchmark.ProtocolClaim 6966 2898347835189620169 9223372036854760969 := Research6966.Endpoint6966.protocol
+theorem ProximityPrize.Benchmark.candidate :
+    ProximityPrize.Benchmark.ProtocolClaim 6969 2899368181980161361 9223372036854649837 :=
+  Research6969.Completed.claim
+
 #print axioms ProximityPrize.Benchmark.candidate

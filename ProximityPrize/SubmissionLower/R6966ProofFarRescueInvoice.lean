@@ -102,7 +102,5 @@ theorem rank_guard (rect : Fin 4) :
     rankB rect < p ∧ 0≤rankWeight rect 1 ∧ 0≤rankWeight rect 2 := by
   fin_cases rect <;> decide +kernel
 
-#print axioms rate_spec
-#print axioms strict_rescue_fee
 
 end Lower6960.FarRescueGeometry

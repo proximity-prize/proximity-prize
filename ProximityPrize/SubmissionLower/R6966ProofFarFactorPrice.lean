@@ -139,5 +139,4 @@ theorem price {w : I → K} {s : K → K[X]} {T : Finset K}
     exact factor W label inject ir n lo hi ((natDegree_le_of_dvd dvd pn).trans degree) mark)
   exact chosen.trans (Nat.add_le_add_right (Nat.mul_le_mul_left _ bound) _)
 
-#print axioms price
 end Research6966.FarFactorPrice

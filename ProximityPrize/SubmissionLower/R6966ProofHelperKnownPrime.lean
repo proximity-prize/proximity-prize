@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6966ProofHelperAvoidance
+import ProximityPrize.SubmissionLower.R6966ProofHelperWindowPrefix
 import ProximityPrize.SubmissionLower.R6966ProofHelperWeightCap
 import ProximityPrize.SubmissionLower.R6960PrefixReceipt
 
@@ -77,7 +77,5 @@ theorem unique_from_known {V:Submodule K1_14.FX Jet} {G:Jet} (g:Common V G)
     exact pinned H h (fun d hd dh => cop (hd.trans assoc.dvd) dh)
   · exact pinned N n (g.1.isRelPrime_iff_not_dvd.mpr dv)
 
-#print axioms not_coprime
-#print axioms unique_from_known
 end
 end Research6966.HelperKnownPrime

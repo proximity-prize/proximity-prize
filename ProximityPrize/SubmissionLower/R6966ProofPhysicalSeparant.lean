@@ -50,6 +50,5 @@ theorem nonzero_iff [IsDomain S] (f:R→+*S) (a b u d c:R) (ua:IsUnit a) (uc:IsU
       (f a*(P.coeff 1).eval₂ f (f a*y+f b)=0) := by rw [both]
   exact not_congr (by simpa only [mul_eq_zero,or_iff_right right,or_iff_right left] using identical)
 
-#print axioms nonzero_iff
 end
 end Research6966.PhysicalSeparant

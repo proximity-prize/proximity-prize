@@ -63,7 +63,6 @@ theorem sufficient_rank {rank width need : ℕ} (h : rank/width+1=need)
   have total := Nat.mod_add_div rank width
   omega
 
-#print axioms physicalBank_ranked
 end
 end Low6960RetainedCut
 
@@ -111,9 +110,6 @@ theorem Bank.of_messages_ranked {w : I → K} {Γ : Finset K} {s : K → (Polyno
     (Bank.of_messages hm).Ranked :=
   Bank.of_messages_ranked_of_rank hm (Low6960Order.primary_rank w)
 
-#print axioms Bank.of_messages
-#print axioms Bank.of_messages_ranked_of_rank
-#print axioms Bank.of_messages_ranked
 end
 end Low6960RetainedCut
 

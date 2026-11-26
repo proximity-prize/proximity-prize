@@ -127,6 +127,4 @@ theorem count {u deleted} (M : P1.ModelAt 33677 u deleted) {Γ : Finset K} (F : 
       exact (cover γ hγ).resolve_right (fun ⟨q,hq,_⟩=>surfaces ⟨q,hq⟩)
     exact (card_le_card contain).trans (fee.trans (by decide +kernel))
 
-#print axioms degrees
-#print axioms count
 end Research6966.FarTerminalCount

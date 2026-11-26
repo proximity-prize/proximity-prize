@@ -106,7 +106,5 @@ theorem reduced_normalization_basis [IsReduced V] (p : ℕ) [CharP K p]
   refine ⟨b.reindex (finCongr rank),bk.reindex (finCongr rank),fun i=>?_⟩
   rw [Basis.reindex_apply,Basis.reindex_apply,Basis.ofIsLocalizedModule_apply]
   rfl
-#print axioms reduced_normalization_finite
-#print axioms reduced_normalization_basis
 end
 end Lower6960.CollisionMarked

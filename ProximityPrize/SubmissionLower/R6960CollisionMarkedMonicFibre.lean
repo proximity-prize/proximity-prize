@@ -127,9 +127,6 @@ theorem monic_order_eq_normalization {p : (Polynomial A)} (hp : p.Monic) (γ : E
       rw [smul_smul,←hd,Units.inv_mul,one_smul]
     exact cancel ▸ B.smul_mem isin _
 end Coordinates
-#print axioms monic_disc_of_basis
-#print axioms monic_coordinates
-#print axioms monic_order_eq_normalization
 end
 end Lower6960.CollisionMarked
 
@@ -248,8 +245,6 @@ theorem monic_fibre_equiv {f : (Polynomial A)} (hf : f.Monic) (γ : E) (root : a
   change h (AdjoinRoot.root q)=image x
   exact AdjoinRoot.liftAlgHom_root q (Algebra.ofId K (K⊗[A] B)) (image x) rootq
 end Fibre
-#print axioms monic_disc_nonzero_at
-#print axioms monic_fibre_equiv
 end
 end Lower6960.CollisionMarked
 

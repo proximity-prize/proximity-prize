@@ -40,7 +40,6 @@ theorem initial_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degree
   rw [restriction_kernel_far E f ir lo hi bounded basis root x z nx nz]
   simp only [Regular,pow_zero,one_mul]; rfl
 
-#print axioms initial_far
 
 /-- Uniform surface bound for every positive abscissa twist of the same actual
 factor. The degrees s,t are measured on its own two specialized chart orders. -/
@@ -75,7 +74,6 @@ theorem actual_all_twists_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3�
   | succ i ih =>
     simpa only [Nat.succ_eq_add_one,Nat.add_mul,one_mul,Nat.add_assoc] using grow E i x nx ih line
 
-#print axioms actual_all_twists_far
 end Lower6960.RetainedTwistedRestriction
 
 end
@@ -160,7 +158,6 @@ theorem vertical_profile_far (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3�
   have bound:=actual_vertical_rank F I s positive det U m v regular
   rwa [Fintype.card_fin,rank] at bound
 
-#print axioms vertical_profile_far
 end Lower6960.MarkedEvaluation
 
 end
@@ -233,7 +230,6 @@ theorem nonlinear_far (T : Finset K) (label : K → L) (inj : Function.Injective
     δf δi nf ni df di xc zc tail S wt mark vrank
   rwa [show S.card=T.card from card_image_of_injective _ inj,degP] at bound
 
-#print axioms nonlinear_far
 end Lower6960.MarkedEvaluation
 
 end

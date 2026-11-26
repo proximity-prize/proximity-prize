@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6966ProofHelperWindowMoments
+import ProximityPrize.SubmissionLower.R6966ProofHelperWindowMoment1
 
 set_option Elab.async false
 
@@ -107,7 +107,6 @@ private def poleBlocks2505_558 : List Block := [pole2505_558_0, pole2505_558_1, 
 theorem moment2505_558 : P1_7_1.groupedPoleMoment 2505 558 ≤ 1106646928910 := by
   refine grouped_from_blocks 2505 558 _ poleBlocks2505_558 ?_ (by decide) (by decide)
   exact ⟨pole2505_558_0_checked, pole2505_558_1_checked, pole2505_558_2_checked, pole2505_558_3_checked, pole2505_558_4_checked, pole2505_558_5_checked, pole2505_558_6_checked, pole2505_558_7_checked, pole2505_558_8_checked, pole2505_558_9_checked, pole2505_558_10_checked, pole2505_558_11_checked, pole2505_558_12_checked, pole2505_558_13_checked, pole2505_558_14_checked, pole2505_558_15_checked, pole2505_558_16_checked, pole2505_558_17_checked, pole2505_558_18_checked, pole2505_558_19_checked, pole2505_558_20_checked, pole2505_558_21_checked, pole2505_558_22_checked, pole2505_558_23_checked, True.intro⟩
-#print axioms moment2505_558
 
 private def pole3414_739_0 : Block := ⟨128, 2180562610798485233998015299793373431442498833692245534550289807734923342677256418950718383800421383118436104903529833918200512877330874514248470607620290002756537086206214799849103947723173656032138664922679649882960453022358573578594669731908835584440699160177797918742449486648692973975576837279454869439756611851329740283230381825670166195382320663742578882996532625671515668344279560780829454915549875534656063677923349853116986643968924899692282412393211642081096093666052506018348231971940589271482944999864998693468598169619169281, 1187316000⟩
 private theorem pole3414_739_0_checked :
@@ -245,6 +244,5 @@ private def poleBlocks3414_739 : List Block := [pole3414_739_0, pole3414_739_1, 
 theorem moment3414_739 : P1_7_1.groupedPoleMoment 3414 739 ≤ 3730461615698 := by
   refine grouped_from_blocks 3414 739 _ poleBlocks3414_739 ?_ (by decide) (by decide)
   exact ⟨pole3414_739_0_checked, pole3414_739_1_checked, pole3414_739_2_checked, pole3414_739_3_checked, pole3414_739_4_checked, pole3414_739_5_checked, pole3414_739_6_checked, pole3414_739_7_checked, pole3414_739_8_checked, pole3414_739_9_checked, pole3414_739_10_checked, pole3414_739_11_checked, pole3414_739_12_checked, pole3414_739_13_checked, pole3414_739_14_checked, pole3414_739_15_checked, pole3414_739_16_checked, pole3414_739_17_checked, pole3414_739_18_checked, pole3414_739_19_checked, pole3414_739_20_checked, pole3414_739_21_checked, pole3414_739_22_checked, pole3414_739_23_checked, pole3414_739_24_checked, pole3414_739_25_checked, pole3414_739_26_checked, pole3414_739_27_checked, pole3414_739_28_checked, pole3414_739_29_checked, pole3414_739_30_checked, pole3414_739_31_checked, pole3414_739_32_checked, True.intro⟩
-#print axioms moment3414_739
 
 end Research6966.HelperWindowCatalogue

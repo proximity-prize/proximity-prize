@@ -71,5 +71,4 @@ theorem rescue2_5 : Checked (rescue 2 5) := by
   · rw [rescue2_5_first]; decide
   · rw [rescue2_5_first, rescue2_5_next]; decide
 
-#print axioms rescue2_5
 end Research6966.FarSourceData

@@ -474,8 +474,6 @@ theorem fixed_count {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     h.trans (add_le_add hceil le_rfl)
   exact_mod_cast bound
 
-#print axioms curve_tariff
-#print axioms fixed_count
 
 end Lower6960.FarRescueGeometry
 
@@ -651,7 +649,6 @@ theorem rated_curve_count {u del} {M : Model u del} {Γ}
       Finset.sum_le_sum hcount
     _ = _ := by simp only [Finset.sum_add_distrib, ← Finset.mul_sum, ← Nat.cast_sum, hsum, hsumH]
 
-#print axioms rated_curve_count
 end Lower6960.FarRescueGeometry
 
 end

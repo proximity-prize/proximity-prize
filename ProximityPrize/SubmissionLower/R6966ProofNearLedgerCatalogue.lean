@@ -74,6 +74,4 @@ theorem finish {r : Fin 58} (I : Invoice (branch r)) (b : Fin 4) (a : ℕ)
     (count : (quote b a i j).Demand (band b) a i j I G tail) : I.paid+tail≤core :=
   Quote.finish I (quote_valid b a lo hi i j) G mass tail count
 
-#print axioms quote_valid
-#print axioms finish
 end Research6966.NearLedger

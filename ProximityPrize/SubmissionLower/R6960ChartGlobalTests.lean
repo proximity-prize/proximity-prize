@@ -96,8 +96,6 @@ theorem chart_cover (s t : Chart) :
       simp only [pow_one,boundary,h,reduceIte]
       rw [mul_assoc,changed_product _ _ _ scalar_ne h,mul_one]
       split <;> first | exact (baseChart s).one_mem | exact xmem s
-#print axioms chart_cover
-#print axioms localize_integral
 variable {E : Type*} [Field E] [Algebra ChartField E]
 theorem uniform_transfer (s t : Chart)
     [Module.Finite (baseChart t) (integralClosure (baseChart t) E)]
@@ -145,7 +143,6 @@ theorem uniform_transfer (s t : Chart)
       change g^N*((c:ChartField)*test u) ∈ A
       rw [mul_left_comm]; exact A.mul_mem c.property su
   exact covers ⟨x,hx⟩
-#print axioms uniform_transfer
 end Lower6960.ChartOverlapTests
 
 end
@@ -220,8 +217,6 @@ theorem overlap_test (s t : Chart) (test : E →ₗ[ChartField] ChartField)
   refine ⟨n,?_⟩
   have val:=regular _ good
   rwa [←map_pow,←Algebra.smul_def,map_smul,smul_eq_mul] at val
-#print axioms simultaneous_tests
-#print axioms overlap_test
 end Lower6960.ChartGlobalTests
 
 end

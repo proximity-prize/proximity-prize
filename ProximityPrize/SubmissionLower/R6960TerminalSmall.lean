@@ -194,7 +194,6 @@ theorem compressed_polynomial {α : Type*} [Finite α] (S : α → (Polynomial F
 end
 end SplitCut.Compression
 
-#print axioms SplitCut.Compression.compressed_polynomial
 
 end Merged_KoalaCompressedEquation
 
@@ -367,7 +366,6 @@ theorem first_band_small_ordinate {w s T} (W : Word 179818 133606 w s T)
   have h := small_ordinate_count (v:=2400) (u:=2400) (b:=128) W label inj
     (by decide) (Or.inr (by decide)) f ne degree axes (by decide) (by decide) (by decide) marks
   exact h.trans (by decide)
-#print axioms first_band_small_ordinate
 abbrev axis (f : Equation) (i : Fin 2) := (K1_14_6_1.flatten f).degreeOf (some i)
 private theorem axis_mul {f g : Equation} (hf : f≠0) (hg : g≠0) (i : Fin 2) :
     axis (f*g) i=axis f i+axis g i := by
@@ -450,7 +448,6 @@ theorem low_component_count {w s T} (W : Word 179818 133606 w s T)
     unfold lowFee
     rw [ax 0,ax 1,natDegree_mul irr.ne_zero ng]
     exact le_of_eq (by ring)
-#print axioms low_component_count
 def smallMarks (T : Finset K1.K) (label : K1.K → K1.K) (s : K1.K → (Polynomial K1.K)) (f : Equation) :
     Finset K1.K := T.filter (fun γ => ∃ q : Equation, Irreducible q ∧ q∣f ∧
       0<q.natDegree ∧ q.natDegree≤2 ∧ atMark q (label γ) (s γ)=0)
@@ -471,7 +468,6 @@ theorem small_marks_at_first_band {w s T} (W : Word 179818 133606 w s T)
       Nat.add_le_add (Nat.mul_le_mul_left _ (Nat.add_le_add (caps 0) (Nat.mul_le_mul_left _ (caps 1))))
         (Nat.mul_le_mul_left _ degree)
     _ = _ := by ring
-#print axioms small_marks_at_first_band
 end Lower6960
 
 end
@@ -575,7 +571,6 @@ theorem small_marks {w s T} (W : Word 179818 164650 w s T) (label : K→K)
   unfold fee smallCap
   change 18*(_+2130706433*_)+2130706434*(_+_)+4*_ ≤ (19*2130706433+1)*2400+4*47
   omega
-#print axioms small_marks
 private theorem root_factor {f : Equation} (nf : f≠0) (z : K) (S : (Polynomial K))
     (root : atMark f z S=0) : ∃ q : Equation,Irreducible q ∧ q∣f ∧ atMark q z S=0 := by
   let ev := eval₂RingHom (graphEval z) (atX S)
@@ -640,7 +635,6 @@ theorem higher_remainder {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ
   refine ⟨q,ir,dv,?_,hit⟩
   by_contra! sm
   exact (mem_sdiff.mp hγ).2 (mem_filter.mpr ⟨ts hγ,q,ir,dv,positive,by omega,hit⟩)
-#print axioms higher_remainder
 end Lower6960.TerminalSmall
 
 end

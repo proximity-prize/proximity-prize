@@ -2,7 +2,7 @@ import ProximityPrize.SubmissionLower.ListProofA
 import ProximityPrize.SubmissionLower.StructuralListPrice
 import ProximityPrize.SubmissionLower.R6960Front6960ListRank
 import ProximityPrize.SubmissionLower.StructuralListMain
-import ProximityPrize.SubmissionLower.RungSplit
+import ProximityPrize.SubmissionLower.UpperBranch3
 
 set_option Elab.async false
 
@@ -244,7 +244,6 @@ theorem transform_weight (g L : (Polynomial K)) (G : Equation) (w : Fin 3 → �
   rw [transform, AlgEquiv.apply_symm_apply]
   exact affine_weight w hw _ _ _
 
-#print axioms transform_initialSep
 end
 end ShortenChart
 
@@ -591,7 +590,6 @@ theorem shortenChart (s : Source) (hs : ShapeOK s) (G : Equation) (hG : OrderTwo
   rw [hlen] at hdeg
   exact chart_contains length hK hk g L hL G E hdeg hf' hroot hEroot hsep
 
-#print axioms shortenChart
 end
 end ShortenChart
 
@@ -676,7 +674,6 @@ theorem scalar_list : CJ0.ScalarList 179818 8609338830670119 := by
     (Or.inr ⟨79, le_rfl, tail, prefix_bound⟩)
   rwa [list_price] at h
 
-#print axioms scalar_list
 end
 end Front6960ListBank
 

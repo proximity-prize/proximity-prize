@@ -93,7 +93,5 @@ theorem one (p : ι → σ → K) (rows : I → Pol σ K) (f : Fin 1 ↪ σ) (h 
   change Fintype.card ι * finrank K (Local (Fin 1) K k) ≤ _ at rank
   simpa only [dim, Fin.prod_univ_one] using rank
 
-#print axioms two
-#print axioms one
 end
 end Research6966.WordAxisPrice

@@ -29,7 +29,6 @@ theorem common_correction_far (f : Curve (Polynomial L)) (ir : Irreducible f) (l
   obtain ⟨c,hc⟩:=high _ _ (above ha) (above hb) _ (compatible_iterate a b u compatible H)
   obtain ⟨d,_,hd⟩ := descend_iterate_far f ir lo hi bounded basis root a b ha u H c hc
   exact ⟨d,hd⟩
-#print axioms common_correction_far
 theorem split_cocycle_far (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
     (hi : f.degreeOf ordinate<48) (bounded : height 164748 f≤heightCap (f.degreeOf ordinate) 164748)
     (basis : PowerBasis ChartField E)
@@ -45,7 +44,6 @@ theorem split_cocycle_far (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 
   obtain ⟨c,hc⟩:=common_correction_far f ir lo hi bounded basis root a b ha hb u
     (fun s t=> by rw [diff]; exact regular s t)
   exact ⟨fun s=>u s-c,hc,fun s t=>by rw [←diff]; ring⟩
-#print axioms split_cocycle_far
 end Lower6960.RetainedChartGluing
 
 end
@@ -107,7 +105,6 @@ theorem split_of_split_on_lines_far (f : Curve (Polynomial L)) (ir : Irreducible
     exact eq ▸ integral.mul (localW s)
   · have eq := (div_eq_iff pn).mp (diff s t)
     linear_combination eq
-#print axioms split_of_split_on_lines_far
 end Lower6960.RetainedLineRestriction
 
 end
@@ -241,7 +238,6 @@ theorem split_of_paired_data_far (f : Curve (Polynomial L)) (ir : Irreducible f)
   have id : u s-(u (false,false)-p (false,false))=p s := by linear_combination eq s (false,false)
   simpa [id,frame] using ip s
 
-#print axioms split_of_paired_data_far
 end Lower6960.RetainedRestrictionTorus
 
 end
@@ -351,7 +347,6 @@ theorem restriction_kernel_far (f : Curve (Polynomial L)) (ir : Irreducible f) (
       · apply congrArg (red E false x); simp only [v,start]; abel
       · apply congrArg (red E true z); simp only [v,start]; abel
       · rfl
-#print axioms restriction_kernel_far
 end Lower6960.RetainedSurfaceClass
 
 end

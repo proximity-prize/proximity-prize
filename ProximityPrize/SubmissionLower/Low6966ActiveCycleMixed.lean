@@ -220,8 +220,6 @@ theorem chart {f Q : Row 4} {l : ℕ} (q : Shape) (ht : 1 ≤ (shape f).t)
   have h := Low6966ActiveCycle.ordinary_chart ht b
   exact h
 
-#print axioms ordinary_budget
-#print axioms chart
 
 end
 end Low6966SharedBentCaps
@@ -418,7 +416,5 @@ end
 
 end Low6966ActiveCycle
 
-#print axioms Low6966ActiveCycle.proof
-#print axioms Low6966ActiveCycle.bound
 
 end Merged_Low6966ActiveCycleMixed

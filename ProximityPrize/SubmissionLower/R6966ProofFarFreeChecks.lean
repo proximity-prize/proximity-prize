@@ -167,7 +167,6 @@ theorem free16 : Checked (free 16) := by
   · rw [free16_first]; decide
   · rw [free16_first, free16_next]; decide
 
-#print axioms free16
 end Research6966.FarSourceData
 
 end Merged_R6966ProofFarFreeChecks

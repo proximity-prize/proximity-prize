@@ -88,7 +88,6 @@ theorem not_excluded {h A e:ℕ} (hp:0<h) (hl:h≤131070) (hc:h<K1.p) {D:PoleDat
   unfold excluded
   exact Nat.not_lt_of_ge (floor.trans (Nat.add_le_add_left sum _))
 
-#print axioms not_excluded
 
 /-- Exhaustive graph classification for the production parents. Both receipt
 families are tested at their minimum number of distinct ordinates. -/
@@ -139,6 +138,5 @@ theorem counted_packet {h A e c amax:ℕ} (hp:0<h) (hl:h≤131070) (hc:h<K1.p) {
     exact False.elim (prohibited (by rwa [Pade.Row.degree_map,kept]))
   · exact Or.inr graph
 
-#print axioms counted_packet
 end
 end Research6966.PadeCutoff

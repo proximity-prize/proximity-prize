@@ -111,8 +111,6 @@ theorem fits {r : ℕ} (hr : 0 < r) (hR : r < terminal) : fitsAt r = true := by
 
 theorem tail : plainCheck gate terminal (4012,1650,550) terminalD = true := by decide +kernel
 
-#print axioms fits
-#print axioms tail
 end KoalaFarBridge.FarCharge0
 
 end Merged_FarCharge0
@@ -198,7 +196,6 @@ theorem count {w Γ s} (hm : Messages w Γ s) (f : Row 4) (hf : SmallFactor f) (
     · exact cut hm f hf hact d u paid
   exact h first firstReceipt (hu.resolve_left hn)
 
-#print axioms count
 end
 end Low6960WeightedProof
 
@@ -297,7 +294,6 @@ theorem count_with_receipts (receipts : ∀ k : Band, Receipt k) {G : Shape → 
     (Bank.of_messages messages) (Bank.of_messages_ranked messages)
     P nz box hw active zero (fun _ ht=>Low6960Leading.lower_count ht) book E booked fat
 
-#print axioms count_with_receipts
 end
 end Lower6960.Low
 

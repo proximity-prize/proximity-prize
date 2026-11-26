@@ -688,6 +688,5 @@ end
 end Low6960FatBanks
 end
 
-#print axioms Low6960FatBanks.proof
 
 end Merged_R6960Low6960FatBanks

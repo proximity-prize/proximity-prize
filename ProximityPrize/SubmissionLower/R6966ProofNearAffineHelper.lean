@@ -82,6 +82,5 @@ theorem helper_bound {u deleted} {M:Model u deleted} {Γ T:Finset K}
   exact NativeAffineTariff.price_floor F sub model gp d w wp cap small 133570 (by omega)
     (by decide) (by decide) (by decide) (by decide) own
 
-#print axioms helper_bound
 end
 end Research6966.NearAffineHelper

@@ -35,7 +35,6 @@ theorem bank20_cover : ∃ ends, Cover bank20 firstHeight ends := by
       (by decide), (by decide), bank20_2341_2361,
       (by decide), (by decide), bank20_2362_2415,
       (by decide), (by decide), bank20_2416_2499, rfl⟩⟩
-#print axioms bank20_cover
 
 def bank21 : Witness :=
   ⟨2, false, 24, 45, 3850, 5374, 1193, 50764, 1750065639325696, 23337042054253⟩
@@ -65,7 +64,6 @@ theorem bank21_cover : ∃ ends, Cover bank21 firstHeight ends := by
       (by decide), (by decide), bank21_2344_2369,
       (by decide), (by decide), bank21_2370_2436,
       (by decide), (by decide), bank21_2437_2499, rfl⟩⟩
-#print axioms bank21_cover
 
 def bank22 : Witness :=
   ⟨3, true, 6, 45, 3200, 4466, 966, 22088, 985382249037824, 10911373353653⟩
@@ -99,7 +97,6 @@ theorem bank22_cover : ∃ ends, Cover bank22 firstHeight ends := by
       (by decide), (by decide), bank22_2342_2361,
       (by decide), (by decide), bank22_2362_2414,
       (by decide), (by decide), bank22_2415_2499, rfl⟩⟩
-#print axioms bank22_cover
 
 def bank23 : Witness :=
   ⟨3, true, 5, 45, 3200, 4466, 966, 25922, 985382249037824, 10911373353653⟩
@@ -129,7 +126,6 @@ theorem bank23_cover : ∃ ends, Cover bank23 firstHeight ends := by
       (by decide), (by decide), bank23_2351_2390,
       (by decide), (by decide), bank23_2391_2494,
       (by decide), (by decide), bank23_2495_2499, rfl⟩⟩
-#print axioms bank23_cover
 
 def bank24 : Witness :=
   ⟨3, true, 2, 45, 3200, 4466, 966, 35703, 985382249037824, 10911373353653⟩
@@ -155,6 +151,5 @@ theorem bank24_cover : ∃ ends, Cover bank24 firstHeight ends := by
       (by decide), (by decide), bank24_2336_2351,
       (by decide), (by decide), bank24_2352_2393,
       (by decide), (by decide), bank24_2394_2499, rfl⟩⟩
-#print axioms bank24_cover
 
 end Research6966.HelperWindowCatalogue
