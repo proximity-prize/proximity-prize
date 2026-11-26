@@ -1,0 +1,31 @@
+import ProximityPrize.SubmissionBinaryLower.KernelMoment43
+import ProximityPrize.SubmissionBinaryLower.B6402DimensionBudget
+open ProximityPrize.SubmissionBinaryLower B6401ContactKerD B6402LocalMoments B6402DimensionBudget
+set_option maxHeartbeats 12000000
+set_option maxRecDepth 12000
+namespace Binary6402MomentBook
+theorem u408 : varsKerDUpperQ 1048575 25266600885 866=(21342635938814148504713/167772) := by decide +kernel
+theorem u409 : varsKerDUpperQ 1048575 25266602567 866=(9701199469071878575837/76260) := by decide +kernel
+theorem u410 : varsKerDUpperQ 1048575 25266707805 866=(106714099241070686586253/838860) := by decide +kernel
+theorem u411 : varsKerDUpperQ 1048575 25266708623 866=(533570531380768646640427/4194300) := by decide +kernel
+theorem u412 : varsKerDUpperQ 1048575 25266778144 866=(1067147041816566917410159/8388600) := by decide +kernel
+theorem u413 : varsKerDUpperQ 1048575 25266782171 866=(533573694076752610224331/4194300) := by decide +kernel
+theorem u414 : varsKerDUpperQ 1048575 25266812889 866=(533575015008652192395497/4194300) := by decide +kernel
+theorem u415 : varsKerDUpperQ 1048575 25266918035 866=(1940289223626246057785/15252) := by decide +kernel
+theorem u416 : varsKerDUpperQ 1048575 25266959985 866=(21343253617462946605841/167772) := by decide +kernel
+theorem u417 : varsKerDUpperQ 1048575 25266971063 866=(533581816814679485525467/4194300) := by decide +kernel
+theorem u418 : varsKerDUpperQ 1048575 25267007783 866=(533583395856103342761787/4194300) := by decide +kernel
+theorem u419 : varsKerDUpperQ 1048575 25267092717 866=(106717409643078261533197/838860) := by decide +kernel
+theorem u420 : varsKerDUpperQ 1048575 25267102283 866=(533587459576394885463787/4194300) := by decide +kernel
+theorem u421 : varsKerDUpperQ 1048575 25267120643 866=(533588249100989868157147/4194300) := by decide +kernel
+theorem u422 : varsKerDUpperQ 1048575 25267163056 866=(26028784047084933607607/204600) := by decide +kernel
+theorem u423 : varsKerDUpperQ 1048575 25267231713 866=(533593025393226704208617/4194300) := by decide +kernel
+theorem u424 : varsKerDUpperQ 1048575 25267337769 866=(13014575270504291425537/102300) := by decide +kernel
+theorem u425 : varsKerDUpperQ 1048575 25267411317 866=(106720149773370006646957/838860) := by decide +kernel
+theorem u426 : varsKerDUpperQ 1048575 25267477629 866=(533603600482185692741057/4194300) := by decide +kernel
+theorem u427 : varsKerDUpperQ 1048575 25267547181 866=(48509690130495360835171/381300) := by decide +kernel
+theorem u428 : varsKerDUpperQ 1048575 25267600209 866=(533608871810727748455977/4194300) := by decide +kernel
+theorem u429 : varsKerDUpperQ 1048575 25267636929 866=(48510040990198889959387/381300) := by decide +kernel
+theorem u430 : varsKerDUpperQ 1048575 25267731429 866=(533614514715513628956257/4194300) := by decide +kernel
+theorem u431 : varsKerDUpperQ 1048575 25267749789 866=(48510482205466063961827/381300) := by decide +kernel
+end Binary6402MomentBook

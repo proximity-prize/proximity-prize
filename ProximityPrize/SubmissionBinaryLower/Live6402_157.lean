@@ -1,0 +1,86 @@
+import ProximityPrize.SubmissionBinaryLower.Live6402_156
+import ProximityPrize.SubmissionBinaryLower.KernelPriceTarget20
+open ProximityPrize.SubmissionBinaryLower B6402PricedCell B6402LinearCertificate B6402RectCover B6402PriceCells Binary6402Targets
+set_option maxRecDepth 12000
+set_option maxHeartbeats 12000000
+namespace Binary6402Live
+def source157 (box : Box) : Array Row := let pair := B6402GridRouting.rows (Native6402Grid.key 157); cell pair.1 pair.2 49 box
+def w2491 : Weights := [(1,(2885514428416/4328272109375)),(2,(1442757214208/865654421875)),(3,(11542057713664/4328272109375)),(4,(2164135821312/4328272109375)),(6,(2885517180257/6925235375000)),(10,(721378607104/865654421875)),(14,(2885514428416/4328272109375)),(15,(5771028856832/4328272109375)),(26,(1442757214208/4328272109375)),(46,(270516977664/4328272109375)),(52,(631206281216/865654421875)),(56,(721378607104/4328272109375)),(58,(1442757214208/4328272109375)),(62,(90172325888/4328272109375)),(63,(2885514428416/4328272109375)),(89,(2885514428416/4328272109375)),(94,(1442757214208/4328272109375))]
+def w2492 : Weights := [(0,(130398379129039397926232949/2351353820422640000)),(1,(130398379129039397926232949/4702707640845280000)),(4,(391195137387118193778698847/9405415281690560000)),(9,(130398379129039397926232949/9405415281690560000)),(14,(117523766667199/1210000)),(46,(117523766667199/4840000)),(50,(117523766667199/1210000)),(67,(117523766667199/4840000)),(68,(117523766667199/4840000)),(69,(6722553011565109/4840000)),(81,(117523766667199/4840000)),(83,(117523766667199/1210000)),(85,(117523766667199/4840000))]
+def w2493 : Weights := [(0,(19553167317412033907989241/352703073063396000)),(1,(19553167317412033907989241/705406146126792000)),(4,(19553167317412033907989241/470270764084528000)),(9,(19553167317412033907989241/1410812292253584000)),(14,(17624653106101/181500)),(46,(17624653106101/726000)),(50,(17624653106101/181500)),(67,(17624653106101/726000)),(68,(17624653106101/726000)),(69,(840278374348511/605000)),(81,(17624653106101/726000)),(83,(17624653106101/181500)),(85,(17624653106101/726000))]
+def w2494 : Weights := [(0,(782390263795032746704547267/7054061461267920000)),(1,(782390263795032746704547267/14108122922535840000)),(4,(782390263795032746704547267/9405415281690560000)),(9,(782390263795032746704547267/28216245845071680000)),(14,(705142599700417/3630000)),(46,(705142599700417/14520000)),(50,(705142599700417/3630000)),(67,(705142599700417/14520000)),(68,(705142599700417/14520000)),(69,(13445106017357101/4840000)),(81,(705142599700417/14520000)),(83,(705142599700417/3630000)),(85,(705142599700417/14520000))]
+def w2495 : Weights := [(0,(195564691122651910989791771/1763515365316980000)),(1,(195564691122651910989791771/3527030730633960000)),(4,(195564691122651910989791771/2351353820422640000)),(9,(195564691122651910989791771/7054061461267920000)),(14,(176266133752321/907500)),(46,(176266133752321/3630000)),(50,(176266133752321/907500)),(67,(176266133752321/3630000)),(68,(176266133752321/3630000)),(69,(3361195180563823/1210000)),(81,(176266133752321/3630000)),(83,(176266133752321/907500)),(85,(176266133752321/3630000))]
+def prepared588 : Prepared := ⟨plan668,⟨461683,629146,17993564,17993564,3951802777,3768⟩,(2751841/12500000),(314573/1048576),⟨true,85,4294967296,59,1301,432874,1073423304,4294982370,0,0⟩,target668,target669⟩
+theorem prepared588_ok : Correct prepared588 := by
+  constructor
+  · change B6402PriceTarget.values plan668 (5*(1:ℚ))=target668
+    rw [show 5*(1:ℚ)=5 by norm_num]
+    exact target668_ok
+  · change B6402PriceTarget.values plan668 (1811+(1:ℚ))=target669
+    rw [show 1811+(1:ℚ)=1812 by norm_num,show plan668=plan669 from rfl]
+    exact target669_ok
+theorem r157_0_1 : Receipt 49 (source157 Binary6402Cover.boxes_157[0]) Binary6402Cover.boxes_157[0] 1 1250000000000000000 (3/50) := Or.inr ⟨prepared588,⟨w2491,w2388,w2492,w2493⟩,by decide +kernel,prepared588_ok,by decide +kernel⟩
+def prepared589 : Prepared := ⟨plan670,⟨461683,629146,17993564,17993564,3951802777,3768⟩,(2751841/12500000),(314573/1048576),⟨true,85,4294967296,59,1301,432874,1073423304,8589964740,0,0⟩,target670,target671⟩
+theorem prepared589_ok : Correct prepared589 := by
+  constructor
+  · change B6402PriceTarget.values plan670 (5*(2:ℚ))=target670
+    rw [show 5*(2:ℚ)=10 by norm_num]
+    exact target670_ok
+  · change B6402PriceTarget.values plan670 (1811+(2:ℚ))=target671
+    rw [show 1811+(2:ℚ)=1813 by norm_num,show plan670=plan671 from rfl]
+    exact target671_ok
+theorem r157_0_2 : Receipt 49 (source157 Binary6402Cover.boxes_157[0]) Binary6402Cover.boxes_157[0] 2 2500000000000000000 (3/50) := Or.inr ⟨prepared589,⟨w2491,w2388,w2494,w2495⟩,by decide +kernel,prepared589_ok,by decide +kernel⟩
+def prepared590 : Prepared := ⟨plan668,⟨461683,83886,17993564,17993564,3951802777,3768⟩,(2751841/12500000),(1/25),⟨true,85,4294967296,59,1301,432874,1073423304,4294982370,0,0⟩,target668,target669⟩
+theorem prepared590_ok : Correct prepared590 := by
+  constructor
+  · change B6402PriceTarget.values plan668 (5*(1:ℚ))=target668
+    rw [show 5*(1:ℚ)=5 by norm_num]
+    exact target668_ok
+  · change B6402PriceTarget.values plan668 (1811+(1:ℚ))=target669
+    rw [show 1811+(1:ℚ)=1812 by norm_num,show plan668=plan669 from rfl]
+    exact target669_ok
+theorem r157_1_1 : Receipt 49 (source157 Binary6402Cover.boxes_157[1]) Binary6402Cover.boxes_157[1] 1 1250000000000000000 (3/50) := Or.inr ⟨prepared590,⟨w2491,w2418,w2492,w2493⟩,by decide +kernel,prepared590_ok,by decide +kernel⟩
+def prepared591 : Prepared := ⟨plan670,⟨461683,83886,17993564,17993564,3951802777,3768⟩,(2751841/12500000),(1/25),⟨true,85,4294967296,59,1301,432874,1073423304,8589964740,0,0⟩,target670,target671⟩
+theorem prepared591_ok : Correct prepared591 := by
+  constructor
+  · change B6402PriceTarget.values plan670 (5*(2:ℚ))=target670
+    rw [show 5*(2:ℚ)=10 by norm_num]
+    exact target670_ok
+  · change B6402PriceTarget.values plan670 (1811+(2:ℚ))=target671
+    rw [show 1811+(2:ℚ)=1813 by norm_num,show plan670=plan671 from rfl]
+    exact target671_ok
+theorem r157_1_2 : Receipt 49 (source157 Binary6402Cover.boxes_157[1]) Binary6402Cover.boxes_157[1] 2 2500000000000000000 (3/50) := Or.inr ⟨prepared591,⟨w2491,w2418,w2494,w2495⟩,by decide +kernel,prepared591_ok,by decide +kernel⟩
+def prepared592 : Prepared := ⟨plan668,⟨461683,10485,17993564,17993564,3951802777,3768⟩,(2751841/12500000),(1/200),⟨true,85,4294967296,59,1301,432874,1073423304,4294982370,0,0⟩,target668,target669⟩
+theorem prepared592_ok : Correct prepared592 := by
+  constructor
+  · change B6402PriceTarget.values plan668 (5*(1:ℚ))=target668
+    rw [show 5*(1:ℚ)=5 by norm_num]
+    exact target668_ok
+  · change B6402PriceTarget.values plan668 (1811+(1:ℚ))=target669
+    rw [show 1811+(1:ℚ)=1812 by norm_num,show plan668=plan669 from rfl]
+    exact target669_ok
+theorem r157_2_1 : Receipt 49 (source157 Binary6402Cover.boxes_157[2]) Binary6402Cover.boxes_157[2] 1 1250000000000000000 (3/50) := Or.inr ⟨prepared592,⟨w2491,w2418,w2492,w2493⟩,by decide +kernel,prepared592_ok,by decide +kernel⟩
+def prepared593 : Prepared := ⟨plan670,⟨461683,10485,17993564,17993564,3951802777,3768⟩,(2751841/12500000),(1/200),⟨true,85,4294967296,59,1301,432874,1073423304,8589964740,0,0⟩,target670,target671⟩
+theorem prepared593_ok : Correct prepared593 := by
+  constructor
+  · change B6402PriceTarget.values plan670 (5*(2:ℚ))=target670
+    rw [show 5*(2:ℚ)=10 by norm_num]
+    exact target670_ok
+  · change B6402PriceTarget.values plan670 (1811+(2:ℚ))=target671
+    rw [show 1811+(2:ℚ)=1813 by norm_num,show plan670=plan671 from rfl]
+    exact target671_ok
+theorem r157_2_2 : Receipt 49 (source157 Binary6402Cover.boxes_157[2]) Binary6402Cover.boxes_157[2] 2 2500000000000000000 (3/50) := Or.inr ⟨prepared593,⟨w2491,w2418,w2494,w2495⟩,by decide +kernel,prepared593_ok,by decide +kernel⟩
+theorem bank157_1 (i : Fin Binary6402Cover.boxes_157.size) : Receipt 49 (source157 Binary6402Cover.boxes_157[i]) Binary6402Cover.boxes_157[i] 1 1250000000000000000 (3/50) := by
+  change Fin 3 at i
+  fin_cases i
+  · exact r157_0_1
+  · exact r157_1_1
+  · exact r157_2_1
+theorem bank157_2 (i : Fin Binary6402Cover.boxes_157.size) : Receipt 49 (source157 Binary6402Cover.boxes_157[i]) Binary6402Cover.boxes_157[i] 2 2500000000000000000 (3/50) := by
+  change Fin 3 at i
+  fin_cases i
+  · exact r157_0_2
+  · exact r157_1_2
+  · exact r157_2_2
+#print axioms bank157_2
+end Binary6402Live
