@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.R6966ProofPadeChart
-import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.ListProofA
 
 set_option Elab.async false
 
@@ -146,8 +146,6 @@ theorem graph_rank {h A W r b:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData h}
   rw [Nat.add_mul] at mult
   exact (Nat.add_le_add_right (PadeBankRank.bank_dimension Crt word s W U) _).trans mult
 
-#print axioms rows_weighted_degree
-#print axioms graph_rank
 
 /-- The exact rounded graph power is forced on the evaluated bank at
 its physical cutoff before applying the integral divisibility theorem. -/
@@ -170,7 +168,6 @@ theorem forced_bank_layers {h W A r:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData h}
   intro y hy
   exact PadeBankRank.rows_contact Crt word U fits small cut geo pass (sheets y hy).1 Q mem
 
-#print axioms forced_bank_layers
 
 end
 end Research6966.PadeFiltered

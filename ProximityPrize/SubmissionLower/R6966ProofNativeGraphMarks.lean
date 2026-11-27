@@ -95,9 +95,6 @@ theorem mark_law {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) {q:Surface
   apply eq_neg_of_add_eq_zero_left
   exact evaluated.symm.trans law
 
-#print axioms owner_iff
-#print axioms off_owner
-#print axioms mark_law
 
 theorem equation_degrees {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) :
     (N.poly.coeff 1).natDegree≤G.graphDegree-1 ∧ (-N.poly.coeff 0).natDegree≤G.graphDegree := by
@@ -130,6 +127,5 @@ theorem equation_degrees {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) :
     omega
   exact ⟨cap 1,by simpa using cap 0⟩
 
-#print axioms equation_degrees
 end
 end Research6966.NativeGraphMarks

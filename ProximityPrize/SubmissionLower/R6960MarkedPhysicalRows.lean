@@ -173,7 +173,6 @@ theorem lift_fibres [FiniteDimensional ChartField E] (i n:ℕ) (budget:Budget E 
   rw [smul_smul,inv_mul_cancel₀ weight,one_smul,smul_zero] at cleared
   exact Fintype.linearIndependent_iff.mp (independent z) _ cleared j
 
-#print axioms lift_fibres
 end Lower6960.MarkedEvaluation
 
 end
@@ -315,7 +314,6 @@ theorem family_from_fibres [FiniteDimensional ChartField E] (i n:ℕ) (budget:Bu
   simp only [Fintype.card_sum,Fintype.card_fin]
   exact (Nat.add_le_add_right size a).trans_eq (by omega)
 
-#print axioms family_from_fibres
 end Lower6960.MarkedEvaluation
 
 end
@@ -450,9 +448,6 @@ theorem local_annihilation (z:L) (P:MarkPlace Scalar Ω (inner z)) (nz:inner z�
   have h:=map_dvd (mapped_torus c ev base _ P nz) killed
   rwa [local_cut,map_mul,map_sub] at h
 
-#print axioms mapped_finite
-#print axioms mapped_infty
-#print axioms mapped_torus
 end Lower6960.MarkedEvaluation
 
 end
@@ -544,7 +539,6 @@ theorem actual_place_rows (T:Finset L) (i e:ℕ) (v:J→E) (o:Tor E) (word:L→T
       exact local_annihilation (c i) (emb g i) (overBase g i) z place nz (u j) o (word z) (ann j z hz))
   exact ⟨A,row,realized,off,count⟩
 
-#print axioms actual_place_rows
 end Lower6960.MarkedEvaluation
 
 end

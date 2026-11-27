@@ -176,7 +176,4 @@ theorem rect_zero (A h e W : ℕ) (s : Shape) (U : Fin 2 → ℕ)
   dsimp only
   rw [Nat.sub_eq_zero_of_le (cap.trans (Nat.succ_le_of_lt gone)),Nat.zero_mul]
 
-#print axioms boundary_eq
-#print axioms rect_lex
-#print axioms rect_zero
 end Research6966.SpreadWindow

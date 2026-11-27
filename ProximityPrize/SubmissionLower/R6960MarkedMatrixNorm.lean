@@ -61,7 +61,6 @@ theorem integral_iff_finite_traces :
       simpa only [traceForm_apply,mul_assoc] using hd (s*t) (IsIntegral.mul hs ht)
     simpa only [smul_eq_mul,traceForm_apply,mul_assoc] using all (d*s) ds
 
-#print axioms integral_iff_finite_traces
 end Lower6960.ChartTraceTests
 
 end
@@ -255,9 +254,6 @@ theorem actual_integral_iff_finite_traces
     simp only [mem,mul_comm x]
   choose probes ok using test
   exact ⟨probes,ok⟩
-#print axioms planeMap_range
-#print axioms chartFractionRing
-#print axioms actual_integral_iff_finite_traces
 end
 end Lower6960.MonicChartProbes
 
@@ -373,9 +369,6 @@ theorem integral_section {E Ω A : Type*} [Field E] [Field Ω] [CommRing A]
   refine ⟨p.map lift,mon.map _,?_⟩
   have eq: (algebraMap A Ω).comp lift=emb.comp (algebraMap (baseChart s) E) := RingHom.ext comm
   rw [eval₂_map,eq,←Polynomial.hom_eval₂,root,map_zero]
-#print axioms finite_base
-#print axioms infinity_base
-#print axioms integral_section
 end Lower6960.MarkedEvaluation
 
 end
@@ -506,7 +499,6 @@ theorem count_from_original_columns [IsGalois (RatFunc K) E] (inK:k→+*K) (labe
     change π z∣∑l,localA z g u l*φ z ((T l v).map inK)
     exact Finset.dvd_sum (fun l _=>(off z hz g u hu l).trans (dvd_mul_right ..))
 
-#print axioms count_from_original_columns
 end Lower6960.MarkedEvaluation
 
 end

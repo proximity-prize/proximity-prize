@@ -152,12 +152,6 @@ theorem helper_not_two {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I
     (fun _ _ _ hR j a hshift => evaluated_mono Crt word rfl rfl rfl le_rfl hshift
       (P0_10_1.evaluated_shift Crt word hR j a))
     supply allG allH
-#print axioms helper_bank_checked
-#print axioms helper_surplus
-#print axioms helper_avoids
-#print axioms helper_nonzero
-#print axioms helper_common_caps
-#print axioms helper_not_two
 end Lower6960.HelperSource
 
 end Merged_R6960HelperSource6960
@@ -310,10 +304,6 @@ theorem native_strip {J : Ideal Ambient} (hJ : J.IsPrime) {G P : Jet} (n : ℕ)
   apply row_strip (I:=I) (Ideal.IsPrime.comap seedPresentation.symm.toRingHom) n (coords G) (coords P) _ mem
   change seedPresentation.symm (seedPresentation (toJet G))∉J
   simpa using outside
-#print axioms native_power
-#print axioms native_strip
-#print axioms row_power
-#print axioms row_strip
 end Lower6960.DifferentialContact
 
 end
@@ -421,8 +411,6 @@ theorem prepare {ι : Type*} [Fintype ι] (P : ι→Jet) (s : ι→Shape) (ks : 
     · exact unique G Q g q (g.1.isRelPrime_iff_not_dvd.mpr same)
   · apply select 1 (Or.inl rfl) P (fun i=>⟨0,by simp⟩)
     exact fun _ Q q _ => ex ⟨Q,q⟩
-#print axioms contact_of_crt
-#print axioms prepare
 end Lower6960.PrefixRows
 
 end
@@ -462,7 +450,6 @@ theorem prepare_6960 {ι : Type*} [Fintype ι] (P : ι→Jet) (s : ι→Shape) (
     helper_common_caps Crt word lo hi g.1 g.2.2.1 g.2.1 g.2.2.2
   unfold rescueDegrees
   omega
-#print axioms prepare_6960
 theorem native_at_6960 {ι : Type*} {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
     (lo : 2359≤h) (hi : h≤33579) {P : ι→Jet} {s : ι→Shape} {ks : ι→ℕ}
     (out : Prepared P s ks (evaluated Crt word helperBank.shape (helperCutoff h)) helperBank.shape)
@@ -485,7 +472,6 @@ theorem native_at_6960 {ι : Type*} {h : ℕ} {D : PoleData h} (Crt : CRTLift D)
       unfold helperCutoff cutoffCount
       omega
     exact contact_of_crt Crt word helperBank.shape H member fit noPole z S residues degree hits many agree
-#print axioms native_at_6960
 end Lower6960.PrefixRows
 
 end

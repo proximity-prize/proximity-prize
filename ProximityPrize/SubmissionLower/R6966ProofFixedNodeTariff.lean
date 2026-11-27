@@ -67,6 +67,5 @@ theorem count (p:ι→Fin 2→K) (words:ι→K[X]) (distinct:Function.Injective 
   rw [balance] at left
   simpa only [sum_const,card_univ,smul_eq_mul] using left.trans right
 
-#print axioms count
 end
 end Research6966.FixedNodeTariff

@@ -125,8 +125,5 @@ theorem Native.remaining_order {G:Pade.Row SeedField} (N:Native G) (gp:G.primiti
       have next:=strip_any _ ((G.primitive_map f).mpr gp) _ y v k bare
       simpa only [Nat.add_sub_add_right] using ih k next
 
-#print axioms exists_native
-#print axioms Native.remaining_axis
-#print axioms Native.remaining_order
 end
 end Research6966.PadeNativeQuotient

@@ -113,7 +113,5 @@ theorem split {T:Finset K} (label:K→K) (s:K→K[X]) (inj:Set.InjOn label (T:Se
     change T.card≤_+(T\B).card
     omega
 
-#print axioms coeff_cap
-#print axioms split
 end
 end Research6966.NativeMarkedTariff

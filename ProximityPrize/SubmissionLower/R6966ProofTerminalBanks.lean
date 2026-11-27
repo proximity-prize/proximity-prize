@@ -74,8 +74,5 @@ theorem product_of_retained {h A : ℕ} {D : PoleData h} (Crt : CRTLift D) (word
   obtain ⟨q,geo,pass,fiber,reg,onG⟩:=sheets y hy
   exact ⟨reg,onG,retained_order Crt word geo pass fits small cut mem y (v y) fiber⟩
 
-#print axioms failed_cutter
-#print axioms retained_order
-#print axioms product_of_retained
 end
 end Research6966.TerminalBanks

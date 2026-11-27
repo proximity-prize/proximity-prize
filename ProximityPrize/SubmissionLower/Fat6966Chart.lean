@@ -1,4 +1,6 @@
-import ProximityPrize.SubmissionLower.Fat6966Factors
+import ProximityPrize.SubmissionLower.Fat6966Defs
+import ProximityPrize.SubmissionLower.UpperBranch5
+import ProximityPrize.SubmissionLower.RingHomShortcuts
 import ProximityPrize.SubmissionLower.Fast066
 
 set_option Elab.async false

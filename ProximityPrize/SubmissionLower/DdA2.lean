@@ -56,7 +56,6 @@ import Mathlib.Topology.Algebra.MvPolynomial
 import ProximityPrize.SubmissionLower.DdZ3EWiUc
 import ProximityPrize.SubmissionLower.DdZgdIx1d
 import ProximityPrize.SubmissionLower.RingHomShortcuts
-import ProximityPrize.SubmissionLower.DdP6Defs
 set_option Elab.async false
 set_option synthInstance.maxHeartbeats 400000
 open _root_ renaming AlgHom.coe_toRingHom→zlv,AlgHom.toRingHom_eq_coe→ziQ,Algebra→yU,Algebra.algebraMap→cy,Algebra.algebraMap_self_apply→zEi,Algebra.smul_def→Oc,CharP.cast_eq_zero_iff→zX2,CommRing→qJ,DFunLike.congr_fun→Ze,DecidableEq→t7,Disjoint→Mj,Field→zc,Filter→Df,Filter.atTop→pG,Filter.eventually_ge_atTop→ZJ,Fin.castSucc→uz,Fin.last→pC,Fin.lastCases→G0,Fin.range_fin_succ→Aa,Fin.sum_univ_eq_sum_range→Ok,Fin.sum_univ_four→zmM,Finite→qy,Finset→nI,Finset.add_sum_erase→zT2,Finset.card_univ→S1,Finset.finite_toSet→WD,Finset.induction_on→Kl,Finset.le_sup→WX,Finset.mem_filter→zO0,Finset.mem_insert_of_mem→ IU,Finset.mem_insert_self→Kc,Finset.mem_univ→vk,Finset.mul_sum→ze,Finset.prod_congr→Dz,Finset.prod_insert→zqX,Finset.range→p7,Finset.single_le_sum→Pc,Finset.sum_add_distrib→zfW,Finset.sum_apply→Zh,Finset.sum_attach→zKD,Finset.sum_congr→qx,Finset.sum_const→Mw,Finset.sum_filter→Np,Finset.sum_insert→Mk,Finset.sum_le_sum→uW

@@ -164,7 +164,6 @@ theorem classify (parents:Finset Surface) (e c amax:ℕ) (large:2≤e) (gap:2*c<
   have : Infinite Sep:=Infinite.of_injective (algebraMap SeedField Sep) (algebraMap SeedField Sep).injective
   exact native_or_spread (sheets parents) e c amax large gap initial (fun σ _ _ h=>stable parents σ h)
 
-#print axioms classify
 
 /-- No extra assumption about the size or realizability of the seed fibre
 is needed at the terminal consumer. -/
@@ -197,9 +196,6 @@ theorem off_graph_product {Kset S:Finset Surface} (sub:S⊆Kset) (nonempty:S.Non
     exact ⟨⟨q,sub hq,hp⟩,sub_ne_zero.mpr (off _ _ (pts x hx))⟩)
   rwa [size,Row.degree_map] at paid
 
-#print axioms projected_sheets
-#print axioms packet_cases
-#print axioms off_graph_product
 end Native
 end
 end Research6966.Pade

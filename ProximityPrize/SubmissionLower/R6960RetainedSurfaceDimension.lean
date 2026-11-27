@@ -119,27 +119,25 @@ theorem paired_bound (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced (Crossing E x z)]
   have ds:tz= -(s:ℤ) := by dsimp [s]; omega
   have dt:tx= -(t:ℤ) := by dsimp [t]; omega
   exact ⟨finite,s,t,dt ▸ xt,ds ▸ zt,by omega⟩
-#print axioms paired_bound
-open RetainedCompression (Curve ordinate view height heightCap wordDegree)
-theorem actual_surface_budget (f:Curve (Polynomial L)) (ir:Irreducible f) (lo:3≤f.degreeOf ordinate)
-    (hi:f.degreeOf ordinate<48) (bounded:height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
-    (basis:PowerBasis ChartField E)
-    (root:aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0) :
-    ∃ (x z:L) (nx:x≠0) (nz:z≠0) (m n s t:ℕ),
-      ∃ (xf:Basis (Fin m) (Polynomial L) (chartImage E false x false)) (xi:Basis (Fin m) (Polynomial L) (chartImage E false x true))
-        (zf:Basis (Fin n) (Polynomial L) (chartImage E true z false)) (zi:Basis (Fin n) (Polynomial L) (chartImage E true z true)),
-      (transition E false x nx xf xi).det.degree=((-(t:ℤ):ℤ):WithBot ℤ) ∧
-      (transition E true z nz zf zi).det.degree=((-(s:ℤ):ℤ):WithBot ℤ) ∧
-      (rawMap E x z).ker=coboundaries E ∧ FiniteDimensional L (Paired E x z) ∧
-      finrank L (Paired E x z)≤s+t := by
-  have : FiniteDimensional ChartField E := basis.finite
-  have : Algebra.IsSeparable ChartField E := MonicChartProbes.actual_separable f ir lo hi basis root
-  obtain ⟨x,z,nx,nz,⟨B⟩,red⟩:=actual_crossing E f ir lo hi basis root
-  have : FiniteDimensional L (Crossing E x z) := Module.Finite.of_basis B
-  obtain ⟨m,⟨xf⟩,⟨xi⟩⟩:=native_frames E false x nx
-  obtain ⟨n,⟨zf⟩,⟨zi⟩⟩:=native_frames E true z nz
-  obtain ⟨finite,s,t,dt,ds,count⟩:=paired_bound E x z nx nz xf xi zf zi
-  exact ⟨x,z,nx,nz,m,n,s,t,xf,xi,zf,zi,dt,ds,
-    restriction_kernel E f ir lo hi bounded basis root x z nx nz,finite,count⟩
-#print axioms actual_surface_budget
+open RetainedCompression (Curve ordinate view height heightCap)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end Lower6960.RetainedSurfaceClass

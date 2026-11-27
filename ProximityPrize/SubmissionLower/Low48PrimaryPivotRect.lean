@@ -238,7 +238,6 @@ theorem key_injective (p q : Triple) (hp : p.index ≤ 1650) (hq : q.index ≤ 1
   congr
   omega
 
-#print axioms row_sound
 
 end Low48PrimaryPivot
 
@@ -427,7 +426,6 @@ theorem block_le_charge (i : BlockIndex) (hs : 1650 ≤ i.1.val) :
     rw [slot_inv,slot_inv] at heq
     exact triple_injOn hs hem hqm heq
 
-#print axioms block_le_charge
 
 end Low48PrimaryPivot
 
@@ -639,7 +637,6 @@ theorem debit_le_fee (w : Window) (hgrade : w.gradeLo ≤ w.gradeHi) :
     2 * (debit w : ℤ) ≤ ∑ q : Column, columnFee2 w (columnPoint q) :=
   debit_le_fee_on w hgrade univ univ
 
-#print axioms debit_le_fee
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotRect

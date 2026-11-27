@@ -1,6 +1,6 @@
 import ProximityPrize.SubmissionLower.R6966ProofHelperPhysicalModel
 import ProximityPrize.SubmissionLower.R6966ProofPadeResidualBank
-import ProximityPrize.SubmissionLower.R6966ProofWordSurfaceMarks
+import ProximityPrize.SubmissionLower.R6966ProofWordSurfaceInterpolation
 
 set_option Elab.async false
 
@@ -162,6 +162,5 @@ theorem bank_rank {h W t:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData h} (Crt:CRTLi
         intro Q mem;by_contra n;exact no ((Nat.le_add_right _ _).trans (totals mem n))) bot_le
       rw [bot,finrank_bot,mul_zero]
 
-#print axioms bank_rank
 end
 end Research6966.HelperBankRank

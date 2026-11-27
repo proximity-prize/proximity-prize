@@ -44,7 +44,6 @@ def atPoint (φ : A →ₐ[k] k) :
   rw [φ.commutes,mul_one]
   rfl
 
-#print axioms atPoint
 end Lower6960.RetainedFibreQuotient
 
 end
@@ -167,8 +166,6 @@ theorem cross_surjective (x z:L) (nx:x≠0) (nz:z≠0) : Function.Surjective (to
   refine ⟨(x*z)⁻¹^n • y,?_⟩
   rw [map_smul,eq,←map_pow,←Algebra.smul_def,smul_smul,←mul_pow,inv_mul_cancel₀ (mul_ne_zero nx nz),one_pow,one_smul]
 
-#print axioms point_kernel
-#print axioms cross_surjective
 
 theorem toCross_kernel (x z:L) (nx:x≠0) (nz:z≠0) :
     RingHom.ker (toCross E x z).toRingHom=(RingHom.ker (point x z).toRingHom).map
@@ -234,7 +231,6 @@ theorem actual_crossing (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3�
   intro a ha
   exact e.injective ((ha.map e.toRingHom).eq_zero.trans (map_zero e).symm)
 
-#print axioms actual_crossing
 end Lower6960.RetainedSurfaceClass
 
 end

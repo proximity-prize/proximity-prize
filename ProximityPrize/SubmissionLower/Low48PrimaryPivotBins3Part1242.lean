@@ -100,7 +100,6 @@ theorem columnFee2_eq_bins (w : Window) (p : Triple) (hg : w.gradeLo ≤ w.grade
     rw [← natCast_card_filter,weight_card]
   · simp [hc]
 
-#print axioms columnFee2_eq_bins
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotBinWeight
@@ -242,8 +241,6 @@ theorem uncharged_card (j : ℕ) (q : ℤ) (hj : j ≤ 1650) :
         omega
       rw [hs]
 
-#print axioms indexFiber_card
-#print axioms uncharged_card
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotBinIndex
@@ -350,7 +347,6 @@ theorem debit_le_binCompute (w : Window) (hg : w.gradeLo ≤ w.gradeHi) :
   rw [fee_eq_binCompute w hg] at h
   omega
 
-#print axioms debit_le_binCompute
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotBinAggregate
@@ -614,8 +610,6 @@ theorem sweep_eq (w : Window) (j lo n : ℕ) :
     rw [sweep,Nat.cast_add,ih,sum_range_succ,Nat.cast_mul,Nat.cast_sub (keep_le ..),
       volume_cast,total_cast,keep_cast,Nat.cast_add]
 
-#print axioms keep_cast
-#print axioms sweep_eq
 end Low48PrimaryPivot.Hinge
 
 namespace Low48PrimaryPivot
@@ -769,7 +763,6 @@ theorem binAtFast_eq (w : Window) (j : ℕ) : binAtFast w j = binAt w j := by
       exact (rawIndex_eq_trim w j hn).trans (trimIndex_eq w j)
     · exact trimIndex_eq w j
 
-#print axioms binAtFast_eq
 end Low48PrimaryPivot
 
 end Merged_Low48PrimaryPivotBinsFast

@@ -132,8 +132,6 @@ theorem rows_contact {h A} {D:PoleData h} (Crt:CRTLift D) (word:K1.I→K1_14.L)
   exact TerminalBanks.retained_order Crt word (geo _ mem) (pass _ mem) fits small cut
     (KoalaRect.rectEvaluated_le Crt word s W U inBank) y v fiber
 
-#print axioms bank_dimension
-#print axioms rows_contact
 end
 end Research6966.PadeBankRank
 
@@ -239,7 +237,6 @@ theorem chart_box (a b u d:K) (B J:ℕ) {P:Plane K} (hp:P∈box K B J) :
     have second:(v^j).natDegree ≤ j := by rw [natDegree_pow];simpa using Nat.mul_le_mul_left j vel
     omega
 
-#print axioms chart_box
 
 set_option backward.isDefEq.respectTransparency false in
 theorem chart_equiv (a b u d:K) (ne:a≠0) : Function.Bijective (chart a b u d) := by
@@ -283,7 +280,6 @@ theorem chart_graph_primitive (a b u d:K) (ne:a≠0) {G:Pade.Row K} (gp:G.primit
   change (chart a b u d G.polynomial).natDegree≠0
   exact (cap.1.trans (G.slope_degree gp)) ▸ one_ne_zero
 
-#print axioms chart_graph_primitive
 
 def window (K:Type*) [Field K] (S:Finset (ℕ×ℕ)) : Submodule K (Plane K) where
   carrier := {Q | ∀ j i,(j,i)∉S → (Q.coeff j).coeff i=0}
@@ -328,7 +324,6 @@ theorem filtered_gain {G:Pade.Row K} (gp:G.primitive) (ys:Finset K) (v:K→K)
   change finrank K ↥(V ⊔ box K b j)≤S.card at width
   omega
 
-#print axioms filtered_gain
 end
 end Research6966.PadeChart
 

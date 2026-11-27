@@ -35,7 +35,6 @@ theorem of_jets {P : Row 4} (h : ∀ m ∈ P.support, m ∈ jetExponents) :
 
 
 
-#print axioms of_jets
 end PrimaryTaperActive
 
 end Merged_PrimaryTaperActive

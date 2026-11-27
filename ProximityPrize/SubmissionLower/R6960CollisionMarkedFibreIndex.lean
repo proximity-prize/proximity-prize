@@ -122,6 +122,5 @@ omit [IsPrincipalIdealRing A] [IsReduced V] in
 theorem idempotent_integral (v : V) (idem : v^2=v) : IsIntegral A v := by
   refine ⟨Polynomial.X^2-Polynomial.X,monic_X_pow_sub (by rw [degree_X]; norm_num),?_⟩
   simp [idem]
-#print axioms reduced_fibre_index
 end
 end Lower6960.CollisionMarked

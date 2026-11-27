@@ -83,8 +83,6 @@ theorem orderAt_off_quotient {H G : Row 4} {S : (Polynomial Geom)} {v k : ℕ}
     (hoff : atJet H S ≠ 0) (h : OrderAt (H^v*G) S k) : OrderAt G S k := by
   simpa using orderAt_quotient (e := 0) (le_of_eq (contactOrder_off hoff)) h
 
-#print axioms orderAt_quotient
-#print axioms orderAt_off_quotient
 
 end
 end KoalaRetainedCut

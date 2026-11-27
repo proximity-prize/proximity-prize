@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.R6966ProofSpreadGain
 import ProximityPrize.SubmissionLower.R6966ProofSpreadWindow
 import ProximityPrize.SubmissionLower.R6966ProofSpreadBucket
-import ProximityPrize.SubmissionLower.R6966ProofHelperWindowIntervals
+import ProximityPrize.SubmissionLower.R6966ProofHelperWindowCertificate
 
 set_option Elab.async false
 
@@ -200,5 +200,4 @@ theorem excluded {s : Shape} {A e a n nodes moment lo hi h : ℕ} {U : Fin 2 →
   exact SpreadBucket.excluded_of_endpoints left right hiD.le wide fast
     (cert.1.trans_eq (congrArg (area U*·) rlo)) (cert.2.trans_eq (congrArg (area U*·) rhi))
 
-#print axioms excluded
 end Research6966.SpreadInterval

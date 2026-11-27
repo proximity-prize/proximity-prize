@@ -79,8 +79,6 @@ theorem branch_index_of_discriminant [IsAlgClosed k]
   have dp : idx z^2∣(∏ i : branchFactors δ,f i^branchWeight δ i).map (evalRingHom z) :=
     (disc z hz).trans factor.dvd'
   simpa only [Polynomial.map_prod,Polynomial.map_pow] using dp
-#print axioms branch_weighted_degrees
-#print axioms branch_index_of_discriminant
 end
 end Lower6960.CollisionTame
 
@@ -156,7 +154,6 @@ theorem simple_branch_weight (δ : (Polynomial (Polynomial k))) (nz : δ≠0) (z
       normalize_normalized_factor _ (Multiset.mem_toFinset.mp i.property)
     rw [emultiplicity_eq_count_normalizedFactors (branchFactor_prime δ i).irreducible nz,norm]
     rfl
-#print axioms simple_branch_weight
 end
 end Lower6960.CollisionTame
 
@@ -268,7 +265,6 @@ theorem simple_frame_corank (δ : Plane k) (nz : δ≠0)
   rw [δeval,δorder]
   exact ENat.natCast_inj.mp idxEq
 
-#print axioms simple_frame_corank
 end
 end Lower6960.CollisionTame
 
@@ -329,7 +325,6 @@ theorem transverse_corank_receipt (δ : Plane k) (nz : δ≠0)
       ((evalRingHom (C z)).map_det T).symm
     rw [detMap]
     exact le_of_eq order
-#print axioms transverse_corank_receipt
 end
 end Lower6960.CollisionTame
 
@@ -507,7 +502,6 @@ theorem fibre_index_supported (p : ℕ) [CharP k p] [CharP (FractionRing (Polyno
     fun h=>not_simple x h droot
   change 2≤((branchProduct δs).map (evalRingHom z)).rootMultiplicity x
   omega
-#print axioms fibre_index_supported
 end
 end Lower6960.CollisionMarked
 
@@ -629,7 +623,6 @@ def axisGenericData (b:Bool) (z:L) (nz:z≠0) :
     rw [first_tmul,Algebra.TensorProduct.cancelBaseChange_symm_tmul]
     change (chartFractionToLaurent b r) ⊗ₜ[Λ] torus.val (1 ⊗ₜ[R] (1:B))=_
     rw [torus.property,map_one]
-#print axioms axisGenericData
 end
 end Lower6960.CollisionMarked
 
@@ -682,7 +675,6 @@ theorem fibreSection_of_chart_pair (a:ℕ) (z:L) (v:Axis E true z)
         (axisX (E:=E) z:Axis E true z) := rfl
     rw [q,show Ideal.Quotient.mk (axisIdeal E true z) u=((↑(axisX (E:=E) z)⁻¹:Axis E true z)^a)*v from val,
       ←mul_assoc,←mul_pow,Units.mul_inv,one_pow,one_mul]
-#print axioms fibreSection_of_chart_pair
 end
 end Lower6960.CollisionMarked
 
@@ -763,8 +755,6 @@ theorem axisGenericData_scalar [FiniteDimensional ChartField E]
   rw [j,g.property.1]
   change axisToGeneric (E:=E) z (f.val (baseMap E z h))=_
   rw [axisFibreData_scalar]
-#print axioms axisToGeneric_injective
-#print axioms axisGenericData_scalar
 end
 end Lower6960.CollisionMarked
 

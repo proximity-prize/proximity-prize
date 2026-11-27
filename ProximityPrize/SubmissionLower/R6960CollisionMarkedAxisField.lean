@@ -73,7 +73,5 @@ theorem axisFraction_separable [Algebra.IsSeparable ChartField E] (b : Bool) :
     let : Algebra (FractionRing (Plane L)) E := axisFractionAlgebra b
     Algebra.IsSeparable (FractionRing (Plane L)) E :=
   lineFraction_separable true b
-#print axioms lineFractionBasis
-#print axioms lineFraction_separable
 end
 end Lower6960.CollisionMarked

@@ -93,8 +93,6 @@ theorem native_index_sum {k:Type} [Field k] [IsAlgClosed k] [DecidableEq k]
   have eq : δ.eval (Polynomial.C z)=D.map (evalRingHom z) := by
     simpa only [D,Bivariate.swap_swap_apply] using RetainedCompression.eval_swap D z
   exact eq ▸ square z hz
-#print axioms plane_degree_from_line_transition
-#print axioms native_index_sum
 end
 end Lower6960.CollisionMarked
 
@@ -189,7 +187,6 @@ theorem actual_good_count (p:ℕ) [CharP L p] [CharP Scalar p] [DecidableEq L]
     positive (by omega) rle sum le_rfl le_rfl _ dimBound orbit
   omega
 
-#print axioms actual_good_count
 end Lower6960.MarkedEvaluation
 
 end

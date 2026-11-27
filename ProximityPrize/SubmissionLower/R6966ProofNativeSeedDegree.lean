@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.R6966ProofNativeSeedSlice
+import ProximityPrize.SubmissionLower.Z6969Pack0096
 import ProximityPrize.SubmissionLower.Fast069
 
 set_option Elab.async false
@@ -91,8 +91,6 @@ theorem coeff_degree (H:Equation) (i:ℕ) : (H.coeff i).totalDegree≤(native H)
   rw [←genericSeedLine_degree _ ne,←line]
   exact natDegree_map_le
 
-#print axioms inverse
-#print axioms coeff_degree
 
 /-- Seed mass of the squarefree projection on any subset of the terminal
 parents. The annihilator's numerator survives clearing on the generic
@@ -109,6 +107,5 @@ theorem projected_seed {parents:Finset Surface} {H:Equation} (proj:ProjectedProd
   rw [eq] at div
   exact (coeff_degree H i).trans ((natDegree_le_of_dvd div dn).trans deg)
 
-#print axioms projected_seed
 end
 end Research6966.NativeSeedDegree

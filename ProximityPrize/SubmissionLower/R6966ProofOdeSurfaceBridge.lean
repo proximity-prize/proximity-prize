@@ -107,7 +107,5 @@ theorem regular (params:ι→Fin 2→E (K:=K)) (fixed:∀ z i,Differential.deriv
       exact (Polynomial.eval_map_apply scalar _).trans (congrArg scalar (hit i mem)))
   exact count
 
-#print axioms degrees
-#print axioms regular
 end
 end Research6966.OdeSurfaceBridge

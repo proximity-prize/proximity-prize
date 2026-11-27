@@ -133,9 +133,6 @@ theorem native_model (P:B[X][X]) (prim:P.IsPrimitive) :
   obtain ⟨D,d,nd,eq⟩:=clear_two (R:=Seeds) P
   exact primitive_part (algebraMap Seeds B) (IsFractionRing.injective Seeds B) P prim D d nd eq
 
-#print axioms native_model
 
-#print axioms joint_surjective
-#print axioms raw_model
 end
 end Research6966.PadeIntegralGraph

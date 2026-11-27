@@ -1,4 +1,4 @@
-import ProximityPrize.SubmissionLower.PortLowBase
+import ProximityPrize.SubmissionLower.ListProofA
 import Mathlib.Tactic
 
 set_option Elab.async false
@@ -110,8 +110,6 @@ theorem quotient_cap (u v W t : ℕ) {F G Q : Raw k} (nz : F≠0) (eq : F=G^t*Q)
   apply (bounded_iff ..).mpr
   omega
 
-#print axioms bounded_iff
-#print axioms quotient_cap
 
 /-- The complete integral bank pays the full raw weight of a graph factor
 after clearing the two CRT poles. -/
@@ -132,6 +130,5 @@ theorem complete_graph_quotient {h : ℕ} (hpos : 0<h) (hh : h≤131070)
   · have rn : R≠0 := desc ▸ mul_ne_zero (pow_ne_zero _ gn) zero
     exact quotient_cap _ _ _ _ rn desc bounded
 
-#print axioms complete_graph_quotient
 end
 end Research6966.RawPhysicalDegree

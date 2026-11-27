@@ -145,9 +145,6 @@ theorem negative_twist {K E : Type*} [Field K] [DecidableEq (RatFunc K)] [Field 
   have pos := Module.finrank_pos (R:=RatFunc K) (M:=E)
   rw [eq,natDegree_mul (pow_ne_zero _ X_ne_zero) qn,natDegree_pow,natDegree_X] at deg
   omega
-#print axioms integral_derivative
-#print axioms square_clears
-#print axioms negative_twist
 theorem pole_budget {K E : Type*} [Field K] [DecidableEq (RatFunc K)] [Field E]
     [Algebra (RatFunc K) E] [FiniteDimensional (RatFunc K) E]
     [Algebra (Polynomial K) E] [IsScalarTower (Polynomial K) (RatFunc K) E]
@@ -186,7 +183,6 @@ theorem pole_budget {K E : Type*} [Field K] [DecidableEq (RatFunc K)] [Field E]
   exact (mul_eq_zero.mp zero).resolve_left ((map_ne_zero_iff _
     ((IsScalarTower.algebraMap_eq (Polynomial K) (RatFunc K) E) ▸
       ι.injective.comp (IsFractionRing.injective (Polynomial K) (RatFunc K)))).mpr (pow_ne_zero _ nz))
-#print axioms pole_budget
 private def rawDegree (e : ℕ) :=
   let m:=e+1
   let H:=164650*(10*(2*e)*(2*e+1)-9*m*(m-1))/(18*m)
@@ -197,7 +193,6 @@ theorem profile_room :
 theorem coarse_room : ∀ e : Fin 48,3≤e.val →
     2*((e.val-1)*(3*e.val-2)*164650+(e.val-1))≤2105544292 ∧
     2105544292+25162141=K1.p := by decide +kernel
-#print axioms profile_room
 end Lower6960.DifferentialPoles
 
 end
@@ -325,8 +320,6 @@ theorem equation_derivative (i : A→+*E) (f : (Polynomial A)) (c : A) (u : Aˣ)
   calc
     _ = (i (u:A)*i ((↑u⁻¹:A)))*(f.derivative.eval₂ i α*β^(e-2)) := by rw [cancel,one_mul]
     _ = _ := by ring
-#print axioms reflect_derivative
-#print axioms equation_derivative
 end Evaluation
 end
 end Lower6960.MonicChart
@@ -438,7 +431,6 @@ theorem original_equation (b : PowerBasis F E) (f : (Polynomial A))
   change P=C l*(C l⁻¹*P)
   rw [← mul_assoc,← C_mul,mul_inv_cancel₀ ln,C_1,one_mul]
 
-#print axioms chart_basis
 end Basis
 end
 end Lower6960.MonicChart
@@ -596,9 +588,6 @@ theorem raw_square_clears (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u :
   rw [ha,mul_pow,map_mul,mul_right_comm]
   exact native.mul (isIntegral_algebraMap (x:=a^2))
 end Differential
-#print axioms resultant_eq_chart
-#print axioms discriminant_dvd
-#print axioms raw_square_clears
 end Comparison
 end
 end Lower6960.MonicChart
@@ -644,8 +633,6 @@ theorem raw_square_clears_local {A F E : Type*} [CommRing A] [IsDomain A] [IsInt
     IsIntegral A (algebraMap A E ((f.resultant f.derivative f.natDegree (f.natDegree-1))^2)*x′) := by
   obtain ⟨c,u,h⟩ := exists_unit_evaluation f primitive
   exact raw_square_clears b f c u h.symm degree positive root x hx
-#print axioms exists_unit_evaluation
-#print axioms raw_square_clears_local
 end
 end Lower6960.MonicChart
 
@@ -853,8 +840,6 @@ theorem scaled_raw_square_clears (b : PowerBasis F E) (f : (Polynomial A)) (c : 
   rw [←identity,mul_pow,map_mul,mul_assoc]
   exact isIntegral_algebraMap.mul clear
 end Differential
-#print axioms scaled_resultant_eq
-#print axioms scaled_raw_square_clears
 end Scaled
 end
 end Lower6960.MonicChart
@@ -997,7 +982,6 @@ theorem infinity_resultant (f : (Polynomial (Polynomial K))) (H d : ℕ) (pos : 
   rw [scale,←mul_assoc,←pow_add,←pow_mul,←mul_assoc,←pow_add]
   unfold resultantWidth
   ring
-#print axioms infinity_resultant
 end
 end Lower6960.MonicChart
 
@@ -1080,7 +1064,6 @@ theorem reflected_local_factor (p : (Polynomial K)) (d : ℕ) (fit : p.natDegree
     rw [←pow_add,Nat.sub_add_cancel fit]
   rw [mapped_X_infty,reverse_atInfinity _ _ fit,tail,eq]
   ring
-#print axioms reflected_local_factor
 end
 end Lower6960.MonicChart
 

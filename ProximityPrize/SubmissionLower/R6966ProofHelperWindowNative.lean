@@ -159,5 +159,4 @@ theorem projected_bounds {b : Witness} (checked : Verified b) {h : ℕ} {D : Pol
       positive cut fits reserve geo pass
     simpa only [tag,ite_true] using result
 
-#print axioms projected_bounds
 end Research6966.HelperWindowNative

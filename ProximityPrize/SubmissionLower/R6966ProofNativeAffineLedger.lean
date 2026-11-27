@@ -74,8 +74,4 @@ theorem projected_floor {n a d marks fee g v₀ v₁ h₀ h₁ : ℕ} (gap : d <
     (Nat.add_le_add (Nat.mul_le_mul (Nat.mul_le_mul_left _ z) o) (Nat.mul_le_mul_left _ o))
     (Nat.mul_le_mul_left _ z))) _)
 
-#print axioms three_floor
-#print axioms two_floor
-#print axioms fixed_floor
-#print axioms projected_floor
 end Research6966.NativeAffineLedger

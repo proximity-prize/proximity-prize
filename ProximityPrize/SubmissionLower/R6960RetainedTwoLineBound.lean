@@ -73,5 +73,4 @@ theorem two_line_bound (G H : Matrix ι ι (Laurent k)) (g : IsUnit G) (h : IsUn
   rw [cross] at c
   change _ + finrank k W ≤ finrank k (H1 G)+finrank k (H1 H)+Fintype.card ι at bound
   exact ⟨finite,by omega⟩
-#print axioms two_line_bound
 end Lower6960.RetainedTwoLineBound

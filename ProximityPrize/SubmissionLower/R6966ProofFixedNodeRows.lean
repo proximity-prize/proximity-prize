@@ -125,7 +125,5 @@ theorem test_detects (z:σ→K) (S:K[X]) (x₀ y₀ x answer:K) (hit:S.eval x₀
     ring
   rw [sum,value,mul_comm answer,←mul_sub,mul_eq_zero,or_iff_right (pow_ne_zero _ regular),sub_eq_zero]
 
-#print axioms test_degree
-#print axioms test_detects
 end
 end Research6966.FixedNodeRows

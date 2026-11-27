@@ -99,7 +99,6 @@ theorem actual_axis_projector [FiniteDimensional ChartField E] (p:ℕ)
     (axisScaledOrdinate P pn b.gen root-axisScaledWord P z S))*η=0
   rw [map_sub,map_sub]
   exact mapped
-#print axioms actual_axis_projector
 end
 end Lower6960.CollisionMarked
 
@@ -229,7 +228,6 @@ theorem actual_axis_marked_family (p:ℕ) [CharP L p] [CharP (FractionRing (Poly
     calc _ = (ρ (red E true z (axisScaledOrdinate P pn b.gen root-axisScaledWord P z S))*η)*
           ρ (polyMap E true z false (h i)) := by ring
          _ = _ := by rw [kills,zero_mul]
-#print axioms actual_axis_marked_family
 end
 end Lower6960.CollisionMarked
 

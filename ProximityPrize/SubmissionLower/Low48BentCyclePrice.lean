@@ -537,7 +537,7 @@ namespace Low48BentCycle
 noncomputable section
 
 open Low48BentLattice (Cap Chamber latticePoints)
-open Low48Price (addBent ambientMix bentIntegral primaryBox )
+open Low48Price (addBent ambientMix bentIntegral)
 open K1_13 (Shape)
 open K1_13_6_2_4_1 (positiveDiagonal)
 open scoped BigOperators

@@ -94,7 +94,6 @@ theorem node_rank (x y : Geom) :
     rw [binCompute3] at h3
     omega
 
-#print axioms node_rank
 end KoalaTaperTransfer
 
 end Merged_KoalaTaperTransferReceipt

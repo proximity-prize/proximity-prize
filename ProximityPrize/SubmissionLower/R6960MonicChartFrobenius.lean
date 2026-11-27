@@ -62,16 +62,13 @@ theorem root_of_coefficients {E : Type*} [Field E] (p : ℕ) [Fact p.Prime] [Cha
   have hle := natDegree_le_of_dvd (ir.prime.dvd_of_dvd_pow dv) hn
   rw [natDegree_X_pow_sub_C,deg] at hle
   omega
-theorem descend_chart {A E : Type*} [CommRing A] [Field E] [Algebra A E]
-    (p : ℕ) [Fact p.Prime] [CharP E p] (u b t : E) (n : ℕ)
-    (given : IsIntegral A ((u^p-b^p)/t^(p*n))) :
-    IsIntegral A ((u-b)/t^n) := by
-  apply IsIntegral.of_pow (n:=p) (Fact.out : p.Prime).pos
-  rw [div_pow,sub_pow_char,←pow_mul,Nat.mul_comm n p]
-  exact given
-#print axioms coefficients_constant
-#print axioms root_of_coefficients
-#print axioms descend_chart
+
+
+
+
+
+
+
 end Lower6960.FrobeniusConstants
 
 end
@@ -151,8 +148,6 @@ theorem fraction_power (p : ℕ) [Fact p.Prime] [CharP k p] [PerfectRing k p]
   refine ⟨ι u/ι v,?_⟩
   rw [div_pow,←map_pow,←map_pow,hu,hv]
   exact IsFractionRing.mk'_num_den' _ _
-#print axioms plane_power
-#print axioms fraction_power
 private theorem cross {x : F} (D : Derivation ℤ F F)
     (op : Plane k→Plane k)
     (agrees : ∀ q,D (algebraMap (Plane k) F q)=algebraMap (Plane k) F (op q))
@@ -209,7 +204,6 @@ theorem root_field_constant (p : ℕ) [Fact p.Prime] [CharP k p] [PerfectRing k 
     obtain ⟨y,eq⟩ := base_constant p dx dz xaction zaction (f.coeff i)
       (coefficient_zero dx Dx ex u integral hx i) (coefficient_zero dz Dz ez u integral hz i)
     exact ⟨ι y,by rw [←map_pow,eq,coeff_map]⟩
-#print axioms root_field_constant
 end Lower6960.PlaneConstants
 
 end
@@ -287,7 +281,6 @@ theorem extend [Algebra.FormallySmooth A B] (d : Derivation ℤ A A) :
   intro x
   exact congrArg TrivSqZeroExt.snd (g.commutes x)
 end Smooth
-#print axioms extend
 section Coordinates
 open PlaneConstants (Plane)
 variable {k : Type} [Field k]
@@ -301,36 +294,35 @@ theorem dz_apply (q : Plane k) : dz q=Bivariate.swap (Bivariate.swap q).derivati
   change (q.coeff i).derivative.coeff j=_
   rw [CurvatureSquares.coeff_swap,coeff_derivative,coeff_derivative,
     show ((j:(Polynomial k))+1)=C ((j:k)+1) by simp,coeff_mul_C,CurvatureSquares.coeff_swap]
-theorem coordinates (F E : Type*) [Field F] [Field E] [Algebra (Plane k) F]
-    [IsFractionRing (Plane k) F] [Algebra F E] [FiniteDimensional F E]
-    (p : ℕ) [Fact p.Prime] [CharP k p] [PerfectRing k p] [CharP F p] [CharP E p]
-    (small : Module.finrank F E<p) :
-    ∃ (Dx Dz : Derivation ℤ E E),
-      (∀ q,Dx (algebraMap F E (algebraMap (Plane k) F q))=
-        algebraMap F E (algebraMap (Plane k) F q.derivative)) ∧
-      (∀ q,Dz (algebraMap F E (algebraMap (Plane k) F q))=
-        algebraMap F E (algebraMap (Plane k) F (Bivariate.swap (Bivariate.swap q).derivative))) ∧
-      ∀ u : E,Dx u=0 → Dz u=0 → ∃ y:E,y^p=u := by
-  have : Algebra.FormallyEtale (Plane k) F :=
-    Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors (Plane k))
-  have : Algebra.IsSeparable F E := by
-    constructor
-    intro x
-    have hx : IsIntegral F x:=Algebra.IsIntegral.isIntegral x
-    exact (separable_iff_derivative_ne_zero (minpoly.irreducible hx)).mpr
-      (CurvatureSquares.derivative_ne_zero_of_natDegree_pos_lt_char p _ (minpoly.natDegree_pos hx)
-        ((minpoly.natDegree_le x).trans_lt small))
-  have : Algebra.FormallyEtale F E := Algebra.FormallyEtale.of_isSeparable F E
-  obtain ⟨x,hx⟩ := extend (B:=F) (dx (k:=k))
-  obtain ⟨z,hz⟩ := extend (B:=F) (dz (k:=k))
-  obtain ⟨X',ex⟩ := extend (B:=E) x
-  obtain ⟨Z',ez⟩ := extend (B:=E) z
-  have vertical (q : Plane k) : z (algebraMap (Plane k) F q)=_ :=
-    (hz q).trans (congrArg (algebraMap (Plane k) F) (dz_apply q))
-  exact ⟨X',Z',fun q=>(ex _).trans (congrArg _ (hx q)),fun q=>(ez _).trans (congrArg _ (vertical q)),
-    fun u hu hv=>PlaneConstants.root_field_constant p x z X' Z' hx vertical ex ez small u hu hv⟩
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end Coordinates
-#print axioms coordinates
 end Lower6960.ChartDerivations
 
 end
@@ -453,8 +445,6 @@ theorem base_coordinates : ∃ dx dz : Derivation ℤ ChartField ChartField,
     rw [←incl_C]
     exact (hz _).trans ((congrArg (algebraMap (Plane L) ChartField) (dz_C a)).trans (incl_C _))
 
-#print axioms plane_fractionRing
-#print axioms base_coordinates
 end
 end Lower6960.MonicChart
 
@@ -571,7 +561,6 @@ theorem infinity_derivation [DecidableEq ChartField] (D : Derivation ℤ ChartFi
   refine ⟨(↑u⁻¹:Infinity Scalar)^2*(g q*a-g p*b),?_⟩
   rw [eq,D.leibniz_div,smul_eq_mul,smul_eq_mul,smul_eq_mul,ha,hb]
   simp only [map_mul,map_pow,map_sub,map_units_inv,hu]
-#print axioms infinity_derivation
 end
 end Lower6960.MonicChart
 
@@ -588,7 +577,7 @@ noncomputable section
 open Polynomial
 open K1_14 (L)
 open PlaneConstants (Plane)
-open RetainedCompression (Curve ordinate view view_y height heightCap wordDegree)
+open RetainedCompression (Curve ordinate view view_y height heightCap)
 open scoped Polynomial Lower6960.MonicChart
 variable {E : Type*} [Field E]
     [Algebra ChartField E] [Algebra (Polynomial Scalar) E] [IsScalarTower (Polynomial Scalar) ChartField E]
@@ -611,79 +600,77 @@ theorem root_finrank (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f
   rw [b.finrank,←b.natDegree_minpoly,←size,
     natDegree_map_eq_of_injective (IsFractionRing.injective (Polynomial Scalar) ChartField),deg]
 variable [DecidableEq ChartField] [Algebra (Infinity Scalar) E] [IsScalarTower (Infinity Scalar) ChartField E]
-private theorem overlap_zero [FiniteDimensional ChartField E] [Algebra.IsSeparable ChartField E]
-    (d : Derivation ℤ ChartField ChartField) (D : Derivation ℤ E E)
-    (share : ∀ a,D (algebraMap ChartField E a)=algebraMap ChartField E (d a))
-    (on_scalars : ∀ a : Scalar,∃ b : Scalar,d (RatFunc.C a)=RatFunc.C b)
-    (on_X : d RatFunc.X=1 ∨ d RatFunc.X=0)
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
-    (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
-    (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
-    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
-    (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) : D x=0 := by
-  obtain ⟨df,hf⟩ := finite_derivation d on_scalars on_X
-  obtain ⟨di,hi'⟩ := infinity_derivation d on_scalars on_X
-  let : Differential E := ⟨D⟩
-  let : Differential (Polynomial Scalar) := ⟨df⟩
-  let : Differential (Infinity Scalar) := ⟨di⟩
-  let : DifferentialAlgebra (Polynomial Scalar) E := ⟨fun a=>by
-    change D (algebraMap (Polynomial Scalar) E a)=algebraMap (Polynomial Scalar) E (df a)
-    rw [IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField E,share,hf]
-    exact (IsScalarTower.algebraMap_apply (Polynomial Scalar) ChartField E (df a)).symm⟩
-  let : DifferentialAlgebra (Infinity Scalar) E := ⟨fun a=>by
-    change D (algebraMap (Infinity Scalar) E a)=algebraMap (Infinity Scalar) E (di a)
-    rw [IsScalarTower.algebraMap_apply (Infinity Scalar) ChartField E,share,hi']
-    exact (IsScalarTower.algebraMap_apply (Infinity Scalar) ChartField E (di a)).symm⟩
-  exact actual_coboundary_zero f ir lo hi bounded b root x y z fx iy overlap
-theorem actual_coboundary_pth_root
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
-    (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
-    (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
-    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
-    (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) :
-    ∃ w : E,w^K1.p=x := by
-  let : IsFractionRing (Plane L) ChartField := plane_fractionRing
-  let : FiniteDimensional ChartField E := b.finite
-  let incl : L→+*ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
-  let : Fact K1.p.Prime := ⟨KoalaBear.is_prime⟩
-  let : CharP E K1.p := charP_of_injective_ringHom ((algebraMap ChartField E).comp incl).injective K1.p
-  have small : Module.finrank ChartField E<K1.p := by
-    rw [root_finrank f ir lo b root]
-    exact hi.trans (by decide +kernel)
-  have : Algebra.IsSeparable ChartField E := by
-    constructor
-    intro a
-    have integ : IsIntegral ChartField a := Algebra.IsIntegral.isIntegral a
-    let : CharP ChartField K1.p := charP_of_injective_ringHom incl.injective K1.p
-    exact (separable_iff_derivative_ne_zero (minpoly.irreducible integ)).mpr
-      (CurvatureSquares.derivative_ne_zero_of_natDegree_pos_lt_char K1.p _ (minpoly.natDegree_pos integ)
-        ((minpoly.natDegree_le a).trans_lt small))
-  have : Algebra.FormallyEtale ChartField E := Algebra.FormallyEtale.of_isSeparable ChartField E
-  obtain ⟨dx,dz,hx,hz,xx,zx,xs,zs⟩ := base_coordinates
-  obtain ⟨Dx,ex⟩ := ChartDerivations.extend (B:=E) dx
-  obtain ⟨Dz,ez⟩ := ChartDerivations.extend (B:=E) dz
-  exact PlaneConstants.root_field_constant K1.p dx dz Dx Dz hx hz ex ez small x
-    (overlap_zero dx Dx ex xs (Or.inl xx) f ir lo hi bounded b root x y z fx iy overlap)
-    (overlap_zero dz Dz ez zs (Or.inr zx) f ir lo hi bounded b root x y z fx iy overlap)
-theorem actual_coboundary_descent
-    (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate) (hi : f.degreeOf ordinate<48)
-    (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
-    (b : PowerBasis ChartField E) (root : aeval b.gen (RetainedLinear.toSeed (view f))=0)
-    (x y z : E) (fx : IsIntegral (Polynomial Scalar) x) (iy : IsIntegral (Infinity Scalar) y)
-    (overlap : y=(algebraMap ChartField E RatFunc.X)^K1.p*x+z^K1.p) :
-    ∃ w : E,w^K1.p=x ∧ IsIntegral (Polynomial Scalar) w ∧
-      IsIntegral (Infinity Scalar) (algebraMap ChartField E RatFunc.X*w+z) ∧
-      (algebraMap ChartField E RatFunc.X*w+z)^K1.p=y := by
-  let incl : L→+*ChartField := RatFunc.C.comp ((algebraMap (Polynomial L) Scalar).comp C)
-  let : Fact K1.p.Prime := ⟨KoalaBear.is_prime⟩
-  let : CharP E K1.p := charP_of_injective_ringHom ((algebraMap ChartField E).comp incl).injective K1.p
-  obtain ⟨w,hw⟩ := actual_coboundary_pth_root f ir lo hi bounded b root x y z fx iy overlap
-  have ep : 0<K1.p := KoalaBear.is_prime.pos
-  have iy' : (algebraMap ChartField E RatFunc.X*w+z)^K1.p=y := by
-    rw [add_pow_char,mul_pow,hw,←overlap]
-  exact ⟨w,hw,IsIntegral.of_pow ep (hw.symm ▸ fx),IsIntegral.of_pow ep (iy'.symm ▸ iy),iy'⟩
-#print axioms actual_coboundary_pth_root
-#print axioms actual_coboundary_descent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
 end Lower6960.MonicChart
 

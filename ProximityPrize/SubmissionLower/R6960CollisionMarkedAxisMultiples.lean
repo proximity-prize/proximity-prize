@@ -102,6 +102,5 @@ theorem marked_axis_multiple [FiniteDimensional ChartField E] [Algebra.IsSeparab
   exact ⟨(u:U),fibreSection_of_chart_pair (E:=E) a z (u:U) umf (target ▸ vmi),
     ueq.trans (congrArg (·*η) (ev false h).symm)⟩
 
-#print axioms marked_axis_multiple
 end
 end Lower6960.CollisionMarked

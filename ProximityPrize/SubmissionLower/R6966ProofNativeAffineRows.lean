@@ -204,7 +204,5 @@ theorem nodal_count_hypotheses {u deleted maxHeight a} {M : P1.ModelAt maxHeight
       (congrArg scalar ((Polynomial.eval_map_apply (algebraMap K L) _).trans
         (congrArg (algebraMap K L) ((marks z).scalar_hits i hi))))))))
 
-#print axioms nodal_count_hypotheses
-#print axioms fee
 end
 end Research6966.NativeAffineRows

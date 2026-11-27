@@ -452,7 +452,6 @@ theorem range_le_old (i : BlockIndex) :
   rintro _ ⟨p, rfl⟩
   exact ⟨⟨p.1, fun e he => (p.2 he).1⟩, rfl⟩
 
-#print axioms range_le_old
 end
 end TaperNormalize
 

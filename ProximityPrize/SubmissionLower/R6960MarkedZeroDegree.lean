@@ -101,5 +101,4 @@ theorem constant_frame (bf:Basis J (Polynomial k) (Ord false)) (bi:Basis J (Poly
   apply global_is_integral bf bi (u i).property
   simpa only [neg_zero,zpow_zero,one_mul] using (decode_infinity bf bi 0 _).mp hi
 
-#print axioms constant_frame
 end Lower6960.MarkedEvaluation

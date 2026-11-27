@@ -202,7 +202,6 @@ theorem axisFibreData_scalar (b:Bool) (z:L) (nz:z≠0) (g:(Polynomial L)) :
     let h : Fiber E z→+*Axis E true z := (axisFibreData (E:=E) b z nz).val
     h (baseMap E z g)=polyMap E true z b g :=
   lineFibreData_scalar true b z nz g
-#print axioms lineFibreData
 end
 end Lower6960.CollisionMarked
 
@@ -288,7 +287,6 @@ def axisLaurentData (b:Bool) (z:L) (nz:z≠0) :
   rfl
 
 
-#print axioms axisLaurentData
 end
 end Lower6960.CollisionMarked
 

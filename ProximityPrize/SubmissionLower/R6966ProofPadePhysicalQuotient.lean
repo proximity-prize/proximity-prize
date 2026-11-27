@@ -103,7 +103,5 @@ theorem support {h W:ℕ} (hp:0<h) (hl:h≤131070) {D:PoleData h} (Crt:CRTLift D
   have last:=region j i ((R.coeff j).coeff i).natDegree (leadingCoeff_ne_zero.mpr nz)
   omega
 
-#print axioms compare
-#print axioms support
 end
 end Research6966.PadePhysicalQuotient

@@ -60,8 +60,6 @@ theorem rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
   · unfold copies
     omega
   all_goals assumption
-#print axioms rows
-#print axioms hasse_at_mark
 end Lower6960.MainPrefixSource
 
 end
@@ -124,7 +122,6 @@ theorem order_or_cut {J : Ideal Ambient} (active : Active J) (dualJ : dual J)
       exact Or.inr ⟨C,Or.inr cap,out,fun z S _ _ hq=>zero z S hq⟩
   · obtain ⟨C,cap,out,zero⟩ := failed_contact cp p
     exact Or.inr ⟨C,Or.inl cap,out,fun z S _ hp _=>zero z S hp⟩
-#print axioms order_or_cut
 open FreeSource (bank reserve cutoff)
 open HelperSource (helperBank helperCutoff)
 open K1_14 (L liftPoly)
@@ -159,7 +156,6 @@ theorem all_stages {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L
     intro z S on residues degree hits many agree regular
     obtain ⟨free,moving⟩ := contact noPole z S residues degree hits many agree regular i
     exact cut z S on free moving
-#print axioms all_stages
 end Lower6960.PrefixStage
 
 end
@@ -208,7 +204,6 @@ theorem filter {G Q : Jet} (irr : Irreducible G) (avoid : ¬G∣Q) {s t : Shape}
       (fun w hw=>(spec.mp hi).2 w (Nat.lt_succ_of_le hw))⟩
   · intro I inside fails
     exact failed_contact qt (fun pass=>fails (spec.mpr ⟨inside,pass⟩))
-#print axioms filter
 theorem history {G : Jet} (irr : Irreducible G) {s : Shape} (gs : RowCaps G s) (js : s.J≤s.B)
     (Q : Fin 17→Jet) (t : Fin 17→Shape) (r : Fin 17→ℕ)
     (avoid : ∀ i,¬G∣Q i) (caps : ∀ i,RowCaps (Q i) (t i)) (jt : ∀ i,(t i).J≤(t i).B)
@@ -245,7 +240,6 @@ theorem history {G : Jet} (irr : Irreducible G) {s : Shape} (gs : RowCaps G s) (
     · apply prior
       have diff : j.val≠i.val := fun eq=>e (Fin.ext eq)
       omega
-#print axioms history
 end Lower6960.ExceptionalStage
 
 end

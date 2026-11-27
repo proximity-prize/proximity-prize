@@ -1,5 +1,5 @@
 import ProximityPrize.SubmissionLower.DdCS
-import ProximityPrize.SubmissionLower.DdP6Defs
+import ProximityPrize.SubmissionLower.DdAA
 set_option Elab.async false
 set_option synthInstance.maxHeartbeats 400000
 set_option autoImplicit true
@@ -7,7 +7,7 @@ namespace P5_8
 noncomputable section
 open i4 PolynomialDifferential MvPolynomial
 open scoped BigOperators
-abbrev A:=P5.dw
+
 abbrev Equation :=apQ.Equation
 def small:Source :=
   ⟨61,83,25,11,(aH1 83 25 11).filter

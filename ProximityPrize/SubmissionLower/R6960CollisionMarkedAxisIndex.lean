@@ -78,7 +78,6 @@ theorem boundary_seed_polynomial (δ : Plane k) (nz : δ≠0) :
   have div : (Polynomial.X:(Polynomial (Polynomial k)))^2∣B :=
     X_pow_dvd_iff.mpr fun i hi=>coeff_eq_zero_of_lt_natTrailingDegree (hi.trans_le large)
   exact (irreducible_X.not_isUnit) ((branch_squarefree P) _ (by simpa only [pow_two] using div))
-#print axioms boundary_seed_polynomial
 end
 end Lower6960.CollisionMarked
 
@@ -116,7 +115,6 @@ theorem boundary_index (p : ℕ) [CharP k p] [CharP (FractionRing (Polynomial k)
   intro zero
   have bad := support 0 ((mem_roots dn).mpr zero)
   omega
-#print axioms boundary_index
 end
 end Lower6960.CollisionMarked
 
@@ -238,8 +236,6 @@ theorem actual_axis_infinity_index (p:ℕ) [CharP L p] [CharP (FractionRing (Pol
     (axisFractionRank (E:=E) true).symm ▸ small
   obtain ⟨d,d0,clear⟩ := boundary_index p degree δ nonzero principal z good
   exact ⟨d,d0,fun η idem=>chartClear true z nz d η idem clear⟩
-#print axioms actual_axis_finite_index
-#print axioms actual_axis_infinity_index
 end
 end Lower6960.CollisionMarked
 

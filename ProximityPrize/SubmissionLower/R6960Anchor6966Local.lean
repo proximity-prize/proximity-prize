@@ -536,10 +536,6 @@ theorem total_fees :
   rw [Fin.sum_univ_eq_sum_range expected 59]
   decide +kernel
 
-#print axioms rows_good
-#print axioms rows_sorted
-#print axioms rows_cover
-#print axioms total_fees
 
 end A6966FinalRankReceipt
 
@@ -566,7 +562,6 @@ theorem origin_rank : Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) â‰
         (A6966FinalRankReceipt.rows_good d) (A6966FinalRankReceipt.rows_sorted d) (A6966FinalRankReceipt.rows_cover d)
     _ = _ := A6966FinalRankReceipt.total_fees
 
-#print axioms origin_rank
 end A6966FinalRank
 
 end Merged_A6966FinalRank
@@ -818,9 +813,6 @@ theorem rawWeight (Q : wideSpace) :
   rw [differentialWeightedDegree, MvPolynomial.weightedTotalDegree, Finset.sup_le_iff]
   exact fun m hm => (Q.property hm).2.2.2.2
 
-#print axioms per_position
-#print axioms shape_bound
-#print axioms active_bound
 
 end
 end Anchor6966Local

@@ -75,5 +75,4 @@ theorem eventually_in_subspace (V : Submodule (RatFunc K) (J → RatFunc K)) :
       ((map_ne_zero_iff _ (IsFractionRing.injective (Polynomial K) _)).mpr (mem_nonZeroDivisors_iff_ne_zero.mp d.property))
   exact (Q.projection_apply_eq_zero_iff compl.symm).mp projected
 
-#print axioms eventually_in_subspace
 end Lower6960.ChartImage

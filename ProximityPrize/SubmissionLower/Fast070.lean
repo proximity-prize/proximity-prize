@@ -2,6 +2,11 @@ import ProximityPrize.SubmissionLower.Fast063
 import ProximityPrize.SubmissionLower.Fast064
 import ProximityPrize.SubmissionLower.Fast065
 import ProximityPrize.SubmissionLower.Fast066
+
+set_option Elab.async false
+
+-- Source: ProximityPrize.SubmissionLower.Fast070
+set_option autoImplicit true
 set_option Elab.async false
 set_option autoImplicit true
 section
@@ -3679,7 +3684,7 @@ theorem ncard_inter_filter {A : Type*} (S : Finset A) (locus : Set A) [Decidable
     ((S : Set A) ∩ locus).ncard = (S.filter (· ∈ locus)).card := by
   rw [← Set.ncard_coe_finset, Finset.coe_filter]
   rfl
-private theorem one_le_degree_of_point {F σ : Type*} [Field F] [Finite σ]
+theorem one_le_degree_of_point {F σ : Type*} [Field F] [Finite σ]
     (J : Ideal (MvPolynomial σ F)) [J.IsPrime] (x : σ → F) (hx : x ∈ zeroLocus F J) :
     1 ≤ affineDegree J := by
   classical

@@ -74,7 +74,6 @@ theorem dimension (d₁ : M→ₗ[k]U) (d₂ : N→ₗ[k]V) (x : M→ₗ[k]C) (z
   change finrank k ((U×V) ⧸ B)+finrank k W ≤ _
   have eq:=W.finrank_quotient_add_finrank
   omega
-#print axioms dimension
 end Lower6960.RetainedNodalIndex
 
 end
@@ -177,98 +176,97 @@ def rawMap (x z:L) : potentials E →ₗ[L] Paired E x z :=
     (red E true z ∘ₗ (atChart E (false,false)-atChart E (reference true true)))
   (RetainedNodalIndex.boundaries (difference E false x) (difference E true z) (evalX E x z) (evalZ E x z)).mkQ.comp lines
 
-private theorem raw_zero (x z:L) (u:potentials E) : rawMap E x z u=0 ↔
-    ∃ v:Bool→Tor E, ∃ w:Bool→Tor E,
-      (∀ b,IsIntegral (baseChart (reference false b)) (v b:E)) ∧
-      (∀ b,IsIntegral (baseChart (reference true b)) (w b:E)) ∧
-      red E false x (u.1 (false,false)-u.1 (reference false true))=red E false x (v false-v true) ∧
-      red E true z (u.1 (false,false)-u.1 (reference true true))=red E true z (w false-w true) ∧
-      (Ideal.Quotient.mk (axisIdeal E false x⊔axisIdeal E true z)) (v false) =
-        Ideal.Quotient.mk _ (w false) := by
-  rw [show rawMap E x z u=0 ↔ _ from Submodule.Quotient.mk_eq_zero _]
-  constructor
-  · rintro ⟨⟨⟨a,b⟩,⟨c,d⟩⟩,eq,edge⟩
-    obtain ⟨v0,iv0,h0⟩:=a.property
-    obtain ⟨v1,iv1,h1⟩:=b.property
-    obtain ⟨w0,iw0,g0⟩:=c.property
-    obtain ⟨w1,iw1,g1⟩:=d.property
-    let v (i:Bool):Tor E:=if i then v1 else v0
-    let w (i:Bool):Tor E:=if i then w1 else w0
-    refine ⟨v,w,(fun i=>by cases i <;> first | exact iv0 | exact iv1),
-      (fun i=>by cases i <;> first | exact iw0 | exact iw1),?_,?_,?_⟩
-    · change _=red E false x (v0-v1)
-      rw [map_sub (red E false x) v0 v1,h0,h1]
-      have e:= (congrArg Prod.fst edge).symm
-      change red E false x (u.1 (false,false)-u.1 (reference false true))=a.1+ -b.1 at e
-      simpa only [sub_eq_add_neg] using e
-    · change _=red E true z (w0-w1)
-      rw [map_sub (red E true z) w0 w1,g0,g1]
-      have e:= (congrArg Prod.snd edge).symm
-      change red E true z (u.1 (false,false)-u.1 (reference true true))=c.1+ -d.1 at e
-      simpa only [sub_eq_add_neg] using e
-    · change crossingX E x z a.1+ -(crossingZ E x z c.1)=0 at eq
-      rw [←h0,←g0] at eq
-      change (Ideal.Quotient.mk _ v0)+ -(Ideal.Quotient.mk _ w0)=0 at eq
-      rw [←sub_eq_add_neg] at eq
-      exact sub_eq_zero.mp eq
-  · rintro ⟨v,w,iv,iw,ex,ez,node⟩
-    let a (i:Bool): chartImage E false x i:=⟨_,⟨v i,iv i,rfl⟩⟩
-    let b (i:Bool): chartImage E true z i:=⟨_,⟨w i,iw i,rfl⟩⟩
-    refine ⟨((a false,a true),(b false,b true)),?_,?_⟩
-    · change Ideal.Quotient.mk _ (v false)+ -Ideal.Quotient.mk _ (w false)=0
-      rw [node,add_neg_cancel]
-    · apply Prod.ext
-      · change red E false x (v false)+ -(red E false x (v true))=_
-        rw [←sub_eq_add_neg,←map_sub]; exact ex.symm
-      · change red E true z (w false)+ -(red E true z (w true))=_
-        rw [←sub_eq_add_neg,←map_sub]; exact ez.symm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 theorem congr_of_eq (j c) (a b:Tor E) (eq : red E j c a=red E j c b) :
     Congruent j c (a:E) (b:E) := by
   obtain ⟨r,hr⟩:=Ideal.mem_span_singleton.mp (Ideal.Quotient.eq.mp eq)
   exact ⟨r,r.property,congrArg Subtype.val hr⟩
 
-private theorem matched_of_eq (x z:L) (a b:Tor E)
-    (eq : Ideal.Quotient.mk (axisIdeal E false x⊔axisIdeal E true z) a=Ideal.Quotient.mk _ b) :
-    Matched x z (a:E) (b:E) := by
-  obtain ⟨u,hu,v,hv,l⟩:=Submodule.mem_sup.mp (Ideal.Quotient.eq.mp eq)
-  obtain ⟨r,rfl⟩:=Ideal.mem_span_singleton.mp hu
-  obtain ⟨t,rfl⟩:=Ideal.mem_span_singleton.mp hv
-  exact ⟨r,t,r.property,t.property,congrArg Subtype.val l.symm⟩
 
-open RetainedCompression (Curve ordinate view height heightCap wordDegree)
 
-/-- The actual bounded cover's untwisted obstruction space embeds in the quotient
-formed by the two torus fibres and a single shared crossing. -/
-theorem restriction_kernel (f : Curve (Polynomial L)) (ir : Irreducible f) (lo : 3≤f.degreeOf ordinate)
-    (hi : f.degreeOf ordinate<48) (bounded : height wordDegree f≤heightCap (f.degreeOf ordinate) wordDegree)
-    (basis : PowerBasis ChartField E)
-    (root : aeval basis.gen ((RetainedLinear.toSeed (view f)).map (algebraMap (Polynomial MonicChart.Scalar) ChartField))=0)
-    (x z:L) (nx:x≠0) (nz:z≠0) :
-    (rawMap E x z).ker=coboundaries E := by
-    ext u
-    change rawMap E x z u=0 ↔ ∃ c:E,∀ s,IsIntegral (baseChart s) ((u.1 s:E)-c)
-    rw [raw_zero]
-    constructor
-    · rintro ⟨v,w,iv,iw,ex,ez,node⟩
-      have r:=split_of_paired_data f ir lo hi bounded basis root x z nx nz
-        (fun s=>(u.1 s:E)) u.property (fun b=>(v b:E)) (fun b=>(w b:E))
-        ⟨iv,congr_of_eq E false x _ _ ex⟩ ⟨iw,congr_of_eq E true z _ _ ez⟩
-        (matched_of_eq E x z _ _ node)
-      obtain ⟨c,hc⟩:=r
-      exact ⟨c,fun s=>by simpa [frame] using hc s⟩
-    · rintro ⟨c,hc⟩
-      have ic : IsIntegral torus c := by
-        have ii:=(u.1 (false,false)).property.sub (order_mono (base_torus (false,false)) (hc (false,false)))
-        simpa only [sub_sub_cancel] using ii
-      let ct : Tor E:=⟨c,ic⟩
-      let v (j b:Bool):Tor E:=u.1 (reference j b)-ct
-      have start (j:Bool) : reference j false=(false,false) := by cases j <;> rfl
-      refine ⟨v false,v true,(fun b=>hc _),(fun b=>hc _),?_,?_,?_⟩
-      · apply congrArg (red E false x); simp only [v,start]; abel
-      · apply congrArg (red E true z); simp only [v,start]; abel
-      · rfl
-#print axioms restriction_kernel
+
+
+
+
+
+
+open RetainedCompression (Curve ordinate view height heightCap)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end Lower6960.RetainedSurfaceClass
 
 end

@@ -253,8 +253,6 @@ theorem fastCount_eq (B J T Θ : ℕ) : fastCount B J T Θ = boxCount B J T Θ :
   conv_rhs => rw [hsplit, sum_range_add, sum_range_add]
   rw [hmid, hlast]
 end FadicGate
-#print axioms FadicGate.taperBox_card
-#print axioms FadicGate.fastCount_eq
 
 end Merged_FadicCount
 
@@ -740,10 +738,6 @@ theorem exists_varGateSpace (f : R) (hf : f ≠ 0) (bl bh jl jh tl L H : ℕ)
       exact hdim
 end Field
 end FadicGate
-#print axioms FadicGate.pow_mul_mem_source_var
-#print axioms FadicGate.cofactor_mem_var
-#print axioms FadicGate.exists_varFadicSpace
-#print axioms FadicGate.exists_varGateSpace
 
 end Merged_FadicVar
 
@@ -788,9 +782,6 @@ theorem taper_le (g : MvPolynomial (Fin 4) R) (b j K : ℕ)
   rw [w_taper]
   apply le_min <;> omega
 end FadicGate
-#print axioms FadicGate.wdeg_top_eq_degreeOf
-#print axioms FadicGate.taper_ge_grade
-#print axioms FadicGate.taper_le
 
 end Merged_FadicDegree
 
@@ -991,9 +982,5 @@ theorem le_fastHigh (B J T Θ : ℕ) {h : ℕ} (hh : 0 < h) : boxCount B J T Θ 
   simp only [zero_add] at h1
   linarith
 end FadicGate
-#print axioms FadicGate.cappedCount_mono
-#print axioms FadicGate.sum_div_block
-#print axioms FadicGate.fastLow_le
-#print axioms FadicGate.le_fastHigh
 
 end Merged_FadicChunk

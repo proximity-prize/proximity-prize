@@ -56,7 +56,6 @@ theorem detects_global [IsReduced S] [Module.Free (Polynomial k) S]
   have idem : (u*(r:S))^2=u*(r:S) := congrArg Subtype.val id
   have nonzero : u*(r:S)≠0 := fun eq=>nz (Subtype.ext eq)
   exact idempotent_survives idem nonzero a (vanish.trans (dvd_mul_right ..))
-#print axioms detects_global
 omit [Algebra k S] in
 theorem reduced_of_point [Module.Free (Polynomial k) S] {D : Type*} [CommRing D] [IsReduced D]
     (a : k) (atNode : S→+*D)
@@ -91,7 +90,6 @@ theorem reduced_of_point [Module.Free (Polynomial k) S] {D : Type*} [CommRing D]
   have bad:=natDegree_le_of_dvd large nz
   rw [natDegree_pow,show p.natDegree=1 from natDegree_X_sub_C _,mul_one] at bad
   omega
-#print axioms reduced_of_point
 end Lower6960.RetainedLineEvaluation
 
 end
@@ -209,8 +207,6 @@ theorem kernel_at_node (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0)
       · exact Submodule.mem_sup_left (Ideal.subset_span (Set.mem_singleton _))
     rw [Ideal.Quotient.eq_zero_iff_mem.mpr member,zero_mul]
 
-#print axioms onto_at_node
-#print axioms kernel_at_node
 end Lower6960.RetainedSurfaceClass
 
 end
@@ -289,8 +285,6 @@ theorem native_euler (j:Bool) (c:L) (nc:c≠0) {n : ℕ}
   rw [E0.finrank_eq,E1.finrank_eq]
   simpa only [Fintype.card_fin] using index
 
-#print axioms native_frames
-#print axioms native_euler
 end Lower6960.RetainedSurfaceClass
 
 end
@@ -400,7 +394,6 @@ theorem global_eval_injective (j:Bool) (x z:L) (nx:x≠0) (nz:z≠0) [IsReduced 
   apply Subtype.ext
   exact congrArg (fun w : R=>(w:Axis E j c)) zero
 
-#print axioms global_eval_injective
 end Lower6960.RetainedSurfaceClass
 
 end

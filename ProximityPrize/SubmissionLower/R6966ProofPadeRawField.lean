@@ -123,8 +123,5 @@ theorem quotient_of_fibre_power {h:ℕ} (hp:0<h) (hl:h≤131070) {D:K1_14_1.Pole
   exact ⟨Q,eq.trans (congrArg (_ * ·) id),RawPhysicalDegree.complete_graph_quotient hp hl Crt word mem G Q t
     gp.ne_zero (eq.trans (congrArg (_ * ·) id))⟩
 
-#print axioms eval_injective
-#print axioms raw_divides
-#print axioms quotient_of_fibre_power
 end
 end Research6966.PadeRawField

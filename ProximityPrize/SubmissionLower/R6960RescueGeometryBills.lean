@@ -1,4 +1,3 @@
-import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt0
 import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt1
 import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt2
 import ProximityPrize.SubmissionLower.R6960RescueSourceReceipt3
@@ -62,9 +61,6 @@ theorem rescue_row {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I →
     ∃ Q ∈ evaluated Crt word (bank rect i).shape (cutoff h rect i), ¬ G∣Q :=
   (checked rect i).avoids Crt word lo hi irr seeded slope hs hj
 
-#print axioms checked
-#print axioms cutoff_fit
-#print axioms rescue_row
 
 end Lower6960.RescueSource
 
@@ -120,7 +116,6 @@ theorem exceptional_rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1
   refine ⟨rect,linear,highJ,highU,fun i => ?_⟩
   exact rescue_row Crt word lo hi rect i irr seeded (by omega) lowU (by rw [linear]; exact lowJ)
 
-#print axioms exceptional_rows
 
 end Lower6960.RescueSource
 
@@ -305,8 +300,6 @@ theorem Initial.rank_ode {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ
   refine ⟨E,caps,?_⟩
   rintro γ _ ⟨J,hJ,on⟩
   simpa only [K1_14_2_2.eval_fixed] using RingHom.mem_ker.mp (on (roots J hJ))
-#print axioms initial_cover
-#print axioms Initial.rank_ode
 end Lower6960.RescueGeometry
 
 end
@@ -451,8 +444,6 @@ theorem Run.parent_geom {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {n : ℕ} {J : Ideal Ambient} (mem : J∈R.kept n) :
     Active J ∧ dual J ∧ J.height=2 ∧ toJet G∈J ∧ toJet (R.row 0)∈J :=
   R.initial.parent_geom J (R.start ▸ R.antitone (Nat.zero_le n) mem)
-#print axioms prepare
-#print axioms history_from_initial
 end Lower6960.RescueGeometry
 
 end
@@ -697,9 +688,6 @@ theorem Run.terminal_surfaces {u deleted} {M : Model u deleted} {Γ} {F : Family
       ∀ γ∈Γ,(∃ J∈R.final,OnMark F J γ) → ∃ q∈S,OnSurface F q γ := by
   obtain ⟨S,geom,_,marks⟩:=R.terminal_surfaces_with_origins
   exact ⟨S,geom,marks⟩
-#print axioms Run.cutCover
-#print axioms Run.retained_or_lost
-#print axioms Run.terminal_surfaces
 end Lower6960.RescueGeometry
 
 end
@@ -913,10 +901,6 @@ theorem inventory {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     · rcases C.covers i hi γ hγ ⟨J,lost,on⟩ with point | curve
       · exact Or.inr (Or.inr (Or.inr (Or.inl (mem_biUnion.mpr ⟨i,mem_range.mpr hi,point⟩))))
       · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨i,hi,curve⟩))))
-#print axioms inventory
-#print axioms Run.joint_bill
-#print axioms seed_limit_small
-#print axioms CutBooks.point_bill
 end Lower6960.RescueGeometry
 
 end

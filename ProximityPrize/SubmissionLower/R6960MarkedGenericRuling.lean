@@ -130,8 +130,6 @@ theorem crossing_rank (G : Matrix ι ι (Laurent k)) (unit : IsUnit G) :
   have rank := LinearMap.finrank_range_add_finrank_ker (crossingEval G)
   rw [←(crossingKernel G).finrank_eq] at rank
   omega
-#print axioms crossingKernel
-#print axioms crossing_rank
 end
 end Lower6960.LineEuler
 
@@ -258,7 +256,6 @@ theorem vertical_rank (G:Matrix J J (Laurent k)) (unit:IsUnit G) (s:ℕ)
   have ev':((s:ℤ)-1)*Fintype.card J+p=v := WithBot.coe_injective ev
   rw [z,Nat.cast_zero,sub_zero,←ev',pval] at idx
   exact_mod_cast (show (finrank k (H0 (twist ((s:ℤ)-1) G)):ℤ)+s=(Fintype.card J:ℤ)*s by rw [idx];ring)
-#print axioms vertical_rank
 end Lower6960.MarkedEvaluation
 
 end
@@ -381,8 +378,6 @@ theorem normalized_rank [DecidableEq (RatFunc k)] [FiniteDimensional (RatFunc k)
   rw [LinearEquiv.apply_symm_apply,map_zero] at iz
   exact congrArg Subtype.val iz
 
-#print axioms negative_section_zero
-#print axioms normalized_rank
 end Lower6960.MarkedEvaluation
 
 end
@@ -444,7 +439,6 @@ theorem span_le_global (bf:Basis J (Polynomial k) (Ord false)) (bi:Basis J (Poly
   have le:span k (Set.range v)≤d.range := span_le.mpr (fun _ ⟨i,eq⟩=>eq ▸ (decode_range bf bi a _).mpr (h i))
   exact (Submodule.finrank_mono le).trans (LinearMap.finrank_range_le d)
 
-#print axioms span_le_global
 end Lower6960.MarkedEvaluation
 
 end
@@ -556,8 +550,6 @@ theorem actual_vertical_rank [FiniteDimensional ChartField E] [Fintype J] [Decid
   rw [show ((s-1:ℕ):ℤ)=(s:ℤ)-1 by omega] at sub
   exact (Nat.add_le_add_right sub s).trans_eq (normalized_rank bf bi s deg)
 
-#print axioms generic_membership
-#print axioms actual_vertical_rank
 end Lower6960.MarkedEvaluation
 
 end
