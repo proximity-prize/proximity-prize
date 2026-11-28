@@ -979,43 +979,6 @@ open Polynomial Finset Matrix
 open scoped BigOperators
 variable {F ι ν : Type} [Field F] [Fintype ι] [DecidableEq ι]
 local instance regularDataDecidable (P : Prop) : Decidable P := Classical.propDecidable P
-def RegularLocatorData (σ : ν → F →+* F) (x u v : ι → F)
-    (k m t : ℕ) (Γ : Finset (ν → F)) : Prop :=
-  ∀ z∈Γ,
-    Module.finrank F (LinearMap.ker ((affineLocator σ x u v (m-t) t).map
-      (MvPolynomial.eval₂Hom (RingHom.id F) z)).mulVecLin)=1 ∧
-    ∃ E : Finset ι, E.card=t ∧
-      ((affineLocator σ x u v (m-t) t).map (MvPolynomial.eval₂Hom (RingHom.id F) z)).mulVec
-        (fun j : Fin (t+1) => (locator x E).coeff j.val)=0 ∧
-      ¬(ExtendsOn x u k (Finset.univ\E) ∧ ExtendsOn x v k (Finset.univ\E))
-theorem regular_data_of_bad_slopes [Fintype ν] [DecidableEq ν]
-    (σ : ν → F →+* F) (x u v : ι → F) (hx : Function.Injective x)
-    (hfixed : ∀ b i, σ b (x i)=x i) (k A m L t : ℕ)
-    (hkm : k+m=Fintype.card ι) (hm : m=L+t) (hA : A=k+L) (hkA : k<A)
-    (Γ : Finset F) (hbad : ∀ γ∈Γ, Principal.BadSlope x u v k A γ)
-    (hnull : ∀ γ∈Γ, Module.finrank F (LinearMap.ker
-      (recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) m t).mulVecLin)=1) :
-    RegularLocatorData σ x u v k m t (Γ.image (fun γ b => σ b γ)) := by
-  intro z hz
-  obtain ⟨γ,hγ,rfl⟩ := Finset.mem_image.mp hz
-  have hM : (affineLocator σ x u v (m-t) t).map
-      (MvPolynomial.eval₂Hom (RingHom.id F) (fun b => σ b γ))=
-      recurrenceMatrixAll (fun b j => σ b (syndrome x (fun i => u i+γ*v i) j)) m t := by
-    rw [affineLocator_eval_slope,recurrenceMatrixAll_conjugate]
-  refine ⟨by rw [hM]; exact hnull γ hγ,?_⟩
-  obtain ⟨T,hT,⟨P,hP,hPv⟩,hTbad⟩ := Principal.bad_slope_exact x hx u v k A hkA γ (hbad γ hγ)
-  let E := Finset.univ\T
-  have hE : E.card=t := by
-    rw [Finset.card_sdiff_of_subset (Finset.subset_univ T),Finset.card_univ,hT]
-    omega
-  refine ⟨E,hE,?_,?_⟩
-  · rw [affineLocator_eval_slope]
-    apply conjugate_locator_annihilates σ x _ hx hfixed k (m-t) t (by omega) P hP E hE.le
-    intro i hi
-    have hiT : i∈T := by simpa only [E,Finset.mem_sdiff,Finset.mem_univ,true_and,not_not] using hi
-    exact (hPv i hiT).symm
-  · have hcomp : Finset.univ\E=T := by ext i; simp [E]
-    rwa [hcomp]
 end
 end FrobeniusLocator.Strata
 end

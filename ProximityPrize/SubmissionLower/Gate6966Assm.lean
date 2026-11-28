@@ -316,16 +316,7 @@ def okAt (G : Gt) (r0 : ℕ) (ws : List ℕ) (lv : Lv) (i : ℕ) : Bool :=
 def allOK (G : Gt) (r0 : ℕ) (ws : List ℕ) (lv : Lv) (lo n : ℕ) : Bool :=
   (List.range n).all fun d => okAt G r0 ws lv (lo + d)
 
-theorem allOK_add (G : Gt) (r0 : ℕ) (ws : List ℕ) (lv : Lv) (lo n m : ℕ)
-    (h1 : allOK G r0 ws lv lo n = true) (h2 : allOK G r0 ws lv (lo + n) m = true) :
-    allOK G r0 ws lv lo (n + m) = true := by
-  unfold allOK at *
-  rw [List.range_add]
-  simp only [List.all_append, Bool.and_eq_true, List.all_map] at *
-  refine ⟨h1, ?_⟩
-  simpa [Function.comp_def, Nat.add_assoc] using h2
 
-theorem allOK_nil (G : Gt) (r0 : ℕ) (ws : List ℕ) (lv : Lv) (lo : ℕ) : allOK G r0 ws lv lo 0 = true := rfl
 
 
 /-! CUT3: kernel-fast evaluators (explicit `Nat.*`, `cond`/`Nat.ble`, no `ite`/instances) with equalities
@@ -537,17 +528,8 @@ theorem levelOKF_eq (G : Gt) (r W B0 B1 B2 fuel : ℕ) (cv : ℕ → Option (ℕ
   rfl
 
 
-def okAtF (G : Gt) (r0 : ℕ) (ws : List ℕ) (lv : Lv) (i : ℕ) : Bool :=
-  levelOKF G (Nat.add i 1) (lv.getD i dflt).2.2.2 (lv.getD i dflt).1 (lv.getD i dflt).2.1 (lv.getD i dflt).2.2.1 80
-    (fun a => some (cvOf r0 ws (Nat.add i 1) a))
 
-def allOKF (G : Gt) (r0 : ℕ) (ws : List ℕ) (lv : Lv) (lo n : ℕ) : Bool :=
-  (List.range n).all fun d => okAtF G r0 ws lv (Nat.add lo d)
 
-theorem allOK_eq_F (G : Gt) (r0 : ℕ) (ws : List ℕ) (lv : Lv) (lo n : ℕ) :
-    allOK G r0 ws lv lo n = allOKF G r0 ws lv lo n := by
-  unfold allOK allOKF okAt okAtF
-  simp only [levelOKF_eq, Nat.add_eq]
 
 end CUT3Fast
 
@@ -580,38 +562,9 @@ end CUT3Fast
 
 
 
-def tabAll (r0 : ℕ) (ws : List ℕ) (lo n : ℕ) : Bool :=
-  (List.range n).all fun d => Gate6966ClassTable.levelOK (r0 + (lo + d)) (ws.getD (lo + d) 0)
 
-theorem tabAll_add (r0 : ℕ) (ws : List ℕ) (lo n m : ℕ) (h1 : tabAll r0 ws lo n = true)
-    (h2 : tabAll r0 ws (lo + n) m = true) : tabAll r0 ws lo (n + m) = true := by
-  unfold tabAll at *
-  rw [List.range_add]
-  simp only [List.all_append, Bool.and_eq_true, List.all_map] at *
-  refine ⟨h1, ?_⟩
-  simpa [Function.comp_def, Nat.add_assoc] using h2
 
-theorem tabAll_nil (r0 : ℕ) (ws : List ℕ) (lo : ℕ) : tabAll r0 ws lo 0 = true := rfl
 
-theorem tableOK_of_all (ws : List ℕ) : ∀ (r0 lo : ℕ),
-    tabAll r0 ws 0 ws.length = true → Gate6966ClassTable.tableOK r0 ws = true := by
-  have key : ∀ (ws : List ℕ) (r0 : ℕ), (∀ j, j < ws.length → Gate6966ClassTable.levelOK (r0 + j) (ws.getD j 0) = true) →
-      Gate6966ClassTable.tableOK r0 ws = true := by
-    intro ws
-    induction ws with
-    | nil => intro r0 _; rfl
-    | cons w ws ih =>
-      intro r0 h
-      have h0 : Gate6966ClassTable.levelOK r0 w = true := by simpa using h 0 (by simp)
-      refine Gate6966ClassTable.tableOK_cons h0 (ih (r0 + 1) fun j hj => ?_)
-      have := h (j + 1) (by simpa using hj)
-      simpa [Nat.add_assoc, Nat.add_comm 1 j] using this
-  intro r0 _ h
-  apply key
-  intro j hj
-  unfold tabAll at h
-  have := List.all_eq_true.mp h j (List.mem_range.mpr hj)
-  simpa using this
 
 
 /-! PERF (69.62): the `Gate6966Amb.compute` lower bound evaluated in Nat. `cumulative` over ℤ is
@@ -758,19 +711,8 @@ def lsum (lv : Lv) (i : ℕ) : ℤ :=
   (Low6966Prices.symbolCount : ℤ) - ambLB (lv.getD i dflt).1 (lv.getD i dflt).2.1 (lv.getD i dflt).2.2.1 +
     ((lv.getD i dflt).2.2.2 : ℤ)
 
-def psum (lv : Lv) (lo : ℕ) : ℕ → ℤ
-  | 0 => 0
-  | n + 1 => psum lv lo n + lsum lv (lo + n)
 
-theorem psum_add (lv : Lv) (lo n m : ℕ) : psum lv lo (n + m) = psum lv lo n + psum lv (lo + n) m := by
-  induction m with
-  | zero => simp [psum]
-  | succ m ih => rw [← Nat.add_assoc, psum, ih, psum, add_assoc, Nat.add_assoc]
 
-theorem psum_eq (lv : Lv) (n : ℕ) : psum lv 0 n = ∑ i ∈ Finset.range n, lsum lv i := by
-  induction n with
-  | zero => simp [psum]
-  | succ n ih => rw [psum, ih, Finset.sum_range_succ]; simp
 
 end Gate6966Cell
 

@@ -241,9 +241,6 @@ namespace K1_13_1_1
 set_option maxRecDepth 30000
 set_option Elab.async false
 set_option maxHeartbeats 4000000
-private def budgetGCheck (p : ℕ → Bool) : ℕ → Bool
-  | 0 => true
-  | n+1 => budgetGCheck p n && p n
 end K1_13_1_1
 end
 section

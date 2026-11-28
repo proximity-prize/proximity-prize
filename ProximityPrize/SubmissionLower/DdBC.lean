@@ -239,7 +239,6 @@ noncomputable section
 open Polynomial Matrix Finset
 open scoped BigOperators
 variable {F row col:Type*} [cy F] [lJ row] [lJ col] [ox col]
-abbrev lN (F:Type*) [cy F] :=G4 (Polynomial F)
 end
 end gR.Bx
 end

@@ -116,7 +116,7 @@ theorem relation_space_gt {F : Type*} [Field F] {α : Type*} [Finite α]
     simp [HeightCompression.Coeffs,Module.finrank_pi_fintype,(degreeLTEquiv F _).finrank_eq]
   rw [dim]
   omega
-def TameBand (e d : ℕ) : Prop := (e < 48 ∧ d ≤ 164670) ∨ (e < 64 ∧ d ≤ 133605)
+def TameBand (e d : ℕ) : Prop := (e < 48 ∧ d ≤ 164670) ∨ (e < 64 ∧ d ≤ 133628)
 theorem TameBand.lt_64 {e d : ℕ} (h : TameBand e d) : e < 64 := by unfold TameBand at h; omega
 theorem TameBand.lt_p {e d : ℕ} (h : TameBand e d) : e < K1.p := h.lt_64.trans (by decide)
 theorem TameBand.mono_left {e n d : ℕ} (h : e ≤ n) (hn : TameBand n d) : TameBand e d := by
@@ -129,7 +129,7 @@ theorem tame_resultant_bound {e d : ℕ} (he : 2 ≤ e) (ht : TameBand e d) :
       2 * ((2*i.val - 1) * heightCap i.val 164670 - 164670 * i.val^2) + 2 * (i.val - 1) < K1.p := by
     decide +kernel
   have h64 : ∀ i : Fin 64, 2 ≤ i.val →
-      2 * ((2*i.val - 1) * heightCap i.val 133605 - 133605 * i.val^2) + 2 * (i.val - 1) < K1.p := by
+      2 * ((2*i.val - 1) * heightCap i.val 133628 - 133628 * i.val^2) + 2 * (i.val - 1) < K1.p := by
     decide +kernel
   have hfactor (e' d' : ℕ) :
       (2*e' - 1) * heightCap e' d' - d' * e'^2 = ((2*e' - 1) * ((3*e' + 1) / 2) - e'^2) * d' := by
@@ -149,7 +149,7 @@ theorem tame_resultant_bound {e d : ℕ} (he : 2 ≤ e) (ht : TameBand e d) :
 theorem tame_vertical_bound {e d : ℕ} (ht : TameBand e d) :
     2 * ((e - 1) * heightCap e d) < K1.p := by
   have h48 : ∀ i : Fin 48, 2 * ((i.val - 1) * heightCap i.val 164670) < K1.p := by decide +kernel
-  have h64 : ∀ i : Fin 64, 2 * ((i.val - 1) * heightCap i.val 133605) < K1.p := by decide +kernel
+  have h64 : ∀ i : Fin 64, 2 * ((i.val - 1) * heightCap i.val 133628) < K1.p := by decide +kernel
   rcases ht with ⟨hl, hd⟩ | ⟨hl, hd⟩
   · have h := h48 ⟨e, hl⟩
     dsimp only at h
@@ -161,12 +161,6 @@ theorem tame_vertical_bound {e d : ℕ} (ht : TameBand e d) :
     unfold heightCap at h ⊢
     have hm := Nat.mul_le_mul_left (e - 1) (Nat.mul_le_mul_left ((3*e + 1) / 2) hd)
     omega
-theorem tame_height {e d : ℕ} (he : e≤47) (hd : d≤164650) :
-    2*((3*e-2)*(e-1)*d+(e-1))<2130706433 :=
-  (Nat.mul_le_mul_left 2 (Nat.add_le_add
-    (Nat.mul_le_mul (Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 3 he) 2)
-      (Nat.sub_le_sub_right he 1)) hd)
-    (Nat.sub_le_sub_right he 1))).trans_lt (by decide +kernel)
 end
 end Lower6960.Near6969Compression
 

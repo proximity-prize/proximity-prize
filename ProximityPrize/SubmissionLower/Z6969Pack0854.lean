@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.Z6970H2307SlopeShape
 import ProximityPrize.SubmissionLower.Shared50OrderDivision
 import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
 import Mathlib.RingTheory.LocalRing.Module
@@ -26,10 +27,6 @@ namespace Low6969GateOrder
 
 open K1_13_6_1_2 (VanishesTo)
 
-theorem vanishesTo_mono {R : Type*} [CommRing R] (P : Ideal R) [P.IsPrime] {f : R} {m n : ℕ}
-    (h : m ≤ n) (hn : VanishesTo P f n) : VanishesTo P f m := by
-  unfold VanishesTo at *
-  exact Ideal.pow_le_pow_right h hn
 
 theorem vanishesTo_zero {R : Type*} [CommRing R] (P : Ideal R) [P.IsPrime] (f : R) :
     VanishesTo P f 0 := by
@@ -72,22 +69,7 @@ theorem cofactor_order {n : ℕ} {K : Type*} [Field K] [PerfectField K]
   have h3 := Shared50OrderDivision.vanishesTo_of_pow_mul P hh h2
   simpa [Nat.mul_one] using h3
 
-theorem vanishesTo_cofactor_of_not_mem {R : Type*} [CommRing R] (P : Ideal R) [P.IsPrime] {g u : R}
-    (hg : g ∉ P) {n : ℕ} (h : VanishesTo P (g * u) n) : VanishesTo P u n := by
-  unfold VanishesTo at *
-  change algebraMap R (Localization.AtPrime P) (g * u) ∈ _ at h
-  show algebraMap R (Localization.AtPrime P) u ∈ _
-  let L := Localization.AtPrime P
-  have hu : IsUnit (algebraMap R L g) := IsLocalization.map_units L (⟨g, hg⟩ : P.primeCompl)
-  obtain ⟨v, hv⟩ := hu
-  have h' : algebraMap R L u = (↑v⁻¹ : L) * algebraMap R L (g * u) := by
-    rw [map_mul, ← hv, ← mul_assoc]; simp
-  rw [h']
-  exact Ideal.mul_mem_left _ _ h
 
-theorem vanishesTo_cofactor_pow {R : Type*} [CommRing R] (P : Ideal R) [P.IsPrime] {g u : R}
-    (hg : g ∉ P) (k : ℕ) {n : ℕ} (h : VanishesTo P (g ^ k * u) n) : VanishesTo P u n :=
-  vanishesTo_cofactor_of_not_mem P (fun hm => hg (‹P.IsPrime›.mem_of_pow_mem k hm)) h
 
 private theorem deriv_ideal_pow {k : Type*} [Field k] {n : ℕ}
     (P : Ideal (MvPolynomial (Fin n) k)) (i : Fin n) (e : ℕ)
@@ -725,11 +707,7 @@ def tableOK : ℕ → List ℕ → Bool
   | _, [] => true
   | r, w :: ws => levelOK r w && tableOK (r + 1) ws
 
-theorem tableOK_cons {r w : ℕ} {ws : List ℕ} (h1 : levelOK r w = true) (h2 : tableOK (r + 1) ws = true) :
-    tableOK r (w :: ws) = true := by
-  simp [tableOK, h1, h2]
 
-theorem tableOK_nil (r : ℕ) : tableOK r [] = true := rfl
 
 theorem tableOK_level : ∀ {ws : List ℕ} {r0 : ℕ}, tableOK r0 ws = true → ∀ j, j < ws.length →
     levelOK (r0 + j) (ws.getD j 0) = true := by
@@ -974,22 +952,6 @@ open K1_13_6_1_2 (VanishesTo)
 open Low6969SharedPrice (coord)
 open Low6969SharedChooseCut (weight_coord)
 
-theorem clear_row (A0 : FractionJet) :
-    ∃ A0' : Row 4, A0'.support = A0.support ∧ ∃ u : GeoField, u ≠ 0 ∧
-      toGeneric A0' = MvPolynomial.C u * toGeometric A0 := by
-  obtain ⟨d, Q, hd, hS, hQ⟩ := clear_denominators A0
-  have hinj : Function.Injective
-      ((algebraMap K1_13_6.GenericField GeoField).comp (algebraMap (Polynomial Geom) K1_13_6.GenericField)) :=
-    (algebraMap K1_13_6.GenericField GeoField).injective.comp
-      (IsFractionRing.injective (Polynomial Geom) K1_13_6.GenericField)
-  refine ⟨Q, hS, (algebraMap K1_13_6.GenericField GeoField) (algebraMap (Polynomial Geom) K1_13_6.GenericField d),
-    ?_, ?_⟩
-  · intro h
-    apply hd
-    apply hinj
-    simpa using h
-  · rw [← fraction_geometric, hQ, map_mul]
-    simp [toGeometric]
 
 theorem coord_eq_shp (A0' : Row 4) (A0 : FractionJet) (h : A0'.support = A0.support) (i : Fin 3) :
     coord (shape A0') i = Low6969GateShape.shp i A0 := by
@@ -1302,7 +1264,7 @@ namespace Low6969GateBox
 
 open K1_13_6 (GenericField)
 open K1_13_2_2 (JetExp oldWeight gradeWeight)
-open TaperColumns (jetColumns jetExponents)
+open ExpandedColumns6970 (jetColumns jetExponents)
 open MvPolynomial Finset
 open Low6969SharedShapeRank (ambient)
 
@@ -1312,8 +1274,6 @@ def fitsBox (b j t : ℕ) (m : JetExp) : Prop :=
 noncomputable instance (b j t : ℕ) (m : JetExp) : Decidable (fitsBox b j t m) := by
   unfold fitsBox; infer_instance
 
-theorem fits_eq (r : ℕ) (m : JetExp) : Low6969ShapeGate.fits r m ↔ fitsBox (r*62) (r*28) (r*7) m :=
-  Iff.rfl
 
 noncomputable def ambCount (b j t : ℕ) : ℕ := (jetColumns.filter (fitsBox b j t)).card
 
@@ -1324,32 +1284,15 @@ theorem boxSpace_dim (b j t : ℕ) : Module.finrank GenericField (boxSpace b j t
   have hle : restrictSupport GenericField (↑(jetColumns.filter (fitsBox b j t))) ≤ ambient := by
     intro Q hQ m hm
     have hw := Finset.mem_filter.mp ((mem_restrictSupport_iff GenericField).mp hQ hm)
-    exact TaperColumns.jetExponents_finite.mem_toFinset.mp hw.1
+    exact ExpandedColumns6970.jetExponents_finite.mem_toFinset.mp hw.1
   change Module.finrank GenericField
     ((restrictSupport GenericField (↑(jetColumns.filter (fitsBox b j t)))).comap ambient.subtype) = _
   rw [(Submodule.comapSubtypeEquivOfLe hle).finrank_eq, finrank_restrictSupport_finset]
   rfl
 
-theorem cutoff_eq_box (r : ℕ) : Low6969SharedShapeRank.cutoff r = boxSpace (r*62) (r*28) (r*7) := rfl
 
-theorem ambCount_cutoff (r : ℕ) : ambCount (r*62) (r*28) (r*7) = Low6969ShapeGate.width r := rfl
 
-theorem boxSpace_mono {b j t b' j' t' : ℕ} (hb : b ≤ b') (hj : j ≤ j') (ht : t ≤ t') :
-    boxSpace b j t ≤ boxSpace b' j' t' := by
-  intro Q hQ m hm
-  have hfin : fitsBox b j t m := (Finset.mem_filter.mp
-    ((mem_restrictSupport_iff GenericField).mp hQ hm)).2
-  have hcol := (Finset.mem_filter.mp
-    ((mem_restrictSupport_iff GenericField).mp hQ hm)).1
-  exact Finset.mem_filter.mpr ⟨hcol, ⟨hfin.1.trans hb, hfin.2.1.trans hj, hfin.2.2.trans ht⟩⟩
 
-theorem ambCount_mono {b j t b' j' t' : ℕ} (hb : b ≤ b') (hj : j ≤ j') (ht : t ≤ t') :
-    ambCount b j t ≤ ambCount b' j' t' := by
-  unfold ambCount
-  apply Finset.card_le_card
-  intro m hm
-  obtain ⟨hc, hf⟩ := Finset.mem_filter.mp hm
-  exact Finset.mem_filter.mpr ⟨hc, ⟨hf.1.trans hb, hf.2.1.trans hj, hf.2.2.trans ht⟩⟩
 
 end Low6969GateBox
 
@@ -1363,31 +1306,31 @@ set_option autoImplicit false
 namespace Low6969GateAmb
 open K1_13_2 (cappedCount)
 open K1_13_2_2 (JetExp oldWeight gradeWeight cumulativeExponents mem_cumulativeColumns)
-open TaperColumns (jetColumns jetExponents)
-open TaperMoments (gradeCap)
+open ExpandedColumns6970 (jetColumns jetExponents)
+open ExpandedColumns6970 (gradeCap)
 open scoped BigOperators
 open Finset
 open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
 open K1_13_2_2_3 (cappedColumns mem_cappedColumns capped_card)
-open TaperColumns (sumGrade sumOld)
+open ExpandedColumns6970 (sumGrade sumOld)
 
-def bound (b : ℕ) : ℕ := min 4013 (b + 1)
-def start (k : ℕ) : ℕ := 16 * k
+def bound (b : ℕ) : ℕ := min 4025 (b + 1)
+def start (k : ℕ) : ℕ := k
 def stop (b k : ℕ) : ℕ := min (bound b) (start (k + 1))
-def chunks (b : ℕ) : ℕ := (bound b + 15) / 16
+def chunks (b : ℕ) : ℕ := bound b
 def padGrade (b k : ℕ) : ℕ := min (gradeCap (start k)) (gradeCap (stop b k - 1))
-def index (j : ℕ) : ℕ := min 1650 j
+def index (j : ℕ) : ℕ := min 1679 j
 
 private theorem grade_le {b k q : ℕ} (hlo : start k ≤ q) (hhi : q < stop b k) :
     padGrade b k ≤ gradeCap q := by
   unfold padGrade gradeCap
-  have hcap := TaperBudget.cap_antitone (show q ≤ stop b k-1 by omega)
+  have hcap := ExpandedShape6970.cap_antitone (show q ≤ stop b k-1 by omega)
   exact le_min ((min_le_left _ _).trans ((min_le_left _ _).trans hlo))
     ((min_le_right _ _).trans ((min_le_right _ _).trans hcap))
 
 noncomputable def grid (b j t : ℕ) : Finset (Σ _ : ℕ, ℕ × JetExp) :=
   (range (chunks b)).sigma fun k => (Ico (start k) (stop b k)).product
-    (cappedColumns (padGrade b k) (index j) t)
+    (cappedColumns (padGrade b k) (index j) (min 500 t))
 
 noncomputable def pad (b : ℕ) (x : Σ _ : ℕ, ℕ × JetExp) : JetExp :=
   x.2.2 + Finsupp.single 0 (x.2.1 - padGrade b x.1)
@@ -1424,21 +1367,24 @@ private theorem map_mem {b j t : ℕ} {x : Σ _ : ℕ, ℕ × JetExp} (hx : x �
   dsimp only at eB eJ eOther hl hh
   have hgrade : m.weight gradeWeight = padGrade b k := by exact_mod_cast hg
   have hindex : m.weight oldWeight ≤ index j := by exact_mod_cast hi
-  have htop : m 3 ≤ t := by exact_mod_cast ht
-  have hD := (grade_le hl hh).trans (min_le_right _ _ : gradeCap q ≤ TaperBudget.cap q)
-  have hb : q ≤ 4012 ∧ q ≤ b := by
+  have htop : m 3 ≤ min 500 t := by exact_mod_cast ht
+  have hD := (grade_le hl hh).trans (min_le_right _ _ : gradeCap q ≤ ExpandedTaper6970.cap q)
+  have hb : q ≤ 4024 ∧ q ≤ b := by
     unfold stop bound at hh
     omega
   apply Finset.mem_filter.mpr
   refine ⟨?_,⟨eB.trans_le hb.2,eJ.trans_le (hindex.trans (min_le_right _ _)),?_⟩⟩
-  · apply TaperColumns.jetExponents_finite.mem_toFinset.mpr
-    change (pad b ⟨k,q,m⟩).weight gradeWeight ≤ 4012 ∧
-      (pad b ⟨k,q,m⟩).weight oldWeight ≤ 1650 ∧ _
-    refine ⟨eB.trans_le hb.1,eJ.trans_le (hindex.trans (min_le_left _ _)),?_⟩
+  · apply ExpandedColumns6970.jetExponents_finite.mem_toFinset.mpr
+    change (pad b ⟨k,q,m⟩).weight gradeWeight ≤ 4024 ∧
+      (pad b ⟨k,q,m⟩).weight oldWeight ≤ 1679 ∧ _
+    refine ⟨eB.trans_le hb.1,eJ.trans_le (hindex.trans (min_le_left _ _)),?_,?_⟩
+    · rw [eOther 3 (by decide)]
+      exact htop.trans (min_le_left _ _)
     rw [eB,eOther 1 (by decide),eOther 2 (by decide),eOther 3 (by decide)]
     rw [sumGrade] at hgrade
     omega
-  · rwa [eOther 3 (by decide)]
+  · rw [eOther 3 (by decide)]
+    exact htop.trans (min_le_right _ _)
 
 private theorem pad_injective (b j t : ℕ) : Set.InjOn (pad b) (grid b j t : Set (Σ _ : ℕ, ℕ × JetExp)) := by
   intro x hx y hy hxy
@@ -1463,7 +1409,7 @@ private theorem pad_injective (b j t : ℕ) : Set.InjOn (pad b) (grid b j t : Se
   rfl
 
 def block (b j t k : ℕ) : ℤ :=
-  ((stop b k-start k : ℕ) : ℤ) * cappedCount (padGrade b k) (index j) t
+  ((stop b k-start k : ℕ) : ℤ) * cappedCount (padGrade b k) (index j) (min 500 t)
 
 def compute (b j t : ℕ) : ℤ := ∑ k ∈ range (chunks b), block b j t k
 
@@ -1473,11 +1419,11 @@ private theorem grid_eq (b j t : ℕ) : ((grid b j t).card : ℤ) = compute b j 
   apply sum_congr rfl
   intro k _
   change (((Ico (start k) (stop b k)).product
-    (cappedColumns (padGrade b k) (index j) t)).card : ℤ) = block b j t k
+    (cappedColumns (padGrade b k) (index j) (min 500 t))).card : ℤ) = block b j t k
   have hcard := Finset.card_product (Ico (start k) (stop b k))
-    (cappedColumns (padGrade b k) (index j) t)
+    (cappedColumns (padGrade b k) (index j) (min 500 t))
   change ((Ico (start k) (stop b k)).product
-    (cappedColumns (padGrade b k) (index j) t)).card = _ at hcard
+    (cappedColumns (padGrade b k) (index j) (min 500 t))).card = _ at hcard
   rw [hcard, Nat.card_Ico, Nat.cast_mul, capped_card K1_13_2_2_2.proof]
   rfl
 
@@ -1486,22 +1432,22 @@ theorem amb_ge (b j t : ℕ) : compute b j t ≤ (Low6969GateBox.ambCount b j t 
   unfold Low6969GateBox.ambCount
   exact_mod_cast Finset.card_le_card_of_injOn (pad b) (fun _ h => map_mem h) (pad_injective b j t)
 
-theorem amb_full (b j t : ℕ) (hb : 4012 ≤ b) (hj : 1650 ≤ j) (htt : 550 ≤ t) :
+theorem amb_full (b j t : ℕ) (hb : 4024 ≤ b) (hj : 1679 ≤ j) (htt : 500 ≤ t) :
     Low6969GateBox.ambCount b j t = Low6969Prices.symbolCount := by
   unfold Low6969GateBox.ambCount
   have jc : jetColumns.card = Low6969Prices.symbolCount := by
-    exact_mod_cast TaperColumns.jet_card_eq.trans TaperColumns.sourceCount_eq
+    exact ExpandedShape6970.jet_count
   rw [filter_true_of_mem, jc]
   intro m hm
-  have h : m ∈ jetExponents := TaperColumns.jetExponents_finite.mem_toFinset.mp hm
+  have h : m ∈ jetExponents := ExpandedColumns6970.jetExponents_finite.mem_toFinset.mp hm
   unfold Low6969GateBox.fitsBox
   have ht : 3 * m 3 ≤ m.weight oldWeight := by rw [sumOld]; omega
-  exact ⟨h.1.trans hb, h.2.1.trans hj, by have hJ := h.2.1; omega⟩
+  exact ⟨h.1.trans hb, h.2.1.trans hj, h.2.2.1.trans htt⟩
 
 theorem amb_le (b j t : ℕ) : Low6969GateBox.ambCount b j t ≤ Low6969Prices.symbolCount := by
   unfold Low6969GateBox.ambCount
   have jc : jetColumns.card = Low6969Prices.symbolCount := by
-    exact_mod_cast TaperColumns.jet_card_eq.trans TaperColumns.sourceCount_eq
+    exact ExpandedShape6970.jet_count
   rw [← jc]
   exact Finset.card_filter_le _ _
 

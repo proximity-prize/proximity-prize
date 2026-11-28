@@ -182,12 +182,6 @@ theorem grouped_eq_debit (s : Shape) (h N a b wt limit : ℕ) (slots : ℕ → �
   · exact Or.inr (Or.inl width)
   · exact Or.inr (Or.inr (Or.inl slope))
 
-theorem grouped_by_slope (s : Shape) (h N a b wt : ℕ) (slots : ℕ → ℕ)
-    (hp : 0 < h) (bp : 0 < b) (narrow : s.J < 131071-h) :
-    grouped s h N a b wt (s.J/b) slots = ∑ W ∈ range N, debitAt s h N W a b wt slots := by
-  apply grouped_eq_debit s h N a b wt (s.J/b) slots hp narrow
-  intro k large
-  exact Or.inr (Or.inr ((Nat.div_lt_iff_lt_mul bp).mp large))
 
 end Research6966.HelperWindowGrouping
 
@@ -422,13 +416,6 @@ theorem cover_height {b : Witness} {endpoints : List ℕ} {lo h : ℕ}
     · exact ⟨lo, hi, low, first, hh, pos⟩
     · exact ih tail (by omega)
 
-theorem node_check (b : Witness) (hm : 2*b.J ≤ b.m) (hb : b.m+b.J ≤ b.B+1)
-    (h : 262144*P1_7_1_2.sixPerNode (b.m-2*b.J) b.J = 6*b.nodes) :
-    P1_7_1.nodeRows b.shape = b.nodes := by
-  have eq := P1_7_1_2.six_nodeRows b.shape hm hb
-  change 6*P1_7_1.nodeRows b.shape = 262144*P1_7_1_2.sixPerNode (b.m-2*b.J) b.J at eq
-  rw [h] at eq
-  omega
 
 theorem weight_room (b : Witness) {h : ℕ} (lo : firstHeight ≤ h) (hi : h ≤ lastHeight)
     (hs : 2*b.reserve ≤ b.B) (hw : b.B*(131071-firstHeight) ≤ b.top firstHeight) :

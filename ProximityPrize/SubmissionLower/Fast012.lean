@@ -1476,147 +1476,12 @@ set_option maxRecDepth 4000
 def jetWeight (a b n : ℕ) : Option (Fin n) → ℕ :=
   fun i => i.elim 0 (fun j => a + b * j.val)
 def coeffWeight (a b n : ℕ) : Fin n → ℕ := fun j => a + b * j.val
-def displacementWeight (b n : ℕ) : Option (Fin n) → ℕ :=
-  fun i => i.elim b (fun _ => 0)
 variable {F : Type*}
 section Semiring
 variable [CommSemiring F]
-theorem universalJet_offset (a b K j : ℕ) :
-    SupportWeightOffset (Finsupp.weight (jetWeight a b K))
-      (Finsupp.weight (displacementWeight b K)) (a + b*j)
-      (universalTaylorJet (F := F) K j) := by
-  classical
-  apply SupportWeightOffset.sum
-  intro l hl
-  apply SupportWeightOffset.monomial
-  have hj := (Finset.mem_filter.mp hl).2
-  simp only [map_add, Finsupp.weight_single, smul_eq_mul,
-    jetWeight, displacementWeight, Option.elim_some, Option.elim_none,
-    mul_zero, zero_add, one_mul, add_zero]
-  have hsub : l.val - j + j = l.val := Nat.sub_add_cancel hj
-  nlinarith
-theorem universalResidual_offset {r : ℕ} (a b K : ℕ) (center : F)
-    (Q : DifferentialPolynomial F r) :
-    SupportWeightOffset (Finsupp.weight (jetWeight a b K))
-      (Finsupp.weight (displacementWeight b K))
-      (Q.weightedTotalDegree (jetWeight a b (r+1)))
-      (universalTaylorResidual K center Q) := by
-  apply supportWeightOffset_aeval
-  intro i
-  cases i with
-  | none =>
-    apply SupportWeightOffset.add
-    · exact SupportWeightOffset.C center
-    · apply SupportWeightOffset.monomial
-      simp [jetWeight, displacementWeight, Finsupp.weight_single]
-  | some j => exact universalJet_offset a b K j.val
-theorem residual_coeff_weight {r : ℕ} (a b K : ℕ) (center : F)
-    (Q : DifferentialPolynomial F r) (h : ℕ) (m : Fin K →₀ ℕ)
-    (hm : m ∈ ((optionEquivLeft F (Fin K)
-      (universalTaylorResidual K center Q)).coeff h).support) :
-    Finsupp.weight (coeffWeight a b K) m ≤
-      b*h + Q.weightedTotalDegree (jetWeight a b (r+1)) := by
-  have hb := universalResidual_offset a b K center Q (m.optionElim h)
-    ((mem_support_coeff_optionEquivLeft F).mp hm)
-  change Finsupp.weight (fun i : Option (Fin K) => i.elim 0 (coeffWeight a b K))
-    (m.optionElim h) ≤
-    Finsupp.weight (fun i : Option (Fin K) => i.elim b (fun _ => 0))
-      (m.optionElim h) + _ at hb
-  simp only [Finsupp.weight_optionElim, zero_mul, zero_add] at hb
-  simpa [Finsupp.weight_apply, Nat.mul_comm] using hb
-theorem initialSeparant_weight {r : ℕ} [Nontrivial F]
-    (a b : ℕ) (center : F) (Q : DifferentialPolynomial F r) :
-    (initialJetSeparant center Q).weightedTotalDegree (coeffWeight a b (r+1)) ≤
-      Q.weightedTotalDegree (jetWeight a b (r+1)) - (a + b*r) := by
-  apply le_trans (weightedTotalDegree_aeval_le_of_le
-    (jetWeight a b (r+1)) (coeffWeight a b (r+1)) _ _ ?_)
-  · simpa [initialJetSeparant, separant, jetWeight] using
-      weightedTotalDegree_pderiv_le_sub (jetWeight a b (r+1))
-        (some (Fin.last r)) Q
-  · intro i
-    cases i with
-    | none => simp [jetWeight]
-    | some j =>
-        change (MvPolynomial.X j : MvPolynomial (Fin (r+1)) F).weightedTotalDegree
-          (coeffWeight a b (r+1)) ≤ a+b*j.val
-        rw [MvPolynomial.X, weightedTotalDegree_monomial _ _ 1 one_ne_zero]
-        simp [Finsupp.weight_single, coeffWeight]
 end Semiring
 section Field
 variable [Field F]
-theorem rationalTaylor_weight {r : ℕ} (a b V : ℕ) (center : F)
-    (Q : DifferentialPolynomial F r)
-    (hV : a + b*r ≤ V)
-    (hQ : Q.weightedTotalDegree (jetWeight a b (r+1)) ≤ V) (l : ℕ) :
-    (rationalTaylorNumerator center Q l).weightedTotalDegree (coeffWeight a b (r+1)) ≤
-      (2*(l-r)-1) * (V-(a+b*r)) + a + b*l := by
-  have hs := (initialSeparant_weight a b center Q).trans
-    (Nat.sub_le_sub_right hQ (a+b*r))
-  induction l using Nat.strong_induction_on with
-  | ind l ih =>
-    rw [rationalTaylorNumerator]
-    split_ifs with hl
-    · have he : 2*(l-r)-1 = 0 := by omega
-      rw [he, X, weightedTotalDegree_monomial _ _ 1 one_ne_zero]
-      simp [Finsupp.weight_single, coeffWeight]
-    · have hlr : r < l := by omega
-      have hden : ∀ m ∈ ((optionEquivLeft F (Fin l)
-          (universalTaylorResidual l center Q)).coeff (l-r)).support,
-          Finsupp.weight (fun i : Fin l => 2*(i.val-r)-1) m ≤ 2*(l-r)-2 := by
-        intro m hm
-        exact denominator_weight_le_of_mem_universalTaylorResidual_coeff
-          (r := r) (K := l) (h := l-r) (by omega) center Q m hm
-      have hw : ∀ m ∈ ((optionEquivLeft F (Fin l)
-          (universalTaylorResidual l center Q)).coeff (l-r)).support,
-          (C (((optionEquivLeft F (Fin l)
-            (universalTaylorResidual l center Q)).coeff (l-r)).coeff m) :
-            MvPolynomial (Fin (r+1)) F).weightedTotalDegree (coeffWeight a b (r+1)) +
-          Finsupp.weight (coeffWeight a b l) m ≤ b*(l-r)+V := by
-        intro m hm
-        simpa using (residual_coeff_weight a b l center Q (l-r) m hm).trans
-          (Nat.add_le_add_left hQ _)
-      have hd := weightedTotalDegree_clearedSubstitution_le_of_coeff C
-        (initialJetSeparant center Q)
-        (fun i : Fin l => rationalTaylorNumerator center Q i.val)
-        (fun i => 2*(i.val-r)-1) (coeffWeight a b l) (coeffWeight a b (r+1))
-        (2*(l-r)-2) (V-(a+b*r)) (b*(l-r)+V)
-        ((optionEquivLeft F (Fin l) (universalTaylorResidual l center Q)).coeff (l-r))
-        hs (fun i => by simpa [coeffWeight, Nat.add_assoc] using ih i.val i.isLt) hden hw
-      have hm := weightedTotalDegree_mul_le (coeffWeight a b (r+1))
-        (-C ((l.choose r : F)⁻¹))
-        (clearedSubstitution C (initialJetSeparant center Q)
-          (fun i : Fin l => rationalTaylorNumerator center Q i.val)
-          (fun i => 2*(i.val-r)-1) (2*(l-r)-2)
-          ((optionEquivLeft F (Fin l) (universalTaylorResidual l center Q)).coeff (l-r)))
-      have hc : (-C ((l.choose r : F)⁻¹) : MvPolynomial (Fin (r+1)) F).weightedTotalDegree
-          (coeffWeight a b (r+1)) = 0 := by
-        rw [← map_neg C]
-        exact weightedTotalDegree_C _ _
-      rw [hc, zero_add] at hm
-      apply hm.trans (hd.trans ?_)
-      have he : 2*(l-r)-1 = (2*(l-r)-2)+1 := by omega
-      have hsub := Nat.sub_add_cancel hV
-      have hlsub : l-r+r=l := Nat.sub_add_cancel (Nat.le_of_lt hlr)
-      rw [he]
-      nlinarith
-theorem commonTaylor_weight {r : ℕ} (a b V K τ : ℕ) (center : F)
-    (Q : DifferentialPolynomial F r) (hτ : TaylorExponentSufficient r K τ)
-    (hV : a+b*r ≤ V)
-    (hQ : Q.weightedTotalDegree (jetWeight a b (r+1)) ≤ V) (l : Fin K) :
-    (commonTaylorNumerator center Q τ l.val).weightedTotalDegree (coeffWeight a b (r+1)) ≤
-      τ * (V-(a+b*r)) + a + b*l.val := by
-  have hd := rationalTaylor_weight a b V center Q hV hQ l.val
-  have hs := (initialSeparant_weight a b center Q).trans
-    (Nat.sub_le_sub_right hQ (a+b*r))
-  have hp := (weightedTotalDegree_pow_le (coeffWeight a b (r+1))
-    (initialJetSeparant center Q) (τ-(2*(l.val-r)-1))).trans
-      (Nat.mul_le_mul_left _ hs)
-  have hm := weightedTotalDegree_mul_le (coeffWeight a b (r+1))
-    (rationalTaylorNumerator center Q l.val)
-    (initialJetSeparant center Q ^ (τ-(2*(l.val-r)-1)))
-  have he := Nat.sub_add_cancel (hτ l)
-  unfold commonTaylorNumerator
-  nlinarith
 end Field
 end
 end Astra7
@@ -2167,13 +2032,6 @@ theorem map_resultant_eq_zero_of_common_root
     Polynomial.exists_mul_add_mul_eq_C_resultant f g hf hg hsize
   have he := congrArg (fun t : (Polynomial R) ↦ t.eval₂ phi z) hbezout
   simpa only [eval₂_add, eval₂_mul, eval₂_C, hfroot, hgroot, zero_mul, zero_add] using he.symm
-theorem native_binomial_guard {E : Type*} [Field E] [CharP E 2130706433]
-    (r : ℕ) (_hr : r ≤ 2) (i : ℕ) (hri : r < i) (hi : i < 131073) :
-    (i.choose r : E) ≠ 0 := by
-  have h := natCast_choose_ne_zero_of_ringChar (D := 131072) (s := r)
-    (Or.inr (by rw [ringChar.eq E 2130706433]; norm_num)) (i - r)
-    (by omega)
-  simpa only [Nat.sub_add_cancel (Nat.le_of_lt hri)] using h
 end Sol1.C40Primitives
 end
 section

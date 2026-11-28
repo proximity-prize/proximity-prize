@@ -4632,24 +4632,6 @@ theorem sum_squares (n : ℕ) :
     simp only [Nat.succ_sub_succ_eq_sub, Nat.sub_zero]
     rw [Nat.mul_add, ih]
     ring
-theorem slot_constants :
-    topSlots 0 = 525913765916471 ∧
-      7800 * (∑ k ∈ Finset.range 1150, topSlots (1 + k)) = 1571799066189253395000 := by
-  constructor
-  · decide
-  · have hs : (∑ k ∈ Finset.range 1150, topSlots (1 + k)) =
-        (70001 * 5671) * ∑ k ∈ Finset.range 1150, (1150 - k)^2 := by
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro k _
-      have hk : 1151 - (1 + k) = 1150 - k := by omega
-      rw [topSlots, hk]
-    rw [hs]
-    have hsquare :
-        (∑ k ∈ Finset.range 1150, (1150 - k)^2) = 507619775 := by
-      have h := sum_squares 1150
-      omega
-    rw [hsquare]
 end K1_13_4_4
 end
 section

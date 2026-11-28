@@ -96,17 +96,6 @@ theorem weight_lower {h} {D:PoleData h} {Crt:CRTLift D} {N:Jet} (M:HelperPhysica
     omega)
   omega
 
-theorem slope_cost {h} {D:PoleData h} {Crt:CRTLift D} {N:Jet} (M:HelperPhysicalModel.Model Crt N)
-    (nn:N≠0) (v:0<N.natDegree) {w:ℕ} (wp:0<w) :
-    w-1≤RawPhysicalDegree.weight w (w-1) M.raw := by
-  have j:N.natDegree≤jetDegree N := by
-    have total:=(jetDegree_le N _).mp le_rfl N.natDegree N.leadingCoeff.natDegree
-      (by rw [coeff_natDegree,coeff_natDegree];exact leadingCoeff_ne_zero.mpr (leadingCoeff_ne_zero.mpr nn))
-    omega
-  have spent:= (Nat.mul_le_mul_left w j).trans (weight_lower M nn w wp)
-  have rt:(w-1)*N.natDegree+N.natDegree=w*N.natDegree:=by rw [←Nat.succ_mul];congr 1;omega
-  have once:w-1≤(w-1)*N.natDegree:=by simpa only [mul_one] using Nat.mul_le_mul_left (w-1) (show 1≤N.natDegree from v)
-  omega
 
 theorem native_degree {G:Pade.Row K1_14_3.SeedField} (N:PadeNativeQuotient.Native G) (gp:G.primitive) :
     jetDegree N.poly=G.graphDegree := by

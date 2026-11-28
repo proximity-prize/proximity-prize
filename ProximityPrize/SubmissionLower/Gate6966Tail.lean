@@ -880,14 +880,7 @@ theorem mn_eq (a b : ℕ) : mn a b = min a b := by
     have : ¬ a ≤ b := fun hh => by simp [Nat.ble_eq_true_of_le hh] at h
     simp only [Bool.cond_false]; omega
 
-def DqN (b j : ℕ) : ℕ := (ZN b j / 864).toNat
 
-theorem DqN_eq (b j : ℕ) : DqN b j = Dinf b j := by
-  unfold DqN
-  have h := Dinf_closed b j
-  rw [← h]
-  have : (Dinf b j : ℤ) * 864 / 864 = Dinf b j := Int.mul_ediv_cancel _ (by norm_num)
-  rw [this]; simp
 
 def freeE (b j t : ℕ) : ℕ :=
   Dq b j - (if mn t (mn b (j / 3)) + 1 ≤ mn (j / 3) b
@@ -917,144 +910,16 @@ set_option autoImplicit false
 
 namespace Gate6966FreeArith
 
-def Vn (m c : ℕ) : ℕ :=
-  bif Nat.beq (m % 2) 0 then (c - m / 2) * (m / 2 + 1) ^ 2
-  else (m / 2 + 1) * (m / 2 + 2) * (2 * c - 2 * (m / 2) - 1) / 2
 
-def freeSum (b j t : ℕ) : ℕ := ∑ e ∈ Finset.range (t + 1), Vn (j - 3 * e) (b + 1 - e)
 
-def Ppos (b j t : ℕ) : ℕ :=
-  bif Nat.beq (t % 2) 0 then
-    bif Nat.beq (j % 2) 0 then 8*b*j*j*t + 8*b*j*j + 8*b*j*t + 32*b*j + 24*b*t*t*t + 32*b + 14*j*j*t*t + 6*j*j*t + 16*j*t + 16*j + 9*t*t*t*t + 26*t*t*t + 32 else 8*b*j*j*t + 8*b*j*j + 8*b*j*t + 32*b*j + 24*b*t*t*t + 24*b + 14*j*j*t*t + 6*j*j*t + 16*j*t + 20*j + 9*t*t*t*t + 26*t*t*t + 24
-  else
-    bif Nat.beq (j % 2) 0 then 8*b*j*j*t + 8*b*j*j + 8*b*j*t + 32*b*j + 24*b*t*t*t + 28*b + 14*j*j*t*t + 6*j*j*t + 16*j*t + 18*j + 9*t*t*t*t + 26*t*t*t + 27 else 8*b*j*j*t + 8*b*j*j + 8*b*j*t + 32*b*j + 24*b*t*t*t + 28*b + 14*j*j*t*t + 6*j*j*t + 16*j*t + 18*j + 9*t*t*t*t + 26*t*t*t + 29
 
-def Pneg (b j t : ℕ) : ℕ :=
-  bif Nat.beq (t % 2) 0 then
-    bif Nat.beq (j % 2) 0 then 24*b*j*t*t + 12*b*t*t + 8*b*t + 4*j*j*j*t + 4*j*j*j + 8*j*j + 20*j*t*t*t + 22*j*t*t + 20*t*t + 8*t else 24*b*j*t*t + 12*b*t*t + 8*b*t + 4*j*j*j*t + 4*j*j*j + 8*j*j + 20*j*t*t*t + 22*j*t*t + 20*t*t + 10*t
-  else
-    bif Nat.beq (j % 2) 0 then 24*b*j*t*t + 12*b*t*t + 8*b*t + 4*j*j*j*t + 4*j*j*j + 8*j*j + 20*j*t*t*t + 22*j*t*t + 20*t*t + 10*t else 24*b*j*t*t + 12*b*t*t + 8*b*t + 4*j*j*j*t + 4*j*j*j + 8*j*j + 20*j*t*t*t + 22*j*t*t + 20*t*t + 8*t
 
-theorem Vn_even (h c : ℕ) : Vn (2 * h) c = (c - h) * (h + 1) ^ 2 := by
-  have h1 : (2 * h) % 2 = 0 := by omega
-  have h2 : (2 * h) / 2 = h := by omega
-  simp [Vn, h1, h2]
 
-theorem Vn_odd (h c : ℕ) : Vn (2 * h + 1) c = (h + 1) * (h + 2) * (2 * c - 2 * h - 1) / 2 := by
-  have h1 : (2 * h + 1) % 2 = 1 := by omega
-  have h2 : (2 * h + 1) / 2 = h := by omega
-  simp [Vn, h1, h2]
 
-theorem beq_mod_true {x : ℕ} (h : x % 2 = 0) : Nat.beq (x % 2) 0 = true := by simp [h]
-theorem beq_mod_false {x : ℕ} (h : x % 2 = 1) : Nat.beq (x % 2) 0 = false := by rw [h]; rfl
 
-theorem Vn_odd_cast (h c : ℕ) (hc : h + 1 ≤ c) :
-    2 * (Vn (2 * h + 1) c : ℤ) = ((h + 1) * (h + 2) * (2 * (c : ℤ) - 2 * h - 1) : ℤ) := by
-  rw [Vn_odd]
-  have hd : 2 ∣ (h + 1) * (h + 2) * (2 * c - 2 * h - 1) := by
-    have : 2 ∣ (h + 1) * (h + 2) := by
-      have := Nat.even_mul_succ_self (h + 1)
-      exact even_iff_two_dvd.mp this
-    exact Dvd.dvd.mul_right this _
-  have h2 := Nat.mul_div_cancel' hd
-  have e : ((2 * c - 2 * h - 1 : ℕ) : ℤ) = 2 * (c : ℤ) - 2 * h - 1 := by
-    have : 2 * h + 1 ≤ 2 * c := by omega
-    push_cast [Nat.sub_sub, Nat.cast_sub this]
-    ring
-  have h3 : (2 : ℤ) * (((h + 1) * (h + 2) * (2 * c - 2 * h - 1) / 2 : ℕ) : ℤ) =
-      (((h + 1) * (h + 2) * (2 * c - 2 * h - 1) : ℕ) : ℤ) := by exact_mod_cast h2
-  rw [h3]
-  push_cast [e]
-  ring
 
-theorem step_closed (t m d : ℕ) :
-    ((Ppos (3*t+3+m+d) (3*t+3+m) (t+1) : ℕ) : ℤ) - (Pneg (3*t+3+m+d) (3*t+3+m) (t+1) : ℕ) -
-      ((Ppos (3*t+3+m+d) (3*t+3+m) t : ℕ) - (Pneg (3*t+3+m+d) (3*t+3+m) t : ℕ)) =
-    32 * (Vn m (3*t+3+m+d - t) : ℤ) := by
-  rcases Nat.even_or_odd' t with ⟨q, rfl | rfl⟩ <;> rcases Nat.even_or_odd' m with ⟨h, rfl | rfl⟩
-  · -- t = 2q, m = 2h
-    have a1 := beq_mod_false (x := 2*q+1) (by omega)
-    have a2 := beq_mod_true (x := 2*q) (by omega)
-    have a3 := beq_mod_false (x := 3*(2*q)+3+2*h) (by omega)
-    have e5 : (3*(2*q)+3+2*h+d - 2*q) = 4*q+3+2*h+d := by omega
-    have e6 : 4*q+3+2*h+d - h = 4*q+3+h+d := by omega
-    simp only [Ppos, Pneg, Vn_even, a1, a2, a3, e5, e6, Bool.cond_true, Bool.cond_false]
-    push_cast
-    ring
-  · -- t = 2q, m = 2h+1
-    have a1 := beq_mod_false (x := 2*q+1) (by omega)
-    have a2 := beq_mod_true (x := 2*q) (by omega)
-    have a3 := beq_mod_true (x := 3*(2*q)+3+(2*h+1)) (by omega)
-    have e5 : (3*(2*q)+3+(2*h+1)+d - 2*q) = 4*q+4+2*h+d := by omega
-    have hX := Vn_odd_cast h (3*(2*q)+3+(2*h+1)+d - 2*q) (by omega)
-    rw [e5] at hX ⊢
-    simp only [Ppos, Pneg, a1, a2, a3, Bool.cond_true, Bool.cond_false]
-    push_cast at hX ⊢
-    linear_combination (-16) * hX
-  · -- t = 2q+1, m = 2h
-    have a1 := beq_mod_true (x := 2*q+1+1) (by omega)
-    have a2 := beq_mod_false (x := 2*q+1) (by omega)
-    have a3 := beq_mod_true (x := 3*(2*q+1)+3+2*h) (by omega)
-    have e5 : (3*(2*q+1)+3+2*h+d - (2*q+1)) = 4*q+5+2*h+d := by omega
-    have e6 : 4*q+5+2*h+d - h = 4*q+5+h+d := by omega
-    simp only [Ppos, Pneg, Vn_even, a1, a2, a3, e5, e6, Bool.cond_true, Bool.cond_false]
-    push_cast
-    ring
-  · -- t = 2q+1, m = 2h+1
-    have a1 := beq_mod_true (x := 2*q+1+1) (by omega)
-    have a2 := beq_mod_false (x := 2*q+1) (by omega)
-    have a3 := beq_mod_false (x := 3*(2*q+1)+3+(2*h+1)) (by omega)
-    have e5 : (3*(2*q+1)+3+(2*h+1)+d - (2*q+1)) = 4*q+6+2*h+d := by omega
-    have hX := Vn_odd_cast h (3*(2*q+1)+3+(2*h+1)+d - (2*q+1)) (by omega)
-    rw [e5] at hX ⊢
-    simp only [Ppos, Pneg, a1, a2, a3, Bool.cond_true, Bool.cond_false]
-    push_cast at hX ⊢
-    linear_combination (-16) * hX
 
-theorem base_closed (j d : ℕ) :
-    ((Ppos (j+d) j 0 : ℕ) : ℤ) - (Pneg (j+d) j 0 : ℕ) = 32 * (Vn j (j+d+1) : ℤ) := by
-  rcases Nat.even_or_odd' j with ⟨h, rfl | rfl⟩
-  · have a2 := beq_mod_true (x := 0) (by omega)
-    have a3 := beq_mod_true (x := 2*h) (by omega)
-    have e6 : 2*h+d+1 - h = h+d+1 := by omega
-    simp only [Ppos, Pneg, Vn_even, a2, a3, Nat.zero_mod, e6, Bool.cond_true, Bool.cond_false, Nat.beq]
-    push_cast
-    ring
-  · have a2 := beq_mod_true (x := 0) (by omega)
-    have a3 := beq_mod_false (x := 2*h+1) (by omega)
-    have hX := Vn_odd_cast h (2*h+1+d+1) (by omega)
-    simp only [Ppos, Pneg, a2, a3, Nat.zero_mod, Bool.cond_true, Bool.cond_false, Nat.beq]
-    push_cast at hX ⊢
-    linear_combination (-16) * hX
 
-theorem freeSum_closed (b j : ℕ) (hb : j ≤ b) :
-    ∀ t, 3 * t ≤ j → 32 * freeSum b j t + Pneg b j t = Ppos b j t := by
-  intro t
-  induction t with
-  | zero =>
-    intro _
-    obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hb
-    have := base_closed j d
-    have h0 : freeSum (j+d) j 0 = Vn j (j+d+1) := by simp [freeSum]
-    rw [h0]
-    zify
-    linarith
-  | succ t ih =>
-    intro h3
-    obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_le (show 3 * t + 3 ≤ j by omega)
-    obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hb
-    have ih' := ih (by omega)
-    have st := step_closed t m d
-    have e1 : 3 * t + 3 + m - 3 * (t + 1) = m := by omega
-    have e2 : 3 * t + 3 + m + d + 1 - (t + 1) = 3 * t + 3 + m + d - t := by omega
-    have hs : freeSum (3*t+3+m+d) (3*t+3+m) (t+1) =
-        freeSum (3*t+3+m+d) (3*t+3+m) t + Vn m (3*t+3+m+d - t) := by
-      unfold freeSum
-      rw [Finset.sum_range_succ _ (t+1), e1, e2]
-    rw [hs]
-    zify at ih' ⊢
-    push_cast at st
-    linarith
 
 end Gate6966FreeArith
 
@@ -1077,100 +942,8 @@ theorem tri (k c : ℕ) (h : k ≤ c) :
     have : ((c - (k + 1) : ℕ) : ℤ) = c - (k + 1) := by push_cast [Nat.cast_sub h]; ring
     rw [this]; push_cast; ring
 
-theorem inner (m c : ℕ) (h : m ≤ c) :
-    ((∑ e2 ∈ range (m / 2 + 1), ∑ e1 ∈ range (m - 2 * e2 + 1), (c - e2 - e1) : ℕ) : ℤ) * 2 =
-      (2 * c - m) * ((m / 2 + 1) * (m + 1 - m / 2) : ℕ) := by
-  have key : ∀ H : ℕ, H ≤ m / 2 + 1 →
-      ((∑ e2 ∈ range H, ∑ e1 ∈ range (m - 2 * e2 + 1), (c - e2 - e1) : ℕ) : ℤ) * 2 =
-        (2 * c - m) * ((H : ℤ) * (m + 1) - H * (H - 1)) := by
-    intro H
-    induction H with
-    | zero => intro _; simp
-    | succ H ih =>
-      intro hH
-      rw [sum_range_succ, Nat.cast_add, add_mul, ih (by omega)]
-      have h2 := tri (m - 2 * H) (c - H) (by omega)
-      have h3 : ((∑ e1 ∈ range (m - 2 * H + 1), (c - H - e1) : ℕ) : ℤ) =
-          ∑ e1 ∈ range (m - 2 * H + 1), (((c - H) - e1 : ℕ) : ℤ) := by push_cast; rfl
-      rw [h3, mul_comm _ (2:ℤ), h2]
-      have hH2 : 2 * H ≤ m := by omega
-      have e1 : ((m - 2 * H : ℕ) : ℤ) = m - 2 * H := by push_cast [Nat.cast_sub hH2]; ring
-      have e2 : ((c - H : ℕ) : ℤ) = c - H := by push_cast [Nat.cast_sub (show H ≤ c by omega)]; ring
-      rw [e1, e2]
-      push_cast
-      ring
-  have := key (m / 2 + 1) le_rfl
-  rw [this]
-  have hle : m / 2 ≤ m + 1 := by omega
-  push_cast [Nat.cast_sub hle]
-  ring
 
-theorem Vn_inner (m c : ℕ) (h : m ≤ c) :
-    (∑ e2 ∈ range (m / 2 + 1), ∑ e1 ∈ range (m - 2 * e2 + 1), (c - e2 - e1)) = Vn m c := by
-  have h1 := inner m c h
-  rcases Nat.even_or_odd' m with ⟨q, rfl | rfl⟩
-  · have hq : 2 * q / 2 = q := by omega
-    rw [hq] at h1 ⊢
-    rw [Vn_even]
-    have e : 2 * q + 1 - q = q + 1 := by omega
-    rw [e] at h1
-    have e2 : ((c - q : ℕ) : ℤ) = c - q := by push_cast [Nat.cast_sub (show q ≤ c by omega)]; ring
-    have : (((∑ e2 ∈ range (q + 1), ∑ e1 ∈ range (2 * q - 2 * e2 + 1), (c - e2 - e1) : ℕ) : ℤ)) =
-        (((c - q) * (q + 1) ^ 2 : ℕ) : ℤ) := by
-      push_cast [e2]
-      push_cast at h1
-      linarith
-    exact_mod_cast this
-  · have hq : (2 * q + 1) / 2 = q := by omega
-    rw [hq] at h1 ⊢
-    rw [Vn_odd]
-    have hX := Vn_odd_cast q c (by omega)
-    rw [Vn_odd] at hX
-    have e : 2 * q + 1 + 1 - q = q + 2 := by omega
-    rw [e] at h1
-    have : (((∑ e2 ∈ range (q + 1), ∑ e1 ∈ range (2 * q + 1 - 2 * e2 + 1), (c - e2 - e1) : ℕ) : ℤ)) =
-        (((q + 1) * (q + 2) * (2 * c - 2 * q - 1) / 2 : ℕ) : ℤ) := by
-      push_cast at h1 hX ⊢
-      push_cast at hX
-      linarith
-    exact_mod_cast this
 
-theorem free_le_sum (b j t : ℕ) (h3 : 3 * t ≤ j) (hb : j ≤ b) :
-    free ![b, j, t] ≤ freeSum b j t := by
-  classical
-  let S : Finset (Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ) :=
-    (range (t + 1)).sigma fun e3 => (range ((j - 3 * e3) / 2 + 1)).sigma fun e2 =>
-      (range (j - 3 * e3 - 2 * e2 + 1)).sigma fun e1 => range (b + 1 - (e1 + e2 + e3))
-  have hcard : S.card = freeSum b j t := by
-    simp only [S, card_sigma, card_range]
-    unfold freeSum
-    apply sum_congr rfl
-    intro e3 he3
-    have he := mem_range.mp he3
-    rw [← Vn_inner _ _ (by omega)]
-    apply sum_congr rfl
-    intro e2 he2
-    have := mem_range.mp he2
-    apply sum_congr rfl
-    intro e1 he1
-    have := mem_range.mp he1
-    omega
-  rw [← hcard]
-  unfold free
-  apply card_le_card_of_injOn (fun m : Fin 4 →₀ ℕ => (⟨m 3, m 2, m 1, m 0⟩ : Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ))
-  · intro m hm
-    have hm' := (freeSet_finite ![b, j, t]).mem_toFinset.mp (by simpa using hm)
-    have w0 := hm' 0
-    have w1 := hm' 1
-    have w2 := hm' 2
-    simp [Finsupp.weight_apply, Finsupp.sum_fintype, wv, Fin.sum_univ_four, Pi.single_apply] at w0 w1 w2
-    simp only [Finset.mem_coe, S, mem_sigma, mem_range]
-    refine ⟨by omega, by omega, by omega, by omega⟩
-  · intro m _ m' _ h
-    simp only [Sigma.mk.inj_iff, heq_eq_eq, and_true] at h
-    obtain ⟨h3, h2, h1, h0⟩ := h
-    ext i
-    fin_cases i <;> simp [h0, h1, h2, h3]
 
 def mn (a b : ℕ) : ℕ := bif Nat.ble a b then a else b
 def mx (a b : ℕ) : ℕ := bif Nat.ble a b then b else a
@@ -1190,7 +963,6 @@ theorem mx_eq (a b : ℕ) : mx a b = max a b := by
     have : ¬ a ≤ b := fun hh => by simp [Nat.ble_eq_true_of_le hh] at h
     simp only [Bool.cond_false]; omega
 
-def freeC (b j t : ℕ) : ℕ := (Ppos (mx b j) j (mn t (j / 3)) - Pneg (mx b j) j (mn t (j / 3))) / 32
 
 theorem free_mono {Y Y' : Fin 3 → ℕ} (h : ∀ i, Y i ≤ Y' i) : free Y ≤ free Y' := by
   unfold free
@@ -1199,29 +971,6 @@ theorem free_mono {Y Y' : Fin 3 → ℕ} (h : ∀ i, Y i ≤ Y' i) : free Y ≤ 
   have hm' := (freeSet_finite Y).mem_toFinset.mp hm
   exact (freeSet_finite Y').mem_toFinset.mpr fun i => (hm' i).trans (h i)
 
-theorem free_le_freeC (Y : Fin 3 → ℕ) : free Y ≤ freeC (Y 0) (Y 1) (Y 2) := by
-  have h1 : free Y ≤ free ![max (Y 0) (Y 1), Y 1, min (Y 2) (Y 1 / 3)] := by
-    unfold free
-    apply card_le_card
-    intro m hm
-    have hm' := (freeSet_finite Y).mem_toFinset.mp hm
-    apply (freeSet_finite _).mem_toFinset.mpr
-    intro i
-    have w1 := hm' 1
-    have w2 := hm' 2
-    have w0 := hm' 0
-    have t3 : m.weight (wv 1) ≥ 3 * m.weight (wv 2) := by
-      simp [Finsupp.weight_apply, Finsupp.sum_fintype, wv, Fin.sum_univ_four, Pi.single_apply]; omega
-    fin_cases i
-    · exact w0.trans (le_max_left _ _)
-    · exact w1
-    · show m.weight (wv 2) ≤ min (Y 2) (Y 1 / 3)
-      exact le_min w2 (by omega)
-  have h2 := free_le_sum (max (Y 0) (Y 1)) (Y 1) (min (Y 2) (Y 1 / 3)) (by have := Nat.min_le_right (Y 2) (Y 1 / 3); omega) (le_max_right _ _)
-  have h3 := freeSum_closed (max (Y 0) (Y 1)) (Y 1) (le_max_right _ _) (min (Y 2) (Y 1 / 3)) (by have := Nat.min_le_right (Y 2) (Y 1 / 3); omega)
-  unfold freeC
-  rw [mx_eq, mn_eq]
-  omega
 
 end Gate6966FreeCard
 
@@ -1235,118 +984,12 @@ set_option autoImplicit false
 namespace Gate6966FreeU3
 open Gate6966Shape Finset Gate6966FreeCard
 
-theorem inner3 (n e2 : ℕ) (h : e2 ≤ n) :
-    2 * (∑ e1 ∈ range (n - e2 + 1), (n + 1 - (e1 + e2))) = (n - e2 + 1) * (n - e2 + 2) := by
-  have key : ∀ k : ℕ, 2 * (∑ e1 ∈ range (k + 1), (k + 1 - e1)) = (k + 1) * (k + 2) := by
-    intro k
-    induction k with
-    | zero => simp
-    | succ k ih =>
-      have : ∑ e1 ∈ range (k + 1 + 1), (k + 1 + 1 - e1) = (k + 1 + 1) + ∑ e1 ∈ range (k + 1), (k + 1 - e1) := by
-        rw [sum_range_succ', Nat.sub_zero]
-        have : ∀ i ∈ range (k + 1), k + 1 + 1 - (i + 1) = k + 1 - i := fun i _ => by omega
-        rw [sum_congr rfl this]; ring
-      rw [this]; nlinarith [ih]
-  have := key (n - e2)
-  rw [← this]
-  congr 1
-  refine sum_congr rfl fun e1 he => ?_
-  have := mem_range.mp he
-  omega
 
-def S3 (n : ℕ) : ℕ := ∑ e2 ∈ range (n + 1), ∑ e1 ∈ range (n - e2 + 1), (n + 1 - (e1 + e2))
 
-theorem tet (n : ℕ) : 6 * S3 n = (n + 1) * (n + 2) * (n + 3) := by
-  unfold S3
-  have h : ∀ e2 ∈ range (n + 1), 2 * (∑ e1 ∈ range (n - e2 + 1), (n + 1 - (e1 + e2))) = (n - e2 + 1) * (n - e2 + 2) :=
-    fun e2 he => inner3 n e2 (by have := mem_range.mp he; omega)
-  have h2 : 2 * (∑ e2 ∈ range (n + 1), ∑ e1 ∈ range (n - e2 + 1), (n + 1 - (e1 + e2))) =
-      ∑ e2 ∈ range (n + 1), (n - e2 + 1) * (n - e2 + 2) := by
-    rw [mul_sum]; exact sum_congr rfl h
-  have h3 : ∑ e2 ∈ range (n + 1), (n - e2 + 1) * (n - e2 + 2) = ∑ i ∈ range (n + 1), (i + 1) * (i + 2) := by
-    rw [← sum_range_reflect]
-    apply sum_congr rfl
-    intro i hi
-    have := mem_range.mp hi
-    have : n + 1 - 1 - i = n - i := by omega
-    rw [this]
-    have : n - (n - i) = i := by omega
-    rw [this]
-  have h4 : ∀ m : ℕ, 3 * (∑ i ∈ range (m + 1), (i + 1) * (i + 2)) = (m + 1) * (m + 2) * (m + 3) := by
-    intro m
-    induction m with
-    | zero => simp
-    | succ m ih => rw [sum_range_succ, mul_add, ih]; ring
-  have := h4 n
-  omega
 
-def Qn (b t : ℕ) : ℕ := (b - t) * (b - t + 1) * (b - t + 2) * (b - t + 3)
 
-theorem sumQ (b : ℕ) : ∀ t, t ≤ b →
-    24 * (∑ e3 ∈ range (t + 1), S3 (b - e3)) + Qn b t = (b + 1) * (b + 2) * (b + 3) * (b + 4) := by
-  intro t
-  induction t with
-  | zero =>
-    intro _
-    have := tet b
-    simp only [Qn, zero_add, range_one, sum_singleton, Nat.sub_zero, Nat.add_zero]
-    nlinarith [this]
-  | succ t ih =>
-    intro h
-    have ih' := ih (by omega)
-    have h6 := tet (b - (t + 1))
-    rw [sum_range_succ]
-    unfold Qn at *
-    have e1 : b - t = (b - (t + 1)) + 1 := by omega
-    rw [e1] at ih'
-    have : b - (t + 1) + 1 + 1 = b - (t + 1) + 2 := rfl
-    nlinarith [ih', h6]
 
-def U3 (b t : ℕ) : ℕ :=
-  ((b + 1) * (b + 2) * (b + 3) * (b + 4) - Qn b (mn t b)) / 24
 
-theorem free_le_U3 (Y : Fin 3 → ℕ) : free Y ≤ U3 (Y 0) (Y 2) := by
-  classical
-  set b := Y 0
-  set t := Y 2
-  have ht : mn t b = min t b := mn_eq t b
-  let S : Finset (Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ) :=
-    (range (min t b + 1)).sigma fun e3 => (range (b - e3 + 1)).sigma fun e2 =>
-      (range (b - e3 - e2 + 1)).sigma fun e1 => range (b + 1 - (e1 + e2 + e3))
-  have hcard : S.card = ∑ e3 ∈ range (min t b + 1), S3 (b - e3) := by
-    simp only [S, card_sigma, card_range]
-    apply sum_congr rfl
-    intro e3 he3
-    have he := mem_range.mp he3
-    unfold S3
-    apply sum_congr rfl
-    intro e2 he2
-    have := mem_range.mp he2
-    apply sum_congr rfl
-    intro e1 he1
-    have := mem_range.mp he1
-    omega
-  have hle : free Y ≤ S.card := by
-    unfold free
-    apply card_le_card_of_injOn (fun m : Fin 4 →₀ ℕ => (⟨m 3, m 2, m 1, m 0⟩ : Σ _ : ℕ, Σ _ : ℕ, Σ _ : ℕ, ℕ))
-    · intro m hm
-      have hm' := (freeSet_finite Y).mem_toFinset.mp (by simpa using hm)
-      have w0 := hm' 0
-      have w2 := hm' 2
-      simp [Finsupp.weight_apply, Finsupp.sum_fintype, wv, Fin.sum_univ_four, Pi.single_apply] at w0 w2
-      simp only [Finset.mem_coe, S, mem_sigma, mem_range]
-      refine ⟨by omega, by omega, by omega, by omega⟩
-    · intro m _ m' _ h
-      simp only [Sigma.mk.inj_iff, heq_eq_eq] at h
-      obtain ⟨h3, h2, h1, h0⟩ := h
-      ext i
-      fin_cases i <;> simp [h0, h1, h2, h3]
-  have hq := sumQ b (min t b) (min_le_right _ _)
-  rw [hcard] at hle
-  unfold U3
-  rw [ht]
-  unfold Qn at hq ⊢
-  omega
 
 def freeD (b j t : ℕ) : ℕ := Witness6966Free.freeE b j t
 

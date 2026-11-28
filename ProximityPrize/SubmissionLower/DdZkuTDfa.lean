@@ -251,8 +251,8 @@ private def Admissible (a :Jn) :Prop :=
 def within (a b:Jn) :Prop :=a.B≤b.B∧a.J≤b.J∧a.C≤b.C
 theorem A9 :
   0<chartCaps.C∧2*chartCaps.C<chartCaps.J∧chartCaps.J<chartCaps.B:= by
- have hB:small.B=83:=rfl
- have hJ:small.J=25:=rfl
+ have hB:small.B=84:=rfl
+ have hJ:small.J=26:=rfl
  have hC:small.C=11 :=rfl
  simp only [chartCaps,a₀,D,e,hB,hJ,hC]
  decide

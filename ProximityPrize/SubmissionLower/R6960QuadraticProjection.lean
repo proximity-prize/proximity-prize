@@ -522,7 +522,6 @@ theorem kernel_test {L : Type} [Field L] (disc : Bi L) :
   · push Not at tame
     exact Or.inr tame
 abbrev Ordinate := Polynomial (Bi K1_14.L)
-abbrev Slope := Polynomial Ordinate
 def xView : Ordinate →+* Ordinate := Bivariate.swap.toRingHom
 def zView : Ordinate →+* Ordinate :=
   Bivariate.swap.toRingHom.comp (mapRingHom Bivariate.swap.toRingHom)

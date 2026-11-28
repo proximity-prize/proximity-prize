@@ -37,17 +37,17 @@ theorem common_of_le {V W : Submodule FX Jet} {G : Jet} (sub : V ≤ W) (known :
 theorem restricted_nonzero (q : Request) {h lo hi : ℕ} (hh : 0 < h) (hmax : h ≤ 131070)
     (hlo : lo ≤ h) (hhi : h ≤ hi) (narrow : q.shape.J < 131071 - hi)
     (slope : 0 < q.slope) (certificate : Triangular q lo hi) (rank : P3_7_1.BankOK q.bank)
-    (wide : HelperSource.WidthGuard q.bank 179740 h q.reserve)
+    (wide : HelperSource.WidthGuard q.bank 179730 h q.reserve)
     {D : PoleData h} (Crt : CRTLift D) (w : K1.I → L) :
     ∃ P ∈ restricted q Crt w, P ≠ 0 := by
   have gain := triangle_positive q hh hlo hhi narrow slope certificate
-  apply FreeSource.nonzero_row Crt w q.bank 179740 q.reserve hh hmax rank wide
+  apply FreeSource.nonzero_row Crt w q.bank 179730 q.reserve hh hmax rank wide
   exact (Nat.le_add_right _ _).trans_lt gain
 
 theorem known_unique (bank : P1_7.Bank) (reserve degree weight seed otherWeight : ℕ)
     {h lo hi : ℕ} (hh : 0 < h) (hmax : h ≤ 131070) (hlo : lo ≤ h) (hhi : h ≤ hi)
     (narrow : bank.shape.J < 131071 - hi) (rank : P3_7_1.BankOK bank)
-    (charU : bank.shape.U < K1.p) (wide : HelperSource.WidthGuard bank 179740 h reserve)
+    (charU : bank.shape.U < K1.p) (wide : HelperSource.WidthGuard bank 179730 h reserve)
     (certificate : Triangular ⟨bank, reserve, degree+1, 2, weight+otherWeight, seed+1⟩ lo hi)
     {D : PoleData h} (Crt : CRTLift D) (w : K1.I → L) {G : Jet}
     (phys : HelperPhysicalModel.Model Crt G)
@@ -174,7 +174,7 @@ def initialMass (s : Plan) : Mass := fun k => s.initialCap k
 def history (s : Plan) (i : ℕ) : Mass := s.historyValues.getD i s.initialMass
 
 def freeCutoff (s : Plan) (h : ℕ) (i : Fin s.count) : ℕ :=
-  cutoffCount (s.bank i).shape 179740 h (s.reserve i) - 1
+  cutoffCount (s.bank i).shape 179730 h (s.reserve i) - 1
 
 abbrev helperCutoff (s : Plan) (h : ℕ) : ℕ := s.head.top h - 1
 
@@ -195,7 +195,7 @@ structure Valid (s : Plan) : Prop where
 structure Sources (s : Plan) (first last : ℕ) (outer : P1_7.Bank) (extra a low floor : ℕ) : Prop where
   free : ∀ i, TransitionSources.Free first (s.reserve i) (s.bank i)
   rank : P3_7_1.BankOK s.head.bank
-  width : WidthGuard s.head.bank 179740 first s.head.reserve
+  width : WidthGuard s.head.bank 179730 first s.head.reserve
   reserve_fit : 2*s.head.reserve ≤ s.head.bank.shape.B
   narrow : s.head.bank.shape.J < 131071-last
   seed_small : s.head.bank.shape.U < K1.p
@@ -279,9 +279,9 @@ theorem rows_from_prepared {u deleted} {M : Model u deleted} {Γ} (F : Family M 
     (P : Fin sched.count → Jet)
     (inside : ∀ i, P i ∈ evaluated Crt (word M) (freeShape i) (sched.freeCutoff M.overhead.toNat i))
     (free_width : ∀ i, sched.freeCutoff M.overhead.toNat i + 2*M.overhead.toNat*reserve i <
-      (freeShape i).m*179740)
+      (freeShape i).m*179730)
     (head_width : sched.helperCutoff M.overhead.toNat+2*M.overhead.toNat*sched.head.reserve <
-      sched.head.bank.shape.m*179740)
+      sched.head.bank.shape.m*179730)
     (out : Prepared P freeShape copies
       (evaluated Crt (word M) sched.head.bank.shape (sched.helperCutoff M.overhead.toNat))
       sched.head.bank.shape) :
@@ -661,17 +661,17 @@ open HighCore82258_3 (envelope_caps)
 open Lower6960.Far6969RescueGeometry (proper_cut)
 open scoped Classical BigOperators
 
-def terminalCutoff : ℕ := terminalShape.m*179740-1
+def terminalCutoff : ℕ := terminalShape.m*179730-1
 def TerminalFits (s : Shape) : Prop :=
   0<s.m ∧ s.B≤terminalShape.B ∧ s.J≤terminalShape.J ∧ s.U≤terminalShape.U
 def TerminalPass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (J : Ideal Ambient) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179740-1),toJet P∈J
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179730-1),toJet P∈J
 
 /-- A parent that fails any terminal bank provides a proper row inside
 the single envelope used by the geometric cut bill. -/
 theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L)
     {J : Ideal Ambient} (failed : ¬ TerminalPass Crt w J) :
-    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179740-1) ∧
+    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179730-1) ∧
       RowCaps P terminalShape ∧ toJet P∉J := by
   classical
   unfold TerminalPass at failed
@@ -683,7 +683,7 @@ theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L
   exact ⟨b.trans sb,v.trans sj,u.trans su⟩
 
 def SurfacePass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (q : Surface) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179740-1),P∈q.asIdeal
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179730-1),P∈q.asIdeal
 
 theorem SurfacePass.original {h : ℕ} {D : PoleData h} {Crt : CRTLift D} {w : I→L}
     {q : Surface} (pass : SurfacePass Crt w q) :
@@ -818,7 +818,7 @@ theorem Initial.marked_cutter {u deleted} {M : Model u deleted} {Γ} {F : Family
     apply zero_of_contact (r:=0)
     exact contact_at_mark R.family Crt noPole
       (fun δ hd=>residues δ (mem_filter.mp hd).1) inside
-      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179740)) (by decide : 0<1)) γ hγ
+      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179730)) (by decide : 0<1)) γ hγ
 
 theorem Initial.cutCover {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows sched F Crt} (ini : Initial R)

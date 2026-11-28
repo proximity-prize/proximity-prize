@@ -96,14 +96,14 @@ theorem regular_cut_count {u₀ deleted} {M : Model u₀ deleted} {Γ T : Finset
     (caps : RowCaps G (graphShape a u))
     (roots : ∀ z∈T, jetAt G (M.label z) (F.scalar z) = 0)
     (good : ∀ z∈T, regular G (M.label z) (F.scalar z))
-    (dp : 0 < d) (gap : d < 179740) (deg : ∀ z∈T, (F.scalar z).natDegree ≤ d) :
+    (dp : 0 < d) (gap : d < 179730) (deg : ∀ z∈T, (F.scalar z).natDegree ≤ d) :
     (T.card : ℚ) ≤ ((u * C.cost 0 + (a-1) * C.cost 1 : ℕ) : ℚ) *
-      MarkedAdaptive.price 262144 d 179740 := by
+      MarkedAdaptive.price 262144 d 179730 := by
   have bcap : cap (fun _ => 1) u (numerator G) := by
     intro i
     rw [show numerator G = -G.coeff 0 from rfl, coeff_neg]
     exact Submodule.neg_mem _ (coefficient_cap caps 0 i)
-  have possible : 179740 ≤ Fintype.card I := by
+  have possible : 179730 ≤ Fintype.card I := by
     rw [IRSProfile.card_index]
     decide
   have tame : d < p := gap.trans (by decide)
@@ -188,7 +188,7 @@ private theorem ceil_up (q : ℚ) : q ≤ (q.ceil.toNat : ℚ) := by
 private theorem card_round {a : ℕ} {q : ℚ} (bound : (a : ℚ) ≤ q) : a ≤ q.ceil.toNat := by
   exact_mod_cast bound.trans (ceil_up q)
 
-def incidence : ℚ := MarkedAdaptive.price 262144 endpointDegree 179740
+def incidence : ℚ := MarkedAdaptive.price 262144 endpointDegree 179730
 def seedRate (u : ℕ) : ℕ := (incidence * u).ceil.toNat + 4
 def ordRate (a : ℕ) : ℕ := (incidence * (a - 1 : ℕ) + mu).ceil.toNat + 4
 
@@ -233,7 +233,7 @@ theorem ordinate_count : (ordinateMarks R).card ≤ plan.initialCap 0 := by
   intro γ hγ δ hδ same
   exact F.distinct (mem_filter.mp hγ).1 (mem_filter.mp hδ).1 (scalar_atX_injective same)
 
-theorem rank_count (hi : M.overhead.toNat ≤ 2389) {τ scale : ℚ} (htau : 0 ≤ τ) (htau' : τ ≤ 1)
+theorem rank_count (hi : M.overhead.toNat ≤ 2411) {τ scale : ℚ} (htau : 0 ≤ τ) (htau' : τ ≤ 1)
     (small : rankB plan < p) :
     ((rankMarks R).card : ℚ) ≤ dotQ (rankWeight plan τ scale) (massQ R.initial.rankExit) +
       rankRound plan τ scale := by
@@ -329,7 +329,7 @@ def lossWeight (a u : ℕ) (i : ℕ) : Mass :=
 
 theorem curve_count {a u : ℕ} (ha : 2 ≤ a) (hu : 0 < u)
     (slope : G.natDegree = 1) (caps : RowCaps G (graphShape a u))
-    (hiM : M.overhead.toNat ≤ 2389)
+    (hiM : M.overhead.toNat ≤ 2411)
     (roots : ∀ γ∈Γ, jetAt G (M.label γ) (F.scalar γ) = 0)
     {i : ℕ} (hi : i < B.steps) :
     ((regularCutMarks B i).card : ℚ) ≤ dotQ (lossWeight B a u i) (massQ (B.lost i)) := by
@@ -399,7 +399,7 @@ def charge (credit : Fin 4 → ℕ) : ℕ := ∑ k, credit k * mass B.final k
 
 theorem paid_count {a u : ℕ} (ha : 2 ≤ a) (hu : 0 < u)
     (prime : Prime G) (slope : G.natDegree = 1) (caps : RowCaps G (graphShape a u))
-    (small : (2*a-1)*u < p) (hiM : M.overhead.toNat ≤ 2389)
+    (small : (2*a-1)*u < p) (hiM : M.overhead.toNat ≤ 2411)
     (roots : ∀ γ∈Γ, jetAt G (M.label γ) (F.scalar γ) = 0)
     {τ scale : ℚ} (htau : 0 ≤ τ) (htau' : τ ≤ 1) (rankSmall : rankB plan < p)
     (credit : Fin 4 → ℕ) (retained : ∀ k, (credit k : ℚ) ≤
@@ -498,7 +498,7 @@ structure Event (R : Run F Crt G plan) (survivors : Finset (Ideal Ambient))
 variable (R : Run F Crt G plan) {a u : ℕ}
 variable (ha : 2 ≤ a) (hu : 0 < u)
 variable (prime : Prime G) (slope : G.natDegree = 1) (caps : RowCaps G (graphShape a u))
-variable (small : (2*a-1)*u < p) (hi : M.overhead.toNat ≤ 2389)
+variable (small : (2*a-1)*u < p) (hi : M.overhead.toNat ≤ 2411)
 variable (roots : ∀ γ∈Γ, jetAt G (M.label γ) (F.scalar γ) = 0)
 variable {τ scale : ℚ} (t0 : 0 ≤ τ) (t1 : τ ≤ 1) (rankSmall : rankB plan < p)
 variable {bound : ℕ} (credit : Fin 4 → ℕ)
@@ -577,7 +577,7 @@ private theorem ceil_up (q : ℚ) : q ≤ (q.ceil.toNat : ℚ) := by
 private theorem card_round {a : ℕ} {q : ℚ} (bound : (a : ℚ) ≤ q) : a ≤ q.ceil.toNat := by
   exact_mod_cast bound.trans (ceil_up q)
 
-def incidence : ℚ := MarkedAdaptive.price 262144 endpointDegree 179740
+def incidence : ℚ := MarkedAdaptive.price 262144 endpointDegree 179730
 def seedRate (u : ℕ) : ℕ := (incidence * u).ceil.toNat + 4
 def ordRate (a : ℕ) : ℕ := (incidence * (a - 1 : ℕ) + mu).ceil.toNat + 4
 
@@ -622,7 +622,7 @@ theorem ordinate_count : (ordinateMarks R).card ≤ plan.initialCap 0 := by
   intro γ hγ δ hδ same
   exact F.distinct (mem_filter.mp hγ).1 (mem_filter.mp hδ).1 (scalar_atX_injective same)
 
-theorem rank_count (hi : M.overhead.toNat ≤ 2534) {τ scale : ℚ} (htau : 0 ≤ τ) (htau' : τ ≤ 1)
+theorem rank_count (hi : M.overhead.toNat ≤ 2557) {τ scale : ℚ} (htau : 0 ≤ τ) (htau' : τ ≤ 1)
     (small : rankB plan < p) :
     ((rankMarks R).card : ℚ) ≤ dotQ (rankWeight plan τ scale) (massQ R.initial.rankExit) +
       rankRound plan τ scale := by
@@ -718,7 +718,7 @@ def lossWeight (a u : ℕ) (i : ℕ) : Mass :=
 
 theorem curve_count {a u : ℕ} (ha : 2 ≤ a) (hu : 0 < u)
     (slope : G.natDegree = 1) (caps : RowCaps G (graphShape a u))
-    (hiM : M.overhead.toNat ≤ 2534)
+    (hiM : M.overhead.toNat ≤ 2557)
     (roots : ∀ γ∈Γ, jetAt G (M.label γ) (F.scalar γ) = 0)
     {i : ℕ} (hi : i < B.steps) :
     ((regularCutMarks B i).card : ℚ) ≤ dotQ (lossWeight B a u i) (massQ (B.lost i)) := by
@@ -788,7 +788,7 @@ def charge (credit : Fin 4 → ℕ) : ℕ := ∑ k, credit k * mass B.final k
 
 theorem paid_count {a u : ℕ} (ha : 2 ≤ a) (hu : 0 < u)
     (prime : Prime G) (slope : G.natDegree = 1) (caps : RowCaps G (graphShape a u))
-    (small : (2*a-1)*u < p) (hiM : M.overhead.toNat ≤ 2534)
+    (small : (2*a-1)*u < p) (hiM : M.overhead.toNat ≤ 2557)
     (roots : ∀ γ∈Γ, jetAt G (M.label γ) (F.scalar γ) = 0)
     {τ scale : ℚ} (htau : 0 ≤ τ) (htau' : τ ≤ 1) (rankSmall : rankB plan < p)
     (credit : Fin 4 → ℕ) (retained : ∀ k, (credit k : ℚ) ≤
@@ -887,7 +887,7 @@ structure Event (R : Run F Crt G plan) (survivors : Finset (Ideal Ambient))
 variable (R : Run F Crt G plan) {a u : ℕ}
 variable (ha : 2 ≤ a) (hu : 0 < u)
 variable (prime : Prime G) (slope : G.natDegree = 1) (caps : RowCaps G (graphShape a u))
-variable (small : (2*a-1)*u < p) (hi : M.overhead.toNat ≤ 2534)
+variable (small : (2*a-1)*u < p) (hi : M.overhead.toNat ≤ 2557)
 variable (roots : ∀ γ∈Γ, jetAt G (M.label γ) (F.scalar γ) = 0)
 variable {τ scale : ℚ} (t0 : 0 ≤ τ) (t1 : τ ≤ 1) (rankSmall : rankB plan < p)
 variable {bound : ℕ} (credit : Fin 4 → ℕ)
@@ -1181,7 +1181,7 @@ theorem produce {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (slope : G.natDegree = 1) (seeded : UsesSeed G)
     (caps : RowCaps G rescue.primeShape)
     (known : Common (evaluated Crt (word M) outer.shape
-      (HelperSource.cutoffCount outer.shape 179740 M.overhead.toNat 10-1)) G)
+      (HelperSource.cutoffCount outer.shape 179730 M.overhead.toNat 10-1)) G)
     (mainDegree : a ≤ jetDegree G) (mainSeed : low ≤ seedDegree G)
     (mainFloor : floor ≤ RawPhysicalDegree.weight (131071-M.overhead.toNat)
       (131071-M.overhead.toNat-1) phys.raw)

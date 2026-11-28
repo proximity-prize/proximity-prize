@@ -106,12 +106,12 @@ structure Rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
 
 theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2390≤M.overhead.toNat) (hi : M.overhead.toNat≤2534)
+    (lo : 2412≤M.overhead.toNat) (hi : M.overhead.toNat≤2557)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     Nonempty (Rows F Crt) := by
-  have loAll : 2293 ≤ M.overhead.toNat := (by decide : 2293 ≤ 2390).trans lo
-  have hiAll : M.overhead.toNat ≤ 33735 := hi.trans (by decide)
+  have loAll : 2314 ≤ M.overhead.toNat := (by decide : 2314 ≤ 2412).trans lo
+  have hiAll : M.overhead.toNat ≤ 33755 := hi.trans (by decide)
   choose P inside nz using free_rows Crt (word M) lo hi
   obtain ⟨out⟩ := PrefixRows.prepare P freeShape copies _ _ nz
     (fun i => evaluated_shape Crt (word M) (inside i))
@@ -131,8 +131,8 @@ theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     · exact contact_at_mark F Crt noPole residues (inside i) (cutoff_fit lo hi i) γ mem
     · intro H hm
       have wh := Prefix6969Helper.helper_width loAll hiAll
-      have width : helperCutoff M.overhead.toNat+2*M.overhead.toNat*10 < helperBank.shape.m*179740 :=
-        FreeSource.buffered_fit helperBank 179740 _ 10 wh
+      have width : helperCutoff M.overhead.toNat+2*M.overhead.toNat*10 < helperBank.shape.m*179730 :=
+        FreeSource.buffered_fit helperBank 179730 _ 10 wh
       exact contact_at_mark F Crt noPole residues hm width γ mem
   · intro i
     exact Classical.choice (K1_14_2_2_1.proof _ _ (out.free_ne i) (out.free_caps i))
@@ -505,17 +505,17 @@ open HighCore82258_3 (envelope_caps)
 open Lower6960.Far6969RescueGeometry (proper_cut)
 open scoped Classical BigOperators
 
-def terminalCutoff : ℕ := terminalShape.m*179740-1
+def terminalCutoff : ℕ := terminalShape.m*179730-1
 def TerminalFits (s : Shape) : Prop :=
   0<s.m ∧ s.B≤terminalShape.B ∧ s.J≤terminalShape.J ∧ s.U≤terminalShape.U
 def TerminalPass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (J : Ideal Ambient) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179740-1),toJet P∈J
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179730-1),toJet P∈J
 
 /-- A parent that fails any terminal bank provides a proper row inside
 the single envelope used by the geometric cut bill. -/
 theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L)
     {J : Ideal Ambient} (failed : ¬ TerminalPass Crt w J) :
-    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179740-1) ∧
+    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179730-1) ∧
       RowCaps P terminalShape ∧ toJet P∉J := by
   classical
   unfold TerminalPass at failed
@@ -527,7 +527,7 @@ theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L
   exact ⟨b.trans sb,v.trans sj,u.trans su⟩
 
 def SurfacePass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (q : Surface) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179740-1),P∈q.asIdeal
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179730-1),P∈q.asIdeal
 
 theorem SurfacePass.original {h : ℕ} {D : PoleData h} {Crt : CRTLift D} {w : I→L}
     {q : Surface} (pass : SurfacePass Crt w q) :
@@ -647,7 +647,7 @@ theorem Initial.marked_cutter {u deleted} {M : Model u deleted} {Γ} {F : Family
     apply zero_of_contact (r:=0)
     exact contact_at_mark R.family Crt noPole
       (fun δ hd=>residues δ (mem_filter.mp hd).1) inside
-      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179740)) (by decide : 0<1)) γ hγ
+      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179730)) (by decide : 0<1)) γ hγ
 
 theorem Initial.cutCover {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R)
@@ -843,7 +843,7 @@ theorem Initial.content_count {u deleted} {M : Model u deleted} {Γ} {F : Family
     |>.trans (Nat.mul_le_mul_left _ ini.content_cap)
 
 theorem Rows.fixed_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt) (hi : M.overhead.toNat≤2534) :
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt) (hi : M.overhead.toNat≤2557) :
     R.fixedMarks.card≤fixedLimit := by
   calc
     _ ≤ ∑ i : Fin 14, (R.fixedMarksOf (R.fixedFree i).equation ∪ R.fixedMarksOf (R.fixedMoving i).equation).card :=
@@ -980,8 +980,8 @@ open scoped Classical BigOperators
 abbrev degreeRates := suppliedDegreeRates
 abbrev heightRates := suppliedHeightRates
 
-def lambda : ℚ := ((262144 : ℚ) / 179740) * endpointDegree
-def mu : ℚ := ((262144 - endpointDegree : ℕ) : ℚ) / (179740 - endpointDegree : ℕ)
+def lambda : ℚ := ((262144 : ℚ) / 179730) * endpointDegree
+def mu : ℚ := ((262144 - endpointDegree : ℕ) : ℚ) / (179730 - endpointDegree : ℕ)
 def tau : ℚ := 1 / 2
 
 def degreeRate (i : ℕ) : ℕ := degreeRates.getD i 0
@@ -1098,7 +1098,7 @@ def Initial.rankMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) : Finset K :=
   R.marks.filter (fun γ=>∃ J∈ini.rankExit,OnMark R.family J γ)
 theorem Initial.rank_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) (hi : M.overhead.toNat≤2534) :
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) (hi : M.overhead.toNat≤2557) :
     (ini.rankMarks.card : ℚ)≤dotQ rankWeight (massQ ini.rankExit)+rankRound := by
   let S := ini.rankExit
   let B := max 2 (mass S 2)
@@ -1149,7 +1149,7 @@ private theorem card_round {a : ℕ} {q : ℚ} (bound : (a : ℚ)≤q) : a≤q.c
   exact_mod_cast bound.trans (Rat.le_ceil.trans ceil_cast)
 theorem CutBooks.curve_bin_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hiM : M.overhead.toNat≤2534) {i : ℕ} (hi : i<14) :
+    (C : CutBooks ini) (hiM : M.overhead.toNat≤2557) {i : ℕ} (hi : i<14) :
     ((curveMarks R.family (C.cover i)).card : ℚ)≤
       dotQ (lossWeight i) (massQ (ini.lost i))+((C.cover i).cost 0 : ℚ) := by
   have global : ((C.cover i).cost 0 : ℚ)≤seedLimit :=
@@ -1188,7 +1188,7 @@ theorem retainedCharge_cast_le (S : Finset (Ideal Ambient)) :
 
 theorem CutBooks.loss_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hi : M.overhead.toNat≤2534) : C.lossMarks.card + retainedCharge ini.final ≤ lossLimit.ceil.toNat := by
+    (C : CutBooks ini) (hi : M.overhead.toNat≤2557) : C.lossMarks.card + retainedCharge ini.final ≤ lossLimit.ceil.toNat := by
   apply card_round
   have cum : (C.lossMarks.card : ℚ) ≤ (ini.rankMarks.card : ℚ) +
       ∑ i∈range 14,((curveMarks R.family (C.cover i)).card : ℚ) := by
@@ -1221,7 +1221,7 @@ def CutBooks.paid {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
   (C.lossMarks ∪ C.pointMarks) ∪ (ini.seedMarks ∪ ini.ordinateMarks) ∪ (R.fixedMarks ∪ ini.contentMarks)
 theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hi : M.overhead.toNat≤2534) : C.paid.card + retainedCharge ini.final ≤ mainFee := by
+    (C : CutBooks ini) (hi : M.overhead.toNat≤2557) : C.paid.card + retainedCharge ini.final ≤ mainFee := by
   have combined := card_union_le
     ((C.lossMarks ∪ C.pointMarks) ∪ (ini.seedMarks ∪ ini.ordinateMarks)) (R.fixedMarks ∪ ini.contentMarks)
   have left := card_union_le (C.lossMarks ∪ C.pointMarks) (ini.seedMarks ∪ ini.ordinateMarks)
@@ -1238,7 +1238,7 @@ theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M
   omega
 theorem Rows.main_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt)
-    (hi : M.overhead.toNat≤2534) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
+    (hi : M.overhead.toNat≤2557) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ (ini : Initial R) (C : CutBooks ini) (S : Finset Surface),
       C.paid.card + retainedCharge ini.final ≤ prefixCap ∧
@@ -1271,7 +1271,7 @@ theorem Rows.main_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ
 /-- Construct the actual wide prefix from the model's CRT data and the verified banks. -/
 theorem main_prefix {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2390 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2534)
+    (lo : 2412 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2557)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ (R : Rows F Crt) (ini : Initial R) (C : CutBooks ini) (S : Finset Surface),
@@ -1315,11 +1315,11 @@ inductive Band
 namespace Band
 
 def last : Band → ℕ
-  | near => 2389
-  | middle => 2534
+  | near => 2411
+  | middle => 2557
 
-def lambda (b : Band) : ℚ := ((262144 : ℚ) / 179740) * (131071+b.last : ℕ)
-def mu (b : Band) : ℚ := ((262144 - (131071+b.last) : ℕ) : ℚ) / (179740 - (131071+b.last) : ℕ)
+def lambda (b : Band) : ℚ := ((262144 : ℚ) / 179730) * (131071+b.last : ℕ)
+def mu (b : Band) : ℚ := ((262144 - (131071+b.last) : ℕ) : ℚ) / (179730 - (131071+b.last) : ℕ)
 
 def fixedFee : Band → ℕ → ℕ → ℕ
   | near => Prefix6969Rates.fixedFee
@@ -1740,7 +1740,7 @@ theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (phys : HelperPhysicalModel.Model Crt G)
     (known : Common (evaluated Crt (word M) outer.shape
-      (HelperSource.cutoffCount outer.shape 179740 M.overhead.toNat 10-1)) G)
+      (HelperSource.cutoffCount outer.shape 179730 M.overhead.toNat 10-1)) G)
     (degree : a ≤ jetDegree G) (seed : low ≤ seedDegree G)
     (physical : floor ≤ RawPhysicalDegree.weight (131071-M.overhead.toNat)
       (131071-M.overhead.toNat-1) phys.raw) :
@@ -1751,20 +1751,20 @@ theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
   let h := M.overhead.toNat
   have shape : sched.head = ⟨sched.head.bank, sched.head.reserve, a+1, 2, floor+extra, low+1⟩ := by
     rw [← source.level, ← source.slope, ← source.weight, ← source.seed]
-  have hw := HelperSource.width_at_height _ 179740 first h _ lo (by omega) source.reserve_fit source.width
+  have hw := HelperSource.width_at_height _ 179730 first h _ lo (by omega) source.reserve_fit source.width
   obtain ⟨ends, cover⟩ := source.physical
   obtain ⟨left, right, hlo, hhi, rmax, cert⟩ := covered cover lo hi
   have narrow := source.narrow.trans_le (Nat.sub_le_sub_left rmax 131071)
   have nz := restricted_nonzero sched.head hh hm hlo hhi narrow
     (show 0 < sched.head.slope from source.slope.symm ▸ by decide) cert source.rank hw Crt (word M)
   have above : restricted sched.head Crt (word M) ≤ evaluated Crt (word M) outer.shape
-      (HelperSource.cutoffCount outer.shape 179740 h 10-1) := by
+      (HelperSource.cutoffCount outer.shape 179730 h 10-1) := by
     intro P hp
     refine evaluated_mono Crt (word M) (s := sched.head.bank.shape) (s' := outer.shape)
       source.same_m source.same_ord source.same_slope source.seed_le ?_ hp
-    change sched.helperCutoff h ≤ HelperSource.cutoffCount outer.shape 179740 h 10-1
-    change sched.head.bank.shape.m * 179740 - 2*h*sched.head.reserve - 1 ≤
-      outer.shape.m * 179740 - 2*h*10 - 1
+    change sched.helperCutoff h ≤ HelperSource.cutoffCount outer.shape 179730 h 10-1
+    change sched.head.bank.shape.m * 179730 - 2*h*sched.head.reserve - 1 ≤
+      outer.shape.m * 179730 - 2*h*10 - 1
     rw [source.same_m]
     exact Nat.sub_le_sub_right
       (Nat.sub_le_sub_left (Nat.mul_le_mul_left (2*h) source.reserve_le) _) 1
@@ -1783,12 +1783,12 @@ theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (fun i => evaluated_shape Crt (word M) (inside i)) nz
     (fun _ mem => evaluated_shape Crt (word M) mem) unique
   have fw (i : Fin sched.count) : sched.freeCutoff h i + 2*h*sched.reserve i <
-      (sched.freeShape i).m*179740 := by
-    have w := HelperSource.width_at_height _ 179740 first h _ lo (by omega)
+      (sched.freeShape i).m*179730 := by
+    have w := HelperSource.width_at_height _ 179730 first h _ lo (by omega)
       (source.free i).reserve_fit (source.free i).width
-    exact FreeSource.buffered_fit _ 179740 h _ w
+    exact FreeSource.buffered_fit _ 179730 h _ w
   obtain ⟨R, outEq⟩ := rows_from_prepared F Crt valid noPole residues P inside fw
-    (FreeSource.buffered_fit _ 179740 h _ hw) out
+    (FreeSource.buffered_fit _ 179730 h _ hw) out
   exact ⟨R, outEq.trans eq⟩
 
 end
@@ -2054,7 +2054,7 @@ theorem main_prefix {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (phys : HelperPhysicalModel.Model Crt G)
     (known : Common (evaluated Crt (word M) outer.shape
-      (HelperSource.cutoffCount outer.shape 179740 M.overhead.toNat 10-1)) G)
+      (HelperSource.cutoffCount outer.shape 179730 M.overhead.toNat 10-1)) G)
     (degree : a ≤ jetDegree G) (seed : low ≤ seedDegree G)
     (physical : floor ≤ RawPhysicalDegree.weight (131071-M.overhead.toNat)
       (131071-M.overhead.toNat-1) phys.raw) :
@@ -2128,7 +2128,7 @@ def initialCap (plan : Plan) : Fin 4 → ℕ :=
   pairCap plan.primeShape (plan.bank plan.first).shape
 
 def top (plan : Plan) (h : ℕ) (i : Fin plan.count) : ℕ :=
-  HelperSource.cutoffCount (plan.bank i).shape 179740 h (plan.reserve i)
+  HelperSource.cutoffCount (plan.bank i).shape 179730 h (plan.reserve i)
 
 def cutoff (plan : Plan) (h : ℕ) (i : Fin plan.count) : ℕ :=
   plan.top h i - 1
@@ -2147,7 +2147,7 @@ structure Ready (plan : Plan) (h : ℕ) : Prop where
   hmax : h ≤ 131070
   rank : ∀ i, P3_7_1.BankOK (plan.bank i)
   seed_small : ∀ i, (plan.bank i).shape.U < K1.p
-  wide : ∀ i, HelperSource.WidthGuard (plan.bank i) 179740 h (plan.reserve i)
+  wide : ∀ i, HelperSource.WidthGuard (plan.bank i) 179730 h (plan.reserve i)
   margin : ∀ i, plan.surplus h i
 
 theorem Ready.avoid {plan : Plan} {h : ℕ} (ready : plan.Ready h)
@@ -2394,7 +2394,7 @@ theorem prepare {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
   have contact (i : Fin plan.count) (γ : K) (hγ : γ∈Γ) :
       Native (RingHom.ker (jetMarkHom (M.label γ) (F.scalar γ))) (plan.reserve i+1) (Q i) :=
     contact_at_mark F Crt noPole residues (inside i)
-      (FreeSource.buffered_fit (plan.bank i) 179740 _ (plan.reserve i) (ready.wide i)) γ hγ
+      (FreeSource.buffered_fit (plan.bank i) 179730 _ (plan.reserve i) (ready.wide i)) γ hγ
   obtain ⟨ini⟩ := initial_cover F irr (avoid plan.first) capsG (caps plan.first)
     (fun γ hγ => zero_of_contact (contact plan.first γ hγ))
   obtain ⟨kept, start, intro_pass, anti, passed, cap, cut⟩ :=
@@ -2651,14 +2651,14 @@ structure Plan.Sources (plan : Plan) (first last : ℕ) : Prop where
   reserve_fit : ∀ i, 2 * plan.reserve i ≤ (plan.bank i).shape.B
   seed_small : ∀ i, (plan.bank i).shape.U < K1.p
   narrow : ∀ i, (plan.bank i).shape.J < 131071-last
-  width : ∀ i, HelperSource.WidthGuard (plan.bank i) 179740 first (plan.reserve i)
+  width : ∀ i, HelperSource.WidthGuard (plan.bank i) 179730 first (plan.reserve i)
   covers : ∀ i, ∃ ends, Cover (Triangular (plan.request i)) last first ends
 
 theorem Plan.Sources.ready {plan : Plan} {first last h : ℕ} (S : plan.Sources first last)
     (lo : first ≤ h) (hi : h ≤ last) : plan.Ready h := by
   refine ⟨S.first_pos.trans_le lo, hi.trans S.last_safe, S.rank, S.seed_small, ?_, ?_⟩
   · intro i
-    exact HelperSource.width_at_height (plan.bank i) 179740 first h (plan.reserve i) lo
+    exact HelperSource.width_at_height (plan.bank i) 179730 first h (plan.reserve i) lo
       (hi.trans (S.last_safe.trans (by decide))) (S.reserve_fit i) (S.width i)
   · intro i
     obtain ⟨ends, cov⟩ := S.covers i
@@ -2779,7 +2779,7 @@ private theorem Run.terminal_cut
       apply zero_of_contact (r := 0)
       apply contact_at_mark F Crt noPole residues inside _ γ hit
       simpa only [Nat.mul_zero, Nat.add_zero] using
-        Nat.sub_lt (Nat.mul_pos multiplicity (by decide : 0 < 179740)) (by decide : 0 < 1)
+        Nat.sub_lt (Nat.mul_pos multiplicity (by decide : 0 < 179730)) (by decide : 0 < 1)
     exact proper_cut F _ (by decide) (R.parent_geom present).1 cap avoids zero
   let C (J : Ideal Ambient) : CutCover :=
     if mem : J∈lost then Classical.choose (oneCut J mem) else emptyCut

@@ -138,15 +138,6 @@ theorem seed_cap {G : Pade.Row SeedField} (N : Native G) (width : Fin 2 → ℕ)
   exact ⟨axes 1 0 z, by simpa [linear, rhs, coeff_neg] using axes 0 1 z,
     by simpa [constant, rhs, coeff_neg] using axes 0 0 z⟩
 
-theorem row_caps {u deleted maxHeight} (M : P1.ModelAt maxHeight u deleted) {G : Pade.Row SeedField}
-    (N : Native G) (width : Fin 2 → ℕ)
-    (axes : ∀ j i z, ((N.poly.coeff j).coeff i).degreeOf z ≤ width z) (d : ℕ) :
-    ∀ i j, (rows M N d i).degreeOf j ≤ Fin.cons (α := fun _ : Fin 3 => ℕ) 1 (fun z => d*width z) j := by
-  intro i
-  apply OdeSurfaceBridge.degrees (equation M N d i) 1 _ (AffineMarkRows.row_degree ..)
-  intro z
-  obtain ⟨hA, hB, hC⟩ := seed_cap N width axes z
-  exact AffineMarkRows.row_cap _ _ _ _ _ _ hA hB hC _ _ _
 
 theorem nodal_count_hypotheses {u deleted maxHeight a} {M : P1.ModelAt maxHeight u deleted} {Γ T : Finset K}
     (F : P1.FamilyAt a M Γ) (sub : T ⊆ Γ) {parents : Finset Surface} {G : Pade.Row SeedField}

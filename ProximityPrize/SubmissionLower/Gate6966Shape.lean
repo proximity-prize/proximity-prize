@@ -31,8 +31,6 @@ def divisible (V : Submodule K R) (p : R) : Submodule K V where
     rw [Submodule.coe_smul, Algebra.smul_def]
     exact Dvd.dvd.mul_left hv _
 
-theorem mem_divisible {V : Submodule K R} {p : R} {v : V} :
-    v ∈ divisible V p ↔ p ∣ (v : R) := Iff.rfl
 
 theorem exists_relPrime_member [Infinite K] (V : Submodule K R)
     (hV : ∀ p : R, Irreducible p → ∃ v ∈ V, ¬ p ∣ v) {G₁ : R} (hG₁ : G₁ ≠ 0) :
@@ -115,10 +113,6 @@ theorem gcd_split (V : Submodule K R) (hV : V ≠ ⊥) :
     exact hq0ne (by simpa using hq1)
   exact hmin q1 hq1Q ⟨hq1ne, p, hp.not_isUnit, by rw [hq1]; ring⟩
 
-theorem split_power (f g : R) (hf : Irreducible f) (hg : g ≠ 0) :
-    ∃ a : ℕ, ∃ h : R, g = f ^ a * h ∧ ¬ f ∣ h := by
-  obtain ⟨n, c, hnd, hc⟩ := WfDvdMonoid.max_power_factor hg hf
-  exact ⟨n, c, hc, hnd⟩
 
 theorem two_general [Infinite K] (V' : Submodule K R)
     (hV : ∀ p : R, Irreducible p → ∃ v ∈ V', ¬ p ∣ v) {T : R} (hT : T ≠ 0) (hTn : ¬ IsUnit T) :

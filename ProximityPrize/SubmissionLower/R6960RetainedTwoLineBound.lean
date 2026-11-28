@@ -39,38 +39,4 @@ variable {k ι C : Type*} [Field k] [Fintype ι] [DecidableEq ι]
 abbrev diff (G : Matrix ι ι (Laurent k)) := difference (finiteLattice k ι) (transitionLattice G)
 abbrev ev (G : Matrix ι ι (Laurent k)) (x : finiteLattice k ι →ₗ[k] C) :=
   x.comp (LinearMap.fst k (finiteLattice k ι) (transitionLattice G))
-abbrev globals (G : Matrix ι ι (Laurent k)) (x : finiteLattice k ι →ₗ[k] C) :
-    H0 G →ₗ[k] C := x.comp (Submodule.inclusion inf_le_left)
-set_option synthInstance.maxHeartbeats 400000 in
-theorem two_line_bound (G H : Matrix ι ι (Laurent k)) (g : IsUnit G) (h : IsUnit H)
-    (s t : ℕ) (dg : G.det.degree = ((-(s:ℤ) : ℤ) : WithBot ℤ))
-    (dh : H.det.degree = ((-(t:ℤ) : ℤ) : WithBot ℤ))
-    (x z : finiteLattice k ι →ₗ[k] C) (cross : finrank k C=Fintype.card ι)
-    (ix : Function.Injective (globals G x)) (iz : Function.Injective (globals H z)) :
-    let B:=RetainedNodalIndex.boundaries (diff G) (diff H) (ev G x) (ev H z)
-    FiniteDimensional k (((ι→Laurent k)×(ι→Laurent k)) ⧸ B) ∧
-      finrank k (((ι→Laurent k)×(ι→Laurent k)) ⧸ B) ≤ s+t := by
-  obtain ⟨fg,fg',m,me,mval⟩:=euler_index G g
-  obtain ⟨fh,fh',n,ne,nval⟩:=euler_index H h
-  have mg : m= -(s:ℤ) := WithBot.coe_injective (me.symm.trans dg)
-  have nh : n= -(t:ℤ) := WithBot.coe_injective (ne.symm.trans dh)
-  rw [mg] at mval
-  rw [nh] at nval
-  have rg : (diff G).range = finiteLattice k ι ⊔ transitionLattice G := image ..
-  have rh : (diff H).range = finiteLattice k ι ⊔ transitionLattice H := image ..
-  have : FiniteDimensional k ((ι→Laurent k) ⧸ (diff G).range) := rg ▸ fg'
-  have : FiniteDimensional k ((ι→Laurent k) ⧸ (diff H).range) := rh ▸ fh'
-  obtain ⟨finite,bound⟩:=RetainedNodalIndex.dimension (diff G) (diff H) (ev G x) (ev H z)
-  let W:=(diff G).ker.map (ev G x) ⊔ (diff H).ker.map (ev H z)
-  have into (v:H0 H) : globals H z v∈W :=
-    Submodule.mem_sup_right (Submodule.mem_map.mpr
-      ⟨(diagonal _ _ v).val,(diagonal _ _ v).property,rfl⟩)
-  let lift: H0 H→ₗ[k]W := (globals H z).codRestrict W into
-  have iw := LinearMap.finrank_le_finrank_of_injective (f:=lift)
-    (fun u v eq=>iz (congrArg (fun y:W=>(y:C)) eq))
-  have c:=LinearMap.finrank_le_finrank_of_injective (f:=globals G x) ix
-  rw [rg,rh,cross] at bound
-  rw [cross] at c
-  change _ + finrank k W ≤ finrank k (H1 G)+finrank k (H1 H)+Fintype.card ι at bound
-  exact ⟨finite,by omega⟩
 end Lower6960.RetainedTwoLineBound

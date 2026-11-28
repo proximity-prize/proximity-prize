@@ -120,67 +120,43 @@ end Z6969Source1260
 section Z6969Source1261
 set_option autoImplicit true
 namespace Research6969.HighDispatch12Band3
-open NormalRoute
+open NormalRoute WholeRows
 set_option maxHeartbeats 1600000
 set_option maxRecDepth 16000
 set_option linter.unusedVariables false
-private theorem leaf1_1025:Done (11:Fin 18) ⟨28,32,9,1,1025,none⟩:=entire WholeRows.cell1764 WholeRows.checked1764
-private theorem tail1_1025 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 1 1025:=leaf1_1025
-private theorem leaf1_129:Done (11:Fin 18) ⟨28,32,9,1,129,some 1024⟩:=entire WholeRows.cell1763 WholeRows.checked1763
-private theorem tail1_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 1 129:=join (leaf1_129) (tail1_1025 needed)
-private theorem leaf1_0:Done (11:Fin 18) ⟨28,32,9,1,0,some 128⟩:=entire WholeRows.cell1762 WholeRows.checked1762
-private theorem tail1_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 1 0:=join (leaf1_0) (tail1_129 needed)
-private theorem leaf2_1025:Done (11:Fin 18) ⟨28,32,9,2,1025,none⟩:=entire WholeRows.cell1770 WholeRows.checked1770
-private theorem tail2_1025 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 1025:=leaf2_1025
-private theorem leaf2_129:Done (11:Fin 18) ⟨28,32,9,2,129,some 1024⟩:=entire WholeRows.cell1769 WholeRows.checked1769
-private theorem tail2_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 129:=join (leaf2_129) (tail2_1025 needed)
-private theorem leaf2_41:Done (11:Fin 18) ⟨28,32,9,2,41,some 128⟩:=entire WholeRows.cell1768 WholeRows.checked1768
-private theorem tail2_41 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 41:=join (leaf2_41) (tail2_129 needed)
-private theorem leaf2_29:Done (11:Fin 18) ⟨28,32,9,2,29,some 40⟩:=entire WholeRows.cell1767 WholeRows.checked1767
-private theorem tail2_29 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 29:=join (leaf2_29) (tail2_41 needed)
-private theorem leaf2_25:Done (11:Fin 18) ⟨28,32,9,2,25,some 28⟩:=entire WholeRows.cell1766 WholeRows.checked1766
-private theorem tail2_25 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 25:=join (leaf2_25) (tail2_29 needed)
-private theorem leaf2_21 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨28,32,9,2,21,some 24⟩:=needed ⟨2,by decide⟩
-private theorem tail2_21 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 21:=join (leaf2_21 needed) (tail2_25 needed)
-private theorem leaf2_17 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨28,32,9,2,17,some 20⟩:=needed ⟨1,by decide⟩
-private theorem tail2_17 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 17:=join (leaf2_17 needed) (tail2_21 needed)
-private theorem leaf2_13 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨28,32,9,2,13,some 16⟩:=needed ⟨0,by decide⟩
-private theorem tail2_13 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 13:=join (leaf2_13 needed) (tail2_17 needed)
-private theorem leaf2_0:Done (11:Fin 18) ⟨28,32,9,2,0,some 12⟩:=entire WholeRows.cell1765 WholeRows.checked1765
-private theorem tail2_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 2 0:=join (leaf2_0) (tail2_13 needed)
-private theorem leaf3_1025:Done (11:Fin 18) ⟨28,32,9,3,1025,none⟩:=entire WholeRows.cell1778 WholeRows.checked1778
-private theorem tail3_1025 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 3 1025:=leaf3_1025
-private theorem leaf3_257:Done (11:Fin 18) ⟨28,32,9,3,257,some 1024⟩:=entire WholeRows.cell1777 WholeRows.checked1777
-private theorem tail3_257 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 3 257:=join (leaf3_257) (tail3_1025 needed)
-private theorem leaf3_65:Done (11:Fin 18) ⟨28,32,9,3,65,some 256⟩:=entire WholeRows.cell1776 WholeRows.checked1776
-private theorem tail3_65 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 3 65:=join (leaf3_65) (tail3_257 needed)
-private theorem leaf3_29:Done (11:Fin 18) ⟨28,32,9,3,29,some 64⟩:=entire WholeRows.cell1775 WholeRows.checked1775
-private theorem tail3_29 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 3 29:=join (leaf3_29) (tail3_65 needed)
-private theorem leaf3_21:Done (11:Fin 18) ⟨28,32,9,3,21,some 28⟩:=entire WholeRows.cell1774 WholeRows.checked1774
-private theorem tail3_21 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 3 21:=join (leaf3_21) (tail3_29 needed)
-private theorem leaf3_13:Done (11:Fin 18) ⟨28,32,9,3,13,some 20⟩:=entire WholeRows.cell1773 WholeRows.checked1773
-private theorem tail3_13 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 3 13:=join (leaf3_13) (tail3_21 needed)
-private theorem leaf3_4:Done (11:Fin 18) ⟨28,32,9,3,4,some 12⟩:=entire WholeRows.cell1772 WholeRows.checked1772
-private theorem tail3_4 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 3 4:=join (leaf3_4) (tail3_13 needed)
-private theorem leaf3_0:Done (11:Fin 18) ⟨28,32,9,3,0,some 3⟩:=entire WholeRows.cell1771 WholeRows.checked1771
-private theorem tail3_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 3 0:=join (leaf3_0) (tail3_4 needed)
-private theorem leaf4_1025:Done (11:Fin 18) ⟨28,32,9,4,1025,none⟩:=entire WholeRows.cell1783 WholeRows.checked1783
-private theorem tail4_1025 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 4 1025:=leaf4_1025
-private theorem leaf4_257:Done (11:Fin 18) ⟨28,32,9,4,257,some 1024⟩:=entire WholeRows.cell1782 WholeRows.checked1782
-private theorem tail4_257 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 4 257:=join (leaf4_257) (tail4_1025 needed)
-private theorem leaf4_49:Done (11:Fin 18) ⟨28,32,9,4,49,some 256⟩:=entire WholeRows.cell1781 WholeRows.checked1781
-private theorem tail4_49 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 4 49:=join (leaf4_49) (tail4_257 needed)
-private theorem leaf4_4:Done (11:Fin 18) ⟨28,32,9,4,4,some 48⟩:=entire WholeRows.cell1780 WholeRows.checked1780
-private theorem tail4_4 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 4 4:=join (leaf4_4) (tail4_49 needed)
-private theorem leaf4_0:Done (11:Fin 18) ⟨28,32,9,4,0,some 3⟩:=entire WholeRows.cell1779 WholeRows.checked1779
-private theorem tail4_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 28 32 9 4 0:=join (leaf4_0) (tail4_4 needed)
+
 theorem allDegrees (needed:HighPendingSeed12.Required) (a:ℕ) (lo:0<a) (hi:a≤4):
     Tail (11:Fin 18) 28 32 9 a 0:=by
   interval_cases a
-  · exact tail1_0 needed
-  · exact tail2_0 needed
-  · exact tail3_0 needed
-  · exact tail4_0 needed
+  · exact
+      join (entire cell1762 checked1762) <|
+      join (entire cell1763 checked1763) <|
+      entire cell1764 checked1764
+  · exact
+      join (entire cell1765 checked1765) <|
+      join (needed ⟨0,by decide⟩) <|
+      join (needed ⟨1,by decide⟩) <|
+      join (needed ⟨2,by decide⟩) <|
+      join (entire cell1766 checked1766) <|
+      join (entire cell1767 checked1767) <|
+      join (entire cell1768 checked1768) <|
+      join (entire cell1769 checked1769) <|
+      entire cell1770 checked1770
+  · exact
+      join (entire cell1771 checked1771) <|
+      join (entire cell1772 checked1772) <|
+      join (entire cell1773 checked1773) <|
+      join (entire cell1774 checked1774) <|
+      join (entire cell1775 checked1775) <|
+      join (entire cell1776 checked1776) <|
+      join (entire cell1777 checked1777) <|
+      entire cell1778 checked1778
+  · exact
+      join (entire cell1779 checked1779) <|
+      join (entire cell1780 checked1780) <|
+      join (entire cell1781 checked1781) <|
+      join (entire cell1782 checked1782) <|
+      entire cell1783 checked1783
 end Research6969.HighDispatch12Band3
 end Z6969Source1261
 
@@ -295,69 +271,44 @@ end Z6969Source1262
 section Z6969Source1263
 set_option autoImplicit true
 namespace Research6969.HighDispatch12Band4
-open NormalRoute
+open NormalRoute WholeRows
 set_option maxHeartbeats 1600000
 set_option maxRecDepth 16000
 set_option linter.unusedVariables false
-private theorem leaf1_129:Done (11:Fin 18) ⟨33,40,9,1,129,none⟩:=entire WholeRows.cell1785 WholeRows.checked1785
-private theorem tail1_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 1 129:=leaf1_129
-private theorem leaf1_0:Done (11:Fin 18) ⟨33,40,9,1,0,some 128⟩:=entire WholeRows.cell1784 WholeRows.checked1784
-private theorem tail1_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 1 0:=join (leaf1_0) (tail1_129 needed)
-private theorem leaf2_513:Done (11:Fin 18) ⟨33,40,9,2,513,none⟩:=entire WholeRows.cell1791 WholeRows.checked1791
-private theorem tail2_513 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 513:=leaf2_513
-private theorem leaf2_97:Done (11:Fin 18) ⟨33,40,9,2,97,some 512⟩:=entire WholeRows.cell1790 WholeRows.checked1790
-private theorem tail2_97 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 97:=join (leaf2_97) (tail2_513 needed)
-private theorem leaf2_41:Done (11:Fin 18) ⟨33,40,9,2,41,some 96⟩:=entire WholeRows.cell1789 WholeRows.checked1789
-private theorem tail2_41 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 41:=join (leaf2_41) (tail2_97 needed)
-private theorem leaf2_29:Done (11:Fin 18) ⟨33,40,9,2,29,some 40⟩:=entire WholeRows.cell1788 WholeRows.checked1788
-private theorem tail2_29 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 29:=join (leaf2_29) (tail2_41 needed)
-private theorem leaf2_25:Done (11:Fin 18) ⟨33,40,9,2,25,some 28⟩:=entire WholeRows.cell1787 WholeRows.checked1787
-private theorem tail2_25 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 25:=join (leaf2_25) (tail2_29 needed)
-private theorem leaf2_21 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨33,40,9,2,21,some 24⟩:=needed ⟨5,by decide⟩
-private theorem tail2_21 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 21:=join (leaf2_21 needed) (tail2_25 needed)
-private theorem leaf2_17 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨33,40,9,2,17,some 20⟩:=needed ⟨4,by decide⟩
-private theorem tail2_17 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 17:=join (leaf2_17 needed) (tail2_21 needed)
-private theorem leaf2_13 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨33,40,9,2,13,some 16⟩:=needed ⟨3,by decide⟩
-private theorem tail2_13 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 13:=join (leaf2_13 needed) (tail2_17 needed)
-private theorem leaf2_0:Done (11:Fin 18) ⟨33,40,9,2,0,some 12⟩:=entire WholeRows.cell1786 WholeRows.checked1786
-private theorem tail2_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 2 0:=join (leaf2_0) (tail2_13 needed)
-private theorem leaf3_513:Done (11:Fin 18) ⟨33,40,9,3,513,none⟩:=entire WholeRows.cell1800 WholeRows.checked1800
-private theorem tail3_513 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 513:=leaf3_513
-private theorem leaf3_129:Done (11:Fin 18) ⟨33,40,9,3,129,some 512⟩:=entire WholeRows.cell1799 WholeRows.checked1799
-private theorem tail3_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 129:=join (leaf3_129) (tail3_513 needed)
-private theorem leaf3_41:Done (11:Fin 18) ⟨33,40,9,3,41,some 128⟩:=entire WholeRows.cell1798 WholeRows.checked1798
-private theorem tail3_41 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 41:=join (leaf3_41) (tail3_129 needed)
-private theorem leaf3_29:Done (11:Fin 18) ⟨33,40,9,3,29,some 40⟩:=entire WholeRows.cell1797 WholeRows.checked1797
-private theorem tail3_29 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 29:=join (leaf3_29) (tail3_41 needed)
-private theorem leaf3_21:Done (11:Fin 18) ⟨33,40,9,3,21,some 28⟩:=entire WholeRows.cell1796 WholeRows.checked1796
-private theorem tail3_21 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 21:=join (leaf3_21) (tail3_29 needed)
-private theorem leaf3_17:Done (11:Fin 18) ⟨33,40,9,3,17,some 20⟩:=entire WholeRows.cell1795 WholeRows.checked1795
-private theorem tail3_17 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 17:=join (leaf3_17) (tail3_21 needed)
-private theorem leaf3_13:Done (11:Fin 18) ⟨33,40,9,3,13,some 16⟩:=entire WholeRows.cell1794 WholeRows.checked1794
-private theorem tail3_13 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 13:=join (leaf3_13) (tail3_17 needed)
-private theorem leaf3_4:Done (11:Fin 18) ⟨33,40,9,3,4,some 12⟩:=entire WholeRows.cell1793 WholeRows.checked1793
-private theorem tail3_4 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 4:=join (leaf3_4) (tail3_13 needed)
-private theorem leaf3_0:Done (11:Fin 18) ⟨33,40,9,3,0,some 3⟩:=entire WholeRows.cell1792 WholeRows.checked1792
-private theorem tail3_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 3 0:=join (leaf3_0) (tail3_4 needed)
-private theorem leaf4_513:Done (11:Fin 18) ⟨33,40,9,4,513,none⟩:=entire WholeRows.cell1806 WholeRows.checked1806
-private theorem tail4_513 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 4 513:=leaf4_513
-private theorem leaf4_129:Done (11:Fin 18) ⟨33,40,9,4,129,some 512⟩:=entire WholeRows.cell1805 WholeRows.checked1805
-private theorem tail4_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 4 129:=join (leaf4_129) (tail4_513 needed)
-private theorem leaf4_49:Done (11:Fin 18) ⟨33,40,9,4,49,some 128⟩:=entire WholeRows.cell1804 WholeRows.checked1804
-private theorem tail4_49 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 4 49:=join (leaf4_49) (tail4_129 needed)
-private theorem leaf4_21:Done (11:Fin 18) ⟨33,40,9,4,21,some 48⟩:=entire WholeRows.cell1803 WholeRows.checked1803
-private theorem tail4_21 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 4 21:=join (leaf4_21) (tail4_49 needed)
-private theorem leaf4_4:Done (11:Fin 18) ⟨33,40,9,4,4,some 20⟩:=entire WholeRows.cell1802 WholeRows.checked1802
-private theorem tail4_4 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 4 4:=join (leaf4_4) (tail4_21 needed)
-private theorem leaf4_0:Done (11:Fin 18) ⟨33,40,9,4,0,some 3⟩:=entire WholeRows.cell1801 WholeRows.checked1801
-private theorem tail4_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 33 40 9 4 0:=join (leaf4_0) (tail4_4 needed)
+
 theorem allDegrees (needed:HighPendingSeed12.Required) (a:ℕ) (lo:0<a) (hi:a≤4):
     Tail (11:Fin 18) 33 40 9 a 0:=by
   interval_cases a
-  · exact tail1_0 needed
-  · exact tail2_0 needed
-  · exact tail3_0 needed
-  · exact tail4_0 needed
+  · exact
+      join (entire cell1784 checked1784) <|
+      entire cell1785 checked1785
+  · exact
+      join (entire cell1786 checked1786) <|
+      join (needed ⟨3,by decide⟩) <|
+      join (needed ⟨4,by decide⟩) <|
+      join (needed ⟨5,by decide⟩) <|
+      join (entire cell1787 checked1787) <|
+      join (entire cell1788 checked1788) <|
+      join (entire cell1789 checked1789) <|
+      join (entire cell1790 checked1790) <|
+      entire cell1791 checked1791
+  · exact
+      join (entire cell1792 checked1792) <|
+      join (entire cell1793 checked1793) <|
+      join (entire cell1794 checked1794) <|
+      join (entire cell1795 checked1795) <|
+      join (entire cell1796 checked1796) <|
+      join (entire cell1797 checked1797) <|
+      join (entire cell1798 checked1798) <|
+      join (entire cell1799 checked1799) <|
+      entire cell1800 checked1800
+  · exact
+      join (entire cell1801 checked1801) <|
+      join (entire cell1802 checked1802) <|
+      join (entire cell1803 checked1803) <|
+      join (entire cell1804 checked1804) <|
+      join (entire cell1805 checked1805) <|
+      entire cell1806 checked1806
 end Research6969.HighDispatch12Band4
 end Z6969Source1263
 
@@ -365,56 +316,37 @@ end Z6969Source1263
 section Z6969Source1264
 set_option autoImplicit true
 namespace Research6969.HighDispatch12Band5
-open NormalRoute
+open NormalRoute WholeRows
 set_option maxHeartbeats 1600000
 set_option maxRecDepth 16000
 set_option linter.unusedVariables false
-private theorem leaf1_129:Done (11:Fin 18) ⟨41,49,9,1,129,none⟩:=entire WholeRows.cell1808 WholeRows.checked1808
-private theorem tail1_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 1 129:=leaf1_129
-private theorem leaf1_0:Done (11:Fin 18) ⟨41,49,9,1,0,some 128⟩:=entire WholeRows.cell1807 WholeRows.checked1807
-private theorem tail1_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 1 0:=join (leaf1_0) (tail1_129 needed)
-private theorem leaf2_129:Done (11:Fin 18) ⟨41,49,9,2,129,none⟩:=entire WholeRows.cell1814 WholeRows.checked1814
-private theorem tail2_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 129:=leaf2_129
-private theorem leaf2_65:Done (11:Fin 18) ⟨41,49,9,2,65,some 128⟩:=entire WholeRows.cell1813 WholeRows.checked1813
-private theorem tail2_65 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 65:=join (leaf2_65) (tail2_129 needed)
-private theorem leaf2_41:Done (11:Fin 18) ⟨41,49,9,2,41,some 64⟩:=entire WholeRows.cell1812 WholeRows.checked1812
-private theorem tail2_41 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 41:=join (leaf2_41) (tail2_65 needed)
-private theorem leaf2_29:Done (11:Fin 18) ⟨41,49,9,2,29,some 40⟩:=entire WholeRows.cell1811 WholeRows.checked1811
-private theorem tail2_29 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 29:=join (leaf2_29) (tail2_41 needed)
-private theorem leaf2_25:Done (11:Fin 18) ⟨41,49,9,2,25,some 28⟩:=entire WholeRows.cell1810 WholeRows.checked1810
-private theorem tail2_25 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 25:=join (leaf2_25) (tail2_29 needed)
-private theorem leaf2_21 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨41,49,9,2,21,some 24⟩:=needed ⟨8,by decide⟩
-private theorem tail2_21 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 21:=join (leaf2_21 needed) (tail2_25 needed)
-private theorem leaf2_17 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨41,49,9,2,17,some 20⟩:=needed ⟨7,by decide⟩
-private theorem tail2_17 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 17:=join (leaf2_17 needed) (tail2_21 needed)
-private theorem leaf2_13 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨41,49,9,2,13,some 16⟩:=needed ⟨6,by decide⟩
-private theorem tail2_13 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 13:=join (leaf2_13 needed) (tail2_17 needed)
-private theorem leaf2_0:Done (11:Fin 18) ⟨41,49,9,2,0,some 12⟩:=entire WholeRows.cell1809 WholeRows.checked1809
-private theorem tail2_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 2 0:=join (leaf2_0) (tail2_13 needed)
-private theorem leaf3_129:Done (11:Fin 18) ⟨41,49,9,3,129,none⟩:=entire WholeRows.cell1823 WholeRows.checked1823
-private theorem tail3_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 129:=leaf3_129
-private theorem leaf3_65:Done (11:Fin 18) ⟨41,49,9,3,65,some 128⟩:=entire WholeRows.cell1822 WholeRows.checked1822
-private theorem tail3_65 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 65:=join (leaf3_65) (tail3_129 needed)
-private theorem leaf3_41:Done (11:Fin 18) ⟨41,49,9,3,41,some 64⟩:=entire WholeRows.cell1821 WholeRows.checked1821
-private theorem tail3_41 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 41:=join (leaf3_41) (tail3_65 needed)
-private theorem leaf3_29:Done (11:Fin 18) ⟨41,49,9,3,29,some 40⟩:=entire WholeRows.cell1820 WholeRows.checked1820
-private theorem tail3_29 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 29:=join (leaf3_29) (tail3_41 needed)
-private theorem leaf3_21:Done (11:Fin 18) ⟨41,49,9,3,21,some 28⟩:=entire WholeRows.cell1819 WholeRows.checked1819
-private theorem tail3_21 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 21:=join (leaf3_21) (tail3_29 needed)
-private theorem leaf3_17:Done (11:Fin 18) ⟨41,49,9,3,17,some 20⟩:=entire WholeRows.cell1818 WholeRows.checked1818
-private theorem tail3_17 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 17:=join (leaf3_17) (tail3_21 needed)
-private theorem leaf3_13:Done (11:Fin 18) ⟨41,49,9,3,13,some 16⟩:=entire WholeRows.cell1817 WholeRows.checked1817
-private theorem tail3_13 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 13:=join (leaf3_13) (tail3_17 needed)
-private theorem leaf3_4:Done (11:Fin 18) ⟨41,49,9,3,4,some 12⟩:=entire WholeRows.cell1816 WholeRows.checked1816
-private theorem tail3_4 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 4:=join (leaf3_4) (tail3_13 needed)
-private theorem leaf3_0:Done (11:Fin 18) ⟨41,49,9,3,0,some 3⟩:=entire WholeRows.cell1815 WholeRows.checked1815
-private theorem tail3_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 41 49 9 3 0:=join (leaf3_0) (tail3_4 needed)
+
 theorem allDegrees (needed:HighPendingSeed12.Required) (a:ℕ) (lo:0<a) (hi:a≤3):
     Tail (11:Fin 18) 41 49 9 a 0:=by
   interval_cases a
-  · exact tail1_0 needed
-  · exact tail2_0 needed
-  · exact tail3_0 needed
+  · exact
+      join (entire cell1807 checked1807) <|
+      entire cell1808 checked1808
+  · exact
+      join (entire cell1809 checked1809) <|
+      join (needed ⟨6,by decide⟩) <|
+      join (needed ⟨7,by decide⟩) <|
+      join (needed ⟨8,by decide⟩) <|
+      join (entire cell1810 checked1810) <|
+      join (entire cell1811 checked1811) <|
+      join (entire cell1812 checked1812) <|
+      join (entire cell1813 checked1813) <|
+      entire cell1814 checked1814
+  · exact
+      join (entire cell1815 checked1815) <|
+      join (entire cell1816 checked1816) <|
+      join (entire cell1817 checked1817) <|
+      join (entire cell1818 checked1818) <|
+      join (entire cell1819 checked1819) <|
+      join (entire cell1820 checked1820) <|
+      join (entire cell1821 checked1821) <|
+      join (entire cell1822 checked1822) <|
+      entire cell1823 checked1823
 end Research6969.HighDispatch12Band5
 end Z6969Source1264
 
@@ -559,7 +491,7 @@ private theorem leaf3_129:Done (11:Fin 18) ⟨50,63,10,3,129,none⟩:=entire Who
 private theorem tail3_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 50 63 10 3 129:=leaf3_129
 private theorem leaf3_65:Done (11:Fin 18) ⟨50,63,10,3,65,some 128⟩:=entire WholeRows.cell1838 WholeRows.checked1838
 private theorem tail3_65 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 50 63 10 3 65:=join (leaf3_65) (tail3_129 needed)
-private theorem leaf3_49:Done (11:Fin 18) ⟨50,63,10,3,49,some 64⟩:=power _ 386045 (by decide) PowerReceipts.power48 (by decide) (by decide) (by decide)
+private theorem leaf3_49:Done (11:Fin 18) ⟨50,63,10,3,49,some 64⟩:=power _ 385979 (by decide) PowerReceipts.power48 (by decide) (by decide) (by decide)
 private theorem tail3_49 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 50 63 10 3 49:=join (leaf3_49) (tail3_65 needed)
 private theorem leaf3_41:Done (11:Fin 18) ⟨50,63,10,3,41,some 48⟩:=entire WholeRows.cell1837 WholeRows.checked1837
 private theorem tail3_41 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 50 63 10 3 41:=join (leaf3_41) (tail3_49 needed)
@@ -590,39 +522,28 @@ end Z6969Source1266
 section Z6969Source1267
 set_option autoImplicit true
 namespace Research6969.HighDispatch12Band7
-open NormalRoute
+open NormalRoute WholeRows
 set_option maxHeartbeats 1600000
 set_option maxRecDepth 16000
 set_option linter.unusedVariables false
-private theorem leaf1_129:Done (11:Fin 18) ⟨64,654,12,1,129,none⟩:=entire WholeRows.cell1841 WholeRows.checked1841
-private theorem tail1_129 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 1 129:=leaf1_129
-private theorem leaf1_0:Done (11:Fin 18) ⟨64,654,12,1,0,some 128⟩:=entire WholeRows.cell1840 WholeRows.checked1840
-private theorem tail1_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 1 0:=join (leaf1_0) (tail1_129 needed)
-private theorem leaf2_65:Done (11:Fin 18) ⟨64,654,12,2,65,none⟩:=entire WholeRows.cell1844 WholeRows.checked1844
-private theorem tail2_65 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 65:=leaf2_65
-private theorem leaf2_49 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨64,654,12,2,49,some 64⟩:=needed ⟨20,by decide⟩
-private theorem tail2_49 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 49:=join (leaf2_49 needed) (tail2_65 needed)
-private theorem leaf2_41:Done (11:Fin 18) ⟨64,654,12,2,41,some 48⟩:=entire WholeRows.cell1843 WholeRows.checked1843
-private theorem tail2_41 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 41:=join (leaf2_41) (tail2_49 needed)
-private theorem leaf2_33 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨64,654,12,2,33,some 40⟩:=needed ⟨19,by decide⟩
-private theorem tail2_33 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 33:=join (leaf2_33 needed) (tail2_41 needed)
-private theorem leaf2_29 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨64,654,12,2,29,some 32⟩:=needed ⟨18,by decide⟩
-private theorem tail2_29 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 29:=join (leaf2_29 needed) (tail2_33 needed)
-private theorem leaf2_25 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨64,654,12,2,25,some 28⟩:=needed ⟨17,by decide⟩
-private theorem tail2_25 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 25:=join (leaf2_25 needed) (tail2_29 needed)
-private theorem leaf2_21 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨64,654,12,2,21,some 24⟩:=needed ⟨16,by decide⟩
-private theorem tail2_21 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 21:=join (leaf2_21 needed) (tail2_25 needed)
-private theorem leaf2_17 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨64,654,12,2,17,some 20⟩:=needed ⟨15,by decide⟩
-private theorem tail2_17 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 17:=join (leaf2_17 needed) (tail2_21 needed)
-private theorem leaf2_13 (needed:HighPendingSeed12.Required):Done (11:Fin 18) ⟨64,654,12,2,13,some 16⟩:=needed ⟨14,by decide⟩
-private theorem tail2_13 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 13:=join (leaf2_13 needed) (tail2_17 needed)
-private theorem leaf2_0:Done (11:Fin 18) ⟨64,654,12,2,0,some 12⟩:=entire WholeRows.cell1842 WholeRows.checked1842
-private theorem tail2_0 (needed:HighPendingSeed12.Required):Tail (11:Fin 18) 64 654 12 2 0:=join (leaf2_0) (tail2_13 needed)
+
 theorem allDegrees (needed:HighPendingSeed12.Required) (a:ℕ) (lo:0<a) (hi:a≤2):
     Tail (11:Fin 18) 64 654 12 a 0:=by
   interval_cases a
-  · exact tail1_0 needed
-  · exact tail2_0 needed
+  · exact
+      join (entire cell1840 checked1840) <|
+      entire cell1841 checked1841
+  · exact
+      join (entire cell1842 checked1842) <|
+      join (needed ⟨14,by decide⟩) <|
+      join (needed ⟨15,by decide⟩) <|
+      join (needed ⟨16,by decide⟩) <|
+      join (needed ⟨17,by decide⟩) <|
+      join (needed ⟨18,by decide⟩) <|
+      join (needed ⟨19,by decide⟩) <|
+      join (entire cell1843 checked1843) <|
+      join (needed ⟨20,by decide⟩) <|
+      entire cell1844 checked1844
 end Research6969.HighDispatch12Band7
 end Z6969Source1267
 
@@ -672,7 +593,7 @@ set_option maxRecDepth 16000
 theorem counted (r : Region) (grade : r.gradeHi ≤ 29) : Done (12 : Fin 18) r := by
   apply small r 29 grade (by decide) (by decide +kernel) (by decide +kernel)
   change ∀ i j : Fin 30, i.val + j.val ≤ 29 → JointLedger.Pass SmallCertificates.primary13 SmallCertificates.rescue13
-    (JointRouted.seedWeight 133460 13) (JointRouted.ordWeight 133460 1) CertifiedCell.target i.val j.val
+    (JointRouted.seedWeight 133482 13) (JointRouted.ordWeight 133482 1) CertifiedCell.target i.val j.val
   rw [SmallCertificates.seed_price13, SmallCertificates.ordinate_price]
   exact ExtendedJointBills.bill13
 end Research6969.SharedGradeInvoice13

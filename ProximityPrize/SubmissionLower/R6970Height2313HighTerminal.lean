@@ -1,0 +1,55 @@
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0669
+import ProximityPrize.SubmissionLower.Bundle6970_01d5856c44b7c788
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0672
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0673
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0674
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0676
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0677
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0678
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0679
+import ProximityPrize.SubmissionLower.Bundle6970_64980975130957fe
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0682
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0683
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0684
+import ProximityPrize.SubmissionLower.Bundle6970_64980975130957fe
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0687
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0688
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0689
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0700
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0941
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0949
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0963
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0967
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0970
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0972
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0973
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0974
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0975
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0976
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0977
+
+set_option Elab.async false
+
+namespace Research6970.Height2313.Research6969.HighTerminal
+theorem count : _root_.Research6970.Height2313.Research6969.HighPackets.Goal := by
+  intro i
+  fin_cases i
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed1.count _root_.Research6970.Height2313.Research6969.HardComplete1.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed2.count _root_.Research6970.Height2313.Research6969.HardComplete2.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed3.count _root_.Research6970.Height2313.Research6969.HardComplete3.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed4.count _root_.Research6970.Height2313.Research6969.HardComplete4.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed5.count _root_.Research6970.Height2313.Research6969.HardComplete5.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed6.count _root_.Research6970.Height2313.Research6969.HardComplete6.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed7.count _root_.Research6970.Height2313.Research6969.HardComplete7.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed8.count _root_.Research6970.Height2313.Research6969.HardComplete8.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed9.count _root_.Research6970.Height2313.Research6969.HardComplete9.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed10.count _root_.Research6970.Height2313.Research6969.HardComplete10.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed11.count _root_.Research6970.Height2313.Research6969.HardComplete11.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed12.count _root_.Research6970.Height2313.Research6969.HardComplete12.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed13.count _root_.Research6970.Height2313.Research6969.HardComplete13.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed14.count _root_.Research6970.Height2313.Research6969.HardComplete14.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed15.count _root_.Research6970.Height2313.Research6969.HardComplete15.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed16.count _root_.Research6970.Height2313.Research6969.HardComplete16.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed17.count _root_.Research6970.Height2313.Research6969.HardComplete17.required
+  · exact _root_.Research6970.Height2313.Research6969.HighDispatchSeed18.count _root_.Research6970.Height2313.Research6969.HardComplete18.required
+end Research6970.Height2313.Research6969.HighTerminal

@@ -57,8 +57,6 @@ abbrev layerNeed := Final50Price.layerNeed
 abbrev Messages := Final50Price.Messages
 abbrev ProperCut := Final50Price.ProperCut
 abbrev LayerBudget := @Final50Price.LayerBudget
-theorem sourceRank_eq : sourceRank = 993533597967758343 := by decide
-theorem certified_layers : sourceRank / layerWidth + 1 = 21410054907182 := by decide
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
     ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧
@@ -701,28 +699,10 @@ theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
   · intro γ hγ
     let m := F.mark γ hγ
     exact ⟨m.bad.support, m.bad.agreement, m.scalar_hits⟩
-theorem proper_layers_of_rank {w Γ s n} {f : Fin n → Row 4}
-    (hm : Messages w Γ s) (hr : PrimaryRank w)
-    (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
-    (htop : ∀ i, (shape (f i)).t < K1.p)
-    (hdiff : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)) :
-    ∃ l : Fin n → ℕ, LayerBudget (fun i => shape (f i)) l ∧
-      ∀ i, 0 < l i → ProperCut (f i) Γ s (l i) :=
-  Final50OrderProof.of_children Final50OrderProof_1.proof
-    Final50OrderProof_2.proof Final50OrderProof_3.proof
-    hm hr hirr hpos htop hdiff
 theorem primary_rank (w : P3.I → K) : PrimaryRank w :=
   Wide50EulerPrimary.primary_family agreement physicalDegree (by decide) (by decide)
     (by decide) w (n := sourceRank) le_rfl
 theorem symbol_families : Final50OrderProof.c3 := Final50OrderProof_3.proof
-theorem proper_layers {w Γ s n} {f : Fin n → Row 4}
-    (hm : Messages w Γ s)
-    (hirr : ∀ i, Irreducible (f i)) (hpos : ∀ i, 0 < (shape (f i)).t)
-    (htop : ∀ i, (shape (f i)).t < K1.p)
-    (hdiff : ∀ i j, i ≠ j → ¬ Associated (f i) (f j)) :
-    ∃ l : Fin n → ℕ, LayerBudget (fun i => shape (f i)) l ∧
-      ∀ i, 0 < l i → ProperCut (f i) Γ s (l i) :=
-  proper_layers_of_rank hm (primary_rank w) hirr hpos htop hdiff
 end
 end Final50Order
 

@@ -4,6 +4,10 @@ import ProximityPrize.SubmissionLower.DdZZ6ou4c
 import ProximityPrize.SubmissionLower.FrontBranch12
 import ProximityPrize.SubmissionLower.FrontBranch3
 import ProximityPrize.SubmissionLower.HighCore82258Pairs
+import ProximityPrize.SubmissionLower.R6970Scalar84Rank
+
+import ProximityPrize.SubmissionLower.Z6970RankThreeBank
+import ProximityPrize.SubmissionLower.Z6970RankFourBank
 
 set_option Elab.async false
 
@@ -17,11 +21,11 @@ set_option linter.constructorNameAsVariable false
 namespace Research6969.Profile
 open ProximityPrize.Benchmark ToyProblem CoreDefinitions ProximityGap
 open scoped NNReal
-abbrev p : ℕ := 2899368181980161361
+abbrev p : ℕ := 2899720025701049676
 abbrev q : ℕ := 9223372036854649837
-abbrev agreement : ℕ := 179740
-abbrev listCap : ℕ := 52000088471619
-abbrev scalarCap : ℕ := 274928728022923468
+abbrev agreement : ℕ := 179730
+abbrev listCap : ℕ := 57502853684523
+abbrev scalarCap : ℕ := 274923225257710564
 
 private theorem of_cross_power {x : ℝ≥0} {a d : ℕ} (hd : 0 < d)
     (h : x ^ d * 2 ^ a ≤ 1) : x ≤ (2 : ℝ≥0) ^ (-(a : ℝ) / d) := by
@@ -31,38 +35,38 @@ private theorem of_cross_power {x : ℝ≥0} {a d : ℕ} (hd : 0 < d)
     NNReal.rpow_neg, NNReal.rpow_natCast, ← one_div]
   exact (le_div_iff₀ (by positivity)).mpr h
 theorem score :
-    (1 - claimedRadius p q) ^ IRSProfile.repetitions ≤ (2 : ℝ≥0) ^ (-((6969 : ℝ) / 100)) := by
+    (1 - claimedRadius p q) ^ IRSProfile.repetitions ≤ (2 : ℝ≥0) ^ (-((6970 : ℝ) / 100)) := by
   let x : ℝ≥0 := (1 - claimedRadius p q) ^ 128
   have small : claimedRadius p q ≤ 1 := by
     unfold claimedRadius
     exact (div_le_one (by positivity)).mpr (by norm_num)
-  have diff : 1 - claimedRadius p q = (6324003854874488476 : ℝ≥0) / q := by
+  have diff : 1 - claimedRadius p q = (6323652011153600161 : ℝ≥0) / q := by
     apply NNReal.coe_injective
     rw [NNReal.coe_sub small]
     norm_num [claimedRadius]
-  have upper : x * 2 ^ 69 ≤ (619693289293 : ℝ≥0) / 1000000000000 := by
+  have upper : x * 2 ^ 69 ≤ (615295737152 : ℝ≥0) / 1000000000000 := by
     dsimp only [x]
     rw [diff, div_pow, div_mul_eq_mul_div, div_le_div_iff₀ (by positivity) (by positivity)]
-    exact_mod_cast (show (6324003854874488476 : ℕ) ^ 128 * 2 ^ 69 * 1000000000000 ≤
-      619693289293 * q ^ 128 by decide +kernel)
+    exact_mod_cast (show (6323652011153600161 : ℕ) ^ 128 * 2 ^ 69 * 1000000000000 ≤
+      615295737152 * q ^ 128 by decide +kernel)
   change x ≤ _
   rw [← neg_div]
-  apply of_cross_power (a := 6969) (d := 100) (by decide)
+  apply of_cross_power (a := 6970) (d := 100) (by decide)
   calc
-    x ^ 100 * 2 ^ 6969 = (x * 2 ^ 69) ^ 100 * 2 ^ 69 := by
+    x ^ 100 * 2 ^ 6970 = (x * 2 ^ 69) ^ 100 * 2 ^ 70 := by
       rw [mul_pow, mul_assoc, ← pow_mul (2 : ℝ≥0), ← pow_add]
-    _ ≤ ((619693289293 : ℝ≥0) / 1000000000000) ^ 100 * 2 ^ 69 :=
+    _ ≤ ((615295737152 : ℝ≥0) / 1000000000000) ^ 100 * 2 ^ 70 :=
       mul_le_mul_of_nonneg_right (pow_le_pow_left' upper _) (by positivity)
     _ ≤ 1 := by
       rw [div_pow, div_mul_eq_mul_div, div_le_one (by positivity)]
-      exact_mod_cast (show (619693289293 : ℕ) ^ 100 * 2 ^ 69 ≤ 1000000000000 ^ 100 by decide +kernel)
+      exact_mod_cast (show (615295737152 : ℕ) ^ 100 * 2 ^ 70 ≤ 1000000000000 ^ 100 by decide +kernel)
 
 theorem admissible : claimedRadius p q ∈ Set.Ioo (0:ℝ≥0) IRSProfile.minRelativeDistance := by
   constructor <;> norm_num [claimedRadius,IRSProfile.minRelativeDistance]
 
 theorem threshold {s:ℕ} (h:(262144:ℝ)*(1-((claimedRadius p q:ℝ≥0):ℝ))≤s) : agreement≤s := by
-  have strict:(179739:ℝ)<262144*(1-((claimedRadius p q:ℝ≥0):ℝ)) := by norm_num [claimedRadius]
-  exact (show 179739<s by exact_mod_cast strict.trans_le h)
+  have strict:(179729:ℝ)<262144*(1-((claimedRadius p q:ℝ≥0):ℝ)) := by norm_num [claimedRadius]
+  exact (show 179729<s by exact_mod_cast strict.trans_le h)
 
 theorem field_budget : (scalarCap+listCap)*2^128≤(0x7f000001:ℕ)^6 := by decide +kernel
 theorem reduced : Nat.Coprime p q := by decide +kernel
@@ -70,34 +74,15 @@ theorem reduced : Nat.Coprime p q := by decide +kernel
 abbrev errors : ℕ := 262144 - agreement
 abbrev link : ℕ := agreement - 131072
 abbrev heightCap : ℕ := errors + 1 - link - 2
-abbrev fieldSize : ℕ := (0x7f000001 : ℕ) ^ 6
-abbrev fieldCap : ℕ := 274980728111395087
-abbrev rankFee : ℕ := 71879381565923
-abbrev anchorFee : ℕ := 71879381846871
-abbrev markBudget : ℕ := 274784969259510674
+abbrev rankFee : ℕ := 71921995694573
+abbrev anchorFee : ℕ := 71921995975571
 
-theorem errors_exact : errors = 82404 := rfl
-theorem link_exact : link = 48668 := rfl
-theorem height_exact : heightCap = 33735 := rfl
 
-theorem field_cap_exact : fieldSize / 2 ^ 128 = fieldCap := by decide +kernel
 theorem rank_fee_exact : link + 0x7f000001 * heightCap = rankFee := by decide +kernel
 theorem anchor_fee_exact :
     0x7f000001 * heightCap + 2 * heightCap + 262144 + 2 = anchorFee := by decide +kernel
-theorem scalar_cap_exact : markBudget + anchorFee + rankFee = scalarCap := by decide +kernel
-theorem mark_budget_exact : fieldCap - listCap - anchorFee - rankFee = markBudget := by
-  decide +kernel
 
-theorem threshold_exact :
-    (179739 : ℝ) < 262144 * (1 - ((claimedRadius p q : ℝ≥0) : ℝ)) ∧
-      262144 * (1 - ((claimedRadius p q : ℝ≥0) : ℝ)) < 179740 := by
-  constructor <;> norm_num [claimedRadius]
 
-theorem next_score_scaled_witness :
-    619693289292 * q ^ 128 ≤
-      (6324003854874488476 : ℕ) ^ 128 * 2 ^ 69 * 1000000000000 ∧
-    (1000000000000 : ℕ) ^ 100 < 619693289292 ^ 100 * 2 ^ 70 := by
-  constructor <;> decide +kernel
 
 end Research6969.Profile
 end Z6969Source2214
@@ -112,8 +97,9 @@ namespace Research6969.ProfileList
 noncomputable section
 open i4 PolynomialDifferential
 open P5_8 (Equation small bo8 Moments small_shape donor_shape)
+open scoped BigOperators
 abbrev A := Profile.agreement
-abbrev donorMargin : ℕ := 25851446690343340
+abbrev donorMargin : ℕ := 25618278392043340
 
 theorem agreement_ok :aRk A:=⟨by decide,by decide,by decide,by decide⟩
 theorem donor_width :bo8.m≤bo8.m*A-N*bo8.B:= by decide
@@ -128,16 +114,22 @@ private theorem stack_le {a :ℕ} {s :Source} {r :ℕ} (hs :Rz s)
     (Nat.mul_le_mul_left _ ((a9M.proof a s (s.B+1) hs hw le_rfl ht).trans hr))
 theorem small_equation (w:Node→K) :
     ∃ Q:Equation,ato small Q ∧ ∀ f∈close A w,differentialSpecialization Q f=0:= by
-  obtain ⟨hr,hm⟩:=P5_8_1.of_children q1EkR5c.proof qokZnNd.proof q2aXx2a.proof
-  have hw:small.m≤ small.m*A-N*small.B:= by decide
-  have hR:=stack_le small_shape hw hr w
-  have hdim:=cqa A small small_shape hw
-  rcases hm with ⟨hT,hS,hV⟩
-  rw [hT,hS,hV] at hdim
-  have hnum :n*232369+N*610160<small.m*A*12850+205216:= by decide
-  have hlt:Vv A small w<Fintype.card (apU A small) := by omega
-  obtain ⟨Q,hQ,hwt,hlocal⟩:=interpolant small_shape hw w hlt
-  exact ⟨Q,hQ,specializes hwt hlocal⟩
+  let s := R6970Scalar84Rank.source
+  have hs : CJ0.ShapeOK s := R6970Scalar84Rank.native_shape
+  have hw : s.m ≤ s.m*A-CJ0.N*s.B := by decide
+  have hrank : CJ0.originRank A s ≤ 253996 := by
+    rcases R6970Scalar84Rank.certificate with h | ⟨cut,hcut,htail,hpre⟩
+    · exact h
+    · exact (CJ0_1.proof A s cut hs hw hcut htail).trans hpre
+  have hr := (CJ0_2.proof A s hs hw w).trans (Nat.mul_le_mul_left CJ0.n hrank)
+  have hdim := CJ0.source_dimension A s hs hw
+  have surplus := R6970Scalar84Rank.surplus
+  unfold CJ0.Surplus at surplus
+  change CJ0.n*253996 + CJ0.N*(∑ j∈s.E,j.q) <
+    s.m*A*s.E.card + ∑ j∈s.E,j.v at surplus
+  have hlt : CJ0.stackRank A s w < Fintype.card (CJ0.ColumnIndex A s) := by omega
+  obtain ⟨Q,hQ,hwt,hlocal⟩:=CJ0.interpolant hs hw w hlt
+  exact ⟨Q,hQ,CJ0.specializes (A := A) (s := s) (w := w) hwt hlocal⟩
 theorem donor_surplus (w : Node → K) :
     Vv A bo8 w + donorMargin ≤ Fintype.card (apU A bo8) := by
   obtain ⟨hr, hm⟩ := P5_8_2.of_children qHvCGFa.proof qNtJgmd.proof qZtSHva.proof P6_8_1.proof
@@ -169,8 +161,8 @@ open scoped Polynomial BigOperators
 def DonorSurplus (w:Node→K) :Prop :=
   Vv A bo8 w+donorMargin≤Fintype.card (apU A bo8)
 structure Allocation (a :Jn) :Prop where
-  total:a.B≤83
-  index :a.J≤25
+  total:a.B≤84
+  index :a.J≤26
   top:a.C≤11
   top_total:a.C≤a.B
   top_index :2*a.C≤a.J
@@ -264,7 +256,7 @@ private theorem avr (P:af 3) (S U:(Polynomial ao)) (T:ℕ)
     have hu: (jet U i).natDegree≤weight i+step:= by
       refine (natDegree_hasseDeriv_le U i.val).trans ((zIu hU _).trans ?_)
       have hi:=i.isLt
-      change 179742 - i.val≤(131071 - i.val)+48671
+      change 179732 - i.val≤(131071 - i.val)+48661
       omega
     change ((z1z (jet S i)+Polynomial.C (jet U i) *
       Polynomial.X).coeff k).natDegree≤weight i+step*k
@@ -372,16 +364,16 @@ private theorem choose_row {w:Node→K} {Q:Equation} (hQ:ato small Q)
   have hprod: (∏ F∈bad,F)∣Q :=
     ((Finset.prod_dvd_prod_of_subset _ _ id (Finset.filter_subset _ _)).trans
       (Multiset.toFinset_prod_dvd_prod factors)).trans (prod_normalizedFactors hQ.1).dvd
-  have hcard:bad.card≤83:= calc
+  have hcard:bad.card≤84:= calc
     bad.card = ∑ _F∈bad,(1 :ℕ) := by simp
     _ ≤ ∑ F∈bad,jetTotalDegree F :=
       Finset.sum_le_sum fun F hF=>(Finset.mem_filter.mp hF).2.1
     _≤jetTotalDegree Q :=
       sum_weightedTotalDegree_le_of_prod_dvd jetDegreeWeight bad id hQ.1 hprod
-    _≤83:=hQ.2.1
-  have hfield :83≤Nat.card K:= by
+    _≤84:=hQ.2.1
+  have hfield :84≤Nat.card K:= by
     rw [Nat.card_eq_fintype_card]
-    exact (show 83≤Fintype.card Node by rw [IRSProfile.card_index]; decide).trans
+    exact (show 84≤Fintype.card Node by rw [IRSProfile.card_index]; decide).trans
       (Fintype.card_le_of_injective node node.injective)
   let blocked (F:Equation) :Submodule K S :=
     ((Ideal.span ({F} : Set Equation)).restrictScalars K).comap S.subtype
@@ -523,7 +515,7 @@ open scoped BigOperators
 private theorem excluded {b j n v : ℕ}
     (h : Gq ⟨b, j, 0⟩ = ∑ i ∈ range n, capRow b j i)
     (hs : (∑ i ∈ range n, capRow b j i) = v)
-    (hv : 48671 * v < donorMargin) : (gap A + 2) * Gq ⟨b, j, 0⟩ < donorMargin := by
+    (hv : 48661 * v < donorMargin) : (gap A + 2) * Gq ⟨b, j, 0⟩ < donorMargin := by
   rw [h, hs]
   exact hv
 
@@ -563,13 +555,13 @@ private theorem cutoff_4 : (gap A + 2) * Gq ⟨18, 4, 0⟩ < donorMargin := by
     +[32,0xa9537d810] +[32,0x73704fc10] +[32,0x49bf42010] +[32,0x2ac054410]
     +[32,0x14f386810] +[32,0x6dcf0987] +[27,0x76e7e30]
 
-private theorem cutoff_5 : (gap A + 2) * Gq ⟨13, 5, 0⟩ < donorMargin := by
-  refine excluded (n := 391) (v := 0x7b92d42d20) (cofactor_index 13 5 (by decide)) ?_ (by decide)
-  exact emptySum (capRow 13 5)
-    +[32,0x21916d1f00] +[32,0x1a3fdb9700] +[32,0x1412caff00] +[32,0xef19f5700]
-    +[32,0xac3bc9f00] +[32,0x77086d700] +[32,0x4df61ff00] +[32,0x2f7b21700]
-    +[32,0x1a0db1f00] +[32,0xc2411700] +[32,0x4347ff00] +[32,0xb53d700]
-    +[7,0x118920]
+private theorem cutoff_5 : (gap A + 2) * Gq ⟨14, 5, 0⟩ < donorMargin := by
+  refine excluded (n := 391) (v := 0x78b44dffb6) (cofactor_index 14 5 (by decide)) ?_ (by decide)
+  exact emptySum (capRow 14 5)
+    +[32,0x217668d2b8] +[32,0x19fc3567b8] +[32,0x13b61c0cb8] +[32,0xe8928c1b8]
+    +[32,0xa5a6786b8] +[32,0x70ee45bb8] +[32,0x48bab40b8] +[32,0x2b5c835b8]
+    +[32,0x172473ab8] +[32,0xa6344fb8] +[32,0x369b74b8] +[32,0x888a9b8]
+    +[7,0xbf516]
 
 private theorem cutoff_6 : (gap A + 2) * Gq ⟨6, 6, 0⟩ < donorMargin := by
   refine excluded (n := 326) (v := 0x7a020c2306) (cofactor_index 6 6 (by decide)) ?_ (by decide)
@@ -591,7 +583,7 @@ private def cutoff : ℕ → ℕ
   | 2 => 23
   | 3 => 21
   | 4 => 18
-  | 5 => 13
+  | 5 => 14
   | _ => 6
 
 private theorem reject {a : Jn}
@@ -630,51 +622,44 @@ def offCommonFee (a : Jn) : ℕ :=
   errors A * properDegree a + gap A * componentCap a
 
 private theorem exact_chart :
-    chartCaps = ⟨21495235, 6160222, 2752440⟩ := by
-  have ha : a₀ small = 21495235 := rfl
-  have hd : D small = 6160222 := rfl
+    chartCaps = ⟨21757372, 6422359, 2752440⟩ := by
+  have ha : a₀ small = 21757372 := rfl
+  have hd : D small = 6422359 := rfl
   have he : e small = 2752440 := by
     have hx : t * (small.C - 1) + k - 2 = 2752440 := rfl
-    have hy : D small / 2 = 3080111 := by rw [hd]
+    have hy : D small / 2 = 3211179 := by rw [hd]
     rw [e, hx, hy]
     exact min_eq_left (by decide)
   unfold chartCaps
   rw [ha, hd, he]
 
-private theorem low_eq : lowFee small = 18080644949566800 := by
-  have hH : H small = 1622 := rfl
-  have hI : I₁ small = 283 := rfl
-  have ha : a₁ small = 0x1953e058 := rfl
-  have hd : d₁ small = 0x469fa7d := rfl
-  have hr : R₁ small = 0x33160a2d17 := by rw [R₁, hH, hd, hI, ha]
-  rw [lowFee, hr, hH]
-  rfl
+private theorem low_eq : lowFee small = 19563661727807523 := by decide +kernel
 
-private def fee (r n : ℕ) := 82404 * r + 48669 * n
+private def fee (r n : ℕ) := 82414 * r + 48659 * n
 
 private def total (a : Jn) : ℕ :=
   let s := tariffShape a
   fee (R₁ s) (H s ^ 2) + (if a.C = 0 then 0 else fee (2 * R₂ s) s.B) +
     fee (tW (smallCaps.wD a).repair (donorCaps.wD a).repair
-      ⟨21495235, 6160222, 2752440⟩) (componentCap a) + 18080644949566800
+      ⟨21757372, 6422359, 2752440⟩) (componentCap a) + 19563661727807523
 
 private theorem total_eq (a : Jn) :
     commonFee a + offCommonFee a + lowFee small = total a := by
-  have herr : errors A = 82404 := rfl
-  have hgap : gap A = 48669 := rfl
+  have herr : errors A = 82414 := rfl
+  have hgap : gap A = 48659 := rfl
   rw [low_eq]
   simp only [total, commonFee, offCommonFee, properDegree, exact_chart, lowFee, regularFee,
     herr, hgap, fee]
 
 private def Band (b stop j c : ℕ) : Prop :=
-  ∀ i, b ≤ i → i < stop → total ⟨i, j, c⟩ ≤ 2530792305825209757
+  ∀ i, b ≤ i → i < stop → total ⟨i, j, c⟩ ≤ 2798031357435233747
 
 private theorem done {b j c : ℕ} : Band b b j c := by
   intro i hl hu
   omega
 
 private theorem bandCons {b stop j c v : ℕ}
-    (he : total ⟨b, j, c⟩ = v) (hv : v ≤ 2530792305825209757)
+    (he : total ⟨b, j, c⟩ = v) (hv : v ≤ 2798031357435233747)
     (ht : Band (b + 1) stop j c) : Band b stop j c := by
   intro i hl hu
   by_cases h : i = b
@@ -684,111 +669,112 @@ private theorem bandCons {b stop j c v : ℕ}
 local notation:65 val:66 " |+| " tail:65 => bandCons (v := val) rfl (by decide) tail
 
 private theorem cost_0_0 : Band 0 26 0 0 :=
-  0x1b617e293753981 |+| 0x1b44dfe130bb908 |+| 0x1b2841992a3b4c9 |+| 0x1b0ba46aca4c515 |+|
-  0x1aef073c6a8cdd5 |+| 0x1ad26a0e0afcf09 |+| 0x1ab5ccdfab9c8b1 |+| 0x1a992fb14c6bacd |+|
-  0x1a7c9282ed6a55d |+| 0x1a5ff5548e98861 |+| 0x1a4358262ff63d9 |+| 0x1a26baf7d1837c5 |+|
-  0x1a0a1dc97340425 |+| 0x19ed809b152c8f9 |+| 0x19d0e36cb748641 |+| 0x19b4463e5993bfd |+|
-  0x1997a90ffc0ea2d |+| 0x197b0be19eb90d1 |+| 0x195e6eb34192fe9 |+| 0x1941d184e49c775 |+|
-  0x1925345687d5775 |+| 0x190897282b3dfe9 |+| 0x18ebf9f9ced60d1 |+| 0x18cf5ccb729da2d |+|
-  0x18b2bf9d1694bfd |+| 0x1896226ebabb641 |+|
+  0x1d094926d0dc321 |+| 0x1ceb6f72ace47bb |+| 0x1ccd95be890487b |+| 0x1cafbd241475ce0 |+|
+  0x1c91e489a016991 |+| 0x1c740bef2be6e8e |+| 0x1c563354b7e6bd7 |+| 0x1c385aba441616c |+|
+  0x1c1a821fd074f4d |+| 0x1bfca9855d0357a |+| 0x1bded0eae9c13f3 |+| 0x1bc0f85076aeab8 |+|
+  0x1ba31fb603cb9c9 |+| 0x1b85471b9118126 |+| 0x1b676e811e940cf |+| 0x1b4995e6ac3f8c4 |+|
+  0x1b2bbd4c3a1a905 |+| 0x1b0de4b1c825192 |+| 0x1af00c17565f26b |+| 0x1ad2337ce4c8b90 |+|
+  0x1ab45ae27361d01 |+| 0x1a968248022a6be |+| 0x1a78a9ad91228c7 |+| 0x1a5ad113204a31c |+|
+  0x1a3cf878afa15bd |+| 0x1a1f1fde3f280aa |+|
   done
 
 private theorem cost_1_0 : Band 1 24 1 0 :=
-  0x1ab8ed5d57a28d0 |+| 0x1a9c55af32d1451 |+| 0x1a7fbf1ab49145d |+| 0x1a6328863680cdd |+|
-  0x1a4691f1b89fdd1 |+| 0x1a29fb5d3aee739 |+| 0x1a0d64c8bd6c915 |+| 0x19f0ce34401a365 |+|
-  0x19d4379fc2f7629 |+| 0x19b7a10b4604161 |+| 0x199b0a76c94050d |+| 0x197e73e24cac12d |+|
-  0x1961dd4dd0475c1 |+| 0x194546b954122c9 |+| 0x1928b024d80c845 |+| 0x190c19905c36635 |+|
-  0x18ef82fbe08fc99 |+| 0x18d2ec676518b71 |+| 0x18b655d2e9d12bd |+| 0x1899bf3e6eb927d |+|
-  0x187d28a9f3d0ab1 |+| 0x186092157917b59 |+| 0x1843fb80fe8e475 |+|
+  0x1c5f7895d317597 |+| 0x1c41a57bc566077 |+| 0x1c23d37b6705efc |+| 0x1c06017b08d55cd |+|
+  0x1be82f7aaad44ea |+| 0x1bca5d7a4d02c53 |+| 0x1bac8b79ef60c08 |+| 0x1b8eb97991ee409 |+|
+  0x1b70e77934ab456 |+| 0x1b531578d797cef |+| 0x1b3543787ab3dd4 |+| 0x1b1771781dff705 |+|
+  0x1af99f77c17a882 |+| 0x1adbcd77652524b |+| 0x1abdfb7708ff460 |+| 0x1aa02976ad08ec1 |+|
+  0x1a825776514216e |+| 0x1a648575f5aac67 |+| 0x1a46b3759a42fac |+| 0x1a28e1753f0ab3d |+|
+  0x1a0b0f74e401f1a |+| 0x19ed3d748928b43 |+| 0x19cf6b742e7efb8 |+|
   done
 
 private theorem cost_2_0 : Band 2 23 2 0 :=
-  0x1a1016788eb2375 |+| 0x19f387471f37139 |+| 0x19d6f815afeb771 |+| 0x19ba68e440cf61d |+|
-  0x199dd9b2d1e2d3d |+| 0x19814a816325cd1 |+| 0x1964bb4ff4984d9 |+| 0x19482c1e863a555 |+|
-  0x192b9ced180be45 |+| 0x190f0dbbaa0cfa9 |+| 0x18f27e8a3c3d981 |+| 0x18d5ef58ce9dbcd |+|
-  0x18b96027612d68d |+| 0x189cd0f5f3ec9c1 |+| 0x188041c486db569 |+| 0x1863b29319f9985 |+|
-  0x18472361ad47615 |+| 0x182a943040c4b19 |+| 0x180e04fed471891 |+| 0x17f175cd684de7d |+|
-  0x17d4e69bfc59cdd |+|
+  0x1bb5351d4e47799 |+| 0x1b976ad0b45f000 |+| 0x1b79a0841aa60b3 |+| 0x1b5bd637811c9b2 |+|
+  0x1b3e0beae7c2afd |+| 0x1b20419e4e98494 |+| 0x1b027751b59d677 |+| 0x1ae4ad051cd20a6 |+|
+  0x1ac6e2b88436321 |+| 0x1aa9186bebc9de8 |+| 0x1a8b4e1f538d0fb |+| 0x1a6d83d2bb7fc5a |+|
+  0x1a4fb98623a2005 |+| 0x1a31ef398bf3bfc |+| 0x1a1424ecf47503f |+| 0x19f65aa05d25cce |+|
+  0x19d89053c6061a9 |+| 0x19bac6072f15ed0 |+| 0x199cfbba9855443 |+| 0x197f316e01c4202 |+|
+  0x196167216b6280d |+|
   done
 
 private theorem cost_2_1 : Band 1 23 2 1 :=
-  0x1c4fac639e135fa |+| 0x1c331ce1b51cd2b |+| 0x1eeac98079f6bf4 |+| 0x21a2761f3f00331 |+|
-  0x245a22be04392e2 |+| 0x2711cf5cc9a1b07 |+| 0x29c97bfb8f39ba0 |+| 0x2c81289a55014ad |+|
-  0x2f38d5391af862e |+| 0x31f081d7e11f023 |+| 0x34a82e76a77528c |+| 0x375fdb156dfad69 |+|
-  0x3a1787b434b00ba |+| 0x3ccf3452fb94c7f |+| 0x3f86e0f1c2a90b8 |+| 0x423e8d9089ecd65 |+|
-  0x44f63a2f5160286 |+| 0x47ade6ce190301b |+| 0x4a65936ce0d5624 |+| 0x4d1d400ba8d74a1 |+|
-  0x4fd4ecaa7108b92 |+| 0x528c99493969af7 |+|
+  0x1def9dbe0a41a4b |+| 0x1dd1d3716f50ecf |+| 0x20885bc55b70b13 |+| 0x233ee41947bffa3 |+|
+  0x25f56c6d343ec7f |+| 0x28abf4c120ed1a7 |+| 0x2b627d150dcaf1b |+| 0x2e190568fad84db |+|
+  0x30cf8dbce8152e7 |+| 0x33861610d58193f |+| 0x363c9e64c31d7e3 |+| 0x38f326b8b0e8ed3 |+|
+  0x3ba9af0c9ee3e0f |+| 0x3e6037608d0e597 |+| 0x4116bfb47b6856b |+| 0x43cd480869f1d8b |+|
+  0x4683d05c58aadf7 |+| 0x493a58b047936af |+| 0x4bf0e10436ab7b3 |+| 0x4ea7695825f3103 |+|
+  0x515df1ac156a29f |+| 0x54147a000510c87 |+|
   done
 
 private theorem cost_3_0 : Band 3 21 3 0 :=
-  0x1967aa9bf96ca29 |+| 0x194b22a55d06d39 |+| 0x192e9aaec0d08bd |+| 0x191212b824c9cb5 |+|
-  0x18f58ac188f2921 |+| 0x18d902caed4ae01 |+| 0x18bc7ad451d2b55 |+| 0x189ff2ddb68a11d |+|
-  0x18836ae71b70f59 |+| 0x1866e2f08087609 |+| 0x184a5af9e5cd52d |+| 0x182dd3034b42cc5 |+|
-  0x18114b0cb0e7cd1 |+| 0x17f4c31616bc551 |+| 0x17d83b1f7cc0645 |+| 0x17bbb328e2f3fad |+|
-  0x179f2b324957189 |+| 0x1782a33bafe9bd9 |+|
+  0x1b0b89cd3b9f408 |+| 0x1aedc6bbae4bb8f |+| 0x1ad003aa2127b62 |+| 0x1ab240989433381 |+|
+  0x1a947d87076e3ec |+| 0x1a76ba757ad8ca3 |+| 0x1a58f763ee72da6 |+| 0x1a3b3452623c6f5 |+|
+  0x1a1d7140d635890 |+| 0x19ffae2f4a5e277 |+| 0x19e1eb1dbeb64aa |+| 0x19c4280c333df29 |+|
+  0x19a664faa7f51f4 |+| 0x1988a1e91cdbd0b |+| 0x196aded791f206e |+| 0x194d1bc60737c1d |+|
+  0x192f58b47cad018 |+| 0x191195a2f251c5f |+|
   done
 
 private theorem cost_3_1 : Band 2 21 3 1 :=
-  0x29cc6a562a6c2c5 |+| 0x29afe16e233c5f0 |+| 0x36261dc9f9bf135 |+| 0x429c5a25d0714ee |+|
-  0x4f129681a75311b |+| 0x5b88d2dd7e645bc |+| 0x67ff0f3955a52d1 |+| 0x74754b952d1585a |+|
-  0x80eb87f104b5657 |+| 0x8d61c44cdc84cc8 |+| 0x99d800a8b483bad |+| 0xa64e3d048cb2306 |+|
-  0xb2c4796065102d3 |+| 0xbf3ab5bc3d9db14 |+| 0xcbb0f218165abc9 |+| 0xd8272e73ef474f2 |+|
-  0xe49d6acfc86368f |+| 0xf113a72ba1af0a0 |+| 0xfd89e3877b2a325 |+|
+  0x2b6b8d0cbbeb16b |+| 0x2b4dc95a3740c35 |+| 0x37c32eea7c09a81 |+| 0x4438947ac102119 |+|
+  0x50adfa0b0629ffd |+| 0x5d235f9b4b8172d |+| 0x6998c52b91086a9 |+| 0x760e2abbd6bee71 |+|
+  0x8283904c1ca4e85 |+| 0x8ef8f5dc62ba6e5 |+| 0x9b6e5b6ca8ff791 |+| 0xa7e3c0fcef74089 |+|
+  0xb459268d36181cd |+| 0xc0ce8c1d7cebb5d |+| 0xcd43f1adc3eed39 |+| 0xd9b9573e0b21761 |+|
+  0xe62ebcce52839d5 |+| 0xf2a4225e9a15495 |+| 0xff1987eee1d67a1 |+|
   done
 
 private theorem cost_4_0 : Band 4 18 4 0 :=
-  0x18aee3241d260f9 |+| 0x189263faae01545 |+| 0x1875e4d13f0c205 |+| 0x185965a7d046739 |+|
-  0x183ce67e61b04e1 |+| 0x18206754f349afd |+| 0x1803e82b851298d |+| 0x17e76902170b091 |+|
-  0x17cae9d8a933009 |+| 0x17ae6aaf3b8a7f5 |+| 0x1791eb85ce11855 |+| 0x17756c5c60c8129 |+|
-  0x1758ed32f3ae271 |+| 0x173c6e0986c3c2d |+|
+  0x1a6199cc3be004d |+| 0x1a43df0f696a6b6 |+| 0x1a262452972456b |+| 0x1a086995c50dc6c |+|
+  0x19eaaed8f326bb9 |+| 0x19ccf41c216f352 |+| 0x19af395f4fe7337 |+| 0x19917ea27e8eb68 |+|
+  0x1973c3e5ad65be5 |+| 0x19560928dc6c4ae |+| 0x19384e6c0ba25c3 |+| 0x191a93af3b07f24 |+|
+  0x18fcd8f26a9d0d1 |+| 0x18df1e359a61aca |+|
   done
 
 private theorem cost_4_1 : Band 3 18 4 1 :=
-  0x41a85b7028a99a8 |+| 0x418bd9eb30566c5 |+| 0x58111edbdb38b9e |+| 0x6e9663cc864a8eb |+|
-  0x851ba8bd318beac |+| 0x9ba0edaddcfcce1 |+| 0xb226329e889d38a |+| 0xc8ab778f346d2a7 |+|
-  0xdf30bc7fe06ca38 |+| 0xf5b601708c9ba3d |+| 0x10c3b466138fa2b6 |+| 0x122c08b51e5883a3 |+|
-  0x13945d0429245d04 |+| 0x14fcb15333f32ed9 |+| 0x166505a23ec4f922 |+|
+  0x4346d533452e2b9 |+| 0x43291934851338b |+| 0x59add7a95eef311 |+| 0x7032961e38faae3 |+|
+  0x86b754931335b01 |+| 0x9d3c1307eda036b |+| 0xb3c0d17cc83a421 |+| 0xca458ff1a303d23 |+|
+  0xe0ca4e667dfce71 |+| 0xf74f0cdb592580b |+| 0x10dd3cb50347d9f1 |+| 0x1245889c51005423 |+|
+  0x13add4839ebbc6a1 |+| 0x1516206aec7a316b |+| 0x167e6c523a3b9481 |+|
   done
 
 private theorem cost_4_2 : Band 2 18 4 2 :=
-  0x5490b9338895979 |+| 0x54743877bd40854 |+| 0x5457b7bbf203369 |+| 0x753c75c4c02fcba |+|
-  0x962133cd8f4a04f |+| 0xb705f1d65f51e28 |+| 0xd7eaafdf3047645 |+| 0xf8cf6de8022a8a6 |+|
-  0x119b42bf0d4fb54b |+| 0x13a98e9f9a8b9c34 |+| 0x15b7da8027d65d61 |+| 0x17c62660b52ff8d2 |+|
-  0x19d4724142986e87 |+| 0x1be2be21d00fbe80 |+| 0x1df10a025d95e8bd |+| 0x1fff55e2eb2aed3e |+|
+  0x562a898935cf10b |+| 0x560ccea423e5579 |+| 0x55ef13bf121360d |+| 0x76d39e1b8c6d7dd |+|
+  0x97b8287807b5329 |+| 0xb89cb2d483ea7f1 |+| 0xd9813d31010d635 |+| 0xfa65c78d7f1ddf5 |+|
+  0x11b4a51e9fe1bf31 |+| 0x13c2edc467e079e9 |+| 0x15d1366a2fee0e1d |+| 0x17df7f0ff80a7bcd |+|
+  0x19edc7b5c035c2f9 |+| 0x1bfc105b886fe3a1 |+| 0x1e0a590150b8ddc5 |+| 0x2018a1a71910b165 |+|
   done
 
-private theorem cost_5_0 : Band 5 13 5 0 :=
-  0x1806b2b0764cbdd |+| 0x17ea3ac1da3d575 |+| 0x17cdc2d33e5d781 |+| 0x17b14ae4a2ad201 |+|
-  0x1794d2f6072c4f5 |+| 0x17785b076bdb05d |+| 0x175be318d0b9439 |+| 0x173f6b2a35c7089 |+|
+private theorem cost_5_0 : Band 5 14 5 0 :=
+  0x19a16e2cf0072ca |+| 0x1983bbc4d86f815 |+| 0x1966095cc1075ac |+| 0x194856f4a9ceb8f |+|
+  0x192aa48c92c59be |+| 0x190cf2247bec039 |+| 0x18ef3fbc6541f00 |+| 0x18d18d544ec7613 |+|
+  0x18b3daec387c572 |+|
   done
 
-private theorem cost_5_1 : Band 4 13 5 1 :=
-  0x6393b7823d57997 |+| 0x63773c9726cb2ae |+| 0x840b895378f7323 |+| 0xa49fd60fcb52c0c |+|
-  0xc53422cc1dddd69 |+| 0xe5c86f88709873a |+| 0x1065cbc44c38297f |+| 0x126f10901169c438 |+|
-  0x1478555bd69e5765 |+|
+private theorem cost_5_1 : Band 4 14 5 1 :=
+  0x65320571245f7f1 |+| 0x6514500c7a8af09 |+| 0x85a8664c3b31007 |+| 0xa63c7c8bfc06951 |+|
+  0xc6d092cbbd0bae7 |+| 0xe764a90b7e404c9 |+| 0x107f8bf4b3fa46f7 |+| 0x1288cd58b0138171 |+|
+  0x14920ebcac2fb437 |+| 0x169b5020a84edf49 |+|
   done
 
-private theorem cost_5_2 : Band 3 13 5 2 :=
-  0x9e173568bc17bca |+| 0x9dfabb46d28969f |+| 0x9dde4124e912dae |+| 0xd7980f2319925bb |+|
-  0x11151dd214aff80c |+| 0x14b0bab1f7d5a4a1 |+| 0x184c5791db0a2b7a |+| 0x1be7f471be4d8c97 |+|
-  0x1f839151a19fc7f8 |+| 0x231f2e318500dd9d |+|
+private theorem cost_5_2 : Band 3 14 5 2 :=
+  0x9fb21537450a035 |+| 0x9f9460ec4966ae9 |+| 0x9f76aca14ddb1c3 |+| 0xd9310c70f589b13 |+|
+  0x112eb6c409e25ddf |+| 0x14ca5cc1047afa27 |+| 0x186602bdff226feb |+| 0x1c01a8baf9d8bf2b |+|
+  0x1f9d4eb7f49de7e7 |+| 0x2338f4b4ef71ea1f |+| 0x26d49ab1ea54c5d3 |+|
   done
 
 private theorem cost_6_1 : Band 5 6 6 1 :=
-  0x8f7db889df38ff2 |+|
+  0x912c418df0aef57 |+|
   done
 
 private theorem cost_6_2 : Band 4 6 6 2 :=
-  0x10163dd0c47c9993 |+| 0x101476a4d6d17e5a |+|
+  0x103006c828eaae75 |+| 0x102e2bfeb5796f31 |+|
   done
 
 private theorem cost_6_3 : Band 3 6 6 3 :=
-  0x11eabcd5e0275e6b |+| 0x11e8f5b6854c24f0 |+| 0x11e72e972a7267af |+|
+  0x120440545b0e564c |+| 0x1202659c82802aa4 |+| 0x12008ae4a9f37b22 |+|
   done
 
 private theorem total_le {b j c : ℕ} (hj : j ≤ 6) (hb : b < cutoff j)
     (hc : 2 * c ≤ j) (ht : c ≤ b) (hi : j ≤ b + c) :
-    total ⟨b, j, c⟩ ≤ 2530792305825209757 := by
+    total ⟨b, j, c⟩ ≤ 2798031357435233747 := by
   have hc' : c ≤ j / 2 := by omega
   interval_cases j
   all_goals interval_cases c
@@ -813,11 +799,11 @@ private theorem total_le {b j c : ℕ} (hj : j ≤ 6) (hb : b < cutoff j)
 theorem list_tariff (a : Jn)
     (capacity : 0 < a.B → donorMargin ≤ (gap A + 2) * Gq a)
     (hc : 2 * a.C ≤ a.J) (ht : a.C ≤ a.B) (hi : a.J ≤ a.B + a.C) :
-    commonFee a + offCommonFee a + lowFee small ≤ gap A * Profile.listCap := by
+    commonFee a + offCommonFee a + lowFee small < gap A * (Profile.listCap + 1) := by
   rcases a with ⟨b, j, c⟩
   obtain ⟨hj, hb⟩ := limits capacity ht hi
   rw [total_eq]
-  exact (total_le hj hb hc ht hi).trans (by decide)
+  exact (total_le hj hb hc ht hi).trans_lt (by decide)
 
 end Research6969.ProfileList
 end Z6969Source2217
@@ -855,7 +841,7 @@ theorem agreement_of_threshold {s : ℕ}
     (hs : (Fintype.card I : ℝ) * (1-radius) ≤ s) : agreement ≤ s := by
   rw [IRSProfile.card_index] at hs
   exact Profile.threshold hs
-theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6969 := by
+theorem query_score : (1 - queryRadius) ^ IRSProfile.repetitions ≤ claimedError 6970 := by
   simpa [queryRadius,claimedError] using Profile.score
 theorem query_admissible : queryRadius ∈ Set.Ioo (0 : ℝ≥0) IRSProfile.minRelativeDistance := Profile.admissible
 theorem scalar_projection_room : scalarCap + 1 < (0x7f000001 : ℕ) ^ 6 := by decide
@@ -947,7 +933,7 @@ theorem gamma_error_le_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
       norm_num [reductionTarget, ProximityGap.prizeThreshold]
 theorem protocol_claim_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
     (hscalar : ∀ u Γ, BadFamily u Γ → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6969 radiusNumerator radiusDenominator where
+    ProtocolClaim 6970 radiusNumerator radiusDenominator where
   admissible := query_admissible
   reduction := gamma_error_le_of_scalar_cap hlist hscalar
   score := query_score
@@ -956,7 +942,7 @@ theorem protocol_claim_of_scalar_cap (hlist : CJ0.ScalarList agreement listCap)
 theorem of_bad_slopes (hlist : CJ0.ScalarList agreement listCap)
     (bound : ∀ (u : Words) (Γ : Finset K),
     (∀ γ ∈ Γ, Principal.BadSlope node (u 0) (u 1) k agreement γ) → Γ.card ≤ scalarCap) :
-    ProtocolClaim 6969 radiusNumerator radiusDenominator := by
+    ProtocolClaim 6970 radiusNumerator radiusDenominator := by
   apply protocol_claim_of_scalar_cap hlist
   intro u Γ hΓ
   apply bound u Γ
@@ -1303,8 +1289,8 @@ private theorem ceY {s :Source} (hs :Rz s) {w:Node→K} {T:zJe (Polynomial K)}
   exact hcast.trans (z3b (zBI _ hF.count) _)
 private theorem tariff_shape {a :Jn} (ha :Allocation a) :Rz (tariffShape a) := by
   obtain ⟨hB,hJ,_,_,hc,_,_⟩:=ha
-  have hbound:max 2 (max a.B a.J)≤83:= by omega
-  have hchar :max N (83*(83-1))<p:= by decide
+  have hbound:max 2 (max a.B a.J)≤84:= by omega
+  have hchar :max N (84*(84-1))<p:= by decide
   refine ⟨Nat.zero_lt_one,?_,?_,?_,?_,?_,?_⟩
   · change 0< max 1 a.C
     omega
@@ -1389,13 +1375,14 @@ theorem scalar_list : CJ0.ScalarList A Profile.listCap := by
     agreement_ok hQ (fun f hf=>⟨hroot f (hs f (mem_filter.mp hf).1),(mem_filter.mp hf).2⟩)
   have hzs :commonMarks.card+offCommon.card=T.card:=card_filter_add_card_filter_not ..
   have huv :U.card+V.card=offCommon.card:=card_filter_add_card_filter_not ..
-  have hcard:gap A*T.card≤gap A*Profile.listCap:= by
+  have hcard:gap A*T.card<gap A*(Profile.listCap+1):= by
     rw [← hzs,← huv,← add_assoc,zws,zws]
-    exact (z9f (z9f hz hu) hv).trans (list_tariff _ d.allocation.capacity d.allocation.top_index
+    exact (z9f (z9f hz hu) hv).trans_lt (list_tariff _ d.allocation.capacity d.allocation.top_index
       d.allocation.top_total d.allocation.index_total)
   exact ⟨hfin,by
     rw [Set.ncard_eq_toFinset_card _ hfin]
-    exact Nat.le_of_mul_le_mul_left hcard (Nat.sub_pos_of_lt agreement_ok.gt_degree)⟩
+    by_contra! h
+    exact (Nat.not_lt_of_ge (Nat.mul_le_mul_left (gap A) (Nat.succ_le_of_lt h))) hcard⟩
 end
 end Research6969.ProfileList
 end
@@ -1405,12 +1392,6 @@ namespace Research6969.ProfileProtocol
 
 open FrobeniusLocator ProximityPrize.Benchmark
 
-theorem protocol_of_bad_slopes
-    (bound : ∀ (u : Words) (Γ : Finset K),
-      (∀ γ ∈ Γ, Principal.BadSlope node (u 0) (u 1) k agreement γ) →
-        Γ.card ≤ scalarCap) :
-    ProtocolClaim 6969 radiusNumerator radiusDenominator :=
-  of_bad_slopes ProfileList.scalar_list bound
 
 
 end Research6969.ProfileProtocol
@@ -1438,7 +1419,7 @@ export P0 (K I Words node p blockLength k Frac Bivar TypeAtMostOne coefficientBl
   extendSeed IsCommonGCD atSlope seed liftX twist amplitudeDegree sixNorm columnRank
   threeU threeV sameDirection relationOn)
 abbrev Rung := P1.Rung
-abbrev target : Rung := ⟨179740, 2899368181980161361, 9223372036854649837, 2292, 274928728022923468, 52000088471619⟩
+abbrev target : Rung := ⟨179730, 2899720025701049676, 9223372036854649837, 2313, 274923225257710564, 57502853684523⟩
 abbrev agreement := target.agreement
 abbrev radiusNumerator := target.numerator
 abbrev radiusDenominator := target.denominator
@@ -1448,9 +1429,9 @@ abbrev listCap := target.listBound
 abbrev t : ℕ := blockLength - agreement
 abbrev L : ℕ := agreement - k
 abbrev heightCap : ℕ := t + 1 - L - 2
-abbrev rankFee : ℕ := 71879381565923
-abbrev anchorFee : ℕ := 71879381846871
-abbrev budget : ℕ := 0x3d0ed83eb28710f
+abbrev rankFee : ℕ := 71921995694573
+abbrev anchorFee : ℕ := 71921995975571
+abbrev budget : ℕ := 274980728111395087
 def queryRadius : ℝ≥0 := claimedRadius radiusNumerator radiusDenominator
 def radius : ℝ := queryRadius
 def BadFamily (u : Words) (Γ : Finset K) : Prop :=
@@ -1580,8 +1561,8 @@ abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.labe
 abbrev AnchorModel.amplitude {u deleted} (M : AnchorModel u deleted) := ModelAt.amplitude M
 abbrev AnchorModel.decoder {u deleted} (M : AnchorModel u deleted) {γ : K} (B : BadMark u γ) :=
   ModelAt.decoder M B
-abbrev lowCap : ℕ := 274784969259510674
-abbrev highCap : ℕ := 274784969259510674
+abbrev lowCap : ℕ := 274779381266040420
+abbrev highCap : ℕ := 274779381266040420
 end
 end Front6969
 end
@@ -1815,8 +1796,8 @@ theorem relation_height_le {u : Words} (hu : FrontRemainder u) (T : TwoActive u)
     T.height ≤ heightCap := by
   have h := relation_height_balance T
   have hr := hu.1
-  change 48668 + T.height + nullity u = 82405 at h
-  change T.height ≤ 33735
+  change 48658 + T.height + nullity u = 82415 at h
+  change T.height ≤ 33755
   omega
 def relation_of_two_active {u : Words} (hu : FrontRemainder u) (T : TwoActive u) :
     Relation T := by
@@ -1843,7 +1824,7 @@ theorem rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K) :
       exact (Finset.mem_filter.mp hγ).2)
   have hs : t + 1 - nullity u - L ≤ heightCap := by
     have hr := hu.1
-    change 82405 - nullity u - 48668 ≤ 33735
+    change 82415 - nullity u - 48658 ≤ 33755
     omega
   exact h.trans ((Nat.add_le_add_left (Nat.mul_le_mul_left p hs) L).trans_eq rank_fee_exact)
 open P0 (type_one_bad_count_of_syndromes)
@@ -1853,14 +1834,14 @@ theorem type_one_count (u : Words) (htype : TypeAtMostOne u)
   exact type_one_bad_count_of_syndromes node (u 0) (u 1) node.injective
     k agreement p hk (by decide) htype Γ (fun γ hγ => bad_slope u γ (hΓ γ hγ))
 theorem deficient_count (u : Words) (Γ : Finset K) (hrank : firstRank u < L)
-    (hΓ : BadFamily u Γ) : Γ.card ≤ 310811 := by
+    (hΓ : BadFamily u Γ) : Γ.card ≤ 310801 := by
   have h := K1_3.deficient_hankel_count node (u 0) (u 1) node.injective
     k L t (firstRank u) (by rw [IRSProfile.card_index]; decide) hrank rfl Γ
     (fun γ hγ => bad_slope u γ (hΓ γ hγ))
   rw [IRSProfile.card_index] at h
   exact h.trans (Nat.add_le_add_left (Nat.le_of_lt_succ hrank) blockLength)
 theorem principal_count (u : Words) (Γ : Finset K) (hprincipal : HomogeneousPrincipal u)
-    (hΓ : BadFamily u Γ) : Γ.card ≤ 734130640077284 := by
+    (hΓ : BadFamily u Γ) : Γ.card ≤ 734151947141614 := by
   obtain ⟨a, g, hg, hga, ha, hkernel⟩ := hprincipal
   have hsum : a + (t - a) = t := by omega
   let φ := algebraMap (Polynomial K) Frac
@@ -1889,7 +1870,7 @@ theorem principal_count (u : Words) (Γ : Finset K) (hprincipal : HomogeneousPri
   exact h.trans ((Nat.mul_le_mul_left p (Nat.add_le_add_left ha blockLength)).trans (by decide))
 open P0 (constantRankCount nativeMoments independent_nativeMoments)
 theorem constant_count (u : Words) (Γ : Finset K) (hu : ConstantKernel u)
-    (hΓ : BadFamily u Γ) : Γ.card ≤ 175580863611365 := by
+    (hΓ : BadFamily u Γ) : Γ.card ≤ 175602170675695 := by
   let φ := algebraMap (Polynomial K) Frac
   have hrank : ((twoBlock u).map φ).rank = stackRank u := rfl
   have hconstant : (coefficientBlocks p node (u 0) (u 1) L t).rank = stackRank u := hu.symm
@@ -1953,14 +1934,14 @@ private theorem bad_excludes_full_rank (u : Words) (γ : K) (M : BadMark u γ) :
     dsimp [S]
     rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index]
     have := M.agreement
-    change 179740 ≤ _ at this
-    change 262144 - _ ≤ 82404
+    change 179730 ≤ _ at this
+    change 262144 - _ ≤ 82414
     omega
   exact excludes_full_rank p node node.injective Native.native_domain_fixed (u 0) (u 1) γ k L t
     (by rw [IRSProfile.card_index]; decide) M.decoder M.degree S hs
     (fun i hi => (M.hits i (by simpa [S] using hi)).symm)
 theorem full_column_count (u : Words) (Γ : Finset K) (hfirst : firstRank u = L)
-    (hz : nullity u = 0) (hΓ : BadFamily u Γ) : Γ.card ≤ 71883642978789 := by
+    (hz : nullity u = 0) (hΓ : BadFamily u Γ) : Γ.card ≤ 71926257107439 := by
   have hr := actual_stackRank u
   rw [hz] at hr
   apply (Strata.two_block_rank_exception_count p node (u 0) (u 1) L t 0 hr hfirst Γ ?_).trans_eq
@@ -1973,8 +1954,8 @@ theorem shortened_guards {u T R} (D : Reduction u T R) (hu : FrontRemainder u) :
     k + D.height ≤ agreement ∧ D.height < p - 1 := by
   have hb := relation_height_le hu T
   have he := D.height_eq
-  change T.height ≤ 33735 at hb
-  change 131072 + 3 * D.height ≤ 262144 - _ ∧ 131072 + D.height ≤ 179740 ∧ D.height < 0x7f000000
+  change T.height ≤ 33755 at hb
+  change 131072 + 3 * D.height ≤ 262144 - _ ∧ 131072 + D.height ≤ 179730 ∧ D.height < 0x7f000000
   omega
 end
 end Front6969
@@ -2141,12 +2122,12 @@ private theorem certificate_shifts_annihilate {u : Words} {T : TwoActive u} (R :
     (s : ℕ) (hL : T.height + s = L) :
     (K1_6.shifts (fun b => Principal.assemble (fun j => R.coefficients (b, j))) L s).transpose *
       twoBlock u = 0 := by
-  have hsize : k + (48667 + 1) + t ≤ Fintype.card I := by
+  have hsize : k + (48657 + 1) + t ≤ Fintype.card I := by
     rw [IRSProfile.card_index]
     decide
   exact certificate_shifts_annihilate_generic p node (u 0) (u 1) IRSProfile.domain.injective
     Native.native_domain_fixed (algebraMap (Polynomial K) Frac) (IsFractionRing.injective (Polynomial K) Frac)
-    k T.height 48667 t s hL hsize R _ (fun _ => rfl)
+    k T.height 48657 t s hL hsize R _ (fun _ => rfl)
 private theorem moving_has_new_node {u : Words} {T : TwoActive u} (R : Relation T)
     (hMoving : MovingGCD R) {γ : K} {M : BadMark u γ} (hSat : SaturatedAt R M) :
     ∃ i ∉ fixedNodes R,
@@ -2183,18 +2164,18 @@ private theorem moving_has_new_node {u : Words} {T : TwoActive u} (R : Relation 
   exact ⟨i, hiFixed, by rw [hAU, eval_mul, hi, zero_mul], by rw [hBV, eval_mul, hi, zero_mul]⟩
 open P1 (count_bound)
 private theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation T)
-    (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6944165320)
+    (hHeight : ∀ i, (R.coefficients i).natDegree ≤ 6956714330)
     (hMoving : MovingGCD R) (hSat : NormalSaturation R) (Γ : Finset K)
     (hBad : BadFamily u Γ) (hNormal : ∀ γ ∈ Γ, Normal u γ) :
-    Γ.card ≤ 1820371273646080 := by
+    Γ.card ≤ 1823660921323520 := by
   classical
   let U (i : I) := (leftU R).eval (C (node i))
   let V (i : I) := (leftV R).eval (C (node i))
-  have hU (i) : (U i).natDegree ≤ 6944165320 := by
+  have hU (i) : (U i).natDegree ≤ 6956714330 := by
     dsimp only [U, leftU]
     rw [Strata.assemble_nodePolynomial]
     exact Principal.nodePolynomial_natDegree_le _ (fun j => hHeight (0, j)) _
-  have hV (i) : (V i).natDegree ≤ 6944165320 := by
+  have hV (i) : (V i).natDegree ≤ 6956714330 := by
     dsimp only [V, leftV]
     rw [Strata.assemble_nodePolynomial]
     exact Principal.nodePolynomial_natDegree_le _ (fun j => hHeight (1, j)) _
@@ -2207,26 +2188,26 @@ private theorem normal_growth_count {u : Words} {T : TwoActive u} (R : Relation 
     exact ⟨i, hNZ, (eval_atSlope (leftU R) γ (node i)).symm.trans hu,
       (eval_atSlope (leftV R) γ (node i)).symm.trans hv⟩
   exact count_bound (c := Γ.card) (n := Fintype.card I) (n' := 262144)
-    (H := 6944165320) (b := 1820371273646080) IRSProfile.card_index
-    (common_node_count U V 6944165320 Γ hU hV hNew) rfl
+    (H := 6956714330) (b := 1823660921323520) IRSProfile.card_index
+    (common_node_count U V 6956714330 Γ hU hV hNew) rfl
 theorem moving_count (u : Words) (front : FrontRemainder u) (T : TwoActive u)
     (R : Relation T) (moving : MovingGCD R) (saturated : NormalSaturation R)
     (Γ : Finset K) (bad : BadFamily u Γ) (normal : ∀ γ ∈ Γ, Normal u γ) :
-    Γ.card ≤ 1820371273646080 := by
+    Γ.card ≤ 1823660921323520 := by
   let P (b : Fin 2) : Bivar := Principal.assemble (fun j => R.coefficients (b, j))
   let s := L - T.height
   have hP : ∀ b, (P b).natDegree ≤ T.height := R.x_degree
   have hBalance := relation_height_balance T
   have hHeight := relation_height_le front T
-  change T.height ≤ 33735 at hHeight
-  have hsDef : s = 48668 - T.height := rfl
-  have hSum : T.height + s = L := by change T.height + s = 48668; omega
-  have hs : 14933 ≤ s := by omega
+  change T.height ≤ 33755 at hHeight
+  have hsDef : s = 48658 - T.height := rfl
+  have hSum : T.height + s = L := by change T.height + s = 48658; omega
+  have hs : 14903 ≤ s := by omega
   have hRank : GenericLayer.genericRank (twoBlock u) + s = 2 * L := by
     change stackRank u + s = _
     rw [actual_stackRank u]
-    change 48668 + T.height + nullity u = 82405 at hBalance
-    change 82405 - nullity u + s = 97336
+    change 48658 + T.height + nullity u = 82415 at hBalance
+    change 82415 - nullity u + s = 97316
     omega
   have hCoordinates : K1_6.pairCoordinates P T.height = R.coefficients := by
     funext i
@@ -2240,10 +2221,10 @@ theorem moving_count (u : Words) (front : FrontRemainder u) (T : TwoActive u)
   have hBound := K1_6_2.proof K L (t + 1) s p (twoBlock u) (K1_6.shifts P L s)
     (by decide) hRank hKernel (stacked_entry_natDegree p node (u 0) (u 1) L t) hMinors rows
   rw [hRows] at hBound
-  have hProduct : 14933 * H ≤ s * H := Nat.mul_le_mul_right H hs
-  have hCeiling : L * (p + 1) = 103697220729912 := rfl
+  have hProduct : 14903 * H ≤ s * H := Nat.mul_le_mul_right H hs
+  have hCeiling : L * (p + 1) = 103675913665572 := rfl
   rw [hCeiling] at hBound
-  have hCap : H ≤ 6944165320 := by omega
+  have hCap : H ≤ 6956714330 := by omega
   apply normal_growth_count R _ moving saturated Γ bad normal
   intro i
   rw [← hCoordinates]
@@ -2301,8 +2282,8 @@ theorem add_rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K)
   classical
   rw [← Finset.card_filter_add_card_filter_not (s := Γ) (p := Normal u)]
   exact Nat.add_le_add hb (rank_exceptions u hu Γ)
-theorem low_with_reserve : lowCap + anchorFee + rankFee = 274928728022923468 := by decide
-theorem nonpositive_with_reserve : listCap + anchorFee + rankFee = 195758851884413 := by decide
+theorem low_with_reserve : lowCap + anchorFee + rankFee = 274923225257710564 := by decide
+theorem nonpositive_with_reserve : listCap + anchorFee + rankFee = 201346845354667 := by decide
 private theorem coherent_count (h5 : c5) (h6 : c6) (h7 : c7) (hlist : CJ0.ScalarList agreement listCap)
     (u : Words) (hu : FrontRemainder u) (T : TwoActive u) (R : Relation T)
     (D : Reduction u T R) (B : RankThree u T R D) (hsat : NormalSaturation R)
@@ -2378,9 +2359,9 @@ private theorem scalar_count (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4)
           (by decide)
   · exact hnone (Finset.not_nonempty_iff_eq_empty.mp hne)
 
-/-- The seven rank and height cases suffice for the protocol at 82,404 errors. -/
+/-- The seven rank and height cases suffice for the protocol at 82,414 errors. -/
 theorem of_children (hlist : CJ0.ScalarList agreement listCap) (h1 : c1) (h2 : c2) (h3 : c3) (h4 : c4) (h5 : c5) (h6 : c6) (h7 : c7) :
-    ProtocolClaim 6969 2899368181980161361 9223372036854649837 :=
+    ProtocolClaim 6970 2899720025701049676 9223372036854649837 :=
   Research6969.ProfileProtocol.protocol_claim_of_scalar_cap hlist
     (scalar_count h1 h2 h3 h4 h5 h6 h7 hlist)
 end
@@ -2471,10 +2452,10 @@ theorem proof : Front6969.c1 := by
       IRSProfile.card_index] at h
     exact h.trans (Nat.sub_le_sub_left M.agreement blockLength)
   have hheight : T.height ≤ heightCap := relation_height_le hfront T
-  have hH : T.height < L := hheight.trans_lt (by change 33735 < 48668; decide)
+  have hH : T.height < L := hheight.trans_lt (by change 33755 < 48658; decide)
   have hfit : k + T.height ≤ M.support.card :=
     have hcap : k + heightCap ≤ agreement := by
-      change 164807 ≤ 179740
+      change 164827 ≤ 179730
       decide
     ((Nat.add_le_add_left hheight k).trans hcap).trans M.agreement
   have hfix (i : I) : frobenius K p (node i) = node i := Native.native_domain_fixed i
@@ -2914,8 +2895,8 @@ private theorem pencil_count {u : Words} (Γ : Finset K)
   have he := Finset.card_erase_add_one hr
   have hS : agreement ≤ S.card := (M r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ, IRSProfile.card_index] at hcard
-  change 179740 ≤ S.card at hS
-  change Γ.card ≤ 82405
+  change 179730 ≤ S.card at hS
+  change Γ.card ≤ 82415
   omega
 theorem proof : Front6969.c2 := by
   intro u hu T R D B _ hp hn Γ hΓ _
@@ -2952,7 +2933,7 @@ abbrev weightedCutoff := sourceCutoff
 namespace RankThree
 
 open P0 (blockLength k)
-open P1_3 (Bank jet_quotient cutDegree)
+open P1_3At6970 (Bank jet_quotient cutDegree)
 open P0_6 (sum_rows ceil_sq_div_eq)
 
 def quotientSurplus (bank : Bank) (n h : ℕ) : Prop :=
@@ -2961,65 +2942,65 @@ def quotientSurplus (bank : Bank) (n h : ℕ) : Prop :=
     K1_10.sourceDim sourceCutoff 5 bank.first bank.second -
       K1_10.sourceDim (sourceCutoff - (k - 1) - h) 4
         (bank.first - 1) (bank.second - 1)
-private theorem source_st : K1_10.sourceDim sourceCutoff 5 20 17 = 1978211746 := by
-  let rows : Fin 6 → ℕ := ![812343315, 547409400, 338756966, 183431124, 77952701, 18318240]
+private theorem source_st : K1_10.sourceDim sourceCutoff 5 19 18 = 1989792126 := by
+  let rows : Fin 6 → ℕ := ![820535000, 550920295, 339612480, 183132262, 77476064, 18116025]
   unfold K1_10.sourceDim
   calc
     _ = ∑ i : Fin 6, rows i := by
       refine sum_rows _ rows ?_
       intro i
       fin_cases i <;> decide
-    _ = 1978211746 := by decide
-private theorem source_ts : K1_10.sourceDim sourceCutoff 5 17 20 = 1978211746 := by
-  let rows : Fin 6 → ℕ := ![823069800, 548363475, 335229632, 179140530, 75044144, 17364165]
+    _ = 1989792126 := by decide
+private theorem source_ts : K1_10.sourceDim sourceCutoff 5 18 19 = 1989792126 := by
+  let rows : Fin 6 → ℕ := ![824109895, 551238120, 338436782, 181702304, 76506825, 17798200]
   unfold K1_10.sourceDim
   calc
     _ = ∑ i : Fin 6, rows i := by
       refine sum_rows _ rows ?_
       intro i
       fin_cases i <;> decide
-    _ = 1978211746 := by decide
-private theorem multiple_st : K1_10.sourceDim 563554 4 19 16 = 991135446 := by
-  let rows : Fin 5 → ℕ := ![478333700, 290315440, 151894044, 59910550, 10681712]
+    _ = 1989792126 := by decide
+private theorem multiple_st : K1_10.sourceDim 563519 4 18 17 = 997402241 := by
+  let rows : Fin 5 → ℕ := ![482998050, 291977280, 152112583, 59720608, 10593720]
   unfold K1_10.sourceDim
   calc
     _ = ∑ i : Fin 5, rows i := by
       refine sum_rows _ rows ?_
       intro i
       fin_cases i <;> decide
-    _ = 991135446 := by decide
-private theorem multiple_ts : K1_10.sourceDim 563554 4 16 19 = 991135446 := by
-  let rows : Fin 5 → ℕ := ![483443960, 289764640, 149574540, 58141846, 10210460]
+    _ = 997402241 := by decide
+private theorem multiple_ts : K1_10.sourceDim 563519 4 17 18 = 997402241 := by
+  let rows : Fin 5 → ℕ := ![484701120, 291793610, 151339520, 59131215, 10436776]
   unfold K1_10.sourceDim
   calc
     _ = ∑ i : Fin 5, rows i := by
       refine sum_rows _ rows ?_
       intro i
       fin_cases i <;> decide
-    _ = 991135446 := by decide
+    _ = 997402241 := by decide
 private theorem source_corner (bank : Bank) :
-    K1_10.sourceDim sourceCutoff 5 bank.first bank.second = 1978211746 := by
+    K1_10.sourceDim sourceCutoff 5 bank.first bank.second = 1989792126 := by
   cases bank
   · exact source_st
   · exact source_ts
 private theorem multiple_corner (bank : Bank) :
-    K1_10.sourceDim 563554 4 (bank.first - 1) (bank.second - 1) = 991135446 := by
+    K1_10.sourceDim 563519 4 (bank.first - 1) (bank.second - 1) = 997402241 := by
   cases bank
   · exact multiple_st
   · exact multiple_ts
 theorem minimum_surplus (bank : Bank) :
     K1_10.sourceDim sourceCutoff 5 bank.first bank.second -
-      K1_10.sourceDim 563554 4 (bank.first - 1) (bank.second - 1) =
-      blockLength * 3765 + 104140 := by
+      K1_10.sourceDim 563519 4 (bank.first - 1) (bank.second - 1) =
+      blockLength * 3785 + 174845 := by
   rw [source_corner, multiple_corner]
   decide
-theorem rank_three_bank_surplus (bank : Bank) (n h : ℕ) (hn : n ≤ blockLength) (hh : 24334 ≤ h) :
+theorem rank_three_bank_surplus (bank : Bank) (n h : ℕ) (hn : n ≤ blockLength) (hh : 24329 ≤ h) :
     quotientSurplus bank n h := by
   let s := bank.first - 1
   let t := bank.second - 1
   have hm : K1_10.sourceDim (sourceCutoff - (k - 1) - h) 4 s t ≤
-      K1_10.sourceDim 563554 4 s t := by
-    have hcut : sourceCutoff - (k - 1) - 24334 = 563554 := by decide
+      K1_10.sourceDim 563519 4 s t := by
+    have hcut : sourceCutoff - (k - 1) - 24329 = 563519 := by decide
     rw [← hcut]
     unfold K1_10.sourceDim
     apply Finset.sum_le_sum
@@ -3031,10 +3012,10 @@ theorem rank_three_bank_surplus (bank : Bank) (n h : ℕ) (hn : n ≤ blockLengt
   unfold quotientSurplus
   rw [jet_quotient]
   have hd := minimum_surplus bank
-  have hs : n * 3765 ≤ blockLength * 3765 := Nat.mul_le_mul_right _ hn
+  have hs : n * 3785 ≤ blockLength * 3785 := Nat.mul_le_mul_right _ hn
   calc
-    n * 3765 ≤ blockLength * 3765 := hs
-    _ < blockLength * 3765 + 104140 := Nat.lt_add_of_pos_right (by decide)
+    n * 3785 ≤ blockLength * 3785 := hs
+    _ < blockLength * 3785 + 174845 := Nat.lt_add_of_pos_right (by decide)
     _ = _ := hd.symm
     _ ≤ _ := Nat.sub_le_sub_left hm _
 def incidenceRatio : ℚ :=
@@ -3042,9 +3023,9 @@ def incidenceRatio : ℚ :=
 
 def regularPrice : ℕ := ⌈((210 : ℕ) : ℚ) * incidenceRatio ^ 2⌉₊
 
-theorem regularPrice_exact : regularPrice = 175945687340321989 := by
+theorem regularPrice_exact : regularPrice = 176018012610796175 := by
   unfold regularPrice incidenceRatio
-  exact ceil_sq_div_eq 0x147ffafff86 48669 210 175945687340321989
+  exact ceil_sq_div_eq 0x147ffafff86 48659 210 176018012610796175
     (by decide) (by decide) (by decide) (by decide)
 
 theorem bank_price_le (bank : Bank) :
@@ -3058,38 +3039,38 @@ end RankThree
 namespace RankFour
 
 open P0 (blockLength)
-open P2_4 (Bank)
+open P2_4At6970 (Bank)
 abbrev heightCap := Profile.heightCap
 
 def originalFloor : Bank → ℕ
-  | .w12 | .w21 | .w22 | .w22Swapped => 24334
-  | _ => 32446
+  | .w12 | .w21 | .w22 | .w22Swapped => 24329
+  | _ => 32439
 
 open K1_11 (V J)
 open P0_7 (countRow gradeRow count grade contactRow V_affine rational_fee)
 open P1_4 (dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8 dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4 dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15 dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8 dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3 dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7 dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6 dims_4_3_5 jets_3_3_5)
-open P2_4 (dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3)
+open P2_4At6970 (dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3)
 private theorem surplus_of_stats (h H e N lo s t ds dt c g c' g' j : ℕ)
-    (hlo : lo ≤ h) (hmax : h ≤ 33735) (hH : H + e = h) (hN : N + e = 262144)
+    (hlo : lo ≤ h) (hmax : h ≤ 33755) (hH : H + e = h) (hN : N + e = 262144)
     (hc : count 5 s t = c) (hg : grade 5 s t = g)
     (hc' : count 4 (s-ds) (t-dt) = c') (hg' : grade 4 (s-ds) (t-dt) = g')
     (hj : J 4 s t - J 3 (s-ds) (t-dt) = j) (hgain : c' ≤ j)
-    (hmargin : 262144 * j + (587889 - lo) * c' + 131071 * g <
-      718960 * c + 131071 * g') :
-    N * (J 4 s t - J 3 (s-ds) (t-dt)) + V (718959 - 131071 - H) 131071 4 (s-ds) (t-dt)
-      < V 718959 131071 5 s t := by
-  have hv := V_affine 718959 131071 5 s t (by decide)
-  have hv' := V_affine (718959 - 131071 - H) 131071 4 (s-ds) (t-dt) (by omega)
+    (hmargin : 262144 * j + (587849 - lo) * c' + 131071 * g <
+      718920 * c + 131071 * g') :
+    N * (J 4 s t - J 3 (s-ds) (t-dt)) + V (718919 - 131071 - H) 131071 4 (s-ds) (t-dt)
+      < V 718919 131071 5 s t := by
+  have hv := V_affine 718919 131071 5 s t (by decide)
+  have hv' := V_affine (718919 - 131071 - H) 131071 4 (s-ds) (t-dt) (by omega)
   rw [hc, hg] at hv
   rw [hc', hg'] at hv'
-  have hw : 718959 - 131071 - H + 1 ≤ (587889 - lo) + e := by omega
-  have hm : N * j + (718959 - 131071 - H + 1) * c' ≤
-      262144 * j + (587889 - lo) * c' := by
+  have hw : 718919 - 131071 - H + 1 ≤ (587849 - lo) + e := by omega
+  have hm : N * j + (718919 - 131071 - H + 1) * c' ≤
+      262144 * j + (587849 - lo) * c' := by
     calc
-      _ ≤ N * j + ((587889 - lo) + e) * c' :=
+      _ ≤ N * j + ((587849 - lo) + e) * c' :=
         Nat.add_le_add_left (Nat.mul_le_mul_right _ hw) _
-      _ = N * j + e * c' + (587889 - lo) * c' := by ring
-      _ ≤ N * j + e * j + (587889 - lo) * c' :=
+      _ = N * j + e * c' + (587849 - lo) * c' := by ring
+      _ ≤ N * j + e * j + (587849 - lo) * c' :=
         Nat.add_le_add_right (Nat.add_le_add_left (Nat.mul_le_mul_left _ hgain) _) _
       _ = _ := by rw [← Nat.add_mul, hN]
   rw [hj]
@@ -3101,58 +3082,58 @@ theorem rank_four_bank_surplus (b : Bank) (h H e N : ℕ) (hlo : originalFloor b
       V weightedCutoff 131071 5 b.s b.t := by
   cases b with
   | w12 =>
-    exact surplus_of_stats h H e N 24334 16 10 1 2 2982 9324 1675 4189 2010
-      hlo hmax hH hN dims_5_16_10.1 dims_5_16_10.2 dims_4_15_8.1 dims_4_15_8.2
-      (by rw [jets_4_16_10, jets_3_15_8]) (by decide) (by decide)
+    exact surplus_of_stats h H e N 24329 16 11 1 2 3304 10374 1895 4764 2180
+      hlo hmax hH hN (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
+      (by decide +kernel) (by decide) (by decide)
   | w13 =>
-    exact surplus_of_stats h H e N 32446 8 7 1 3 952 2814 355 809 855
+    exact surplus_of_stats h H e N 32439 8 7 1 3 952 2814 355 809 855
       hlo hmax hH hN dims_5_8_7.1 dims_5_8_7.2 dims_4_7_4.1 dims_4_7_4.2
       (by rw [jets_4_8_7, jets_3_7_4]) (by decide) (by decide)
   | w21 =>
-    exact surplus_of_stats h H e N 24334 10 16 2 1 2982 9324 1675 4189 2010
-      hlo hmax hH hN dims_5_10_16.1 dims_5_10_16.2 dims_4_8_15.1 dims_4_8_15.2
-      (by rw [jets_4_10_16, jets_3_8_15]) (by decide) (by decide)
+    exact surplus_of_stats h H e N 24329 11 16 2 1 3304 10374 1895 4764 2180
+      hlo hmax hH hN (by decide +kernel) (by decide +kernel) (by decide +kernel) (by decide +kernel)
+      (by decide +kernel) (by decide) (by decide)
   | w22 =>
-    exact surplus_of_stats h H e N 24334 11 10 2 2 2002 6174 985 2419 1495
+    exact surplus_of_stats h H e N 24329 11 10 2 2 2002 6174 985 2419 1495
       hlo hmax hH hN dims_5_11_10.1 dims_5_11_10.2 dims_4_9_8.1 dims_4_9_8.2
       (by rw [jets_4_11_10, jets_3_9_8]) (by decide) (by decide)
   | w22Swapped =>
-    exact surplus_of_stats h H e N 24334 10 11 2 2 2002 6174 985 2419 1495
+    exact surplus_of_stats h H e N 24329 10 11 2 2 2002 6174 985 2419 1495
       hlo hmax hH hN dims_5_10_11.1 dims_5_10_11.2 dims_4_8_9.1 dims_4_8_9.2
       (by rw [jets_4_10_11, jets_3_8_9]) (by decide) (by decide)
   | w23 =>
-    exact surplus_of_stats h H e N 32446 8 6 2 3 798 2324 215 459 800
+    exact surplus_of_stats h H e N 32439 8 6 2 3 798 2324 215 459 800
       hlo hmax hH hN dims_5_8_6.1 dims_5_8_6.2 dims_4_6_3.1 dims_4_6_3.2
       (by rw [jets_4_8_6, jets_3_6_3]) (by decide) (by decide)
   | w31 =>
-    exact surplus_of_stats h H e N 32446 7 8 3 1 952 2814 355 809 855
+    exact surplus_of_stats h H e N 32439 7 8 3 1 952 2814 355 809 855
       hlo hmax hH hN dims_5_7_8.1 dims_5_7_8.2 dims_4_4_7.1 dims_4_4_7.2
       (by rw [jets_4_7_8, jets_3_4_7]) (by decide) (by decide)
   | w32 =>
-    exact surplus_of_stats h H e N 32446 6 8 3 2 798 2324 215 459 800
+    exact surplus_of_stats h H e N 32439 6 8 3 2 798 2324 215 459 800
       hlo hmax hH hN dims_5_6_8.1 dims_5_6_8.2 dims_4_3_6.1 dims_4_3_6.2
       (by rw [jets_4_6_8, jets_3_3_6]) (by decide) (by decide)
   | w33 =>
-    exact surplus_of_stats h H e N 32446 6 8 3 3 798 2324 175 364 835
+    exact surplus_of_stats h H e N 32439 6 8 3 3 798 2324 175 364 835
       hlo hmax hH hN dims_5_6_8.1 dims_5_6_8.2 dims_4_3_5.1 dims_4_3_5.2
       (by rw [jets_4_6_8, jets_3_3_5]) (by decide) (by decide)
   | w33Swapped =>
-    exact surplus_of_stats h H e N 32446 8 6 3 3 798 2324 175 364 835
+    exact surplus_of_stats h H e N 32439 8 6 3 3 798 2324 175 364 835
       hlo hmax hH hN dims_5_8_6.1 dims_5_8_6.2 dims_4_5_3.1 dims_4_5_3.2
       (by rw [jets_4_8_6, jets_3_5_3]) (by decide) (by decide)
-def chartRate (b : Bank) : ℚ := (131073 / 48669 : ℚ) * b.M
+def chartRate (b : Bank) : ℚ := (131073 / 48659 : ℚ) * b.M
 def chartFee (b : Bank) : ℚ := b.E * chartRate b ^ 2
 abbrev tariff : ℕ := 250000000000000000
 private theorem priced (E M zeroFee cap : ℕ)
-    (h : zeroFee * 48669^2 + 5 * E * (131073*M)^2 ≤ cap * 48669^2)
+    (h : zeroFee * 48659^2 + 5 * E * (131073*M)^2 ≤ cap * 48659^2)
     (hc : cap ≤ tariff) :
-    (zeroFee : ℚ) + 5 * ((E : ℚ) * ((131073 / 48669 : ℚ) * M)^2) ≤ tariff :=
-  (rational_fee E M zeroFee cap 131073 48669 (by decide) h).trans (by exact_mod_cast hc)
+    (zeroFee : ℚ) + 5 * ((E : ℚ) * ((131073 / 48659 : ℚ) * M)^2) ≤ tariff :=
+  (rational_fee E M zeroFee cap 131073 48659 (by decide) h).trans (by exact_mod_cast hc)
 local notation "fee!" e "," m "," z "," c => priced e m z c (by decide) (by decide)
 theorem bank_fee (b : Bank) : (b.zeroFee : ℚ) + 5 * chartFee b ≤ tariff := by
   cases b with
-  | w12 => exact fee! 36, 9174936, 0x771000024, 250000000000000000
-  | w21 => exact fee! 36, 9174936, 0x7f0000024, 250000000000000000
+  | w12 => exact fee! 37, 9437077, 0x7f0000025, 250000000000000000
+  | w21 => exact fee! 37, 9437077, 0x7f0000025, 250000000000000000
   | w22Swapped => exact fee! 36, 9174936, 0x7f0000024, 250000000000000000
   | w13 => exact fee! 30, 7602090, 0x86f00001e, 250000000000000000
   | w31 => exact fee! 30, 7602090, 0x3f800001e, 250000000000000000
@@ -3164,10 +3145,10 @@ theorem bank_fee (b : Bank) : (b.zeroFee : ℚ) + 5 * chartFee b ≤ tariff := b
 
 theorem bank_rate_ge (b : Bank) : (262144 : ℚ) ≤ chartRate b := by
   have hm : (262144 : ℕ) ≤ b.M := by cases b <;> decide
-  have hr : (1 : ℚ) ≤ 131073 / 48669 := by
-    apply (le_div_iff₀ (by positivity : (0 : ℚ) < 48669)).mpr
+  have hr : (1 : ℚ) ≤ 131073 / 48659 := by
+    apply (le_div_iff₀ (by positivity : (0 : ℚ) < 48659)).mpr
     rw [one_mul]
-    exact_mod_cast (show (48669 : ℕ) ≤ 131073 by decide)
+    exact_mod_cast (show (48659 : ℕ) ≤ 131073 by decide)
   exact (by exact_mod_cast hm : (262144 : ℚ) ≤ b.M).trans
     (by simpa only [one_mul, chartRate] using
       mul_le_mul_of_nonneg_right hr (by positivity : (0 : ℚ) ≤ b.M))
@@ -3186,7 +3167,7 @@ section
 namespace Front6969_3
 noncomputable section
 open Front6969 Polynomial
-open P1_3 (Bank cutDegree)
+open P1_3At6970 (Bank cutDegree)
 def leftCoeff {u T R D} (B : RankThree u T R D) (l : Fin 2) : (Polynomial K) :=
   B.a * (B.β l).map twist
 def rightCoeff {u T R D} (B : RankThree u T R D) (j : Fin 2) : (Polynomial K) :=
@@ -3208,7 +3189,7 @@ section
 namespace Front6969_3
 noncomputable section
 open Front6969 Polynomial ProximityPrize.Benchmark FrobeniusLocator
-open P1_3 (Adjugate Plane)
+open P1_3At6970 (Adjugate Plane)
 open P0_6 (amp_le primitive_lift contraction_degree)
 theorem adjugate_of_plane {u : Words} {T : TwoActive u} {R : Relation T} {D : Reduction u T R}
     (B : RankThree u T R D) (hnp : Nonparallel B)
@@ -3309,11 +3290,11 @@ section
 namespace Front6969_3
 noncomputable section
 open Front6969
-open P1_3 (Bank)
+open P1_3At6970 (Bank)
 open scoped BigOperators
-open P1_3 (jet_quotient)
+open P1_3At6970 (jet_quotient)
 open P0_6 (sum_rows ceil_sq_div_eq)
-theorem bank_surplus (bank : Bank) (n h : ℕ) (hn : n ≤ blockLength) (hh : 24334 ≤ h) :
+theorem bank_surplus (bank : Bank) (n h : ℕ) (hn : n ≤ blockLength) (hh : 24329 ≤ h) :
     quotientSurplus bank n h :=
   Research6969.ProfileBanks.RankThree.rank_three_bank_surplus bank n h hn hh
 
@@ -3327,7 +3308,7 @@ section
 namespace Front6969_3
 noncomputable section
 open Front6969 FrobeniusLocator ProximityPrize.Benchmark Polynomial
-open P1_3 (Adjugate)
+open P1_3At6970 (Adjugate)
 open P0_6 (natDegree_lt_of_degree_lt_pos)
 theorem mark_disjoint {u : Words} {T : TwoActive u} {R : Relation T} (D : Reduction u T R)
     {γ : K} (hn : Normal u γ) (M : BadMark u γ) :
@@ -3413,7 +3394,7 @@ set_option backward.isDefEq.respectTransparency false
 namespace Front6969_3
 noncomputable section
 open Front6969 Polynomial FrobeniusLocator
-open P1_3 (Plane)
+open P1_3At6970 (Plane)
 open P0_6 (column column_ne column_bound column_dvd firstColumn_normal threeU_fun tight_pair outputs slice_bound nodes_of_columns relationOn_fun)
 private theorem left_eq {u T R D} (B : RankThree u T R D) :
     threeU B.a B.β = column p (leftCoeff B) := by
@@ -3499,9 +3480,9 @@ section
 namespace Front6969_3
 noncomputable section
 open Front6969 Polynomial
-open P1_3 (Bank Plane ScalarSource)
+open P1_3At6970 (Bank Plane ScalarSource)
 def c1 : Prop :=
-  ∀ bank u deleted h U V, Plane u deleted h U V → 24334 ≤ h →
+  ∀ bank u deleted h U V, Plane u deleted h U V → 24329 ≤ h →
     h + deleted.card ≤ heightCap → quotientSurplus bank (blockLength - deleted.card) h →
     ∃ A : ScalarSource bank, ∀ γ (M : BadMark u γ), Disjoint M.support deleted →
       A.atDecoder γ M.decoder = 0
@@ -3536,8 +3517,8 @@ private theorem count_with_bank (h1 : c1) (h2 : c2) (bank : Bank) : Front6969.c3
       obtain ⟨M⟩ := bad_mark u Γ hΓ γ hγ
       exact no_small_normal T D J hsmall (hn γ hγ) M)
     simp [hempty]
-  have hmin : 24334 ≤ D.height := by
-    change ¬ 2 * D.height < 48668 at hsmall
+  have hmin : 24329 ≤ D.height := by
+    change ¬ 2 * D.height < 48658 at hsmall
     omega
   obtain ⟨A, hA⟩ := h1 bank u _ D.height _ _ W hmin hh
     (bank_surplus bank _ _ (Nat.sub_le _ _) hmin)
@@ -3569,26 +3550,26 @@ noncomputable section
 open MvPolynomial K1_11
 open K1_10_1 (Contacts relationBounds)
 open Front6969_3 (sourceCutoff)
-open P1_3_1 (Multipliers)
-open P1_3_1 (localMultiply LocalSpace local_finrank)
+open P1_3_1At6970 (Multipliers)
+open P1_3_1At6970 (localMultiply LocalSpace local_finrank)
 open P0_6_1 (exists_kernel_outside)
-abbrev Source (F : Type*) [Field F] (bank : P1_3.Bank) :=
+abbrev Source (F : Type*) [Field F] (bank : P1_3At6970.Bank) :=
   filtered (F := F) (sourceWeights 131071) (sourceBounds sourceCutoff 5 bank.first bank.second)
 variable {F : Type*} [Field F] {N : ℕ} {L : MvPolynomial (Fin 5) F}
-variable (bank : P1_3.Bank) (C : Contacts N L) {h : ℕ}
+variable (bank : P1_3At6970.Bank) (C : Contacts N L) {h : ℕ}
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = relationBounds h j)
 private def nodeMap (i : Fin N) : Source F bank →ₗ[F] LocalSpace bank C hdeg i :=
   (LinearMap.range (localMultiply bank C hdeg i)).mkQ.comp
     (sourceToJet sourceCutoff 131071 5 bank.first bank.second 3 (C.x i) (C.first i) (C.firstSlope i)
       (C.second i) (C.secondSlope i))
 include hdeg in
-theorem quotientSource (hL : L ≠ 0) (hh : h ≤ 33735) (hs : Front6969_3.quotientSurplus bank N h) :
+theorem quotientSource (hL : L ≠ 0) (hh : h ≤ 33755) (hs : Front6969_3.quotientSurplus bank N h) :
     ∃ G : Source F bank, ¬ L ∣ G.val ∧ ∀ i, ∃ R : Multipliers F bank,
       C.shifted i G.val - C.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
   have hfit : ∀ j, relationBounds h j ≤ sourceBounds sourceCutoff 5 bank.first bank.second j := by
-    have hcapacity : 131071 + 33735 ≤ sourceCutoff := by decide
+    have hcapacity : 131071 + 33755 ≤ sourceCutoff := by decide
     intro j
-    cases bank <;> fin_cases j <;> simp [relationBounds, sourceBounds, P1_3.Bank.first, P1_3.Bank.second] <;> omega
+    cases bank <;> fin_cases j <;> simp [relationBounds, sourceBounds, P1_3At6970.Bank.first, P1_3At6970.Bank.second] <;> omega
   have hshift : (fun j => sourceBounds sourceCutoff 5 bank.first bank.second j - relationBounds h j) =
       sourceBounds (sourceCutoff - 131071 - h) 4 (bank.first - 1) (bank.second - 1) := by
     funext j
@@ -3635,9 +3616,9 @@ namespace Front6969_3_1
 noncomputable section
 open MvPolynomial K1_11
 open Front6969 (K I Words node p blockLength agreement twist heightCap BadMark)
-open P1_3 (Plane)
+open P1_3At6970 (Plane)
 open Front6969_3 (sourceCutoff)
-open P1_3_1 (toScalarSource toScalarSource_atDecoder)
+open P1_3_1At6970 (toScalarSource toScalarSource_atDecoder)
 open K1_10_1 (Contacts denominator numerator planeRelation planeRelation_view relationBounds)
 open P0_6_1 (coeff_bounds denominator_ne relation_eval)
 open K1_11 (scalar_total_weight_le)
@@ -3659,7 +3640,7 @@ private theorem correctOn_mark {u : Words} {deleted : Finset I} (P : Puncture de
 private theorem relation_at_decoder {u : Words} {deleted : Finset I} {h : ℕ}
     {U V : Fin 2 → Polynomial K} (W : Plane u deleted h U V) (P : Puncture deleted)
     (hdeg : (planeRelation U V W.output).weightedTotalDegree (sourceWeights 131071 0) ≤ 131071 + h)
-    (hh : h ≤ 33735) (Q Q' : Polynomial K) (hq : Q.natDegree ≤ 131071)
+    (hh : h ≤ 33755) (Q Q' : Polynomial K) (hq : Q.natDegree ≤ 131071)
     (hq' : Q'.natDegree ≤ 131071) (s t : K) (S : Finset (Fin P.N)) (hS : agreement ≤ S.card)
     (hc : correctOn u P Q Q' s t S) :
     aeval (decoderImages Q Q' s t) (planeRelation U V W.output) = 0 := by
@@ -3675,13 +3656,13 @@ private theorem relation_at_decoder {u : Words} {deleted : Finset I} {h : ℕ}
     linear_combination W.nodes _ hi 0 0 + s * W.nodes _ hi 1 0 +
       t * W.nodes _ hi 0 1 + (s * t) * W.nodes _ hi 1 1
   · have hd := decoder_eval_degree 131071 (131071 + h) _ hdeg Q Q' hq hq' s t
-    have hcapacity : 131071 + 33735 < agreement := by decide
+    have hcapacity : 131071 + 33755 < agreement := by decide
     omega
 theorem proof : Front6969_3.c1 := by
   intro bank u deleted h U V W _ hh hs
-  have hheight : h ≤ 33735 := by
+  have hheight : h ≤ 33755 := by
     have hh' : h + deleted.card ≤ heightCap := hh
-    change h + deleted.card ≤ 33735 at hh'
+    change h + deleted.card ≤ 33755 at hh'
     omega
   let P := nativePuncture deleted
   let L := planeRelation U V W.output
@@ -3761,13 +3742,13 @@ set_option maxHeartbeats 1200000
 namespace Front6969_3_2
 noncomputable section
 open Front6969 Polynomial MvPolynomial ProximityPrize.Benchmark
-open P1_3 (cutDegree)
-open P1_3_2 (nodeCut_degree)
+open P1_3At6970 (cutDegree)
+open P1_3_2At6970 (nodeCut_degree)
 open Front6969_3 (incidenceRatio)
 open K1_10_2 (GenericRow point surface_count_with_terminal RegularRoot
   derivativeOrder toGeneric atTrajectory)
 open scoped Polynomial
-open P1_3_2 (assign_charts)
+open P1_3_2At6970 (assign_charts)
 open K1_10_2_2 (nodeCut eval_nodeCut)
 open K1_10_2 (derivativeOrder_degree eval_toGeneric)
 private abbrev Marks (u : Words) (Γ : Finset K) := ∀ γ ∈ Γ, BadMark u γ
@@ -3780,7 +3761,7 @@ private structure TaylorCuts {u : Words} {Γ : Finset K} (F : Marks u Γ) where
 private theorem pencil_count {u : Words} (Γ : Finset K) (F : Marks u Γ)
     (P Q : (Polynomial K)) (hP : P.degree < 131072) (hQ : Q.degree < 131072)
     (hpencil : ∀ γ (hγ : γ ∈ Γ), (F γ hγ).decoder = P + Polynomial.C γ * Q) :
-    Γ.card ≤ 82405 := by
+    Γ.card ≤ 82415 := by
   classical
   rcases Γ.eq_empty_or_nonempty with rfl | ⟨r, hr⟩
   · simp
@@ -3827,7 +3808,7 @@ private theorem pencil_count {u : Words} (Γ : Finset K) (F : Marks u Γ)
       (Finset.mem_erase.mp δ.property).2 (hindex γ) hδ (hmismatch γ))
   have hcard := Finset.card_le_card_of_injective hf
   have he := Finset.card_erase_add_one hr
-  have hS : 179740 ≤ S.card := (F r hr).agreement
+  have hS : 179730 ≤ S.card := (F r hr).agreement
   rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), Finset.card_univ,
     IRSProfile.card_index] at hcard
   omega
@@ -3835,7 +3816,7 @@ private theorem persistent_count {u : Words} {Γ : Finset K} {F : Marks u Γ}
     (C : TaylorCuts F) (J : Ideal GenericRow) (W : Finset K) (hW : W ⊆ Γ)
     (hzero : ∀ γ (hγ : γ ∈ W), point γ (F γ (hW hγ)).decoder ∈ zeroLocus Frac J)
     (hpersistent : 131072 ≤ {i | C.equation i ∈ J}.ncard) :
-    W.card ≤ 82405 := by
+    W.card ≤ 82415 := by
   classical
   let keep := Finset.univ.filter fun i => C.equation i ∈ J
   have hk : 131072 ≤ keep.card := by
@@ -3865,24 +3846,24 @@ private theorem persistent_count {u : Words} {Γ : Finset K} {F : Marks u Γ}
     rw [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C]
     exact (C.agrees γ (hW hγ) i).mp hz |>.trans (by
       rw [Lagrange.eval_interpolate_at_node _ hinj hi, Lagrange.eval_interpolate_at_node _ hinj hi])
-private theorem terminal_price_le : (82405 : ℚ) ≤ incidenceRatio := by
-  change ((82405 : ℕ) : ℚ) ≤ ((0x147ffafff86 : ℕ) : ℚ) / ((48669 : ℕ) : ℚ)
+private theorem terminal_price_le : (82415 : ℚ) ≤ incidenceRatio := by
+  change ((82415 : ℕ) : ℚ) ≤ ((0x147ffafff86 : ℕ) : ℚ) / ((48659 : ℕ) : ℚ)
   apply (le_div_iff₀ (by positivity)).mpr
-  exact_mod_cast (show (82405 : ℕ) * 48669 ≤ 0x147ffafff86 by decide)
+  exact_mod_cast (show (82415 : ℕ) * 48659 ≤ 0x147ffafff86 by decide)
 private theorem node_incidence (m : ℕ) (hm : m < 131072) :
     (((Fintype.card I - m) * cutDegree : ℕ) : ℚ) ≤
-      incidenceRatio * ((179740 - m : ℕ) : ℚ) := by
+      incidenceRatio * ((179730 - m : ℕ) : ℚ) := by
   rw [IRSProfile.card_index, Nat.cast_mul]
-  have hn : (262144 - m) * 48669 ≤ 131073 * (179740 - m) := by omega
-  have hq : ((262144 - m : ℕ) : ℚ) * 48669 ≤ 131073 * ((179740 - m : ℕ) : ℚ) := by
+  have hn : (262144 - m) * 48659 ≤ 131073 * (179730 - m) := by omega
+  have hq : ((262144 - m : ℕ) : ℚ) * 48659 ≤ 131073 * ((179730 - m : ℕ) : ℚ) := by
     exact_mod_cast hn
   change ((262144 - m : ℕ) : ℚ) * (cutDegree : ℚ) ≤
-    (((131073 : ℕ) * cutDegree : ℕ) : ℚ) / 48669 * ((179740 - m : ℕ) : ℚ)
+    (((131073 : ℕ) * cutDegree : ℕ) : ℚ) / 48659 * ((179730 - m : ℕ) : ℚ)
   rw [Nat.cast_mul, div_mul_eq_mul_div]
   apply (le_div_iff₀ (by positivity)).mpr
   calc
-    _ = (((262144 - m : ℕ) : ℚ) * 48669) * (cutDegree : ℚ) := by ring
-    _ ≤ (131073 * ((179740 - m : ℕ) : ℚ)) * (cutDegree : ℚ) :=
+    _ = (((262144 - m : ℕ) : ℚ) * 48659) * (cutDegree : ℚ) := by ring
+    _ ≤ (131073 * ((179730 - m : ℕ) : ℚ)) * (cutDegree : ℚ) :=
       mul_le_mul_of_nonneg_right hq (Nat.cast_nonneg _)
     _ = _ := by push_cast; ring
 private theorem count_chart {u : Words} {Γ : Finset K} (F : Marks u Γ) (C : TaylorCuts F)
@@ -3902,8 +3883,8 @@ private theorem count_chart {u : Words} {Γ : Finset K} (F : Marks u Γ) (C : Ta
   have hcard : S.card = Γ.card := by
     simp only [S, Finset.card_image_of_injective _ hinj, Finset.card_attach]
   rw [← hcard]
-  refine surface_count_with_terminal g s hg C.equation (L := 131072) (A := 179740)
-    (by decide) hdeg C.degree ((by norm_num : (1 : ℚ) ≤ 82405).trans terminal_price_le)
+  refine surface_count_with_terminal g s hg C.equation (L := 131072) (A := 179730)
+    (by decide) hdeg C.degree ((by norm_num : (1 : ℚ) ≤ 82415).trans terminal_price_le)
     node_incidence S
     (fun y hy => ?_) (fun y hy => ?_) (fun J hJ => ?_)
   · obtain ⟨γ, -, rfl⟩ := Finset.mem_image.mp hy
@@ -3933,7 +3914,7 @@ private theorem count_chart {u : Words} {Γ : Finset K} (F : Marks u Γ) (C : Ta
       · rintro ⟨γ, ⟨hγ, h⟩, rfl⟩
         exact ⟨⟨γ, hγ, rfl⟩, h⟩
     rw [he, Set.ncard_coe_finset, Finset.card_image_of_injective _ hinj, hW]
-    exact (by exact_mod_cast hcount : (V.card : ℚ) ≤ 82405).trans terminal_price_le
+    exact (by exact_mod_cast hcount : (V.card : ℚ) ≤ 82415).trans terminal_price_le
 theorem proof : Front6969_3.c2 := by
   classical
   intro bank u A Γ hΓ
@@ -4011,7 +3992,7 @@ set_option autoImplicit false
 namespace Front6969_4
 noncomputable section
 open Front6969 MvPolynomial
-open P2_4 (Bank Puncture nodeCut)
+open P2_4At6970 (Bank Puncture nodeCut)
 open K1_11 (scalarWeightY scalarWeightYS scalarWeightT scalarWeightTotal scalarImages)
 
 structure Marks (u : Words) (deleted : Finset I) (Γ : Finset K) where
@@ -4055,7 +4036,7 @@ set_option backward.isDefEq.respectTransparency false
 namespace Front6969_4
 noncomputable section
 open Front6969 MvPolynomial
-open P2_4 (Bank Puncture nodeCut)
+open P2_4At6970 (Bank Puncture nodeCut)
 open K1_11 (scalarWeightTotal)
 open K1_11_3 (SimpleRoot derivativeChart exists_simple_derivative_at_root)
 open K1_11_3 (exceptions specializeY yView_degree specializeY_eval specializeY_iterate specializeY_derivative)
@@ -4179,7 +4160,7 @@ set_option maxHeartbeats 1500000
 namespace Front6969_4
 noncomputable section
 open Front6969 MvPolynomial
-open P2_4 (Bank Puncture nodeCut)
+open P2_4At6970 (Bank Puncture nodeCut)
 open K1_11 (scalarWeightTotal)
 open scoped BigOperators
 open K1_11 (indexedSupport mem_indexedSupport indexedSupport_card nodes_injective)
@@ -4350,9 +4331,9 @@ structure ReducedPair {u : Words} {T : TwoActive u} {R : Relation T}
   graphU : K1_11_2.graph p U = Polynomial.C A.content * D.U
   graphV : K1_11_2.graph p V = Polynomial.C A.content * D.V
 abbrev weightedCutoff : ℕ := 4 * agreement - 1
-def originalFloor : P2_4.Bank → ℕ
-  | .w22 | .w22Swapped | .w12 | .w21 => 24334
-  | _ => 32446
+def originalFloor : P2_4At6970.Bank → ℕ
+  | .w22 | .w22Swapped | .w12 | .w21 => 24329
+  | _ => 32439
 end
 end Front6969_4
 end
@@ -4364,7 +4345,7 @@ set_option maxHeartbeats 1600000
 namespace Front6969_4
 noncomputable section
 open Front6969 MvPolynomial
-open P2_4 (Bank Puncture ContactInput)
+open P2_4At6970 (Bank Puncture ContactInput)
 open K1_11 (sourceWeights sourceBounds filtered mem_filtered)
 open K1_11_2 (OmitsMessages sWeight tWeight graph PlaneOutput equation equation_degrees
   nodeWordMap decoder_bounds decoderNumerator decoderDenominator decoderDenominator_ne equation_linear
@@ -4405,11 +4386,11 @@ private theorem reduced_boxes {u : Words} {T : TwoActive u} {R : Relation T}
     B.U.degreeOf 3 ≤ 2 ∧ B.U.degreeOf 4 ≤ 3 ∧
       B.V.degreeOf 3 ≤ 3 ∧ B.V.degreeOf 4 ≤ 2 := by
   obtain ⟨hUS, hUT, hVS, hVT⟩ := reduced_bounds B
-  have hh : T.height ≤ 33735 := hH
-  exact ⟨Nat.le_of_lt_succ (degree_lt_of_product _ _ 3 _ hUS (by change _ < (48668 - _) * 3; omega)),
-    Nat.le_of_lt_succ (degree_lt_of_product _ _ 4 _ hUT (by change 48668 < (48668 - _) * 4; omega)),
-    Nat.le_of_lt_succ (degree_lt_of_product _ _ 4 _ hVS (by change 48668 < (48668 - _) * 4; omega)),
-    Nat.le_of_lt_succ (degree_lt_of_product _ _ 3 _ hVT (by change _ < (48668 - _) * 3; omega))⟩
+  have hh : T.height ≤ 33755 := hH
+  exact ⟨Nat.le_of_lt_succ (degree_lt_of_product _ _ 3 _ hUS (by change _ < (48658 - _) * 3; omega)),
+    Nat.le_of_lt_succ (degree_lt_of_product _ _ 4 _ hUT (by change 48658 < (48658 - _) * 4; omega)),
+    Nat.le_of_lt_succ (degree_lt_of_product _ _ 4 _ hVS (by change 48658 < (48658 - _) * 4; omega)),
+    Nat.le_of_lt_succ (degree_lt_of_product _ _ 3 _ hVT (by change _ < (48658 - _) * 3; omega))⟩
 private theorem no_pair_one_one {u : Words} {T : TwoActive u} {R : Relation T}
     {D : Reduction u T R} {A : IndependentLift R} (B : ReducedPair D A)
     (hr : columnRank D.U D.V = 4) (hs : sWeight B.U B.V = 1) (ht : tWeight B.U B.V = 1) :
@@ -4428,27 +4409,27 @@ private theorem actual_bank {u : Words} {T : TwoActive u} {R : Relation T}
       originalFloor bank ≤ T.height := by
   obtain ⟨pUS, pUT, pVS, pVT⟩ := reduced_bounds B
   obtain ⟨bUS, bUT, bVS, bVT⟩ := reduced_boxes B hH
-  have hlo : 24334 ≤ T.height := by
+  have hlo : 24329 ≤ T.height := by
     by_contra! h
     have hs₁ : B.U.degreeOf 3 < 1 :=
-      degree_lt_of_product _ _ 1 _ pUS (by change _ < (48668 - _) * 1; omega)
+      degree_lt_of_product _ _ 1 _ pUS (by change _ < (48658 - _) * 1; omega)
     have hs₂ : B.V.degreeOf 3 < 2 :=
-      degree_lt_of_product _ _ 2 _ pVS (by change 48668 < (48668 - _) * 2; omega)
+      degree_lt_of_product _ _ 2 _ pVS (by change 48658 < (48658 - _) * 2; omega)
     have ht₁ : B.U.degreeOf 4 < 2 :=
-      degree_lt_of_product _ _ 2 _ pUT (by change 48668 < (48668 - _) * 2; omega)
+      degree_lt_of_product _ _ 2 _ pUT (by change 48658 < (48658 - _) * 2; omega)
     have ht₂ : B.V.degreeOf 4 < 1 :=
-      degree_lt_of_product _ _ 1 _ pVT (by change _ < (48668 - _) * 1; omega)
+      degree_lt_of_product _ _ 1 _ pVT (by change _ < (48658 - _) * 1; omega)
     exact no_pair_one_one B hr (by unfold sWeight; omega) (by unfold tWeight; omega)
-  have hhi (hw : sWeight B.U B.V = 3 ∨ tWeight B.U B.V = 3) : 32446 ≤ T.height := by
+  have hhi (hw : sWeight B.U B.V = 3 ∨ tWeight B.U B.V = 3) : 32439 ≤ T.height := by
     by_contra! h
     have hs₁ : B.U.degreeOf 3 < 2 :=
-      degree_lt_of_product _ _ 2 _ pUS (by change _ < (48668 - _) * 2; omega)
+      degree_lt_of_product _ _ 2 _ pUS (by change _ < (48658 - _) * 2; omega)
     have hs₂ : B.V.degreeOf 3 < 3 :=
-      degree_lt_of_product _ _ 3 _ pVS (by change 48668 < (48668 - _) * 3; omega)
+      degree_lt_of_product _ _ 3 _ pVS (by change 48658 < (48658 - _) * 3; omega)
     have ht₁ : B.U.degreeOf 4 < 3 :=
-      degree_lt_of_product _ _ 3 _ pUT (by change 48668 < (48668 - _) * 3; omega)
+      degree_lt_of_product _ _ 3 _ pUT (by change 48658 < (48658 - _) * 3; omega)
     have ht₂ : B.V.degreeOf 4 < 2 :=
-      degree_lt_of_product _ _ 2 _ pVT (by change _ < (48668 - _) * 2; omega)
+      degree_lt_of_product _ _ 2 _ pVT (by change _ < (48658 - _) * 2; omega)
     unfold sWeight tWeight at hw
     omega
   have hs : sWeight B.U B.V = 1 ∨ sWeight B.U B.V = 2 ∨ sWeight B.U B.V = 3 := by
@@ -4510,7 +4491,7 @@ private theorem plane_output {u : Words} {T : TwoActive u} {R : Relation T}
   have hs : W.degreeOf 3 ≤ sWeight B.U B.V := by simpa [degreeOf_X] using hdeg 3
   have ht : W.degreeOf 4 ≤ tWeight B.U B.V := by simpa [degreeOf_X] using hdeg 4
   have hbound : 131072 + D.height ≤ P.N := by
-    have hh : T.height ≤ 33735 := hH
+    have hh : T.height ≤ 33755 := hH
     have hD := D.height_eq
     have hP := P.size
     omega
@@ -4601,11 +4582,11 @@ set_option maxRecDepth 8000
 set_option maxHeartbeats 900000
 namespace Front6969_4
 open Front6969 Finset
-open P2_4 (Bank)
+open P2_4At6970 (Bank)
 open K1_11 (V J)
 open P0_7 (countRow gradeRow count grade contactRow V_affine rational_fee)
 open P1_4 (dims_5_16_10 dims_4_15_8 jets_4_16_10 jets_3_15_8 dims_5_8_7 dims_4_7_4 jets_4_8_7 jets_3_7_4 dims_5_10_16 dims_4_8_15 jets_4_10_16 jets_3_8_15 dims_5_11_10 dims_4_9_8 jets_4_11_10 jets_3_9_8 dims_5_8_6 dims_4_6_3 jets_4_8_6 jets_3_6_3 dims_5_7_8 dims_4_4_7 jets_4_7_8 jets_3_4_7 dims_5_6_8 dims_4_3_6 jets_4_6_8 jets_3_3_6 dims_4_3_5 jets_3_3_5)
-open P2_4 (dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3)
+open P2_4At6970 (dims_5_10_11 jets_4_10_11 dims_4_8_9 jets_3_8_9 dims_4_5_3 jets_3_5_3)
 theorem bank_surplus (b : Bank) (h H e N : ℕ) (hlo : originalFloor b ≤ h)
     (hmax : h ≤ heightCap) (hH : H + e = h) (hN : N + e = blockLength) :
     N * (J 4 b.s b.t - J 3 (b.s - b.dS) (b.t - b.dT)) +
@@ -4614,7 +4595,7 @@ theorem bank_surplus (b : Bank) (h H e N : ℕ) (hlo : originalFloor b ≤ h)
   apply Research6969.ProfileBanks.RankFour.rank_four_bank_surplus b h H e N _ hmax hH hN
   cases b <;> exact hlo
 
-def chartRate (b : Bank) : ℚ := (131073 / 48669 : ℚ) * b.M
+def chartRate (b : Bank) : ℚ := (131073 / 48659 : ℚ) * b.M
 def chartFee (b : Bank) : ℚ := b.E * chartRate b ^ 2
 abbrev tariff := Research6969.ProfileBanks.RankFour.tariff
 theorem bank_fee (b : Bank) : (b.zeroFee : ℚ) + 5 * chartFee b ≤ tariff :=
@@ -4631,11 +4612,11 @@ namespace Front6969_4
 noncomputable section
 open MvPolynomial
 open Front6969 (heightCap)
-open P2_4 (Bank ContactData Multipliers)
+open P2_4At6970 (Bank ContactData Multipliers)
 open K1_11 (V J filtered filteredMul filteredMul_injective mem_filteredMul_range_iff
   sourceWeights sourceBounds source_filtered_finrank sourceToJet contactWeight)
 open K1_11 (exists_kernel_outside)
-open P2_4 (LocalSpace localMultiply local_finrank)
+open P2_4At6970 (LocalSpace localMultiply local_finrank)
 abbrev Source (F : Type*) [Field F] (b : Bank) :=
   filtered (F := F) (sourceWeights 131071) (sourceBounds weightedCutoff 5 b.s b.t)
 variable {F : Type*} [Field F]
@@ -4659,10 +4640,10 @@ theorem exists_quotient_source (h e : ℕ) (hmin : originalFloor b ≤ h) (hmax 
     (hdeg : ∀ j, L.weightedTotalDegree (sourceWeights 131071 j) = b.relationBounds H j) :
     ∃ Q : Source F b, ¬ L ∣ Q.val ∧ ∀ i, ∃ R : Multipliers F b,
       D.shifted i Q.val - D.shifted i L * R.val ∈ restrictWeightedOrder contactWeight 4 := by
-  have hupper : H ≤ 33735 := by
-    have hh : h ≤ 33735 := hmax
+  have hupper : H ≤ 33755 := by
+    have hh : h ≤ 33755 := hmax
     omega
-  have hD : weightedCutoff = 718959 := rfl
+  have hD : weightedCutoff = 718919 := rfl
   have hfit : ∀ i, b.relationBounds H i ≤ sourceBounds weightedCutoff 5 b.s b.t i := by
     intro i
     cases b <;> fin_cases i <;>
@@ -4704,7 +4685,7 @@ set_option maxHeartbeats 1500000
 namespace Front6969_4
 noncomputable section
 open Front6969 FrobeniusLocator MvPolynomial
-open P2_4 (Bank Puncture ContactInput)
+open P2_4At6970 (Bank Puncture ContactInput)
 open K1_11 (contactWeight contactDecoderImages decoder_contact_composition contactDecoderImages_vanish
   decoder_eval_degree eq_zero_of_many_contacts decoder_contact_multiplicity decoderImages
   sourceWeights mem_filtered correctOn nodes_injective indexedSupport indexedSupport_card
@@ -4712,10 +4693,10 @@ open K1_11 (contactWeight contactDecoderImages decoder_contact_composition conta
   scalarEliminant_ne_zero polynomialView_source_coefficients clearedEval_weight_bound
   polynomialView scalarEliminant_annihilates)
 open K1_11 (scalar_total_weight_le)
-open P2_4 (asContactData bank_cancel contact_order_one_mem)
+open P2_4At6970 (asContactData bank_cancel contact_order_one_mem)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted} {b : Bank} {H : ℕ}
     (D : ContactInput u P b H)
-private theorem relation_on_support (hH : H ≤ 33735) (Q Q' : Polynomial K)
+private theorem relation_on_support (hH : H ≤ 33755) (Q Q' : Polynomial K)
     (hQ : Q.natDegree ≤ 131071) (hQ' : Q'.natDegree ≤ 131071)
     (s t : K) (S : Finset (Fin P.N)) (hS : agreement ≤ S.card) (hc : correctOn u P Q Q' s t S) :
     aeval (decoderImages Q Q' s t) D.L = 0 := by
@@ -4731,7 +4712,7 @@ private theorem relation_on_support (hH : H ≤ 33735) (Q Q' : Polynomial K)
   · have hdeg : D.L.weightedTotalDegree (sourceWeights 131071 0) ≤ 131071+H :=
       le_of_eq (D.degrees 0)
     have hd := decoder_eval_degree 131071 (131071+H) D.L hdeg Q Q' hQ hQ' s t
-    change 179740 ≤ S.card at hS
+    change 179730 ≤ S.card at hS
     omega
 theorem exists_two_decoder_source (h : ℕ) (hmin : originalFloor b ≤ h) (hmax : h ≤ heightCap)
     (hH : H + deleted.card = h) :
@@ -4742,7 +4723,7 @@ theorem exists_two_decoder_source (h : ℕ) (hmin : originalFloor b ≤ h) (hmax
   obtain ⟨G, hnot, hnode⟩ := exists_quotient_source (asContactData D) h deleted.card hmin hmax hH P.size D.degrees
   refine ⟨G, hnot, ?_⟩
   intro Q Q' hQ hQ' s t S hS hc
-  have hmax' : h ≤ 33735 := hmax
+  have hmax' : h ≤ 33755 := hmax
   have hrel := relation_on_support D (by omega) Q Q' hQ hQ' s t S hS hc
   apply eq_zero_of_many_contacts S P.nodes nodes_injective 4
   · intro i hi
@@ -4751,8 +4732,8 @@ theorem exists_two_decoder_source (h : ℕ) (hmin : originalFloor b ≤ h) (hmax
       (hc i hi).1 (hc i hi).2 hrel hR
   · have hd := decoder_eval_degree 131071 weightedCutoff G.val
       ((mem_filtered _ _ _).mp G.property 0) Q Q' hQ hQ' s t
-    change _ ≤ 718959 at hd
-    change 179740 ≤ S.card at hS
+    change _ ≤ 718919 at hd
+    change 179730 ≤ S.card at hS
     omega
 def SupportAt {u : Words} {deleted : Finset I} {Γ : Finset K} (F : Marks u deleted Γ) : Prop :=
   ∀ γ (hγ : γ ∈ Γ), agreement ≤ (F.mark γ hγ).support.card
@@ -4797,7 +4778,7 @@ theorem exists_annihilator {u : Words} {deleted : Finset I} {P : Puncture delete
   have hd' : (M.decoder.map twist).natDegree ≤ 131071 :=
     Polynomial.natDegree_map_le.trans hd
   have hcorrect := correctOn_mark P M
-  have hmax' : h ≤ 33735 := hmax
+  have hmax' : h ≤ 33755 := hmax
   have hrel := relation_on_support C (by omega) _ _ hd hd' γ (γ ^ p) S hS hcorrect
   exact scalarEliminant_annihilates weightedCutoff 131071 5 b.s b.t G.val C.L G.property
     C.numerator C.denominator C.linear _ _ γ (γ^p) hrel
@@ -4812,14 +4793,14 @@ set_option maxHeartbeats 1500000
 namespace Front6969_4
 noncomputable section
 open Front6969 MvPolynomial
-open P2_4 (Bank Puncture nodeCut)
+open P2_4At6970 (Bank Puncture nodeCut)
 open scoped BigOperators
 open K1_11 (indexedSupport mem_indexedSupport indexedSupport_card)
 open K1_11 (ncard_inter_filter surface_count_with_terminal)
 variable {u : Words} {deleted : Finset I} {P : Puncture deleted}
   {Γ Λ : Finset K} {F : Marks u deleted Γ} {b : Bank}
 private theorem chart_agreements (chart : TaylorChart u P F b Λ) (hF : SupportAt F) (γ : K) (hγ : γ ∈ Λ) :
-    179740 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
+    179730 ≤ {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0}.ncard := by
   let M := F.mark γ (chart.subset hγ)
   have hsub : (indexedSupport P M.support : Set (Fin P.N)) ⊆
       {i | MvPolynomial.eval (chart.point γ) (nodeCut u P chart.numerator chart.denominator i) = 0} := by
@@ -4846,17 +4827,17 @@ theorem chart_count {u : Words} {deleted : Finset I} {P : Puncture deleted}
   have hcard : S.card = Λ.card := Finset.card_image_of_injOn hinj
   let cuts := nodeCut u P chart.numerator chart.denominator
   have hratio (m : ℕ) (hm : m < 131072) :
-      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((179740 - m : ℕ) : ℚ) := by
-    have hnat : (P.N - m) * 48669 ≤ 131073 * (179740 - m) := by omega
-    have hrat : ((P.N - m : ℕ) : ℚ) * 48669 ≤ 131073 * ((179740 - m : ℕ) : ℚ) := by
+      (((Fintype.card (Fin P.N) - m) * b.M : ℕ) : ℚ) ≤ R * ((179730 - m : ℕ) : ℚ) := by
+    have hnat : (P.N - m) * 48659 ≤ 131073 * (179730 - m) := by omega
+    have hrat : ((P.N - m : ℕ) : ℚ) * 48659 ≤ 131073 * ((179730 - m : ℕ) : ℚ) := by
       exact_mod_cast hnat
-    have hh : ((P.N - m : ℕ) : ℚ) ≤ (131073/48669 : ℚ) * ((179740 - m : ℕ) : ℚ) := by
+    have hh : ((P.N - m : ℕ) : ℚ) ≤ (131073/48659 : ℚ) * ((179730 - m : ℕ) : ℚ) := by
       linarith
     rw [Fintype.card_fin, Nat.cast_mul]
     exact (mul_le_mul_of_nonneg_right hh (by positivity : 0 ≤ (b.M : ℚ))).trans_eq (by dsimp [R, chartRate]; ring)
   rw [← hcard]
   refine surface_count_with_terminal chart.equation chart.denominator chart.equation_ne cuts
-    (L := 131072) (A := 179740) (by decide) chart.equation_degree chart.cut_degree hR hratio S
+    (L := 131072) (A := 179730) (by decide) chart.equation_degree chart.cut_degree hR hratio S
     (fun x hx => ?_) (fun x hx => ?_) (fun J hJ => ?_)
   · obtain ⟨γ, hγ, rfl⟩ := Finset.mem_image.mp hx
     exact ⟨chart.on_equation γ hγ, chart.regular γ hγ⟩
@@ -4884,7 +4865,7 @@ set_option maxHeartbeats 1500000
 set_option backward.isDefEq.respectTransparency false
 namespace Front6969_4
 open Front6969
-open P2_4 (Bank)
+open P2_4At6970 (Bank)
 def c1 : Prop :=
   ∀ u, FrontRemainder u → ∀ (T : TwoActive u) (R : Relation T),
     Nonempty (IndependentLift R)
@@ -5150,9 +5131,9 @@ open K1_11_2_1 (divide_plane planeLocator degreeOf_le_of_dvd omits_of_dvd native
 open Front6969_4 (degree_lt_of_product)
 private theorem seed_degree_lt {h d : ℕ} (hmax : h ≤ heightCap)
     (hd : (L - h) * d ≤ L) : d < p := by
-  have hh : h ≤ 33735 := hmax
+  have hh : h ≤ 33755 := hmax
   have hd' : d < 4 := degree_lt_of_product _ _ 4 _ hd (by
-    change 48668 < (48668 - h) * 4
+    change 48658 < (48658 - h) * 4
     omega)
   exact hd'.trans_le (by change 4 ≤ 2130706433; decide)
 private theorem reduced_relPrime {u : Words} {T : TwoActive u} {R : Relation T}
@@ -5182,8 +5163,8 @@ private theorem reduced_relPrime {u : Words} {T : TwoActive u} {R : Relation T}
     (rename (![3, 4] : Fin 2 → Fin 5))
 theorem proof : Front6969_4.c2 := by
   intro u T R D hmax A
-  have hhcap : T.height ≤ 33735 := hmax
-  have hh : T.height ≤ L := hhcap.trans (by decide : 33735 ≤ 48668)
+  have hhcap : T.height ≤ 33755 := hmax
+  have hh : T.height ≤ L := hhcap.trans (by decide : 33755 ≤ 48658)
   have hASU := seed_degree_lt hmax (A.bounds.1.trans hh)
   have hASV := seed_degree_lt hmax A.bounds.2.2.1
   obtain ⟨U, hfU, hU, hgU⟩ := divide_plane (fixedNodes R) A.U D.U A.content D.U_ne

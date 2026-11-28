@@ -1,0 +1,12 @@
+import ProximityPrize.SubmissionLower.Bundle6970_4f52f67781c8c087
+import ProximityPrize.SubmissionLower.Bundle6970_4f52f67781c8c087
+import ProximityPrize.SubmissionLower.Bundle6970_4f52f67781c8c087
+import ProximityPrize.SubmissionLower.Bundle6970_4f52f67781c8c087
+import ProximityPrize.SubmissionLower.Bundle6970_4f52f67781c8c087
+import ProximityPrize.SubmissionLower.Bundle6970_4f52f67781c8c087
+import ProximityPrize.SubmissionLower.Bundle6970_4f52f67781c8c087
+
+set_option Elab.async false
+set_option maxHeartbeats 0
+set_option maxRecDepth 30000
+

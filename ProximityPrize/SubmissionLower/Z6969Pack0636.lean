@@ -45,14 +45,14 @@ private theorem supported (P:Eqn (Fin 2) FX) (empty:∀i,(P.coeff i).totalDegree
 
 /-- When the differential equation has no seed, every regular word lies
 on the dummy zero-seed line. Its point count costs only the ordinate degree. -/
-theorem line {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ) (sub:T⊆Γ)
-    {r d:ℕ} (rp:0<r) (dp:0<d) (gap:d<179740) (tame:d<p)
+theorem line {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ) (sub:T⊆Γ)
+    {r d:ℕ} (rp:0<r) (dp:0<d) (gap:d<179730) (tame:d<p)
     (A B:Eqn (Fin 2) FX) (ay:A.natDegree≤r) (byDeg:B.natDegree≤r+1)
     (az:∀i,(A.coeff i).totalDegree=0) (bz:∀i,(B.coeff i).totalDegree=0)
     (degree:∀z∈T,(F.scalar z).natDegree≤d)
     (laws:∀z∈T,let ev:=evaluate (NativeSurfaceCount.label (M.label z)) (atX (F.scalar z))
       (ev A*atX (F.scalar z).derivative=ev B) ∧ ev A≠0) :
-    (T.card:ℚ)≤(r:ℚ)*MarkedAdaptive.price (Fintype.card I) d 179740 := by
+    (T.card:ℚ)≤(r:ℚ)*MarkedAdaptive.price (Fintype.card I) d 179730 := by
   let H:Eqn (Fin 2) FX:=Polynomial.C (MvPolynomial.X 0)
   have hm:supportedOn 0 H:=by
     intro n k hk
@@ -61,7 +61,7 @@ theorem line {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 1
     | succ n=>simp [H]
   have hv (i:ℕ):(H.coeff i).degreeOf 0≤1:=by
     cases i <;>simp [H,MvPolynomial.degreeOf_X]
-  have size:179740≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
+  have size:179730≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
   have pair (z) (hz:z∈T):
       evaluate (fun _=>0) (atX (F.scalar z)) A * atX (F.scalar z).derivative =
         evaluate (fun _=>0) (atX (F.scalar z)) B ∧ evaluate (fun _=>0) (atX (F.scalar z)) A≠0:=by
@@ -77,7 +77,7 @@ theorem line {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 1
 
 /-- A seed-independent retained equation has at most its degree many
 distinct marked words, regardless of the number of labels. -/
-theorem roots {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem roots {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) (H:Eqn (Fin 2) FX) (hn:H≠0) (empty:∀i,(H.coeff i).totalDegree=0)
     (hits:∀z∈T,evaluate (NativeSurfaceCount.label (M.label z)) (atX (F.scalar z)) H=0) : T.card≤H.natDegree:=by
   classical
@@ -106,7 +106,7 @@ open Finset
 set_option maxHeartbeats 1300000
 set_option maxRecDepth 9000
 
-abbrev A:ℕ:=179740
+abbrev A:ℕ:=179730
 abbrev n:ℕ:=262144
 def num (d u:ℕ):ℕ:=(n-A)*((2*d-1)*u)+(A-d)
 def linePrice (d u:ℕ):ℕ:=num d u^2/(A-d)^2
@@ -148,8 +148,8 @@ theorem from_votes {last h u cutoff fee count wt:ℕ} (hi:h≤last) (legal:13107
   apply Nat.le_of_mul_le_mul_right (c:=votes h wt) _ (vp.trans_le fit)
   exact bound.trans ((Nat.add_le_add_left rhs _).trans_eq (by rw [←Nat.add_mul,Nat.add_sub_of_le safe]))
 
-theorem family {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt A M Γ) (sub:T⊆Γ)
-    {h last width cutoff fee:ℕ} (hEq:h=M.overhead.toNat) (hp:0<h) (hi:h≤last) (lastFit:last≤2534)
+theorem family {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt A M Γ) (sub:T⊆Γ)
+    {h last width cutoff fee:ℕ} (hEq:h=M.overhead.toNat) (hp:0<h) (hi:h≤last) (lastFit:last≤2557)
     {D:PoleData h} {Crt:CRTLift D} {G:Jet} (phys:HelperPhysicalModel.Model Crt G) (prime:Prime G)
     (slope:G.natDegree=1) (quad:K1_14_2_2_2_1.jetDegree G=2) (char:3*width<p)
     (cap:∀j i,((G.coeff j).coeff i).totalDegree≤width)
@@ -158,7 +158,7 @@ theorem family {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt
     (low:RawPhysicalDegree.weight (131071-h) (131071-h-1) phys.raw<cutoff) (ok:Valid last width cutoff fee): T.card≤fee:=by
   have hl:h≤131070:=by omega
   have primeCap:131071+h<p:=by change 131071+h<2130706433;omega
-  have lastA:131071+last<A:=by change 131071+last<179740;omega
+  have lastA:131071+last<A:=by change 131071+last<179730;omega
   have physical:131071+M.overhead≤(131071+h:ℕ):=by omega
   have priced:=PhysicalHelperTariff.price F sub hp hl phys prime slope quad width (131071+h) cap char
     physical le_rfl primeCap (by omega) nodes res belongs
@@ -186,7 +186,7 @@ attribute [local instance] GenericPhysicalCentre.physical GenericPhysicalCentre.
 set_option maxRecDepth 9500
 set_option maxHeartbeats 1600000
 
-variable {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+variable {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
 variable {G:Pade.Row SeedField} (N:Research6966.PadeNativeQuotient.Native G)
 
 abbrev ev (z:K):Equation→+*FX:=evaluate (label (M.label z)) (atX (F.scalar z))
@@ -217,26 +217,26 @@ private theorem degree {d:ℕ} (phys:131071+M.overhead≤(d:ℤ)) (sub:T⊆Γ) {
 
 theorem constant_regular {d:ℕ} (gp:G.primitive) (nonlinear:2≤G.graphDegree)
     (empty:∀j i,((N.poly.coeff j).coeff i).totalDegree≤0) (sub:T⊆Γ) (phys:131071+M.overhead≤(d:ℤ))
-    (dp:0<d) (gap:d<179740) (tame:d<p) (laws:∀z∈T,law F N z) (reg:∀z∈T,regular F N z) :
+    (dp:0<d) (gap:d<179730) (tame:d<p) (laws:∀z∈T,law F N z) (reg:∀z∈T,regular F N z) :
     T.card≤JointRouted.ordWeight d (G.graphDegree-1):=by
   obtain ⟨ord,rh⟩:=NativeGraphMarks.equation_degrees N gp
   have raw:=ZeroSeeds.line F sub (by omega:0<G.graphDegree-1) dp gap tame (den N) (rhs N) ord
     (rh.trans (by omega)) (fun i=>Nat.eq_zero_of_le_zero (empty 1 i))
     (fun i=>by simpa only [rhs,coeff_neg,MvPolynomial.totalDegree_neg] using Nat.eq_zero_of_le_zero (empty 0 i))
     (fun _ hz=>degree F phys sub hz) (fun z hz=>⟨laws z hz,reg z hz⟩)
-  let R:=MarkedAdaptive.price (Fintype.card I) d 179740
-  have ceil:=Nat.le_ceil (R*(G.graphDegree-1:ℕ)+((Fintype.card I-d:ℕ):ℚ)/(179740-d:ℕ))
-  have extra:(0:ℚ)≤((Fintype.card I-d:ℕ):ℚ)/(179740-d:ℕ):=by positivity
+  let R:=MarkedAdaptive.price (Fintype.card I) d 179730
+  have ceil:=Nat.le_ceil (R*(G.graphDegree-1:ℕ)+((Fintype.card I-d:ℕ):ℚ)/(179730-d:ℕ))
+  have extra:(0:ℚ)≤((Fintype.card I-d:ℕ):ℚ)/(179730-d:ℕ):=by positivity
   have bound:(T.card:ℚ)≤(JointRouted.ordWeight d (G.graphDegree-1):ℚ):=by
     change (T.card:ℚ)≤((G.graphDegree-1:ℕ):ℚ)*R at raw
     unfold JointRouted.ordWeight
-    change (T.card:ℚ)≤((⌈R*(G.graphDegree-1:ℕ)+((Fintype.card I-d:ℕ):ℚ)/(179740-d:ℕ)⌉₊+4:ℕ):ℚ)
+    change (T.card:ℚ)≤((⌈R*(G.graphDegree-1:ℕ)+((Fintype.card I-d:ℕ):ℚ)/(179730-d:ℕ)⌉₊+4:ℕ):ℚ)
     push_cast;linarith
   exact_mod_cast bound
 
 theorem ambient {d width:ℕ} (gp:G.primitive) (nonlinear:2≤G.graphDegree)
     (cap:∀j i,((N.poly.coeff j).coeff i).totalDegree≤width) (char:(2*G.graphDegree-1)*width<p)
-    (sub:T⊆Γ) (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p)
+    (sub:T⊆Γ) (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p)
     (laws:∀z∈T,law F N z) :
     T.card≤(2*G.graphDegree-1)*((p+1)*width)+3*JointRouted.ordWeight d (G.graphDegree-1)*JointRouted.seedWeight d width^2:=by
   obtain ⟨S,part,good,split⟩:=good F N gp cap char laws
@@ -248,13 +248,13 @@ theorem ambient {d width:ℕ} (gp:G.primitive) (nonlinear:2≤G.graphDegree)
       (fun z hz=>laws z (part hz)) good
     rw [show JointRouted.seedWeight d 0=4 by simp [JointRouted.seedWeight]]
     exact word.trans ((Nat.le_mul_of_pos_left _ (by decide:0<3)).trans (Nat.le_mul_of_pos_right _ (by decide:0<4^2)))
-  · have fit:179740≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
+  · have fit:179730≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
     exact NativeAmbient.round (NativeAmbient.regular F (part.trans sub) N gp nonlinear (Nat.pos_of_ne_zero zero)
       cap phys dp gap fit tame (fun z hz=>laws z (part hz)) good)
 
 theorem on_surface {d width:ℕ} (gp:G.primitive) (nonlinear:2≤G.graphDegree)
     (cap:∀j i,((N.poly.coeff j).coeff i).totalDegree≤width) (char:(2*G.graphDegree-1)*width<p)
-    (sub:T⊆Γ) (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p)
+    (sub:T⊆Γ) (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p)
     {H:Equation} (hn:H≠0) (laws:∀z∈T,law F N z) (roots:∀z∈T,ev F z H=0) :
     T.card≤(2*G.graphDegree-1)*((p+1)*width)+H.natDegree*JointRouted.seedWeight d width^2+
       2*K1_14_4.seedDegree H*JointRouted.seedWeight d width*JointRouted.ordWeight d (G.graphDegree-1) := by
@@ -269,7 +269,7 @@ theorem on_surface {d width:ℕ} (gp:G.primitive) (nonlinear:2≤G.graphDegree)
       have n:=constant_regular F N gp nonlinear cap (part.trans sub) phys dp gap tame (fun z hz=>laws z (part hz)) reg
       simp only [Nat.mul_zero,Nat.zero_add] at split
       exact (split.trans n).trans ((Nat.le_mul_of_pos_left _ (show 0<2*K1_14_4.seedDegree H*4 by positivity)).trans (Nat.le_add_left ..))
-  · have fit:179740≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
+  · have fit:179730≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
     exact NativeSurfaceCount.round_price (NativeSurfaceCount.price_equation F sub hn N gp nonlinear (Nat.pos_of_ne_zero zero)
       cap ((K1_14_4.seedDegree_le_iff ..).mp le_rfl) char phys dp gap fit tame laws roots)
 
@@ -315,7 +315,7 @@ theorem owners:NativeAffineRows.Owned F S.onLabels (NearBook.owning N.poly P.par
 theorem laws (gp:G.primitive):∀z∈S.onLabels,WordRates.law F N z :=
   fun z hz=>by obtain ⟨_,_,hit,atQ⟩:=owners P N S z hz;exact NativeGraphMarks.mark_law N gp hit atQ
 
-theorem invoice (hi:M.overhead.toNat≤2534) (degreeCap:3≤gc) (moff:JointProjection.Product (NearBook.outside N.poly P.parents) J)
+theorem invoice (hi:M.overhead.toNat≤2557) (degreeCap:3≤gc) (moff:JointProjection.Product (NearBook.outside N.poly P.parents) J)
     {off minG maxOn maxSeed:ℕ} (offDeg:J.natDegree≤off) (tiny:off<64) (safe:(2*off-1)*m.seedMass<p)
     (lower:minG≤P.projected.natDegree) (gd:S.onEq.natDegree≤maxOn) (seed:K1_14_4.seedDegree S.onEq≤maxSeed)
     (mode:Bool) (fixed y z:ℤ)

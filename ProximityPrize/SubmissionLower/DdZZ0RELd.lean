@@ -9,9 +9,10 @@ open i4 PolynomialDifferential MvPolynomial
 open scoped BigOperators
 
 abbrev Equation :=apQ.Equation
-def small:Source :=
+def legacySmall:Source :=
   ⟨61,83,25,11,(aH1 83 25 11).filter
     (fun j=>j.b+j.c≤25-(j.q - 76)/2)⟩
+def small:Source := ⟨62,84,26,11,aH1 84 26 11⟩
 def bo8:Source :=⟨4600,6251,1959,979,aH1 6251 1959 979⟩
 def Moments (s :Source) (T S V:ℕ) :Prop :=
  s.E.card=T∧(∑ j∈s.E,j.q)=S∧(∑ j∈s.E,j.v)=V
@@ -33,7 +34,7 @@ def aMt (s :Jn) :ℕ :=
   tetra (s.B+3) - tetra (s.B+3 - d) +
     (z+1 - d)*(s.J+1 - d - z)*(2*s.B+2 - s.J)/2
 def donorCaps :Jn:=⟨6251,1959,979⟩
-def smallCaps :Jn:=⟨83,25,11⟩
+def smallCaps :Jn:=⟨84,26,11⟩
 def chartCaps :Jn:=⟨a₀ small,D small,e small⟩
 def Gq (a :Jn) :ℕ :=
   ∑ i∈Finset.range (donorCaps.B/a.B),
@@ -65,7 +66,7 @@ def tW (a b u:Jn) :ℕ :=
     mixedTerm b u a+mixedTerm u a b+mixedTerm u b a)/2
 def properDegree (a :Jn) :ℕ :=
  tW (smallCaps.wD a).repair (donorCaps.wD a).repair chartCaps
-def componentCap (a :Jn) :ℕ:=(83-a.B)*(6251-a.B)
+def componentCap (a :Jn) :ℕ:=(84-a.B)*(6251-a.B)
 def tariffShape (a :Jn) :Source :=
  ⟨1,max 2 (max a.B a.J),max 2 a.J,max 1 a.C,∅⟩
 end

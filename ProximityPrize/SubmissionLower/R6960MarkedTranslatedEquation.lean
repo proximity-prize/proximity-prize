@@ -383,11 +383,6 @@ theorem normalized_fibre_separable (z:L) (P:CurvatureSquares.Ordinate) (S:(Polyn
   have base:(raw.map J).Separable := projectedRaw_fibre P z ▸ mark.separable
   rw [←integralNormalization_map J raw nz]
   apply integralNormalization_separable p _ _ _ base <;> rwa [full,projectedRaw_degree]
-theorem marked_row_separable (c z:L) (P:CurvatureSquares.Ordinate) (S:(Polynomial L))
-    (p:ℕ) [CharP Scalar p] (lo:0<P.natDegree) (hi:P.natDegree<p) (mark:RetainedCompression.MarkedFiber P z S) :
-    ((((projectedRaw P).integralNormalization.map (rowPlane c)).map (evalRingHom (inner z)))).Separable := by
-  rw [Polynomial.map_map,row_specialization,←Polynomial.map_map]
-  exact (normalized_fibre_separable z P S p lo hi mark).map
 theorem scaled_row_degree {F E Ω:Type} [Field F] [Field E] [Field Ω] [Algebra F E] [Algebra F Ω]
     (b:PowerBasis F E) (σ:F≃+*F) (ev:E→+*Ω)
     (base:∀a,ev (algebraMap F E a)=algebraMap F Ω (σ a)) (a:F) (nz:a≠0) :

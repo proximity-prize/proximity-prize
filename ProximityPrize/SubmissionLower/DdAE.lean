@@ -21,7 +21,6 @@ open ProximityPrize.Benchmark
 open scoped BigOperators
 abbrev K:=Native.K
 abbrev I:=Native.I
-abbrev kB:=Bx.lN K
 end
 end DdK1
 end

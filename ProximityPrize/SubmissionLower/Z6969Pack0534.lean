@@ -215,9 +215,9 @@ open scoped Classical Differential
 set_option maxRecDepth 7000
 set_option maxHeartbeats 1100000
 
-abbrev seedWeight (d U:ℕ):ℕ:=⌈MarkedAdaptive.price (Fintype.card I) d 179740*U⌉₊+4
-abbrev ordWeight (d r:ℕ):ℕ:=⌈MarkedAdaptive.price (Fintype.card I) d 179740*r+
-  ((Fintype.card I-d:ℕ):ℚ)/(179740-d:ℕ)⌉₊+4
+abbrev seedWeight (d U:ℕ):ℕ:=⌈MarkedAdaptive.price (Fintype.card I) d 179730*U⌉₊+4
+abbrev ordWeight (d r:ℕ):ℕ:=⌈MarkedAdaptive.price (Fintype.card I) d 179730*r+
+  ((Fintype.card I-d:ℕ):ℚ)/(179730-d:ℕ)⌉₊+4
 
 theorem natCeil_div (a b : ℕ) (hb : 0 < b) : ⌈(a : ℚ) / (b : ℚ)⌉₊ = (a + b - 1) / b := by
   have hbq : (0 : ℚ) < b := by exact_mod_cast hb
@@ -239,24 +239,24 @@ theorem natCeil_div (a b : ℕ) (hb : 0 < b) : ⌈(a : ℚ) / (b : ℚ)⌉₊ = 
     omega
 
 theorem seedWeight_eq (d U : ℕ) :
-    seedWeight d U = (2 * 262144 * d * U + 179740 - 1) / 179740 + 4 := by
+    seedWeight d U = (2 * 262144 * d * U + 179730 - 1) / 179730 + 4 := by
   unfold seedWeight
   rw [show Fintype.card K1.I = 262144 from Fintype.card_fin (2^18)]
   unfold Research6969.MarkedAdaptive.price
-  have : (2 * ((262144 : ℕ) : ℚ) * d / (179740 : ℕ) * U) = ((2 * 262144 * d * U : ℕ) : ℚ) / ((179740 : ℕ) : ℚ) := by
+  have : (2 * ((262144 : ℕ) : ℚ) * d / (179730 : ℕ) * U) = ((2 * 262144 * d * U : ℕ) : ℚ) / ((179730 : ℕ) : ℚ) := by
     push_cast; ring
   rw [this, natCeil_div _ _ (by norm_num)]
 
 
 /-- At a regular rescue mark the exclusive polynomial and the graph law
 hold on the same word. Either counting theorem applies to this same set. -/
-theorem invoice_optional {u del} {M:P1.ModelAt 33735 u del} {Γ S:Finset K}
-    (F:P1.FamilyAt 179740 M Γ) (sub:S⊆Γ) (hi:M.overhead.toNat≤2534)
+theorem invoice_optional {u del} {M:P1.ModelAt 33755 u del} {Γ S:Finset K}
+    (F:P1.FamilyAt 179730 M Γ) (sub:S⊆Γ) (hi:M.overhead.toNat≤2557)
     {A B:Finset Surface} {f g h:Equation} (main:JointProjection.Product A f)
     (rescue:JointProjection.Product B g) (union:JointProjection.Product (A∪B) h)
     {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (nonlinear:2≤G.graphDegree)
     {degree U:ℕ} (pos:0<U) (dp:0<degree) (phys:131071+M.overhead≤(degree:ℤ))
-    (gap:degree<179740) (tame:degree<p)
+    (gap:degree<179730) (tame:degree<p)
     (width:∀ j i,((N.poly.coeff j).coeff i).totalDegree≤U)
     (grade:h.natDegree<64)
     (smallF:(2*h.natDegree-1)*K1_14_4.seedDegree f<p)
@@ -298,13 +298,13 @@ theorem invoice_optional {u del} {M:P1.ModelAt 33735 u del} {Γ S:Finset K}
   have priceE:=JointMarked.owned_count F (esub.trans sub) hi e prim sep (le'.trans_lt grade) le_rfl
     ((Nat.mul_le_mul (Nat.sub_le_sub_right (Nat.mul_le_mul_left 2 le') 1) seed).trans_lt smallG)
     (fun z hz=>(read z e).symm.trans (cell z hz))
-  have fit:179740≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)]; decide
+  have fit:179730≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)]; decide
   have charged:=regular_equation F (esub.trans sub) enz N gp nonlinear pos width
     ((K1_14_4.seedDegree_le_iff ..).mp le_rfl) phys dp gap fit tame
     (fun z hz=>law z (esub hz) (outside z hz)) (fun z hz=>cell z hz)
     (fun z hz=>regular z (esub hz) (outside z hz))
   have q:=round_price (bad:=0) (g:=e.natDegree) (v:=K1_14_4.seedDegree e) (r:=G.graphDegree-1) (u:=U)
-    (n:=Fintype.card I) (a:=179740) (d:=degree) (by simpa using charged)
+    (n:=Fintype.card I) (a:=179730) (d:=degree) (by simpa using charged)
   simp only [Nat.zero_add] at q
   have priceBoth:=le_min priceE q
   refine ⟨_,_,sum,natDegree_le_of_dvd dvd rescue.primitive.ne_zero,seed,?_⟩
@@ -312,13 +312,13 @@ theorem invoice_optional {u del} {M:P1.ModelAt 33735 u del} {Γ S:Finset K}
   rw [←part,Nat.add_comm E.card]
   exact Nat.add_le_add priceP priceBoth
 
-theorem invoice {u del} {M:P1.ModelAt 33735 u del} {Γ S:Finset K}
-    (F:P1.FamilyAt 179740 M Γ) (sub:S⊆Γ) (hi:M.overhead.toNat≤2534)
+theorem invoice {u del} {M:P1.ModelAt 33755 u del} {Γ S:Finset K}
+    (F:P1.FamilyAt 179730 M Γ) (sub:S⊆Γ) (hi:M.overhead.toNat≤2557)
     {A B:Finset Surface} {f g h:Equation} (main:ProjectedProduct A f)
     (rescue:ProjectedProduct B g) (union:ProjectedProduct (A∪B) h)
     {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (nonlinear:2≤G.graphDegree)
     {degree U:ℕ} (pos:0<U) (dp:0<degree) (phys:131071+M.overhead≤(degree:ℤ))
-    (gap:degree<179740) (tame:degree<p)
+    (gap:degree<179730) (tame:degree<p)
     (width:∀ j i,((N.poly.coeff j).coeff i).totalDegree≤U)
     (grade:h.natDegree<64)
     (smallF:(2*h.natDegree-1)*K1_14_4.seedDegree f<p)
@@ -452,115 +452,115 @@ open JointRouted (seedWeight ordWeight)
 set_option maxRecDepth 10000
 set_option maxHeartbeats 1500000
 
-abbrev primary1 : Book := ⟨205764847783078227,5503,126979896095280,1816676828996⟩
-abbrev rescue1 : Book := ⟨34848927525703159,24839,206646633540,208389551481⟩
-theorem seed_price1 : seedWeight 133460 1=389297 := by
+abbrev primary1 : Book := ⟨205786607349302799,5503,126979896095280,1816676828996⟩
+abbrev rescue1 : Book := ⟨34856458124440570,24839,206646633540,208389551481⟩
+theorem seed_price1 : seedWeight 133482 1=389383 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill1 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary1 rescue1 389297 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill1 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary1 rescue1 389383 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary2 : Book := ⟨203623142476321729,5458,126881882836380,1816710589896⟩
-abbrev rescue2 : Book := ⟨33036341832539669,21876,413291143800,215369846589⟩
-theorem seed_price2 : seedWeight 133460 2=778590 := by
+abbrev primary2 : Book := ⟨203627057392393535,5458,126881882836380,1816710589896⟩
+abbrev rescue2 : Book := ⟨33043478944012779,21876,413291143800,215369846589⟩
+theorem seed_price2 : seedWeight 133482 2=778762 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill2 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary2 rescue2 778590 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill2 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary2 rescue2 778762 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary3 : Book := ⟨202026846775169117,5429,126684668343420,1816777241024⟩
-abbrev rescue3 : Book := ⟨31074122775277824,20959,619935654060,216390639020⟩
-theorem seed_price3 : seedWeight 133460 3=1167883 := by
+abbrev primary3 : Book := ⟨202030739200029160,5429,126684668343420,1816777241024⟩
+abbrev rescue3 : Book := ⟨31080831599657387,20959,619935654060,216390639020⟩
+theorem seed_price3 : seedWeight 133482 3=1168140 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill3 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary3 rescue3 1167883 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill3 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary3 rescue3 1168140 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary4 : Book := ⟨200489216485889094,5388,126469137375540,1816850271928⟩
-abbrev rescue4 : Book := ⟨29197303702490968,20046,826579633500,217412440380⟩
-theorem seed_price4 : seedWeight 133460 4=1557175 := by
+abbrev primary4 : Book := ⟨200511084029632841,5388,126469137375540,1816850271928⟩
+abbrev rescue4 : Book := ⟨29203605066442791,20046,826579633500,217412440380⟩
+theorem seed_price4 : seedWeight 133482 4=1557519 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill4 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary4 rescue4 1557175 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill4 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary4 rescue4 1557519 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary5 : Book := ⟨199154573704011765,5350,126245256078240,1816926490928⟩
-abbrev rescue5 : Book := ⟨27501369032801000,17929,1033224143760,218435218305⟩
-theorem seed_price5 : seedWeight 133460 5=1946468 := by
+abbrev primary5 : Book := ⟨199176348375005480,5350,126245256078240,1816926490928⟩
+abbrev rescue5 : Book := ⟨27507301354127021,17929,1033224143760,218435218305⟩
+theorem seed_price5 : seedWeight 133482 5=1946897 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill5 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary5 rescue5 1946468 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill5 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary5 rescue5 1946897 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary6 : Book := ⟨197571264505672176,5312,126021374780940,1817002709928⟩
-abbrev rescue6 : Book := ⟨25703534277495936,17082,1239868654020,219459008444⟩
-theorem seed_price6 : seedWeight 133460 6=2335761 := by
+abbrev primary6 : Book := ⟨197589459237142777,5312,126021374780940,1817002709928⟩
+abbrev rescue6 : Book := ⟨25709075698271047,17082,1239868654020,219459008444⟩
+theorem seed_price6 : seedWeight 133482 6=2336276 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill6 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary6 rescue6 2335761 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill6 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary6 rescue6 2336276 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary7 : Book := ⟨196390635614266072,5274,125801717218380,1817077186896⟩
-abbrev rescue7 : Book := ⟨26075806386532736,16728,1446513164280,220786655515⟩
-theorem seed_price7 : seedWeight 133460 7=2725054 := by
+abbrev primary7 : Book := ⟨196411447952779468,5274,125801717218380,1817077186896⟩
+abbrev rescue7 : Book := ⟨26081428904694984,16728,1446513164280,220786655515⟩
+theorem seed_price7 : seedWeight 133482 7=2725655 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill7 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary7 rescue7 2725054 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill7 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary7 rescue7 2725655 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary8 : Book := ⟨195177924874418294,5237,125582060186640,1817151668048⟩
-abbrev rescue8 : Book := ⟨22557237352261468,16463,1653157143720,221547035032⟩
-theorem seed_price8 : seedWeight 133460 8=3114346 := by
+abbrev primary8 : Book := ⟨195199211400478228,5237,125582060186640,1817151668048⟩
+abbrev rescue8 : Book := ⟨22562095260867864,16463,1653157143720,221547035032⟩
+theorem seed_price8 : seedWeight 133482 8=3115033 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill8 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary8 rescue8 3114346 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill8 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary8 rescue8 3115033 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary9 : Book := ⟨193312820225067037,5200,125364515287680,1817225811096⟩
-abbrev rescue9 : Book := ⟨22431832087008914,16521,1859801653980,223132847495⟩
-theorem seed_price9 : seedWeight 133460 9=3503639 := by
+abbrev primary9 : Book := ⟨193333885834127928,5200,125364515287680,1817225811096⟩
+abbrev rescue9 : Book := ⟨22436662858301116,16521,1859801653980,223132847495⟩
+theorem seed_price9 : seedWeight 133482 9=3504412 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill9 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary9 rescue9 3503639 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill9 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary9 rescue9 3504412 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary10 : Book := ⟨191972345836058179,5164,125149081990680,1817299081036⟩
-abbrev rescue10 : Book := ⟨19757791676453168,14832,2066446164240,225057901428⟩
-theorem seed_price10 : seedWeight 133460 10=3892932 := by
+abbrev primary10 : Book := ⟨191993281415171292,5164,125149081990680,1817299081036⟩
+abbrev rescue10 : Book := ⟨19762041271603195,14832,2066446164240,225057901428⟩
+theorem seed_price10 : seedWeight 133482 10=3893790 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill10 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary10 rescue10 3892932 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill10 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary10 rescue10 3893790 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary11 : Book := ⟨191189708424265424,5128,124935761357280,1817371486236⟩
-abbrev rescue11 : Book := ⟨19509119143794733,13578,2273090674500,228059351000⟩
-theorem seed_price11 : seedWeight 133460 11=4282225 := by
+abbrev primary11 : Book := ⟨191210590053437783,5128,124935761357280,1817371486236⟩
+abbrev rescue11 : Book := ⟨19513314941434316,13578,2273090674500,228059351000⟩
+theorem seed_price11 : seedWeight 133482 11=4283169 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill11 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary11 rescue11 4282225 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill11 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary11 rescue11 4283169 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary12 : Book := ⟨189899439526341313,5092,124722440193060,1817443887252⟩
-abbrev rescue12 : Book := ⟨17507280825119066,12216,2479734653940,230005811000⟩
-theorem seed_price12 : seedWeight 133460 12=4671517 := by
+abbrev primary12 : Book := ⟨189920062983760142,5092,124722440193060,1817443887252⟩
+abbrev rescue12 : Book := ⟨17511042678032626,12216,2479734653940,230005811000⟩
+theorem seed_price12 : seedWeight 133482 12=4672547 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill12 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary12 rescue12 4671517 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill12 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary12 rescue12 4672547 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary13 : Book := ⟨188682103096635776,5056,124511231692440,1817515423528⟩
-abbrev rescue13 : Book := ⟨15286339105750627,12070,2686379164200,230580796490⟩
-theorem seed_price13 : seedWeight 133460 13=5060810 := by
+abbrev primary13 : Book := ⟨188702832136578163,5056,124511231692440,1817515423528⟩
+abbrev rescue13 : Book := ⟨15289619798520233,12070,2686379164200,230580796490⟩
+theorem seed_price13 : seedWeight 133482 13=5061926 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill13 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary13 rescue13 5060810 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill13 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary13 rescue13 5061926 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary14 : Book := ⟨186679027578918589,5028,124287098786460,1817591782592⟩
-abbrev rescue14 : Book := ⟨14867945835023022,10854,2893023674460,233898741000⟩
-theorem seed_price14 : seedWeight 133460 14=5450103 := by
+abbrev primary14 : Book := ⟨186699331201095497,5028,124287098786460,1817591782592⟩
+abbrev rescue14 : Book := ⟨14871135711312628,10854,2893023674460,233898741000⟩
+theorem seed_price14 : seedWeight 133482 14=5451305 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill14 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary14 rescue14 5450103 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill14 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary14 rescue14 5451305 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary15 : Book := ⟨186320372405965399,4992,124198287823080,1817621639236⟩
-abbrev rescue15 : Book := ⟨13112079970355718,9781,3099668184720,235845206000⟩
-theorem seed_price15 : seedWeight 133460 15=5839396 := by
+abbrev primary15 : Book := ⟨186340940017700043,4992,124198287823080,1817621639236⟩
+abbrev rescue15 : Book := ⟨13114889771632282,9781,3099668184720,235845206000⟩
+theorem seed_price15 : seedWeight 133482 15=5840683 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill15 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary15 rescue15 5839396 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill15 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary15 rescue15 5840683 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary16 : Book := ⟨185228290944896622,4956,124136252482140,1817642785728⟩
-abbrev rescue16 : Book := ⟨11568344374968281,8833,3306312164160,237791666000⟩
-theorem seed_price16 : seedWeight 133460 16=6228688 := by
+abbrev primary16 : Book := ⟨185248783257479838,4956,124136252482140,1817642785728⟩
+abbrev rescue16 : Book := ⟨11570820812603638,8833,3306312164160,237791666000⟩
+theorem seed_price16 : seedWeight 133482 16=6230062 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill16 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary16 rescue16 6228688 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill16 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary16 rescue16 6230062 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary17 : Book := ⟨182978269490810060,4921,124074217672020,1817663936404⟩
-abbrev rescue17 : Book := ⟨10976346647019908,7996,3512956674420,239738131000⟩
-theorem seed_price17 : seedWeight 133460 17=6617981 := by
+abbrev primary17 : Book := ⟨182998256555064463,4921,124074217672020,1817663936404⟩
+abbrev rescue17 : Book := ⟨10978694466497497,7996,3512956674420,239738131000⟩
+theorem seed_price17 : seedWeight 133482 17=6619440 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill17 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary17 rescue17 6617981 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill17 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary17 rescue17 6619440 389386 274779381266040419 i.val j.val := by decide +kernel
 
-abbrev primary18 : Book := ⟨182711329596118984,4886,124013461076460,1817684545752⟩
-abbrev rescue18 : Book := ⟨9262048418821099,7257,3719601184680,241684596000⟩
-theorem seed_price18 : seedWeight 133460 18=7007274 := by
+abbrev primary18 : Book := ⟨182731348849387046,4886,124013461076460,1817684545752⟩
+abbrev rescue18 : Book := ⟨9264026684615287,7257,3719601184680,241684596000⟩
+theorem seed_price18 : seedWeight 133482 18=7008819 := by
   rw [Research6969.JointRouted.seedWeight_eq]
-theorem bill18 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary18 rescue18 7007274 389300 274784969259510674 i.val j.val := by decide +kernel
+theorem bill18 : ∀ i j:Fin 22,i.val+j.val≤21 → Pass primary18 rescue18 7008819 389386 274779381266040419 i.val j.val := by decide +kernel
 
-theorem ordinate_price : ordWeight 133460 1=389300 := by
+theorem ordinate_price : ordWeight 133482 1=389386 := by
   unfold ordWeight MarkedAdaptive.price
   rw [show Fintype.card K1.I=262144 from Fintype.card_fin (2^18)]
   decide +kernel
@@ -575,58 +575,58 @@ open JointLedger
 set_option maxHeartbeats 0
 set_option maxRecDepth 10000
 
-theorem bill1:∀ i j:Fin 22,i.val+j.val≤21→Pass SmallCertificates.primary1 SmallCertificates.rescue1 389297 389300 274784969259510674 i.val j.val:=by
+theorem bill1:∀ i j:Fin 22,i.val+j.val≤21→Pass SmallCertificates.primary1 SmallCertificates.rescue1 389383 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=21) (by decide +kernel)
 
-theorem bill2:∀ i j:Fin 23,i.val+j.val≤22→Pass SmallCertificates.primary2 SmallCertificates.rescue2 778590 389300 274784969259510674 i.val j.val:=by
+theorem bill2:∀ i j:Fin 23,i.val+j.val≤22→Pass SmallCertificates.primary2 SmallCertificates.rescue2 778762 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=22) (by decide +kernel)
 
-theorem bill3:∀ i j:Fin 24,i.val+j.val≤23→Pass SmallCertificates.primary3 SmallCertificates.rescue3 1167883 389300 274784969259510674 i.val j.val:=by
+theorem bill3:∀ i j:Fin 24,i.val+j.val≤23→Pass SmallCertificates.primary3 SmallCertificates.rescue3 1168140 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=23) (by decide +kernel)
 
-theorem bill4:∀ i j:Fin 24,i.val+j.val≤23→Pass SmallCertificates.primary4 SmallCertificates.rescue4 1557175 389300 274784969259510674 i.val j.val:=by
+theorem bill4:∀ i j:Fin 24,i.val+j.val≤23→Pass SmallCertificates.primary4 SmallCertificates.rescue4 1557519 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=23) (by decide +kernel)
 
-theorem bill5:∀ i j:Fin 25,i.val+j.val≤24→Pass SmallCertificates.primary5 SmallCertificates.rescue5 1946468 389300 274784969259510674 i.val j.val:=by
+theorem bill5:∀ i j:Fin 25,i.val+j.val≤24→Pass SmallCertificates.primary5 SmallCertificates.rescue5 1946897 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=24) (by decide +kernel)
 
-theorem bill6:∀ i j:Fin 26,i.val+j.val≤25→Pass SmallCertificates.primary6 SmallCertificates.rescue6 2335761 389300 274784969259510674 i.val j.val:=by
+theorem bill6:∀ i j:Fin 26,i.val+j.val≤25→Pass SmallCertificates.primary6 SmallCertificates.rescue6 2336276 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=25) (by decide +kernel)
 
-theorem bill7:∀ i j:Fin 26,i.val+j.val≤25→Pass SmallCertificates.primary7 SmallCertificates.rescue7 2725054 389300 274784969259510674 i.val j.val:=by
+theorem bill7:∀ i j:Fin 26,i.val+j.val≤25→Pass SmallCertificates.primary7 SmallCertificates.rescue7 2725655 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=25) (by decide +kernel)
 
-theorem bill8:∀ i j:Fin 27,i.val+j.val≤26→Pass SmallCertificates.primary8 SmallCertificates.rescue8 3114346 389300 274784969259510674 i.val j.val:=by
+theorem bill8:∀ i j:Fin 27,i.val+j.val≤26→Pass SmallCertificates.primary8 SmallCertificates.rescue8 3115033 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=26) (by decide +kernel)
 
-theorem bill9:∀ i j:Fin 28,i.val+j.val≤27→Pass SmallCertificates.primary9 SmallCertificates.rescue9 3503639 389300 274784969259510674 i.val j.val:=by
+theorem bill9:∀ i j:Fin 28,i.val+j.val≤27→Pass SmallCertificates.primary9 SmallCertificates.rescue9 3504412 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=27) (by decide +kernel)
 
-theorem bill10:∀ i j:Fin 28,i.val+j.val≤27→Pass SmallCertificates.primary10 SmallCertificates.rescue10 3892932 389300 274784969259510674 i.val j.val:=by
+theorem bill10:∀ i j:Fin 28,i.val+j.val≤27→Pass SmallCertificates.primary10 SmallCertificates.rescue10 3893790 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=27) (by decide +kernel)
 
-theorem bill11:∀ i j:Fin 29,i.val+j.val≤28→Pass SmallCertificates.primary11 SmallCertificates.rescue11 4282225 389300 274784969259510674 i.val j.val:=by
+theorem bill11:∀ i j:Fin 29,i.val+j.val≤28→Pass SmallCertificates.primary11 SmallCertificates.rescue11 4283169 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=28) (by decide +kernel)
 
-theorem bill12:∀ i j:Fin 29,i.val+j.val≤28→Pass SmallCertificates.primary12 SmallCertificates.rescue12 4671517 389300 274784969259510674 i.val j.val:=by
+theorem bill12:∀ i j:Fin 29,i.val+j.val≤28→Pass SmallCertificates.primary12 SmallCertificates.rescue12 4672547 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=28) (by decide +kernel)
 
-theorem bill13:∀ i j:Fin 30,i.val+j.val≤29→Pass SmallCertificates.primary13 SmallCertificates.rescue13 5060810 389300 274784969259510674 i.val j.val:=by
+theorem bill13:∀ i j:Fin 30,i.val+j.val≤29→Pass SmallCertificates.primary13 SmallCertificates.rescue13 5061926 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=29) (by decide +kernel)
 
-theorem bill14:∀ i j:Fin 31,i.val+j.val≤30→Pass SmallCertificates.primary14 SmallCertificates.rescue14 5450103 389300 274784969259510674 i.val j.val:=by
+theorem bill14:∀ i j:Fin 31,i.val+j.val≤30→Pass SmallCertificates.primary14 SmallCertificates.rescue14 5451305 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=30) (by decide +kernel)
 
-theorem bill15:∀ i j:Fin 31,i.val+j.val≤30→Pass SmallCertificates.primary15 SmallCertificates.rescue15 5839396 389300 274784969259510674 i.val j.val:=by
+theorem bill15:∀ i j:Fin 31,i.val+j.val≤30→Pass SmallCertificates.primary15 SmallCertificates.rescue15 5840683 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=30) (by decide +kernel)
 
-theorem bill16:∀ i j:Fin 32,i.val+j.val≤31→Pass SmallCertificates.primary16 SmallCertificates.rescue16 6228688 389300 274784969259510674 i.val j.val:=by
+theorem bill16:∀ i j:Fin 32,i.val+j.val≤31→Pass SmallCertificates.primary16 SmallCertificates.rescue16 6230062 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=31) (by decide +kernel)
 
-theorem bill17:∀ i j:Fin 32,i.val+j.val≤31→Pass SmallCertificates.primary17 SmallCertificates.rescue17 6617981 389300 274784969259510674 i.val j.val:=by
+theorem bill17:∀ i j:Fin 32,i.val+j.val≤31→Pass SmallCertificates.primary17 SmallCertificates.rescue17 6619440 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=31) (by decide +kernel)
 
-theorem bill18:∀ i j:Fin 33,i.val+j.val≤32→Pass SmallCertificates.primary18 SmallCertificates.rescue18 7007274 389300 274784969259510674 i.val j.val:=by
+theorem bill18:∀ i j:Fin 33,i.val+j.val≤32→Pass SmallCertificates.primary18 SmallCertificates.rescue18 7008819 389386 274779381266040419 i.val j.val:=by
   exact GradeTable.checked (n:=32) (by decide +kernel)
 
 end Research6969.ExtendedJointBills

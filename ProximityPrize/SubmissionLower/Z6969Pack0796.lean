@@ -458,7 +458,7 @@ theorem fixed_numerator (O : Offset F anchor) (W : (Polynomial K)) (hW : F.den =
     have hheight := F.height
     change F.U.natDegree + F.s + deleted.card ≤ heightCap at hheight
     have hmargin : k + heightCap ≤ agreement := by
-      change 164807 ≤ 179740
+      change 164827 ≤ 179730
       decide
     have hdeg : diff.natDegree ≤ max (l.natDegree + a.natDegree + P.natDegree)
         (r.natDegree + a.natDegree + P.natDegree) := by
@@ -514,10 +514,10 @@ theorem offset_of_anchor {u deleted} (F : Direction u deleted) (H : CrossLift F)
     change 0 < 131072
     decide
   have hagMargin : k + heightCap ≤ agreement := by
-    change 164807 ≤ 179740
+    change 164827 ≤ 179730
     decide
   have hdetMargin : k + 2 * heightCap ≤ blockLength := by
-    change 198542 ≤ 262144
+    change 198582 ≤ 262144
     decide
   have hpos : 0 < d := by dsimp only [d]; omega
   have hA1 : (F.A 1).natDegree ≤ F.s := le_max_right _ _
@@ -1085,7 +1085,7 @@ open ProximityPrize.Benchmark
 
 /-- The remaining inputs are the positive-overhead mark bounds on the two height ranges. -/
 theorem of_height_counts (low : Front6969.c6) (high : Front6969.c7) :
-    ProtocolClaim 6969 Profile.p Profile.q :=
+    ProtocolClaim 6970 Profile.p Profile.q :=
   Front6969.of_children ProfileList.scalar_list Front6969_1.proof Front6969_2.proof
     (Front6969_3.of_children Front6969_3_1.proof Front6969_3_2.proof)
     (Front6969_4.of_children Front6969_4_1.proof Front6969_4_2.proof)

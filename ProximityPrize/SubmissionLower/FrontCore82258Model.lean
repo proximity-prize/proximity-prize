@@ -670,8 +670,6 @@ open K1_14 (L FX Seeds Equation Shape Jet Banks SeedBound liftPoly graphEval atX
   jetAt triangle slots shapeSum)
 open K1_14_3 (Surface Parent)
 open scoped BigOperators
-def asP1Model {u del} (M : AnchorModel u del) : P1.AnchorModel u del :=
-  { M with height_bound := M.height_bound.trans (by decide : P3.heightCap ≤ P1.heightCap) }
 def fullCutoff (s : Shape) := s.m * agreement - 1
 def buffered (h r : ℕ) (s : Shape) := fullCutoff s - 2*h*r
 abbrev debit := P1_7.debit
@@ -841,10 +839,6 @@ def retainedCap : Band → ℕ
   | .h2367 => 0x233b95fa21d83e5
   | .h2395 => 0x271956e092a65d7
   | .h7773 => 0x13aee2ace4cdc
-def highBound : Band → ℕ
-  | .h2367 => 0x3b10ba614948794
-  | .h2395 => 0x3420609139fc6a6
-  | .h7773 => 0x3dc317b12a0d6
 
 def subbank (b : Band) (g : Grade) : Bank :=
   let t := terminal b
@@ -866,9 +860,6 @@ def threshold (b : Band) : Test b → ℕ
   | none => (grades b).length + 1
   | some i => i.val + 1
 
-def seedThreshold (b : Band) : Test b → ℕ
-  | none => 0
-  | some i => ((grades b).get i).seedCap + 1
 
 def jointGain (h : ℕ) (s : Shape) (E v : ℕ) : ℕ :=
   shapeSum s fun q j =>
@@ -889,11 +880,6 @@ def gain (h r : ℕ) (s : Shape) (mode : ℕ) : ℕ :=
   triangle s.U * shapeSum s (fun q j => rawWidth h r s q j - mode * (2 * h * j))
 
 
-theorem accounting (b : Band) :
-    (fees b).loss + (fees b).point + (fees b).lowSeed + (fees b).lowJet +
-       (fees b).fixedODE + (fees b).content + retainedCap b + 1 = highBound b ∧
-       highBound b ≤ 267872462194200158 := by
-  cases b <;> decide +kernel
 
 end HighCore82258
 

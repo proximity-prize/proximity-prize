@@ -128,34 +128,6 @@ open K1_14 (L liftPoly)
 open K1_14_1 (PoleData CRTLift evaluated nodeL MarkResidues)
 open MainPrefixSource (copies)
 open PrefixRows (Prepared rescueDegrees)
-theorem all_stages {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I→L)
-    (lo : 2359≤h) (hi : h≤33579) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0) :
-    ∃ (P : Fin 17→Jet) (out : Prepared P (fun i=>(bank i).shape) copies
-          (evaluated Crt word helperBank.shape (helperCutoff h)) helperBank.shape),
-      (out.exception=1 ∨ rescueDegrees out.exception) ∧
-      ∀ i (J : Ideal Ambient), Active J → dual J →
-      (orderOn J (out.free i) (reserve i+1) ∧ orderOn J (out.helper^copies i) (reserve i+1) ∧
-        chainCompatible (out.free i) (out.helper^copies i) J) ∨
-      ∃ C : Jet, (RowCaps C (bank i).shape ∨ RowCaps C (HelperPrefix.timesShape (copies i) helperBank.shape)) ∧
-        toJet C∉J ∧ ∀ z S, OnJet J z S → MarkResidues D z S →
-          (liftPoly S).natDegree≤131071+h →
-          ∀ hits : Finset K1.I, 179818≤hits.card →
-          (∀ j∈hits,(liftPoly S).eval (nodeL j)=word j) →
-          toJet out.exception∉RingHom.ker (jetMarkHom z S) → jetAt C z S=0 := by
-  obtain ⟨P,out,kind,_,contact⟩ := MainPrefixSource.rows Crt word lo hi
-  refine ⟨P,out,kind,?_⟩
-  intro i J active dualJ
-  have pos : 0<copies i := by unfold copies; omega
-  have slope : 0<(HelperPrefix.timesShape (copies i) helperBank.shape).J :=
-    Nat.mul_pos pos (by decide)
-  have small : reserve i<K1.p := by fin_cases i <;> decide +kernel
-  rcases order_or_cut active dualJ small (out.free_caps i) (out.moving_caps i)
-    (pow_ne_zero _ out.helper_ne) slope with good | ⟨C,cap,proper,cut⟩
-  · exact Or.inl good
-  · refine Or.inr ⟨C,cap,proper,?_⟩
-    intro z S on residues degree hits many agree regular
-    obtain ⟨free,moving⟩ := contact noPole z S residues degree hits many agree regular i
-    exact cut z S on free moving
 end Lower6960.PrefixStage
 
 end

@@ -187,12 +187,6 @@ private def rawDegree (e : ℕ) :=
   let m:=e+1
   let H:=164650*(10*(2*e)*(2*e+1)-9*m*(m-1))/(18*m)
   (2*e-2)*H-e*(e-1)*164650
-theorem profile_room :
-    (∀ e : Fin 48,3≤e.val → 2*rawDegree e.val≤1707353296) ∧
-    rawDegree 47=853676648 ∧ 1707353296+423353137=K1.p := by decide +kernel
-theorem coarse_room : ∀ e : Fin 48,3≤e.val →
-    2*((e.val-1)*(3*e.val-2)*164650+(e.val-1))≤2105544292 ∧
-    2105544292+25162141=K1.p := by decide +kernel
 end Lower6960.DifferentialPoles
 
 end
@@ -554,25 +548,6 @@ theorem chart_resultant_dvd (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u
       f.resultant f.derivative f.natDegree (f.natDegree-1) := by
   refine ⟨f.leadingCoeff*(u:A)^(2*f.natDegree-2),?_⟩
   rw [resultant_eq_chart b f c u hu degree positive root,mul_comm]
-theorem discriminant_dvd (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u : Aˣ)
-    (hu : f.eval c=(u:A)) (degree : f.natDegree=b.dim) (positive : 2≤f.natDegree)
-    (root : aeval b.gen f=0) :
-    ∃ (v : PowerBasis F E) (d : A), v.gen=reciprocal b c ∧ IsIntegral A v.gen ∧
-      algebraMap A F d=Algebra.discr F v.basis ∧
-      d∣f.resultant f.derivative f.natDegree (f.natDegree-1) := by
-  obtain ⟨v,gen,integral,minimal⟩ := chart_basis b f c u hu degree root
-  let g := equation f c u
-  let r := g.resultant g.derivative g.natDegree (g.natDegree-1)
-  let n := Module.finrank F E*(Module.finrank F E-1)/2
-  let s : A := (-1)^n
-  have sz : IsUnit s := (isUnit_one.neg).pow _
-  have repr : algebraMap A F (s*r)=Algebra.discr F v.basis := by
-    rw [Algebra.discr_powerBasis_eq_norm,map_mul,monic_norm v g integral minimal]
-    simp only [s,n,map_pow,map_neg,map_one]
-    rw [minpoly.isIntegrallyClosed_eq_field_fractions' F integral,minimal,derivative_map,
-      aeval_map_algebraMap]
-  refine ⟨v,s*r,gen,integral,repr,?_⟩
-  exact (sz.mul_left_dvd.mpr dvd_rfl).trans (chart_resultant_dvd b f c u hu degree positive root)
 section Differential
 variable [Differential A] [Differential E] [DifferentialAlgebra A E]
 theorem raw_square_clears (b : PowerBasis F E) (f : (Polynomial A)) (c : A) (u : Aˣ)
@@ -907,9 +882,6 @@ theorem infinity_degree (f : (Polynomial (Polynomial K))) (H d : ℕ) : (weighte
     have req := congrArg (fun q : (Polynomial K) => q.coeff (revAt (H-d*f.natDegree) j)) zero
     simp only [coeff_reflect,revAt_invol,coeff_zero] at req
     exact req
-theorem infinity_leading (f : (Polynomial (Polynomial K))) (H d : ℕ) :
-    (weightedInfinity f H d).leadingCoeff=f.leadingCoeff.reflect (H-d*f.natDegree) := by
-  rw [leadingCoeff,infinity_degree,coeff_weightedInfinity,coeff_natDegree]
 theorem infinity_field (f : (Polynomial (Polynomial K))) (H d : ℕ)
     (weights : ∀ i≤f.natDegree,(f.coeff i).natDegree+d*i≤H) :
     (weightedInfinity f H d).map (AtInfinity K)=

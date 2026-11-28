@@ -13,18 +13,6 @@ open ProximityPrize.Benchmark ToyProblem CoreDefinitions ProximityGap
 open scoped NNReal
 abbrev p : ℕ := 2896623800957216602
 abbrev q : ℕ := 9223372036854599207
-theorem larger_radius :
-    claimedRadius 337211391 1073741824 < claimedRadius p q := by
-  norm_num [claimedRadius]
-theorem maximal_in_cell (a b : ℕ) (size : b ≤ 9223372036854775807)
-    (below : a * 262144 < 82327 * b) : a * q ≤ p * b := by
-  by_contra! above
-  have h₁ : (p : ℤ) * b + 1 ≤ (a : ℤ) * q := by exact_mod_cast above
-  have h₂ : (a : ℤ) * 262144 + 1 ≤ 82327 * (b : ℤ) := by exact_mod_cast below
-  have join := add_le_add (mul_le_mul_of_nonneg_left h₁ (by decide : (0 : ℤ) ≤ 262144))
-    (mul_le_mul_of_nonneg_left h₂ (by decide : (0 : ℤ) ≤ q))
-  norm_num [p, q] at join
-  omega
 private theorem of_cross_power {x : ℝ≥0} {a d : ℕ} (hd : 0 < d)
     (h : x ^ d * 2 ^ a ≤ 1) : x ≤ (2 : ℝ≥0) ^ (-(a : ℝ) / d) := by
   have hd' : 0 < (d : ℝ) := by exact_mod_cast hd
@@ -401,14 +389,12 @@ def Nonparallel {u T R D} (B : RankThree u T R D) : Prop :=
 def UnitNorm {u T R D} (B : RankThree u T R D) : Prop :=
   sixNorm B.a = sixNorm B.b
 abbrev ModelAt := P1.ModelAt
-abbrev MarkAt := @P1.MarkAt
 abbrev FamilyAt := @P1.FamilyAt
 abbrev ModelAt.overhead := @P1.ModelAt.overhead
 abbrev ModelAt.label := @P1.ModelAt.label
 abbrev ModelAt.amplitude := @P1.ModelAt.amplitude
 abbrev ModelAt.decoder := @P1.ModelAt.decoder
 abbrev AnchorModel := ModelAt heightCap
-abbrev AnchorMark {u deleted} (M : AnchorModel u deleted) := MarkAt (A := agreement) M
 abbrev AnchoredFamily {u deleted} (M : AnchorModel u deleted) := FamilyAt agreement M
 abbrev AnchorModel.overhead {u deleted} (M : AnchorModel u deleted) := ModelAt.overhead M
 abbrev AnchorModel.label {u deleted} (M : AnchorModel u deleted) := ModelAt.label M
@@ -667,8 +653,6 @@ def relation_of_two_active {u : Words} (hu : FrontRemainder u) (T : TwoActive u)
   exact (Nat.mul_le_mul_right p (show 2 * T.height + 2 ≤ 2 * heightCap + 2 by omega)).trans_lt
     (by decide)
 theorem rank_fee_exact : L + p * heightCap = rankFee := by decide
-theorem anchor_fee_exact : p * heightCap + 2 * heightCap + blockLength + 2 = anchorFee := by
-  decide
 theorem rank_exceptions (u : Words) (hu : FrontRemainder u) (Γ : Finset K) :
     (abnormalSlopes u Γ).card ≤ rankFee := by
   classical

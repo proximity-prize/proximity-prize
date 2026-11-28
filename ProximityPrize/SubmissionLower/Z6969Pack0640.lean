@@ -49,7 +49,7 @@ def run {first last:ℕ} (a l wt:ℕ) (high:Option ℕ):List (Source first last)
 
 theorem sound {first last:ℕ} (ts:List (Source first last)) {a lo wt h:ℕ} {high:Option ℕ} {D:PoleData h}
     (Crt:CRTLift D) (word:K1.I→L) (hp:0<h) (hl:h≤131070) (earlier:first≤h) (later:h≤last)
-    {S:Finset Surface} (geo:∀q∈S,Parent q) (pass:∀q∈S,TerminalBanks.Pass Crt word 179740 SpreadCatalogue.shape q)
+    {S:Finset Surface} (geo:∀q∈S,Parent q) (pass:∀q∈S,TerminalBanks.Pass Crt word 179730 SpreadCatalogue.shape q)
     {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (deg:G.graphDegree=a)
     {H:Equation} (on:NativeWitnessBank.witnessed N S H) (low:lo≤seedDegree N.poly)
     (up:∀v,high=some v→seedDegree N.poly≤v)
@@ -237,10 +237,10 @@ deriving DecidableEq
 structure Test where
   source:Request
   kind:Kind
-  fits:TerminalWitness.Fits source 2293 2389 SpreadCatalogue.shape
+  fits:TerminalWitness.Fits source 2314 2411 SpreadCatalogue.shape
   verified:match kind with
-    | .triangle=>∃ends,Cover (Triangular source) 2389 2293 ends
-    | .either side=>side≤source.shape.U ∧ ∃ends,Cover (Rectangle source side) 2389 2293 ends
+    | .triangle=>∃ends,Cover (Triangular source) 2411 2314 ends
+    | .either side=>side≤source.shape.U ∧ ∃ends,Cover (Rectangle source side) 2411 2314 ends
 
 def Test.seedFloor (t:Test):ℕ:=match t.kind with
   | .triangle=>t.source.seed
@@ -250,8 +250,8 @@ def Test.degreeCap (t:Test):ℕ:=(t.source.shape.B+(t.source.jet-1)*t.source.sha
 def Test.totalCap (t:Test) (u:ℕ):ℕ:=(t.source.shape.U+t.source.shape.J*u)/(t.source.reserve+1)
 
 theorem Test.bounds (t:Test) {h:ℕ} {D:PoleData h} (Crt:CRTLift D) (word:K1.I→L)
-    (lo:2293≤h) (hi:h≤2389) {S:Finset Surface} (geo:∀q∈S,Parent q)
-    (pass:∀q∈S,TerminalBanks.Pass Crt word 179740 SpreadCatalogue.shape q)
+    (lo:2314≤h) (hi:h≤2411) {S:Finset Surface} (geo:∀q∈S,Parent q)
+    (pass:∀q∈S,TerminalBanks.Pass Crt word 179730 SpreadCatalogue.shape q)
     {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (actual:G.graphDegree=t.source.jet)
     {H:Equation} (on:NativeWitnessBank.witnessed N S H) (low:t.seedFloor≤seedDegree N.poly)
     (positive:0<seedDegree N.poly) (phys:HelperPhysicalModel.Model Crt N.poly)
@@ -499,7 +499,7 @@ def bill (m r:JointLedger.Book) (off md gd cap:ℕ) (constant ordinate seed:ℤ)
   (m.fee:ℤ)+r.fee+mo*m.seedMass+ro*r.seedMass+2*((off*(max 3 off-1):ℕ):ℤ)+constant+
     (ordinate-deg)*(if 0≤ordinate-deg then (gd:ℤ) else md)+max 0 (seed-sd)*cap
 
-private theorem off_price {u del} {M:Model u del} {Γ} {F:Family M Γ} (hi:M.overhead.toNat≤2534)
+private theorem off_price {u del} {M:Model u del} {Γ} {F:Family M Γ} (hi:M.overhead.toNat≤2557)
     {Q:Finset Surface} {f:Equation} (pr:JointProjection.Product Q f) (off:ℕ) (le:f.natDegree≤off) (low:off<64)
     (char:(2*f.natDegree-1)*K1_14_4.seedDegree f<p) :
     (labels (F:=F) Q).card≤degreeCost off*K1_14_4.seedDegree f+off*(max 3 off-1):=by
@@ -521,7 +521,7 @@ variable {H:Jet} {m r:JointLedger.Book} (P:Pair F Crt H m r)
 variable {G:Pade.Row SeedField} (N:Native G)
 
 theorem count {content:ℕ} {onEq:Equation} (s:UnionPartition.Data P N content onEq)
-    (hhi:M.overhead.toNat≤2534) (small:content-G.graphDegree<64)
+    (hhi:M.overhead.toNat≤2557) (small:content-G.graphDegree<64)
     (charM:(2*(content-G.graphDegree)-1)*m.seedMass<p) (charR:(2*(content-G.graphDegree)-1)*r.seedMass<p)
     {lo hi v:ℕ} (low:lo≤onEq.natDegree) (high:onEq.natDegree≤hi) (seedMax:K1_14_4.seedDegree onEq≤v)
     (constant ordinate seed:ℤ)
@@ -594,7 +594,7 @@ open scoped Classical
 set_option maxHeartbeats 1500000
 set_option maxRecDepth 12000
 
-def fee (d w:ℕ):ℕ:=p*w+(3*(d*w)^2*(262144-d)^3)/(179740-d)^3
+def fee (d w:ℕ):ℕ:=p*w+(3*(d*w)^2*(262144-d)^3)/(179730-d)^3
 
 private theorem debit_mono (b:Book):Monotone (markedDebit b):=by
   intro i j le
@@ -606,7 +606,7 @@ private theorem debit_mono (b:Book):Monotone (markedDebit b):=by
       (Nat.mul_le_mul (Nat.sub_le_sub_right (max_le_max_left 3 le) _) le)
 
 private theorem off_bound {u del} {M:Model u del} {Γ S:Finset K} (F:Family M Γ) (sub:S⊆Γ)
-    (hi:M.overhead.toNat≤2534) (b:Book) (weights:Fin 4→ℕ) (wc:b.seedCredit=weights 1+weights 2)
+    (hi:M.overhead.toNat≤2557) (b:Book) (weights:Fin 4→ℕ) (wc:b.seedCredit=weights 1+weights 2)
     (parents:Finset Surface) {f:Equation} (project:JointProjection.Product parents f) {off:ℕ}
     (degree:f.natDegree≤off) (small:off<64) (safe:(2*off-1)*b.seedMass<p)
     (sources:Finset (Ideal Ambient)) (active:∀J∈sources,Active J)
@@ -627,8 +627,8 @@ private theorem off_bound {u del} {M:Model u del} {Γ S:Finset K} (F:Family M Γ
 /-- Count every on-graph mark once across the two actual packets. Each
 off-graph projection then consumes only its own native seed credit. -/
 theorem price {u del} {M:Model u del} {Γ} {F:Family M Γ} {D:PoleData M.overhead.toNat}
-    {Crt:CRTLift D} {H:Jet} {m r} (P:Pair F Crt H m r) (hi:M.overhead.toNat≤2534)
-    {d w c:ℕ} (wp:0<w) (char:w<p) (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p)
+    {Crt:CRTLift D} {H:Jet} {m r} (P:Pair F Crt H m r) (hi:M.overhead.toNat≤2557)
+    {d w c:ℕ} (wp:0<w) (char:w<p) (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p)
     {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (linear:G.graphDegree=1)
     (width:K1_14_2_2_2_1.seedDegree N.poly≤w)
     {f:Equation} (pr:ProjectedProduct (P.main∪P.rescue) f) (large:c<f.natDegree)
@@ -720,7 +720,7 @@ theorem owners:NativeAffineRows.Owned F (group F N parents) (owning N.poly paren
   obtain ⟨q,hq,on⟩:=(mem_filter.mp h).2
   exact ⟨q,hq,(mem_filter.mp hq).2,on⟩
 
-theorem marked {f:Equation} (pr:ProjectedProduct (owning N.poly parents) f) (hi:M.overhead.toNat≤2534)
+theorem marked {f:Equation} (pr:ProjectedProduct (owning N.poly parents) f) (hi:M.overhead.toNat≤2557)
     {g:ℕ} (cap:f.natDegree≤g) (small:g<64) (char:(2*f.natDegree-1)*K1_14_4.seedDegree f<p):
     (group F N parents).card≤JointLedger.coefficient g*K1_14_4.seedDegree f+g*(max 3 g-1):=by
   let v:=K1_14_4.seedDegree f
@@ -736,7 +736,7 @@ theorem marked {f:Equation} (pr:ProjectedProduct (owning N.poly parents) f) (hi:
 
 theorem affine {d w:ℕ} (gp:G.primitive) (linear:G.graphDegree=1) (wp:0<w)
     (char:w<p) (width:K1_14_2_2_2_1.seedDegree N.poly≤w)
-    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p) :
+    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p) :
     (group F N parents).card≤WholeAffine.fee d w:=by
   have bounds:∀j i,(N.poly.coeff j).coeff i∈MvPolynomial.restrictWeightAtMost (fun _=>1) w:=by
     intro j i
@@ -749,11 +749,11 @@ theorem affine {d w:ℕ} (gp:G.primitive) (linear:G.graphDegree=1) (wp:0<w)
 
 theorem surface {d w:ℕ} (gp:G.primitive) (large:2≤G.graphDegree) (wp:0<w)
     (char:(2*G.graphDegree-1)*w<p) (width:K1_14_2_2_2_1.seedDegree N.poly≤w)
-    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p)
+    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p)
     {f:Equation} (pr:ProjectedProduct (owning N.poly parents) f):
     (group F N parents).card≤(2*G.graphDegree-1)*((p+1)*w)+f.natDegree*JointRouted.seedWeight d w^2+
       2*K1_14_4.seedDegree f*JointRouted.seedWeight d w*JointRouted.ordWeight d (G.graphDegree-1):=by
-  have fit:179740≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
+  have fit:179730≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
   have c:=NativeSurfaceCount.price_owned F (filter_subset _ _) pr N gp large wp
     ((K1_14_2_2_2_1.seedDegree_le ..).mp width) ((K1_14_4.seedDegree_le_iff ..).mp le_rfl)
     char phys dp gap fit tame (owners F N parents)
@@ -761,7 +761,7 @@ theorem surface {d w:ℕ} (gp:G.primitive) (large:2≤G.graphDegree) (wp:0<w)
 
 theorem seedless {d:ℕ} (gp:G.primitive) (large:2≤G.graphDegree)
     (width:K1_14_2_2_2_1.seedDegree N.poly=0)
-    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p) {f:Equation}
+    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p) {f:Equation}
     (pr:ProjectedProduct (owning N.poly parents) f) :
     (group F N parents).card≤f.natDegree*JointRouted.seedWeight d 0^2+
       2*K1_14_4.seedDegree f*JointRouted.seedWeight d 0*JointRouted.ordWeight d (G.graphDegree-1) := by
@@ -799,15 +799,15 @@ theorem seedless {d:ℕ} (gp:G.primitive) (large:2≤G.graphDegree)
   have wordCount:=ZeroSeeds.line F (filter_subset _ _) (by omega:0<G.graphDegree-1) dp gap tame (den N) (rhs N) dy
     (ny.trans (by omega)) (fun i=>Nat.eq_zero_of_le_zero (seed 1 i)) (fun i=>by simpa [rhs] using Nat.eq_zero_of_le_zero (seed 0 i))
     degree (fun z hz=>⟨law z hz,regular z hz⟩)
-  let R:=MarkedAdaptive.price (Fintype.card I) d 179740
+  let R:=MarkedAdaptive.price (Fintype.card I) d 179730
   have bound:R*(G.graphDegree-1:ℕ)≤(JointRouted.ordWeight d (G.graphDegree-1):ℚ):=by
     unfold JointRouted.ordWeight
-    have extra:(0:ℚ)≤((Fintype.card I-d:ℕ):ℚ)/(179740-d:ℕ):=by positivity
-    have ceil:=Nat.le_ceil (R*(G.graphDegree-1:ℕ)+((Fintype.card I-d:ℕ):ℚ)/(179740-d:ℕ))
+    have extra:(0:ℚ)≤((Fintype.card I-d:ℕ):ℚ)/(179730-d:ℕ):=by positivity
+    have ceil:=Nat.le_ceil (R*(G.graphDegree-1:ℕ)+((Fintype.card I-d:ℕ):ℚ)/(179730-d:ℕ))
     push_cast
     linarith
   have wg:(T.card:ℚ)≤(JointRouted.ordWeight d (G.graphDegree-1):ℚ):=wordCount.trans
-    (by simpa only [R,mul_comm (MarkedAdaptive.price (Fintype.card I) d 179740)] using bound)
+    (by simpa only [R,mul_comm (MarkedAdaptive.price (Fintype.card I) d 179730)] using bound)
   have n:T.card≤JointRouted.ordWeight d (G.graphDegree-1):=by exact_mod_cast wg
   exact n.trans ((Nat.le_mul_of_pos_left _ (show 0<2*K1_14_4.seedDegree f*4 by positivity)).trans (Nat.le_add_left ..))
 
@@ -848,8 +848,8 @@ def run (a lo wt:ℕ) (high:Option ℕ) : List Test→Cap→Cap
   | t::rest,c=>run a lo wt high rest (c.step t a lo wt high)
 
 theorem sound (ts:List Test) {a lo wt h:ℕ} {high:Option ℕ} {D:PoleData h}
-    (Crt:CRTLift D) (word:K1.I→L) (floor:2293≤h) (ceil:h≤2389) {S:Finset Surface}
-    (geo:∀q∈S,Parent q) (pass:∀q∈S,TerminalBanks.Pass Crt word 179740 SpreadCatalogue.shape q)
+    (Crt:CRTLift D) (word:K1.I→L) (floor:2314≤h) (ceil:h≤2411) {S:Finset Surface}
+    (geo:∀q∈S,Parent q) (pass:∀q∈S,TerminalBanks.Pass Crt word 179730 SpreadCatalogue.shape q)
     {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (deg:G.graphDegree=a)
     {H:Equation} (on:NativeWitnessBank.witnessed N S H) (low:lo≤seedDegree N.poly)
     (up:∀ v,high=some v→seedDegree N.poly≤v)
@@ -921,9 +921,9 @@ structure Row where
   tests:List MeasuredBound.Test
   method:Method
 
-abbrev target:ℕ:=274784969259510674
-abbrev d:ℕ:=133460
-def Row.weight (b:Row):ℕ:=b.graph*(131071-2389)-1
+abbrev target:ℕ:=274779381266040419
+abbrev d:ℕ:=133482
+def Row.weight (b:Row):ℕ:=b.graph*(131071-2411)-1
 def Row.off (b:Row):ℕ:=b.content-b.graph
 def Row.lower (b:Row):ℕ:=b.minGrade-b.off
 def Row.cap (b:Row) (m r:Book):CaseBounds.Cap:=
@@ -951,7 +951,7 @@ instance (b:Row) (m r:Book):Decidable (b.check m r):=by
 
 theorem Row.proves (b:Row) {m r:Book} (ok:b.check m r)
     {u del} {M:Model u del} {Γ} {F:Family M Γ} {D:PoleData M.overhead.toNat}
-    {Crt:CRTLift D} {H:Jet} (P:Pair F Crt H m r) (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    {Crt:CRTLift D} {H:Jet} (P:Pair F Crt H m r) (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     {f:Equation} (pr:ProjectedProduct (P.main∪P.rescue) f) (minGrade:b.minGrade≤f.natDegree) (maxGrade:f.natDegree≤b.maxGrade)
     {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (degree:G.graphDegree=b.graph)
     (control:Pade.Controls (G.map (algebraMap SeedField Pade.Native.Sep)) (Pade.Native.sheets (P.main∪P.rescue)) b.content)
@@ -960,7 +960,7 @@ theorem Row.proves (b:Row) {m r:Book} (ok:b.check m r)
   classical
   let S:=P.main∪P.rescue
   have geo q (hq:q∈S):Parent q:=(mem_union.mp hq).elim (fun h=>(P.mainGeo q h).1) (fun h=>(P.rescueGeo q h).1)
-  have pass q (hq:q∈S):TerminalBanks.Pass Crt (word M) 179740 SpreadCatalogue.shape q:=
+  have pass q (hq:q∈S):TerminalBanks.Pass Crt (word M) 179730 SpreadCatalogue.shape q:=
     (mem_union.mp hq).elim (fun h=>(P.mainGeo q h).2.1) (fun h=>(P.rescueGeo q h).2.1)
   obtain ⟨gc,offSmall,guardM,guardR,pay⟩:=ok
   obtain ⟨onEq,offEq,seen,off,offCap,total⟩:=NearTerminal.partition geo pr b.content (gc.trans_le minGrade) N gp control
@@ -989,9 +989,9 @@ theorem Row.proves (b:Row) {m r:Book} (ok:b.check m r)
   have small: b.content-G.graphDegree<64:=degree ▸ offSmall
   have guards:(2*(b.content-G.graphDegree)-1)*m.seedMass<p ∧ (2*(b.content-G.graphDegree)-1)*r.seedMass<p:=degree ▸ ⟨guardM,guardR⟩
   have budget:=WholeGraph.count P N data (hi.trans (by decide)) small guards.1 guards.2 lower gcap vcap
-  have dh:131071+M.overhead≤(d:ℤ):=by change 131071+M.overhead≤(133460:ℤ);omega
+  have dh:131071+M.overhead≤(d:ℤ):=by change 131071+M.overhead≤(133482:ℤ);omega
   have ds:0<d:=by decide
-  have gap:d<179740:=by decide
+  have gap:d<179730:=by decide
   have tp:d<p:=by decide
   let t:=UnionTariffs.group F N S
   have close (k y z:ℤ) (cp:(t.card:ℤ)≤k+y*onEq.natDegree+z*K1_14_4.seedDegree onEq)
@@ -1055,8 +1055,8 @@ theorem ratio (n d:ℕ) : ceilRatio n d=⌈(n:ℚ)/d⌉₊:=by
   rw [←Int.ceil_toNat,Rat.ceil_natCast_div_natCast]
   rfl
 
-def side (u:ℕ):ℕ:=ceilRatio (2*262144*133460*u) 179740+4
-def ordinate (r:ℕ):ℕ:=ceilRatio (2*262144*133460*r*(179740-133460)+(262144-133460)*179740) (179740*(179740-133460))+4
+def side (u:ℕ):ℕ:=ceilRatio (2*262144*133482*u) 179730+4
+def ordinate (r:ℕ):ℕ:=ceilRatio (2*262144*133482*r*(179730-133482)+(262144-133482)*179730) (179730*(179730-133482))+4
 
 theorem side_eq (u:ℕ):seedWeight CertifiedCell.d u=side u:=by
   unfold seedWeight side MarkedAdaptive.price

@@ -391,10 +391,6 @@ namespace K1_13_2_3_6
 open K1_13_2_3
 open K1_13_2_3_6 (sumFrom)
 set_option maxHeartbeats 2000000
-private def withNatF (n : ℕ) (f : ℕ → ℕ) : ℕ :=
-  match n with
-  | 0 => f 0
-  | k+1 => f (Nat.succ k)
 set_option maxRecDepth 50000
 end K1_13_2_3_6
 end
@@ -738,31 +734,6 @@ def natKernel (d j h r : ℕ) : ℕ :=
     else
       match countParts d h, countParts (d - r) (h - 3 * r), countParts (d - r) (1650 - j) with
       | (c, e), (f, g), (k, l) => a + e + f + l - (b + c + g + k)
-def natEntry (t j : ℕ) : ℕ :=
-  if 23 ≤ t + j ∧ t + j ≤ 656 then
-    let b := 1136 - t
-    if 4 * j < b then
-      let old := natDen 1651 - natDen (1650 - j)
-      let chosen := natKernel (1650 - (b - 4 * j)) j (b - j) j
-      let original := natKernel 1650 j (b - j) ((b + 3) / 4)
-      Nat.min old chosen - original
-    else 0
-  else 0
-def natGrade (t : ℕ) : ℕ := rangeSum (natEntry t) 283
-def natChunk (lo len : ℕ) : ℕ := rangeSum (fun t => natGrade (lo + t)) len
-private theorem rangeSum_append (f : ℕ → ℕ) (a b : ℕ) :
-    rangeSum f (a + b) = rangeSum f a + rangeSum (fun k => f (a + k)) b := by
-  induction b with
-  | zero => simp [rangeSum]
-  | succ b ih =>
-    change rangeSum f (a + b) + f (a + b) =
-      rangeSum f a + (rangeSum (fun k => f (a + k)) b + f (a + b))
-    rw [ih, Nat.add_assoc]
-theorem natChunk_append (lo a b : ℕ) :
-    natChunk lo (a + b) = natChunk lo a + natChunk (lo + a) b := by
-  unfold natChunk
-  rw [rangeSum_append]
-  simp only [Nat.add_assoc]
 end K1_13_2_3_7
 end
 section

@@ -76,11 +76,6 @@ theorem index_square {ι : Type*} [DecidableEq ι] [Fintype ι] (A D : Matrix ι
     D.det^2 ∣ (D.transpose*A*D).det := by
   refine ⟨A.det,?_⟩
   rw [det_mul,det_mul,det_transpose]; ring
-omit [DecidableEq K] in
-theorem clear_section {ι : Type*} [DecidableEq ι] [Fintype ι] (D : Matrix ι ι (Polynomial K)) (v : ι→(Polynomial K)) :
-    ∃ u : ι→(Polynomial K),D.mulVec u=D.det • v := by
-  refine ⟨D.adjugate.mulVec v,?_⟩
-  rw [Matrix.mulVec_mulVec,Matrix.mul_adjugate,Matrix.smul_mulVec,Matrix.one_mulVec]
 end Lower6960.BranchIndex
 
 end

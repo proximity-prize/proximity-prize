@@ -1494,12 +1494,6 @@ open scoped BigOperators
 noncomputable section
 private abbrev Coord := Option (Option (Fin 2))
 private def seedCoord (i : Fin 2) : Coord := some (some i)
-private def nest (F : Type) [CommRing F] :
-    MvPolynomial Coord F ≃ₐ[F] Polynomial (Polynomial (MvPolynomial (Fin 2) F)) :=
-  (optionEquivLeft F (Option (Fin 2))).trans (Polynomial.mapAlgEquiv (optionEquivLeft F (Fin 2)))
-private def rawIdeal (I : Ideal Jet) : Ideal (Raw Coord) :=
-  I.comap (nest FX).toRingHom
-private abbrev jetSlice (I : Ideal Jet) := sliceIdeal (rawIdeal I) (seedCoord 0) (seedCoord 1)
 end
 end K1_14_3R_3_3
 end

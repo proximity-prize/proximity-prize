@@ -1,0 +1,8 @@
+import ProximityPrize.SubmissionLower.R6970Height2313AlternateNew
+import ProximityPrize.SubmissionLower.R6970Height2313AlternateReuse
+
+set_option Elab.async false
+set_option maxRecDepth 30000
+set_option maxHeartbeats 0
+
+

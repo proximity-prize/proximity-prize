@@ -45,19 +45,7 @@ theorem three_floor {n a d marks fee c h₀ h₁ : ℕ} (gap : d < a) (an : a �
       Nat.mul_le_mul (Nat.mul_le_mul_left _ (side_ratio gap an)) (side_ratio gap an)
     _ = _ := by ring
 
-theorem two_floor {n a d marks fee h : ℕ} (gap : d < a) (an : a ≤ n)
-    (count : marks*(a-d)^2 ≤ fee*(a-d)^2+2*side n a d 1*side n a d h) :
-    marks ≤ fee+(2*max 1 h*(n-d)^2)/(a-d)^2 := by
-  apply floor (pow_pos (by omega) 2)
-  refine count.trans (Nat.add_le_add_left ?_ _)
-  rw [side_one gap an]
-  calc
-    2*(n-d)*side n a d h ≤ 2*(n-d)*(max 1 h*(n-d)) := Nat.mul_le_mul_left _ (side_ratio gap an)
-    _ = _ := by ring
 
-theorem fixed_floor {n a d marks : ℕ} (gap : d < a) (an : a ≤ n)
-    (count : marks*(a-d) ≤ side n a d 1) : marks ≤ (n-d)/(a-d) := by
-  exact (Nat.le_div_iff_mul_le (by omega)).mpr (count.trans_eq (side_one gap an))
 
 /-- The projected ledger keeps the individual side lengths. This variant
 permits the width-zero padding used by the numerical ledger. -/

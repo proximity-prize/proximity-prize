@@ -194,7 +194,6 @@ theorem lineFibreData_scalar (j b:Bool) (z:L) (nz:z≠0) (g:(Polynomial L)) :
 @[instance_reducible] def axisPlaneAlgebra (b:Bool) : Algebra (Plane L) E :=
   linePlaneAlgebra true b
 abbrev axisPlaneOrder (b:Bool) := linePlaneOrder (E:=E) true b
-abbrev axisOrderMap (b:Bool) (z:L) := lineOrderMap (E:=E) true b z
 abbrev axisFibreData (b:Bool) (z:L) (nz:z≠0) :=
   lineFibreData (E:=E) true b z nz
 theorem axisFibreData_scalar (b:Bool) (z:L) (nz:z≠0) (g:(Polynomial L)) :
