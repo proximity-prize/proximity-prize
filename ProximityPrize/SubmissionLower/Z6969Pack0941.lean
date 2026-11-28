@@ -1,3 +1,5 @@
+import ProximityPrize.SubmissionLower.Z6970StockReceiptIndex
+import ProximityPrize.SubmissionLower.Z6970StockPairRoutes
 import ProximityPrize.SubmissionLower.Z6969Pack0666
 import ProximityPrize.SubmissionLower.Z6969Pack0934
 import ProximityPrize.SubmissionLower.Z6969Pack0940
@@ -17,25 +19,25 @@ set_option autoImplicit true
 namespace Research6969.HardFit1At210
 set_option maxRecDepth 18000
 set_option maxHeartbeats 1200000
-private theorem leaf0:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,2,some 3⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell950 PairReceipts.choice950 PairReceipts.check950 (none) (by decide)
+private def leaf0 := (PairReceipts.route940 10)
 theorem case210: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,2,some 3⟩:=PairRoute.start _ leaf0
-private theorem leaf1:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,4,some 8⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell949 PairReceipts.choice949 PairReceipts.check949 (none) (by decide)
+private def leaf1 := (PairReceipts.route940 9)
 theorem case211: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,4,some 8⟩:=PairRoute.start _ leaf1
-private theorem leaf2:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,9,some 12⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell948 PairReceipts.choice948 PairReceipts.check948 (none) (by decide)
+private def leaf2 := (PairReceipts.route940 8)
 theorem case212: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,9,some 12⟩:=PairRoute.start _ leaf2
-private theorem leaf3:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,13,some 16⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell947 PairReceipts.choice947 PairReceipts.check947 (none) (by decide)
+private def leaf3 := (PairReceipts.route940 7)
 theorem case213: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,13,some 16⟩:=PairRoute.start _ leaf3
-private theorem leaf4:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,17,some 20⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell946 PairReceipts.choice946 PairReceipts.check946 (none) (by decide)
+private def leaf4 := (PairReceipts.route940 6)
 theorem case214: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,17,some 20⟩:=PairRoute.start _ leaf4
-private theorem leaf5:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,21,some 24⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell945 PairReceipts.choice945 PairReceipts.check945 (none) (by decide)
+private def leaf5 := (PairReceipts.route940 5)
 theorem case215: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,21,some 24⟩:=PairRoute.start _ leaf5
-private theorem leaf6:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,25,some 28⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell944 PairReceipts.choice944 PairReceipts.check944 (none) (by decide)
+private def leaf6 := (PairReceipts.route940 4)
 theorem case216: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,25,some 28⟩:=PairRoute.start _ leaf6
-private theorem leaf7:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,29,some 32⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell943 PairReceipts.choice943 PairReceipts.check943 (none) (by decide)
+private def leaf7 := (PairReceipts.route940 3)
 theorem case217: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,29,some 32⟩:=PairRoute.start _ leaf7
-private theorem leaf8:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,33,some 40⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell942 PairReceipts.choice942 PairReceipts.check942 (none) (by decide)
+private def leaf8 := (PairReceipts.route940 2)
 theorem case218: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,33,some 40⟩:=PairRoute.start _ leaf8
-private theorem leaf9:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,41,some 48⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell941 PairReceipts.choice941 PairReceipts.check941 (none) (by decide)
+private def leaf9 := (PairReceipts.route940 1)
 theorem case219: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,41,some 48⟩:=PairRoute.start _ leaf9
 end Research6969.HardFit1At210
 end Z6969Source2651
@@ -44,68 +46,34 @@ end Z6969Source2651
 section Z6969Source2652
 set_option autoImplicit true
 namespace Research6969.PairReceipts
+open StockPairs
 set_option maxHeartbeats 0
 set_option maxRecDepth 15000
-def cell960:PairCell.Row:=⟨64,721,12,2,25,some 28,0,none,302619,[MeasuredChoices.test166,MeasuredChoices.test167],[]⟩
-def choice960:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check960:PairPrices.valid cell960 (0:Fin 18) choice960:=by decide +kernel
-def cell961:PairCell.Row:=⟨64,721,12,2,21,some 24,0,none,257363,[MeasuredChoices.test25,MeasuredChoices.test26],[]⟩
-def choice961:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check961:PairPrices.valid cell961 (0:Fin 18) choice961:=by decide +kernel
-def cell962:PairCell.Row:=⟨64,721,12,2,17,some 20,0,none,257363,[],[]⟩
-def choice962:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check962:PairPrices.valid cell962 (0:Fin 18) choice962:=by decide +kernel
-def cell963:PairCell.Row:=⟨64,721,12,2,13,some 16,0,none,257363,[],[]⟩
-def choice963:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check963:PairPrices.valid cell963 (0:Fin 18) choice963:=by decide +kernel
-def cell964:PairCell.Row:=⟨64,721,12,2,9,some 12,0,none,257363,[],[]⟩
-def choice964:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check964:PairPrices.valid cell964 (0:Fin 18) choice964:=by decide +kernel
-def cell965:PairCell.Row:=⟨64,721,12,2,4,some 8,0,none,257363,[],[]⟩
-def choice965:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check965:PairPrices.valid cell965 (0:Fin 18) choice965:=by decide +kernel
-def cell966:PairCell.Row:=⟨64,721,12,2,2,some 3,0,none,257363,[],[]⟩
-def choice966:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check966:PairPrices.valid cell966 (0:Fin 18) choice966:=by decide +kernel
-def cell967:PairCell.Row:=⟨64,721,12,2,1,some 1,0,none,257363,[],[]⟩
-def choice967:PairPrices.Decision:=⟨.surface,.whole,.surface,0⟩
-theorem check967:PairPrices.valid cell967 (0:Fin 18) choice967:=by decide +kernel
-def cell968:PairCell.Row:=⟨64,721,12,2,0,some 0,0,none,257363,[],[]⟩
-def choice968:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check968:PairPrices.valid cell968 (0:Fin 18) choice968:=by decide +kernel
-def cell969:PairCell.Row:=⟨28,32,9,2,25,some 28,0,none,257363,[MeasuredChoices.test36],[]⟩
-def choice969:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check969:PairPrices.valid cell969 (9:Fin 18) choice969:=by decide +kernel
-def cell970:PairCell.Row:=⟨28,32,9,2,21,some 24,0,none,257363,[],[]⟩
-def choice970:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check970:PairPrices.valid cell970 (9:Fin 18) choice970:=by decide +kernel
-def cell971:PairCell.Row:=⟨28,32,9,2,17,some 20,0,none,257363,[],[]⟩
-def choice971:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check971:PairPrices.valid cell971 (9:Fin 18) choice971:=by decide +kernel
-def cell972:PairCell.Row:=⟨28,32,9,2,13,some 16,0,none,257363,[],[]⟩
-def choice972:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check972:PairPrices.valid cell972 (9:Fin 18) choice972:=by decide +kernel
-def cell973:PairCell.Row:=⟨28,32,9,2,9,some 12,0,none,257363,[],[]⟩
-def choice973:PairPrices.Decision:=⟨.surface,.intersection,.surface,0⟩
-theorem check973:PairPrices.valid cell973 (9:Fin 18) choice973:=by decide +kernel
-def cell974:PairCell.Row:=⟨33,40,9,2,25,some 28,0,none,257363,[MeasuredChoices.test36],[]⟩
-def choice974:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check974:PairPrices.valid cell974 (9:Fin 18) choice974:=by decide +kernel
-def cell975:PairCell.Row:=⟨33,40,9,2,21,some 24,0,none,257363,[],[]⟩
-def choice975:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check975:PairPrices.valid cell975 (9:Fin 18) choice975:=by decide +kernel
-def cell976:PairCell.Row:=⟨33,40,9,2,17,some 20,0,none,257363,[],[]⟩
-def choice976:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check976:PairPrices.valid cell976 (9:Fin 18) choice976:=by decide +kernel
-def cell977:PairCell.Row:=⟨33,40,9,2,13,some 16,0,none,257363,[],[]⟩
-def choice977:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check977:PairPrices.valid cell977 (9:Fin 18) choice977:=by decide +kernel
-def cell978:PairCell.Row:=⟨33,40,9,2,9,some 12,0,none,257363,[],[]⟩
-def choice978:PairPrices.Decision:=⟨.surface,.intersection,.surface,0⟩
-theorem check978:PairPrices.valid cell978 (9:Fin 18) choice978:=by decide +kernel
-def cell979:PairCell.Row:=⟨41,49,9,2,25,some 28,0,none,257363,[MeasuredChoices.test36],[]⟩
-def choice979:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check979:PairPrices.valid cell979 (9:Fin 18) choice979:=by decide +kernel
+private def rows960 : List StockPairs.Receipt := [
+  ⟨⟨64,721,12,2,25,some 28,0,none,302619,[MeasuredChoices.test166,MeasuredChoices.test167],[]⟩,0,surfaceWhole⟩,
+  ⟨⟨64,721,12,2,21,some 24,0,none,257319,[MeasuredChoices.test25,MeasuredChoices.test26],[]⟩,0,surfaceWhole⟩,
+  ⟨⟨64,721,12,2,17,some 20,0,none,257319,[],[]⟩,0,surfaceWhole⟩,
+  ⟨⟨64,721,12,2,13,some 16,0,none,257319,[],[]⟩,0,surfaceWhole⟩,
+  ⟨⟨64,721,12,2,9,some 12,0,none,257319,[],[]⟩,0,surfaceWhole⟩,
+  ⟨⟨64,721,12,2,4,some 8,0,none,257319,[],[]⟩,0,surfaceWhole⟩,
+  ⟨⟨64,721,12,2,2,some 3,0,none,257319,[],[]⟩,0,surfaceWhole⟩,
+  ⟨⟨64,721,12,2,1,some 1,0,none,257319,[],[]⟩,0,⟨.surface,.whole,.surface,0⟩⟩,
+  ⟨⟨64,721,12,2,0,some 0,0,none,257319,[],[]⟩,0,surfaceWhole⟩,
+  ⟨⟨28,32,9,2,25,some 28,0,none,257319,[MeasuredChoices.test36],[]⟩,9,surfaceIntersection⟩,
+  ⟨⟨28,32,9,2,21,some 24,0,none,257319,[],[]⟩,9,surfaceIntersection⟩,
+  ⟨⟨28,32,9,2,17,some 20,0,none,257319,[],[]⟩,9,surfaceIntersection⟩,
+  ⟨⟨28,32,9,2,13,some 16,0,none,257319,[],[]⟩,9,surfaceIntersection⟩,
+  ⟨⟨28,32,9,2,9,some 12,0,none,257319,[],[]⟩,9,⟨.surface,.intersection,.surface,0⟩⟩,
+  ⟨⟨33,40,9,2,25,some 28,0,none,257319,[MeasuredChoices.test36],[]⟩,9,surfaceIntersection⟩,
+  ⟨⟨33,40,9,2,21,some 24,0,none,257319,[],[]⟩,9,surfaceIntersection⟩,
+  ⟨⟨33,40,9,2,17,some 20,0,none,257319,[],[]⟩,9,surfaceIntersection⟩,
+  ⟨⟨33,40,9,2,13,some 16,0,none,257319,[],[]⟩,9,surfaceIntersection⟩,
+  ⟨⟨33,40,9,2,9,some 12,0,none,257319,[],[]⟩,9,⟨.surface,.intersection,.surface,0⟩⟩,
+  ⟨⟨41,49,9,2,25,some 28,0,none,257319,[MeasuredChoices.test36],[]⟩,9,surfaceIntersection⟩]
+private theorem paid960 : StockPairs.checked rows960 = true := by decide +kernel
+theorem route960 (i : Fin 20) : (rows960.get i).Done :=
+  StockPairs.doneAt paid960 i
+
 end Research6969.PairReceipts
 end Z6969Source2652
 
@@ -115,27 +83,27 @@ set_option autoImplicit true
 namespace Research6969.HardFit1At220
 set_option maxRecDepth 18000
 set_option maxHeartbeats 1200000
-private theorem leaf0:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,49,some 64⟩,0,none,128681,none⟩:=PairLeaves.paired PairReceipts.cell940 PairReceipts.choice940 PairReceipts.check940 (none) (by decide)
+private def leaf0 := (PairReceipts.route940 0)
 theorem case220: NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,49,some 64⟩:=PairRoute.start _ leaf0
-private theorem leaf1:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,0,some 0⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell968 PairReceipts.choice968 PairReceipts.check968 (none) (by decide)
+private def leaf1 := (PairReceipts.route960 8)
 theorem case221: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,0,some 0⟩:=PairRoute.start _ leaf1
-private theorem leaf2:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,1,some 1⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell967 PairReceipts.choice967 PairReceipts.check967 (none) (by decide)
+private def leaf2 := (PairReceipts.route960 7)
 theorem case222: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,1,some 1⟩:=PairRoute.start _ leaf2
-private theorem leaf3:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,2,some 3⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell966 PairReceipts.choice966 PairReceipts.check966 (none) (by decide)
+private def leaf3 := (PairReceipts.route960 6)
 theorem case223: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,2,some 3⟩:=PairRoute.start _ leaf3
-private theorem leaf4:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,4,some 8⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell965 PairReceipts.choice965 PairReceipts.check965 (none) (by decide)
+private def leaf4 := (PairReceipts.route960 5)
 theorem case224: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,4,some 8⟩:=PairRoute.start _ leaf4
-private theorem leaf5:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,9,some 12⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell964 PairReceipts.choice964 PairReceipts.check964 (none) (by decide)
+private def leaf5 := (PairReceipts.route960 4)
 theorem case225: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,9,some 12⟩:=PairRoute.start _ leaf5
-private theorem leaf6:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,13,some 16⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell963 PairReceipts.choice963 PairReceipts.check963 (none) (by decide)
+private def leaf6 := (PairReceipts.route960 3)
 theorem case226: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,13,some 16⟩:=PairRoute.start _ leaf6
-private theorem leaf7:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,17,some 20⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell962 PairReceipts.choice962 PairReceipts.check962 (none) (by decide)
+private def leaf7 := (PairReceipts.route960 2)
 theorem case227: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,17,some 20⟩:=PairRoute.start _ leaf7
-private theorem leaf8:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,21,some 24⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell961 PairReceipts.choice961 PairReceipts.check961 (none) (by decide)
+private def leaf8 := (PairReceipts.route960 1)
 theorem case228: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,21,some 24⟩:=PairRoute.start _ leaf8
-private theorem leaf9:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,25,some 28⟩,0,none,257363,some 302619⟩:=PairLeaves.paired PairReceipts.cell959 PairReceipts.choice959 PairReceipts.check959 (some 302619) (by decide)
-private theorem leaf10:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,25,some 28⟩,0,none,302619,none⟩:=PairLeaves.paired PairReceipts.cell960 PairReceipts.choice960 PairReceipts.check960 (none) (by decide)
-private theorem weight11:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,25,some 28⟩,0,none,257363,none⟩:=PairRoute.weight 302619 leaf9 leaf10
+private def leaf9 := (PairReceipts.route940 19)
+private def leaf10 := (PairReceipts.route960 0)
+private def weight11 := PairRoute.weight 302619 leaf9 leaf10
 theorem case229: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,25,some 28⟩:=PairRoute.start _ weight11
 end Research6969.HardFit1At220
 end Z6969Source2653
@@ -146,17 +114,17 @@ set_option autoImplicit true
 namespace Research6969.HardFit1At230
 set_option maxRecDepth 18000
 set_option maxHeartbeats 1200000
-private theorem leaf0:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,29,some 32⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell958 PairReceipts.choice958 PairReceipts.check958 (none) (by decide)
+private def leaf0 := (PairReceipts.route940 18)
 theorem case230: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,29,some 32⟩:=PairRoute.start _ leaf0
-private theorem leaf1:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,33,some 36⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell957 PairReceipts.choice957 PairReceipts.check957 (none) (by decide)
+private def leaf1 := (PairReceipts.route940 17)
 theorem case231: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,33,some 36⟩:=PairRoute.start _ leaf1
-private theorem leaf2:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,37,some 40⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell956 PairReceipts.choice956 PairReceipts.check956 (none) (by decide)
+private def leaf2 := (PairReceipts.route940 16)
 theorem case232: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,37,some 40⟩:=PairRoute.start _ leaf2
-private theorem leaf3:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,41,some 48⟩,0,none,257363,some 291368⟩:=PairLeaves.paired PairReceipts.cell954 PairReceipts.choice954 PairReceipts.check954 (some 291368) (by decide)
-private theorem leaf4:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,41,some 48⟩,0,none,291368,none⟩:=PairLeaves.paired PairReceipts.cell955 PairReceipts.choice955 PairReceipts.check955 (none) (by decide)
-private theorem weight5:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,41,some 48⟩,0,none,257363,none⟩:=PairRoute.weight 291368 leaf3 leaf4
+private def leaf3 := (PairReceipts.route940 14)
+private def leaf4 := (PairReceipts.route940 15)
+private def weight5 := PairRoute.weight 291368 leaf3 leaf4
 theorem case233: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,41,some 48⟩:=PairRoute.start _ weight5
-private theorem leaf6:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,49,some 52⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell953 PairReceipts.choice953 PairReceipts.check953 (none) (by decide)
+private def leaf6 := (PairReceipts.route940 13)
 theorem case234: NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,49,some 52⟩:=PairRoute.start _ leaf6
 end Research6969.HardFit1At230
 end Z6969Source2654
@@ -695,68 +663,34 @@ end Z6969Source2655
 section Z6969Source2656
 set_option autoImplicit true
 namespace Research6969.PairReceipts
+open StockPairs
 set_option maxHeartbeats 0
 set_option maxRecDepth 15000
-def cell1100:PairCell.Row:=⟨50,63,10,2,17,some 20,0,none,257363,[],[]⟩
-def choice1100:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1100:PairPrices.valid cell1100 (15:Fin 18) choice1100:=by decide +kernel
-def cell1101:PairCell.Row:=⟨64,628,12,2,25,some 28,0,none,257363,[MeasuredChoices.test35,MeasuredChoices.test36],[]⟩
-def choice1101:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1101:PairPrices.valid cell1101 (15:Fin 18) choice1101:=by decide +kernel
-def cell1102:PairCell.Row:=⟨64,628,12,2,21,some 24,0,none,257363,[MeasuredChoices.test26],[]⟩
-def choice1102:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1102:PairPrices.valid cell1102 (15:Fin 18) choice1102:=by decide +kernel
-def cell1103:PairCell.Row:=⟨64,628,12,2,17,some 20,0,none,257363,[],[]⟩
-def choice1103:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1103:PairPrices.valid cell1103 (15:Fin 18) choice1103:=by decide +kernel
-def cell1104:PairCell.Row:=⟨64,628,12,2,13,some 16,0,none,257363,[],[]⟩
-def choice1104:PairPrices.Decision:=⟨.surface,.intersection,.surface,0⟩
-theorem check1104:PairPrices.valid cell1104 (15:Fin 18) choice1104:=by decide +kernel
-def cell1105:PairCell.Row:=⟨28,32,9,2,21,some 24,0,none,257363,[],[]⟩
-def choice1105:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1105:PairPrices.valid cell1105 (16:Fin 18) choice1105:=by decide +kernel
-def cell1106:PairCell.Row:=⟨33,40,9,2,21,some 24,0,none,257363,[],[]⟩
-def choice1106:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1106:PairPrices.valid cell1106 (16:Fin 18) choice1106:=by decide +kernel
-def cell1107:PairCell.Row:=⟨41,49,9,2,21,some 24,0,none,257363,[],[]⟩
-def choice1107:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1107:PairPrices.valid cell1107 (16:Fin 18) choice1107:=by decide +kernel
-def cell1108:PairCell.Row:=⟨50,63,10,2,21,some 24,0,none,257363,[],[]⟩
-def choice1108:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1108:PairPrices.valid cell1108 (16:Fin 18) choice1108:=by decide +kernel
-def cell1109:PairCell.Row:=⟨64,628,12,2,25,some 28,0,none,257363,[MeasuredChoices.test35,MeasuredChoices.test36],[]⟩
-def choice1109:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1109:PairPrices.valid cell1109 (16:Fin 18) choice1109:=by decide +kernel
-def cell1110:PairCell.Row:=⟨64,628,12,2,21,some 24,0,none,257363,[MeasuredChoices.test26],[]⟩
-def choice1110:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1110:PairPrices.valid cell1110 (16:Fin 18) choice1110:=by decide +kernel
-def cell1111:PairCell.Row:=⟨64,628,12,2,17,some 20,0,none,257363,[],[]⟩
-def choice1111:PairPrices.Decision:=⟨.surface,.intersection,.surface,0⟩
-theorem check1111:PairPrices.valid cell1111 (16:Fin 18) choice1111:=by decide +kernel
-def cell1112:PairCell.Row:=⟨33,40,9,2,21,some 24,0,none,257363,[],[]⟩
-def choice1112:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1112:PairPrices.valid cell1112 (17:Fin 18) choice1112:=by decide +kernel
-def cell1113:PairCell.Row:=⟨41,49,9,2,21,some 24,0,none,257363,[],[]⟩
-def choice1113:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1113:PairPrices.valid cell1113 (17:Fin 18) choice1113:=by decide +kernel
-def cell1114:PairCell.Row:=⟨50,63,10,2,21,some 24,0,none,257363,[],[]⟩
-def choice1114:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1114:PairPrices.valid cell1114 (17:Fin 18) choice1114:=by decide +kernel
-def cell1115:PairCell.Row:=⟨64,581,12,2,25,some 28,0,none,257363,[MeasuredChoices.test35,MeasuredChoices.test36],[]⟩
-def choice1115:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1115:PairPrices.valid cell1115 (17:Fin 18) choice1115:=by decide +kernel
-def cell1116:PairCell.Row:=⟨64,581,12,2,21,some 24,0,none,257363,[MeasuredChoices.test26],[]⟩
-def choice1116:PairPrices.Decision:=⟨.surface,.intersection,.impossible,0⟩
-theorem check1116:PairPrices.valid cell1116 (17:Fin 18) choice1116:=by decide +kernel
-def cell1117:PairCell.Row:=⟨64,581,12,2,17,some 20,0,none,257363,[],[]⟩
-def choice1117:PairPrices.Decision:=⟨.surface,.intersection,.surface,0⟩
-theorem check1117:PairPrices.valid cell1117 (17:Fin 18) choice1117:=by decide +kernel
-def cell1118:PairCell.Row:=⟨23,24,9,2,29,some 32,0,none,257363,[MeasuredChoices.test39],[]⟩
-def choice1118:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1118:PairPrices.valid cell1118 (1:Fin 18) choice1118:=by decide +kernel
-def cell1119:PairCell.Row:=⟨23,24,9,2,25,some 28,0,none,257363,[MeasuredChoices.test36],[]⟩
-def choice1119:PairPrices.Decision:=⟨(.node 8000000000000000),.intersection,.impossible,302619⟩
-theorem check1119:PairPrices.valid cell1119 (1:Fin 18) choice1119:=by decide +kernel
+private def rows1100 : List StockPairs.Receipt := [
+  ⟨⟨50,63,10,2,17,some 20,0,none,257319,[],[]⟩,15,surfaceIntersection⟩,
+  ⟨⟨64,628,12,2,25,some 28,0,none,257319,[MeasuredChoices.test35,MeasuredChoices.test36],[]⟩,15,surfaceIntersection⟩,
+  ⟨⟨64,628,12,2,21,some 24,0,none,257319,[MeasuredChoices.test26],[]⟩,15,surfaceIntersection⟩,
+  ⟨⟨64,628,12,2,17,some 20,0,none,257319,[],[]⟩,15,surfaceIntersection⟩,
+  ⟨⟨64,628,12,2,13,some 16,0,none,257319,[],[]⟩,15,⟨.surface,.intersection,.surface,0⟩⟩,
+  ⟨⟨28,32,9,2,21,some 24,0,none,257319,[],[]⟩,16,surfaceIntersection⟩,
+  ⟨⟨33,40,9,2,21,some 24,0,none,257319,[],[]⟩,16,surfaceIntersection⟩,
+  ⟨⟨41,49,9,2,21,some 24,0,none,257319,[],[]⟩,16,surfaceIntersection⟩,
+  ⟨⟨50,63,10,2,21,some 24,0,none,257319,[],[]⟩,16,surfaceIntersection⟩,
+  ⟨⟨64,628,12,2,25,some 28,0,none,257319,[MeasuredChoices.test35,MeasuredChoices.test36],[]⟩,16,surfaceIntersection⟩,
+  ⟨⟨64,628,12,2,21,some 24,0,none,257319,[MeasuredChoices.test26],[]⟩,16,surfaceIntersection⟩,
+  ⟨⟨64,628,12,2,17,some 20,0,none,257319,[],[]⟩,16,⟨.surface,.intersection,.surface,0⟩⟩,
+  ⟨⟨33,40,9,2,21,some 24,0,none,257319,[],[]⟩,17,surfaceIntersection⟩,
+  ⟨⟨41,49,9,2,21,some 24,0,none,257319,[],[]⟩,17,surfaceIntersection⟩,
+  ⟨⟨50,63,10,2,21,some 24,0,none,257319,[],[]⟩,17,surfaceIntersection⟩,
+  ⟨⟨64,581,12,2,25,some 28,0,none,257319,[MeasuredChoices.test35,MeasuredChoices.test36],[]⟩,17,surfaceIntersection⟩,
+  ⟨⟨64,581,12,2,21,some 24,0,none,257319,[MeasuredChoices.test26],[]⟩,17,surfaceIntersection⟩,
+  ⟨⟨64,581,12,2,17,some 20,0,none,257319,[],[]⟩,17,⟨.surface,.intersection,.surface,0⟩⟩,
+  ⟨⟨23,24,9,2,29,some 32,0,none,257319,[MeasuredChoices.test39],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,2,25,some 28,0,none,257319,[MeasuredChoices.test36],[]⟩,1,⟨(.node 8059959167344767),.intersection,.impossible,302619⟩⟩]
+private theorem paid1100 : StockPairs.checked rows1100 = true := by decide +kernel
+theorem route1100 (i : Fin 20) : (rows1100.get i).Done :=
+  StockPairs.doneAt paid1100 i
+
 end Research6969.PairReceipts
 end Z6969Source2656
 
@@ -764,68 +698,34 @@ end Z6969Source2656
 section Z6969Source2657
 set_option autoImplicit true
 namespace Research6969.PairReceipts
+open StockPairs
 set_option maxHeartbeats 0
 set_option maxRecDepth 15000
-def cell1120:PairCell.Row:=⟨23,24,9,2,25,some 28,0,none,302619,[MeasuredChoices.test166],[]⟩
-def choice1120:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1120:PairPrices.valid cell1120 (1:Fin 18) choice1120:=by decide +kernel
-def cell1121:PairCell.Row:=⟨23,24,9,2,21,some 24,0,none,257363,[MeasuredChoices.test25],[]⟩
-def choice1121:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1121:PairPrices.valid cell1121 (1:Fin 18) choice1121:=by decide +kernel
-def cell1122:PairCell.Row:=⟨23,24,9,2,17,some 20,0,none,257363,[],[]⟩
-def choice1122:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1122:PairPrices.valid cell1122 (1:Fin 18) choice1122:=by decide +kernel
-def cell1123:PairCell.Row:=⟨23,24,9,2,13,some 16,0,none,257363,[],[]⟩
-def choice1123:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1123:PairPrices.valid cell1123 (1:Fin 18) choice1123:=by decide +kernel
-def cell1124:PairCell.Row:=⟨23,24,9,2,9,some 12,0,none,257363,[],[]⟩
-def choice1124:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1124:PairPrices.valid cell1124 (1:Fin 18) choice1124:=by decide +kernel
-def cell1125:PairCell.Row:=⟨23,24,9,2,4,some 8,0,none,257363,[],[]⟩
-def choice1125:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1125:PairPrices.valid cell1125 (1:Fin 18) choice1125:=by decide +kernel
-def cell1126:PairCell.Row:=⟨23,24,9,3,21,some 24,0,none,386045,[MeasuredChoices.test869],[]⟩
-def choice1126:PairPrices.Decision:=⟨.marked,.whole,.impossible,0⟩
-theorem check1126:PairPrices.valid cell1126 (1:Fin 18) choice1126:=by decide +kernel
-def cell1127:PairCell.Row:=⟨23,24,9,3,17,some 20,0,some 0,386045,[MeasuredChoices.test821],[AxisChoices.test1821]⟩
-def choice1127:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1127:PairPrices.valid cell1127 (1:Fin 18) choice1127:=by decide +kernel
-def cell1128:PairCell.Row:=⟨23,24,9,3,17,some 20,1,some 1,386045,[MeasuredChoices.test821],[AxisChoices.test1822]⟩
-def choice1128:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1128:PairPrices.valid cell1128 (1:Fin 18) choice1128:=by decide +kernel
-def cell1129:PairCell.Row:=⟨23,24,9,3,17,some 20,2,some 2,386045,[MeasuredChoices.test821],[AxisChoices.test1823]⟩
-def choice1129:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1129:PairPrices.valid cell1129 (1:Fin 18) choice1129:=by decide +kernel
-def cell1130:PairCell.Row:=⟨23,24,9,3,17,some 20,3,some 3,386045,[MeasuredChoices.test821],[AxisChoices.test1824]⟩
-def choice1130:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1130:PairPrices.valid cell1130 (1:Fin 18) choice1130:=by decide +kernel
-def cell1131:PairCell.Row:=⟨23,24,9,3,17,some 20,4,some 4,386045,[MeasuredChoices.test821],[AxisChoices.test1825]⟩
-def choice1131:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1131:PairPrices.valid cell1131 (1:Fin 18) choice1131:=by decide +kernel
-def cell1132:PairCell.Row:=⟨23,24,9,3,17,some 20,5,some 5,386045,[MeasuredChoices.test821],[AxisChoices.test1826]⟩
-def choice1132:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1132:PairPrices.valid cell1132 (1:Fin 18) choice1132:=by decide +kernel
-def cell1133:PairCell.Row:=⟨23,24,9,3,17,some 20,6,some 6,386045,[MeasuredChoices.test821],[AxisChoices.test1827]⟩
-def choice1133:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1133:PairPrices.valid cell1133 (1:Fin 18) choice1133:=by decide +kernel
-def cell1134:PairCell.Row:=⟨23,24,9,3,17,some 20,7,some 7,386045,[MeasuredChoices.test821],[AxisChoices.test1828]⟩
-def choice1134:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1134:PairPrices.valid cell1134 (1:Fin 18) choice1134:=by decide +kernel
-def cell1135:PairCell.Row:=⟨23,24,9,3,17,some 20,8,some 8,386045,[MeasuredChoices.test821],[AxisChoices.test1829]⟩
-def choice1135:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1135:PairPrices.valid cell1135 (1:Fin 18) choice1135:=by decide +kernel
-def cell1136:PairCell.Row:=⟨23,24,9,3,17,some 20,9,some 9,386045,[MeasuredChoices.test821],[AxisChoices.test1830]⟩
-def choice1136:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1136:PairPrices.valid cell1136 (1:Fin 18) choice1136:=by decide +kernel
-def cell1137:PairCell.Row:=⟨23,24,9,3,17,some 20,10,some 10,386045,[MeasuredChoices.test821],[AxisChoices.test1831]⟩
-def choice1137:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1137:PairPrices.valid cell1137 (1:Fin 18) choice1137:=by decide +kernel
-def cell1138:PairCell.Row:=⟨23,24,9,3,17,some 20,11,some 11,386045,[MeasuredChoices.test821],[AxisChoices.test1832]⟩
-def choice1138:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1138:PairPrices.valid cell1138 (1:Fin 18) choice1138:=by decide +kernel
-def cell1139:PairCell.Row:=⟨23,24,9,3,17,some 20,12,some 12,386045,[MeasuredChoices.test821],[AxisChoices.test1833]⟩
-def choice1139:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1139:PairPrices.valid cell1139 (1:Fin 18) choice1139:=by decide +kernel
+private def rows1120 : List StockPairs.Receipt := [
+  ⟨⟨23,24,9,2,25,some 28,0,none,302619,[MeasuredChoices.test166],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,2,21,some 24,0,none,257319,[MeasuredChoices.test25],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,2,17,some 20,0,none,257319,[],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,2,13,some 16,0,none,257319,[],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,2,9,some 12,0,none,257319,[],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,2,4,some 8,0,none,257319,[],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,3,21,some 24,0,none,385979,[MeasuredChoices.test869],[]⟩,1,markedWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,0,some 0,385979,[MeasuredChoices.test821],[AxisChoices.test1821]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,1,some 1,385979,[MeasuredChoices.test821],[AxisChoices.test1822]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,2,some 2,385979,[MeasuredChoices.test821],[AxisChoices.test1823]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,3,some 3,385979,[MeasuredChoices.test821],[AxisChoices.test1824]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,4,some 4,385979,[MeasuredChoices.test821],[AxisChoices.test1825]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,5,some 5,385979,[MeasuredChoices.test821],[AxisChoices.test1826]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,6,some 6,385979,[MeasuredChoices.test821],[AxisChoices.test1827]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,7,some 7,385979,[MeasuredChoices.test821],[AxisChoices.test1828]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,8,some 8,385979,[MeasuredChoices.test821],[AxisChoices.test1829]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,9,some 9,385979,[MeasuredChoices.test821],[AxisChoices.test1830]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,10,some 10,385979,[MeasuredChoices.test821],[AxisChoices.test1831]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,11,some 11,385979,[MeasuredChoices.test821],[AxisChoices.test1832]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,12,some 12,385979,[MeasuredChoices.test821],[AxisChoices.test1833]⟩,1,markedAxisWhole⟩]
+private theorem paid1120 : StockPairs.checked rows1120 = true := by decide +kernel
+theorem route1120 (i : Fin 20) : (rows1120.get i).Done :=
+  StockPairs.doneAt paid1120 i
+
 end Research6969.PairReceipts
 end Z6969Source2657
 
@@ -833,68 +733,34 @@ end Z6969Source2657
 section Z6969Source2658
 set_option autoImplicit true
 namespace Research6969.PairReceipts
+open StockPairs
 set_option maxHeartbeats 0
 set_option maxRecDepth 15000
-def cell1180:PairCell.Row:=⟨23,24,9,3,15,some 15,15,some 15,386045,[MeasuredChoices.test797],[AxisChoices.test1836]⟩
-def choice1180:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1180:PairPrices.valid cell1180 (1:Fin 18) choice1180:=by decide +kernel
-def cell1181:PairCell.Row:=⟨23,24,9,3,14,some 14,0,some 0,386045,[MeasuredChoices.test785],[AxisChoices.test1821]⟩
-def choice1181:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1181:PairPrices.valid cell1181 (1:Fin 18) choice1181:=by decide +kernel
-def cell1182:PairCell.Row:=⟨23,24,9,3,14,some 14,1,some 1,386045,[MeasuredChoices.test785],[AxisChoices.test1822]⟩
-def choice1182:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1182:PairPrices.valid cell1182 (1:Fin 18) choice1182:=by decide +kernel
-def cell1183:PairCell.Row:=⟨23,24,9,3,14,some 14,2,some 2,386045,[MeasuredChoices.test785],[AxisChoices.test1823]⟩
-def choice1183:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1183:PairPrices.valid cell1183 (1:Fin 18) choice1183:=by decide +kernel
-def cell1184:PairCell.Row:=⟨23,24,9,3,14,some 14,3,some 3,386045,[MeasuredChoices.test785],[AxisChoices.test1824]⟩
-def choice1184:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1184:PairPrices.valid cell1184 (1:Fin 18) choice1184:=by decide +kernel
-def cell1185:PairCell.Row:=⟨23,24,9,3,14,some 14,4,some 4,386045,[MeasuredChoices.test785],[AxisChoices.test1825]⟩
-def choice1185:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1185:PairPrices.valid cell1185 (1:Fin 18) choice1185:=by decide +kernel
-def cell1186:PairCell.Row:=⟨23,24,9,3,14,some 14,5,some 5,386045,[MeasuredChoices.test785],[AxisChoices.test1826]⟩
-def choice1186:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1186:PairPrices.valid cell1186 (1:Fin 18) choice1186:=by decide +kernel
-def cell1187:PairCell.Row:=⟨23,24,9,3,14,some 14,6,some 6,386045,[MeasuredChoices.test785],[AxisChoices.test1827]⟩
-def choice1187:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1187:PairPrices.valid cell1187 (1:Fin 18) choice1187:=by decide +kernel
-def cell1188:PairCell.Row:=⟨23,24,9,3,14,some 14,7,some 7,386045,[MeasuredChoices.test785],[AxisChoices.test1828]⟩
-def choice1188:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1188:PairPrices.valid cell1188 (1:Fin 18) choice1188:=by decide +kernel
-def cell1189:PairCell.Row:=⟨23,24,9,3,14,some 14,8,some 8,386045,[MeasuredChoices.test785],[AxisChoices.test1829]⟩
-def choice1189:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1189:PairPrices.valid cell1189 (1:Fin 18) choice1189:=by decide +kernel
-def cell1190:PairCell.Row:=⟨23,24,9,3,14,some 14,9,some 9,386045,[MeasuredChoices.test785],[AxisChoices.test1830]⟩
-def choice1190:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1190:PairPrices.valid cell1190 (1:Fin 18) choice1190:=by decide +kernel
-def cell1191:PairCell.Row:=⟨23,24,9,3,14,some 14,10,some 10,386045,[MeasuredChoices.test785],[AxisChoices.test1831]⟩
-def choice1191:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1191:PairPrices.valid cell1191 (1:Fin 18) choice1191:=by decide +kernel
-def cell1192:PairCell.Row:=⟨23,24,9,3,14,some 14,11,some 11,386045,[MeasuredChoices.test785],[AxisChoices.test1832]⟩
-def choice1192:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1192:PairPrices.valid cell1192 (1:Fin 18) choice1192:=by decide +kernel
-def cell1193:PairCell.Row:=⟨23,24,9,3,14,some 14,12,some 12,386045,[MeasuredChoices.test785],[AxisChoices.test1833]⟩
-def choice1193:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1193:PairPrices.valid cell1193 (1:Fin 18) choice1193:=by decide +kernel
-def cell1194:PairCell.Row:=⟨23,24,9,3,14,some 14,13,some 13,386045,[MeasuredChoices.test785],[AxisChoices.test1834]⟩
-def choice1194:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1194:PairPrices.valid cell1194 (1:Fin 18) choice1194:=by decide +kernel
-def cell1195:PairCell.Row:=⟨23,24,9,3,14,some 14,14,some 14,386045,[MeasuredChoices.test785],[AxisChoices.test1835]⟩
-def choice1195:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1195:PairPrices.valid cell1195 (1:Fin 18) choice1195:=by decide +kernel
-def cell1196:PairCell.Row:=⟨23,24,9,3,13,some 13,0,none,386045,[MeasuredChoices.test770],[]⟩
-def choice1196:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1196:PairPrices.valid cell1196 (1:Fin 18) choice1196:=by decide +kernel
-def cell1197:PairCell.Row:=⟨23,24,9,3,9,some 12,0,none,386045,[MeasuredChoices.test724],[]⟩
-def choice1197:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1197:PairPrices.valid cell1197 (1:Fin 18) choice1197:=by decide +kernel
-def cell1198:PairCell.Row:=⟨23,24,9,3,4,some 8,0,none,386045,[MeasuredChoices.test671],[]⟩
-def choice1198:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1198:PairPrices.valid cell1198 (1:Fin 18) choice1198:=by decide +kernel
-def cell1199:PairCell.Row:=⟨25,27,9,2,33,some 40,0,none,257363,[MeasuredChoices.test44],[]⟩
-def choice1199:PairPrices.Decision:=⟨.marked,.whole,.impossible,0⟩
-theorem check1199:PairPrices.valid cell1199 (1:Fin 18) choice1199:=by decide +kernel
+private def rows1180 : List StockPairs.Receipt := [
+  ⟨⟨23,24,9,3,15,some 15,15,some 15,385979,[MeasuredChoices.test797],[AxisChoices.test1836]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,0,some 0,385979,[MeasuredChoices.test785],[AxisChoices.test1821]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,1,some 1,385979,[MeasuredChoices.test785],[AxisChoices.test1822]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,2,some 2,385979,[MeasuredChoices.test785],[AxisChoices.test1823]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,3,some 3,385979,[MeasuredChoices.test785],[AxisChoices.test1824]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,4,some 4,385979,[MeasuredChoices.test785],[AxisChoices.test1825]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,5,some 5,385979,[MeasuredChoices.test785],[AxisChoices.test1826]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,6,some 6,385979,[MeasuredChoices.test785],[AxisChoices.test1827]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,7,some 7,385979,[MeasuredChoices.test785],[AxisChoices.test1828]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,8,some 8,385979,[MeasuredChoices.test785],[AxisChoices.test1829]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,9,some 9,385979,[MeasuredChoices.test785],[AxisChoices.test1830]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,10,some 10,385979,[MeasuredChoices.test785],[AxisChoices.test1831]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,11,some 11,385979,[MeasuredChoices.test785],[AxisChoices.test1832]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,12,some 12,385979,[MeasuredChoices.test785],[AxisChoices.test1833]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,13,some 13,385979,[MeasuredChoices.test785],[AxisChoices.test1834]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,14,some 14,14,some 14,385979,[MeasuredChoices.test785],[AxisChoices.test1835]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,13,some 13,0,none,385979,[MeasuredChoices.test770],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,3,9,some 12,0,none,385979,[MeasuredChoices.test724],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨23,24,9,3,4,some 8,0,none,385979,[MeasuredChoices.test671],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨25,27,9,2,33,some 40,0,none,257319,[MeasuredChoices.test44],[]⟩,1,markedWhole⟩]
+private theorem paid1180 : StockPairs.checked rows1180 = true := by decide +kernel
+theorem route1180 (i : Fin 20) : (rows1180.get i).Done :=
+  StockPairs.doneAt paid1180 i
+
 end Research6969.PairReceipts
 end Z6969Source2658
 
@@ -904,27 +770,27 @@ set_option autoImplicit true
 namespace Research6969.HardFit2At000
 set_option maxRecDepth 18000
 set_option maxHeartbeats 1200000
-private theorem leaf0:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,4,some 8⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell1125 PairReceipts.choice1125 PairReceipts.check1125 (none) (by decide)
+private def leaf0 := (PairReceipts.route1120 5)
 theorem case0: NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,4,some 8⟩:=PairRoute.start _ leaf0
-private theorem leaf1:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,9,some 12⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell1124 PairReceipts.choice1124 PairReceipts.check1124 (none) (by decide)
+private def leaf1 := (PairReceipts.route1120 4)
 theorem case1: NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,9,some 12⟩:=PairRoute.start _ leaf1
-private theorem leaf2:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,13,some 16⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell1123 PairReceipts.choice1123 PairReceipts.check1123 (none) (by decide)
+private def leaf2 := (PairReceipts.route1120 3)
 theorem case2: NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,13,some 16⟩:=PairRoute.start _ leaf2
-private theorem leaf3:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,17,some 20⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell1122 PairReceipts.choice1122 PairReceipts.check1122 (none) (by decide)
+private def leaf3 := (PairReceipts.route1120 2)
 theorem case3: NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,17,some 20⟩:=PairRoute.start _ leaf3
-private theorem leaf4:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,21,some 24⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell1121 PairReceipts.choice1121 PairReceipts.check1121 (none) (by decide)
+private def leaf4 := (PairReceipts.route1120 1)
 theorem case4: NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,21,some 24⟩:=PairRoute.start _ leaf4
-private theorem leaf5:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,25,some 28⟩,0,none,257363,some 302619⟩:=PairLeaves.paired PairReceipts.cell1119 PairReceipts.choice1119 PairReceipts.check1119 (some 302619) (by decide)
-private theorem leaf6:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,25,some 28⟩,0,none,302619,none⟩:=PairLeaves.paired PairReceipts.cell1120 PairReceipts.choice1120 PairReceipts.check1120 (none) (by decide)
-private theorem weight7:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,25,some 28⟩,0,none,257363,none⟩:=PairRoute.weight 302619 leaf5 leaf6
+private def leaf5 := (PairReceipts.route1100 19)
+private def leaf6 := (PairReceipts.route1120 0)
+private def weight7 := PairRoute.weight 302619 leaf5 leaf6
 theorem case5: NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,25,some 28⟩:=PairRoute.start _ weight7
-private theorem leaf8:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,29,some 32⟩,0,none,257363,none⟩:=PairLeaves.paired PairReceipts.cell1118 PairReceipts.choice1118 PairReceipts.check1118 (none) (by decide)
+private def leaf8 := (PairReceipts.route1100 18)
 theorem case6: NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,29,some 32⟩:=PairRoute.start _ leaf8
-private theorem leaf9:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,3,4,some 8⟩,0,none,386045,none⟩:=PairLeaves.paired PairReceipts.cell1198 PairReceipts.choice1198 PairReceipts.check1198 (none) (by decide)
+private def leaf9 := (PairReceipts.route1180 18)
 theorem case7: NormalRoute.Done (1:Fin 18) ⟨23,24,9,3,4,some 8⟩:=PairRoute.start _ leaf9
-private theorem leaf10:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,3,9,some 12⟩,0,none,386045,none⟩:=PairLeaves.paired PairReceipts.cell1197 PairReceipts.choice1197 PairReceipts.check1197 (none) (by decide)
+private def leaf10 := (PairReceipts.route1180 17)
 theorem case8: NormalRoute.Done (1:Fin 18) ⟨23,24,9,3,9,some 12⟩:=PairRoute.start _ leaf10
-private theorem leaf11:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,3,13,some 13⟩,0,none,386045,none⟩:=PairLeaves.paired PairReceipts.cell1196 PairReceipts.choice1196 PairReceipts.check1196 (none) (by decide)
+private def leaf11 := (PairReceipts.route1180 16)
 theorem case9: NormalRoute.Done (1:Fin 18) ⟨23,24,9,3,13,some 13⟩:=PairRoute.start _ leaf11
 end Research6969.HardFit2At000
 end Z6969Source2659
@@ -933,68 +799,34 @@ end Z6969Source2659
 section Z6969Source2660
 set_option autoImplicit true
 namespace Research6969.PairReceipts
+open StockPairs
 set_option maxHeartbeats 0
 set_option maxRecDepth 15000
-def cell1140:PairCell.Row:=⟨23,24,9,3,17,some 20,13,some 13,386045,[MeasuredChoices.test821],[AxisChoices.test1834]⟩
-def choice1140:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1140:PairPrices.valid cell1140 (1:Fin 18) choice1140:=by decide +kernel
-def cell1141:PairCell.Row:=⟨23,24,9,3,17,some 20,14,some 14,386045,[MeasuredChoices.test821],[AxisChoices.test1835]⟩
-def choice1141:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1141:PairPrices.valid cell1141 (1:Fin 18) choice1141:=by decide +kernel
-def cell1142:PairCell.Row:=⟨23,24,9,3,17,some 20,15,some 15,386045,[MeasuredChoices.test821],[AxisChoices.test1836]⟩
-def choice1142:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1142:PairPrices.valid cell1142 (1:Fin 18) choice1142:=by decide +kernel
-def cell1143:PairCell.Row:=⟨23,24,9,3,17,some 20,16,some 16,386045,[MeasuredChoices.test821],[AxisChoices.test1837]⟩
-def choice1143:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1143:PairPrices.valid cell1143 (1:Fin 18) choice1143:=by decide +kernel
-def cell1144:PairCell.Row:=⟨23,24,9,3,17,some 20,17,some 17,386045,[MeasuredChoices.test821],[AxisChoices.test1838]⟩
-def choice1144:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1144:PairPrices.valid cell1144 (1:Fin 18) choice1144:=by decide +kernel
-def cell1145:PairCell.Row:=⟨23,24,9,3,17,some 20,18,some 18,386045,[MeasuredChoices.test821],[AxisChoices.test1839]⟩
-def choice1145:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1145:PairPrices.valid cell1145 (1:Fin 18) choice1145:=by decide +kernel
-def cell1146:PairCell.Row:=⟨23,24,9,3,17,some 20,19,some 19,386045,[MeasuredChoices.test821],[AxisChoices.test1840]⟩
-def choice1146:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1146:PairPrices.valid cell1146 (1:Fin 18) choice1146:=by decide +kernel
-def cell1147:PairCell.Row:=⟨23,24,9,3,17,some 20,20,some 20,386045,[MeasuredChoices.test821],[AxisChoices.test1841]⟩
-def choice1147:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1147:PairPrices.valid cell1147 (1:Fin 18) choice1147:=by decide +kernel
-def cell1148:PairCell.Row:=⟨23,24,9,3,16,some 16,0,some 0,386045,[MeasuredChoices.test807],[AxisChoices.test1821]⟩
-def choice1148:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1148:PairPrices.valid cell1148 (1:Fin 18) choice1148:=by decide +kernel
-def cell1149:PairCell.Row:=⟨23,24,9,3,16,some 16,1,some 1,386045,[MeasuredChoices.test807],[AxisChoices.test1822]⟩
-def choice1149:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1149:PairPrices.valid cell1149 (1:Fin 18) choice1149:=by decide +kernel
-def cell1150:PairCell.Row:=⟨23,24,9,3,16,some 16,2,some 2,386045,[MeasuredChoices.test807],[AxisChoices.test1823]⟩
-def choice1150:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1150:PairPrices.valid cell1150 (1:Fin 18) choice1150:=by decide +kernel
-def cell1151:PairCell.Row:=⟨23,24,9,3,16,some 16,3,some 3,386045,[MeasuredChoices.test807],[AxisChoices.test1824]⟩
-def choice1151:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1151:PairPrices.valid cell1151 (1:Fin 18) choice1151:=by decide +kernel
-def cell1152:PairCell.Row:=⟨23,24,9,3,16,some 16,4,some 4,386045,[MeasuredChoices.test807],[AxisChoices.test1825]⟩
-def choice1152:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1152:PairPrices.valid cell1152 (1:Fin 18) choice1152:=by decide +kernel
-def cell1153:PairCell.Row:=⟨23,24,9,3,16,some 16,5,some 5,386045,[MeasuredChoices.test807],[AxisChoices.test1826]⟩
-def choice1153:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1153:PairPrices.valid cell1153 (1:Fin 18) choice1153:=by decide +kernel
-def cell1154:PairCell.Row:=⟨23,24,9,3,16,some 16,6,some 6,386045,[MeasuredChoices.test807],[AxisChoices.test1827]⟩
-def choice1154:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1154:PairPrices.valid cell1154 (1:Fin 18) choice1154:=by decide +kernel
-def cell1155:PairCell.Row:=⟨23,24,9,3,16,some 16,7,some 7,386045,[MeasuredChoices.test807],[AxisChoices.test1828]⟩
-def choice1155:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1155:PairPrices.valid cell1155 (1:Fin 18) choice1155:=by decide +kernel
-def cell1156:PairCell.Row:=⟨23,24,9,3,16,some 16,8,some 8,386045,[MeasuredChoices.test807],[AxisChoices.test1829]⟩
-def choice1156:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1156:PairPrices.valid cell1156 (1:Fin 18) choice1156:=by decide +kernel
-def cell1157:PairCell.Row:=⟨23,24,9,3,16,some 16,9,some 9,386045,[MeasuredChoices.test807],[AxisChoices.test1830]⟩
-def choice1157:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1157:PairPrices.valid cell1157 (1:Fin 18) choice1157:=by decide +kernel
-def cell1158:PairCell.Row:=⟨23,24,9,3,16,some 16,10,some 10,386045,[MeasuredChoices.test807],[AxisChoices.test1831]⟩
-def choice1158:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1158:PairPrices.valid cell1158 (1:Fin 18) choice1158:=by decide +kernel
-def cell1159:PairCell.Row:=⟨23,24,9,3,16,some 16,11,some 11,386045,[MeasuredChoices.test807],[AxisChoices.test1832]⟩
-def choice1159:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1159:PairPrices.valid cell1159 (1:Fin 18) choice1159:=by decide +kernel
+private def rows1140 : List StockPairs.Receipt := [
+  ⟨⟨23,24,9,3,17,some 20,13,some 13,385979,[MeasuredChoices.test821],[AxisChoices.test1834]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,14,some 14,385979,[MeasuredChoices.test821],[AxisChoices.test1835]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,15,some 15,385979,[MeasuredChoices.test821],[AxisChoices.test1836]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,16,some 16,385979,[MeasuredChoices.test821],[AxisChoices.test1837]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,17,some 17,385979,[MeasuredChoices.test821],[AxisChoices.test1838]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,18,some 18,385979,[MeasuredChoices.test821],[AxisChoices.test1839]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,19,some 19,385979,[MeasuredChoices.test821],[AxisChoices.test1840]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,17,some 20,20,some 20,385979,[MeasuredChoices.test821],[AxisChoices.test1841]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,0,some 0,385979,[MeasuredChoices.test807],[AxisChoices.test1821]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,1,some 1,385979,[MeasuredChoices.test807],[AxisChoices.test1822]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,2,some 2,385979,[MeasuredChoices.test807],[AxisChoices.test1823]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,3,some 3,385979,[MeasuredChoices.test807],[AxisChoices.test1824]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,4,some 4,385979,[MeasuredChoices.test807],[AxisChoices.test1825]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,5,some 5,385979,[MeasuredChoices.test807],[AxisChoices.test1826]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,6,some 6,385979,[MeasuredChoices.test807],[AxisChoices.test1827]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,7,some 7,385979,[MeasuredChoices.test807],[AxisChoices.test1828]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,8,some 8,385979,[MeasuredChoices.test807],[AxisChoices.test1829]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,9,some 9,385979,[MeasuredChoices.test807],[AxisChoices.test1830]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,10,some 10,385979,[MeasuredChoices.test807],[AxisChoices.test1831]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,11,some 11,385979,[MeasuredChoices.test807],[AxisChoices.test1832]⟩,1,markedAxisWhole⟩]
+private theorem paid1140 : StockPairs.checked rows1140 = true := by decide +kernel
+theorem route1140 (i : Fin 20) : (rows1140.get i).Done :=
+  StockPairs.doneAt paid1140 i
+
 end Research6969.PairReceipts
 end Z6969Source2660
 
@@ -1002,68 +834,34 @@ end Z6969Source2660
 section Z6969Source2661
 set_option autoImplicit true
 namespace Research6969.PairReceipts
+open StockPairs
 set_option maxHeartbeats 0
 set_option maxRecDepth 15000
-def cell1160:PairCell.Row:=⟨23,24,9,3,16,some 16,12,some 12,386045,[MeasuredChoices.test807],[AxisChoices.test1833]⟩
-def choice1160:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1160:PairPrices.valid cell1160 (1:Fin 18) choice1160:=by decide +kernel
-def cell1161:PairCell.Row:=⟨23,24,9,3,16,some 16,13,some 13,386045,[MeasuredChoices.test807],[AxisChoices.test1834]⟩
-def choice1161:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1161:PairPrices.valid cell1161 (1:Fin 18) choice1161:=by decide +kernel
-def cell1162:PairCell.Row:=⟨23,24,9,3,16,some 16,14,some 14,386045,[MeasuredChoices.test807],[AxisChoices.test1835]⟩
-def choice1162:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1162:PairPrices.valid cell1162 (1:Fin 18) choice1162:=by decide +kernel
-def cell1163:PairCell.Row:=⟨23,24,9,3,16,some 16,15,some 15,386045,[MeasuredChoices.test807],[AxisChoices.test1836]⟩
-def choice1163:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1163:PairPrices.valid cell1163 (1:Fin 18) choice1163:=by decide +kernel
-def cell1164:PairCell.Row:=⟨23,24,9,3,16,some 16,16,some 16,386045,[MeasuredChoices.test807],[AxisChoices.test1837]⟩
-def choice1164:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1164:PairPrices.valid cell1164 (1:Fin 18) choice1164:=by decide +kernel
-def cell1165:PairCell.Row:=⟨23,24,9,3,15,some 15,0,some 0,386045,[MeasuredChoices.test797],[AxisChoices.test1821]⟩
-def choice1165:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1165:PairPrices.valid cell1165 (1:Fin 18) choice1165:=by decide +kernel
-def cell1166:PairCell.Row:=⟨23,24,9,3,15,some 15,1,some 1,386045,[MeasuredChoices.test797],[AxisChoices.test1822]⟩
-def choice1166:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1166:PairPrices.valid cell1166 (1:Fin 18) choice1166:=by decide +kernel
-def cell1167:PairCell.Row:=⟨23,24,9,3,15,some 15,2,some 2,386045,[MeasuredChoices.test797],[AxisChoices.test1823]⟩
-def choice1167:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1167:PairPrices.valid cell1167 (1:Fin 18) choice1167:=by decide +kernel
-def cell1168:PairCell.Row:=⟨23,24,9,3,15,some 15,3,some 3,386045,[MeasuredChoices.test797],[AxisChoices.test1824]⟩
-def choice1168:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1168:PairPrices.valid cell1168 (1:Fin 18) choice1168:=by decide +kernel
-def cell1169:PairCell.Row:=⟨23,24,9,3,15,some 15,4,some 4,386045,[MeasuredChoices.test797],[AxisChoices.test1825]⟩
-def choice1169:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1169:PairPrices.valid cell1169 (1:Fin 18) choice1169:=by decide +kernel
-def cell1170:PairCell.Row:=⟨23,24,9,3,15,some 15,5,some 5,386045,[MeasuredChoices.test797],[AxisChoices.test1826]⟩
-def choice1170:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1170:PairPrices.valid cell1170 (1:Fin 18) choice1170:=by decide +kernel
-def cell1171:PairCell.Row:=⟨23,24,9,3,15,some 15,6,some 6,386045,[MeasuredChoices.test797],[AxisChoices.test1827]⟩
-def choice1171:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1171:PairPrices.valid cell1171 (1:Fin 18) choice1171:=by decide +kernel
-def cell1172:PairCell.Row:=⟨23,24,9,3,15,some 15,7,some 7,386045,[MeasuredChoices.test797],[AxisChoices.test1828]⟩
-def choice1172:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1172:PairPrices.valid cell1172 (1:Fin 18) choice1172:=by decide +kernel
-def cell1173:PairCell.Row:=⟨23,24,9,3,15,some 15,8,some 8,386045,[MeasuredChoices.test797],[AxisChoices.test1829]⟩
-def choice1173:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1173:PairPrices.valid cell1173 (1:Fin 18) choice1173:=by decide +kernel
-def cell1174:PairCell.Row:=⟨23,24,9,3,15,some 15,9,some 9,386045,[MeasuredChoices.test797],[AxisChoices.test1830]⟩
-def choice1174:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1174:PairPrices.valid cell1174 (1:Fin 18) choice1174:=by decide +kernel
-def cell1175:PairCell.Row:=⟨23,24,9,3,15,some 15,10,some 10,386045,[MeasuredChoices.test797],[AxisChoices.test1831]⟩
-def choice1175:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1175:PairPrices.valid cell1175 (1:Fin 18) choice1175:=by decide +kernel
-def cell1176:PairCell.Row:=⟨23,24,9,3,15,some 15,11,some 11,386045,[MeasuredChoices.test797],[AxisChoices.test1832]⟩
-def choice1176:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1176:PairPrices.valid cell1176 (1:Fin 18) choice1176:=by decide +kernel
-def cell1177:PairCell.Row:=⟨23,24,9,3,15,some 15,12,some 12,386045,[MeasuredChoices.test797],[AxisChoices.test1833]⟩
-def choice1177:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1177:PairPrices.valid cell1177 (1:Fin 18) choice1177:=by decide +kernel
-def cell1178:PairCell.Row:=⟨23,24,9,3,15,some 15,13,some 13,386045,[MeasuredChoices.test797],[AxisChoices.test1834]⟩
-def choice1178:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1178:PairPrices.valid cell1178 (1:Fin 18) choice1178:=by decide +kernel
-def cell1179:PairCell.Row:=⟨23,24,9,3,15,some 15,14,some 14,386045,[MeasuredChoices.test797],[AxisChoices.test1835]⟩
-def choice1179:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1179:PairPrices.valid cell1179 (1:Fin 18) choice1179:=by decide +kernel
+private def rows1160 : List StockPairs.Receipt := [
+  ⟨⟨23,24,9,3,16,some 16,12,some 12,385979,[MeasuredChoices.test807],[AxisChoices.test1833]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,13,some 13,385979,[MeasuredChoices.test807],[AxisChoices.test1834]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,14,some 14,385979,[MeasuredChoices.test807],[AxisChoices.test1835]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,15,some 15,385979,[MeasuredChoices.test807],[AxisChoices.test1836]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,16,some 16,16,some 16,385979,[MeasuredChoices.test807],[AxisChoices.test1837]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,0,some 0,385979,[MeasuredChoices.test797],[AxisChoices.test1821]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,1,some 1,385979,[MeasuredChoices.test797],[AxisChoices.test1822]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,2,some 2,385979,[MeasuredChoices.test797],[AxisChoices.test1823]⟩,1,separateWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,3,some 3,385979,[MeasuredChoices.test797],[AxisChoices.test1824]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,4,some 4,385979,[MeasuredChoices.test797],[AxisChoices.test1825]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,5,some 5,385979,[MeasuredChoices.test797],[AxisChoices.test1826]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,6,some 6,385979,[MeasuredChoices.test797],[AxisChoices.test1827]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,7,some 7,385979,[MeasuredChoices.test797],[AxisChoices.test1828]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,8,some 8,385979,[MeasuredChoices.test797],[AxisChoices.test1829]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,9,some 9,385979,[MeasuredChoices.test797],[AxisChoices.test1830]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,10,some 10,385979,[MeasuredChoices.test797],[AxisChoices.test1831]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,11,some 11,385979,[MeasuredChoices.test797],[AxisChoices.test1832]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,12,some 12,385979,[MeasuredChoices.test797],[AxisChoices.test1833]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,13,some 13,385979,[MeasuredChoices.test797],[AxisChoices.test1834]⟩,1,markedAxisWhole⟩,
+  ⟨⟨23,24,9,3,15,some 15,14,some 14,385979,[MeasuredChoices.test797],[AxisChoices.test1835]⟩,1,markedAxisWhole⟩]
+private theorem paid1160 : StockPairs.checked rows1160 = true := by decide +kernel
+theorem route1160 (i : Fin 20) : (rows1160.get i).Done :=
+  StockPairs.doneAt paid1160 i
+
 end Research6969.PairReceipts
 end Z6969Source2661
 
@@ -1071,67 +869,33 @@ end Z6969Source2661
 section Z6969Source2662
 set_option autoImplicit true
 namespace Research6969.PairReceipts
+open StockPairs
 set_option maxHeartbeats 0
 set_option maxRecDepth 15000
-def cell1200:PairCell.Row:=⟨25,27,9,2,29,some 32,0,none,257363,[MeasuredChoices.test39],[]⟩
-def choice1200:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1200:PairPrices.valid cell1200 (1:Fin 18) choice1200:=by decide +kernel
-def cell1201:PairCell.Row:=⟨25,27,9,2,25,some 28,0,none,257363,[MeasuredChoices.test36],[]⟩
-def choice1201:PairPrices.Decision:=⟨(.node 8000000000000000),.intersection,.impossible,302619⟩
-theorem check1201:PairPrices.valid cell1201 (1:Fin 18) choice1201:=by decide +kernel
-def cell1202:PairCell.Row:=⟨25,27,9,2,25,some 28,0,none,302619,[MeasuredChoices.test166],[]⟩
-def choice1202:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1202:PairPrices.valid cell1202 (1:Fin 18) choice1202:=by decide +kernel
-def cell1203:PairCell.Row:=⟨25,27,9,2,21,some 24,0,none,257363,[MeasuredChoices.test25],[]⟩
-def choice1203:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1203:PairPrices.valid cell1203 (1:Fin 18) choice1203:=by decide +kernel
-def cell1204:PairCell.Row:=⟨25,27,9,2,17,some 20,0,none,257363,[],[]⟩
-def choice1204:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1204:PairPrices.valid cell1204 (1:Fin 18) choice1204:=by decide +kernel
-def cell1205:PairCell.Row:=⟨25,27,9,2,13,some 16,0,none,257363,[],[]⟩
-def choice1205:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1205:PairPrices.valid cell1205 (1:Fin 18) choice1205:=by decide +kernel
-def cell1206:PairCell.Row:=⟨25,27,9,2,9,some 12,0,none,257363,[],[]⟩
-def choice1206:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1206:PairPrices.valid cell1206 (1:Fin 18) choice1206:=by decide +kernel
-def cell1207:PairCell.Row:=⟨25,27,9,2,4,some 8,0,none,257363,[],[]⟩
-def choice1207:PairPrices.Decision:=⟨.surface,.whole,.impossible,0⟩
-theorem check1207:PairPrices.valid cell1207 (1:Fin 18) choice1207:=by decide +kernel
-def cell1208:PairCell.Row:=⟨25,27,9,3,25,some 28,0,none,386045,[MeasuredChoices.test924],[]⟩
-def choice1208:PairPrices.Decision:=⟨.marked,.whole,.impossible,0⟩
-theorem check1208:PairPrices.valid cell1208 (1:Fin 18) choice1208:=by decide +kernel
-def cell1209:PairCell.Row:=⟨25,27,9,3,20,some 20,0,some 0,386045,[MeasuredChoices.test856],[AxisChoices.test1821]⟩
-def choice1209:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1209:PairPrices.valid cell1209 (1:Fin 18) choice1209:=by decide +kernel
-def cell1210:PairCell.Row:=⟨25,27,9,3,20,some 20,1,some 1,386045,[MeasuredChoices.test856],[AxisChoices.test1822]⟩
-def choice1210:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1210:PairPrices.valid cell1210 (1:Fin 18) choice1210:=by decide +kernel
-def cell1211:PairCell.Row:=⟨25,27,9,3,20,some 20,2,some 2,386045,[MeasuredChoices.test856],[AxisChoices.test1823]⟩
-def choice1211:PairPrices.Decision:=⟨.separate,.whole,.impossible,0⟩
-theorem check1211:PairPrices.valid cell1211 (1:Fin 18) choice1211:=by decide +kernel
-def cell1212:PairCell.Row:=⟨25,27,9,3,20,some 20,3,some 3,386045,[MeasuredChoices.test856],[AxisChoices.test1824]⟩
-def choice1212:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1212:PairPrices.valid cell1212 (1:Fin 18) choice1212:=by decide +kernel
-def cell1213:PairCell.Row:=⟨25,27,9,3,20,some 20,4,some 4,386045,[MeasuredChoices.test856],[AxisChoices.test1825]⟩
-def choice1213:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1213:PairPrices.valid cell1213 (1:Fin 18) choice1213:=by decide +kernel
-def cell1214:PairCell.Row:=⟨25,27,9,3,20,some 20,5,some 5,386045,[MeasuredChoices.test856],[AxisChoices.test1826]⟩
-def choice1214:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1214:PairPrices.valid cell1214 (1:Fin 18) choice1214:=by decide +kernel
-def cell1215:PairCell.Row:=⟨25,27,9,3,20,some 20,6,some 6,386045,[MeasuredChoices.test856],[AxisChoices.test1827]⟩
-def choice1215:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1215:PairPrices.valid cell1215 (1:Fin 18) choice1215:=by decide +kernel
-def cell1216:PairCell.Row:=⟨25,27,9,3,20,some 20,7,some 7,386045,[MeasuredChoices.test856],[AxisChoices.test1828]⟩
-def choice1216:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1216:PairPrices.valid cell1216 (1:Fin 18) choice1216:=by decide +kernel
-def cell1217:PairCell.Row:=⟨25,27,9,3,20,some 20,8,some 8,386045,[MeasuredChoices.test856],[AxisChoices.test1829]⟩
-def choice1217:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1217:PairPrices.valid cell1217 (1:Fin 18) choice1217:=by decide +kernel
-def cell1218:PairCell.Row:=⟨25,27,9,3,20,some 20,9,some 9,386045,[MeasuredChoices.test856],[AxisChoices.test1830]⟩
-def choice1218:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1218:PairPrices.valid cell1218 (1:Fin 18) choice1218:=by decide +kernel
-def cell1219:PairCell.Row:=⟨25,27,9,3,20,some 20,10,some 10,386045,[MeasuredChoices.test856],[AxisChoices.test1831]⟩
-def choice1219:PairPrices.Decision:=⟨.markedAxis,.whole,.impossible,0⟩
-theorem check1219:PairPrices.valid cell1219 (1:Fin 18) choice1219:=by decide +kernel
+private def rows1200 : List StockPairs.Receipt := [
+  ⟨⟨25,27,9,2,29,some 32,0,none,257319,[MeasuredChoices.test39],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨25,27,9,2,25,some 28,0,none,257319,[MeasuredChoices.test36],[]⟩,1,⟨(.node 8059959167344767),.intersection,.impossible,302619⟩⟩,
+  ⟨⟨25,27,9,2,25,some 28,0,none,302619,[MeasuredChoices.test166],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨25,27,9,2,21,some 24,0,none,257319,[MeasuredChoices.test25],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨25,27,9,2,17,some 20,0,none,257319,[],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨25,27,9,2,13,some 16,0,none,257319,[],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨25,27,9,2,9,some 12,0,none,257319,[],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨25,27,9,2,4,some 8,0,none,257319,[],[]⟩,1,surfaceWhole⟩,
+  ⟨⟨25,27,9,3,25,some 28,0,none,385979,[MeasuredChoices.test924],[]⟩,1,markedWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,0,some 0,385979,[MeasuredChoices.test856],[AxisChoices.test1821]⟩,1,separateWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,1,some 1,385979,[MeasuredChoices.test856],[AxisChoices.test1822]⟩,1,separateWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,2,some 2,385979,[MeasuredChoices.test856],[AxisChoices.test1823]⟩,1,separateWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,3,some 3,385979,[MeasuredChoices.test856],[AxisChoices.test1824]⟩,1,markedAxisWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,4,some 4,385979,[MeasuredChoices.test856],[AxisChoices.test1825]⟩,1,markedAxisWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,5,some 5,385979,[MeasuredChoices.test856],[AxisChoices.test1826]⟩,1,markedAxisWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,6,some 6,385979,[MeasuredChoices.test856],[AxisChoices.test1827]⟩,1,markedAxisWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,7,some 7,385979,[MeasuredChoices.test856],[AxisChoices.test1828]⟩,1,markedAxisWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,8,some 8,385979,[MeasuredChoices.test856],[AxisChoices.test1829]⟩,1,markedAxisWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,9,some 9,385979,[MeasuredChoices.test856],[AxisChoices.test1830]⟩,1,markedAxisWhole⟩,
+  ⟨⟨25,27,9,3,20,some 20,10,some 10,385979,[MeasuredChoices.test856],[AxisChoices.test1831]⟩,1,markedAxisWhole⟩]
+private theorem paid1200 : StockPairs.checked rows1200 = true := by decide +kernel
+theorem route1200 (i : Fin 20) : (rows1200.get i).Done :=
+  StockPairs.doneAt paid1200 i
+
 end Research6969.PairReceipts
 end Z6969Source2662

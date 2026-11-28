@@ -37,7 +37,7 @@ private theorem root_at_node {P : Ordinate} {z : L} {S : (Polynomial K)}
     (p:=specialize P z) (x:=liftPoly S)
   rw [commute,coe_evalRingHom,value] at eq
   exact eq.trans (h.trans eval_zero)
-theorem pure_node_price_6969 {w s T} (W : Word 179740 164806 w s T)
+theorem pure_node_price_6969 {w s T} (W : Word 179730 164806 w s T)
     (z : K → L) (inj : Set.InjOn z (T:Set K)) (P : Ordinate) (irr : Irreducible P)
     (pos : 0<P.natDegree) (pure : PureNodes w P)
     (marks : ∀ γ∈T, MarkedFiber P (z γ) (liftPoly (s γ))) :

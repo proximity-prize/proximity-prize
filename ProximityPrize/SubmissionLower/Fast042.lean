@@ -400,9 +400,6 @@ def VectorDots (q u : ℕ) (z : Block) (j : ℕ) : Prop :=
   ∀ i < outer (!z.bank.onRows) q,
     ∀ k < fiber (!z.bank.onRows) q u i, dot q u z j i k % (CJ0.p : ℤ) = 0
 abbrev Cell := ℕ × ℕ × ℕ
-def Checks : List Cell → Prop
-  | [] => True
-  | (q,u,r)::xs => (CJ0.blockMatrix source q ((u : ℤ)-20)).rank ≤ r ∧ Checks xs
 def boundIn (q u d : ℕ) : List Cell → ℕ
   | [] => d
   | (a,b,r)::xs => if q = a ∧ u = b then r else boundIn q u d xs

@@ -152,10 +152,6 @@ private theorem mem_product_box {G:Row K} (gp:G.primitive) {Q:Plane K} {b j:ℕ}
     natDegree_mul (G.polynomial_ne gp) z,G.slope_degree gp]
   exact ⟨by omega,by omega⟩
 
-private theorem slope_lt {Q:Plane K} {b j:ℕ} (pos:0<j) (h:Q∈box K b j) : Q.natDegree<j := by
-  by_cases z:Q=0
-  · simpa [z] using pos
-  exact ((mem_box z).mp h).2
 
 private theorem effective_slope {Q:Plane K} {b j:ℕ} (bp:0<b) (jp:0<j) (h:Q∈box K b j) :
     Q.natDegree < min b j := by

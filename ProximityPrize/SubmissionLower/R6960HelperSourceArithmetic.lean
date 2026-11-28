@@ -2737,62 +2737,6 @@ theorem avoiding_row (s : Shape) (h N slope extra u : ℕ) (hh : 0<h)
 def net {ι : Type*} (T : Finset ι) (weight : ι→ℕ) (a b : ι→ℤ)
     (c d : ℤ) (x : ℕ) : ℤ :=
   (∑ i∈T, (weight i : ℤ)*max 0 (a i+b i*(x:ℤ)))-(c+d*(x:ℤ))
-private theorem clip_second (x y : ℤ) :
-    2*max 0 (x+y) ≤ max 0 x + max 0 (x+2*y) := by
-  by_cases h : 0≤x+y
-  · rw [max_eq_right h]
-    have h1 := le_max_right 0 x
-    have h2 := le_max_right 0 (x+2*y)
-    omega
-  · rw [max_eq_left (by omega : x+y≤0)]
-    have h1 := le_max_left 0 x
-    have h2 := le_max_left 0 (x+2*y)
-    omega
-theorem net_convex {ι : Type*} (T : Finset ι) (weight : ι→ℕ) (a b : ι→ℤ)
-    (c d : ℤ) (x : ℕ) :
-    2*net T weight a b c d (x+1) ≤ net T weight a b c d x + net T weight a b c d (x+2) := by
-  classical
-  have each (i) : 2*((weight i:ℤ)*max 0 (a i+b i*((x:ℤ)+1))) ≤
-      (weight i:ℤ)*max 0 (a i+b i*(x:ℤ)) + (weight i:ℤ)*max 0 (a i+b i*((x:ℤ)+2)) := by
-    have z:=mul_le_mul_of_nonneg_left (clip_second (a i+b i*(x:ℤ)) (b i)) (Int.natCast_nonneg (weight i))
-    rw [show a i+b i*((x:ℤ)+1)=a i+b i*(x:ℤ)+b i by ring,
-      show a i+b i*((x:ℤ)+2)=a i+b i*(x:ℤ)+2*b i by ring]
-    linarith only [z]
-  have total:=sum_le_sum (s:=T) (fun i _=>each i)
-  rw [←Finset.mul_sum, Finset.sum_add_distrib] at total
-  unfold net
-  push_cast
-  linarith only [total]
-theorem from_two_heights (f : ℕ→ℤ) (lo : ℕ) (positive : 0<f lo)
-    (next : f lo≤f (lo+1)) (convex : ∀ x,2*f (x+1)≤f x+f (x+2)) :
-    ∀ y,lo≤y → 0<f y := by
-  intro y hy
-  obtain ⟨n,rfl⟩ := Nat.exists_eq_add_of_le hy
-  have both : ∀ n, 0<f (lo+n) ∧ f (lo+n)≤f (lo+n+1) := by
-    intro t
-    induction t with
-    | zero => exact ⟨positive,next⟩
-    | succ t ih =>
-      have := convex (lo+t)
-      exact ⟨lt_of_lt_of_le ih.1 ih.2,by
-        change f (lo+t+1)≤f (lo+t+2)
-        omega⟩
-  exact (both n).1
-theorem sum_layer_gains (N width shift layers : ℕ) (delta : ℕ→ℕ) :
-    (∑ W∈range N, ∑ i∈range layers,
-      if width≤W ∧ W+shift*i<N then delta i else 0) =
-      ∑ i∈range layers, (N-width-shift*i)*delta i := by
-  classical
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro i _
-  have support : (range N).filter (fun W=>width≤W ∧ W+shift*i<N) = Ico width (N-shift*i) := by
-    ext W
-    simp only [mem_filter,mem_range,mem_Ico]
-    omega
-  rw [←Finset.sum_filter,support,Finset.sum_const,Nat.card_Ico,nsmul_eq_mul]
-  change (N-shift*i-width)*delta i=(N-width-shift*i)*delta i
-  rw [Nat.sub_sub,Nat.sub_sub,Nat.add_comm (shift*i) width]
 end Lower6960.PowerLayers
 
 end

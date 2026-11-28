@@ -136,10 +136,6 @@ namespace wT
 noncomputable section
 open MvPolynomial
 variable {F σ:Type*} [zrb F]
-def a2U (v :σ→ℕ) : (σ →₀ ℕ) →+ (zNO σ →₀ ℕ) where
- toFun e :=e.optionElim (e.weight v)
- map_zero' := by ext i; cases i <;> simp
- map_add' e f := by ext i; cases i <;> simp
 end
 end wT
 end

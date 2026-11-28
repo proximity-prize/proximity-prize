@@ -117,20 +117,6 @@ theorem degree_bound (base word : K[X]) {d : ℕ}
   rw [natDegree_divByMonic _ Lagrange.nodal_monic, Lagrange.natDegree_nodal]
   exact Nat.sub_le_sub_right ((natDegree_sub_le ..).trans (max_le hw hb)) _
 
-theorem detects (inj : Function.Injective nodes) (base word : K[X])
-    (same : ∀ i ∈ T, word.eval (nodes i) = base.eval (nodes i))
-    {j : I} (outside : j ∉ T) (received : K) :
-    (residual T nodes base word).eval (nodes j) =
-      (received-base.eval (nodes j))/(Lagrange.nodal T nodes).eval (nodes j) ↔
-      word.eval (nodes j) = received := by
-  have nz : (Lagrange.nodal T nodes).eval (nodes j) ≠ 0 :=
-    Lagrange.eval_nodal_not_at_node (by
-      intro i hi eq
-      exact outside (inj eq ▸ hi))
-  have eq := congrArg (fun p : K[X] => p.eval (nodes j)) (recover T inj base word same)
-  simp only [eval_add, eval_mul] at eq
-  rw [eq_div_iff nz, mul_comm, eq]
-  rw [eq_sub_iff_add_eq, add_comm]
 
 theorem common_card_le (inj : Function.Injective nodes) {base word : K[X]}
     (distinct : word ≠ base) (same : ∀ i ∈ T, word.eval (nodes i) = base.eval (nodes i))
@@ -143,30 +129,7 @@ theorem common_card_le (inj : Function.Injective nodes) {base word : K[X]}
   rw [Lagrange.natDegree_nodal] at h
   exact h.trans ((natDegree_sub_le ..).trans (max_le hw hb))
 
-theorem derivative_residual (inj : Function.Injective nodes) (base word : K[X])
-    (same : ∀ i ∈ T, word.eval (nodes i) = base.eval (nodes i)) :
-    derivative word = derivative base +
-      (derivative (Lagrange.nodal T nodes) * residual T nodes base word +
-        Lagrange.nodal T nodes * derivative (residual T nodes base word)) := by
-  calc derivative word = derivative (base + Lagrange.nodal T nodes * residual T nodes base word) :=
-        congrArg derivative (recover T inj base word same)
-    _ = _ := by rw [derivative_add, derivative_mul]
 
-theorem residual_hits [DecidableEq K] [DecidableEq I] (inj : Function.Injective nodes) (S : Finset I) (recv : I → K)
-    (base word : K[X]) (same : ∀ i ∈ T, word.eval (nodes i) = base.eval (nodes i))
-    (a : ℕ) (enough : a ≤ (S.filter (fun i => word.eval (nodes i) = recv i)).card) :
-    a - T.card ≤ ((S \ T).filter (fun i => (residual T nodes base word).eval (nodes i) =
-      (recv i-base.eval (nodes i))/(Lagrange.nodal T nodes).eval (nodes i))).card := by
-  classical
-  let good := S.filter (fun i => word.eval (nodes i) = recv i)
-  have sub : good \ T ⊆ (S \ T).filter (fun i => (residual T nodes base word).eval (nodes i) =
-      (recv i-base.eval (nodes i))/(Lagrange.nodal T nodes).eval (nodes i)) := by
-    intro i hi
-    obtain ⟨hit,out⟩ := mem_sdiff.mp hi
-    obtain ⟨mem,agree⟩ := mem_filter.mp hit
-    exact mem_filter.mpr ⟨mem_sdiff.mpr ⟨mem,out⟩,(detects T inj base word same out _).mpr agree⟩
-  have bound : good.card ≤ (good \ T).card + T.card := card_le_card_sdiff_add_card
-  exact (Nat.sub_le_of_le_add (enough.trans bound)).trans (card_le_card sub)
 
 end
 end Research6969.KnownGraphShortening

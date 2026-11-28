@@ -19,8 +19,8 @@ noncomputable section
 
 /-- A retained root of degree at most 47 can use the same field-theoretic
 price at every transition height, including roots reassigned across packets. -/
-theorem count {u deleted} {M:P1.ModelAt 33735 u deleted} {Γ T:Finset K}
-    (F:P1.FamilyAt 179740 M Γ) (sub:T⊆Γ) (hi:M.overhead.toNat≤2534)
+theorem count {u deleted} {M:P1.ModelAt 33755 u deleted} {Γ T:Finset K}
+    (F:P1.FamilyAt 179730 M Γ) (sub:T⊆Γ) (hi:M.overhead.toNat≤2557)
     {f:Equation} (positive:0<f.natDegree) (separable:(f.map (algebraMap Seeds SeedField)).Separable)
     (n v x y:ℕ) (large:3≤n) (legal:n<48) (deg:f.natDegree≤n)
     (total:∀ i,(f.coeff i).totalDegree≤v) (xc:axisDegree f 0≤x) (yc:axisDegree f 1≤y)
@@ -32,7 +32,7 @@ theorem count {u deleted} {M:P1.ModelAt 33735 u deleted} {Γ T:Finset K}
   obtain ⟨S,P,inside,pn,pe,wide,marks,split⟩:=Research6966.NativeMarkedTariff.split M.label F.scalar
     inject.injOn positive separable (Research6966.NativeMarkedTariff.coeff_cap total xc yc) small roots
   have domain:S⊆Γ:=inside.trans sub
-  have words:RetainedShortening.Word 179740 164806 M.word F.scalar S:=by
+  have words:RetainedShortening.Word 179730 164806 M.word F.scalar S:=by
     refine ⟨F.distinct.mono domain,?_,?_⟩
     · intro γ hγ
       rcases (F.mark γ (domain hγ)).scalar_degree with zero|bd
@@ -75,8 +75,8 @@ noncomputable section
 
 /-- A retained root of degree at most 63 can use the same field-theoretic
 price at every transition height, including roots reassigned across packets. -/
-theorem count64 {u deleted} {M:P1.ModelAt 33735 u deleted} {Γ T:Finset K}
-    (F:P1.FamilyAt 179740 M Γ) (sub:T⊆Γ) (hi:M.overhead.toNat≤2534)
+theorem count64 {u deleted} {M:P1.ModelAt 33755 u deleted} {Γ T:Finset K}
+    (F:P1.FamilyAt 179730 M Γ) (sub:T⊆Γ) (hi:M.overhead.toNat≤2557)
     {f:Equation} (positive:0<f.natDegree) (separable:(f.map (algebraMap Seeds SeedField)).Separable)
     (n v x y:ℕ) (large:3≤n) (legal:n<64) (deg:f.natDegree≤n)
     (total:∀ i,(f.coeff i).totalDegree≤v) (xc:axisDegree f 0≤x) (yc:axisDegree f 1≤y)
@@ -88,7 +88,7 @@ theorem count64 {u deleted} {M:P1.ModelAt 33735 u deleted} {Γ T:Finset K}
   obtain ⟨S,P,inside,pn,pe,wide,marks,split⟩:=Research6966.NativeMarkedTariff.split M.label F.scalar
     inject.injOn positive separable (Research6966.NativeMarkedTariff.coeff_cap total xc yc) small roots
   have domain:S⊆Γ:=inside.trans sub
-  have words:RetainedShortening.Word 179740 133605 M.word F.scalar S:=by
+  have words:RetainedShortening.Word 179730 133628 M.word F.scalar S:=by
     refine ⟨F.distinct.mono domain,?_,?_⟩
     · intro γ hγ
       rcases (F.mark γ (domain hγ)).scalar_degree with zero|bd
@@ -128,8 +128,8 @@ def price (e v:ℕ):ℕ:=
   if e=0 then 0 else
     (Near6969FactorPrice.rate (max 3 e)+2*e-1)*(p*v)+(max 3 e-1)*e
 
-theorem owned_count {u del} {M:P1.ModelAt 33735 u del} {Γ S:Finset K}
-    (F:P1.FamilyAt 179740 M Γ) (sub:S⊆Γ) (hi:M.overhead.toNat≤2534) (f:Equation)
+theorem owned_count {u del} {M:P1.ModelAt 33755 u del} {Γ S:Finset K}
+    (F:P1.FamilyAt 179730 M Γ) (sub:S⊆Γ) (hi:M.overhead.toNat≤2557) (f:Equation)
     (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable) (grade:f.natDegree<64)
     {v:ℕ} (cap:K1_14_4.seedDegree f≤v) (small:(2*f.natDegree-1)*v<p)
     (roots:∀γ∈S,(f.map (graphEval (M.label γ))).eval (atX (F.scalar γ))=0) :
@@ -157,8 +157,8 @@ theorem owned_count {u del} {M:P1.ModelAt 33735 u del} {Γ S:Finset K}
 
 /-- Count the union of the two actual projected families, assigning every
 mark on their common part to the primary projection exactly once. -/
-theorem both {u del} {M:P1.ModelAt 33735 u del} {Γ S:Finset K}
-    (F:P1.FamilyAt 179740 M Γ) (sub:S⊆Γ) (hi:M.overhead.toNat≤2534)
+theorem both {u del} {M:P1.ModelAt 33755 u del} {Γ S:Finset K}
+    (F:P1.FamilyAt 179730 M Γ) (sub:S⊆Γ) (hi:M.overhead.toNat≤2557)
     {A B:Finset Surface} {primary rescue whole:Equation} (main:ProjectedProduct A primary)
     (other:ProjectedProduct B rescue) (union:ProjectedProduct (A∪B) whole)
     {v w:ℕ} (cmain:K1_14_4.seedDegree primary≤v) (cother:K1_14_4.seedDegree rescue≤w)

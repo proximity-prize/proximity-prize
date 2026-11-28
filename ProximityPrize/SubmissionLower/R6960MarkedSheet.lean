@@ -243,17 +243,11 @@ theorem table :
       ∀ f : Fin 24, 2≤f.val → 2*f.val≤e.val →
         constantCurveRate e.val f.val≤rate e.val := by decide +kernel
 
-theorem matched_shallow_uniform :
-    (rate 18)*(2400*2130706433) + 48 + 143456202788540 + 143313454876987920 ≤
-      266695718139456639 := by decide +kernel
 
 theorem grade_twenty_four :
     rate 24*(2400+2130706433*1119) + 48 + 143456202788540 + 143313454876987920 ≤
       266695718139456639 := by decide +kernel
 
-theorem grade_twenty_five :
-    266695718139456639 <
-      rate 25*(2400+2130706433*1029) + 48 + 143456202788540 + 143313454876987920 := by decide +kernel
 
 #print axioms table
 #print axioms grade_twenty_four

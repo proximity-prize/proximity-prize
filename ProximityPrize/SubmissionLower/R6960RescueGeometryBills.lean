@@ -760,8 +760,6 @@ def pointLimit (rect : Fin 4) : ℚ := weightedBill 17 (cutWeight rect 2) (fun _
 def initialSeedLimit (rect : Fin 4) : ℕ := (K1.p+1)*initialCap rect 2+initialCap rect 3
 theorem seed_limit_small (rect : Fin 4) : seedLimit rect < (K1.p : ℚ) := by
   fin_cases rect <;> decide +kernel
-theorem point_limit_bound (rect : Fin 4) : pointLimit rect ≤ 206700957314 := by
-  fin_cases rect <;> decide +kernel
 def Initial.seedMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {G Q₀ : Jet} {rect : Fin 4} (ini : Initial F G Q₀ rect) : Finset K :=
   Γ.filter (fun γ=>ini.seeds.Covers (M.label γ))

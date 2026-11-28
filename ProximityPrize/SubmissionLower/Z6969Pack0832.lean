@@ -26,8 +26,8 @@ open P3 (I K node)
 open K1_13 (Geom Row shape InBox Contact)
 open Wide50EulerPrimary (primary_family sourceRank layerNeed)
 
-abbrev agreement : ℕ := 179740
-abbrev degree : ℕ := 133363
+abbrev agreement : ℕ := 179730
+abbrev degree : ℕ := 133378
 abbrev cutoff : ℕ := 3000 * agreement - 1
 abbrev rank : ℕ := sourceRank agreement degree
 abbrev need : ℕ := layerNeed agreement degree
@@ -39,14 +39,14 @@ structure Messages (w : I → K) (Γ : Finset K) (s : K → Polynomial K) : Prop
     ∀ i ∈ T, (s γ).eval (node i) = w i
 
 theorem messages_of_family {cap u deleted Γ} (M : P1.ModelAt cap u deleted)
-    (F : P1.FamilyAt agreement M Γ) (hi : M.overhead ≤ 2292) :
+    (F : P1.FamilyAt agreement M Γ) (hi : M.overhead ≤ 2307) :
     Messages M.word Γ F.scalar := by
   refine ⟨F.distinct, ?_, ?_⟩
   · intro γ hγ
     obtain hzero | h := (F.mark γ hγ).scalar_degree
     · simp [hzero]
     · change ((F.scalar γ).natDegree : ℤ) ≤ 131071 + M.overhead at h
-      change (F.scalar γ).natDegree ≤ 133363
+      change (F.scalar γ).natDegree ≤ 133378
       omega
   · intro γ hγ
     let mark := F.mark γ hγ
@@ -122,7 +122,6 @@ abbrev layerNeed := LowProfile6969.need
 abbrev Messages := LowProfile6969.Messages
 
 
-theorem certified_layers : sourceRank / layerWidth + 1 = 20089989785677 := by decide
 def PrimaryRank (w : I → K) : Prop :=
   ∃ e : Fin sourceRank → Row 4, LinearIndependent Geom e ∧
     ∀ i, InBox (shape (e i)) primaryBox ∧ TrueWeightLE (e i) primaryCutoff ∧
@@ -753,7 +752,7 @@ open scoped Polynomial
 export Low6969OrderProof (BankRow requiredOrder)
 export Low6969OrderProof_1 (order_of_contact)
 theorem messages_of_family {cap u del Γ} (M : P1.ModelAt cap u del)
-    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2292) :
+    (F : P1.FamilyAt agreement M Γ) (hh : M.overhead ≤ 2307) :
     Messages M.word Γ F.scalar :=
   Research6969.Low6969Primary.messages_of_family M F hh
 
@@ -811,163 +810,161 @@ open P3_6_8_1 (sumBelow term mass_eq extend)
 
 
 def Box (a : Shape) : Prop :=
-  a.b ≤ 27 ∧ a.j ≤ 8 ∧ (4 ≤ a.j → a.b ≤ 25) ∧ (5 ≤ a.j → a.b ≤ 22) ∧
-  (6 ≤ a.j → a.b ≤ 19) ∧ (7 ≤ a.j → a.b ≤ 14) ∧ (8 ≤ a.j → a.b ≤ 6)
+  a.b ≤ 28 ∧ a.j ≤ 8 ∧ (4 ≤ a.j → a.b ≤ 26) ∧ (5 ≤ a.j → a.b ≤ 23) ∧
+  (6 ≤ a.j → a.b ≤ 20) ∧ (7 ≤ a.j → a.b ≤ 15) ∧ (8 ≤ a.j → a.b ≤ 8)
 def combined {n : ℕ} (a : Fin n → Shape) (z : Finset (Fin n)) := P3_6_8.shapeSum a z
 
 local notation "row!" h "," len "," nxt "," v "," z =>
   P3_6_8_1.extend (n := len) (N := nxt) (y := v) (total := z) h rfl rfl rfl
 
-private theorem reject3 : zeroMass 28 3 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 28) (j := 3) (m := 143) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 28 3) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4487333727686,4487333727686
-  have r2 := row! r1,12,24,3762659771402,8249993499088
-  have r3 := row! r2,12,36,3108192642446,11358186141534
-  have r4 := row! r3,12,48,2519763922706,13877950064240
-  have r5 := row! r4,12,60,1993324446806,15871274511046
-  have r6 := row! r5,12,72,1524944302106,17396218813152
-  have r7 := row! r6,12,84,1110812828702,18507031641854
-  have r8 := row! r7,12,96,747238668280,19254270310134
-  have r9 := row! r8,12,108,431539940145,19685810250279
-  have r10 := row! r9,12,120,176240195865,19862050446144
-  have r11 := row! r10,12,132,30699448338,19892749894482
-  have r12 := row! r11,11,143,773590642,19893523485124
+private theorem reject3 : zeroMass 29 3 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b:=29) (j:=3) (m:=138) (by decide) (Or.inl (by decide))]
+  have r0 : sumBelow (term 29 3) 0 = 0 := rfl
+  have r1 := extend (n:=12) (N:=12) (y:=4477975520787) (total:=4477975520787) r0 rfl rfl rfl
+  have r2 := extend (n:=12) (N:=24) (y:=3737583866259) (total:=8215559387046) r1 rfl rfl rfl
+  have r3 := extend (n:=12) (N:=36) (y:=3069529283115) (total:=11285088670161) r2 rfl rfl rfl
+  have r4 := extend (n:=12) (N:=48) (y:=2469498206427) (total:=13754586876588) r3 rfl rfl rfl
+  have r5 := extend (n:=12) (N:=60) (y:=1933300802979) (total:=15687887679567) r4 rfl rfl rfl
+  have r6 := extend (n:=12) (N:=72) (y:=1456870971267) (total:=17144758650834) r5 rfl rfl rfl
+  have r7 := extend (n:=12) (N:=84) (y:=1036266341499) (total:=18181024992333) r6 rfl rfl rfl
+  have r8 := extend (n:=12) (N:=96) (y:=667679360644) (total:=18848704352977) r7 rfl rfl rfl
+  have r9 := extend (n:=12) (N:=108) (y:=350662584629) (total:=19199366937606) r8 rfl rfl rfl
+  have r10 := extend (n:=12) (N:=120) (y:=112409380647) (total:=19311776318253) r9 rfl rfl rfl
+  have r11 := extend (n:=12) (N:=132) (y:=10847697500) (total:=19322624015753) r10 rfl rfl rfl
+  have r12 := extend (n:=6) (N:=138) (y:=42232007) (total:=19322666247760) r11 rfl rfl rfl
   rw [r12]
   decide
 
-private theorem reject4 : zeroMass 26 4 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 26) (j := 4) (m := 154) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 26 4) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4457924221828,4457924221828
-  have r2 := row! r1,12,24,3694139357412,8152063579240
-  have r3 := row! r2,12,36,3020291191620,11172354770860
-  have r4 := row! r3,12,48,2429554428580,13601909199440
-  have r5 := row! r4,12,60,1915360345860,15517269545300
-  have r6 := row! r5,12,72,1471396794468,16988666339768
-  have r7 := row! r6,12,84,1091608198852,18080274538620
-  have r8 := row! r7,12,96,770195556900,18850470095520
-  have r9 := row! r8,12,108,501616440976,19352086536496
-  have r10 := row! r9,12,120,280971568492,19633058104988
-  have r11 := row! r10,12,132,111555751260,19744613856248
-  have r12 := row! r11,12,144,18384312204,19762998168452
-  have r13 := row! r12,10,154,359753742,19763357922194
+private theorem reject4 : zeroMass 27 4 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b:=27) (j:=4) (m:=148) (by decide) (Or.inl (by decide))]
+  have r0 : sumBelow (term 27 4) 0 = 0 := rfl
+  have r1 := extend (n:=12) (N:=12) (y:=4448708304028) (total:=4448708304028) r0 rfl rfl rfl
+  have r2 := extend (n:=12) (N:=24) (y:=3669952574668) (total:=8118660878696) r1 rfl rfl rfl
+  have r3 := extend (n:=12) (N:=36) (y:=2983874250236) (total:=11102535128932) r2 rfl rfl rfl
+  have r4 := extend (n:=12) (N:=48) (y:=2383395415084) (total:=13485930544016) r3 rfl rfl rfl
+  have r5 := extend (n:=12) (N:=60) (y:=1861705343836) (total:=15347635887852) r4 rfl rfl rfl
+  have r6 := extend (n:=12) (N:=72) (y:=1412260501388) (total:=16759896389240) r5 rfl rfl rfl
+  have r7 := extend (n:=12) (N:=84) (y:=1028784542908) (total:=17788680932148) r6 rfl rfl rfl
+  have r8 := extend (n:=12) (N:=96) (y:=705268313836) (total:=18493949245984) r7 rfl rfl rfl
+  have r9 := extend (n:=12) (N:=108) (y:=435977627600) (total:=18929926873584) r8 rfl rfl rfl
+  have r10 := extend (n:=12) (N:=120) (y:=217512667936) (total:=19147439541520) r9 rfl rfl rfl
+  have r11 := extend (n:=12) (N:=132) (y:=63845620505) (total:=19211285162025) r10 rfl rfl rfl
+  have r12 := extend (n:=12) (N:=144) (y:=4896470558) (total:=19216181632583) r11 rfl rfl rfl
+  have r13 := extend (n:=4) (N:=148) (y:=5416761) (total:=19216187049344) r12 rfl rfl rfl
   rw [r13]
   decide
 
-private theorem reject5 : zeroMass 23 5 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 23) (j := 5) (m := 174) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 23 5) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4437425025303,4437425025303
-  have r2 := row! r1,12,24,3647721777551,8085146802854
-  have r3 := row! r2,12,36,2963031374519,11048178177373
-  have r4 := row! r3,12,48,2373948326607,13422126503980
-  have r5 := row! r4,12,60,1871496552215,15293623056195
-  have r6 := row! r5,12,72,1447129377743,16740752433938
-  have r7 := row! r6,12,84,1092729537591,17833481971529
-  have r8 := row! r7,12,96,800609174159,18634091145688
-  have r9 := row! r8,12,108,563509837847,19197600983535
-  have r10 := row! r9,12,120,374602487055,19572203470590
-  have r11 := row! r10,12,132,227487489219,19799690959809
-  have r12 := row! r11,12,144,116378050133,19916069009942
-  have r13 := row! r12,12,156,39557489286,19955626499228
-  have r14 := row! r13,12,168,4378437247,19960004936475
-  have r15 := row! r14,6,174,18369367,19960023305842
-  rw [r15]
+private theorem reject5 : zeroMass 24 5 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b:=24) (j:=5) (m:=167) (by decide) (Or.inl (by decide))]
+  have r0 : sumBelow (term 24 5) 0 = 0 := rfl
+  have r1 := extend (n:=12) (N:=12) (y:=4428349760428) (total:=4428349760428) r0 rfl rfl rfl
+  have r2 := extend (n:=12) (N:=24) (y:=3624402126232) (total:=8052751886660) r1 rfl rfl rfl
+  have r3 := extend (n:=12) (N:=36) (y:=2928770873996) (total:=10981522760656) r2 rfl rfl rfl
+  have r4 := extend (n:=12) (N:=48) (y:=2331664262920) (total:=13313187023576) r3 rfl rfl rfl
+  have r5 := extend (n:=12) (N:=60) (y:=1823740696204) (total:=15136927719780) r4 rfl rfl rfl
+  have r6 := extend (n:=12) (N:=72) (y:=1396108721048) (total:=16533036440828) r5 rfl rfl rfl
+  have r7 := extend (n:=12) (N:=84) (y:=1040327028652) (total:=17573363469480) r6 rfl rfl rfl
+  have r8 := extend (n:=12) (N:=96) (y:=748404454216) (total:=18321767923696) r7 rfl rfl rfl
+  have r9 := extend (n:=12) (N:=108) (y:=512799976940) (total:=18834567900636) r8 rfl rfl rfl
+  have r10 := extend (n:=12) (N:=120) (y:=326422720024) (total:=19160990620660) r9 rfl rfl rfl
+  have r11 := extend (n:=12) (N:=132) (y:=182652280504) (total:=19343642901164) r10 rfl rfl rfl
+  have r12 := extend (n:=12) (N:=144) (y:=77055882718) (total:=19420698783882) r11 rfl rfl rfl
+  have r13 := extend (n:=12) (N:=156) (y:=15281570442) (total:=19435980354324) r12 rfl rfl rfl
+  have r14 := extend (n:=11) (N:=167) (y:=397884432) (total:=19436378238756) r13 rfl rfl rfl
+  rw [r14]
   decide
 
-private theorem reject6 : zeroMass 20 6 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 20) (j := 6) (m := 200) (by decide) (Or.inl (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 20 6) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4416491788049,4416491788049
-  have r2 := row! r1,12,24,3598518638333,8015010426382
-  have r3 := row! r2,12,36,2898523609481,10913534035863
-  have r4 := row! r3,12,48,2304691473845,13218225509708
-  have r5 := row! r4,12,60,1805825102465,15024050612173
-  have r6 := row! r5,12,72,1391345465069,16415396077242
-  have r7 := row! r6,12,84,1051291630073,17466687707315
-  have r8 := row! r7,12,96,776320764581,18243008471896
-  have r9 := row! r8,12,108,557708134385,18800716606281
-  have r10 := row! r9,12,120,387347103965,19188063710246
-  have r11 := row! r10,12,132,257749136489,19445812846735
-  have r12 := row! r11,12,144,162043793813,19607856640548
-  have r13 := row! r12,12,156,93978736481,19701835377029
-  have r14 := row! r13,12,168,47919723725,19749755100754
-  have r15 := row! r14,12,180,18887896997,19768642997751
-  have r16 := row! r15,12,192,3562975968,19772205973719
-  have r17 := row! r16,8,200,49565740,19772255539459
-  rw [r17]
+private theorem reject6 : zeroMass 21 6 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b:=21) (j:=6) (m:=191) (by decide) (Or.inl (by decide))]
+  have r0 : sumBelow (term 21 6) 0 = 0 := rfl
+  have r1 := extend (n:=12) (N:=12) (y:=4407555550024) (total:=4407555550024) r0 rfl rfl rfl
+  have r2 := extend (n:=12) (N:=24) (y:=3576044411128) (total:=7983599961152) r1 rfl rfl rfl
+  have r3 := extend (n:=12) (N:=36) (y:=2866331436904) (total:=10849931398056) r2 rfl rfl rfl
+  have r4 := extend (n:=12) (N:=48) (y:=2266057390744) (total:=13115988788800) r3 rfl rfl rfl
+  have r5 := extend (n:=12) (N:=60) (y:=1763516966536) (total:=14879505755336) r4 rfl rfl rfl
+  have r6 := extend (n:=12) (N:=72) (y:=1347658788664) (total:=16227164544000) r5 rfl rfl rfl
+  have r7 := extend (n:=12) (N:=84) (y:=1008085412008) (total:=17235249956008) r6 rfl rfl rfl
+  have r8 := extend (n:=12) (N:=96) (y:=735053321944) (total:=17970303277952) r7 rfl rfl rfl
+  have r9 := extend (n:=12) (N:=108) (y:=519472934344) (total:=18489776212296) r8 rfl rfl rfl
+  have r10 := extend (n:=12) (N:=120) (y:=352908595576) (total:=18842684807872) r9 rfl rfl rfl
+  have r11 := extend (n:=12) (N:=132) (y:=227578582504) (total:=19070263390376) r10 rfl rfl rfl
+  have r12 := extend (n:=12) (N:=144) (y:=136355102488) (total:=19206618492864) r11 rfl rfl rfl
+  have r13 := extend (n:=12) (N:=156) (y:=72764293384) (total:=19279382786248) r12 rfl rfl rfl
+  have r14 := extend (n:=12) (N:=168) (y:=31021519144) (total:=19310404305392) r13 rfl rfl rfl
+  have r15 := extend (n:=12) (N:=180) (y:=7203309307) (total:=19317607614699) r14 rfl rfl rfl
+  have r16 := extend (n:=11) (N:=191) (y:=222068622) (total:=19317829683321) r15 rfl rfl rfl
+  rw [r16]
   decide
 
-private theorem reject7 : zeroMass 15 7 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 15) (j := 7) (m := 235) (by decide) (Or.inr (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 15 7) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4412735849268,4412735849268
-  have r2 := row! r1,12,24,3590013950096,8002749799364
-  have r3 := row! r2,12,36,2887936043876,10890685843240
-  have r4 := row! r3,12,48,2294106149808,13184791993048
-  have r5 := row! r4,12,60,1796799228020,14981591221068
-  have r6 := row! r5,12,72,1384961179568,16366552400636
-  have r7 := row! r6,12,84,1048208846436,17414761247072
-  have r8 := row! r7,12,96,776830011536,18191591258608
-  have r9 := row! r8,12,108,561783398708,18753374657316
-  have r10 := row! r9,12,120,394698672720,19148073330036
-  have r11 := row! r10,12,132,267876439268,19415949769304
-  have r12 := row! r11,12,144,174288244976,19590238014280
-  have r13 := row! r12,12,156,107576577396,19697814591676
-  have r14 := row! r13,12,168,62054865008,19759869456684
-  have r15 := row! r14,12,180,32707477220,19792576933904
-  have r16 := row! r15,12,192,15189724368,19807766658272
-  have r17 := row! r16,12,204,5827857716,19813594515988
-  have r18 := row! r17,12,216,1619069456,19815213585444
-  have r19 := row! r18,12,228,231492708,19815445078152
-  have r20 := row! r19,7,235,4535960,19815449614112
+private theorem reject7 : zeroMass 16 7 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b:=16) (j:=7) (m:=235) (by decide) (Or.inr rfl)]
+  have r0 : sumBelow (term 16 7) 0 = 0 := rfl
+  have r1 := extend (n:=12) (N:=12) (y:=4403937022179) (total:=4403937022179) r0 rfl rfl rfl
+  have r2 := extend (n:=12) (N:=24) (y:=3568363723539) (total:=7972300745718) r1 rfl rfl rfl
+  have r3 := extend (n:=12) (N:=36) (y:=2857725950803) (total:=10830026696521) r2 rfl rfl rfl
+  have r4 := extend (n:=12) (N:=48) (y:=2258903862243) (total:=13088930558764) r3 rfl rfl rfl
+  have r5 := extend (n:=12) (N:=60) (y:=1759505456643) (total:=14848436015407) r4 rfl rfl rfl
+  have r6 := extend (n:=12) (N:=72) (y:=1347866573299) (total:=16196302588706) r5 rfl rfl rfl
+  have r7 := extend (n:=12) (N:=84) (y:=1013050892019) (total:=17209353480725) r6 rfl rfl rfl
+  have r8 := extend (n:=12) (N:=96) (y:=744849933123) (total:=17954203413848) r7 rfl rfl rfl
+  have r9 := extend (n:=12) (N:=108) (y:=533783057443) (total:=18487986471291) r8 rfl rfl rfl
+  have r10 := extend (n:=12) (N:=120) (y:=371097466323) (total:=18859083937614) r9 rfl rfl rfl
+  have r11 := extend (n:=12) (N:=132) (y:=248768201619) (total:=19107852139233) r10 rfl rfl rfl
+  have r12 := extend (n:=12) (N:=144) (y:=159498145699) (total:=19267350284932) r11 rfl rfl rfl
+  have r13 := extend (n:=12) (N:=156) (y:=96718021443) (total:=19364068306375) r12 rfl rfl rfl
+  have r14 := extend (n:=12) (N:=168) (y:=54586392243) (total:=19418654698618) r13 rfl rfl rfl
+  have r15 := extend (n:=12) (N:=180) (y:=27989662003) (total:=19446644360621) r14 rfl rfl rfl
+  have r16 := extend (n:=12) (N:=192) (y:=12542075139) (total:=19459186435760) r15 rfl rfl rfl
+  have r17 := extend (n:=12) (N:=204) (y:=4585716579) (total:=19463772152339) r16 rfl rfl rfl
+  have r18 := extend (n:=12) (N:=216) (y:=1190511763) (total:=19464962664102) r17 rfl rfl rfl
+  have r19 := extend (n:=12) (N:=228) (y:=154226643) (total:=19465116890745) r18 rfl rfl rfl
+  have r20 := extend (n:=7) (N:=235) (y:=2616445) (total:=19465119507190) r19 rfl rfl rfl
   rw [r20]
   decide
 
-private theorem reject8 : zeroMass 7 8 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 7) (j := 8) (m := 206) (by decide) (Or.inr (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 7 8) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4434018990758,4434018990758
-  have r2 := row! r1,12,24,3638417588822,8072436579580
-  have r3 := row! r2,12,36,2948917116678,11021353696258
-  have r4 := row! r3,12,48,2356675780790,13378029477048
-  have r5 := row! r4,12,60,1853134903142,15231164380190
-  have r6 := row! r5,12,72,1430018921238,16661183301428
-  have r7 := row! r6,12,84,1079335388102,17740518689530
-  have r8 := row! r7,12,96,793374972278,18533893661808
-  have r9 := row! r8,12,108,564711457830,19098605119638
-  have r10 := row! r9,12,120,386201744342,19484806863980
-  have r11 := row! r10,12,132,250985846918,19735792710898
-  have r12 := row! r11,12,144,152486896182,19888279607080
-  have r13 := row! r12,12,156,84411138278,19972690745358
-  have r14 := row! r13,12,168,40747934870,20013438680228
-  have r15 := row! r14,12,180,15769763142,20029208443370
-  have r16 := row! r15,12,192,4032215798,20033240659168
-  have r17 := row! r16,12,204,374001062,20033614660230
-  have r18 := row! r17,2,206,182693,20033614842923
+private theorem reject8 : zeroMass 9 8 < layerNeed := by
+  rw [P3_6_8_1.mass_eq (b:=9) (j:=8) (m:=206) (by decide) (Or.inr rfl)]
+  have r0 : sumBelow (term 9 8) 0 = 0 := rfl
+  have r1 := extend (n:=12) (N:=12) (y:=4416692946778) (total:=4416692946778) r0 rfl rfl rfl
+  have r2 := extend (n:=12) (N:=24) (y:=3596722857258) (total:=8013415804036) r1 rfl rfl rfl
+  have r3 := extend (n:=12) (N:=36) (y:=2892292320762) (total:=10905708124798) r2 rfl rfl rfl
+  have r4 := extend (n:=12) (N:=48) (y:=2292711993802) (total:=13198420118600) r3 rfl rfl rfl
+  have r5 := extend (n:=12) (N:=60) (y:=1787745517722) (total:=14986165636322) r4 rfl rfl rfl
+  have r6 := extend (n:=12) (N:=72) (y:=1367609518698) (total:=16353775155020) r5 rfl rfl rfl
+  have r7 := extend (n:=12) (N:=84) (y:=1022973607738) (total:=17376748762758) r6 rfl rfl rfl
+  have r8 := extend (n:=12) (N:=96) (y:=744960380682) (total:=18121709143440) r7 rfl rfl rfl
+  have r9 := extend (n:=12) (N:=108) (y:=525145418202) (total:=18646854561642) r8 rfl rfl rfl
+  have r10 := extend (n:=12) (N:=120) (y:=355557285802) (total:=19002411847444) r9 rfl rfl rfl
+  have r11 := extend (n:=12) (N:=132) (y:=228677533818) (total:=19231089381262) r10 rfl rfl rfl
+  have r12 := extend (n:=12) (N:=144) (y:=137440697418) (total:=19368530078680) r11 rfl rfl rfl
+  have r13 := extend (n:=12) (N:=156) (y:=75234296602) (total:=19443764375282) r12 rfl rfl rfl
+  have r14 := extend (n:=12) (N:=168) (y:=35898836202) (total:=19479663211484) r13 rfl rfl rfl
+  have r15 := extend (n:=12) (N:=180) (y:=13727805882) (total:=19493391017366) r14 rfl rfl rfl
+  have r16 := extend (n:=12) (N:=192) (y:=3467680138) (total:=19496858697504) r15 rfl rfl rfl
+  have r17 := extend (n:=12) (N:=204) (y:=317918298) (total:=19497176615802) r16 rfl rfl rfl
+  have r18 := extend (n:=2) (N:=206) (y:=153575) (total:=19497176769377) r17 rfl rfl rfl
   rw [r18]
   decide
 
 private theorem reject9 : zeroMass 3 9 < layerNeed := by
-  rw [P3_6_8_1.mass_eq (b := 3) (j := 9) (m := 183) (by decide) (Or.inr (by decide))]
-  have r0 : P3_6_8_1.sumBelow (P3_6_8_1.term 3 9) 0 = 0 := rfl
-  have r1 := row! r0,12,12,4419454632432,4419454632432
-  have r2 := row! r1,12,24,3596534841372,8015989473804
-  have r3 := row! r2,12,36,2880841206984,10896830680788
-  have r4 := row! r3,12,48,2265453291444,13162283972232
-  have r5 := row! r4,12,60,1743314608032,14905598580264
-  have r6 := row! r5,12,72,1307232621132,16212831201396
-  have r7 := row! r6,12,84,949878746232,17162709947628
-  have r8 := row! r7,12,96,663788349924,17826498297552
-  have r9 := row! r8,12,108,441360749904,18267859047456
-  have r10 := row! r9,12,120,274859214972,18542718262428
-  have r11 := row! r10,12,132,156410965032,18699129227460
-  have r12 := row! r11,12,144,78007171092,18777136398552
-  have r13 := row! r12,12,156,31502955264,18808639353816
-  have r14 := row! r13,12,168,8617390764,18817256744580
-  have r15 := row! r14,12,180,933501912,18818190246492
-  have r16 := row! r15,3,183,1782176,18818192028668
+  rw [P3_6_8_1.mass_eq (b:=3) (j:=9) (m:=183) (by decide) (Or.inr rfl)]
+  have r0 : sumBelow (term 3 9) 0 = 0 := rfl
+  have r1 := extend (n:=12) (N:=12) (y:=4419454632432) (total:=4419454632432) r0 rfl rfl rfl
+  have r2 := extend (n:=12) (N:=24) (y:=3596534841372) (total:=8015989473804) r1 rfl rfl rfl
+  have r3 := extend (n:=12) (N:=36) (y:=2880841206984) (total:=10896830680788) r2 rfl rfl rfl
+  have r4 := extend (n:=12) (N:=48) (y:=2265453291444) (total:=13162283972232) r3 rfl rfl rfl
+  have r5 := extend (n:=12) (N:=60) (y:=1743314608032) (total:=14905598580264) r4 rfl rfl rfl
+  have r6 := extend (n:=12) (N:=72) (y:=1307232621132) (total:=16212831201396) r5 rfl rfl rfl
+  have r7 := extend (n:=12) (N:=84) (y:=949878746232) (total:=17162709947628) r6 rfl rfl rfl
+  have r8 := extend (n:=12) (N:=96) (y:=663788349924) (total:=17826498297552) r7 rfl rfl rfl
+  have r9 := extend (n:=12) (N:=108) (y:=441360749904) (total:=18267859047456) r8 rfl rfl rfl
+  have r10 := extend (n:=12) (N:=120) (y:=274859214972) (total:=18542718262428) r9 rfl rfl rfl
+  have r11 := extend (n:=12) (N:=132) (y:=156410965032) (total:=18699129227460) r10 rfl rfl rfl
+  have r12 := extend (n:=12) (N:=144) (y:=78007171092) (total:=18777136398552) r11 rfl rfl rfl
+  have r13 := extend (n:=12) (N:=156) (y:=31502955264) (total:=18808639353816) r12 rfl rfl rfl
+  have r14 := extend (n:=12) (N:=168) (y:=8617390764) (total:=18817256744580) r13 rfl rfl rfl
+  have r15 := extend (n:=12) (N:=180) (y:=933501912) (total:=18818190246492) r14 rfl rfl rfl
+  have r16 := extend (n:=3) (N:=183) (y:=1782176) (total:=18818192028668) r15 rfl rfl rfl
   rw [r16]
   decide
 
@@ -1038,898 +1035,6 @@ end Merged_R6960Low6969Retained
 end Z6969Source2263
 
 -- Source: ProximityPrize.SubmissionLower.LowAnchor6969Local
-section Z6969Source2264
-set_option autoImplicit true
-set_option Elab.async false
-set_option maxHeartbeats 1800000
-set_option maxRecDepth 12000
-
-namespace LowAnchor6969Local
-noncomputable section
-open K1 K1_13 K1_13_1_1 Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative
-open A6966FinalAnchorSpace (gradeLimit gradeLimit_antitone cap_of_grade cap_active AnchorEligible anchorLocal anchorSpace)
-open scoped BigOperators
-open K1_13_1 (atJet_unflatten)
-open K1_13_1_1 (exponent_le_of_mem_translation_monomial)
-
-def WideEligible (u : JetVariable 3 →₀ ℕ) : Prop :=
-  u.some.degree ≤ 142 ∧ u.some.weight (fun i => i.val) ≤ 58 ∧ u (some 3) ≤ 15 ∧
-    u.some.degree ≤ gradeLimit (u (some 1) + u (some 2) + u (some 3)) ∧
-    u.weight (differentialWeight 133363) ≤ 106 * 179740 - 1 + 58
-
-def wideSpace : Submodule Geom (DifferentialPolynomial Geom 3) :=
-  MvPolynomial.restrictSupport Geom {u | WideEligible u}
-
-def wideLocal (x y : Geom) : wideSpace →ₗ[Geom] LocalPolynomial Geom 3 :=
-  (localConstraintAt 106 x y).domRestrict _
-
-section
-open MvPolynomial
-
-private def truncateX : DifferentialPolynomial Geom 3 →ₗ[Geom] DifferentialPolynomial Geom 3 :=
-  filterSupport (fun u => u none < 106)
-private theorem origin_monomial_zero (u : JetVariable 3 →₀ ℕ) (a : Geom)
-    (hu : 106 ≤ u none) :
-    localConstraintAt 106 0 0 (monomial u a) = 0 := by
-  have hm : (MvPolynomial.X none ^ u none * monomial (u.erase none) a :
-      DifferentialPolynomial Geom 3) = monomial u a := by
-    rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.monomial_mul_monomial, one_mul, Finsupp.single_add_erase]
-  rw [← hm]
-  apply (satisfiesLocalConstraints_iff_coeff_eq_zero 106 0 0 _).mpr
-  intro e he
-  rw [map_mul, map_pow, unscaledLocalSubstitution, bind₁_X_right]
-  simp only [unscaledLocalImage, MvPolynomial.C_0, zero_add, MvPolynomial.X_pow_eq_monomial]
-  rw [coeff_monomial_mul', ite_eq_right]
-  rw [Finsupp.single_le_iff]
-  rw [localContactOrder_eq] at he
-  change u none ≤ e (localT 3) → False
-  omega
-private theorem origin_truncateX (Q : DifferentialPolynomial Geom 3) :
-    localConstraintAt 106 0 0 (truncateX Q) = localConstraintAt 106 0 0 Q := by
-  rw [Q.as_sum]
-  simp only [map_sum]
-  apply Finset.sum_congr rfl
-  intro u _
-  have hfilter : truncateX (monomial u (Q.coeff u)) =
-      if u none < 106 then monomial u (Q.coeff u) else 0 := by
-    ext v
-    rw [truncateX, coeff_filterSupport]
-    by_cases h : u = v
-    · subst v
-      by_cases hx : u none < 106 <;> simp [hx]
-    · by_cases hx : u none < 106 <;> simp [hx, MvPolynomial.coeff_monomial, h]
-  rw [hfilter]
-  split
-  · rfl
-  · rw [map_zero, origin_monomial_zero _ _ (by omega)]
-
-private theorem centered {u v : JetVariable 3 →₀ ℕ}
-    (h : v ≤ u) (hu : WideEligible u) (hx : v none < 106) :
-    AnchorEligible v := by
-  have hd : v.some.degree ≤ u.some.degree := by
-    rw [Finsupp.degree_eq_sum, Finsupp.degree_eq_sum]
-    exact Finset.sum_le_sum fun j _ => h (some j)
-  have hi : v.some.weight (fun i => i.val) ≤ u.some.weight (fun i => i.val) := by
-    rw [Finsupp.weight_eq_sum, Finsupp.weight_eq_sum]
-    exact Finset.sum_le_sum fun j _ => Nat.mul_le_mul_right j.val (h (some j))
-  obtain ⟨hdeg,hidx,ht,htail,_⟩ := hu
-  have hsum := add_le_add (add_le_add (h (some 1)) (h (some 2))) (h (some 3))
-  refine ⟨hd.trans hdeg,hi.trans hidx,(h _).trans ht,hd.trans (htail.trans (gradeLimit_antitone hsum)),?_⟩
-  have hw := Finsupp.weight_le_weight
-    (w := fun j : Fin 4 => 133484 - j.val) (w' := fun _ => 133484)
-    (fun j => Nat.sub_le _ _) v.some
-  have he : v.some.weight (fun _ => 133484) = 133484 * v.some.degree := by
-    simp only [Finsupp.weight_apply, Finsupp.degree_apply, Finsupp.sum, smul_eq_mul,
-      Finset.mul_sum, Nat.mul_comm]
-  rw [he] at hw
-  have hweight : differentialWeight (d := 3) 133484 =
-      fun j => j.elim 1 (fun i => 133484 - i.val) := by
-    funext j
-    cases j <;> rfl
-  rw [← Finsupp.optionElim_some v, hweight, Finsupp.weight_optionElim, one_mul]
-  calc
-    _ ≤ 105 + 133484 * 142 :=
-      Nat.add_le_add (Nat.le_of_lt_succ hx)
-        (hw.trans (Nat.mul_le_mul_left _ (hd.trans hdeg)))
-    _ ≤ _ := by decide
-private theorem centered_in_space (x y : Geom) (Q : wideSpace) :
-    truncateX (globalPointTranslation x y (Q : DifferentialPolynomial Geom 3)) ∈
-      anchorSpace := by
-  classical
-  rw [(Q : DifferentialPolynomial Geom 3).as_sum, map_sum, map_sum]
-  refine Submodule.sum_mem _ fun u hu => ?_
-  apply (mem_restrictSupport_iff Geom).mpr
-  intro v hv
-  have hn := mem_support_iff.mp hv
-  rw [truncateX, coeff_filterSupport] at hn
-  split at hn
-  · exact centered
-      (exponent_le_of_mem_translation_monomial x y u v _ (mem_support_iff.mpr hn))
-      (Q.property hu) (by assumption)
-  · exact (hn rfl).elim
-theorem rank_at_point_le_origin (x y : Geom) :
-    Module.finrank Geom (LinearMap.range (wideLocal x y)) ≤
-      Module.finrank Geom (LinearMap.range (anchorLocal 0 0)) := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133484 j ≠ 0 := by
-    cases j with
-    | none => decide
-    | some j =>
-      have hj := j.isLt
-      change 133484 - j.val ≠ 0
-      omega
-  have : Module.Finite Geom anchorSpace :=
-    restrictSupport_finite <|
-      (Finsupp.finite_of_nat_weight_le _ hpositive _).subset fun _ hu => hu.2.2.2.2
-  let f : wideSpace →ₗ[Geom] DifferentialPolynomial Geom 3 :=
-    (truncateX.comp (globalPointTranslation x y).toLinearMap).domRestrict wideSpace
-  let tr : wideSpace →ₗ[Geom] anchorSpace := f.codRestrict _ fun Q =>
-    centered_in_space x y Q
-  have he : wideLocal x y = (anchorLocal 0 0).comp tr := by
-    apply LinearMap.ext
-    intro Q
-    change localConstraintAt 106 x y (Q : DifferentialPolynomial Geom 3) =
-      localConstraintAt 106 0 0 (truncateX (globalPointTranslation x y Q))
-    rw [origin_truncateX,localConstraintAt_eq_zero_globalPointTranslation]
-  rw [he]
-  exact LinearMap.finrank_range_comp_le_left _ _
-
-end
-
-theorem per_position (x y : Geom) :
-    Module.finrank Geom (LinearMap.range (wideLocal x y)) ≤ 22239546 :=
-  (rank_at_point_le_origin x y).trans A6966FinalRank.origin_rank
-
-theorem finiteWide : Module.Finite Geom wideSpace := by
-  have hpositive (j : JetVariable 3) : differentialWeight 133363 j ≠ 0 := by
-    cases j with
-    | none => decide
-    | some j =>
-      have hj := j.isLt
-      change 133363 - j.val ≠ 0
-      omega
-  exact MvPolynomial.restrictSupport_finite <|
-    (Finsupp.finite_of_nat_weight_le _ hpositive _).subset fun _ hu => hu.2.2.2.2
-
-theorem shape_bound (Q : wideSpace) :
-    InBox (shape (MvPolynomial.optionEquivRight Geom (Fin 4) Q)) ⟨142, 58, 15⟩ := by
-  classical
-  let P : Row 4 := MvPolynomial.optionEquivRight Geom (Fin 4) Q
-  have hQ := (MvPolynomial.mem_restrictSupport_iff Geom).mp Q.property
-  have hm (m : Fin 4 →₀ ℕ) (h : m ∈ P.support) : ∃ i, WideEligible (m.optionElim i) := by
-    obtain ⟨i, hi⟩ := Polynomial.support_nonempty.mpr (MvPolynomial.mem_support_iff.mp h)
-    refine ⟨i, hQ ?_⟩
-    exact MvPolynomial.mem_support_iff.mpr (by
-      rwa [← MvPolynomial.optionEquivRight_coeff_coeff, ← Polynomial.mem_support_iff])
-  refine ⟨?_, ?_, ?_⟩
-  · apply Finset.sup_le
-    intro m h
-    obtain ⟨i, hi⟩ := hm m h
-    simpa only [Finsupp.some_optionElim, Finsupp.degree_apply, Finsupp.sum] using hi.1
-  · apply Finset.sup_le
-    intro m h
-    obtain ⟨i, hi⟩ := hm m h
-    simpa only [Finsupp.some_optionElim, Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm] using hi.2.1
-  · change P.degreeOf 3 ≤ 15
-    rw [MvPolynomial.degreeOf_eq_sup]
-    apply Finset.sup_le
-    intro m h
-    obtain ⟨i, hi⟩ := hm m h
-    simpa only [Finsupp.optionElim_apply_some] using hi.2.2.1
-
-theorem active_bound (Q : wideSpace) :
-    A6966LowBase.ActiveFits (MvPolynomial.optionEquivRight Geom (Fin 4) Q) 178 := by
-  classical
-  let P : Row 4 := MvPolynomial.optionEquivRight Geom (Fin 4) Q
-  intro m hm
-  obtain ⟨i, hi⟩ := Polynomial.support_nonempty.mpr (MvPolynomial.mem_support_iff.mp hm)
-  have hQ := (MvPolynomial.mem_restrictSupport_iff Geom).mp Q.property
-  have h : WideEligible (m.optionElim i) := hQ (MvPolynomial.mem_support_iff.mpr (by
-    rwa [← MvPolynomial.optionEquivRight_coeff_coeff, ← Polynomial.mem_support_iff]))
-  have hd := h.1
-  have hl := h.2.2.2.1
-  have hw := h.2.1
-  simp only [Finsupp.optionElim_apply_some] at hl
-  rw [Finsupp.some_optionElim] at hd hw
-  have hdeg : m.degree = m 0 + m 1 + m 2 + m 3 := by
-    rw [Finsupp.degree_eq_sum, Fin.sum_univ_four]
-  have hweight : m.weight (fun i : Fin 4 => i.val) = m 1 + 2 * m 2 + 3 * m 3 := by
-    rw [Finsupp.weight_eq_sum, Fin.sum_univ_four]
-    simp [Nat.mul_comm, Nat.add_assoc]
-  change m.weight (fun i : Fin 4 => i.val) ≤ 58 at hw
-  rw [hweight] at hw
-  have hc := cap_of_grade (s := m.degree) (t := m 1 + m 2 + m 3)
-    (by omega) (by omega) (by simpa [Finsupp.some_optionElim] using hl)
-  have hb := cap_active _ hd
-  omega
-
-theorem rawWeight (Q : wideSpace) :
-    differentialWeightedDegree 133363 (Q : DifferentialPolynomial Geom 3) ≤
-      106 * 179740 - 1 + 58 := by
-  rw [differentialWeightedDegree, MvPolynomial.weightedTotalDegree, Finset.sup_le_iff]
-  exact fun m hm => (Q.property hm).2.2.2.2
-
-
-end
-end LowAnchor6969Local
-end Z6969Source2264
-
--- Source: ProximityPrize.SubmissionLower.LowAnchor6969Columns
-section Z6969Source2265
-set_option autoImplicit true
-set_option Elab.async false
-set_option maxHeartbeats 3000000
-set_option maxRecDepth 10000
-
-open K1 K1_13 K1_13_1_1 PolynomialDifferential ReedSolomon.HiddenDerivative
-open MvPolynomial
-open scoped BigOperators Polynomial
-
-namespace LowAnchor6969Columns
-noncomputable section
-
-abbrev Ex := JetVariable 3 →₀ ℕ
-abbrev DP := DifferentialPolynomial Geom 3
-
-def jidx (u : Ex) : ℕ := u.some.weight Fin.val
-def jdeg (u : Ex) : ℕ := u.some.degree
-def jdiff (u : Ex) : ℕ := u (some 1) + u (some 2) + u (some 3)
-
-@[simp] theorem jidx_add (u v : Ex) : jidx (u + v) = jidx u + jidx v := by
-  simp [jidx, Finsupp.some_add]
-@[simp] theorem jdeg_add (u v : Ex) : jdeg (u + v) = jdeg u + jdeg v := by
-  simp [jdeg, Finsupp.some_add]
-@[simp] theorem jdiff_add (u v : Ex) : jdiff (u + v) = jdiff u + jdiff v := by
-  unfold jdiff
-  simp only [Finsupp.add_apply]
-  omega
-
-def top (u : Ex) : Ex := u + Finsupp.single none (jidx u)
-
-@[simp] theorem top_add (u v : Ex) : top (u + v) = top u + top v := by
-  rw [top, jidx_add, Finsupp.single_add]
-  unfold top
-  abel
-
-def Related (u v : Ex) : Prop :=
-  jdeg v = jdeg u ∧ jidx v ≤ jidx u ∧ jdiff v ≤ jdiff u ∧
-    v (some 3) ≤ u (some 3) ∧ v none = u none + jidx v
-
-theorem Related.add {u v a b : Ex} (h : Related u a) (k : Related v b) :
-    Related (u+v) (a+b) := by
-  obtain ⟨hd,hi,hf,ht,hx⟩ := h
-  obtain ⟨kd,ki,kf,kt,kx⟩ := k
-  unfold Related
-  simp only [jdeg_add, jidx_add, jdiff_add, Finsupp.add_apply]
-  exact ⟨by omega, by omega, by omega, by omega, by omega⟩
-
-theorem top_related (u : Ex) : Related u (top u) := by
-  unfold top Related jdeg jidx jdiff
-  simp [Finsupp.some_add, Finsupp.some_single_none]
-
-def Bounded (u : Ex) (P : DP) : Prop :=
-  ∀ v ∈ P.support, Related u v ∧ jidx v < jidx u
-
-def HasTop (u : Ex) (a : Geom) (P : DP) : Prop :=
-  ∃ L, P = monomial (top u) a + L ∧ Bounded u L
-
-private theorem bounded_add {u : Ex} {P Q : DP} (h : Bounded u P) (k : Bounded u Q) :
-    Bounded u (P+Q) := by
-  intro v hv
-  exact (Finset.mem_union.mp (support_add hv)).elim (h v) (k v)
-
-private theorem monomial_related {u : Ex} {a : Geom} {v : Ex}
-    (h : v ∈ (monomial (top u) a).support) : Related u v := by
-  have hv := Finset.mem_singleton.mp (support_monomial_subset h)
-  simpa only [hv] using top_related u
-
-private theorem top_idx (u : Ex) : jidx (top u) = jidx u := by
-  unfold jidx top
-  simp [Finsupp.some_add, Finsupp.some_single_none]
-
-private theorem bounded_mul_left {u v : Ex} {P Q : DP} (h : Bounded u P)
-    (k : ∀ a ∈ Q.support, Related v a) : Bounded (u+v) (P*Q) := by
-  intro z hz
-  obtain ⟨a, ha, b, hb, rfl⟩ := Finset.mem_add.mp (support_mul _ _ hz)
-  obtain ⟨hr, hi⟩ := h a ha
-  have hk := k b hb
-  exact ⟨hr.add hk, by simpa using Nat.add_lt_add_of_lt_of_le hi hk.2.1⟩
-
-private theorem bounded_mul_right {u v : Ex} {P Q : DP} (h : ∀ a ∈ P.support, Related u a)
-    (k : Bounded v Q) : Bounded (u+v) (P*Q) := by
-  rw [add_comm, mul_comm]
-  exact bounded_mul_left k h
-
-theorem HasTop.mul {u v : Ex} {a b : Geom} {P Q : DP} (h : HasTop u a P)
-    (k : HasTop v b Q) : HasTop (u+v) (a*b) (P*Q) := by
-  obtain ⟨L, rfl, hL⟩ := h
-  obtain ⟨M, rfl, hM⟩ := k
-  refine ⟨monomial (top u) a * M + L * monomial (top v) b + L*M, ?_, ?_⟩
-  · rw [top_add, ← monomial_mul_monomial]
-    ring
-  · refine bounded_add (bounded_add ?_ ?_) ?_
-    · exact bounded_mul_right (fun b hb => monomial_related hb) hM
-    · exact bounded_mul_left hL (fun b hb => monomial_related hb)
-    · exact bounded_mul_left hL (fun b hb => (hM b hb).1)
-
-theorem HasTop.support {u : Ex} {a : Geom} {P : DP} (h : HasTop u a P) :
-    ∀ v ∈ P.support, Related u v := by
-  obtain ⟨L,rfl,hL⟩ := h
-  intro v hv
-  exact (Finset.mem_union.mp (support_add hv)).elim (fun h => monomial_related h) (fun h => (hL v h).1)
-
-theorem HasTop.lower {u : Ex} {a : Geom} {P : DP} (h : HasTop u a P) :
-    ∀ v ∈ P.support, v = top u ∨ jidx v < jidx u := by
-  obtain ⟨L,rfl,hL⟩ := h
-  intro v hv
-  exact (Finset.mem_union.mp (support_add hv)).elim
-    (fun h => Or.inl (Finset.mem_singleton.mp (support_monomial_subset h))) (fun h => Or.inr (hL v h).2)
-
-theorem HasTop.coeff {u : Ex} {a : Geom} {P : DP} (h : HasTop u a P) :
-    P.coeff (top u) = a := by
-  obtain ⟨L,rfl,hL⟩ := h
-  have hzero : L.coeff (top u) = 0 := by
-    apply notMem_support_iff.mp
-    intro hz
-    have hh := (hL _ hz).2
-    rw [top_idx] at hh
-    exact (lt_irrefl _) hh
-  simp [hzero]
-
-theorem HasTop.pow {u : Ex} {a : Geom} {P : DP} (h : HasTop u a P) (n : ℕ) :
-    HasTop (n • u) (a^n) (P^n) := by
-  induction n with
-  | zero =>
-    refine ⟨0, ?_, by simp [Bounded]⟩
-    simp [top,jidx,monomial_zero']
-  | succ n ih =>
-    rw [pow_succ, pow_succ, succ_nsmul]
-    exact ih.mul h
-
-private def eulTerm (i k : ℕ) (hk : k < 4) : DP :=
-  monomial (Finsupp.single none k + Finsupp.single (some ⟨k,hk⟩) 1)
-    ((-1 : Geom)^k * (133363-k).choose (i-k))
-
-def eul (i : Fin 4) : DP :=
-  ∑ k : Fin (i.val+1), eulTerm i.val k.val (by omega)
-
-private theorem eulTerm_related (i k : Fin 4) (h : k ≤ i) :
-    Related (Finsupp.single (some i) 1)
-      (Finsupp.single none k.val + Finsupp.single (some k) 1) := by
-  have hval : k.val ≤ i.val := h
-  simp only [Related, jdeg, jidx, jdiff, Finsupp.some_add, Finsupp.some_single_none,
-    zero_add, Finsupp.some_single_some, Finsupp.degree_single, Finsupp.weight_single,
-    nsmul_eq_mul, Finsupp.add_apply, Finsupp.single_eq_same, Finsupp.single_apply, Option.some.injEq]
-  fin_cases k <;> fin_cases i <;> (first | contradiction | decide)
-
-
-theorem eul_top (i : Fin 4) : HasTop (Finsupp.single (some i) 1) ((-1 : Geom)^i.val) (eul i) := by
-  rw [eul, Fin.sum_univ_castSucc]
-  let L := ∑ k : Fin i.val, eulTerm i.val k.val (by omega)
-  have he : eulTerm i.val i.val i.isLt =
-      monomial (top (Finsupp.single (some i) 1)) ((-1 : Geom)^i.val) := by
-    simp [eulTerm,top,jidx,Finsupp.some_single_some, Finsupp.weight_single,add_comm]
-  refine ⟨L, ?_, ?_⟩
-  · rw [add_comm]
-    congr 1
-  · intro v hv
-    obtain ⟨k, _, hk⟩ := Finset.mem_biUnion.mp (support_sum hv)
-    have hv' := Finset.mem_singleton.mp (support_monomial_subset hk)
-    subst v
-    refine ⟨eulTerm_related i ⟨k,by omega⟩ (by exact k.isLt.le), ?_⟩
-    simp [jidx,Finsupp.some_add,Finsupp.some_single_none,Finsupp.some_single_some,Finsupp.weight_single, k.isLt]
-
-
-def ColumnEligible (u : Ex) : Prop :=
-  jdeg u ≤ 142 ∧ jidx u ≤ 58 ∧ u (some 3) ≤ 15 ∧
-    jdeg u ≤ A6966FinalAnchorSpace.gradeLimit (jdiff u) ∧
-    u none + 133363*jdeg u < 106*179740 + 2*jidx u
-
-private def orth (u : Ex) : DP :=
-  eul 0 ^ u (some 0) * eul 1 ^ u (some 1) *
-    eul 2 ^ u (some 2) * eul 3 ^ u (some 3)
-
-private def jetOnly (u : Ex) : Ex := u.some.optionElim 0
-
-private theorem normalized_jet (u : Ex) :
-    u (some 0) • Finsupp.single (some (0 : Fin 4)) 1 +
-      u (some 1) • Finsupp.single (some (1 : Fin 4)) 1 +
-      u (some 2) • Finsupp.single (some (2 : Fin 4)) 1 +
-      u (some 3) • Finsupp.single (some (3 : Fin 4)) 1 = jetOnly u := by
-  ext k
-  cases k with
-  | none => simp [jetOnly]
-  | some k => fin_cases k <;> simp [jetOnly]
-
-private def sign (u : Ex) : Geom :=
-  ((-1 : Geom)^0) ^ u (some 0) * ((-1 : Geom)^1) ^ u (some 1) *
-    ((-1 : Geom)^2) ^ u (some 2) * ((-1 : Geom)^3) ^ u (some 3)
-
-private theorem sign_ne_zero (u : Ex) : sign u ≠ 0 := by simp [sign]
-
-private theorem orth_top (u : Ex) : HasTop (jetOnly u) (sign u) (orth u) := by
-  rw [← normalized_jet]
-  exact ((((eul_top 0).pow _).mul ((eul_top 1).pow _)).mul ((eul_top 2).pow _)).mul ((eul_top 3).pow _)
-
-private theorem single_top (x : ℕ) : HasTop (Finsupp.single none x) 1
-    (monomial (Finsupp.single none x) 1) := by
-  refine ⟨0, ?_, by simp [Bounded]⟩
-  simp [top,jidx,Finsupp.some_single_none]
-
-private def adjusted (u : Ex) : Ex :=
-  Finsupp.single none (u none - jidx u) + jetOnly u
-
-private theorem adjusted_idx (u : Ex) : jidx (adjusted u) = jidx u := by
-  rw [adjusted,jidx,Finsupp.some_add,Finsupp.some_single_none,zero_add,jetOnly,Finsupp.some_optionElim]
-  rfl
-
-private theorem adjusted_top (u : Ex) (h : jidx u ≤ u none) : top (adjusted u) = u := by
-  rw [top,adjusted_idx]
-  ext k
-  cases k with
-  | none => simp [adjusted,jetOnly,Nat.sub_add_cancel h]
-  | some k => simp [adjusted,jetOnly]
-
-def column (u : Ex) : DP :=
-  if u none < jidx u then monomial u 1 else
-    monomial (Finsupp.single none (u none - jidx u)) 1 * orth u
-
-private theorem column_hasTop (u : Ex) (h : ¬ u none < jidx u) :
-    HasTop (adjusted u) (sign u) (column u) := by
-  simpa only [column, ite_eq_right h, one_mul, adjusted] using (single_top _).mul (orth_top u)
-
-theorem column_coeff (u : Ex) : (column u).coeff u ≠ 0 := by
-  by_cases h : u none < jidx u
-  · simp [column,h]
-  · have he := (column_hasTop u h).coeff
-    rw [adjusted_top u (Nat.le_of_not_gt h)] at he
-    rw [he]
-    exact sign_ne_zero u
-
-theorem column_lower (u v : Ex) (h : v ≠ u) (hle : jidx u ≤ jidx v) :
-    (column u).coeff v = 0 := by
-  apply notMem_support_iff.mp
-  intro hv
-  by_cases hcut : u none < jidx u
-  · rw [column,ite_eq_left hcut] at hv
-    exact h (Finset.mem_singleton.mp (support_monomial_subset hv))
-  · obtain he | hl := (column_hasTop u hcut).lower v hv
-    · exact h (he.trans (adjusted_top u (Nat.le_of_not_gt hcut)))
-    · rw [adjusted_idx] at hl
-      omega
-
-private theorem jet_weight (m : Fin 4 →₀ ℕ) (w : Fin 4 → ℕ) :
-    m.weight w = m 0 * w 0 + m 1 * w 1 + m 2 * w 2 + m 3 * w 3 := by
-  simp [Finsupp.weight_apply, Finsupp.sum_fintype, Fin.sum_univ_succ, smul_eq_mul, add_assoc]
-
-private theorem weight_formula (u : Ex) :
-    u.weight (differentialWeight 133363) + jidx u = u none + 133363*jdeg u := by
-  have he : differentialWeight (d := 3) 133363 = fun i =>
-      i.elim 1 (fun k => 133363 - k.val) := by
-    funext i
-    cases i <;> rfl
-  conv_lhs => enter [1]; rw [← Finsupp.optionElim_some u,he,Finsupp.weight_optionElim,one_mul]
-  unfold jidx jdeg
-  rw [Finsupp.degree_eq_weight_one, jet_weight, jet_weight, jet_weight]
-  change u none + (u.some 0*133363 + u.some 1*133362 + u.some 2*133361 + u.some 3*133360) +
-      (u.some 0*0 + u.some 1*1 + u.some 2*2 + u.some 3*3) =
-    u none + 133363 * (u.some 0*1 + u.some 1*1 + u.some 2*1 + u.some 3*1)
-  omega
-
-private theorem adjusted_shape (u : Ex) :
-    jdeg (adjusted u) = jdeg u ∧ jdiff (adjusted u) = jdiff u ∧
-      adjusted u (some 3) = u (some 3) ∧ adjusted u none = u none - jidx u := by
-  have he : (adjusted u).some = u.some := by
-    rw [adjusted,Finsupp.some_add,Finsupp.some_single_none,zero_add,jetOnly,Finsupp.some_optionElim]
-  change (adjusted u).some.degree = u.some.degree ∧ _ ∧ _ ∧ _
-  rw [he]
-  simp [adjusted,jetOnly,jdiff]
-
-theorem column_wide {u : Ex} (h : ColumnEligible u) :
-    column u ∈ LowAnchor6969Local.wideSpace := by
-  apply (MvPolynomial.mem_restrictSupport_iff Geom).mpr
-  intro v hv
-  obtain ⟨hd,hi,ht,hf,hw⟩ := h
-  have hvw := weight_formula v
-  by_cases hcut : u none < jidx u
-  · rw [column,ite_eq_left hcut] at hv
-    have he := Finset.mem_singleton.mp (support_monomial_subset hv)
-    subst v
-    refine ⟨hd,hi,ht,hf,?_⟩
-    omega
-  · obtain ⟨hvd,hvi,hvf,hvt,hvx⟩ := (column_hasTop u hcut).support v hv
-    obtain ⟨had,haf,hat,hax⟩ := adjusted_shape u
-    rw [had] at hvd
-    rw [adjusted_idx] at hvi
-    rw [haf] at hvf
-    rw [hat] at hvt
-    rw [hax] at hvx
-    refine ⟨hvd.le.trans hd,hvi.trans hi,hvt.trans ht,?_ ,?_⟩
-    · exact hvd.le.trans (hf.trans (A6966FinalAnchorSpace.gradeLimit_antitone hvf))
-    · omega
-
-
-
-private theorem spec_eul (S : (Polynomial Geom)) (i : Fin 4) :
-    differentialSpecializationHom S (eul i) = EulerJetDegree.euler 133363 i.val S := by
-  rw [eul, map_sum, EulerJetDegree.euler, ← Fin.sum_univ_eq_sum_range]
-  refine Finset.sum_congr rfl fun k _ => ?_
-  unfold eulTerm
-  rw [monomial_add_single, pow_one, ← MvPolynomial.C_mul_X_pow_eq_monomial,
-    map_mul, map_mul, map_pow]
-  simp [differentialSpecializationHom, mul_assoc]
-
-private theorem natDegree_prod_bound (S : (Polynomial Geom)) (u : Ex) (hS : S.natDegree ≤ 133363) :
-    (differentialSpecializationHom S (orth u)).natDegree ≤ 133363*jdeg u - jidx u := by
-  rw [orth,map_mul,map_mul,map_mul,map_pow,map_pow,map_pow,map_pow,spec_eul,spec_eul,spec_eul,spec_eul]
-  have hh (i : Fin 4) := (Polynomial.natDegree_pow_le
-    (p := EulerJetDegree.euler 133363 i.val S) (n := u (some i))).trans
-      (Nat.mul_le_mul_left _ (EulerJetDegree.natDegree_euler_le_sub (i := i.val) hS))
-  have ha := Polynomial.natDegree_mul_le.trans (Nat.add_le_add
-    (Polynomial.natDegree_mul_le.trans (Nat.add_le_add
-      (Polynomial.natDegree_mul_le.trans (Nat.add_le_add (hh 0) (hh 1))) (hh 2))) (hh 3))
-  refine ha.trans ?_
-  rw [jdeg, Finsupp.degree_eq_weight_one, jidx, jet_weight, jet_weight]
-  change (u (some 0)*133363 + u (some 1)*133362 + u (some 2)*133361 + u (some 3)*133360) ≤
-    133363 * (u (some 0)*1+u (some 1)*1+u (some 2)*1+u (some 3)*1) -
-    (u (some 0)*0+u (some 1)*1+u (some 2)*2+u (some 3)*3)
-  omega
-
-theorem column_eval_degree (S : (Polynomial Geom)) {u : Ex} (h : ColumnEligible u)
-    (hs : S.natDegree ≤ 133363) :
-    (differentialSpecialization (column u) S).natDegree ≤ 106 * 179740 - 1 := by
-  obtain ⟨hd,hi,_,_,hw⟩ := h
-  by_cases hcut : u none < jidx u
-  · rw [column,ite_eq_left hcut]
-    apply (natDegree_differentialSpecialization_le _ _ hs).trans
-    rw [differentialWeightedDegree, MvPolynomial.weightedTotalDegree, Finset.sup_le_iff]
-    intro v hv
-    have he := Finset.mem_singleton.mp (support_monomial_subset hv)
-    subst v
-    have hf := weight_formula u
-    omega
-  · change (differentialSpecializationHom S (column u)).natDegree ≤ _
-    rw [column,ite_eq_right hcut,map_mul,← MvPolynomial.X_pow_eq_monomial,map_pow]
-    have hx : differentialSpecializationHom S (MvPolynomial.X none : DP) = Polynomial.X := by
-      simp [differentialSpecializationHom]
-    rw [hx]
-    refine Polynomial.natDegree_mul_le.trans ?_
-    rw [Polynomial.natDegree_X_pow]
-    · have hrel := natDegree_prod_bound S u hs
-      have hz : jidx u ≤ 133363*jdeg u := by
-        have hh := weight_formula u
-        have hwnd : u none ≤ u.weight (differentialWeight 133363) := by
-          have he : differentialWeight (d := 3) 133363 = fun i =>
-              i.elim 1 (fun k => 133363 - k.val) := by
-            funext i
-            cases i <;> rfl
-          rw [← Finsupp.optionElim_some u,he,Finsupp.weight_optionElim,one_mul]
-          simp
-        omega
-      omega
-
-end
-end LowAnchor6969Columns
-end Z6969Source2265
-
--- Source: ProximityPrize.SubmissionLower.LowAnchor6969Dimension
-section Z6969Source2266
-set_option autoImplicit true
-set_option Elab.async false
-set_option maxHeartbeats 3000000
-set_option maxRecDepth 16000
-
-namespace LowAnchor6969Dimension
-open A6966FinalAnchorSpace LowAnchor6969Columns
-open K1_13 (Geom)
-open PolynomialDifferential ReedSolomon.HiddenDerivative
-open scoped BigOperators
-
-/- Count the abscissa powers using the monomial parametrization in P0_9_1. -/
-private abbrev Exponent := JetVariable 3 →₀ ℕ
-private def indexWeight (a b c : ℕ) : ℕ := a + 2 * b + 3 * c
-private def gradeCeiling (a b c : ℕ) : ℕ :=
-  min 142 (gradeLimit (a + b + c))
-private def gradeSlots (a b c : ℕ) : ℕ :=
-  gradeCeiling a b c + 1 - (a + b + c)
-private def firstWidth (a b c : ℕ) : ℕ :=
-  106 * 179740 - 133363 * gradeCeiling a b c + 2 * indexWeight a b c
-private def abscissaWidth (a b c j : ℕ) : ℕ := firstWidth a b c + 133363 * j
-private noncomputable def exponent (x v a b c : ℕ) : Exponent :=
-  (Finsupp.equivFunOnFinite.symm ![v, a, b, c]).optionElim x
-@[simp] private theorem exponent_none (x v a b c : ℕ) : exponent x v a b c none = x := by
-  simp [exponent]
-@[simp] private theorem exponent_some (x v a b c : ℕ) (i : Fin 4) :
-    exponent x v a b c (some i) = ![v, a, b, c] i := by
-  simp [exponent]
-private theorem exponent_coordinates (u : Exponent) :
-    exponent (u none) (u (some 0)) (u (some 1)) (u (some 2)) (u (some 3)) = u := by
-  ext i
-  cases i with
-  | none => simp
-  | some i => fin_cases i <;> simp
-private theorem jet_weight (m : Fin 4 →₀ ℕ) (w : Fin 4 → ℕ) :
-    m.weight w = m 0 * w 0 + m 1 * w 1 + m 2 * w 2 + m 3 * w 3 := by
-  simp [Finsupp.weight_apply, Finsupp.sum_fintype, Fin.sum_univ_succ, smul_eq_mul, add_assoc]
-private theorem eligible_exponent (x v a b c : ℕ) :
-    ColumnEligible (exponent x v a b c) ↔
-      c ≤ 15 ∧ indexWeight a b c ≤ 58 ∧ v + (a + b + c) ≤ gradeCeiling a b c ∧
-        x + 133363 * (v + (a + b + c)) < 106 * 179740 + 2 * indexWeight a b c := by
-  unfold ColumnEligible jdeg jidx jdiff gradeCeiling indexWeight
-  rw [Finsupp.degree_eq_weight_one, jet_weight, jet_weight]
-  simp only [mul_one, Finsupp.some_apply, exponent_some, Matrix.cons_val_zero, le_min_iff]
-  simp only [exponent_none, Matrix.cons_val_one]
-  have ht : ![v,a,b,c] (2 : Fin 4) = b := rfl
-  have hf : ![v,a,b,c] (3 : Fin 4) = c := rfl
-  rw [ht,hf,show ![a,b,c] (0 : Fin 3) = a by rfl]
-  change (v + a + b + c ≤ 142 ∧ v * 0 + a * 1 + b * 2 + c * 3 ≤ 58 ∧
-    c ≤ 15 ∧ v + a + b + c ≤ gradeLimit (a + b + c) ∧
-    x + 133363 * (v + a + b + c) < 106 * 179740 + 2 * (v * 0 + a * 1 + b * 2 + c * 3)) ↔ _
-  omega
-private theorem width_iff (a b c j x : ℕ) (hj : j ≤ gradeCeiling a b c) :
-    x < abscissaWidth a b c j ↔
-      x + 133363 * (gradeCeiling a b c - j) < 106 * 179740 + 2 * indexWeight a b c := by
-  have hgrade : gradeCeiling a b c ≤ 142 := min_le_left _ _
-  unfold abscissaWidth firstWidth
-  omega
-private abbrev Slot :=
-  Σ c : Fin 16, Σ b : Fin ((58 - 3 * c.val) / 2 + 1),
-    Σ a : Fin (58 - 3 * c.val - 2 * b.val + 1),
-      Σ j : Fin (gradeSlots a.val b.val c.val),
-        Fin (abscissaWidth a.val b.val c.val j.val)
-private abbrev Eligible := {u : Exponent // ColumnEligible u}
-private theorem slot_bounds (c b a j x : ℕ) :
-    (c < 16 ∧ b < (58 - 3 * c) / 2 + 1 ∧ a < 58 - 3 * c - 2 * b + 1 ∧
-      j < gradeSlots a b c ∧ x < abscissaWidth a b c j) ↔
-    (c ≤ 15 ∧ indexWeight a b c ≤ 58 ∧ j + (a + b + c) ≤ gradeCeiling a b c ∧
-      x < abscissaWidth a b c j) := by
-  unfold indexWeight gradeSlots
-  omega
-private noncomputable def slotExponent (q : Slot) : Eligible := by
-  rcases q with ⟨c, b, a, j, x⟩
-  refine ⟨exponent x (gradeCeiling a b c - j - (a.val + b.val + c.val)) a b c, ?_⟩
-  obtain ⟨hc, hi, hj, hx⟩ := (slot_bounds c b a j x).mp
-    ⟨c.isLt, b.isLt, a.isLt, j.isLt, x.isLt⟩
-  have hg : gradeCeiling a b c - j - (a.val + b.val + c.val) + (a.val + b.val + c.val) =
-      gradeCeiling a b c - j := by omega
-  rw [eligible_exponent, hg]
-  exact ⟨hc, hi, by omega, (width_iff a b c j x (by omega)).mp hx⟩
-private theorem slotExponent_injective : Function.Injective slotExponent := by
-  rintro ⟨⟨c, hc⟩, ⟨b, hb⟩, ⟨a, ha⟩, ⟨j, hj⟩, ⟨x, hx⟩⟩
-    ⟨⟨c', hc'⟩, ⟨b', hb'⟩, ⟨a', ha'⟩, ⟨j', hj'⟩, ⟨x', hx'⟩⟩ h
-  have ec : c = c' := by
-    simpa [slotExponent] using congrArg (fun u : Eligible => u.val (some 3)) h
-  have eb : b = b' := by
-    simpa [slotExponent] using congrArg (fun u : Eligible => u.val (some 2)) h
-  have ea : a = a' := by
-    simpa [slotExponent] using congrArg (fun u : Eligible => u.val (some 1)) h
-  have ex : x = x' := by
-    simpa [slotExponent] using congrArg (fun u : Eligible => u.val none) h
-  subst c'
-  subst b'
-  subst a'
-  subst x'
-  have ev : gradeCeiling a b c - j - (a + b + c) =
-      gradeCeiling a b c - j' - (a + b + c) := by
-    simpa [slotExponent] using congrArg (fun u : Eligible => u.val (some 0)) h
-  have ej : j = j' := by
-    change j < gradeSlots a b c at hj
-    change j' < gradeSlots a b c at hj'
-    unfold gradeSlots at hj hj'
-    omega
-  subst j'
-  rfl
-private theorem slotExponent_surjective : Function.Surjective slotExponent := by
-  intro u
-  let x := u.val none
-  let v := u.val (some 0)
-  let a := u.val (some 1)
-  let b := u.val (some 2)
-  let c := u.val (some 3)
-  have he : exponent x v a b c = u.val := exponent_coordinates u.val
-  obtain ⟨hc, hi, hg, hx⟩ := (eligible_exponent x v a b c).mp (he.symm ▸ u.property)
-  let j := gradeCeiling a b c - (v + (a + b + c))
-  have hj : j ≤ gradeCeiling a b c := Nat.sub_le _ _
-  have hj' : gradeCeiling a b c - j = v + (a + b + c) := by
-    dsimp [j]
-    omega
-  obtain ⟨hc', hb', ha', hj'', hx'⟩ := (slot_bounds c b a j x).mpr
-    ⟨hc, hi, by dsimp [j]; omega, (width_iff a b c j x hj).mpr (hj'.symm ▸ hx)⟩
-  refine ⟨⟨⟨c, hc'⟩, ⟨b, hb'⟩, ⟨a, ha'⟩, ⟨j, hj''⟩, ⟨x, hx'⟩⟩, Subtype.ext ?_⟩
-  change exponent x (gradeCeiling a b c - j - (a + b + c)) a b c = u.val
-  have hv : gradeCeiling a b c - j - (a + b + c) = v := by omega
-  rwa [hv]
-private def sumRange (f : ℕ → ℕ) : ℕ → ℕ
-  | 0 => 0
-  | n + 1 => sumRange f n + f n
-private theorem sumRange_eq (f : ℕ → ℕ) (n : ℕ) :
-    sumRange f n = ∑ i ∈ Finset.range n, f i := by
-  induction n with
-  | zero => simp [sumRange]
-  | succ n ih => rw [sumRange, Finset.sum_range_succ, ih]
-private theorem sumRange_eq_fin (f : ℕ → ℕ) (n : ℕ) :
-    sumRange f n = ∑ i : Fin n, f i := by
-  rw [Fin.sum_univ_eq_sum_range, sumRange_eq]
-private def tripleCount (a b c : ℕ) : ℕ :=
-  let n := gradeSlots a b c
-  n * firstWidth a b c + 133363 * (n * (n - 1) / 2)
-private theorem sum_abscissaWidth (a b c : ℕ) :
-    (∑ j : Fin (gradeSlots a b c), abscissaWidth a b c j) = tripleCount a b c := by
-  rw [Fin.sum_univ_eq_sum_range (abscissaWidth a b c)]
-  simp [abscissaWidth, tripleCount, Finset.sum_add_distrib]
-  rw [← Finset.mul_sum, Finset.sum_range_id]
-private def rowCount (b c : ℕ) : ℕ :=
-  sumRange (fun a => tripleCount a b c) (58 - 3 * c - 2 * b + 1)
-private def sliceCount (c : ℕ) : ℕ :=
-  sumRange (fun b => rowCount b c) ((58 - 3 * c) / 2 + 1)
-private theorem slot_card : Fintype.card Slot = sumRange sliceCount 16 := by
-  simp only [Slot, sliceCount, rowCount, Fintype.card_sigma, Fintype.card_fin, sumRange_eq_fin,
-    sum_abscissaWidth]
-private def totals : List ℕ := [792229856789, 720519587459, 652047384834, 586021710405, 523426000532, 463453531767, 407103459043, 353553740610, 303819383337, 257062893809, 214315264194, 174723416049, 139334460204, 107279806590, 79624565202, 55487968368]
-
-private theorem slice_value (i : Fin 16) : sliceCount i = totals[i.val]! := by
-  fin_cases i <;> decide +kernel
-
-private theorem totalCount : sumRange sliceCount 16 = 5830003029192 := by
-  rw [sumRange_eq_fin]
-  calc
-    _ = ∑ c : Fin 16, totals[c.val]! := Finset.sum_congr rfl fun c _ => slice_value c
-    _ = _ := by rw [← sumRange_eq_fin]; decide +kernel
-
-
-theorem eligible_card : Nonempty (Eligible ≃ Fin 5830003029192) := by
-  let e : Slot ≃ Eligible :=
-    Equiv.ofBijective slotExponent ⟨slotExponent_injective, slotExponent_surjective⟩
-  exact ⟨e.symm.trans ((Fintype.equivFin Slot).trans (finCongr (slot_card.trans totalCount)))⟩
-
-end LowAnchor6969Dimension
-end Z6969Source2266
-
--- Source: ProximityPrize.SubmissionLower.LowAnchor6969
-section Z6969Source2267
-set_option autoImplicit true
-set_option Elab.async false
-set_option maxHeartbeats 300000
-set_option linter.style.haveILetI false
-set_option maxRecDepth 10000
-
-namespace LowAnchor6969
-noncomputable section
-open K1 K1_13 K1_13_1_1 Polynomial PolynomialDifferential ReedSolomon.HiddenDerivative
-open LowAnchor6969Columns LowAnchor6969Local
-open scoped BigOperators
-open K1_13_1 (atJet_unflatten)
-
-private abbrev Slot := {u : Ex // ColumnEligible u}
-
-private theorem independent_dp : LinearIndependent Geom (fun u : Slot => column u.val) := by
-  classical
-  apply linearIndependent_iff'.mpr
-  intro s c he i hi
-  by_contra hn
-  let F := s.filter (fun i => c i ≠ 0)
-  have hF : F.Nonempty := ⟨i, Finset.mem_filter.mpr ⟨hi, hn⟩⟩
-  obtain ⟨j, hj, hm⟩ := F.exists_max_image (fun u => jidx u.val) hF
-  have hj' := Finset.mem_filter.mp hj
-  have hcoeff := congrArg (fun p : DP => p.coeff j.val) he
-  change (∑ i ∈ s, c i • column i.val).coeff j.val = (0 : DP).coeff j.val at hcoeff
-  rw [MvPolynomial.coeff_sum, AddMonoidAlgebra.coeff_zero,
-    Finset.sum_eq_single_of_mem j hj'.1] at hcoeff
-  · rw [MvPolynomial.coeff_smul, smul_eq_mul] at hcoeff
-    exact (mul_ne_zero hj'.2 (column_coeff j.val)) hcoeff
-  · intro k hk hkj
-    rw [MvPolynomial.coeff_smul]
-    by_cases hc : c k = 0
-    · simp [hc]
-    · have hne : j.val ≠ k.val := fun h => hkj (Subtype.ext h.symm)
-      have hi := hm k (Finset.mem_filter.mpr ⟨hk,hc⟩)
-      simp [column_lower k.val j.val hne hi]
-
-private def source : Submodule Geom DP := Submodule.span Geom
-    (Set.range fun u : Slot => column u.val)
-
-private theorem source_le_wide : source ≤ wideSpace := by
-  apply Submodule.span_le.mpr
-  rintro _ ⟨u,rfl⟩
-  exact column_wide u.property
-
-private theorem dim_source : Module.finrank Geom source = 5830003029192 := by
-  classical
-  obtain ⟨e⟩ := LowAnchor6969Dimension.eligible_card
-  letI : Fintype Slot := Fintype.ofEquiv _ e.symm
-  rw [source,finrank_span_eq_card independent_dp,Fintype.card_congr e,Fintype.card_fin]
-
-private theorem source_eval (Q : source) (S : (Polynomial Geom)) (hs : S.natDegree ≤ 133363) :
-    (differentialSpecialization (Q.val : DP) S).natDegree ≤ 106*179740-1 := by
-  change (differentialSpecializationHom S Q.val).natDegree ≤ _
-  let f := (differentialSpecializationHom (d := 3) S).toLinearMap
-  change (f Q.val).natDegree ≤ _
-  have hq : Q.val ∈ Submodule.span Geom (Set.range fun u : Slot => column u.val) := Q.property
-  refine Submodule.span_induction (p := fun p _ => (f p).natDegree ≤ 106 * 179740 - 1) ?_ ?_ ?_ ?_ hq
-  · rintro _ ⟨u,rfl⟩
-    exact column_eval_degree S u.property hs
-  · rw [map_zero]
-    simp
-  · intro a b _ _ ha hb
-    rw [map_add]
-    exact (Polynomial.natDegree_add_le (f a) (f b)).trans (max_le ha hb)
-  · intro a p _ hp
-    rw [map_smul]
-    exact (Polynomial.natDegree_smul_le _ _).trans hp
-
-private def row (w : I → K) (i : I) : source →ₗ[Geom] LocalPolynomial Geom 3 :=
-  (localConstraintAt 106 (embed (node i)) (embed (w i))).domRestrict _
-
-private theorem row_rank (w : I → K) (i : I) :
-    Module.finrank Geom (LinearMap.range (row w i)) ≤ 22239546 := by
-  letI : Module.Finite Geom wideSpace := finiteWide
-  let L := wideLocal (embed (node i)) (embed (w i))
-  have hle : LinearMap.range (row w i) ≤ LinearMap.range L := by
-    rintro _ ⟨Q,rfl⟩
-    exact ⟨⟨Q.val,source_le_wide Q.property⟩,rfl⟩
-  have hfin : Module.finrank Geom (LinearMap.range (row w i)) ≤
-      Module.finrank Geom (LinearMap.range L) := Submodule.finrank_mono hle
-  exact hfin.trans (per_position (embed (node i)) (embed (w i)))
-
-private theorem exists_local (w : I → K) :
-    ∃ Q : source, Q ≠ 0 ∧ ∀ i, row w i Q = 0 := by
-  have hr : (∑ i, Module.finrank Geom (LinearMap.range (row w i))) ≤ 262144 * 22239546 := calc
-    _ ≤ ∑ _ : I, (22239546 : ℕ) := Finset.sum_le_sum fun i _ => row_rank w i
-    _ = _ := by simp
-  have hroom : 262144 * 22239546 < Module.finrank Geom source := by
-    rw [dim_source]
-    decide
-  exact LinearMap.exists_ne_zero_of_sum_finrank_range_lt (row w) (hr.trans_lt hroom)
-
-/-- The Euler anchor at the actual low endpoint, using the published local-rank witnesses. -/
-theorem exists_anchor (w : I → K) :
-    ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨142,58,15⟩ ∧ A6966LowBase.ActiveFits P 178 ∧
-      differentialWeightedDegree 133363 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
-        106 * 179740 - 1 + 58 ∧
-      ∀ (S : (Polynomial K)) (T : Finset I), S.natDegree ≤ 133363 → 179740 ≤ T.card →
-        (∀ i ∈ T, S.eval (node i) = w i) → atJet P (extend S) = 0 := by
-  classical
-  obtain ⟨Q,hQ,hloc⟩ := exists_local w
-  let V : wideSpace := ⟨Q.val, source_le_wide Q.property⟩
-  let P : Row 4 := MvPolynomial.optionEquivRight Geom (Fin 4) Q.val
-  have hP : P ≠ 0 := by
-    intro h
-    exact hQ (Subtype.ext ((MvPolynomial.optionEquivRight Geom (Fin 4)).injective
-      (h.trans (map_zero _).symm)))
-  refine ⟨P,hP,shape_bound V,active_bound V,?_,?_⟩
-  · simpa only [P,AlgEquiv.symm_apply_apply] using rawWeight V
-  · intro S T hd hT hits
-    rw [atJet_unflatten]
-    have hS : (extend S).natDegree ≤ 133363 := Polynomial.natDegree_map_le.trans hd
-    have hdeg := (source_eval Q (extend S) hS).trans_lt (by decide : 106*179740-1 < 106*179740)
-    have heval (i : I) (hi : i ∈ T) : (extend S).eval (embed (node i)) = embed (w i) := by
-      rw [Polynomial.eval_map, Polynomial.eval₂_hom, hits i hi]
-    exact eq_zero_of_natDegree_lt_mul_of_pow_X_sub_C_dvd_at_injOn
-      (fun i => embed (node i)) T 106 179740
-      ((RingHom.injective embed).comp node.injective).injOn hT
-      (fun i hi => X_sub_C_pow_dvd_differentialSpecialization_of_contact
-        Q.val (extend S) (embed (node i)) (embed (w i)) (heval i hi) (hloc i)) hdeg
-
-/-- The actual low-band model and marks supply the same single anchor. -/
-theorem anchor_of_family {cap u del Γ} (M : P1.ModelAt cap u del) (F : P1.FamilyAt 179740 M Γ)
-    (hi : M.overhead ≤ 2292) :
-    ∃ P : Row 4, P ≠ 0 ∧ InBox (shape P) ⟨142,58,15⟩ ∧ A6966LowBase.ActiveFits P 178 ∧
-      differentialWeightedDegree 133363 ((MvPolynomial.optionEquivRight Geom (Fin 4)).symm P) ≤
-        106*179740-1+58 ∧ ∀ γ∈Γ,atJet P (extend (F.scalar γ))=0 := by
-  obtain ⟨P,nz,box,active,weight,zero⟩ := exists_anchor M.word
-  refine ⟨P,nz,box,active,weight,?_⟩
-  intro γ hγ
-  let mark := F.mark γ hγ
-  have degree : (F.scalar γ).natDegree ≤ 133363 := by
-    rcases mark.scalar_degree with z | h
-    · simp [z]
-    · change ((F.scalar γ).natDegree : ℤ) ≤ 131071 + M.overhead at h
-      omega
-  exact zero _ mark.bad.support degree mark.bad.agreement mark.scalar_hits
-
-end
-end LowAnchor6969
-end Z6969Source2267
-
 -- Source: ProximityPrize.SubmissionLower.Low6969Inventory
 section Z6969Source2268
 set_option autoImplicit true
@@ -1947,15 +1052,15 @@ open Final50Price (ActiveFits)
 open Final50GeoCover (activeDegree activeFits_iff)
 open K1_13_1 (coeff_flatten anchorLead_term index_bounds)
 open scoped BigOperators Polynomial Classical
-abbrev anchorCutoff : ℕ := 106*agreement-1+58
-def fullCap (top : ℕ) : Shape := ⟨142, 58, top⟩
+abbrev anchorCutoff : ℕ := 107*agreement-1+60
+def fullCap (top : ℕ) : Shape := ⟨143, 60, top⟩
 def Fits (top : ℕ) {n : ℕ} (a : Fin n → Shape) : Prop :=
-  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 142 ∧ (∑ i, (a i).j) ≤ 58 ∧
+  (∀ i, K1_13_8.Valid (a i)) ∧ (∑ i, (a i).b) ≤ 143 ∧ (∑ i, (a i).j) ≤ 60 ∧
     (∑ i, (a i).t) ≤ top
 def LowerRow (top : ℕ) (g : Row 3) : Prop :=
-  g≠0 ∧ g.totalDegree≤142-top ∧ indexDegree g≤58-3*top ∧ TrueWeightLE g anchorCutoff
+  g≠0 ∧ g.totalDegree≤143-top ∧ indexDegree g≤60-3*top ∧ TrueWeightLE g anchorCutoff
 def SmallFactor (f : Row 4) : Prop :=
-  Irreducible f ∧ 0<(shape f).t ∧ InBox (shape f) (fullCap 15) ∧ TrueWeightLE f anchorCutoff
+  Irreducible f ∧ 0<(shape f).t ∧ InBox (shape f) (fullCap 16) ∧ TrueWeightLE f anchorCutoff
 theorem trueWeight_iff {n D : ℕ} (P : Row n) :
     TrueWeightLE P D ↔
       ((MvPolynomial.optionEquivRight Geom (Fin n)).symm P).weightedTotalDegree
@@ -1989,16 +1094,16 @@ theorem differentialWeight_eq : differentialWeight (d := 3) physicalDegree =
 section FactorCover
 open MvPolynomial UniqueFactorizationMonoid
 theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨142, 58, 15⟩) (hw : TrueWeightLE P anchorCutoff) :
+    (hbox : InBox (shape P) ⟨143, 60, 16⟩) (hw : TrueWeightLE P anchorCutoff) :
     LowerRow (shape P).t (anchorLead P) := by
   refine ⟨anchorLead_ne hP, ?_, ?_, ?_⟩
   · have hb := (Euler50GeoLead.lead_degree P hP).trans hbox.1
-    change (anchorLead P).totalDegree + (shape P).t ≤ 142 at hb
-    change (anchorLead P).totalDegree ≤ 142 - (shape P).t
+    change (anchorLead P).totalDegree + (shape P).t ≤ 143 at hb
+    change (anchorLead P).totalDegree ≤ 143 - (shape P).t
     omega
   · have hj := (Euler50GeoLead.lead_index P hP).trans hbox.2.1
-    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 58 at hj
-    change indexDegree (anchorLead P) ≤ 58 - 3 * (shape P).t
+    change indexDegree (anchorLead P) + 3 * (shape P).t ≤ 60 at hj
+    change indexDegree (anchorLead P) ≤ 60 - 3 * (shape P).t
     omega
   · intro m hm
     obtain ⟨u, hu, hc, h⟩ := anchorLead_term P m hm
@@ -2007,7 +1112,7 @@ theorem lower_of_anchor (P : Row 4) (hP : P ≠ 0)
     apply (Nat.add_le_add_left _ _).trans (hw u hu)
     simpa only [Finsupp.weight_apply, smul_eq_mul, Nat.mul_comm, Fin.val_castSucc] using hle
 theorem factor_small {P f : Row 4} (hP : P ≠ 0)
-    (hbox : InBox (shape P) ⟨142, 58, 15⟩) (hw : TrueWeightLE P anchorCutoff)
+    (hbox : InBox (shape P) ⟨143, 60, 16⟩) (hw : TrueWeightLE P anchorCutoff)
     (hf : Irreducible f) (ht : 0 < (shape f).t) (hd : f ∣ P) : SmallFactor f := by
   refine ⟨hf, ht, ⟨?_, ?_, ?_⟩, ?_⟩
   · have h := weightedTotalDegree_le_of_dvd (1 : Fin 4 → ℕ) hd hP
@@ -2107,19 +1212,19 @@ open K1 (I K)
 open K1_13 (Geom)
 open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necessary MixedOrder PairOrders CommonPair
 open scoped Polynomial BigOperators
-abbrev firstOrder : ℕ := 4009322
-abbrev secondOrder : ℕ := 1775283
-abbrev firstCut : ℕ := 5000 * 179740 - firstOrder
-abbrev secondCut : ℕ := 5000 * 179740 - secondOrder
-abbrev bankRank : ℕ := 633745210731502346258
+abbrev firstOrder : ℕ := 3975818
+abbrev secondOrder : ℕ := 1815862
+abbrev firstCut : ℕ := 5000 * 179730 - firstOrder
+abbrev secondCut : ℕ := 5000 * 179730 - secondOrder
+abbrev bankRank : ℕ := 701329375673955677026
 def mixedWeight (a : SeedVar →₀ ℕ) : ℕ :=
-  6876 * a none + 48671 * a.some.degree
+  6921 * a none + 48661 * a.some.degree
 theorem mixedWeight_add (a b : SeedVar →₀ ℕ) :
     mixedWeight (a + b) = mixedWeight a + mixedWeight b := by
   simp only [mixedWeight, Finsupp.add_apply, Finsupp.some_add, map_add, Nat.mul_add]
   ac_rfl
 /-- The low fat chain works with rows whose seed degree is at most 24,000 in the first bank and 32,000 in the second. -/
-abbrev seedCap (a : K1_13.Shape) : ℕ := if a.b = 6789 then 24000 else 32000
+abbrev seedCap (a : K1_13.Shape) : ℕ := if a.b = 6789 then 24400 else 35200
 def Caps27 {R : Type*} [CommSemiring R] (a : K1_13.Shape) (F : SeedRow R) : Prop :=
   Caps a F ∧ seedDegree F ≤ seedCap a
 def Source27 {Γ s} (w : I → K) (P : K1_13.PoleData Γ s) (L : ResidueChart P)
@@ -2128,8 +1233,8 @@ def Source27 {Γ s} (w : I → K) (P : K1_13.PoleData Γ s) (L : ResidueChart P)
 def HasRank27 {Γ s} (w : I → K) (P : K1_13.PoleData Γ s) (L : ResidueChart P)
     (a : K1_13.Shape) (t n : ℕ) : Prop :=
   ∃ e : Fin n → PhysicalRow, LinearIndependent Geom e ∧ ∀ i, Source27 w P L a t (e i)
-abbrev commonBox : K1_13.Shape := ⟨2947, 955, 0⟩
-abbrev resultantBox : K1_13.Shape := ⟨380928000, 128800000, 0⟩
+abbrev commonBox : K1_13.Shape := ⟨682, 239, 0⟩
+abbrev resultantBox : K1_13.Shape := ⟨405380800, 137080000, 0⟩
 structure FatEquations where
   common : K1_13.Row 3
   residual : K1_13.Row 3
@@ -2147,15 +1252,15 @@ structure CommonPair (F G : GenericRow) where
   left : GenericRow
   right : GenericRow
   pure_ne : pure ≠ 0
-  pure_degree : pure.natDegree ≤ 56000
+  pure_degree : pure.natDegree ≤ 59600
   fixed_kind : ∀ f ∈ fixed, Irreducible f ∧ 0 < jetTotal f ∧ seedDegree f = 0
   moving_kind : ∀ f ∈ moving, Irreducible f ∧ 0 < jetTotal f ∧
     0 < seedDegree f ∧ f.degreeOf (some 2) = 0
-  fixed_total : jetTotal (∏ f ∈ fixed, f) ≤ 125
-  fixed_index : jetIndex (∏ f ∈ fixed, f) ≤ 42
-  moving_total : jetTotal (∏ f ∈ moving, f) ≤ 17
-  moving_index : jetIndex (∏ f ∈ moving, f) ≤ 5
-  moving_seed : seedDegree (∏ f ∈ moving, f) ≤ 83
+  fixed_total : jetTotal (∏ f ∈ fixed, f) ≤ 52
+  fixed_index : jetIndex (∏ f ∈ fixed, f) ≤ 14
+  moving_total : jetTotal (∏ f ∈ moving, f) ≤ 7
+  moving_index : jetIndex (∏ f ∈ moving, f) ≤ 2
+  moving_seed : seedDegree (∏ f ∈ moving, f) ≤ 45
   left_eq : F = (pureSeed pure * (∏ f ∈ fixed, f ^ exponent f) *
     (∏ f ∈ moving, f ^ exponent f)) * left
   right_eq : G = (pureSeed pure * (∏ f ∈ fixed, f ^ exponent f) *
@@ -2184,9 +1289,9 @@ open K1_13_4 hiding firstOrder secondOrder firstCut secondCut mixedWeight Necess
 open P0_9_4 (clear_denominators)
 open scoped Polynomial BigOperators
 structure Messages (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)) : Prop where
-  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 179740 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
+  hits : ∀ γ ∈ Γ, ∃ T : Finset I, 179730 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i
 def c1 : Prop :=
-  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2292 →
+  ∀ w Γ s (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2307 →
     (∃ F, F ≠ 0 ∧ Source27 w P L firstBox firstCut F) ∧
     HasRank27 w P L secondBox secondCut bankRank
 def c2 : Prop :=
@@ -2195,22 +1300,22 @@ def c2 : Prop :=
     ∃ G, G ∈ Necessary w P L ∧ Nonempty (CommonPair (toGeneric F) (toGeneric G))
 def c3 : Prop :=
   ∀ w Γ s, Messages w Γ s →
-    ∀ (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2292 →
+    ∀ (P : PoleData Γ s) (L : ResidueChart P), P.H.natDegree ≤ 2307 →
       (∀ F, Source27 w P L firstBox firstCut F → ∀ γ ∈ Γ,
         MixedOrder (toGeneric F) (inclConst (P.z γ)) (trajectory (extend (s γ))) firstOrder) ∧
       (∀ G ∈ Necessary w P L, ∀ γ ∈ Γ,
         MixedOrder (toGeneric G) (inclConst (P.z γ)) (trajectory (extend (s γ))) secondOrder)
 
-abbrev fatOrder : ℕ := 21269
+abbrev fatOrder : ℕ := 21437
 def Holds (E : FatEquations) (S : (Polynomial K1_13.Geom)) : Prop :=
   K1_13.atJet E.common S = 0 ∨ K1_13.OrderAt E.residual S fatOrder
 
 def Equations : Prop :=
   ∀ (w : I → K) (Γ : Finset K) (s : K → (Polynomial K)),
-    (∀ γ ∈ Γ, (s γ).natDegree ≤ 133363) →
-    (∀ γ ∈ Γ, ∃ T : Finset I, 179740 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i) →
-    ∀ P : K1_13.PoleData Γ s, P.H.natDegree ≤ 2292 →
-    ∃ (book : Finset K1.K) (E : FatEquations), book.card ≤ 56000 ∧
+    (∀ γ ∈ Γ, (s γ).natDegree ≤ 133378) →
+    (∀ γ ∈ Γ, ∃ T : Finset I, 179730 ≤ T.card ∧ ∀ i ∈ T, (s γ).eval (node i) = w i) →
+    ∀ P : K1_13.PoleData Γ s, P.H.natDegree ≤ 2307 →
+    ∃ (book : Finset K1.K) (E : FatEquations), book.card ≤ 59600 ∧
       ∀ γ ∈ Γ, γ ∉ book → Holds E (K1_13.extend (s γ))
 end
 end Low6969Fat

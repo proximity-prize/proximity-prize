@@ -144,25 +144,6 @@ theorem derivative_resultant_tame (f : Curve (Polynomial L)) (d : ℕ)
     decide +kernel
   exact (Nat.add_le_add_right (Nat.mul_le_mul_left 2 R) _).trans_lt numerics
 
-theorem derivative_resultant_nonzero (f : Curve (Polynomial L)) (ir : Irreducible f)
-    (pos : 0<f.degreeOf ordinate) (small : f.degreeOf ordinate<K1.p) :
-    (view f).resultant (view f).derivative (f.degreeOf ordinate)
-      (f.degreeOf ordinate-1)≠0 := by
-  let P := view f
-  have ip : Irreducible P := (MulEquiv.irreducible_iff view).mpr ir
-  have dP : P.natDegree=f.degreeOf ordinate := view_y f
-  have ne : ((P.natDegree : ℕ) : Polynomial (Polynomial L)) ≠0 := by
-    intro zero
-    have dvd := (CharP.cast_eq_zero_iff (Polynomial (Polynomial L)) K1.p P.natDegree).mp zero
-    exact (Nat.ne_of_gt (dP.symm ▸ pos)) (Nat.eq_zero_of_dvd_of_lt dvd (dP.symm ▸ small))
-  have der : P.derivative≠0 := by
-    intro zero
-    have base : P.natDegree-1+1=P.natDegree := Nat.sub_add_cancel (dP.symm ▸ pos)
-    have h := congrArg (fun Q => Q.coeff (P.natDegree-1)) zero
-    rw [coeff_derivative,← Nat.cast_add_one,base,coeff_natDegree,coeff_zero] at h
-    exact mul_ne_zero (leadingCoeff_ne_zero.mpr ip.ne_zero) ne h
-  have result := Polynomial.resultant_derivative_ne_zero_of_irreducible P ip der
-  rwa [dP] at result
 
 end
 end Lower6960.RetainedCompression

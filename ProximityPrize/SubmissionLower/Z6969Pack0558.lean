@@ -1065,48 +1065,27 @@ theorem cutoff_fit {h : ℕ} (lo : 2535≤h) (hi : h≤33735) (rect : Fin 4) (i 
     cutoff h rect i+2*h*(reserve i)<(bank rect i).shape.m*agreement :=
   FreeSource.buffered_fit _ _ _ _ ((rescue_checked rect i).window lo hi)
 
-theorem rescue_row {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
-    (lo : 2535≤h) (hi : h≤33735) (rect : Fin 4) (i : Fin 17) {G : Jet}
-    (irr : Irreducible G) (seeded : UsesSeed G) (slope : 1≤G.natDegree)
-    (hs : seed rect≤seedDegree G) (hj : G.natDegree+excess rect≤jetDegree G) :
-    ∃ Q ∈ evaluated Crt word (bank rect i).shape (cutoff h rect i), ¬G∣Q := by
-  have cert := rescue_checked rect i
-  exact HelperSource.crt_avoiding_row Crt word (bank rect i) agreement (reserve i) 1 (excess rect) (seed rect)
-    (by omega) (by omega) (by decide) cert.rank.nodes cert.rank.moment.1 cert.rank.moment.2
-    (shape_guards rect i).2.2.2.1 (cert.window lo hi) (cert.gain lo hi) irr seeded slope hs hj
 
-private theorem fits_rectangle {j u : ℕ} (loJ : 1≤j) (hiJ : j≤7)
-    (loU : 1≤u) (hiU : u≤85) (mixed : 2≤j → u≤78) :
-    ∃ rect : Fin 4, 1+excess rect≤j ∧ j≤jetCap rect ∧ seed rect≤u ∧ u≤seedCap rect := by
-  by_cases hJ : 2≤j
-  · refine ⟨3,?_⟩
-    change 2≤j ∧ j≤7 ∧ 1≤u ∧ u≤78
-    exact ⟨hJ,hiJ,loU,mixed hJ⟩
-  · by_cases hU : u≤1
-    · refine ⟨0,?_⟩
-      change 1≤j ∧ j≤1 ∧ 1≤u ∧ u≤1
-      omega
-    · by_cases hU' : u≤6
-      · refine ⟨1,?_⟩
-        change 1≤j ∧ j≤1 ∧ 2≤u ∧ u≤6
-        omega
-      · refine ⟨2,?_⟩
-        change 1≤j ∧ j≤1 ∧ 7≤u ∧ u≤85
-        omega
 
-theorem exceptional_rows {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (word : K1.I → L)
-    (lo : 2535≤h) (hi : h≤33735) {G : Jet} (irr : Irreducible G) (seeded : UsesSeed G)
-    (slope : 0<G.natDegree)
-    (common : ∀ P ∈ evaluated Crt word Far6969HelperSource.helperBank.shape (Far6969HelperSource.helperCutoff h), G∣P) :
-    ∃ rect : Fin 4, G.natDegree=1 ∧ jetDegree G≤jetCap rect ∧ seedDegree G≤seedCap rect ∧
-      ∀ i : Fin 17, ∃ Q ∈ evaluated Crt word (bank rect i).shape (cutoff h rect i), ¬G∣Q := by
-  obtain ⟨linear,loJ,hiJ,loU,hiU,mixed⟩ := Far6969HelperSource.helper_common_caps Crt word lo hi irr seeded slope common
-  obtain ⟨rect,lowJ,highJ,lowU,highU⟩ := fits_rectangle loJ hiJ loU hiU mixed
-  refine ⟨rect,linear,highJ,highU,fun i => ?_⟩
-  exact rescue_row Crt word lo hi rect i irr seeded (by omega) lowU (by rw [linear]; exact lowJ)
 
 end Lower6960.Far6969RescueSource
 end Z6969Source0577
+
+namespace Research6969.TransitionArithmetic
+open Research6966.FarSourceArithmetic (Request fastPhase fastPhase_eq)
+open Lower6960.HelperSource (gain surplus gain_eq_compressed)
+abbrev agreement : ℕ := 179730
+def value (q:Request) (h:ℕ) : ℤ :=
+  (fastPhase q.bank.shape agreement h q.reserve q.slope q.excess q.seed 0-
+    fastPhase q.bank.shape agreement h q.reserve q.slope q.excess q.seed 1:ℕ) -
+    (P1_7.debit h q.bank:ℤ)
+
+theorem value_eq (q:Request) (h:ℕ) (pos:0<q.slope) (narrow:q.bank.shape.J<131071-h) :
+    value q h=surplus q.bank agreement h q.reserve q.slope q.excess q.seed := by
+  unfold value surplus
+  rw [gain_eq_compressed _ _ _ _ _ _ _ pos,fastPhase_eq _ _ _ _ _ _ _ _ narrow,fastPhase_eq _ _ _ _ _ _ _ _ narrow]
+
+end Research6969.TransitionArithmetic
 
 -- Source: Research6969.FarRescueGeometry
 section Z6969Source0578
@@ -1135,8 +1114,8 @@ open scoped Classical
 open K1_14_2_2_3 (shiftedWord)
 open P0_10R_1 (seed_projection section_bound component_height)
 open P1_7_4_1 (irreducible_cut)
-abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33735 u deleted
-abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179740 M Γ
+abbrev Model (u : P1.Words) (deleted : Finset I) := P1.ModelAt 33755 u deleted
+abbrev Family {u deleted} (M : Model u deleted) (Γ : Finset K) := P1.FamilyAt 179730 M Γ
 def word {u deleted} (M : Model u deleted) : I→L := fun i => algebraMap K L (M.word i)
 def OnMark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (A : Ideal Ambient) (γ : K) : Prop := OnJet A (M.label γ) (F.scalar γ)
@@ -1155,7 +1134,7 @@ theorem contact_at_mark {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
     {s : Shape} {W r : ℕ} {P : Jet} (inside : P∈evaluated Crt (word M) s W)
-    (width : W+2*M.overhead.toNat*r<s.m*179740)
+    (width : W+2*M.overhead.toNat*r<s.m*179730)
     (γ : K) (hγ : γ∈Γ) :
     Native (RingHom.ker (jetMarkHom (M.label γ) (F.scalar γ))) (r+1) P := by
   let B := F.mark γ hγ
@@ -1406,29 +1385,6 @@ structure Run {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
   cut : ∀ i : Fin 17,∀ J∈kept i.val,J∉kept (i.val+1) →
     ∃ C : Jet,RowCaps C (bank rect i).shape ∧ toJet C∉J ∧
       ∀ γ∈Γ,jetAt C (M.label γ) (F.scalar γ)=0
-theorem prepare {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2535≤M.overhead.toNat) (hi : M.overhead.toNat≤33735)
-    (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
-    (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
-    {G : Jet} (common : PrefixRows.Common
-      (evaluated Crt (word M) Far6969HelperSource.helperBank.shape (Far6969HelperSource.helperCutoff M.overhead.toNat)) G) :
-    Nonempty (Run F Crt G) := by
-  obtain ⟨rect,linear,jCap,uCap,rows⟩ := Far6969RescueSource.exceptional_rows Crt (word M) lo hi
-    common.1 common.2.2.1 common.2.1 common.2.2.2
-  choose Q inside avoid using rows
-  have capsG : RowCaps G (primeShape rect) :=
-    (rowCaps_iff G _).mpr ⟨jCap,linear.le,uCap⟩
-  have caps (i : Fin 17) : RowCaps (Q i) (bank rect i).shape :=
-    evaluated_shape Crt (word M) (inside i)
-  have contact (i : Fin 17) (γ : K) (hγ : γ∈Γ) :
-      Native (RingHom.ker (jetMarkHom (M.label γ) (F.scalar γ))) (reserve i+1) (Q i) :=
-    contact_at_mark F Crt noPole residues (inside i) (Far6969RescueSource.cutoff_fit lo hi rect i) γ hγ
-  obtain ⟨ini⟩ := initial_cover F common.1 (avoid 0) capsG (caps 0)
-    (fun γ hγ=>zero_of_contact (contact 0 γ hγ))
-  obtain ⟨kept,start,intro_pass,anti,passed,cap,cut⟩ :=
-    history_from_initial common.1 capsG Q ini avoid caps contact
-  exact ⟨⟨rect,Q,inside,avoid,ini,kept,start,intro_pass,anti,passed,cap,cut⟩⟩
 theorem Run.parent_geom {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {G : Jet} (R : Run F Crt G)
     {n : ℕ} {J : Ideal Ambient} (mem : J∈R.kept n) :
@@ -1461,17 +1417,17 @@ open scoped Classical
 open HighCore82258_3 (envelope_caps)
 open K1_14_2_2_7 (seed_value_eq)
 def terminalShape : Shape := ⟨4500,6286,1329,748778⟩
-def terminalCutoff : ℕ := terminalShape.m*179740-1
+def terminalCutoff : ℕ := terminalShape.m*179730-1
 def TerminalFits (s : Shape) : Prop :=
   0<s.m ∧ s.B≤terminalShape.B ∧ s.J≤terminalShape.J ∧ s.U≤terminalShape.U
 def TerminalPass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (J : Ideal Ambient) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179740-1),toJet P∈J
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179730-1),toJet P∈J
 
 /-- A parent that fails any terminal bank provides a proper row inside
 the single envelope used by the geometric cut bill. -/
 theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L)
     {J : Ideal Ambient} (failed : ¬ TerminalPass Crt w J) :
-    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179740-1) ∧
+    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179730-1) ∧
       RowCaps P terminalShape ∧ toJet P∉J := by
   classical
   unfold TerminalPass at failed
@@ -1551,7 +1507,7 @@ theorem Run.marked_cutter {u deleted} {M : Model u deleted} {Γ} {F : Family M �
     intro γ hγ
     apply zero_of_contact (r:=0)
     exact contact_at_mark F Crt noPole residues inside
-      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179740)) (by decide : 0<1)) γ hγ
+      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179730)) (by decide : 0<1)) γ hγ
 private theorem mark_on_cut {J : Ideal Ambient} {P : Jet} {z : K} {S : (Polynomial K)}
     (on : OnJet J z S) (zero : jetAt P z S=0) :
     ∃ Q∈cutComponents J P,OnJet Q z S := by
@@ -1642,7 +1598,7 @@ def OnSurface {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     (q : Surface) (γ : K) : Prop :=
   ∀ P∈q.asIdeal,jetAt P (M.label γ) (F.scalar γ)=0
 def SurfacePass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (q : Surface) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179740-1),P∈q.asIdeal
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179730-1),P∈q.asIdeal
 
 theorem SurfacePass.original {h : ℕ} {D : PoleData h} {Crt : CRTLift D} {w : I→L}
     {q : Surface} (pass : SurfacePass Crt w q) :
@@ -1747,8 +1703,6 @@ def seedLimit (rect : Fin 4) : ℚ := weightedBill 17 (cutWeight rect 0) (histor
 def pointLimit (rect : Fin 4) : ℚ := weightedBill 17 (cutWeight rect 2) (fun _ => initialMass rect)
 def initialSeedLimit (rect : Fin 4) : ℕ := (K1.p+1)*initialCap rect 2+initialCap rect 3
 theorem seed_limit_small (rect : Fin 4) : seedLimit rect < (K1.p : ℚ) := by
-  fin_cases rect <;> decide +kernel
-theorem point_limit_bound (rect : Fin 4) : pointLimit rect ≤ 206700957314 := by
   fin_cases rect <;> decide +kernel
 def Initial.seedMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {G Q₀ : Jet} {rect : Fin 4} (ini : Initial F G Q₀ rect) : Finset K :=
@@ -1862,33 +1816,6 @@ theorem Run.joint_bill {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
   (le_add_of_nonneg_right (P1_7_4.final_credit_nonneg 18 (beforeCuts rank cut) R.final)).trans
     (R.joint_bill_with_final rank cut)
 
-theorem inventory {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2535≤M.overhead.toNat) (hi : M.overhead.toNat≤33735)
-    (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
-    (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ))
-    {G : Jet} (common : PrefixRows.Common
-      (K1_14_1.evaluated Crt (word M) Far6969HelperSource.helperBank.shape (Far6969HelperSource.helperCutoff M.overhead.toNat)) G) :
-    ∃ (R : Run F Crt G) (C : CutBooks R) (S : Finset Surface),
-      (∀ q∈S,Parent q ∧ SurfacePass Crt (word M) q) ∧
-      ∀ γ∈Γ,jetAt G (M.label γ) (F.scalar γ)=0 →
-        γ∈R.initial.seedMarks ∨ γ∈R.initial.ordinateMarks ∨
-        (∃ J∈R.initial.rankExit,OnMark F J γ) ∨ γ∈C.pointMarks ∨
-        (∃ i<17,∃ Q∈(C.cover i).curves,OnMark F Q γ) ∨ ∃ q∈S,OnSurface F q γ := by
-  obtain ⟨R⟩ := prepare F Crt lo hi noPole residues common
-  obtain ⟨C⟩ := R.cutBooks noPole residues
-  obtain ⟨S,geom,pass⟩ := R.terminal_surfaces
-  refine ⟨R,C,S,geom,?_⟩
-  intro γ hγ zero
-  rcases R.initial.covers γ hγ zero with seed | ordinate | rank | ⟨J,mem,on⟩
-  · exact Or.inl (mem_filter.mpr ⟨hγ,seed⟩)
-  · exact Or.inr (Or.inl (mem_filter.mpr ⟨hγ,ordinate⟩))
-  · exact Or.inr (Or.inr (Or.inl rank))
-  · rcases R.retained_or_lost mem with final | ⟨i,hi,lost⟩
-    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (pass γ hγ ⟨J,final,on⟩)))))
-    · rcases C.covers i hi γ hγ ⟨J,lost,on⟩ with point | curve
-      · exact Or.inr (Or.inr (Or.inr (Or.inl (mem_biUnion.mpr ⟨i,mem_range.mpr hi,point⟩))))
-      · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨i,hi,curve⟩))))
 end Lower6960.Far6969RescueGeometry
 
 end
@@ -1926,9 +1853,9 @@ open K1_14_2_5 (clear_equation factor_cover)
 open K1_14_3_6 (power totalCap topCap)
 open scoped Classical BigOperators
 
-private abbrev agreement : ℕ := 179740
+private abbrev agreement : ℕ := 179730
 private abbrev blockLength : ℕ := 262144
-abbrev endpointDegree : ℕ := 133460
+abbrev endpointDegree : ℕ := 133482
 
 structure FixedWord (w : I → K) (U : Finset K) (s : K → (Polynomial K)) (d : ℕ) : Prop where
   distinct : Set.InjOn s (U : Set K)
@@ -2017,7 +1944,7 @@ private theorem weights {s d : ℕ} (hs : s ≤ d) (hd : d < agreement)
     _ ≤ (blockLength : ℚ) * ((d : ℚ) / agreement) :=
       mul_le_mul (by exact_mod_cast Nat.sub_le blockLength s) hfrac (by positivity) (by positivity)
     _ = density * d := by ring
-private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 133460) :
+private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 133482) :
     rho d ≤ density * d := by
   have hdA : d < agreement := hh.trans_lt (by decide)
   have hdN : d ≤ blockLength := hh.trans (by decide)
@@ -2026,8 +1953,8 @@ private theorem rho_at_endpoint {d : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 133460
     have hp : (0 : ℚ) < ((agreement - d : ℕ) : ℚ) := by exact_mod_cast Nat.sub_pos_of_lt hdA
     apply (div_le_iff₀ hp).mpr
     rw [Nat.cast_sub hdN, Nat.cast_sub hdA.le]
-    change (262144 : ℚ) - d ≤ 17 * ((179740 : ℚ) - d)
-    have hQ : (d : ℚ) ≤ 133460 := by exact_mod_cast hh
+    change (262144 : ℚ) - d ≤ 17 * ((179730 : ℚ) - d)
+    have hQ : (d : ℚ) ≤ 133482 := by exact_mod_cast hh
     linarith only [hQ]
   have hDensity : 1 ≤ density := by
     apply (le_div_iff₀ (show (0 : ℚ) < (agreement : ℚ) by positivity)).mpr
@@ -2045,7 +1972,7 @@ private theorem taylorPower_cast {g : ℕ} (hg : 0 < g) :
   rfl
 private theorem regular_count {n g H d : ℕ} {U : Finset K} {s : K → Polynomial K} {w}
     (A : K1_14_2_4.RegularChart U s g H n) (hw : FixedWord w U s d)
-    (hg : 0 < g) (hl : 131071 ≤ d) (hh : d ≤ 133460) :
+    (hg : 0 < g) (hl : 131071 ≤ d) (hh : d ≤ 133482) :
     (U.card : ℚ) ≤ (2 * density * d * (taylorPower g : ℚ) + rho d) * H + 1 := by
   have hbound : 0 ≤ (2 * density * d * (taylorPower g : ℚ) + rho d) * (H : ℚ) := by
     unfold rho
@@ -2101,7 +2028,7 @@ private theorem regular_count {n g H d : ℕ} {U : Finset K} {s : K → Polynomi
 /-- Degree and agreement at the new upper height, for an arbitrary set
 of marks from the actual anchored family. -/
 theorem fixed_word {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    (hi : M.overhead.toNat≤2389) {T : Finset K} (hT : T⊆Γ) :
+    (hi : M.overhead.toNat≤2411) {T : Finset K} (hT : T⊆Γ) :
     FixedWord M.word T F.scalar endpointDegree where
   distinct := F.distinct.mono hT
   degree := by
@@ -2109,7 +2036,7 @@ theorem fixed_word {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     rcases (F.mark γ (hT hγ)).scalar_degree with zero | bound
     · simp [zero]
     · change ((F.scalar γ).natDegree : ℤ)≤131071+M.overhead at bound
-      change (F.scalar γ).natDegree≤133460
+      change (F.scalar γ).natDegree≤133482
       omega
   hits := by
     intro γ hγ
@@ -2127,7 +2054,7 @@ def CurveTariff {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ) : Prop 
     (T.card : ℚ)≤curveUnit g*H+g
 
 theorem curve_tariff {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    (hi : M.overhead.toNat≤2389) : CurveTariff F := by
+    (hi : M.overhead.toNat≤2411) : CurveTariff F := by
   intro T hT J g H hg hgLimit hcurve _ hmarks
   obtain ⟨U,hU,hexc,n,⟨A⟩⟩ := regular_chart T M.label F.scalar J g H hg
     (hgLimit.trans_lt (by decide)) hcurve (label_injective M).injOn hmarks
@@ -2257,7 +2184,7 @@ def persistentTop (d B J : ℕ) : ℚ :=
 private theorem persistentTotal_nonneg (d B : ℕ) : 0 ≤ persistentTotal d B := by
   unfold persistentTotal siteRatio
   positivity
-private theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 133460)
+private theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 133482)
     (hm : m ≤ d) (hJ : 0 < J) :
     let t := max 1 (d-m)
     siteRatio m * totalCap t B ≤ persistentTotal d B ∧
@@ -2294,7 +2221,7 @@ private theorem caps_weighted {d m B J : ℕ} (hl : 131071 ≤ d) (hh : d ≤ 13
       _ = (siteRatio m * t) * (2*J-1 : ℕ) := by push_cast; ring
       _ ≤ _ := mul_le_mul_of_nonneg_right hLambda (Nat.cast_nonneg _)
 private theorem persistent_regular {w T s d B J} (hw : FixedWord w T s d)
-    (hl : 131071 ≤ d) (hh : d ≤ 133460) (hJ : 0 < J)
+    (hl : 131071 ≤ d) (hh : d ≤ 133482) (hJ : 0 < J)
     (f : Row 2) (hf : Irreducible f) (hfpos : 0 < f.degreeOf 1)
     (hb : f.totalDegree ≤ B) (hj : f.degreeOf 1 ≤ J)
     (hreg : ∀ γ ∈ T, RegularAt 1 f (extend (s γ))) :
@@ -2352,7 +2279,7 @@ def fixedFee (B J : ℕ) : ℕ :=
   (mix B J (persistentTotal endpointDegree B) (persistentTop endpointDegree B J)).ceil.toNat+B^2
 
 theorem fixed_count {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
-    (hi : M.overhead.toNat≤2389) {B J : ℕ} (guard : ODEGuard B J)
+    (hi : M.overhead.toNat≤2411) {B J : ℕ} (guard : ODEGuard B J)
     (G : ODE) (caps : ODECaps G B J) {T : Finset K} (hT : T⊆Γ)
     (roots : ∀ γ∈T,fixedAt G (F.scalar γ)=0) :
     T.card≤fixedFee B J := by
@@ -2561,7 +2488,7 @@ namespace Research6969.TransitionSources
 open K1_14 (L)
 open K1_14_1 (PoleData CRTLift evaluated)
 open Lower6960
-open FarProfileArithmetic (agreement value value_eq)
+open TransitionArithmetic (agreement value value_eq)
 open Research6966.FarSourceArithmetic (Request)
 
 def request (r:ℕ) (b:P1_7.Bank):Request:=⟨b,r,b.shape.J+1,0,0⟩
@@ -2619,7 +2546,7 @@ structure Request where
   weight : ℕ
   seed : ℕ
 
-abbrev agreement : ℕ := 179740
+abbrev agreement : ℕ := 179730
 abbrev Request.shape (b:Request) := b.bank.shape
 abbrev Request.top (b:Request) (h:ℕ) := cutoff b.shape agreement h b.reserve
 abbrev Request.limit (b:Request) (width:ℕ) := slotLimit b.shape width b.seed
@@ -2693,18 +2620,6 @@ theorem rectangle_positive (b:Request) (width:ℕ) {lo hi h:ℕ} (hh:0<h) (low:l
   exact HelperWindowIntervals.positive b.shape agreement b.reserve lo hi h b.jet b.slope b.weight (b.limit width)
     _ _ b.bank.nodeRows b.bank.poleMoment _ hh low high narrow (fun k large=>slope_tail slope (tail k large)) checked
 
-theorem avoiding (b:Request) {lo hi h:ℕ} (hh:0<h) (hlt:h≤131070) (low:lo≤h) (high:h≤hi)
-    (narrow:b.shape.J<131071-hi) (slope:0<b.slope) (checked:Triangular b lo hi)
-    (rank:P3_7_1.BankOK b.bank) (char:b.shape.U<K1.p) (charB:b.shape.B<K1.p)
-    (nz:0<b.top h) (wide:b.shape.B*(131071-h)≤b.top h)
-    {D:PoleData h} (Crt:CRTLift D) (word:K1.I→L) {F:Jet}
-    (M:HelperPhysicalModel.Model Crt F) (ir:Irreducible F) (seeded:UsesSeed F)
-    (aCap:b.jet≤jetDegree F) (bCap:b.slope≤F.natDegree)
-    (wCap:b.weight≤RawPhysicalDegree.weight (131071-h) (131071-h-1) M.raw) (sCap:b.seed≤seedDegree F) :
-    ∃ Q∈evaluated Crt word b.shape (b.top h-1),¬F∣Q :=
-  HelperAvoidance.triangle_avoiding hh hlt Crt word b.bank M ir (slope.trans_le bCap) seeded char
-    aCap bCap wCap sCap charB nz wide rank.nodes rank.moment.1
-    (triangle_positive b hh low high narrow slope checked)
 
 end Research6969.PhysicalWindow
 end Z6969Source0581
@@ -3125,27 +3040,21 @@ private theorem pole0 : momentEstimate 141 31 = 11621252 := by
 theorem rank0 (u : ℕ) : P3_7_1.BankOK (bank0 u) :=
   P3_7_1.checked (bank0 u) (m:=102) (B:=141) (J:=31) (N:=33533460480) (M:=11621252) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole0
-theorem free0_0 : TransitionSources.Free 2293 0 (bank0 1639) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank0 1639)) 2293 = 28565729920 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank0 1639)) 2294 = 414845806400 := by decide +kernel
-  refine ⟨rank0 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
-  · rw [left]; decide
-  · rw [left,right]; decide
 private theorem pole1 : momentEstimate 144 32 = 12729182 := by
   refine moment_from_blocks [(128,11505698),(48,1223484)] ?_ rfl rfl
   exact ⟨by decide +kernel,by decide +kernel,True.intro⟩
 theorem rank1 (u : ℕ) : P3_7_1.BankOK (bank1 u) :=
   P3_7_1.checked (bank1 u) (m:=104) (B:=144) (J:=32) (N:=35837181952) (M:=12729182) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole1
-theorem free1_0 : TransitionSources.Free 2293 0 (bank1 1559) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank1 1559)) 2293 = 45023590560 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank1 1559)) 2294 = 418146087840 := by decide +kernel
+theorem free1_0 : TransitionSources.Free 2314 0 (bank1 1559) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank1 1559)) 2314 = 2490028451040 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank1 1559)) 2315 = 2863150948320 := by decide +kernel
   refine ⟨rank1 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free1_1 : TransitionSources.Free 2390 0 (bank1 1128) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank1 1128)) 2390 = 17970067200 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank1 1128)) 2391 = 205511413884 := by decide +kernel
+theorem free1_1 : TransitionSources.Free 2412 0 (bank1 1128) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank1 1128)) 2412 = 1319784191448 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank1 1128)) 2413 = 1507325538132 := by decide +kernel
   refine ⟨rank1 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3155,15 +3064,15 @@ private theorem pole2 : momentEstimate 147 32 = 13594640 := by
 theorem rank2 (u : ℕ) : P3_7_1.BankOK (bank2 u) :=
   P3_7_1.checked (bank2 u) (m:=106) (B:=147) (J:=32) (N:=37385666560) (M:=13594640) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole2
-theorem free2_0 : TransitionSources.Free 2293 0 (bank2 1529) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank2 1529)) 2293 = 51831121500 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank2 1529)) 2294 = 424277107470 := by decide +kernel
+theorem free2_0 : TransitionSources.Free 2314 0 (bank2 1529) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank2 1529)) 2314 = 2465275534470 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank2 1529)) 2315 = 2837721520440 := by decide +kernel
   refine ⟨rank2 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free2_1 : TransitionSources.Free 2390 0 (bank2 1121) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank2 1121)) 2390 = 30904254678 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank2 1121)) 2391 = 223115283072 := by decide +kernel
+theorem free2_1 : TransitionSources.Free 2412 0 (bank2 1121) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank2 1121)) 2412 = 1350596227266 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank2 1121)) 2413 = 1542807255660 := by decide +kernel
   refine ⟨rank2 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3173,21 +3082,21 @@ private theorem pole3 : momentEstimate 148 33 = 14217978 := by
 theorem rank3 (u : ℕ) : P3_7_1.BankOK (bank3 u) :=
   P3_7_1.checked (bank3 u) (m:=107) (B:=148) (J:=33) (N:=39047397376) (M:=14217978) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole3
-theorem free3_0 : TransitionSources.Free 2293 0 (bank3 1490) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank3 1490)) 2293 = 40077119796 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank3 1490)) 2294 = 408001414800 := by decide +kernel
+theorem free3_0 : TransitionSources.Free 2314 0 (bank3 1490) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank3 1490)) 2314 = 2404879494780 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank3 1490)) 2315 = 2772803789784 := by decide +kernel
   refine ⟨rank3 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free3_1 : TransitionSources.Free 2390 0 (bank3 1102) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank3 1102)) 2390 = 63465216984 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank3 1102)) 2391 = 256707335916 := by decide +kernel
+theorem free3_1 : TransitionSources.Free 2412 0 (bank3 1102) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank3 1102)) 2412 = 1379892813888 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank3 1102)) 2413 = 1573134932820 := by decide +kernel
   refine ⟨rank3 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free3_2 : TransitionSources.Free 2390 0 (bank3 1490) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank3 1490)) 2390 = 35728733735184 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank3 1490)) 2391 = 36096658030188 := by decide +kernel
+theorem free3_2 : TransitionSources.Free 2412 0 (bank3 1490) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank3 1490)) 2412 = 38461460405172 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank3 1490)) 2413 = 38829384700176 := by decide +kernel
   refine ⟨rank3 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3197,15 +3106,15 @@ private theorem pole4 : momentEstimate 150 33 = 14840297 := by
 theorem rank4 (u : ℕ) : P3_7_1.BankOK (bank4 u) :=
   P3_7_1.checked (bank4 u) (m:=108) (B:=150) (J:=33) (N:=39862927360) (M:=14840297) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole4
-theorem free4_0 : TransitionSources.Free 2293 0 (bank4 1470) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank4 1470)) 2293 = 26055208122 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank4 1470)) 2294 = 392793133644 := by decide +kernel
+theorem free4_0 : TransitionSources.Free 2314 0 (bank4 1470) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank4 1470)) 2314 = 2380486885044 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank4 1470)) 2315 = 2747224810566 := by decide +kernel
   refine ⟨rank4 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free4_1 : TransitionSources.Free 2390 0 (bank4 1096) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank4 1096)) 2390 = 31579453088 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank4 1096)) 2391 = 227313477168 := by decide +kernel
+theorem free4_1 : TransitionSources.Free 2412 0 (bank4 1096) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank4 1096)) 2412 = 1363296776328 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank4 1096)) 2413 = 1559030800408 := by decide +kernel
   refine ⟨rank4 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3215,15 +3124,15 @@ private theorem pole5 : momentEstimate 151 33 = 15158299 := by
 theorem rank5 (u : ℕ) : P3_7_1.BankOK (bank5 u) :=
   P3_7_1.checked (bank5 u) (m:=109) (B:=151) (J:=33) (N:=40687370240) (M:=15158299) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole5
-theorem free5_0 : TransitionSources.Free 2293 0 (bank5 1462) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank5 1462)) 2293 = 5746110986 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank5 1462)) 2294 = 372838855312 := by decide +kernel
+theorem free5_0 : TransitionSources.Free 2314 0 (bank5 1462) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank5 1462)) 2314 = 2336949828752 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank5 1462)) 2315 = 2704042573078 := by decide +kernel
   refine ⟨rank5 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free5_1 : TransitionSources.Free 2390 0 (bank5 1094) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank5 1094)) 2390 = 11835399480 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank5 1094)) 2391 = 209181776670 := by decide +kernel
+theorem free5_1 : TransitionSources.Free 2412 0 (bank5 1094) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank5 1094)) 2412 = 1340176399860 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank5 1094)) 2413 = 1537522777050 := by decide +kernel
   refine ⟨rank5 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3233,15 +3142,15 @@ private theorem pole6 : momentEstimate 154 34 = 16508386 := by
 theorem rank6 (u : ℕ) : P3_7_1.BankOK (bank6 u) :=
   P3_7_1.checked (bank6 u) (m:=111) (B:=154) (J:=34) (N:=43306188800) (M:=16508386) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole6
-theorem free6_0 : TransitionSources.Free 2293 0 (bank6 1414) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank6 1414)) 2293 = 26510030660 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank6 1414)) 2294 = 391719645880 := by decide +kernel
+theorem free6_0 : TransitionSources.Free 2314 0 (bank6 1414) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank6 1414)) 2314 = 2324854384280 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank6 1414)) 2315 = 2690063999500 := by decide +kernel
   refine ⟨rank6 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free6_1 : TransitionSources.Free 2390 0 (bank6 1073) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 0 (bank6 1073)) 2390 = 18991993080 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 0 (bank6 1073)) 2391 = 220895914452 := by decide +kernel
+theorem free6_1 : TransitionSources.Free 2412 0 (bank6 1073) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 0 (bank6 1073)) 2412 = 1365933805764 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 0 (bank6 1073)) 2413 = 1567837727136 := by decide +kernel
   refine ⟨rank6 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3251,27 +3160,21 @@ private theorem pole7 : momentEstimate 157 35 = 17945628 := by
 theorem rank7 (u : ℕ) : P3_7_1.BankOK (bank7 u) :=
   P3_7_1.checked (bank7 u) (m:=113) (B:=157) (J:=35) (N:=46031437824) (M:=17945628) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole7
-theorem free7_0 : TransitionSources.Free 2293 1 (bank7 1720) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank7 1720)) 2293 = 73369854426 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank7 1720)) 2294 = 647658460662 := by decide +kernel
-  refine ⟨rank7 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
-  · rw [left]; decide
-  · rw [left,right]; decide
 private theorem pole8 : momentEstimate 158 35 = 18313194 := by
   refine moment_from_blocks [(128,15245787),(65,3067407)] ?_ rfl rfl
   exact ⟨by decide +kernel,by decide +kernel,True.intro⟩
 theorem rank8 (u : ℕ) : P3_7_1.BankOK (bank8 u) :=
   P3_7_1.checked (bank8 u) (m:=114) (B:=158) (J:=35) (N:=46942126080) (M:=18313194) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole8
-theorem free8_0 : TransitionSources.Free 2293 1 (bank8 1694) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank8 1694)) 2293 = 46382624100 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank8 1694)) 2294 = 609362764920 := by decide +kernel
+theorem free8_0 : TransitionSources.Free 2314 1 (bank8 1694) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank8 1694)) 2314 = 3521986083720 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank8 1694)) 2315 = 4084966224540 := by decide +kernel
   refine ⟨rank8 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free8_1 : TransitionSources.Free 2390 1 (bank8 1238) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank8 1238)) 2390 = 48968204040 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank8 1238)) 2391 = 337645009548 := by decide +kernel
+theorem free8_1 : TransitionSources.Free 2412 1 (bank8 1238) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank8 1238)) 2412 = 1938913756416 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank8 1238)) 2413 = 2227590561924 := by decide +kernel
   refine ⟨rank8 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3281,15 +3184,15 @@ private theorem pole9 : momentEstimate 162 36 = 20261980 := by
 theorem rank9 (u : ℕ) : P3_7_1.BankOK (bank9 u) :=
   P3_7_1.checked (bank9 u) (m:=117) (B:=162) (J:=36) (N:=50775982080) (M:=20261980) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole9
-theorem free9_0 : TransitionSources.Free 2293 1 (bank9 1624) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank9 1624)) 2293 = 58221332000 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank9 1624)) 2294 = 613313179375 := by decide +kernel
+theorem free9_0 : TransitionSources.Free 2314 1 (bank9 1624) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank9 1624)) 2314 = 3422382445625 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank9 1624)) 2315 = 3977474293000 := by decide +kernel
   refine ⟨rank9 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free9_1 : TransitionSources.Free 2390 1 (bank9 1210) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank9 1210)) 2390 = 78841072366 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank9 1210)) 2391 = 374691649332 := by decide +kernel
+theorem free9_1 : TransitionSources.Free 2412 1 (bank9 1210) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank9 1210)) 2412 = 1981040190318 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank9 1210)) 2413 = 2276890767284 := by decide +kernel
   refine ⟨rank9 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3299,21 +3202,21 @@ private theorem pole10 : momentEstimate 165 36 = 21484793 := by
 theorem rank10 (u : ℕ) : P3_7_1.BankOK (bank10 u) :=
   P3_7_1.checked (bank10 u) (m:=119) (B:=165) (J:=36) (N:=52725547008) (M:=21484793) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole10
-theorem free10_0 : TransitionSources.Free 2293 1 (bank10 1603) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank10 1603)) 2293 = 12693241168 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank10 1603)) 2294 = 571919494754 := by decide +kernel
+theorem free10_0 : TransitionSources.Free 2314 1 (bank10 1603) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank10 1603)) 2314 = 3368417834074 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank10 1603)) 2315 = 3927644087660 := by decide +kernel
   refine ⟨rank10 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free10_1 : TransitionSources.Free 2390 1 (bank10 1206) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank10 1206)) 2390 = 68832757376 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank10 1206)) 2391 = 372729027878 := by decide +kernel
+theorem free10_1 : TransitionSources.Free 2412 1 (bank10 1206) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank10 1206)) 2412 = 2003883488100 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank10 1206)) 2413 = 2307779758602 := by decide +kernel
   refine ⟨rank10 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free10_2 : TransitionSources.Free 2390 1 (bank10 1603) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank10 1603)) 2390 = 54257639839010 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank10 1603)) 2391 = 54816866092596 := by decide +kernel
+theorem free10_2 : TransitionSources.Free 2412 1 (bank10 1603) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank10 1603)) 2412 = 58172590685502 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank10 1603)) 2413 = 58731816939088 := by decide +kernel
   refine ⟨rank10 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3323,15 +3226,15 @@ private theorem pole11 : momentEstimate 165 37 = 21934618 := by
 theorem rank11 (u : ℕ) : P3_7_1.BankOK (bank11 u) :=
   P3_7_1.checked (bank11 u) (m:=119) (B:=165) (J:=37) (N:=53801910272) (M:=21934618) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole11
-theorem free11_0 : TransitionSources.Free 2293 1 (bank11 1580) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank11 1580)) 2293 = 8727769791 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank11 1580)) 2294 = 565611443919 := by decide +kernel
+theorem free11_0 : TransitionSources.Free 2314 1 (bank11 1580) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank11 1580)) 2314 = 3362038885029 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank11 1580)) 2315 = 3918922559157 := by decide +kernel
   refine ⟨rank11 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free11_1 : TransitionSources.Free 2390 1 (bank11 1192) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank11 1192)) 2390 = 91198036777 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank11 1192)) 2391 = 395516675073 := by decide +kernel
+theorem free11_1 : TransitionSources.Free 2412 1 (bank11 1192) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank11 1192)) 2412 = 2035729620339 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank11 1192)) 2413 = 2340048258635 := by decide +kernel
   refine ⟨rank11 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3341,15 +3244,15 @@ private theorem pole12 : momentEstimate 166 37 = 22362213 := by
 theorem rank12 (u : ℕ) : P3_7_1.BankOK (bank12 u) :=
   P3_7_1.checked (bank12 u) (m:=120) (B:=166) (J:=37) (N:=54812999680) (M:=22362213) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole12
-theorem free12_0 : TransitionSources.Free 2293 1 (bank12 1569) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank12 1569)) 2293 = 101873654460 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank12 1569)) 2294 = 656901517700 := by decide +kernel
+theorem free12_0 : TransitionSources.Free 2314 1 (bank12 1569) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank12 1569)) 2314 = 3406484656500 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank12 1569)) 2315 = 3961512519740 := by decide +kernel
   refine ⟨rank12 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free12_1 : TransitionSources.Free 2390 1 (bank12 1187) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank12 1187)) 2390 = 13063198104 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank12 1187)) 2391 = 318004616952 := by decide +kernel
+theorem free12_1 : TransitionSources.Free 2412 1 (bank12 1187) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank12 1187)) 2412 = 1939223567160 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank12 1187)) 2413 = 2244164986008 := by decide +kernel
   refine ⟨rank12 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3359,15 +3262,15 @@ private theorem pole13 : momentEstimate 168 37 = 23234370 := by
 theorem rank13 (u : ℕ) : P3_7_1.BankOK (bank13 u) :=
   P3_7_1.checked (bank13 u) (m:=121) (B:=168) (J:=37) (N:=55834050560) (M:=23234370) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole13
-theorem free13_0 : TransitionSources.Free 2293 1 (bank13 1553) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank13 1553)) 2293 = 17922103290 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank13 1553)) 2294 = 573477173220 := by decide +kernel
+theorem free13_0 : TransitionSources.Free 2314 1 (bank13 1553) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank13 1553)) 2314 = 3323604454170 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank13 1553)) 2315 = 3879159524100 := by decide +kernel
   refine ⟨rank13 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free13_1 : TransitionSources.Free 2390 1 (bank13 1183) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 1 (bank13 1183)) 2390 = 10813886400 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 1 (bank13 1183)) 2391 = 320286450720 := by decide +kernel
+theorem free13_1 : TransitionSources.Free 2412 1 (bank13 1183) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 1 (bank13 1183)) 2412 = 1964698916640 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 1 (bank13 1183)) 2413 = 2274171480960 := by decide +kernel
   refine ⟨rank13 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3377,15 +3280,15 @@ private theorem pole14 : momentEstimate 172 38 = 25559185 := by
 theorem rank14 (u : ℕ) : P3_7_1.BankOK (bank14 u) :=
   P3_7_1.checked (bank14 u) (m:=124) (B:=172) (J:=38) (N:=60131901440) (M:=25559185) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole14
-theorem free14_0 : TransitionSources.Free 2293 2 (bank14 1831) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank14 1831)) 2293 = 19469400464 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank14 1831)) 2294 = 844381505836 := by decide +kernel
+theorem free14_0 : TransitionSources.Free 2314 2 (bank14 1831) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank14 1831)) 2314 = 4838163324956 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank14 1831)) 2315 = 5663075430328 := by decide +kernel
   refine ⟨rank14 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free14_1 : TransitionSources.Free 2390 2 (bank14 1349) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank14 1349)) 2390 = 99279702675 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank14 1349)) 2391 = 529164920250 := by decide +kernel
+theorem free14_1 : TransitionSources.Free 2412 2 (bank14 1349) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank14 1349)) 2412 = 2765247767325 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank14 1349)) 2413 = 3195132984900 := by decide +kernel
   refine ⟨rank14 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3395,33 +3298,27 @@ private theorem pole15 : momentEstimate 175 38 = 27010804 := by
 theorem rank15 (u : ℕ) : P3_7_1.BankOK (bank15 u) :=
   P3_7_1.checked (bank15 u) (m:=126) (B:=175) (J:=38) (N:=62309531648) (M:=27010804) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole15
-theorem free15_0 : TransitionSources.Free 2293 2 (bank15 1816) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank15 1816)) 2293 = 54712506467 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank15 1816)) 2294 = 892991294488 := by decide +kernel
-  refine ⟨rank15 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
-  · rw [left]; decide
-  · rw [left,right]; decide
 private theorem pole16 : momentEstimate 175 39 = 27547813 := by
   refine moment_from_blocks [(128,20337130),(86,7210683)] ?_ rfl rfl
   exact ⟨by decide +kernel,by decide +kernel,True.intro⟩
 theorem rank16 (u : ℕ) : P3_7_1.BankOK (bank16 u) :=
   P3_7_1.checked (bank16 u) (m:=126) (B:=175) (J:=39) (N:=63517491200) (M:=27547813) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole16
-theorem free16_0 : TransitionSources.Free 2293 2 (bank16 1778) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank16 1778)) 2293 = 96964362978 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank16 1778)) 2294 = 918979019124 := by decide +kernel
+theorem free16_0 : TransitionSources.Free 2314 2 (bank16 1778) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank16 1778)) 2314 = 4870756186044 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank16 1778)) 2315 = 5692770842190 := by decide +kernel
   refine ⟨rank16 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free16_1 : TransitionSources.Free 2390 2 (bank16 1326) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank16 1326)) 2390 = 56001443580 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank16 1326)) 2391 = 494895406118 := by decide +kernel
+theorem free16_1 : TransitionSources.Free 2412 2 (bank16 1326) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank16 1326)) 2412 = 2761683406616 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank16 1326)) 2413 = 3200577369154 := by decide +kernel
   refine ⟨rank16 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free16_2 : TransitionSources.Free 2390 2 (bank16 1778) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank16 1778)) 2390 = 79832386009140 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank16 1778)) 2391 = 80654400665286 := by decide +kernel
+theorem free16_2 : TransitionSources.Free 2412 2 (bank16 1778) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank16 1778)) 2412 = 85428192488352 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank16 1778)) 2413 = 86250207144498 := by decide +kernel
   refine ⟨rank16 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3431,15 +3328,15 @@ private theorem pole17 : momentEstimate 176 39 = 28054113 := by
 theorem rank17 (u : ℕ) : P3_7_1.BankOK (bank17 u) :=
   P3_7_1.checked (bank17 u) (m:=127) (B:=176) (J:=39) (N:=64644710400) (M:=28054113) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole17
-theorem free17_0 : TransitionSources.Free 2293 2 (bank17 1760) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank17 1760)) 2293 = 69510230742 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank17 1760)) 2294 = 882888895116 := by decide +kernel
+theorem free17_0 : TransitionSources.Free 2314 2 (bank17 1760) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank17 1760)) 2314 = 4737382741596 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank17 1760)) 2315 = 5550761405970 := by decide +kernel
   refine ⟨rank17 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free17_1 : TransitionSources.Free 2390 2 (bank17 1319) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank17 1319)) 2390 = 74264572800 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank17 1319)) 2391 = 512820520080 := by decide +kernel
+theorem free17_1 : TransitionSources.Free 2412 2 (bank17 1319) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank17 1319)) 2412 = 2746743552960 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank17 1319)) 2413 = 3185299500240 := by decide +kernel
   refine ⟨rank17 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3462,15 +3359,15 @@ private theorem pole18 : momentEstimate 180 40 = 30727249 := by
 theorem rank18 (u : ℕ) : P3_7_1.BankOK (bank18 u) :=
   P3_7_1.checked (bank18 u) (m:=130) (B:=180) (J:=40) (N:=69377720320) (M:=30727249) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole18
-theorem free18_0 : TransitionSources.Free 2293 2 (bank18 1703) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank18 1703)) 2293 = 125608666224 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank18 1703)) 2294 = 937265898792 := by decide +kernel
+theorem free18_0 : TransitionSources.Free 2314 2 (bank18 1703) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank18 1703)) 2314 = 4704699292152 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank18 1703)) 2315 = 5516356524720 := by decide +kernel
   refine ⟨rank18 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free18_1 : TransitionSources.Free 2390 2 (bank18 1295) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank18 1295)) 2390 = 72991789200 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank18 1295)) 2391 = 523528256448 := by decide +kernel
+theorem free18_1 : TransitionSources.Free 2412 2 (bank18 1295) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank18 1295)) 2412 = 2772588995856 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank18 1295)) 2413 = 3223125463104 := by decide +kernel
   refine ⟨rank18 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3480,15 +3377,15 @@ private theorem pole19 : momentEstimate 184 41 = 33586892 := by
 theorem rank19 (u : ℕ) : P3_7_1.BankOK (bank19 u) :=
   P3_7_1.checked (bank19 u) (m:=133) (B:=184) (J:=41) (N:=74336174080) (M:=33586892) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole19
-theorem free19_0 : TransitionSources.Free 2293 2 (bank19 1656) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank19 1656)) 2293 = 59319658824 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank19 1656)) 2294 = 876222998508 := by decide +kernel
+theorem free19_0 : TransitionSources.Free 2314 2 (bank19 1656) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank19 1656)) 2314 = 4591833584778 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank19 1656)) 2315 = 5408736924462 := by decide +kernel
   refine ⟨rank19 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free19_1 : TransitionSources.Free 2390 2 (bank19 1276) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 2 (bank19 1276)) 2390 = 118560812372 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 2 (bank19 1276)) 2391 = 584172701376 := by decide +kernel
+theorem free19_1 : TransitionSources.Free 2412 2 (bank19 1276) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 2 (bank19 1276)) 2412 = 2863795283550 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 2 (bank19 1276)) 2413 = 3329407172554 := by decide +kernel
   refine ⟨rank19 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3498,15 +3395,15 @@ private theorem pole20 : momentEstimate 186 41 = 34768135 := by
 theorem rank20 (u : ℕ) : P3_7_1.BankOK (bank20 u) :=
   P3_7_1.checked (bank20 u) (m:=134) (B:=186) (J:=41) (N:=75585814528) (M:=34768135) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole20
-theorem free20_0 : TransitionSources.Free 2293 3 (bank20 1970) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank20 1970)) 2293 = 25948881198 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank20 1970)) 2294 = 1204547660532 := by decide +kernel
+theorem free20_0 : TransitionSources.Free 2314 3 (bank20 1970) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank20 1970)) 2314 = 6565604115492 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank20 1970)) 2315 = 7744202894826 := by decide +kernel
   refine ⟨rank20 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free20_1 : TransitionSources.Free 2390 3 (bank20 1460) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank20 1460)) 2390 = 45933541956 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank20 1460)) 2391 = 667353870630 := by decide +kernel
+theorem free20_1 : TransitionSources.Free 2412 3 (bank20 1460) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank20 1460)) 2412 = 3709442948364 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank20 1460)) 2413 = 4330863277038 := by decide +kernel
   refine ⟨rank20 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3516,15 +3413,15 @@ private theorem pole21 : momentEstimate 187 41 = 35369225 := by
 theorem rank21 (u : ℕ) : P3_7_1.BankOK (bank21 u) :=
   P3_7_1.checked (bank21 u) (m:=135) (B:=187) (J:=41) (N:=76846465024) (M:=35369225) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole21
-theorem free21_0 : TransitionSources.Free 2293 3 (bank21 1963) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank21 1963)) 2293 = 56581489750 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank21 1963)) 2294 = 1238648857130 := by decide +kernel
+theorem free21_0 : TransitionSources.Free 2314 3 (bank21 1963) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank21 1963)) 2314 = 6553817687230 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank21 1963)) 2315 = 7735885054610 := by decide +kernel
   refine ⟨rank21 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free21_1 : TransitionSources.Free 2390 3 (bank21 1459) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank21 1459)) 2390 = 95260741910 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank21 1459)) 2391 = 722114111490 := by decide +kernel
+theorem free21_1 : TransitionSources.Free 2412 3 (bank21 1459) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank21 1459)) 2412 = 3756932830170 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank21 1459)) 2413 = 4383786199750 := by decide +kernel
   refine ⟨rank21 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3534,15 +3431,15 @@ private theorem pole22 : momentEstimate 187 42 = 36021740 := by
 theorem rank22 (u : ℕ) : P3_7_1.BankOK (bank22 u) :=
   P3_7_1.checked (bank22 u) (m:=135) (B:=187) (J:=42) (N:=78229012480) (M:=36021740) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole22
-theorem free22_0 : TransitionSources.Free 2293 3 (bank22 1937) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank22 1937)) 2293 = 136427654397 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank22 1937)) 2294 = 1312833376614 := by decide +kernel
+theorem free22_0 : TransitionSources.Free 2314 3 (bank22 1937) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank22 1937)) 2314 = 6626320855104 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank22 1937)) 2315 = 7802726577321 := by decide +kernel
   refine ⟨rank22 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free22_1 : TransitionSources.Free 2390 3 (bank22 1443) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank22 1443)) 2390 = 93755865940 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank22 1443)) 2391 = 720473565650 := by decide +kernel
+theorem free22_1 : TransitionSources.Free 2412 3 (bank22 1443) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank22 1443)) 2412 = 3767526848060 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank22 1443)) 2413 = 4394244547770 := by decide +kernel
   refine ⟨rank22 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3552,15 +3449,15 @@ private theorem pole23 : momentEstimate 190 42 = 37902732 := by
 theorem rank23 (u : ℕ) : P3_7_1.BankOK (bank23 u) :=
   P3_7_1.checked (bank23 u) (m:=137) (B:=190) (J:=42) (N:=80832888832) (M:=37902732) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole23
-theorem free23_0 : TransitionSources.Free 2293 3 (bank23 1898) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank23 1898)) 2293 = 145934063352 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank23 1898)) 2294 = 1308173024916 := by decide +kernel
+theorem free23_0 : TransitionSources.Free 2314 3 (bank23 1898) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank23 1898)) 2314 = 6485932721196 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank23 1898)) 2315 = 7648171682760 := by decide +kernel
   refine ⟨rank23 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free23_1 : TransitionSources.Free 2390 3 (bank23 1429) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank23 1429)) 2390 = 69600089130 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank23 1429)) 2391 = 702004523220 := by decide +kernel
+theorem free23_1 : TransitionSources.Free 2412 3 (bank23 1429) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank23 1429)) 2412 = 3735807113610 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank23 1429)) 2413 = 4368211547700 := by decide +kernel
   refine ⟨rank23 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3570,21 +3467,21 @@ private theorem pole24 : momentEstimate 194 43 = 41244492 := by
 theorem rank24 (u : ℕ) : P3_7_1.BankOK (bank24 u) :=
   P3_7_1.checked (bank24 u) (m:=140) (B:=194) (J:=43) (N:=86317203456) (M:=41244492) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole24
-theorem free24_0 : TransitionSources.Free 2293 3 (bank24 1838) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank24 1838)) 2293 = 17144791032 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank24 1838)) 2294 = 1173629468016 := by decide +kernel
+theorem free24_0 : TransitionSources.Free 2314 3 (bank24 1838) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank24 1838)) 2314 = 6221186319696 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank24 1838)) 2315 = 7377670996680 := by decide +kernel
   refine ⟨rank24 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free24_1 : TransitionSources.Free 2390 3 (bank24 1404) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank24 1404)) 2390 = 165389029860 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank24 1404)) 2391 = 813205097920 := by decide +kernel
+theorem free24_1 : TransitionSources.Free 2412 3 (bank24 1404) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank24 1404)) 2412 = 3861039693180 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank24 1404)) 2413 = 4508855761240 := by decide +kernel
   refine ⟨rank24 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free24_2 : TransitionSources.Free 2390 3 (bank24 1838) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 3 (bank24 1838)) 2390 = 112196158458480 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 3 (bank24 1838)) 2391 = 113352643135464 := by decide +kernel
+theorem free24_2 : TransitionSources.Free 2412 3 (bank24 1838) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 3 (bank24 1838)) 2412 = 119556684664128 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 3 (bank24 1838)) 2413 = 120713169341112 := by decide +kernel
   refine ⟨rank24 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3594,15 +3491,15 @@ private theorem pole25 : momentEstimate 198 44 = 44802338 := by
 theorem rank25 (u : ℕ) : P3_7_1.BankOK (bank25 u) :=
   P3_7_1.checked (bank25 u) (m:=143) (B:=198) (J:=44) (N:=92044001280) (M:=44802338) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole25
-theorem free25_0 : TransitionSources.Free 2293 4 (bank25 2129) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank25 2129)) 2293 = 119256222810 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank25 2129)) 2294 = 1763607524955 := by decide +kernel
+theorem free25_0 : TransitionSources.Free 2314 4 (bank25 2129) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank25 2129)) 2314 = 8800971193605 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank25 2129)) 2315 = 10445322495750 := by decide +kernel
   refine ⟨rank25 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free25_1 : TransitionSources.Free 2390 4 (bank25 1577) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank25 1577)) 2390 = 85868065335 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank25 1577)) 2391 = 951894437292 := by decide +kernel
+theorem free25_1 : TransitionSources.Free 2412 4 (bank25 1577) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank25 1577)) 2412 = 4948495449939 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank25 1577)) 2413 = 5814521821896 := by decide +kernel
   refine ⟨rank25 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3612,15 +3509,15 @@ private theorem pole26 : momentEstimate 201 44 = 47009993 := by
 theorem rank26 (u : ℕ) : P3_7_1.BankOK (bank26 u) :=
   P3_7_1.checked (bank26 u) (m:=145) (B:=201) (J:=44) (N:=94934138880) (M:=47009993) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole26
-theorem free26_0 : TransitionSources.Free 2293 4 (bank26 2102) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank26 2102)) 2293 = 12709232346 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank26 2102)) 2294 = 1661317963368 := by decide +kernel
+theorem free26_0 : TransitionSources.Free 2314 4 (bank26 2102) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank26 2102)) 2314 = 8649371363808 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank26 2102)) 2315 = 10297980094830 := by decide +kernel
   refine ⟨rank26 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free26_1 : TransitionSources.Free 2390 4 (bank26 1570) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank26 1570)) 2390 = 1520429510 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank26 1570)) 2391 = 884328552834 := by decide +kernel
+theorem free26_1 : TransitionSources.Free 2412 4 (bank26 1570) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank26 1570)) 2412 = 4920502672638 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank26 1570)) 2413 = 5803310795962 := by decide +kernel
   refine ⟨rank26 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3630,27 +3527,21 @@ private theorem pole27 : momentEstimate 205 45 = 50931776 := by
 theorem rank27 (u : ℕ) : P3_7_1.BankOK (bank27 u) :=
   P3_7_1.checked (bank27 u) (m:=148) (B:=205) (J:=45) (N:=101033181184) (M:=50931776) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole27
-theorem free27_0 : TransitionSources.Free 2293 4 (bank27 2033) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank27 2033)) 2293 = 206484431841 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank27 2033)) 2294 = 1838298831363 := by decide +kernel
-  refine ⟨rank27 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
-  · rw [left]; decide
-  · rw [left,right]; decide
 private theorem pole28 : momentEstimate 205 46 = 51790020 := by
   refine moment_from_blocks [(128,30259822),(123,21530198)] ?_ rfl rfl
   exact ⟨by decide +kernel,by decide +kernel,True.intro⟩
 theorem rank28 (u : ℕ) : P3_7_1.BankOK (bank28 u) :=
   P3_7_1.checked (bank28 u) (m:=148) (B:=205) (J:=46) (N:=102693601280) (M:=51790020) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole28
-theorem free28_0 : TransitionSources.Free 2293 4 (bank28 2005) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank28 2005)) 2293 = 16509898551 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank28 2005)) 2294 = 1635307359333 := by decide +kernel
+theorem free28_0 : TransitionSources.Free 2314 4 (bank28 2005) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank28 2005)) 2314 = 8386546015893 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank28 2005)) 2315 = 10005343476675 := by decide +kernel
   refine ⟨rank28 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free28_1 : TransitionSources.Free 2390 4 (bank28 1523) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank28 1523)) 2390 = 47540360850 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank28 1523)) 2391 = 944107632990 := by decide +kernel
+theorem free28_1 : TransitionSources.Free 2412 4 (bank28 1523) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank28 1523)) 2412 = 4979728113930 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank28 1523)) 2413 = 5876295386070 := by decide +kernel
   refine ⟨rank28 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3660,15 +3551,15 @@ private theorem pole29 : momentEstimate 208 46 = 54254747 := by
 theorem rank29 (u : ℕ) : P3_7_1.BankOK (bank29 u) :=
   P3_7_1.checked (bank29 u) (m:=150) (B:=208) (J:=46) (N:=105810755584) (M:=54254747) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole29
-theorem free29_0 : TransitionSources.Free 2293 4 (bank29 1976) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank29 1976)) 2293 = 228049278906 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank29 1976)) 2294 = 1842549830841 := by decide +kernel
+theorem free29_0 : TransitionSources.Free 2314 4 (bank29 1976) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank29 1976)) 2314 = 8493328280541 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank29 1976)) 2315 = 10107828832476 := by decide +kernel
   refine ⟨rank29 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free29_1 : TransitionSources.Free 2390 4 (bank29 1513) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank29 1513)) 2390 = 84946781495 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank29 1513)) 2391 = 993478595634 := by decide +kernel
+theorem free29_1 : TransitionSources.Free 2412 4 (bank29 1513) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank29 1513)) 2412 = 5033937077553 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank29 1513)) 2413 = 5942468891692 := by decide +kernel
   refine ⟨rank29 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3678,27 +3569,27 @@ private theorem pole30 : momentEstimate 209 47 = 56002200 := by
 theorem rank30 (u : ℕ) : P3_7_1.BankOK (bank30 u) :=
   P3_7_1.checked (bank30 u) (m:=151) (B:=209) (J:=47) (N:=109114818560) (M:=56002200) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole30
-theorem free30_0 : TransitionSources.Free 2293 4 (bank30 1953) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank30 1953)) 2293 = 160658466200 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank30 1953)) 2294 = 1783931304280 := by decide +kernel
+theorem free30_0 : TransitionSources.Free 2314 4 (bank30 1953) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank30 1953)) 2314 = 8430451752680 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank30 1953)) 2315 = 10053724590760 := by decide +kernel
   refine ⟨rank30 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free30_1 : TransitionSources.Free 2293 5 (bank30 2315) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank30 2315)) 2293 = 213200278608 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank30 2315)) 2294 = 2493457042992 := by decide +kernel
+theorem free30_1 : TransitionSources.Free 2314 5 (bank30 2315) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank30 2315)) 2314 = 11829923663952 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank30 2315)) 2315 = 14110180428336 := by decide +kernel
   refine ⟨rank30 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free30_2 : TransitionSources.Free 2390 4 (bank30 1501) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank30 1501)) 2390 = 186226797768 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank30 1501)) 2391 = 1106619762312 := by decide +kernel
+theorem free30_2 : TransitionSources.Free 2412 4 (bank30 1501) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank30 1501)) 2412 = 5176930765176 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank30 1501)) 2413 = 6097323729720 := by decide +kernel
   refine ⟨rank30 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free30_3 : TransitionSources.Free 2390 5 (bank30 1706) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank30 1706)) 2390 = 186244597488 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank30 1706)) 2391 = 1374904105920 := by decide +kernel
+theorem free30_3 : TransitionSources.Free 2412 5 (bank30 1706) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank30 1706)) 2412 = 6631210512432 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank30 1706)) 2413 = 7819870020864 := by decide +kernel
   refine ⟨rank30 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3708,27 +3599,27 @@ private theorem pole31 : momentEstimate 212 47 = 58616088 := by
 theorem rank31 (u : ℕ) : P3_7_1.BankOK (bank31 u) :=
   P3_7_1.checked (bank31 u) (m:=153) (B:=212) (J:=47) (N:=112361209856) (M:=58616088) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole31
-theorem free31_0 : TransitionSources.Free 2293 4 (bank31 1925) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank31 1925)) 2293 = 188314018272 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank31 1925)) 2294 = 1806497816976 := by decide +kernel
+theorem free31_0 : TransitionSources.Free 2314 4 (bank31 1925) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank31 1925)) 2314 = 8344605658176 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank31 1925)) 2315 = 9962789456880 := by decide +kernel
   refine ⟨rank31 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free31_1 : TransitionSources.Free 2293 5 (bank31 2263) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank31 2263)) 2293 = 54295954368 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank31 2263)) 2294 = 2290014030144 := by decide +kernel
+theorem free31_1 : TransitionSources.Free 2314 5 (bank31 2263) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank31 2263)) 2314 = 11321773563264 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank31 2263)) 2315 = 13557491639040 := by decide +kernel
   refine ⟨rank31 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free31_2 : TransitionSources.Free 2390 4 (bank31 1491) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank31 1491)) 2390 = 171283330720 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank31 1491)) 2391 = 1103111847168 := by decide +kernel
+theorem free31_2 : TransitionSources.Free 2412 4 (bank31 1491) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank31 1491)) 2412 = 5171195919936 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank31 1491)) 2413 = 6103024436384 := by decide +kernel
   refine ⟨rank31 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free31_3 : TransitionSources.Free 2390 5 (bank31 1686) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank31 1686)) 2390 = 47967213280 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank31 1686)) 2391 = 1239123660432 := by decide +kernel
+theorem free31_3 : TransitionSources.Free 2412 5 (bank31 1686) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank31 1686)) 2412 = 6438165633984 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank31 1686)) 2413 = 7629322081136 := by decide +kernel
   refine ⟨rank31 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3738,15 +3629,15 @@ private theorem pole32 : momentEstimate 215 47 = 61311840 := by
 theorem rank32 (u : ℕ) : P3_7_1.BankOK (bank32 u) :=
   P3_7_1.checked (bank32 u) (m:=155) (B:=215) (J:=47) (N:=115657932800) (M:=61311840) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole32
-theorem free32_0 : TransitionSources.Free 2293 5 (bank32 2243) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank32 2243)) 2293 = 190377414480 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank32 2243)) 2294 = 2446351757520 := by decide +kernel
+theorem free32_0 : TransitionSources.Free 2314 5 (bank32 2243) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank32 2243)) 2314 = 11490296038320 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank32 2243)) 2315 = 13746270381360 := by decide +kernel
   refine ⟨rank32 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free32_1 : TransitionSources.Free 2390 5 (bank32 1683) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank32 1683)) 2390 = 255479000080 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank32 1683)) 2391 = 1474651620240 := by decide +kernel
+theorem free32_1 : TransitionSources.Free 2412 5 (bank32 1683) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank32 1683)) 2412 = 6757652703600 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank32 1683)) 2413 = 7976825323760 := by decide +kernel
   refine ⟨rank32 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3756,33 +3647,33 @@ private theorem pole33 : momentEstimate 216 48 = 63235028 := by
 theorem rank33 (u : ℕ) : P3_7_1.BankOK (bank33 u) :=
   P3_7_1.checked (bank33 u) (m:=156) (B:=216) (J:=48) (N:=119176429568) (M:=63235028) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole33
-theorem free33_0 : TransitionSources.Free 2293 4 (bank33 1882) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank33 1882)) 2293 = 49565787208 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank33 1882)) 2294 = 1681496870984 := by decide +kernel
+theorem free33_0 : TransitionSources.Free 2314 4 (bank33 1882) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank33 1882)) 2314 = 8151595591384 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank33 1882)) 2315 = 9783526675160 := by decide +kernel
   refine ⟨rank33 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free33_1 : TransitionSources.Free 2293 5 (bank33 2191) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank33 2191)) 2293 = 84751196464 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank33 2191)) 2294 = 2296069619072 := by decide +kernel
+theorem free33_1 : TransitionSources.Free 2314 5 (bank33 2191) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank33 2191)) 2314 = 11063381769472 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank33 2191)) 2315 = 13274700192080 := by decide +kernel
   refine ⟨rank33 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free33_2 : TransitionSources.Free 2390 4 (bank33 1472) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 4 (bank33 1472)) 2390 = 19458418380 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 4 (bank33 1472)) 2391 = 977699790576 := by decide +kernel
+theorem free33_2 : TransitionSources.Free 2412 4 (bank33 1472) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 4 (bank33 1472)) 2412 = 5084983901772 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 4 (bank33 1472)) 2413 = 6043225273968 := by decide +kernel
   refine ⟨rank33 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free33_3 : TransitionSources.Free 2390 5 (bank33 1655) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank33 1655)) 2390 = 148303080000 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank33 1655)) 2391 = 1359392165784 := by decide +kernel
+theorem free33_3 : TransitionSources.Free 2412 5 (bank33 1655) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank33 1655)) 2412 = 6551315738928 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank33 1655)) 2413 = 7762404824712 := by decide +kernel
   refine ⟨rank33 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free33_4 : TransitionSources.Free 2390 5 (bank33 2191) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank33 2191)) 2390 = 214582638189440 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank33 2191)) 2391 = 216793956612048 := by decide +kernel
+theorem free33_4 : TransitionSources.Free 2412 5 (bank33 2191) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank33 2191)) 2412 = 227772587185056 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank33 2191)) 2413 = 229983905607664 := by decide +kernel
   refine ⟨rank33 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3792,15 +3683,15 @@ private theorem pole34 : momentEstimate 220 49 = 68121522 := by
 theorem rank34 (u : ℕ) : P3_7_1.BankOK (bank34 u) :=
   P3_7_1.checked (bank34 u) (m:=159) (B:=220) (J:=49) (N:=126261657600) (M:=68121522) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole34
-theorem free34_0 : TransitionSources.Free 2293 5 (bank34 2131) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank34 2131)) 2293 = 191023965756 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank34 2131)) 2294 = 2396366217648 := by decide +kernel
+theorem free34_0 : TransitionSources.Free 2314 5 (bank34 2131) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank34 2131)) 2314 = 10982819783988 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank34 2131)) 2315 = 13188162035880 := by decide +kernel
   refine ⟨rank34 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free34_1 : TransitionSources.Free 2390 5 (bank34 1629) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank34 1629)) 2390 = 255148366200 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank34 1629)) 2391 = 1492139931730 := by decide +kernel
+theorem free34_1 : TransitionSources.Free 2412 5 (bank34 1629) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank34 1629)) 2412 = 6703517294110 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank34 1629)) 2413 = 7940508859640 := by decide +kernel
   refine ⟨rank34 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3810,15 +3701,15 @@ private theorem pole35 : momentEstimate 226 50 = 75401397 := by
 theorem rank35 (u : ℕ) : P3_7_1.BankOK (bank35 u) :=
   P3_7_1.checked (bank35 u) (m:=163) (B:=226) (J:=50) (N:=135467106304) (M:=75401397) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole35
-theorem free35_0 : TransitionSources.Free 2293 5 (bank35 2061) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank35 2061)) 2293 = 125530167940 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank35 2061)) 2294 = 2333644353980 := by decide +kernel
+theorem free35_0 : TransitionSources.Free 2314 5 (bank35 2061) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank35 2061)) 2314 = 10779580291000 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank35 2061)) 2315 = 12987694477040 := by decide +kernel
   refine ⟨rank35 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free35_1 : TransitionSources.Free 2390 5 (bank35 1600) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank35 1600)) 2390 = 271463830920 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank35 1600)) 2391 = 1548847876482 := by decide +kernel
+theorem free35_1 : TransitionSources.Free 2412 5 (bank35 1600) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank35 1600)) 2412 = 6839501817024 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank35 1600)) 2413 = 8116885862586 := by decide +kernel
   refine ⟨rank35 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3841,15 +3732,15 @@ private theorem pole36 : momentEstimate 227 50 = 76474675 := by
 theorem rank36 (u : ℕ) : P3_7_1.BankOK (bank36 u) :=
   P3_7_1.checked (bank36 u) (m:=164) (B:=227) (J:=50) (N:=137325445120) (M:=76474675) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole36
-theorem free36_0 : TransitionSources.Free 2293 5 (bank36 2062) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank36 2062)) 2293 = 231996319526 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank36 2062)) 2294 = 2461536504244 := by decide +kernel
+theorem free36_0 : TransitionSources.Free 2314 5 (bank36 2062) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank36 2062)) 2314 = 10903947855884 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank36 2062)) 2315 = 13133488040602 := by decide +kernel
   refine ⟨rank36 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free36_1 : TransitionSources.Free 2390 5 (bank36 1602) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank36 1602)) 2390 = 136724973952 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank36 1602)) 2391 = 1428390147240 := by decide +kernel
+theorem free36_1 : TransitionSources.Free 2412 5 (bank36 1602) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank36 1602)) 2412 = 6725157360768 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank36 1602)) 2413 = 8016822534056 := by decide +kernel
   refine ⟨rank36 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3859,15 +3750,15 @@ private theorem pole37 : momentEstimate 227 51 = 77637159 := by
 theorem rank37 (u : ℕ) : P3_7_1.BankOK (bank37 u) :=
   P3_7_1.checked (bank37 u) (m:=164) (B:=227) (J:=51) (N:=139361517568) (M:=77637159) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole37
-theorem free37_0 : TransitionSources.Free 2293 5 (bank37 2039) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank37 2039)) 2293 = 209920955160 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank37 2039)) 2294 = 2429351052360 := by decide +kernel
+theorem free37_0 : TransitionSources.Free 2314 5 (bank37 2039) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank37 2039)) 2314 = 10866587052360 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank37 2039)) 2315 = 13086017149560 := by decide +kernel
   refine ⟨rank37 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free37_1 : TransitionSources.Free 2390 5 (bank37 1587) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank37 1587)) 2390 = 88451109308 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank37 1587)) 2391 = 1378907666820 := by decide +kernel
+theorem free37_1 : TransitionSources.Free 2412 5 (bank37 1587) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank37 1587)) 2412 = 6690532887372 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank37 1587)) 2413 = 7980989444884 := by decide +kernel
   refine ⟨rank37 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3877,15 +3768,15 @@ private theorem pole38 : momentEstimate 230 51 = 80971087 := by
 theorem rank38 (u : ℕ) : P3_7_1.BankOK (bank38 u) :=
   P3_7_1.checked (bank38 u) (m:=166) (B:=230) (J:=51) (N:=143178334208) (M:=80971087) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole38
-theorem free38_0 : TransitionSources.Free 2293 6 (bank38 2327) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 6 (bank38 2327)) 2293 = 338919226080 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 6 (bank38 2327)) 2294 = 3299234806896 := by decide +kernel
+theorem free38_0 : TransitionSources.Free 2314 6 (bank38 2327) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 6 (bank38 2327)) 2314 = 14416548568656 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 6 (bank38 2327)) 2315 = 17376864149472 := by decide +kernel
   refine ⟨rank38 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free38_1 : TransitionSources.Free 2390 6 (bank38 1764) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 6 (bank38 1764)) 2390 = 138273375840 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 6 (bank38 1764)) 2391 = 1771027591490 := by decide +kernel
+theorem free38_1 : TransitionSources.Free 2412 6 (bank38 1764) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 6 (bank38 1764)) 2412 = 8413097353940 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 6 (bank38 1764)) 2413 = 10045851569590 := by decide +kernel
   refine ⟨rank38 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3895,15 +3786,15 @@ private theorem pole39 : momentEstimate 233 52 = 85660533 := by
 theorem rank39 (u : ℕ) : P3_7_1.BankOK (bank39 u) :=
   P3_7_1.checked (bank39 u) (m:=168) (B:=233) (J:=52) (N:=149189820416) (M:=85660533) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole39
-theorem free39_0 : TransitionSources.Free 2293 5 (bank39 1983) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank39 1983)) 2293 = 288983015808 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank39 1983)) 2294 = 2530927183904 := by decide +kernel
+theorem free39_0 : TransitionSources.Free 2314 5 (bank39 1983) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank39 1983)) 2314 = 10901078027424 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank39 1983)) 2315 = 13143022195520 := by decide +kernel
   refine ⟨rank39 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free39_1 : TransitionSources.Free 2390 5 (bank39 1564) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 5 (bank39 1564)) 2390 = 249595960905 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 5 (bank39 1564)) 2391 = 1588175978580 := by decide +kernel
+theorem free39_1 : TransitionSources.Free 2412 5 (bank39 1564) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 5 (bank39 1564)) 2412 = 7003648823355 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 5 (bank39 1564)) 2413 = 8342228841030 := by decide +kernel
   refine ⟨rank39 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3913,15 +3804,15 @@ private theorem pole40 : momentEstimate 237 53 = 91783289 := by
 theorem rank40 (u : ℕ) : P3_7_1.BankOK (bank40 u) :=
   P3_7_1.checked (bank40 u) (m:=171) (B:=237) (J:=53) (N:=157407510528) (M:=91783289) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole40
-theorem free40_0 : TransitionSources.Free 2293 6 (bank40 2218) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 6 (bank40 2218)) 2293 = 306995667664 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 6 (bank40 2218)) 2294 = 3252188008622 := by decide +kernel
+theorem free40_0 : TransitionSources.Free 2314 6 (bank40 2218) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 6 (bank40 2218)) 2314 = 14052108805882 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 6 (bank40 2218)) 2315 = 16997301146840 := by decide +kernel
   refine ⟨rank40 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free40_1 : TransitionSources.Free 2390 6 (bank40 1714) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 6 (bank40 1714)) 2390 = 35312560010 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 6 (bank40 1714)) 2391 = 1723322524560 := by decide +kernel
+theorem free40_1 : TransitionSources.Free 2412 6 (bank40 1714) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 6 (bank40 1714)) 2412 = 8433855112410 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 6 (bank40 1714)) 2413 = 10121865076960 := by decide +kernel
   refine ⟨rank40 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3931,15 +3822,15 @@ private theorem pole41 : momentEstimate 241 53 = 96837455 := by
 theorem rank41 (u : ℕ) : P3_7_1.BankOK (bank41 u) :=
   P3_7_1.checked (bank41 u) (m:=174) (B:=241) (J:=53) (N:=163628974080) (M:=96837455) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole41
-theorem free41_0 : TransitionSources.Free 2293 8 (bank41 2989) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 8 (bank41 2989)) 2293 = 337074805015 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 8 (bank41 2989)) 2294 = 5855823797525 := by decide +kernel
+theorem free41_0 : TransitionSources.Free 2314 8 (bank41 2989) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 8 (bank41 2989)) 2314 = 25689261300625 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 8 (bank41 2989)) 2315 = 31208010293135 := by decide +kernel
   refine ⟨rank41 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free41_1 : TransitionSources.Free 2390 8 (bank41 2155) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 8 (bank41 2155)) 2390 = 273986076518 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 8 (bank41 2155)) 2391 = 3027356290266 := by decide +kernel
+theorem free41_1 : TransitionSources.Free 2412 8 (bank41 2155) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 8 (bank41 2155)) 2412 = 13765666177494 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 8 (bank41 2155)) 2413 = 16519036391242 := by decide +kernel
   refine ⟨rank41 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3949,45 +3840,45 @@ private theorem pole42 : momentEstimate 241 54 = 98228328 := by
 theorem rank42 (u : ℕ) : P3_7_1.BankOK (bank42 u) :=
   P3_7_1.checked (bank42 u) (m:=174) (B:=241) (J:=54) (N:=165921423360) (M:=98228328) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole42
-theorem free42_0 : TransitionSources.Free 2293 6 (bank42 2171) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 6 (bank42 2171)) 2293 = 431279616834 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 6 (bank42 2171)) 2294 = 3392699802162 := by decide +kernel
+theorem free42_0 : TransitionSources.Free 2314 6 (bank42 2171) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 6 (bank42 2171)) 2314 = 14065433719722 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 6 (bank42 2171)) 2315 = 17026853905050 := by decide +kernel
   refine ⟨rank42 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free42_1 : TransitionSources.Free 2293 7 (bank42 2497) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank42 2497)) 2293 = 125616350211 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank42 2497)) 2294 = 4042292523093 := by decide +kernel
+theorem free42_1 : TransitionSources.Free 2314 7 (bank42 2497) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank42 2497)) 2314 = 18154516030233 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank42 2497)) 2315 = 22071192203115 := by decide +kernel
   refine ⟨rank42 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free42_2 : TransitionSources.Free 2293 10 (bank42 4552) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank42 4552)) 2293 = 405143273271 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank42 4552)) 2294 = 13414309901223 := by decide +kernel
+theorem free42_2 : TransitionSources.Free 2314 10 (bank42 4552) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank42 4552)) 2314 = 60287709794763 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank42 4552)) 2315 = 73296876422715 := by decide +kernel
   refine ⟨rank42 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free42_3 : TransitionSources.Free 2390 6 (bank42 1693) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 6 (bank42 1693)) 2390 = 56672469315 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 6 (bank42 1693)) 2391 = 1785087847851 := by decide +kernel
+theorem free42_3 : TransitionSources.Free 2412 6 (bank42 1693) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 6 (bank42 1693)) 2412 = 8542285589607 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 6 (bank42 1693)) 2413 = 10270700968143 := by decide +kernel
   refine ⟨rank42 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free42_4 : TransitionSources.Free 2390 7 (bank42 1886) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank42 1886)) 2390 = 267856630800 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank42 1886)) 2391 = 2412502749888 := by decide +kernel
+theorem free42_4 : TransitionSources.Free 2412 7 (bank42 1886) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank42 1886)) 2412 = 10798356986736 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank42 1886)) 2413 = 12943003105824 := by decide +kernel
   refine ⟨rank42 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free42_5 : TransitionSources.Free 2390 7 (bank42 2497) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank42 2497)) 2390 = 380043205119765 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank42 2497)) 2391 = 383959881292647 := by decide +kernel
+theorem free42_5 : TransitionSources.Free 2412 7 (bank42 2497) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank42 2497)) 2412 = 401988780972669 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank42 2497)) 2413 = 405905457145551 := by decide +kernel
   refine ⟨rank42 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free42_6 : TransitionSources.Free 2390 10 (bank42 2862) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank42 2862)) 2390 = 327057324440 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank42 2862)) 2391 = 5262947152232 := by decide +kernel
+theorem free42_6 : TransitionSources.Free 2412 10 (bank42 2862) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank42 2862)) 2412 = 24560869427864 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank42 2862)) 2413 = 29496759255656 := by decide +kernel
   refine ⟨rank42 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -3997,15 +3888,15 @@ private theorem pole43 : momentEstimate 244 54 = 102199273 := by
 theorem rank43 (u : ℕ) : P3_7_1.BankOK (bank43 u) :=
   P3_7_1.checked (bank43 u) (m:=176) (B:=244) (J:=54) (N:=170203545600) (M:=102199273) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole43
-theorem free43_0 : TransitionSources.Free 2293 6 (bank43 2152) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 6 (bank43 2152)) 2293 = 244724064926 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 6 (bank43 2152)) 2294 = 3222154590523 := by decide +kernel
+theorem free43_0 : TransitionSources.Free 2314 6 (bank43 2152) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 6 (bank43 2152)) 2314 = 13838920928063 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 6 (bank43 2152)) 2315 = 16816351453660 := by decide +kernel
   refine ⟨rank43 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free43_1 : TransitionSources.Free 2390 6 (bank43 1688) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 6 (bank43 1688)) 2390 = 176150936115 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 6 (bank43 1688)) 2391 = 1934386473096 := by decide +kernel
+theorem free43_1 : TransitionSources.Free 2412 6 (bank43 1688) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 6 (bank43 1688)) 2412 = 8739881957697 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 6 (bank43 1688)) 2413 = 10498117494678 := by decide +kernel
   refine ⟨rank43 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4015,15 +3906,15 @@ private theorem pole44 : momentEstimate 247 55 = 107778015 := by
 theorem rank44 (u : ℕ) : P3_7_1.BankOK (bank44 u) :=
   P3_7_1.checked (bank44 u) (m:=178) (B:=247) (J:=55) (N:=176946151424) (M:=107778015) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole44
-theorem free44_0 : TransitionSources.Free 2293 7 (bank44 2409) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank44 2409)) 2293 = 120894295280 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank44 2409)) 2294 = 4001633759860 := by decide +kernel
+theorem free44_0 : TransitionSources.Free 2314 7 (bank44 2409) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank44 2409)) 2314 = 17760545094260 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank44 2409)) 2315 = 21641284558840 := by decide +kernel
   refine ⟨rank44 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free44_1 : TransitionSources.Free 2390 7 (bank44 1848) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank44 1848)) 2390 = 30329516800 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank44 1848)) 2391 = 2222183614530 := by decide +kernel
+theorem free44_1 : TransitionSources.Free 2412 7 (bank44 1848) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank44 1848)) 2412 = 10659133948860 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank44 1848)) 2413 = 12850988046590 := by decide +kernel
   refine ⟨rank44 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4033,15 +3924,15 @@ private theorem pole45 : momentEstimate 254 57 = 121131076 := by
 theorem rank45 (u : ℕ) : P3_7_1.BankOK (bank45 u) :=
   P3_7_1.checked (bank45 u) (m:=183) (B:=254) (J:=57) (N:=193292926976) (M:=121131076) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole45
-theorem free45_0 : TransitionSources.Free 2293 7 (bank45 2316) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank45 2316)) 2293 = 331206753192 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank45 2316)) 2294 = 4237203620076 := by decide +kernel
+theorem free45_0 : TransitionSources.Free 2314 7 (bank45 2316) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank45 2316)) 2314 = 17798146201626 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank45 2316)) 2315 = 21704143068510 := by decide +kernel
   refine ⟨rank45 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free45_1 : TransitionSources.Free 2390 7 (bank45 1806) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank45 1806)) 2390 = 478519476240 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank45 1806)) 2391 = 2758217073144 := by decide +kernel
+theorem free45_1 : TransitionSources.Free 2412 7 (bank45 1806) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank45 1806)) 2412 = 11360693683248 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank45 1806)) 2413 = 13640391280152 := by decide +kernel
   refine ⟨rank45 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4051,15 +3942,15 @@ private theorem pole46 : momentEstimate 262 58 = 135575420 := by
 theorem rank46 (u : ℕ) : P3_7_1.BankOK (bank46 u) :=
   P3_7_1.checked (bank46 u) (m:=189) (B:=262) (J:=58) (N:=210421678080) (M:=135575420) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole46
-theorem free46_0 : TransitionSources.Free 2293 7 (bank46 2247) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank46 2247)) 2293 = 538745824768 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank46 2247)) 2294 = 4496903828632 := by decide +kernel
+theorem free46_0 : TransitionSources.Free 2314 7 (bank46 2247) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank46 2247)) 2314 = 17699335960072 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank46 2247)) 2315 = 21657493963936 := by decide +kernel
   refine ⟨rank46 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free46_1 : TransitionSources.Free 2390 7 (bank46 1778) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 7 (bank46 1778)) 2390 = 396600546660 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 7 (bank46 1778)) 2391 = 2775159873840 := by decide +kernel
+theorem free46_1 : TransitionSources.Free 2412 7 (bank46 1778) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 7 (bank46 1778)) 2412 = 11411059589220 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 7 (bank46 1778)) 2413 = 13789618916400 := by decide +kernel
   refine ⟨rank46 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4069,15 +3960,15 @@ private theorem pole47 : momentEstimate 263 59 = 139044661 := by
 theorem rank47 (u : ℕ) : P3_7_1.BankOK (bank47 u) :=
   P3_7_1.checked (bank47 u) (m:=190) (B:=263) (J:=59) (N:=215642275840) (M:=139044661) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole47
-theorem free47_0 : TransitionSources.Free 2293 10 (bank47 3362) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank47 3362)) 2293 = 372257444862 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank47 3362)) 2294 = 9434118409416 := by decide +kernel
+theorem free47_0 : TransitionSources.Free 2314 10 (bank47 3362) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank47 3362)) 2314 = 39454358822496 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank47 3362)) 2315 = 48516219787050 := by decide +kernel
   refine ⟨rank47 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free47_1 : TransitionSources.Free 2390 10 (bank47 2413) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank47 2413)) 2390 = 536893141330 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank47 2413)) 2391 = 5017213720722 := by decide +kernel
+theorem free47_1 : TransitionSources.Free 2412 10 (bank47 2413) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank47 2413)) 2412 = 21179790522954 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank47 2413)) 2413 = 25660111102346 := by decide +kernel
   refine ⟨rank47 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4087,15 +3978,15 @@ private theorem pole48 : momentEstimate 266 59 = 144192301 := by
 theorem rank48 (u : ℕ) : P3_7_1.BankOK (bank48 u) :=
   P3_7_1.checked (bank48 u) (m:=192) (B:=266) (J:=59) (N:=220738355200) (M:=144192301) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole48
-theorem free48_0 : TransitionSources.Free 2293 8 (bank48 2482) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 8 (bank48 2482)) 2293 = 347420699522 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 8 (bank48 2482)) 2294 = 5393417690596 := by decide +kernel
+theorem free48_0 : TransitionSources.Free 2314 8 (bank48 2482) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 8 (bank48 2482)) 2314 = 21938236552076 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 8 (bank48 2482)) 2315 = 26984233543150 := by decide +kernel
   refine ⟨rank48 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free48_1 : TransitionSources.Free 2390 8 (bank48 1930) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 8 (bank48 1930)) 2390 = 509994208660 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 8 (bank48 1930)) 2391 = 3438410622438 := by decide +kernel
+theorem free48_1 : TransitionSources.Free 2412 8 (bank48 1930) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 8 (bank48 1930)) 2412 = 13899288751776 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 8 (bank48 1930)) 2413 = 16827705165554 := by decide +kernel
   refine ⟨rank48 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4105,15 +3996,15 @@ private theorem pole49 : momentEstimate 268 59 = 147695211 := by
 theorem rank49 (u : ℕ) : P3_7_1.BankOK (bank49 u) :=
   P3_7_1.checked (bank49 u) (m:=193) (B:=268) (J:=59) (N:=223309987840) (M:=147695211) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole49
-theorem free49_0 : TransitionSources.Free 2293 9 (bank49 2815) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 9 (bank49 2815)) 2293 = 48953862144 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 9 (bank49 2815)) 2294 = 6633706793472 := by decide +kernel
+theorem free49_0 : TransitionSources.Free 2314 9 (bank49 2815) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 9 (bank49 2815)) 2314 = 28326006162432 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 9 (bank49 2815)) 2315 = 34910759093760 := by decide +kernel
   refine ⟨rank49 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free49_1 : TransitionSources.Free 2390 9 (bank49 2130) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 9 (bank49 2130)) 2390 = 11937563660 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 9 (bank49 2130)) 2391 = 3630165996858 := by decide +kernel
+theorem free49_1 : TransitionSources.Free 2412 9 (bank49 2130) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 9 (bank49 2130)) 2412 = 16610905765416 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 9 (bank49 2130)) 2413 = 20229134198614 := by decide +kernel
   refine ⟨rank49 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4123,15 +4014,15 @@ private theorem pole50 : momentEstimate 268 60 = 149605064 := by
 theorem rank50 (u : ℕ) : P3_7_1.BankOK (bank50 u) :=
   P3_7_1.checked (bank50 u) (m:=193) (B:=268) (J:=60) (N:=226125676544) (M:=149605064) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole50
-theorem free50_0 : TransitionSources.Free 2293 8 (bank50 2450) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 8 (bank50 2450)) 2293 = 56541118992 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 8 (bank50 2450)) 2294 = 5121338068416 := by decide +kernel
+theorem free50_0 : TransitionSources.Free 2314 8 (bank50 2450) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 8 (bank50 2450)) 2314 = 21866261879676 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 8 (bank50 2450)) 2315 = 26931058829100 := by decide +kernel
   refine ⟨rank50 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free50_1 : TransitionSources.Free 2390 8 (bank50 1914) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 8 (bank50 1914)) 2390 = 618909616000 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 8 (bank50 1914)) 2391 = 3585820433520 := by decide +kernel
+theorem free50_1 : TransitionSources.Free 2412 8 (bank50 1914) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 8 (bank50 1914)) 2412 = 14270789263540 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 8 (bank50 1914)) 2413 = 17237700081060 := by decide +kernel
   refine ⟨rank50 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4141,15 +4032,15 @@ private theorem pole51 : momentEstimate 269 59 = 149468191 := by
 theorem rank51 (u : ℕ) : P3_7_1.BankOK (bank51 u) :=
   P3_7_1.checked (bank51 u) (m:=194) (B:=269) (J:=59) (N:=225897349120) (M:=149468191) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole51
-theorem free51_0 : TransitionSources.Free 2293 9 (bank51 2810) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 9 (bank51 2810)) 2293 = 390552283674 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 9 (bank51 2810)) 2294 = 7000026387912 := by decide +kernel
+theorem free51_0 : TransitionSources.Free 2314 9 (bank51 2810) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 9 (bank51 2810)) 2314 = 28548983615472 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 9 (bank51 2810)) 2315 = 35158457719710 := by decide +kernel
   refine ⟨rank51 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free51_1 : TransitionSources.Free 2390 9 (bank51 2130) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 9 (bank51 2130)) 2390 = 546261733360 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 9 (bank51 2130)) 2391 = 4191144714558 := by decide +kernel
+theorem free51_1 : TransitionSources.Free 2412 9 (bank51 2130) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 9 (bank51 2130)) 2412 = 17140774866516 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 9 (bank51 2130)) 2413 = 20785657847714 := by decide +kernel
   refine ⟨rank51 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4159,21 +4050,21 @@ private theorem pole52 : momentEstimate 283 63 = 184912224 := by
 theorem rank52 (u : ℕ) : P3_7_1.BankOK (bank52 u) :=
   P3_7_1.checked (bank52 u) (m:=204) (B:=283) (J:=63) (N:=265373614080) (M:=184912224) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole52
-theorem free52_0 : TransitionSources.Free 2293 10 (bank52 2900) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank52 2900)) 2293 = 727057717536 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank52 2900)) 2294 = 8944403024928 := by decide +kernel
+theorem free52_0 : TransitionSources.Free 2314 10 (bank52 2900) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank52 2900)) 2314 = 34524160366368 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank52 2900)) 2315 = 42741505673760 := by decide +kernel
   refine ⟨rank52 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free52_1 : TransitionSources.Free 2390 10 (bank52 2212) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank52 2212)) 2390 = 584617593120 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank52 2212)) 2391 = 5172982818336 := by decide +kernel
+theorem free52_1 : TransitionSources.Free 2412 10 (bank52 2212) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank52 2212)) 2412 = 20767862525472 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank52 2212)) 2413 = 25356227750688 := by decide +kernel
   refine ⟨rank52 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free52_2 : TransitionSources.Free 2390 10 (bank52 2900) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank52 2900)) 2390 = 797809552534560 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank52 2900)) 2391 = 806026897841952 := by decide +kernel
+theorem free52_2 : TransitionSources.Free 2412 10 (bank52 2900) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank52 2900)) 2412 = 839824000490784 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank52 2900)) 2413 = 848041345798176 := by decide +kernel
   refine ⟨rank52 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4183,15 +4074,15 @@ private theorem pole53 : momentEstimate 284 64 = 189280842 := by
 theorem rank53 (u : ℕ) : P3_7_1.BankOK (bank53 u) :=
   P3_7_1.checked (bank53 u) (m:=205) (B:=284) (J:=64) (N:=271454044160) (M:=189280842) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole53
-theorem free53_0 : TransitionSources.Free 2293 10 (bank53 2871) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank53 2871)) 2293 = 216639836656 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank53 2871)) 2294 = 8444954935368 := by decide +kernel
+theorem free53_0 : TransitionSources.Free 2314 10 (bank53 2871) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank53 2871)) 2314 = 33927054366608 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank53 2871)) 2315 = 42155369465320 := by decide +kernel
   refine ⟨rank53 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free53_1 : TransitionSources.Free 2390 10 (bank53 2196) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank53 2196)) 2390 = 220967690970 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank53 2196)) 2391 = 4841143010132 := by decide +kernel
+theorem free53_1 : TransitionSources.Free 2412 10 (bank53 2196) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank53 2196)) 2412 = 20466495950784 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank53 2196)) 2413 = 25086671269946 := by decide +kernel
   refine ⟨rank53 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4214,15 +4105,15 @@ private theorem pole54 : momentEstimate 294 65 = 214017359 := by
 theorem rank54 (u : ℕ) : P3_7_1.BankOK (bank54 u) :=
   P3_7_1.checked (bank54 u) (m:=212) (B:=294) (J:=65) (N:=295979712512) (M:=214017359) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole54
-theorem free54_0 : TransitionSources.Free 2293 10 (bank54 2755) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank54 2755)) 2293 = 35884853524 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank54 2755)) 2294 = 8239465935896 := by decide +kernel
+theorem free54_0 : TransitionSources.Free 2314 10 (bank54 2755) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank54 2755)) 2314 = 32772254149336 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank54 2755)) 2315 = 40975835231708 := by decide +kernel
   refine ⟨rank54 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free54_1 : TransitionSources.Free 2390 10 (bank54 2149) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank54 2149)) 2390 = 898582855100 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank54 2149)) 2391 = 5689357866150 := by decide +kernel
+theorem free54_1 : TransitionSources.Free 2412 10 (bank54 2149) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank54 2149)) 2412 = 21366248173200 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank54 2149)) 2413 = 26157023184250 := by decide +kernel
   refine ⟨rank54 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4232,15 +4123,15 @@ private theorem pole55 : momentEstimate 298 67 = 228740750 := by
 theorem rank55 (u : ℕ) : P3_7_1.BankOK (bank55 u) :=
   P3_7_1.checked (bank55 u) (m:=215) (B:=298) (J:=67) (N:=312397004800) (M:=228740750) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole55
-theorem free55_0 : TransitionSources.Free 2293 9 (bank55 2427) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 9 (bank55 2427)) 2293 = 791599917360 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 9 (bank55 2427)) 2294 = 7508086505640 := by decide +kernel
+theorem free55_0 : TransitionSources.Free 2314 9 (bank55 2427) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 9 (bank55 2427)) 2314 = 27376669694640 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 9 (bank55 2427)) 2315 = 34093156282920 := by decide +kernel
   refine ⟨rank55 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free55_1 : TransitionSources.Free 2390 9 (bank55 1948) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 9 (bank55 1948)) 2390 = 116354325500 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 9 (bank55 1948)) 2391 = 4268774836500 := by decide +kernel
+theorem free55_1 : TransitionSources.Free 2412 9 (bank55 1948) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 9 (bank55 1948)) 2412 = 17708341140000 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 9 (bank55 1948)) 2413 = 21860761651000 := by decide +kernel
   refine ⟨rank55 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4250,15 +4141,15 @@ private theorem pole56 : momentEstimate 308 69 = 260075583 := by
 theorem rank56 (u : ℕ) : P3_7_1.BankOK (bank56 u) :=
   P3_7_1.checked (bank56 u) (m:=222) (B:=308) (J:=69) (N:=343008870400) (M:=260075583) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole56
-theorem free56_0 : TransitionSources.Free 2293 10 (bank56 2591) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank56 2591)) 2293 = 487262205504 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank56 2591)) 2294 = 8857610148672 := by decide +kernel
+theorem free56_0 : TransitionSources.Free 2314 10 (bank56 2591) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank56 2591)) 2314 = 32913517957632 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank56 2591)) 2315 = 41283865900800 := by decide +kernel
   refine ⟨rank56 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free56_1 : TransitionSources.Free 2390 10 (bank56 2069) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank56 2069)) 2390 = 146648301300 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank56 2069)) 2391 = 5268851137980 := by decide +kernel
+theorem free56_1 : TransitionSources.Free 2412 10 (bank56 2069) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank56 2069)) 2412 = 21399828017760 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank56 2069)) 2413 = 26522030854440 := by decide +kernel
   refine ⟨rank56 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4268,15 +4159,15 @@ private theorem pole57 : momentEstimate 311 70 = 271261163 := by
 theorem rank57 (u : ℕ) : P3_7_1.BankOK (bank57 u) :=
   P3_7_1.checked (bank57 u) (m:=224) (B:=311) (J:=70) (N:=353725317120) (M:=271261163) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole57
-theorem free57_0 : TransitionSources.Free 2293 11 (bank57 2831) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 11 (bank57 2831)) 2293 = 8224962024 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 11 (bank57 2831)) 2294 = 10325092749888 := by decide +kernel
+theorem free57_0 : TransitionSources.Free 2314 11 (bank57 2831) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 11 (bank57 2831)) 2314 = 39938273072928 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 11 (bank57 2831)) 2315 = 50255140860792 := by decide +kernel
   refine ⟨rank57 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free57_1 : TransitionSources.Free 2390 11 (bank57 2225) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 11 (bank57 2225)) 2390 = 941822745864 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 11 (bank57 2225)) 2391 = 7058103373545 := by decide +kernel
+theorem free57_1 : TransitionSources.Free 2412 11 (bank57 2225) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 11 (bank57 2225)) 2412 = 26305307108766 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 11 (bank57 2225)) 2413 = 32421587736447 := by decide +kernel
   refine ⟨rank57 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4286,15 +4177,15 @@ private theorem pole58 : momentEstimate 312 70 = 274069426 := by
 theorem rank58 (u : ℕ) : P3_7_1.BankOK (bank58 u) :=
   P3_7_1.checked (bank58 u) (m:=225) (B:=312) (J:=70) (N:=357261639680) (M:=274069426) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole58
-theorem free58_0 : TransitionSources.Free 2293 10 (bank58 2557) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank58 2557)) 2293 = 399598113248 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank58 2557)) 2294 = 8865020678785 := by decide +kernel
+theorem free58_0 : TransitionSources.Free 2314 10 (bank58 2557) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank58 2557)) 2314 = 32819637499025 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank58 2557)) 2315 = 41285060064562 := by decide +kernel
   refine ⟨rank58 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free58_1 : TransitionSources.Free 2390 10 (bank58 2054) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank58 2054)) 2390 = 1095028771380 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank58 2054)) 2391 = 6337643237940 := by decide +kernel
+theorem free58_1 : TransitionSources.Free 2412 10 (bank58 2054) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank58 2054)) 2412 = 22613589365700 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank58 2054)) 2413 = 27856203832260 := by decide +kernel
   refine ⟨rank58 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4316,15 +4207,15 @@ private theorem pole61 : momentEstimate 315 71 = 285699863 := by
 theorem rank61 (u : ℕ) : P3_7_1.BankOK (bank61 u) :=
   P3_7_1.checked (bank61 u) (m:=227) (B:=315) (J:=71) (N:=368270376960) (M:=285699863) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole61
-theorem free61_0 : TransitionSources.Free 2293 10 (bank61 2536) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank61 2536)) 2293 = 1011191528494 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank61 2536)) 2294 = 9605857449272 := by decide +kernel
+theorem free61_0 : TransitionSources.Free 2314 10 (bank61 2536) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank61 2536)) 2314 = 33903610636072 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank61 2536)) 2315 = 42498276556850 := by decide +kernel
   refine ⟨rank61 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free61_1 : TransitionSources.Free 2390 10 (bank61 2044) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 10 (bank61 2044)) 2390 = 1009812002000 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 10 (bank61 2044)) 2391 = 6368197718130 := by decide +kernel
+theorem free61_1 : TransitionSources.Free 2412 10 (bank61 2044) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 10 (bank61 2044)) 2412 = 22985120544660 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 10 (bank61 2044)) 2413 = 28343506260790 := by decide +kernel
   refine ⟨rank61 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4334,15 +4225,15 @@ private theorem pole62 : momentEstimate 328 74 = 335760609 := by
 theorem rank62 (u : ℕ) : P3_7_1.BankOK (bank62 u) :=
   P3_7_1.checked (bank62 u) (m:=237) (B:=328) (J:=74) (N:=418217984000) (M:=335760609) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole62
-theorem free62_0 : TransitionSources.Free 2293 14 (bank62 3617) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank62 3617)) 2293 = 622720847268 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank62 3617)) 2294 = 20229424597269 := by decide +kernel
+theorem free62_0 : TransitionSources.Free 2314 14 (bank62 3617) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank62 3617)) 2314 = 72566444384289 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank62 3617)) 2315 = 92173148134290 := by decide +kernel
   refine ⟨rank62 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free62_1 : TransitionSources.Free 2390 14 (bank62 2724) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank62 2724)) 2390 = 165723341125 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank62 2724)) 2391 = 10837648217700 := by decide +kernel
+theorem free62_1 : TransitionSources.Free 2412 14 (bank62 2724) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank62 2724)) 2412 = 42171245600775 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank62 2724)) 2413 = 52843170477350 := by decide +kernel
   refine ⟨rank62 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4352,15 +4243,15 @@ private theorem pole63 : momentEstimate 332 74 = 349077659 := by
 theorem rank63 (u : ℕ) : P3_7_1.BankOK (bank63 u) :=
   P3_7_1.checked (bank63 u) (m:=239) (B:=332) (J:=74) (N:=426141286400) (M:=349077659) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole63
-theorem free63_0 : TransitionSources.Free 2293 12 (bank63 2899) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 12 (bank63 2899)) 2293 = 323054565400 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 12 (bank63 2899)) 2294 = 13212477779450 := by decide +kernel
+theorem free63_0 : TransitionSources.Free 2314 12 (bank63 2899) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 12 (bank63 2899)) 2314 = 47815117960450 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 12 (bank63 2899)) 2315 = 60704541174500 := by decide +kernel
   refine ⟨rank63 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free63_1 : TransitionSources.Free 2390 12 (bank63 2304) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 12 (bank63 2304)) 2390 = 1293970078025 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 12 (bank63 2304)) 2391 = 9107539769160 := by decide +kernel
+theorem free63_1 : TransitionSources.Free 2412 12 (bank63 2304) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 12 (bank63 2304)) 2412 = 32182113712995 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 12 (bank63 2304)) 2413 = 39995683404130 := by decide +kernel
   refine ⟨rank63 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4370,15 +4261,15 @@ private theorem pole64 : momentEstimate 337 74 = 366224034 := by
 theorem rank64 (u : ℕ) : P3_7_1.BankOK (bank64 u) :=
   P3_7_1.checked (bank64 u) (m:=243) (B:=337) (J:=74) (N:=442223820800) (M:=366224034) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole64
-theorem free64_0 : TransitionSources.Free 2293 14 (bank64 3514) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank64 3514)) 2293 = 1010292639390 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank64 3514)) 2294 = 20507520414870 := by decide +kernel
+theorem free64_0 : TransitionSources.Free 2314 14 (bank64 3514) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank64 3514)) 2314 = 71468830991970 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank64 3514)) 2315 = 90966058767450 := by decide +kernel
   refine ⟨rank64 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free64_1 : TransitionSources.Free 2390 14 (bank64 2688) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank64 2688)) 2390 = 1653034125595 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank64 2688)) 2391 = 12601809024993 := by decide +kernel
+theorem free64_1 : TransitionSources.Free 2412 14 (bank64 2688) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank64 2688)) 2412 = 44123591551101 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank64 2688)) 2413 = 55072366450499 := by decide +kernel
   refine ⟨rank64 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4388,21 +4279,21 @@ private theorem pole65 : momentEstimate 350 78 = 430562752 := by
 theorem rank65 (u : ℕ) : P3_7_1.BankOK (bank65 u) :=
   P3_7_1.checked (bank65 u) (m:=252) (B:=350) (J:=78) (N:=498909577216) (M:=430562752) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole65
-theorem free65_0 : TransitionSources.Free 2293 15 (bank65 3612) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank65 3612)) 2293 = 1002134861792 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank65 3612)) 2294 = 24227993516536 := by decide +kernel
+theorem free65_0 : TransitionSources.Free 2314 15 (bank65 3612) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank65 3612)) 2314 = 83228843676056 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank65 3612)) 2315 = 106454702330800 := by decide +kernel
   refine ⟨rank65 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free65_1 : TransitionSources.Free 2390 15 (bank65 2772) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank65 2772)) 2390 = 1318639476760 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank65 2772)) 2391 = 14446326972624 := by decide +kernel
+theorem free65_1 : TransitionSources.Free 2412 15 (bank65 2772) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank65 2772)) 2412 = 51231941168808 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank65 2772)) 2413 = 64359628664672 := by decide +kernel
   refine ⟨rank65 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free65_2 : TransitionSources.Free 2390 15 (bank65 3612) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank65 3612)) 2390 = 2253910424371960 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank65 3612)) 2391 = 2277136283026704 := by decide +kernel
+theorem free65_2 : TransitionSources.Free 2412 15 (bank65 3612) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank65 3612)) 2412 = 2359362991840968 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank65 3612)) 2413 = 2382588850495712 := by decide +kernel
   refine ⟨rank65 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4412,15 +4303,15 @@ private theorem pole66 : momentEstimate 355 79 = 455042366 := by
 theorem rank66 (u : ℕ) : P3_7_1.BankOK (bank66 u) :=
   P3_7_1.checked (bank66 u) (m:=256) (B:=355) (J:=79) (N:=521718988800) (M:=455042366) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole66
-theorem free66_0 : TransitionSources.Free 2293 15 (bank66 3528) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank66 3528)) 2293 = 154792258796 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank66 3528)) 2294 = 23187293765968 := by decide +kernel
+theorem free66_0 : TransitionSources.Free 2314 15 (bank66 3528) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank66 3528)) 2314 = 80098945157408 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank66 3528)) 2315 = 103131446664580 := by decide +kernel
   refine ⟨rank66 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free66_1 : TransitionSources.Free 2390 15 (bank66 2733) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank66 2733)) 2390 = 1856949805480 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank66 2733)) 2391 = 15121755880992 := by decide +kernel
+theorem free66_1 : TransitionSources.Free 2412 15 (bank66 2733) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank66 2733)) 2412 = 51340223562744 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank66 2733)) 2413 = 64605029638256 := by decide +kernel
   refine ⟨rank66 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4430,15 +4321,15 @@ private theorem pole67 : momentEstimate 355 80 = 459454565 := by
 theorem rank67 (u : ℕ) : P3_7_1.BankOK (bank67 u) :=
   P3_7_1.checked (bank67 u) (m:=256) (B:=355) (J:=80) (N:=526651490304) (M:=459454565) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole67
-theorem free67_0 : TransitionSources.Free 2293 16 (bank67 3891) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 16 (bank67 3891)) 2293 = 1463086945040 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 16 (bank67 3891)) 2294 = 29811005951524 := by decide +kernel
+theorem free67_0 : TransitionSources.Free 2314 16 (bank67 3891) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 16 (bank67 3891)) 2314 = 100360775039924 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 16 (bank67 3891)) 2315 = 128708694046408 := by decide +kernel
   refine ⟨rank67 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free67_1 : TransitionSources.Free 2390 16 (bank67 2944) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 16 (bank67 2944)) 2390 = 2042375635310 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 16 (bank67 2944)) 2391 = 17616448361490 := by decide +kernel
+theorem free67_1 : TransitionSources.Free 2412 16 (bank67 2944) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 16 (bank67 2944)) 2412 = 60422211617670 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 16 (bank67 2944)) 2413 = 75996284343850 := by decide +kernel
   refine ⟨rank67 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4448,15 +4339,15 @@ private theorem pole68 : momentEstimate 359 80 = 476279615 := by
 theorem rank68 (u : ℕ) : P3_7_1.BankOK (bank68 u) :=
   P3_7_1.checked (bank68 u) (m:=259) (B:=359) (J:=80) (N:=540538306560) (M:=476279615) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole68
-theorem free68_0 : TransitionSources.Free 2293 14 (bank68 3168) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank68 3168)) 2293 = 1836164265290 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank68 3168)) 2294 = 21034339161520 := by decide +kernel
+theorem free68_0 : TransitionSources.Free 2314 14 (bank68 3168) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank68 3168)) 2314 = 67798845614120 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank68 3168)) 2315 = 86997020510350 := by decide +kernel
   refine ⟨rank68 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free68_1 : TransitionSources.Free 2390 14 (bank68 2518) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank68 2518)) 2390 = 1991077804100 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank68 2518)) 2391 = 13630362075330 := by decide +kernel
+theorem free68_1 : TransitionSources.Free 2412 14 (bank68 2518) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank68 2518)) 2412 = 44979852539160 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank68 2518)) 2413 = 56619136810390 := by decide +kernel
   refine ⟨rank68 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4466,15 +4357,15 @@ private theorem pole69 : momentEstimate 360 82 = 489737381 := by
 theorem rank69 (u : ℕ) : P3_7_1.BankOK (bank69 u) :=
   P3_7_1.checked (bank69 u) (m:=260) (B:=360) (J:=82) (N:=555371724800) (M:=489737381) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole69
-theorem free69_0 : TransitionSources.Free 2293 18 (bank69 4787) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank69 4787)) 2293 = 1634217110568 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank69 4787)) 2294 = 46762762715046 := by decide +kernel
+theorem free69_0 : TransitionSources.Free 2314 18 (bank69 4787) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank69 4787)) 2314 = 157615888308606 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank69 4787)) 2315 = 202744433913084 := by decide +kernel
   refine ⟨rank69 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free69_1 : TransitionSources.Free 2390 18 (bank69 3442) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank69 3442)) 2390 = 942249177254 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank69 3442)) 2391 = 23332526166642 := by decide +kernel
+theorem free69_1 : TransitionSources.Free 2412 18 (bank69 3442) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank69 3442)) 2412 = 84105953567790 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank69 3442)) 2413 = 106496230557178 := by decide +kernel
   refine ⟨rank69 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4484,15 +4375,15 @@ private theorem pole70 : momentEstimate 361 79 = 480182166 := by
 theorem rank70 (u : ℕ) : P3_7_1.BankOK (bank70 u) :=
   P3_7_1.checked (bank70 u) (m:=260) (B:=361) (J:=79) (N:=540090040320) (M:=480182166) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole70
-theorem free70_0 : TransitionSources.Free 2293 15 (bank70 3511) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank70 3511)) 2293 = 713591563968 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank70 3511)) 2294 = 24305479477344 := by decide +kernel
+theorem free70_0 : TransitionSources.Free 2314 15 (bank70 3511) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank70 3511)) 2314 = 82338255504864 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank70 3511)) 2315 = 105930143418240 := by decide +kernel
   refine ⟨rank70 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free70_1 : TransitionSources.Free 2390 15 (bank70 2735) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank70 2735)) 2390 = 2220018909120 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank70 2735)) 2391 = 15958879538688 := by decide +kernel
+theorem free70_1 : TransitionSources.Free 2412 15 (bank70 2735) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank70 2735)) 2412 = 53312943479616 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank70 2735)) 2413 = 67051804109184 := by decide +kernel
   refine ⟨rank70 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4502,15 +4393,15 @@ private theorem pole71 : momentEstimate 363 82 = 502963348 := by
 theorem rank71 (u : ℕ) : P3_7_1.BankOK (bank71 u) :=
   P3_7_1.checked (bank71 u) (m:=262) (B:=363) (J:=82) (N:=564966981632) (M:=502963348) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole71
-theorem free71_0 : TransitionSources.Free 2293 12 (bank71 2671) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 12 (bank71 2671)) 2293 = 21083946392 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 12 (bank71 2671)) 2294 = 14289609932848 := by decide +kernel
+theorem free71_0 : TransitionSources.Free 2314 12 (bank71 2671) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 12 (bank71 2671)) 2314 = 48825598815728 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 12 (bank71 2671)) 2315 = 63094124802184 := by decide +kernel
   refine ⟨rank71 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free71_1 : TransitionSources.Free 2390 12 (bank71 2198) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 12 (bank71 2198)) 2390 = 1980235475640 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 12 (bank71 2198)) 2391 = 11253577692036 := by decide +kernel
+theorem free71_1 : TransitionSources.Free 2412 12 (bank71 2198) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 12 (bank71 2198)) 2412 = 36091244174352 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 12 (bank71 2198)) 2413 = 45364586390748 := by decide +kernel
   refine ⟨rank71 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4533,15 +4424,15 @@ private theorem pole72 : momentEstimate 369 83 = 535097333 := by
 theorem rank72 (u : ℕ) : P3_7_1.BankOK (bank72 u) :=
   P3_7_1.checked (bank72 u) (m:=266) (B:=369) (J:=83) (N:=589745881088) (M:=535097333) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole72
-theorem free72_0 : TransitionSources.Free 2293 13 (bank72 2841) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 13 (bank72 2841)) 2293 = 276740457658 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 13 (bank72 2841)) 2294 = 17117759108282 := by decide +kernel
+theorem free72_0 : TransitionSources.Free 2314 13 (bank72 2841) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 13 (bank72 2841)) 2314 = 57409090324642 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 13 (bank72 2841)) 2315 = 74250108975266 := by decide +kernel
   refine ⟨rank72 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free72_1 : TransitionSources.Free 2390 13 (bank72 2320) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 13 (bank72 2320)) 2390 = 1888907790242 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 13 (bank72 2320)) 2391 = 12666944741748 := by decide +kernel
+theorem free72_1 : TransitionSources.Free 2412 13 (bank72 2320) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 13 (bank72 2320)) 2412 = 41216027536134 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 13 (bank72 2320)) 2413 = 51994064487640 := by decide +kernel
   refine ⟨rank72 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4551,15 +4442,15 @@ private theorem pole73 : momentEstimate 373 83 = 553942033 := by
 theorem rank73 (u : ℕ) : P3_7_1.BankOK (bank73 u) :=
   P3_7_1.checked (bank73 u) (m:=269) (B:=373) (J:=83) (N:=604708536320) (M:=553942033) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole73
-theorem free73_0 : TransitionSources.Free 2293 20 (bank73 5660) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank73 5660)) 2293 = 483095881872 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank73 5660)) 2294 = 68679127944846 := by decide +kernel
+theorem free73_0 : TransitionSources.Free 2314 20 (bank73 5660) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank73 5660)) 2314 = 228517281679626 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank73 5660)) 2315 = 296713313742600 := by decide +kernel
   refine ⟨rank73 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free73_1 : TransitionSources.Free 2390 20 (bank73 3927) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank73 3927)) 2390 = 1911156282120 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank73 3927)) 2391 = 33415136780472 := by decide +kernel
+theorem free73_1 : TransitionSources.Free 2412 20 (bank73 3927) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank73 3927)) 2412 = 115240756820664 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank73 3927)) 2413 = 146744737319016 := by decide +kernel
   refine ⟨rank73 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4569,39 +4460,39 @@ private theorem pole74 : momentEstimate 373 84 = 559058208 := by
 theorem rank74 (u : ℕ) : P3_7_1.BankOK (bank74 u) :=
   P3_7_1.checked (bank74 u) (m:=269) (B:=373) (J:=84) (N:=610154577920) (M:=559058208) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole74
-theorem free74_0 : TransitionSources.Free 2293 13 (bank74 2818) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 13 (bank74 2818)) 2293 = 1557763365528 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 13 (bank74 2818)) 2294 = 18662694331374 := by decide +kernel
+theorem free74_0 : TransitionSources.Free 2314 13 (bank74 2818) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 13 (bank74 2818)) 2314 = 59027850126294 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 13 (bank74 2818)) 2315 = 76132781092140 := by decide +kernel
   refine ⟨rank74 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free74_1 : TransitionSources.Free 2293 16 (bank74 3583) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 16 (bank74 3583)) 2293 = 978631492608 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 16 (bank74 3583)) 2294 = 28624087505664 := by decide +kernel
+theorem free74_1 : TransitionSources.Free 2314 16 (bank74 3583) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 16 (bank74 3583)) 2314 = 93851512790784 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 16 (bank74 3583)) 2315 = 121496968803840 := by decide +kernel
   refine ⟨rank74 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free74_2 : TransitionSources.Free 2293 21 (bank74 6544) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank74 6544)) 2293 = 1133088019140 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank74 6544)) 2294 = 93315458589045 := by decide +kernel
+theorem free74_2 : TransitionSources.Free 2314 21 (bank74 6544) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank74 6544)) 2314 = 310796611424145 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank74 6544)) 2315 = 402978981994050 := by decide +kernel
   refine ⟨rank74 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free74_3 : TransitionSources.Free 2390 13 (bank74 2309) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 13 (bank74 2309)) 2390 = 1033833749025 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 13 (bank74 2309)) 2391 = 12054174383790 := by decide +kernel
+theorem free74_3 : TransitionSources.Free 2412 13 (bank74 2309) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 13 (bank74 2309)) 2412 = 40857171594855 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 13 (bank74 2309)) 2413 = 51877512229620 := by decide +kernel
   refine ⟨rank74 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free74_4 : TransitionSources.Free 2390 16 (bank74 2799) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 16 (bank74 2799)) 2390 = 1123470607000 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 16 (bank74 2799)) 2391 = 17313580477200 := by decide +kernel
+theorem free74_4 : TransitionSources.Free 2412 16 (bank74 2799) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 16 (bank74 2799)) 2412 = 59625355231400 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 16 (bank74 2799)) 2413 = 75815465101600 := by decide +kernel
   refine ⟨rank74 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free74_5 : TransitionSources.Free 2390 21 (bank74 4330) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank74 4330)) 2390 = 1720975991370 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank74 4330)) 2391 = 40451266298124 := by decide +kernel
+theorem free74_5 : TransitionSources.Free 2412 21 (bank74 4330) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank74 4330)) 2412 = 141662866177158 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank74 4330)) 2413 = 180393156483912 := by decide +kernel
   refine ⟨rank74 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4611,15 +4502,15 @@ private theorem pole75 : momentEstimate 377 84 = 578534598 := by
 theorem rank75 (u : ℕ) : P3_7_1.BankOK (bank75 u) :=
   P3_7_1.checked (bank75 u) (m:=272) (B:=377) (J:=84) (N:=625462476800) (M:=578534598) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole75
-theorem free75_0 : TransitionSources.Free 2293 20 (bank75 5459) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank75 5459)) 2293 = 1668635142720 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank75 5459)) 2294 = 67140603640110 := by decide +kernel
+theorem free75_0 : TransitionSources.Free 2314 20 (bank75 5459) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank75 5459)) 2314 = 218437655891910 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank75 5459)) 2315 = 283909624389300 := by decide +kernel
   refine ⟨rank75 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free75_1 : TransitionSources.Free 2390 20 (bank75 3842) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank75 3842)) 2390 = 468907449570 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank75 3842)) 2391 = 31589539411752 := by decide +kernel
+theorem free75_1 : TransitionSources.Free 2412 20 (bank75 3842) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank75 3842)) 2412 = 111335585350374 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank75 3842)) 2413 = 142456217312556 := by decide +kernel
   refine ⟨rank75 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4629,15 +4520,15 @@ private theorem pole76 : momentEstimate 377 85 = 583814440 := by
 theorem rank76 (u : ℕ) : P3_7_1.BankOK (bank76 u) :=
   P3_7_1.checked (bank76 u) (m:=272) (B:=377) (J:=85) (N:=631028580352) (M:=583814440) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole76
-theorem free76_0 : TransitionSources.Free 2293 18 (bank76 4276) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank76 4276)) 2293 = 2363082554105 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank76 4276)) 2294 = 42990065229475 := by decide +kernel
+theorem free76_0 : TransitionSources.Free 2314 18 (bank76 4276) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank76 4276)) 2314 = 137553739536395 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank76 4276)) 2315 = 178180722211765 := by decide +kernel
   refine ⟨rank76 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free76_1 : TransitionSources.Free 2390 18 (bank76 3214) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank76 3214)) 2390 = 1006373831800 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank76 3214)) 2391 = 23032341403800 := by decide +kernel
+theorem free76_1 : TransitionSources.Free 2412 18 (bank76 3214) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank76 3214)) 2412 = 79857207660600 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank76 3214)) 2413 = 101883175232600 := by decide +kernel
   refine ⟨rank76 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4647,15 +4538,15 @@ private theorem pole77 : momentEstimate 382 83 = 597984703 := by
 theorem rank77 (u : ℕ) : P3_7_1.BankOK (bank77 u) :=
   P3_7_1.checked (bank77 u) (m:=275) (B:=382) (J:=83) (N:=635228389376) (M:=597984703) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole77
-theorem free77_0 : TransitionSources.Free 2293 20 (bank77 5503) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank77 5503)) 2293 = 599772267008 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank77 5503)) 2294 = 68283219345664 := by decide +kernel
+theorem free77_0 : TransitionSources.Free 2314 20 (bank77 5503) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank77 5503)) 2314 = 226840618678784 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank77 5503)) 2315 = 294524065757440 := by decide +kernel
   refine ⟨rank77 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free77_1 : TransitionSources.Free 2390 20 (bank77 3883) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank77 3883)) 2390 = 2810831030440 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank77 3883)) 2391 = 35150623915296 := by decide +kernel
+theorem free77_1 : TransitionSources.Free 2412 20 (bank77 3883) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank77 3883)) 2412 = 119113664542272 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank77 3883)) 2413 = 151453457427128 := by decide +kernel
   refine ⟨rank77 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4683,15 +4574,15 @@ private theorem pole81 : momentEstimate 383 83 = 603020643 := by
 theorem rank81 (u : ℕ) : P3_7_1.BankOK (bank81 u) :=
   P3_7_1.checked (bank81 u) (m:=276) (B:=383) (J:=83) (N:=640392101888) (M:=603020643) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole81
-theorem free81_0 : TransitionSources.Free 2293 20 (bank81 5502) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank81 5502)) 2293 = 1833024129278 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank81 5502)) 2294 = 69871596613060 := by decide +kernel
+theorem free81_0 : TransitionSources.Free 2314 20 (bank81 5502) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank81 5502)) 2314 = 228110369757500 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank81 5502)) 2315 = 296148942241282 := by decide +kernel
   refine ⟨rank81 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free81_1 : TransitionSources.Free 2390 20 (bank81 3885) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank81 3885)) 2390 = 1458667756582 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank81 3885)) 2391 = 34012624743726 := by decide +kernel
+theorem free81_1 : TransitionSources.Free 2412 20 (bank81 3885) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank81 3885)) 2412 = 117942633380550 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank81 3885)) 2413 = 150496590367694 := by decide +kernel
   refine ⟨rank81 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4701,15 +4592,15 @@ private theorem pole82 : momentEstimate 384 86 = 624925184 := by
 theorem rank82 (u : ℕ) : P3_7_1.BankOK (bank82 u) :=
   P3_7_1.checked (bank82 u) (m:=277) (B:=384) (J:=86) (N:=663023779840) (M:=624925184) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole82
-theorem free82_0 : TransitionSources.Free 2293 14 (bank82 2965) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank82 2965)) 2293 = 773561997304 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank82 2965)) 2294 = 21231346013729 := by decide +kernel
+theorem free82_0 : TransitionSources.Free 2314 14 (bank82 2965) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank82 2965)) 2314 = 67740246808849 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank82 2965)) 2315 = 88198030825274 := by decide +kernel
   refine ⟨rank82 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free82_1 : TransitionSources.Free 2390 14 (bank82 2422) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank82 2422)) 2390 = 321219503924 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank82 2422)) 2391 = 13420859896968 := by decide +kernel
+theorem free82_1 : TransitionSources.Free 2412 14 (bank82 2422) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank82 2422)) 2412 = 46476642310812 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank82 2422)) 2413 = 59576282703856 := by decide +kernel
   refine ⟨rank82 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4719,33 +4610,33 @@ private theorem pole83 : momentEstimate 390 87 = 662678389 := by
 theorem rank83 (u : ℕ) : P3_7_1.BankOK (bank83 u) :=
   P3_7_1.checked (bank83 u) (m:=281) (B:=390) (J:=87) (N:=690560696320) (M:=662678389) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole83
-theorem free83_0 : TransitionSources.Free 2293 13 (bank83 2752) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 13 (bank83 2752)) 2293 = 2069230997534 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 13 (bank83 2752)) 2294 = 20425617527164 := by decide +kernel
+theorem free83_0 : TransitionSources.Free 2314 13 (bank83 2752) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 13 (bank83 2752)) 2314 = 61803701965964 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 13 (bank83 2752)) 2315 = 80160088495594 := by decide +kernel
   refine ⟨rank83 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free83_1 : TransitionSources.Free 2293 21 (bank83 5597) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank83 5597)) 2293 = 993454432884 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank83 5597)) 2294 = 76875938127504 := by decide +kernel
+theorem free83_1 : TransitionSources.Free 2314 21 (bank83 5597) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank83 5597)) 2314 = 247868072410104 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank83 5597)) 2315 = 323750556104724 := by decide +kernel
   refine ⟨rank83 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free83_2 : TransitionSources.Free 2390 13 (bank83 2285) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 13 (bank83 2285)) 2390 = 1345708270224 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 13 (bank83 2285)) 2391 = 13489781486220 := by decide +kernel
+theorem free83_2 : TransitionSources.Free 2412 13 (bank83 2285) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 13 (bank83 2285)) 2412 = 43891298700336 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 13 (bank83 2285)) 2413 = 56035371916332 := by decide +kernel
   refine ⟨rank83 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free83_3 : TransitionSources.Free 2390 21 (bank83 3955) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank83 3955)) 2390 = 1702774054144 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank83 3955)) 2391 = 38063512333320 := by decide +kernel
+theorem free83_3 : TransitionSources.Free 2412 21 (bank83 3955) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank83 3955)) 2412 = 129071111805216 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank83 3955)) 2413 = 165431850084392 := by decide +kernel
   refine ⟨rank83 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free83_4 : TransitionSources.Free 2390 21 (bank83 5597) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank83 5597)) 2390 = 7361594372811024 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank83 5597)) 2391 = 7437476856505644 := by decide +kernel
+theorem free83_4 : TransitionSources.Free 2412 21 (bank83 5597) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank83 5597)) 2412 = 7684351474482864 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank83 5597)) 2413 = 7760233958177484 := by decide +kernel
   refine ⟨rank83 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4755,15 +4646,15 @@ private theorem pole84 : momentEstimate 391 87 = 668148909 := by
 theorem rank84 (u : ℕ) : P3_7_1.BankOK (bank84 u) :=
   P3_7_1.checked (bank84 u) (m:=282) (B:=391) (J:=87) (N:=696062574592) (M:=668148909) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole84
-theorem free84_0 : TransitionSources.Free 2293 21 (bank84 5564) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank84 5564)) 2293 = 2273697537090 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank84 5564)) 2294 = 77635539631440 := by decide +kernel
+theorem free84_0 : TransitionSources.Free 2314 21 (bank84 5564) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank84 5564)) 2314 = 245464229313240 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank84 5564)) 2315 = 320826071407590 := by decide +kernel
   refine ⟨rank84 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free84_1 : TransitionSources.Free 2390 21 (bank84 3942) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank84 3942)) 2390 = 1504618848972 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank84 3942)) 2391 = 37805301273494 := by decide +kernel
+theorem free84_1 : TransitionSources.Free 2412 21 (bank84 3942) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank84 3942)) 2412 = 127656853867496 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank84 3942)) 2413 = 163957536292018 := by decide +kernel
   refine ⟨rank84 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4773,15 +4664,15 @@ private theorem pole85 : momentEstimate 395 89 = 702503867 := by
 theorem rank85 (u : ℕ) : P3_7_1.BankOK (bank85 u) :=
   P3_7_1.checked (bank85 u) (m:=285) (B:=395) (J:=89) (N:=724956610560) (M:=702503867) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole85
-theorem free85_0 : TransitionSources.Free 2293 14 (bank85 2903) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank85 2903)) 2293 = 1428556953252 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank85 2903)) 2294 = 22807106152116 := by decide +kernel
+theorem free85_0 : TransitionSources.Free 2314 14 (bank85 2903) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank85 2903)) 2314 = 70078855044396 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank85 2903)) 2315 = 91457404243260 := by decide +kernel
   refine ⟨rank85 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free85_1 : TransitionSources.Free 2390 14 (bank85 2394) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank85 2394)) 2390 = 2418840476650 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank85 2394)) 2391 = 16371365598120 := by decide +kernel
+theorem free85_1 : TransitionSources.Free 2412 14 (bank85 2394) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank85 2394)) 2412 = 50687136851490 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank85 2394)) 2413 = 64639661972960 := by decide +kernel
   refine ⟨rank85 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4791,27 +4682,27 @@ private theorem pole86 : momentEstimate 398 89 = 719781707 := by
 theorem rank86 (u : ℕ) : P3_7_1.BankOK (bank86 u) :=
   P3_7_1.checked (bank86 u) (m:=287) (B:=398) (J:=89) (N:=736375603200) (M:=719781707) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole86
-theorem free86_0 : TransitionSources.Free 2293 18 (bank86 3897) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank86 3897)) 2293 = 449303332514 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank86 3897)) 2294 = 39521120999272 := by decide +kernel
+theorem free86_0 : TransitionSources.Free 2314 18 (bank86 3897) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank86 3897)) 2314 = 125123355014582 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank86 3897)) 2315 = 164195172681340 := by decide +kernel
   refine ⟨rank86 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free86_1 : TransitionSources.Free 2293 20 (bank86 4712) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank86 4712)) 2293 = 1831052569224 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank86 4712)) 2294 = 58947272532852 := by decide +kernel
+theorem free86_1 : TransitionSources.Free 2314 20 (bank86 4712) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank86 4712)) 2314 = 184092010069062 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank86 4712)) 2315 = 241208230032690 := by decide +kernel
   refine ⟨rank86 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free86_2 : TransitionSources.Free 2390 18 (bank86 3038) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank86 3038)) 2390 = 513052914660 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank86 3038)) 2391 = 23299724677914 := by decide +kernel
+theorem free86_2 : TransitionSources.Free 2412 18 (bank86 3038) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank86 3038)) 2412 = 78844603198248 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank86 3038)) 2413 = 101631274961502 := by decide +kernel
   refine ⟨rank86 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free86_3 : TransitionSources.Free 2390 20 (bank86 3512) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank86 3512)) 2390 = 2615828209140 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank86 3512)) 2391 = 33064478027568 := by decide +kernel
+theorem free86_3 : TransitionSources.Free 2412 20 (bank86 3512) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank86 3512)) 2412 = 107301215548206 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank86 3512)) 2413 = 137749865366634 := by decide +kernel
   refine ⟨rank86 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4821,27 +4712,27 @@ private theorem pole87 : momentEstimate 398 90 = 725984075 := by
 theorem rank87 (u : ℕ) : P3_7_1.BankOK (bank87 u) :=
   P3_7_1.checked (bank87 u) (m:=287) (B:=398) (J:=90) (N:=742561677312) (M:=725984075) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole87
-theorem free87_0 : TransitionSources.Free 2293 18 (bank87 3887) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank87 3887)) 2293 = 453732150528 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank87 3887)) 2294 = 39748687072560 := by decide +kernel
+theorem free87_0 : TransitionSources.Free 2314 18 (bank87 3887) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank87 3887)) 2314 = 126674214610320 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank87 3887)) 2315 = 165969169532352 := by decide +kernel
   refine ⟨rank87 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free87_1 : TransitionSources.Free 2293 20 (bank87 4698) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank87 4698)) 2293 = 418526067950 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank87 4698)) 2294 = 57813662503000 := by decide +kernel
+theorem free87_1 : TransitionSources.Free 2314 20 (bank87 4698) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank87 4698)) 2314 = 184777240427000 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank87 4698)) 2315 = 242172376862050 := by decide +kernel
   refine ⟨rank87 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free87_2 : TransitionSources.Free 2390 18 (bank87 3031) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank87 3031)) 2390 = 2548353045656 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank87 3031)) 2391 = 25478052651312 := by decide +kernel
+theorem free87_2 : TransitionSources.Free 2412 18 (bank87 3031) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank87 3031)) 2412 = 81894836013048 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank87 3031)) 2413 = 104824535618704 := by decide +kernel
   refine ⟨rank87 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free87_3 : TransitionSources.Free 2390 20 (bank87 3502) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank87 3502)) 2390 = 1082524117172 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank87 3502)) 2391 = 31687160543898 := by decide +kernel
+theorem free87_3 : TransitionSources.Free 2412 20 (bank87 3502) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank87 3502)) 2412 = 106969554575064 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank87 3502)) 2413 = 137574191001790 := by decide +kernel
   refine ⟨rank87 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4851,15 +4742,15 @@ private theorem pole88 : momentEstimate 409 92 = 805907535 := by
 theorem rank88 (u : ℕ) : P3_7_1.BankOK (bank88 u) :=
   P3_7_1.checked (bank88 u) (m:=295) (B:=409) (J:=92) (N:=802732113920) (M:=805907535) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole88
-theorem free88_0 : TransitionSources.Free 2293 14 (bank88 2848) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank88 2848)) 2293 = 2803188051510 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank88 2848)) 2294 = 25493000703555 := by decide +kernel
+theorem free88_0 : TransitionSources.Free 2314 14 (bank88 2848) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank88 2848)) 2314 = 73861325839455 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank88 2848)) 2315 = 96551138491500 := by decide +kernel
   refine ⟨rank88 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free88_1 : TransitionSources.Free 2390 14 (bank88 2372) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 14 (bank88 2372)) 2390 = 2193955671621 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 14 (bank88 2372)) 2391 = 17297581010724 := by decide +kernel
+theorem free88_1 : TransitionSources.Free 2412 14 (bank88 2372) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 14 (bank88 2372)) 2412 = 53183381318487 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 14 (bank88 2372)) 2413 = 68287006657590 := by decide +kernel
   refine ⟨rank88 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4869,39 +4760,39 @@ private theorem pole89 : momentEstimate 411 92 = 818632570 := by
 theorem rank89 (u : ℕ) : P3_7_1.BankOK (bank89 u) :=
   P3_7_1.checked (bank89 u) (m:=296) (B:=411) (J:=92) (N:=808826961920) (M:=818632570) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole89
-theorem free89_0 : TransitionSources.Free 2293 18 (bank89 3732) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank89 3732)) 2293 = 111249902886 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank89 3732)) 2294 = 39432215320110 := by decide +kernel
+theorem free89_0 : TransitionSources.Free 2314 18 (bank89 3732) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank89 3732)) 2314 = 123656006027310 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank89 3732)) 2315 = 162976971444534 := by decide +kernel
   refine ⟨rank89 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free89_1 : TransitionSources.Free 2293 21 (bank89 4866) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank89 4866)) 2293 = 1746400145856 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank89 4866)) 2294 = 68582053457604 := by decide +kernel
+theorem free89_1 : TransitionSources.Free 2314 21 (bank89 4866) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank89 4866)) 2314 = 211753232423124 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank89 4866)) 2315 = 278588885734872 := by decide +kernel
   refine ⟨rank89 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free89_2 : TransitionSources.Free 2293 25 (bank89 8176) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 25 (bank89 8176)) 2293 = 1338927083390 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 25 (bank89 8176)) 2294 = 189978924184426 := by decide +kernel
+theorem free89_2 : TransitionSources.Free 2314 25 (bank89 8176) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 25 (bank89 8176)) 2314 = 594043830787706 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 25 (bank89 8176)) 2315 = 782683827888742 := by decide +kernel
   refine ⟨rank89 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free89_3 : TransitionSources.Free 2390 18 (bank89 2959) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank89 2959)) 2390 = 511209040720 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank89 2959)) 2391 = 24232128619440 := by decide +kernel
+theorem free89_3 : TransitionSources.Free 2412 18 (bank89 2959) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank89 2959)) 2412 = 80845861718160 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank89 2959)) 2413 = 104566781296880 := by decide +kernel
   refine ⟨rank89 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free89_4 : TransitionSources.Free 2390 21 (bank89 3630) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank89 3630)) 2390 = 2044124694984 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank89 3630)) 2391 = 37736872399740 := by decide +kernel
+theorem free89_4 : TransitionSources.Free 2412 21 (bank89 3630) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank89 3630)) 2412 = 122933199337536 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank89 3630)) 2413 = 158625947042292 := by decide +kernel
   refine ⟨rank89 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free89_5 : TransitionSources.Free 2390 25 (bank89 5201) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 25 (bank89 5201)) 2390 = 1589892935382 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 25 (bank89 5201)) 2391 = 74842924779918 := by decide +kernel
+theorem free89_5 : TransitionSources.Free 2412 25 (bank89 5201) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 25 (bank89 5201)) 2412 = 249672979417734 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 25 (bank89 5201)) 2413 = 322926011262270 := by decide +kernel
   refine ⟨rank89 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4924,15 +4815,15 @@ private theorem pole90 : momentEstimate 416 94 = 865230227 := by
 theorem rank90 (u : ℕ) : P3_7_1.BankOK (bank90 u) :=
   P3_7_1.checked (bank90 u) (m:=300) (B:=416) (J:=94) (N:=846999060480) (M:=865230227) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole90
-theorem free90_0 : TransitionSources.Free 2293 18 (bank90 3666) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank90 3666)) 2293 = 670512189446 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank90 3666)) 2294 = 40299620266818 := by decide +kernel
+theorem free90_0 : TransitionSources.Free 2314 18 (bank90 3666) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank90 3666)) 2314 = 123701216714258 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank90 3666)) 2315 = 163330324791630 := by decide +kernel
   refine ⟨rank90 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free90_1 : TransitionSources.Free 2390 18 (bank90 2925) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank90 2925)) 2390 = 3356138758665 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank90 2925)) 2391 = 27566387137366 := by decide +kernel
+theorem free90_1 : TransitionSources.Free 2412 18 (bank90 2925) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank90 2925)) 2412 = 84423507640087 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank90 2925)) 2413 = 108633756018788 := by decide +kernel
   refine ⟨rank90 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4942,15 +4833,15 @@ private theorem pole91 : momentEstimate 419 95 = 892659430 := by
 theorem rank91 (u : ℕ) : P3_7_1.BankOK (bank91 u) :=
   P3_7_1.checked (bank91 u) (m:=302) (B:=419) (J:=95) (N:=866513846272) (M:=892659430) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole91
-theorem free91_0 : TransitionSources.Free 2293 20 (bank91 4262) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank91 4262)) 2293 = 3097641236508 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank91 4262)) 2294 = 57960479428488 := by decide +kernel
+theorem free91_0 : TransitionSources.Free 2314 20 (bank91 4262) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank91 4262)) 2314 = 173679541104888 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank91 4262)) 2315 = 228542379296868 := by decide +kernel
   refine ⟨rank91 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free91_1 : TransitionSources.Free 2390 20 (bank91 3297) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank91 3297)) 2390 = 2411321407648 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank91 3297)) 2391 = 33916944769128 := by decide +kernel
+theorem free91_1 : TransitionSources.Free 2412 20 (bank91 3297) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank91 3297)) 2412 = 108035639605008 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank91 3297)) 2413 = 139541262966488 := by decide +kernel
   refine ⟨rank91 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4960,15 +4851,15 @@ private theorem pole92 : momentEstimate 430 95 = 970134630 := by
 theorem rank92 (u : ℕ) : P3_7_1.BankOK (bank92 u) :=
   P3_7_1.checked (bank92 u) (m:=310) (B:=430) (J:=95) (N:=918657433600) (M:=970134630) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole92
-theorem free92_0 : TransitionSources.Free 2293 23 (bank92 5432) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 23 (bank92 5432)) 2293 = 3385490955492 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 23 (bank92 5432)) 2294 = 97051420124376 := by decide +kernel
+theorem free92_0 : TransitionSources.Free 2314 23 (bank92 5432) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 23 (bank92 5432)) 2314 = 285650364156456 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 23 (bank92 5432)) 2315 = 379316293325340 := by decide +kernel
   refine ⟨rank92 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free92_1 : TransitionSources.Free 2390 23 (bank92 3992) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 23 (bank92 3992)) 2390 = 2951320055640 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 23 (bank92 3992)) 2391 = 51495820124364 := by decide +kernel
+theorem free92_1 : TransitionSources.Free 2412 23 (bank92 3992) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 23 (bank92 3992)) 2412 = 160858494445968 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 23 (bank92 3992)) 2413 = 209402994514692 := by decide +kernel
   refine ⟨rank92 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4978,15 +4869,15 @@ private theorem pole93 : momentEstimate 433 97 = 1008070710 := by
 theorem rank93 (u : ℕ) : P3_7_1.BankOK (bank93 u) :=
   P3_7_1.checked (bank93 u) (m:=313) (B:=433) (J:=97) (N:=953437126656) (M:=1008070710) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole93
-theorem free93_0 : TransitionSources.Free 2293 15 (bank93 2947) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank93 2947)) 2293 = 3384211366470 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank93 2947)) 2294 = 31879276972422 := by decide +kernel
+theorem free93_0 : TransitionSources.Free 2314 15 (bank93 2947) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank93 2947)) 2314 = 87775934600442 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank93 2947)) 2315 = 116271000206394 := by decide +kernel
   refine ⟨rank93 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free93_1 : TransitionSources.Free 2390 15 (bank93 2467) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 15 (bank93 2467)) 2390 = 4043594264694 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 15 (bank93 2467)) 2391 = 23206248335286 := by decide +kernel
+theorem free93_1 : TransitionSources.Free 2412 15 (bank93 2467) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 15 (bank93 2467)) 2412 = 65349540188298 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 15 (bank93 2467)) 2413 = 84512194258890 := by decide +kernel
   refine ⟨rank93 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -4996,15 +4887,15 @@ private theorem pole94 : momentEstimate 434 97 = 1015567563 := by
 theorem rank94 (u : ℕ) : P3_7_1.BankOK (bank94 u) :=
   P3_7_1.checked (bank94 u) (m:=313) (B:=434) (J:=97) (N:=953437126656) (M:=1015567563) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole94
-theorem free94_0 : TransitionSources.Free 2293 30 (bank94 16634) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 30 (bank94 16634)) 2293 = 4559667440130 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 30 (bank94 16634)) 2294 = 915284046579540 := by decide +kernel
+theorem free94_0 : TransitionSources.Free 2314 30 (bank94 16634) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 30 (bank94 16634)) 2314 = 2725323194518440 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 30 (bank94 16634)) 2315 = 3636047573657850 := by decide +kernel
   refine ⟨rank94 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free94_1 : TransitionSources.Free 2390 30 (bank94 7943) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 30 (bank94 7943)) 2390 = 2121965214240 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 30 (bank94 7943)) 2391 = 201398206468056 := by decide +kernel
+theorem free94_1 : TransitionSources.Free 2412 30 (bank94 7943) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 30 (bank94 7943)) 2412 = 644894802522792 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 30 (bank94 7943)) 2413 = 844171043776608 := by decide +kernel
   refine ⟨rank94 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5014,15 +4905,15 @@ private theorem pole95 : momentEstimate 434 98 = 1023606650 := by
 theorem rank95 (u : ℕ) : P3_7_1.BankOK (bank95 u) :=
   P3_7_1.checked (bank95 u) (m:=313) (B:=434) (J:=98) (N:=960795770880) (M:=1023606650) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole95
-theorem free95_0 : TransitionSources.Free 2293 16 (bank95 3103) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 16 (bank95 3103)) 2293 = 124342546240 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 16 (bank95 3103)) 2294 = 32154774998720 := by decide +kernel
+theorem free95_0 : TransitionSources.Free 2314 16 (bank95 3103) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 16 (bank95 3103)) 2314 = 96368485861120 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 16 (bank95 3103)) 2315 = 128398918313600 := by decide +kernel
   refine ⟨rank95 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free95_1 : TransitionSources.Free 2390 16 (bank95 2576) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 16 (bank95 2576)) 2390 = 1683489211140 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 16 (bank95 2576)) 2391 = 22866938457264 := by decide +kernel
+theorem free95_1 : TransitionSources.Free 2412 16 (bank95 2576) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 16 (bank95 2576)) 2412 = 70405094211408 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 16 (bank95 2576)) 2413 = 91588543457532 := by decide +kernel
   refine ⟨rank95 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5032,15 +4923,15 @@ private theorem pole96 : momentEstimate 435 98 = 1031203184 := by
 theorem rank96 (u : ℕ) : P3_7_1.BankOK (bank96 u) :=
   P3_7_1.checked (bank96 u) (m:=314) (B:=435) (J:=98) (N:=967673118720) (M:=1031203184) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole96
-theorem free96_0 : TransitionSources.Free 2293 17 (bank96 3290) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 17 (bank96 3290)) 2293 = 2522520939774 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 17 (bank96 3290)) 2294 = 38684684724180 := by decide +kernel
+theorem free96_0 : TransitionSources.Free 2314 17 (bank96 3290) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 17 (bank96 3290)) 2314 = 110249268711780 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 17 (bank96 3290)) 2315 = 146411432496186 := by decide +kernel
   refine ⟨rank96 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free96_1 : TransitionSources.Free 2390 17 (bank96 2705) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 17 (bank96 2705)) 2390 = 3116833608966 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 17 (bank96 2705)) 2391 = 26575311750867 := by decide +kernel
+theorem free96_1 : TransitionSources.Free 2412 17 (bank96 2705) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 17 (bank96 2705)) 2412 = 78585732980568 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 17 (bank96 2705)) 2413 = 102044211122469 := by decide +kernel
   refine ⟨rank96 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5050,15 +4941,15 @@ private theorem pole97 : momentEstimate 438 99 = 1062483026 := by
 theorem rank97 (u : ℕ) : P3_7_1.BankOK (bank97 u) :=
   P3_7_1.checked (bank97 u) (m:=316) (B:=438) (J:=99) (N:=989003776000) (M:=1062483026) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole97
-theorem free97_0 : TransitionSources.Free 2293 17 (bank97 3273) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 17 (bank97 3273)) 2293 = 2939438989336 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 17 (bank97 3273)) 2294 = 39558466652588 := by decide +kernel
+theorem free97_0 : TransitionSources.Free 2314 17 (bank97 3273) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 17 (bank97 3273)) 2314 = 112074878567628 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 17 (bank97 3273)) 2315 = 148693906230880 := by decide +kernel
   refine ⟨rank97 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free97_1 : TransitionSources.Free 2390 17 (bank97 2697) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 17 (bank97 2697)) 2390 = 4385607282860 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 17 (bank97 2697)) 2391 = 28246462697664 := by decide +kernel
+theorem free97_1 : TransitionSources.Free 2412 17 (bank97 2697) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 17 (bank97 2697)) 2412 = 81188895426548 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 17 (bank97 2697)) 2413 = 105049750841352 := by decide +kernel
   refine ⟨rank97 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5068,15 +4959,15 @@ private theorem pole98 : momentEstimate 442 100 = 1102455756 := by
 theorem rank98 (u : ℕ) : P3_7_1.BankOK (bank98 u) :=
   P3_7_1.checked (bank98 u) (m:=319) (B:=442) (J:=100) (N:=1017758351360) (M:=1102455756) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole98
-theorem free98_0 : TransitionSources.Free 2293 17 (bank98 3253) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 17 (bank98 3253)) 2293 = 1332605036136 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 17 (bank98 3253)) 2294 = 38494924533123 := by decide +kernel
+theorem free98_0 : TransitionSources.Free 2314 17 (bank98 3253) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 17 (bank98 3253)) 2314 = 111172807529913 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 17 (bank98 3253)) 2315 = 148335127026900 := by decide +kernel
   refine ⟨rank98 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free98_1 : TransitionSources.Free 2390 17 (bank98 2688) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 17 (bank98 2688)) 2390 = 3016502815615 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 17 (bank98 2688)) 2391 = 27366517469502 := by decide +kernel
+theorem free98_1 : TransitionSources.Free 2412 17 (bank98 2688) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 17 (bank98 2688)) 2412 = 80767214908779 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 17 (bank98 2688)) 2413 = 105117229562666 := by decide +kernel
   refine ⟨rank98 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5086,15 +4977,15 @@ private theorem pole99 : momentEstimate 446 101 = 1143545315 := by
 theorem rank99 (u : ℕ) : P3_7_1.BankOK (bank99 u) :=
   P3_7_1.checked (bank99 u) (m:=322) (B:=446) (J:=101) (N:=1047064739840) (M:=1143545315) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole99
-theorem free99_0 : TransitionSources.Free 2293 17 (bank99 3235) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 17 (bank99 3235)) 2293 = 672743281864 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 17 (bank99 3235)) 2294 = 38422341149384 := by decide +kernel
+theorem free99_0 : TransitionSources.Free 2314 17 (bank99 3235) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 17 (bank99 3235)) 2314 = 111357641949424 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 17 (bank99 3235)) 2315 = 149107239816944 := by decide +kernel
   refine ⟨rank99 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free99_1 : TransitionSources.Free 2390 17 (bank99 2680) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 17 (bank99 2680)) 2390 = 1388037626024 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 17 (bank99 2680)) 2391 = 26249669321694 := by decide +kernel
+theorem free99_1 : TransitionSources.Free 2412 17 (bank99 2680) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 17 (bank99 2680)) 2412 = 80151031183104 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 17 (bank99 2680)) 2413 = 105012662878774 := by decide +kernel
   refine ⟨rank99 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5122,27 +5013,27 @@ private theorem pole103 : momentEstimate 458 103 = 1264296353 := by
 theorem rank103 (u : ℕ) : P3_7_1.BankOK (bank103 u) :=
   P3_7_1.checked (bank103 u) (m:=330) (B:=458) (J:=103) (N:=1122512142336) (M:=1264296353) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole103
-theorem free103_0 : TransitionSources.Free 2293 18 (bank103 3373) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank103 3373)) 2293 = 482332336108 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank103 3373)) 2294 = 44467491076064 := by decide +kernel
+theorem free103_0 : TransitionSources.Free 2314 18 (bank103 3373) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank103 3373)) 2314 = 127894435125184 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank103 3373)) 2315 = 171879593865140 := by decide +kernel
   refine ⟨rank103 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free103_1 : TransitionSources.Free 2293 25 (bank103 5586) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 25 (bank103 5586)) 2293 = 4800871320706 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 25 (bank103 5586)) 2294 = 125395465446604 := by decide +kernel
+theorem free103_1 : TransitionSources.Free 2314 25 (bank103 5586) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 25 (bank103 5586)) 2314 = 354155499352564 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 25 (bank103 5586)) 2315 = 474750093478462 := by decide +kernel
   refine ⟨rank103 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free103_2 : TransitionSources.Free 2390 18 (bank103 2789) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank103 2789)) 2390 = 350168078880 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank103 2789)) 2391 = 29207596682340 := by decide +kernel
+theorem free103_2 : TransitionSources.Free 2412 18 (bank103 2789) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank103 2789)) 2412 = 90699740325000 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank103 2789)) 2413 = 119557168928460 := by decide +kernel
   refine ⟨rank103 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free103_3 : TransitionSources.Free 2390 25 (bank103 4148) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 25 (bank103 4148)) 2390 = 1657319958540 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 25 (bank103 4148)) 2391 = 65467157108346 := by decide +kernel
+theorem free103_3 : TransitionSources.Free 2412 25 (bank103 4148) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 25 (bank103 4148)) 2412 = 201446176804272 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 25 (bank103 4148)) 2413 = 265256013954078 := by decide +kernel
   refine ⟨rank103 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5152,15 +5043,15 @@ private theorem pole104 : momentEstimate 460 104 = 1291682639 := by
 theorem rank104 (u : ℕ) : P3_7_1.BankOK (bank104 u) :=
   P3_7_1.checked (bank104 u) (m:=332) (B:=460) (J:=104) (N:=1146054246400) (M:=1291682639) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole104
-theorem free104_0 : TransitionSources.Free 2293 18 (bank104 3359) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank104 3359)) 2293 = 283608010560 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank104 3359)) 2294 = 44678549338080 := by decide +kernel
+theorem free104_0 : TransitionSources.Free 2314 18 (bank104 3359) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank104 3359)) 2314 = 127516938336480 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank104 3359)) 2315 = 171911879664000 := by decide +kernel
   refine ⟨rank104 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free104_1 : TransitionSources.Free 2390 18 (bank104 2782) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank104 2782)) 2390 = 4787344596980 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank104 2782)) 2391 = 34011559029426 := by decide +kernel
+theorem free104_1 : TransitionSources.Free 2412 18 (bank104 2782) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank104 2782)) 2412 = 95384339464392 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank104 2782)) 2413 = 124608553896838 := by decide +kernel
   refine ⟨rank104 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5170,15 +5061,15 @@ private theorem pole105 : momentEstimate 474 107 = 1453763546 := by
 theorem rank105 (u : ℕ) : P3_7_1.BankOK (bank105 u) :=
   P3_7_1.checked (bank105 u) (m:=342) (B:=474) (J:=107) (N:=1251092201472) (M:=1453763546) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole105
-theorem free105_0 : TransitionSources.Free 2293 18 (bank105 3304) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank105 3304)) 2293 = 3462826388320 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank105 3304)) 2294 = 50206826725340 := by decide +kernel
+theorem free105_0 : TransitionSources.Free 2314 18 (bank105 3304) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank105 3304)) 2314 = 134552679281140 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank105 3304)) 2315 = 181296679618160 := by decide +kernel
   refine ⟨rank105 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free105_1 : TransitionSources.Free 2390 18 (bank105 2759) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank105 2759)) 2390 = 2956626931920 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank105 2759)) 2391 = 34234438005360 := by decide +kernel
+theorem free105_1 : TransitionSources.Free 2412 18 (bank105 2759) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank105 2759)) 2412 = 97879682804400 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank105 2759)) 2413 = 129157493877840 := by decide +kernel
   refine ⟨rank105 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5188,15 +5079,15 @@ private theorem pole106 : momentEstimate 477 107 = 1483537364 := by
 theorem rank106 (u : ℕ) : P3_7_1.BankOK (bank106 u) :=
   P3_7_1.checked (bank106 u) (m:=344) (B:=477) (J:=107) (N:=1267512901632) (M:=1483537364) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole106
-theorem free106_0 : TransitionSources.Free 2293 19 (bank106 3476) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 19 (bank106 3476)) 2293 = 3558844414554 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 19 (bank106 3476)) 2294 = 55920496613358 := by decide +kernel
+theorem free106_0 : TransitionSources.Free 2314 19 (bank106 3476) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 19 (bank106 3476)) 2314 = 149558101298718 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 19 (bank106 3476)) 2315 = 201919753497522 := by decide +kernel
   refine ⟨rank106 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free106_1 : TransitionSources.Free 2390 19 (bank106 2882) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 19 (bank106 2882)) 2390 = 2951912429724 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 19 (bank106 2882)) 2391 = 37492345810620 := by decide +kernel
+theorem free106_1 : TransitionSources.Free 2412 19 (bank106 2882) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 19 (bank106 2882)) 2412 = 107194874000796 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 19 (bank106 2882)) 2413 = 141735307381692 := by decide +kernel
   refine ⟨rank106 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5206,15 +5097,9 @@ private theorem pole107 : momentEstimate 482 108 = 1545109193 := by
 theorem rank107 (u : ℕ) : P3_7_1.BankOK (bank107 u) :=
   P3_7_1.checked (bank107 u) (m:=348) (B:=482) (J:=108) (N:=1309818224640) (M:=1545109193) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole107
-theorem free107_0 : TransitionSources.Free 2293 18 (bank107 3286) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank107 3286)) 2293 = 6199906891570 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank107 3286)) 2294 = 54374504574104 := by decide +kernel
-  refine ⟨rank107 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
-  · rw [left]; decide
-  · rw [left,right]; decide
-theorem free107_1 : TransitionSources.Free 2390 18 (bank107 3286) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 18 (bank107 3286)) 2390 = 4679135882097368 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 18 (bank107 3286)) 2391 = 4727310479779902 := by decide +kernel
+theorem free107_1 : TransitionSources.Free 2412 18 (bank107 3286) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 18 (bank107 3286)) 2412 = 4859621395257276 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 18 (bank107 3286)) 2413 = 4907795992939810 := by decide +kernel
   refine ⟨rank107 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5237,27 +5122,27 @@ private theorem pole108 : momentEstimate 483 108 = 1555432583 := by
 theorem rank108 (u : ℕ) : P3_7_1.BankOK (bank108 u) :=
   P3_7_1.checked (bank108 u) (m:=348) (B:=483) (J:=108) (N:=1309818224640) (M:=1555432583) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole108
-theorem free108_0 : TransitionSources.Free 2293 21 (bank108 3859) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank108 3859)) 2293 = 4264128131020 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank108 3859)) 2294 = 70962106023260 := by decide +kernel
+theorem free108_0 : TransitionSources.Free 2314 21 (bank108 3859) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank108 3859)) 2314 = 189487867720060 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank108 3859)) 2315 = 256185845612300 := by decide +kernel
   refine ⟨rank108 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free108_1 : TransitionSources.Free 2293 30 (bank108 8100) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 30 (bank108 8100)) 2293 = 7079449091372 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 30 (bank108 8100)) 2294 = 300809843346046 := by decide +kernel
+theorem free108_1 : TransitionSources.Free 2314 30 (bank108 8100) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 30 (bank108 8100)) 2314 = 822690989991926 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 30 (bank108 8100)) 2315 = 1116421384246600 := by decide +kernel
   refine ⟨rank108 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free108_2 : TransitionSources.Free 2390 21 (bank108 3149) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank108 3149)) 2390 = 4903667070750 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank108 3149)) 2391 = 47522295730350 := by decide +kernel
+theorem free108_2 : TransitionSources.Free 2412 21 (bank108 3149) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank108 3149)) 2412 = 133039022611950 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank108 3149)) 2413 = 175657651271550 := by decide +kernel
   refine ⟨rank108 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free108_3 : TransitionSources.Free 2390 30 (bank108 5498) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 30 (bank108 5498)) 2390 = 2001502704240 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 30 (bank108 5498)) 2391 = 131859534446406 := by decide +kernel
+theorem free108_3 : TransitionSources.Free 2412 30 (bank108 5498) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 30 (bank108 5498)) 2412 = 392324296931892 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 30 (bank108 5498)) 2413 = 522182328674058 := by decide +kernel
   refine ⟨rank108 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5267,15 +5152,15 @@ private theorem pole109 : momentEstimate 484 109 = 1576951631 := by
 theorem rank109 (u : ℕ) : P3_7_1.BankOK (bank109 u) :=
   P3_7_1.checked (bank109 u) (m:=349) (B:=484) (J:=109) (N:=1327400222720) (M:=1576951631) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole109
-theorem free109_0 : TransitionSources.Free 2293 20 (bank109 3631) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank109 3631)) 2293 = 3097839413728 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank109 3631)) 2294 = 62900651485184 := by decide +kernel
+theorem free109_0 : TransitionSources.Free 2314 20 (bank109 3631) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank109 3631)) 2314 = 168590367758704 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank109 3631)) 2315 = 228393179830160 := by decide +kernel
   refine ⟨rank109 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free109_1 : TransitionSources.Free 2390 20 (bank109 2996) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank109 2996)) 2390 = 3556541638260 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank109 2996)) 2391 = 42626380864086 := by decide +kernel
+theorem free109_1 : TransitionSources.Free 2412 20 (bank109 2996) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank109 2996)) 2412 = 120621750924582 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank109 2996)) 2413 = 159691590150408 := by decide +kernel
   refine ⟨rank109 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5285,15 +5170,15 @@ private theorem pole110 : momentEstimate 491 109 = 1651411016 := by
 theorem rank110 (u : ℕ) : P3_7_1.BankOK (bank110 u) :=
   P3_7_1.checked (bank110 u) (m:=354) (B:=491) (J:=109) (N:=1370293534720) (M:=1651411016) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole110
-theorem free110_0 : TransitionSources.Free 2293 21 (bank110 3824) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank110 3824)) 2293 = 369622445175 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank110 3824)) 2294 = 68587200915525 := by decide +kernel
+theorem free110_0 : TransitionSources.Free 2314 21 (bank110 3824) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank110 3824)) 2314 = 186358026260025 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank110 3824)) 2315 = 254575604730375 := by decide +kernel
   refine ⟨rank110 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free110_1 : TransitionSources.Free 2390 21 (bank110 3137) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank110 3137)) 2390 = 6275876825655 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank110 3137)) 2391 = 50330872533729 := by decide +kernel
+theorem free110_1 : TransitionSources.Free 2412 21 (bank110 3137) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank110 3137)) 2412 = 136434966915783 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank110 3137)) 2413 = 180489962623857 := by decide +kernel
   refine ⟨rank110 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5303,15 +5188,15 @@ private theorem pole111 : momentEstimate 495 111 = 1718934918 := by
 theorem rank111 (u : ℕ) : P3_7_1.BankOK (bank111 u) :=
   P3_7_1.checked (bank111 u) (m:=357) (B:=495) (J:=111) (N:=1415598571520) (M:=1718934918) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole111
-theorem free111_0 : TransitionSources.Free 2293 20 (bank111 3583) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank111 3583)) 2293 = 399698976768 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank111 3583)) 2294 = 62264879007744 := by decide +kernel
+theorem free111_0 : TransitionSources.Free 2314 20 (bank111 3583) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank111 3583)) 2314 = 168056081700864 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank111 3583)) 2315 = 229921261731840 := by decide +kernel
   refine ⟨rank111 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free111_1 : TransitionSources.Free 2390 20 (bank111 2977) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank111 2977)) 2390 = 7525787005320 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank111 2977)) 2391 = 48510567646272 := by decide +kernel
+theorem free111_1 : TransitionSources.Free 2412 20 (bank111 2977) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank111 2977)) 2412 = 127927789227144 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank111 2977)) 2413 = 168912569868096 := by decide +kernel
   refine ⟨rank111 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5321,15 +5206,15 @@ private theorem pole112 : momentEstimate 506 113 = 1870272531 := by
 theorem rank112 (u : ℕ) : P3_7_1.BankOK (bank112 u) :=
   P3_7_1.checked (bank112 u) (m:=365) (B:=506) (J:=113) (N:=1507599056896) (M:=1870272531) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole112
-theorem free112_0 : TransitionSources.Free 2293 20 (bank112 3547) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank112 3547)) 2293 = 1850206296324 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank112 3547)) 2294 = 66195872533248 := by decide +kernel
+theorem free112_0 : TransitionSources.Free 2314 20 (bank112 3547) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank112 3547)) 2314 = 172918665997428 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank112 3547)) 2315 = 237264332234352 := by decide +kernel
   refine ⟨rank112 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free112_1 : TransitionSources.Free 2390 20 (bank112 2964) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank112 2964)) 2390 = 6079566329540 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank112 2964)) 2391 = 49196896944960 := by decide +kernel
+theorem free112_1 : TransitionSources.Free 2412 20 (bank112 2964) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank112 2964)) 2412 = 130411970979030 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank112 2964)) 2413 = 173529301594450 := by decide +kernel
   refine ⟨rank112 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5339,15 +5224,15 @@ private theorem pole113 : momentEstimate 506 114 = 1883005203 := by
 theorem rank113 (u : ℕ) : P3_7_1.BankOK (bank113 u) :=
   P3_7_1.checked (bank113 u) (m:=365) (B:=506) (J:=114) (N:=1517607976960) (M:=1883005203) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole113
-theorem free113_0 : TransitionSources.Free 2293 21 (bank113 3716) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank113 3716)) 2293 = 845909514954 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank113 3716)) 2294 = 72052004352132 := by decide +kernel
+theorem free113_0 : TransitionSources.Free 2314 21 (bank113 3716) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank113 3716)) 2314 = 190979598183192 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank113 3716)) 2315 = 262185693020370 := by decide +kernel
   refine ⟨rank113 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free113_1 : TransitionSources.Free 2390 21 (bank113 3080) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank113 3080)) 2390 = 2683719407460 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank113 3080)) 2391 = 49624882620534 := by decide +kernel
+theorem free113_1 : TransitionSources.Free 2412 21 (bank113 3080) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank113 3080)) 2412 = 138585270957588 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank113 3080)) 2413 = 185526434170662 := by decide +kernel
   refine ⟨rank113 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5357,15 +5242,15 @@ private theorem pole114 : momentEstimate 509 114 = 1919120263 := by
 theorem rank114 (u : ℕ) : P3_7_1.BankOK (bank114 u) :=
   P3_7_1.checked (bank114 u) (m:=367) (B:=509) (J:=114) (N:=1536268697600) (M:=1919120263) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole114
-theorem free114_0 : TransitionSources.Free 2293 21 (bank114 3710) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank114 3710)) 2293 = 4741232834982 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank114 3710)) 2294 = 76534384135476 := by decide +kernel
+theorem free114_0 : TransitionSources.Free 2314 21 (bank114 3710) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank114 3710)) 2314 = 195563405386956 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank114 3710)) 2315 = 267356556687450 := by decide +kernel
   refine ⟨rank114 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free114_1 : TransitionSources.Free 2390 21 (bank114 3080) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank114 3080)) 2390 = 6868041728925 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank114 3080)) 2391 = 54349971124449 := by decide +kernel
+theorem free114_1 : TransitionSources.Free 2412 21 (bank114 3080) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank114 3080)) 2412 = 143741000998803 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank114 3080)) 2413 = 191222930394327 := by decide +kernel
   refine ⟨rank114 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5375,15 +5260,15 @@ private theorem pole115 : momentEstimate 510 115 = 1944295055 := by
 theorem rank115 (u : ℕ) : P3_7_1.BankOK (bank115 u) :=
   P3_7_1.checked (bank115 u) (m:=368) (B:=510) (J:=115) (N:=1555815727104) (M:=1944295055) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole115
-theorem free115_0 : TransitionSources.Free 2293 20 (bank115 3521) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank115 3521)) 2293 = 58078498488 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank115 3521)) 2294 = 65511149124108 := by decide +kernel
+theorem free115_0 : TransitionSources.Free 2314 20 (bank115 3521) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank115 3521)) 2314 = 173539124546268 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank115 3521)) 2315 = 238992195171888 := by decide +kernel
   refine ⟨rank115 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free115_1 : TransitionSources.Free 2390 20 (bank115 2949) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank115 2949)) 2390 = 3070777242100 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank115 2949)) 2391 = 47130109095600 := by decide +kernel
+theorem free115_1 : TransitionSources.Free 2412 20 (bank115 2949) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank115 2949)) 2412 = 129731697051100 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank115 2949)) 2413 = 173791028904600 := by decide +kernel
   refine ⟨rank115 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5393,27 +5278,27 @@ private theorem pole116 : momentEstimate 524 118 = 2163592004 := by
 theorem rank116 (u : ℕ) : P3_7_1.BankOK (bank116 u) :=
   P3_7_1.checked (bank116 u) (m:=378) (B:=524) (J:=118) (N:=1684225392640) (M:=2163592004) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole116
-theorem free116_0 : TransitionSources.Free 2293 20 (bank116 3482) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank116 3482)) 2293 = 8264292401736 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank116 3482)) 2294 = 77386616376678 := by decide +kernel
+theorem free116_0 : TransitionSources.Free 2314 20 (bank116 3482) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank116 3482)) 2314 = 188011184013198 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank116 3482)) 2315 = 257133507988140 := by decide +kernel
   refine ⟨rank116 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free116_1 : TransitionSources.Free 2293 21 (bank116 3644) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank116 3644)) 2293 = 871036275060 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank116 3644)) 2294 = 76568345383005 := by decide +kernel
+theorem free116_1 : TransitionSources.Free 2314 21 (bank116 3644) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank116 3644)) 2314 = 197649996801705 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank116 3644)) 2315 = 273347305909650 := by decide +kernel
   refine ⟨rank116 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free116_2 : TransitionSources.Free 2390 20 (bank116 2935) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 20 (bank116 2935)) 2390 = 3128602444100 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 20 (bank116 2935)) 2391 = 50252616936648 := by decide +kernel
+theorem free116_2 : TransitionSources.Free 2412 20 (bank116 2935) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 20 (bank116 2935)) 2412 = 136093666042236 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 20 (bank116 2935)) 2413 = 183217680534784 := by decide +kernel
   refine ⟨rank116 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free116_3 : TransitionSources.Free 2390 21 (bank116 3050) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank116 3050)) 2390 = 4748463909630 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank116 3050)) 2391 = 55636291621260 := by decide +kernel
+theorem free116_3 : TransitionSources.Free 2412 21 (bank116 3050) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank116 3050)) 2412 = 148344492050370 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank116 3050)) 2413 = 199232319762000 := by decide +kernel
   refine ⟨rank116 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5423,15 +5308,15 @@ private theorem pole117 : momentEstimate 526 119 = 2204525073 := by
 theorem rank117 (u : ℕ) : P3_7_1.BankOK (bank117 u) :=
   P3_7_1.checked (bank117 u) (m:=380) (B:=526) (J:=119) (N:=1715056148480) (M:=2204525073) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole117
-theorem free117_0 : TransitionSources.Free 2293 41 (bank117 49199) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank117 49199)) 2293 = 6941369306400 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank117 49199)) 2294 = 14012872324291200 := by decide +kernel
+theorem free117_0 : TransitionSources.Free 2314 41 (bank117 49199) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank117 49199)) 2314 = 36110229595987200 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank117 49199)) 2315 = 50116160550972000 := by decide +kernel
   refine ⟨rank117 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free117_1 : TransitionSources.Free 2390 41 (bank117 13588) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank117 13588)) 2390 = 3145337933340 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank117 13588)) 2391 = 1028293225984746 := by decide +kernel
+theorem free117_1 : TransitionSources.Free 2412 41 (bank117 13588) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank117 13588)) 2412 = 2871942854164272 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank117 13588)) 2413 = 3897090742215678 := by decide +kernel
   refine ⟨rank117 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5441,15 +5326,15 @@ private theorem pole118 : momentEstimate 527 118 = 2203657519 := by
 theorem rank118 (u : ℕ) : P3_7_1.BankOK (bank118 u) :=
   P3_7_1.checked (bank118 u) (m:=380) (B:=527) (J:=118) (N:=1704221474816) (M:=2203657519) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole118
-theorem free118_0 : TransitionSources.Free 2293 21 (bank118 3641) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank118 3641)) 2293 = 1826743162671 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank118 3641)) 2294 = 78240970308228 := by decide +kernel
+theorem free118_0 : TransitionSources.Free 2314 21 (bank118 3641) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank118 3641)) 2314 = 199595423953968 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank118 3641)) 2315 = 276009651099525 := by decide +kernel
   refine ⟨rank118 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free118_1 : TransitionSources.Free 2390 21 (bank118 3051) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank118 3051)) 2390 = 189824481000 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank118 3051)) 2391 = 51675775815202 := by decide +kernel
+theorem free118_1 : TransitionSources.Free 2412 21 (bank118 3051) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank118 3051)) 2412 = 144817521613044 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank118 3051)) 2413 = 196303472947246 := by decide +kernel
   refine ⟨rank118 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5459,15 +5344,15 @@ private theorem pole119 : momentEstimate 529 120 = 2259708309 := by
 theorem rank119 (u : ℕ) : P3_7_1.BankOK (bank119 u) :=
   P3_7_1.checked (bank119 u) (m:=382) (B:=529) (J:=120) (N:=1746249449472) (M:=2259708309) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole119
-theorem free119_0 : TransitionSources.Free 2293 41 (bank119 41691) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank119 41691)) 2293 = 8779490228236 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank119 41691)) 2294 = 10259560257246650 := by decide +kernel
+theorem free119_0 : TransitionSources.Free 2314 41 (bank119 41691) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank119 41691)) 2314 = 26461924475149730 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank119 41691)) 2315 = 36712705242168144 := by decide +kernel
   refine ⟨rank119 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free119_1 : TransitionSources.Free 2390 41 (bank119 12995) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank119 12995)) 2390 = 4730037487398 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank119 12995)) 2391 = 960384260228760 := by decide +kernel
+theorem free119_1 : TransitionSources.Free 2412 41 (bank119 12995) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank119 12995)) 2412 = 2681938909036962 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank119 12995)) 2413 = 3637593131778324 := by decide +kernel
   refine ⟨rank119 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5477,15 +5362,15 @@ private theorem pole120 : momentEstimate 532 120 = 2301165208 := by
 theorem rank120 (u : ℕ) : P3_7_1.BankOK (bank120 u) :=
   P3_7_1.checked (bank120 u) (m:=384) (B:=532) (J:=120) (N:=1766771916800) (M:=2301165208) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole120
-theorem free120_0 : TransitionSources.Free 2293 41 (bank120 36262) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank120 36262)) 2293 = 2780841499784 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank120 36262)) 2294 = 7840577921285608 := by decide +kernel
+theorem free120_0 : TransitionSources.Free 2314 41 (bank120 36262) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank120 36262)) 2314 = 20090088263902568 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank120 36262)) 2315 = 27927885343688392 := by decide +kernel
   refine ⟨rank120 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free120_1 : TransitionSources.Free 2390 41 (bank120 12477) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank120 12477)) 2390 = 941362643142 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank120 12477)) 2391 = 891342331943306 := by decide +kernel
+theorem free120_1 : TransitionSources.Free 2412 41 (bank120 12477) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank120 12477)) 2412 = 2478876375286430 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank120 12477)) 2413 = 3369277344586594 := by decide +kernel
   refine ⟨rank120 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5495,15 +5380,15 @@ private theorem pole121 : momentEstimate 535 121 = 2358160566 := by
 theorem rank121 (u : ℕ) : P3_7_1.BankOK (bank121 u) :=
   P3_7_1.checked (bank121 u) (m:=386) (B:=535) (J:=121) (N:=1798595411968) (M:=2358160566) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole121
-theorem free121_0 : TransitionSources.Free 2293 41 (bank121 32187) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank121 32187)) 2293 = 3962701004158 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank121 32187)) 2294 = 6296805780296330 := by decide +kernel
+theorem free121_0 : TransitionSources.Free 2314 41 (bank121 32187) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank121 32187)) 2314 = 16150689360995410 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank121 32187)) 2315 = 22443532440287582 := by decide +kernel
   refine ⟨rank121 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free121_1 : TransitionSources.Free 2390 41 (bank121 11999) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank121 11999)) 2390 = 9832565802000 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank121 11999)) 2391 = 849007049526000 := by decide +kernel
+theorem free121_1 : TransitionSources.Free 2412 41 (bank121 11999) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank121 11999)) 2412 = 2347910552970000 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank121 11999)) 2413 = 3187085036694000 := by decide +kernel
   refine ⟨rank121 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5513,21 +5398,21 @@ private theorem pole122 : momentEstimate 535 123 = 2388083183 := by
 theorem rank122 (u : ℕ) : P3_7_1.BankOK (bank122 u) :=
   P3_7_1.checked (bank122 u) (m:=387) (B:=535) (J:=123) (N:=1831412432896) (M:=2388083183) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole122
-theorem free122_0 : TransitionSources.Free 2293 40 (bank122 24063) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 40 (bank122 24063)) 2293 = 10678898052608 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 40 (bank122 24063)) 2294 = 3590970611377664 := by decide +kernel
+theorem free122_0 : TransitionSources.Free 2314 40 (bank122 24063) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 40 (bank122 24063)) 2314 = 9265365638633984 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 40 (bank122 24063)) 2315 = 12845657351959040 := by decide +kernel
   refine ⟨rank122 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free122_1 : TransitionSources.Free 2390 40 (bank122 10626) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 40 (bank122 10626)) 2390 = 1179776383760 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 40 (bank122 10626)) 2391 = 671115078685646 := by decide +kernel
+theorem free122_1 : TransitionSources.Free 2412 40 (bank122 10626) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 40 (bank122 10626)) 2412 = 1880937002478572 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 40 (bank122 10626)) 2413 = 2550872304780458 := by decide +kernel
   refine ⟨rank122 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free122_2 : TransitionSources.Free 2390 40 (bank122 24063) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 40 (bank122 24063)) 2390 = 347298975090583040 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 40 (bank122 24063)) 2391 = 350879266803908096 := by decide +kernel
+theorem free122_2 : TransitionSources.Free 2412 40 (bank122 24063) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 40 (bank122 24063)) 2412 = 360133953544489472 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 40 (bank122 24063)) 2413 = 363714245257814528 := by decide +kernel
   refine ⟨rank122 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5537,15 +5422,15 @@ private theorem pole123 : momentEstimate 536 120 = 2357242900 := by
 theorem rank123 (u : ℕ) : P3_7_1.BankOK (bank123 u) :=
   P3_7_1.checked (bank123 u) (m:=387) (B:=536) (J:=120) (N:=1797793513472) (M:=2357242900) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole123
-theorem free123_0 : TransitionSources.Free 2293 21 (bank123 3616) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank123 3616)) 2293 = 4633858646954 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank123 3616)) 2294 = 83777310780880 := by decide +kernel
+theorem free123_0 : TransitionSources.Free 2314 21 (bank123 3616) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank123 3616)) 2314 = 205136357676530 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank123 3616)) 2315 = 284279809810456 := by decide +kernel
   refine ⟨rank123 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free123_1 : TransitionSources.Free 2390 21 (bank123 3043) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank123 3043)) 2390 = 8771524406080 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank123 3043)) 2391 = 62555705912460 := by decide +kernel
+theorem free123_1 : TransitionSources.Free 2412 21 (bank123 3043) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank123 3043)) 2412 = 156841631939340 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank123 3043)) 2413 = 210625813445720 := by decide +kernel
   refine ⟨rank123 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5555,15 +5440,15 @@ private theorem pole124 : momentEstimate 537 123 = 2416913989 := by
 theorem rank124 (u : ℕ) : P3_7_1.BankOK (bank124 u) :=
   P3_7_1.checked (bank124 u) (m:=387) (B:=537) (J:=123) (N:=1831412432896) (M:=2416913989) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole124
-theorem free124_0 : TransitionSources.Free 2293 40 (bank124 22589) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 40 (bank124 22589)) 2293 = 5781341977470 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 40 (bank124 22589)) 2294 = 3181881852607410 := by decide +kernel
+theorem free124_0 : TransitionSources.Free 2314 40 (bank124 22589) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 40 (bank124 22589)) 2314 = 8357064711233310 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 40 (bank124 22589)) 2315 = 11533165221863250 := by decide +kernel
   refine ⟨rank124 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free124_1 : TransitionSources.Free 2390 40 (bank124 10359) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 40 (bank124 10359)) 2390 = 6567222492600 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 40 (bank124 10359)) 2391 = 647498773697160 := by decide +kernel
+theorem free124_1 : TransitionSources.Free 2412 40 (bank124 10359) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 40 (bank124 10359)) 2412 = 1834732372849320 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 40 (bank124 10359)) 2413 = 2475663924053880 := by decide +kernel
   refine ⟨rank124 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5573,15 +5458,15 @@ private theorem pole125 : momentEstimate 538 122 = 2416196542 := by
 theorem rank125 (u : ℕ) : P3_7_1.BankOK (bank125 u) :=
   P3_7_1.checked (bank125 u) (m:=388) (B:=538) (J:=122) (N:=1830787219456) (M:=2416196542) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole125
-theorem free125_0 : TransitionSources.Free 2293 41 (bank125 29117) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank125 29117)) 2293 = 10712601883440 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank125 29117)) 2294 = 5258394658710972 := by decide +kernel
+theorem free125_0 : TransitionSources.Free 2314 41 (bank125 29117) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank125 29117)) 2314 = 13501734545406492 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank125 29117)) 2315 = 18749416602234024 := by decide +kernel
   refine ⟨rank125 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free125_1 : TransitionSources.Free 2390 41 (bank125 11583) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank125 11583)) 2390 = 7740754426240 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank125 11583)) 2391 = 804618384593664 := by decide +kernel
+theorem free125_1 : TransitionSources.Free 2412 41 (bank125 11583) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank125 11583)) 2412 = 2232075307479168 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank125 11583)) 2413 = 3028952937646592 := by decide +kernel
   refine ⟨rank125 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5604,15 +5489,15 @@ private theorem pole126 : momentEstimate 541 122 = 2459779870 := by
 theorem rank126 (u : ℕ) : P3_7_1.BankOK (bank126 u) :=
   P3_7_1.checked (bank126 u) (m:=390) (B:=541) (J:=122) (N:=1851971338240) (M:=2459779870) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole126
-theorem free126_0 : TransitionSources.Free 2293 41 (bank126 26574) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank126 26574)) 2293 = 9769915963700 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank126 26574)) 2294 = 4427034474620800 := by decide +kernel
+theorem free126_0 : TransitionSources.Free 2314 41 (bank126 26574) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank126 26574)) 2314 = 11292950936742800 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank126 26574)) 2315 = 15710215495399900 := by decide +kernel
   refine ⟨rank126 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free126_1 : TransitionSources.Free 2390 41 (bank126 11206) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank126 11206)) 2390 = 8493218629252 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank126 11206)) 2391 = 762223214703720 := by decide +kernel
+theorem free126_1 : TransitionSources.Free 2412 41 (bank126 11206) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank126 11206)) 2412 = 2099421768867948 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank126 11206)) 2413 = 2853151764942416 := by decide +kernel
   refine ⟨rank126 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5622,15 +5507,15 @@ private theorem pole127 : momentEstimate 542 122 = 2474425808 := by
 theorem rank127 (u : ℕ) : P3_7_1.BankOK (bank127 u) :=
   P3_7_1.checked (bank127 u) (m:=391) (B:=542) (J:=122) (N:=1862611763200) (M:=2474425808) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole127
-theorem free127_0 : TransitionSources.Free 2293 21 (bank127 3592) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank127 3592)) 2293 = 8975292873160 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank127 3592)) 2294 = 90026767595378 := by decide +kernel
+theorem free127_0 : TransitionSources.Free 2314 21 (bank127 3592) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank127 3592)) 2314 = 214358182550278 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank127 3592)) 2315 = 295409657272496 := by decide +kernel
   refine ⟨rank127 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free127_1 : TransitionSources.Free 2390 21 (bank127 3031) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank127 3031)) 2390 = 7457139445688 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank127 3031)) 2391 = 62835091175184 := by decide +kernel
+theorem free127_1 : TransitionSources.Free 2412 21 (bank127 3031) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank127 3031)) 2412 = 159911207383320 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank127 3031)) 2413 = 215289159112816 := by decide +kernel
   refine ⟨rank127 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5640,15 +5525,15 @@ private theorem pole128 : momentEstimate 542 123 = 2490027179 := by
 theorem rank128 (u : ℕ) : P3_7_1.BankOK (bank128 u) :=
   P3_7_1.checked (bank128 u) (m:=391) (B:=542) (J:=123) (N:=1874060115968) (M:=2490027179) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole128
-theorem free128_0 : TransitionSources.Free 2293 41 (bank128 25826) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank128 25826)) 2293 = 6123213148710 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank128 25826)) 2294 = 4227051812928012 := by decide +kernel
+theorem free128_0 : TransitionSources.Free 2314 41 (bank128 25826) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank128 25826)) 2314 = 10782920365670172 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank128 25826)) 2315 = 15003848965449474 := by decide +kernel
   refine ⟨rank128 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free128_1 : TransitionSources.Free 2390 41 (bank128 11074) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank128 11074)) 2390 = 2137882604300 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank128 11074)) 2391 = 746829299272050 := by decide +kernel
+theorem free128_1 : TransitionSources.Free 2412 41 (bank128 11074) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank128 11074)) 2412 = 2067050278453800 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank128 11074)) 2413 = 2811741695121550 := by decide +kernel
   refine ⟨rank128 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5658,15 +5543,15 @@ private theorem pole129 : momentEstimate 544 123 = 2519689529 := by
 theorem rank129 (u : ℕ) : P3_7_1.BankOK (bank129 u) :=
   P3_7_1.checked (bank129 u) (m:=392) (B:=544) (J:=123) (N:=1884803301376) (M:=2519689529) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole129
-theorem free129_0 : TransitionSources.Free 2293 41 (bank129 24535) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank129 24535)) 2293 = 11003908322464 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank129 24535)) 2294 = 3847397514861104 := by decide +kernel
+theorem free129_0 : TransitionSources.Free 2314 41 (bank129 24535) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank129 24535)) 2314 = 9829665313687024 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank129 24535)) 2315 = 13666058920225664 := by decide +kernel
   refine ⟨rank129 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free129_1 : TransitionSources.Free 2390 41 (bank129 10859) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank129 10859)) 2390 = 6675513873720 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank129 10859)) 2391 = 727791069847680 := by decide +kernel
+theorem free129_1 : TransitionSources.Free 2412 41 (bank129 10859) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank129 10859)) 2412 = 2010878062774440 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank129 10859)) 2413 = 2731993618748400 := by decide +kernel
   refine ⟨rank129 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5676,15 +5561,15 @@ private theorem pole130 : momentEstimate 547 124 = 2580674858 := by
 theorem rank130 (u : ℕ) : P3_7_1.BankOK (bank130 u) :=
   P3_7_1.checked (bank130 u) (m:=395) (B:=547) (J:=124) (N:=1928921088000) (M:=2580674858) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole130
-theorem free130_0 : TransitionSources.Free 2293 41 (bank130 22726) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank130 22726)) 2293 = 10533560232124 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank130 22726)) 2294 = 3363213152230592 := by decide +kernel
+theorem free130_0 : TransitionSources.Free 2314 41 (bank130 22726) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank130 22726)) 2314 = 8441779383249952 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank130 22726)) 2315 = 11794458975248420 := by decide +kernel
   refine ⟨rank130 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free130_1 : TransitionSources.Free 2390 41 (bank130 10521) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank130 10521)) 2390 = 12252836223970 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank130 10521)) 2391 = 701754588068718 := by decide +kernel
+theorem free130_1 : TransitionSources.Free 2412 41 (bank130 10521) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank130 10521)) 2412 = 1896606713170926 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank130 10521)) 2413 = 2586108465015674 := by decide +kernel
   refine ⟨rank130 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5694,15 +5579,15 @@ private theorem pole131 : momentEstimate 550 124 = 2626456108 := by
 theorem rank131 (u : ℕ) : P3_7_1.BankOK (bank131 u) :=
   P3_7_1.checked (bank131 u) (m:=397) (B:=550) (J:=124) (N:=1950842880000) (M:=2626456108) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole131
-theorem free131_0 : TransitionSources.Free 2293 41 (bank131 21237) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank131 21237)) 2293 = 2506922093956 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank131 21237)) 2294 = 2960644300048673 := by decide +kernel
+theorem free131_0 : TransitionSources.Free 2314 41 (bank131 21237) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank131 21237)) 2314 = 7393188150201763 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank131 21237)) 2315 = 10351325528156480 := by decide +kernel
   refine ⟨rank131 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free131_1 : TransitionSources.Free 2390 41 (bank131 10228) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 41 (bank131 10228)) 2390 = 1527988942915 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 41 (bank131 10228)) 2391 = 659922020069826 := by decide +kernel
+theorem free131_1 : TransitionSources.Free 2412 41 (bank131 10228) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 41 (bank131 10228)) 2412 = 1789574514291207 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 41 (bank131 10228)) 2413 = 2447968545418118 := by decide +kernel
   refine ⟨rank131 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5712,15 +5597,15 @@ private theorem pole132 : momentEstimate 553 124 = 2672787483 := by
 theorem rank132 (u : ℕ) : P3_7_1.BankOK (bank132 u) :=
   P3_7_1.checked (bank132 u) (m:=399) (B:=553) (J:=124) (N:=1972895744000) (M:=2672787483) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole132
-theorem free132_0 : TransitionSources.Free 2293 36 (bank132 9317) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 36 (bank132 9317)) 2293 = 9689305639416 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 36 (bank132 9317)) 2294 = 585168627795603 := by decide +kernel
+theorem free132_0 : TransitionSources.Free 2314 36 (bank132 9317) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 36 (bank132 9317)) 2314 = 1440820295834343 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 36 (bank132 9317)) 2315 = 2016299617990530 := by decide +kernel
   refine ⟨rank132 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free132_1 : TransitionSources.Free 2390 36 (bank132 6342) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 36 (bank132 6342)) 2390 = 2264151356680 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 36 (bank132 6342)) 2391 = 258122836739842 := by decide +kernel
+theorem free132_1 : TransitionSources.Free 2412 36 (bank132 6342) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 36 (bank132 6342)) 2412 = 694010011326244 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 36 (bank132 6342)) 2413 = 949868696709406 := by decide +kernel
   refine ⟨rank132 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5748,15 +5633,15 @@ private theorem pole136 : momentEstimate 566 127 = 2933627832 := by
 theorem rank136 (u : ℕ) : P3_7_1.BankOK (bank136 u) :=
   P3_7_1.checked (bank136 u) (m:=409) (B:=566) (J:=127) (N:=2123022467072) (M:=2933627832) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole136
-theorem free136_0 : TransitionSources.Free 2293 40 (bank136 13749) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 40 (bank136 13749)) 2293 = 6430190140000 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 40 (bank136 13749)) 2294 = 1347778237080000 := by decide +kernel
+theorem free136_0 : TransitionSources.Free 2314 40 (bank136 13749) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 40 (bank136 13749)) 2314 = 3255215478680000 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 40 (bank136 13749)) 2315 = 4596563525620000 := by decide +kernel
   refine ⟨rank136 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free136_1 : TransitionSources.Free 2390 40 (bank136 8209) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 40 (bank136 8209)) 2390 = 9116576573760 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 40 (bank136 8209)) 2391 = 467947380202080 := by decide +kernel
+theorem free136_1 : TransitionSources.Free 2412 40 (bank136 8209) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 40 (bank136 8209)) 2412 = 1218710661667200 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 40 (bank136 8209)) 2413 = 1677541465295520 := by decide +kernel
   refine ⟨rank136 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5766,15 +5651,15 @@ private theorem pole137 : momentEstimate 570 128 = 3018995326 := by
 theorem rank137 (u : ℕ) : P3_7_1.BankOK (bank137 u) :=
   P3_7_1.checked (bank137 u) (m:=411) (B:=570) (J:=128) (N:=2159008022528) (M:=3018995326) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole137
-theorem free137_0 : TransitionSources.Free 2293 21 (bank137 3540) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank137 3540)) 2293 = 1717045248132 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank137 3540)) 2294 = 92566737183135 := by decide +kernel
+theorem free137_0 : TransitionSources.Free 2314 21 (bank137 3540) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank137 3540)) 2314 = 223846242950565 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank137 3540)) 2315 = 314695934885568 := by decide +kernel
   refine ⟨rank137 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free137_1 : TransitionSources.Free 2390 21 (bank137 3019) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 21 (bank137 3019)) 2390 = 1129908497230 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 21 (bank137 3019)) 2391 = 64533295146540 := by decide +kernel
+theorem free137_1 : TransitionSources.Free 2412 21 (bank137 3019) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 21 (bank137 3019)) 2412 = 169787891157750 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 21 (bank137 3019)) 2413 = 233191277807060 := by decide +kernel
   refine ⟨rank137 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5784,15 +5669,15 @@ private theorem pole138 : momentEstimate 577 130 = 3177562648 := by
 theorem rank138 (u : ℕ) : P3_7_1.BankOK (bank138 u) :=
   P3_7_1.checked (bank138 u) (m:=416) (B:=577) (J:=130) (N:=2244209803264) (M:=3177562648) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole138
-theorem free138_0 : TransitionSources.Free 2293 23 (bank138 3813) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 23 (bank138 3813)) 2293 = 2987793373223 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 23 (bank138 3813)) 2294 = 112519703862079 := by decide +kernel
+theorem free138_0 : TransitionSources.Free 2314 23 (bank138 3813) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 23 (bank138 3813)) 2314 = 269269010920799 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 23 (bank138 3813)) 2315 = 378800921409655 := by decide +kernel
   refine ⟨rank138 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free138_1 : TransitionSources.Free 2390 23 (bank138 3222) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 23 (bank138 3222)) 2390 = 5928093925468 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 23 (bank138 3222)) 2391 = 80975573584620 := by decide +kernel
+theorem free138_1 : TransitionSources.Free 2412 23 (bank138 3222) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 23 (bank138 3222)) 2412 = 204502100134332 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 23 (bank138 3222)) 2413 = 279549579793484 := by decide +kernel
   refine ⟨rank138 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5802,15 +5687,15 @@ private theorem pole139 : momentEstimate 630 142 = 4512018338 := by
 theorem rank139 (u : ℕ) : P3_7_1.BankOK (bank139 u) :=
   P3_7_1.checked (bank139 u) (m:=455) (B:=630) (J:=142) (N:=2930701762560) (M:=4512018338) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole139
-theorem free139_0 : TransitionSources.Free 2293 30 (bank139 4862) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 30 (bank139 4862)) 2293 = 3298665705492 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 30 (bank139 4862)) 2294 = 233103902439768 := by decide +kernel
+theorem free139_0 : TransitionSources.Free 2314 30 (bank139 4862) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 30 (bank139 4862)) 2314 = 519942652101288 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 30 (bank139 4862)) 2315 = 749747888835564 := by decide +kernel
   refine ⟨rank139 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free139_1 : TransitionSources.Free 2390 30 (bank139 4010) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 30 (bank139 4010)) 2390 = 14459620922544 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 30 (bank139 4010)) 2391 = 164461473731772 := by decide +kernel
+theorem free139_1 : TransitionSources.Free 2412 30 (bank139 4010) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 30 (bank139 4010)) 2412 = 382803590701560 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 30 (bank139 4010)) 2413 = 532805443510788 := by decide +kernel
   refine ⟨rank139 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
@@ -5820,15 +5705,15 @@ private theorem pole140 : momentEstimate 631 142 = 4535089958 := by
 theorem rank140 (u : ℕ) : P3_7_1.BankOK (bank140 u) :=
   P3_7_1.checked (bank140 u) (m:=455) (B:=631) (J:=142) (N:=2930701762560) (M:=4535089958) rfl rfl rfl rfl rfl
     (by decide) (by decide) (by decide +kernel) (by decide) pole140
-theorem free140_0 : TransitionSources.Free 2293 25 (bank140 3997) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 25 (bank140 3997)) 2293 = 12759232110541 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 25 (bank140 3997)) 2294 = 168554821109660 := by decide +kernel
+theorem free140_0 : TransitionSources.Free 2314 25 (bank140 3997) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 25 (bank140 3997)) 2314 = 366539123977390 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 25 (bank140 3997)) 2315 = 522334712976509 := by decide +kernel
   refine ⟨rank140 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide
-theorem free140_1 : TransitionSources.Free 2390 25 (bank140 3403) := by
-  have left : FarProfileArithmetic.value (TransitionSources.request 25 (bank140 3403)) 2390 = 4227952054280 := by decide +kernel
-  have right : FarProfileArithmetic.value (TransitionSources.request 25 (bank140 3403)) 2391 = 112587045624186 := by decide +kernel
+theorem free140_1 : TransitionSources.Free 2412 25 (bank140 3403) := by
+  have left : TransitionArithmetic.value (TransitionSources.request 25 (bank140 3403)) 2412 = 272754959300712 := by decide +kernel
+  have right : TransitionArithmetic.value (TransitionSources.request 25 (bank140 3403)) 2413 = 381114052870618 := by decide +kernel
   refine ⟨rank140 _,by decide,by decide,by unfold Lower6960.HelperSource.WidthGuard; decide +kernel,?_,?_⟩
   · rw [left]; decide
   · rw [left,right]; decide

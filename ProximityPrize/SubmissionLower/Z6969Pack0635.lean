@@ -31,7 +31,7 @@ open scoped Classical
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 8500
 
-variable {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ) (sub:T⊆Γ)
+variable {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ) (sub:T⊆Γ)
 variable {parents:Finset Surface} {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive)
 variable (S:Split F T parents N.poly)
 
@@ -41,7 +41,7 @@ theorem owners:NativeAffineRows.Owned F S.onLabels (NearBook.owning N.poly paren
   exact ⟨q,hq,(mem_filter.mp hq).2,on⟩
 
 include sub in
-theorem marked {v w:ℕ} (high:M.overhead.toNat≤2534)
+theorem marked {v w:ℕ} (high:M.overhead.toNat≤2557)
     (onGrade:S.onEq.natDegree<64) (offGrade:S.offEq.natDegree<64)
     (onSeed:K1_14_4.seedDegree S.onEq≤v) (offSeed:K1_14_4.seedDegree S.offEq≤w)
     (onChar:(2*S.onEq.natDegree-1)*v<p) (offChar:(2*S.offEq.natDegree-1)*w<p) :
@@ -55,10 +55,10 @@ theorem marked {v w:ℕ} (high:M.overhead.toNat≤2534)
 include sub gp
 theorem nonlinear {d u v:ℕ} (large:2≤G.graphDegree) (up:0<u)
     (seed:∀j i,((N.poly.coeff j).coeff i).totalDegree≤u) (bound:K1_14_4.seedDegree S.onEq≤v)
-    (small:(2*G.graphDegree-1)*u<p) (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p) :
+    (small:(2*G.graphDegree-1)*u<p) (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p) :
     S.onLabels.card≤(2*G.graphDegree-1)*((p+1)*u)+S.onEq.natDegree*JointRouted.seedWeight d u^2+
       2*v*JointRouted.seedWeight d u*JointRouted.ordWeight d (G.graphDegree-1) := by
-  have fit:179740≤Fintype.card K1.I:=by rw [show Fintype.card K1.I=262144 from Fintype.card_fin (2^18)];decide
+  have fit:179730≤Fintype.card K1.I:=by rw [show Fintype.card K1.I=262144 from Fintype.card_fin (2^18)];decide
   have a:=NativeSurfaceCount.price_equation F (S.onSub.trans sub) S.onProduct.primitive.ne_zero N gp large up
     seed ((K1_14_4.seedDegree_le_iff ..).mp bound) small phys dp gap fit tame (by
       intro z hz;obtain ⟨q,_,owned,atQ⟩:=owners F N S z hz
@@ -69,8 +69,8 @@ theorem nonlinear {d u v:ℕ} (large:2≤G.graphDegree) (up:0<u)
 
 theorem affine {d width:ℕ} (linear:G.graphDegree=1) (up:0<width)
     (seed:∀j i,((N.poly.coeff j).coeff i).totalDegree≤width) (small:width<p)
-    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p) :
-    S.onLabels.card≤p*width+(3*(d*width)^2*(262144-d)^3)/(179740-d)^3 := by
+    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p) :
+    S.onLabels.card≤p*width+(3*(d*width)^2*(262144-d)^3)/(179730-d)^3 := by
   apply NativeAffineTariff.price_floor F (S.onSub.trans sub) N gp linear width up _ small d phys tame dp gap
     (by decide) (owners F N S)
   intro j i
@@ -133,8 +133,8 @@ structure Inputs (b:Book) (gradeCap offCap:ℕ) where
 
 /-- Construct the input to the price ledger from actual projected parents.
 The filtered on-graph and off-graph sources partition their seed mass. -/
-theorem inputs {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} {F:P1.FamilyAt 179740 M Γ}
-    {A G} (S:Split F T A G) (sub:T⊆Γ) (hi:M.overhead.toNat≤2534)
+theorem inputs {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} {F:P1.FamilyAt 179730 M Γ}
+    {A G} (S:Split F T A G) (sub:T⊆Γ) (hi:M.overhead.toNat≤2557)
     (book:Book) (gradeCap offCap:ℕ) (ge:3≤gradeCap)
     (J:Finset (Ideal K1_14_2.Ambient)) (active:∀q∈J,K1_14_2_2.Active q)
     (origins:∀q∈A,∃j∈J,q.asIdeal=j.comap K1_14_2.toJet)
@@ -259,7 +259,7 @@ set_option maxHeartbeats 1300000
 a label that is not a root of the global off-graph polynomial has an actual
 on-graph parent. Counting the entire specialized off factor first also gives
 the exact seed credit of the original full projection. -/
-structure Parts {u del} {M:P1.ModelAt 33735 u del} {Γ} (F:P1.FamilyAt 179740 M Γ) (T:Finset K)
+structure Parts {u del} {M:P1.ModelAt 33755 u del} {Γ} (F:P1.FamilyAt 179730 M Γ) (T:Finset K)
     (parents:Finset Surface) (G:Jet) (f H J:Equation) where
   onEq:Equation
   offLabels:Finset K
@@ -278,7 +278,7 @@ structure Parts {u del} {M:P1.ModelAt 33735 u del} {Γ} (F:P1.FamilyAt 179740 M 
   offRoots:∀z∈offLabels,(J.map (graphEval (M.label z))).eval (atX (F.scalar z))=0
   onSurface:∀z∈onLabels,∃q∈NearBook.owning G parents,GraphPartition.On F q z
 
-theorem parts {u del} {M:P1.ModelAt 33735 u del} {Γ} (F:P1.FamilyAt 179740 M Γ) {T:Finset K}
+theorem parts {u del} {M:P1.ModelAt 33755 u del} {Γ} (F:P1.FamilyAt 179730 M Γ) {T:Finset K}
     (parents:Finset Surface) (G:Jet) {f H J:Equation} (full:JointProjection.Product parents f)
     (on:JointProjection.Product (NearBook.owning G parents) H) (off:JointProjection.Product (NearBook.outside G parents) J)
     (marks:∀z∈T,∃q∈parents,GraphPartition.On F q z) : Nonempty (Parts F T parents G f H J) := by
@@ -504,16 +504,16 @@ theorem regular {a₀ : P1.Words} {deleted : Finset I} {maxHeight agreement d U:
   rwa [show W.card=T.card from card_image_of_injective _ inject] at counted
 
 
-theorem round {t r u d:ℕ} (bound:(t:ℚ)≤((3*r*u^2:ℕ):ℚ)*price (Fintype.card I) d 179740^3) :
+theorem round {t r u d:ℕ} (bound:(t:ℚ)≤((3*r*u^2:ℕ):ℚ)*price (Fintype.card I) d 179730^3) :
     t≤3*JointRouted.ordWeight d r*JointRouted.seedWeight d u^2:=by
-  let R:=price (Fintype.card I) d 179740
+  let R:=price (Fintype.card I) d 179730
   have z:0≤R:=by unfold R price;positivity
   have xs:R*u≤(JointRouted.seedWeight d u:ℚ):=by
     unfold JointRouted.seedWeight;push_cast
     have cp:=Nat.le_ceil (R*u);linarith
   have ys:R*r≤(JointRouted.ordWeight d r:ℚ):=by
     unfold JointRouted.ordWeight
-    let extra:ℚ:=((Fintype.card I-d:ℕ):ℚ)/(179740-d:ℕ)
+    let extra:ℚ:=((Fintype.card I-d:ℕ):ℚ)/(179730-d:ℕ)
     have en:0≤extra:=by dsimp [extra];positivity
     have cp:=Nat.le_ceil (R*r+extra)
     push_cast

@@ -743,9 +743,6 @@ def tableOK : ℕ → List ℕ → Bool
   | _, [] => true
   | r, w :: ws => levelOK r w && tableOK (r + 1) ws
 
-theorem tableOK_cons {r w : ℕ} {ws : List ℕ} (h1 : levelOK r w = true) (h2 : tableOK (r + 1) ws = true) :
-    tableOK r (w :: ws) = true := by
-  simp [tableOK, h1, h2]
 
 
 

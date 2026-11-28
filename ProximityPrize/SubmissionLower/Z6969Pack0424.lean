@@ -31,8 +31,8 @@ open scoped Polynomial
 set_option maxRecDepth 15000
 set_option maxHeartbeats 2500000
 
-abbrev agreement : ℕ := 179740
-abbrev wordDegree : ℕ := 133605
+abbrev agreement : ℕ := 179730
+abbrev wordDegree : ℕ := 133628
 abbrev rate := MarkedEvaluation.rate
 
 theorem rate_mono : Monotone rate := by
@@ -1061,7 +1061,7 @@ open scoped Polynomial
 set_option maxRecDepth 15000
 set_option maxHeartbeats 2500000
 
-abbrev agreement : ℕ := 179740
+abbrev agreement : ℕ := 179730
 abbrev wordDegree : ℕ := 164806
 abbrev rate := MarkedEvaluation.rate
 

@@ -1,3 +1,4 @@
+import ProximityPrize.SubmissionLower.R6970PhysicalCoverCompact
 import ProximityPrize.SubmissionLower.Z6969Pack0575
 import ProximityPrize.SubmissionLower.Z6969FastCeil
 import ProximityPrize.SubmissionLower.Z6969Pack0591
@@ -50,10 +51,10 @@ def plan : Plan where
   initial_small := by intro k; fin_cases k <;> decide +kernel
   degree := 2
   slopeFloor := 1
-  physicalFloor := 257073
+  physicalFloor := 257027
   seedFloor := 21
 
-theorem sources : plan.Sources 2390 (Band.middle).last := by
+theorem sources : plan.Sources 2412 (Band.middle).last := by
   refine ⟨by decide, by decide, by decide, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro i; fin_cases i
     · exact rank246 17151
@@ -84,7 +85,7 @@ theorem sources : plan.Sources 2390 (Band.middle).last := by
     · exact ⟨_, cover2086⟩
     · exact ⟨_, cover2087⟩
 
-def price : EarlyPrice := ⟨2, 21, 10, 80/100, 80/100, ![886339066234, 131290600713, 25124984380, 1196449610], 3062858626904233⟩
+def price : EarlyPrice := ⟨2, 21, 10, 80/100, 80/100, ![886339066234, 131290600713, 25124984380, 1196449610], 3063514867344240⟩
 theorem priced : price.Valid plan Band.middle := by
   refine ⟨by decide, by decide, by decide, by decide, rfl, rfl,
     by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, ?_⟩
@@ -112,7 +113,7 @@ theorem budget_checked : budget.Valid Lower6960.Prefix6969MainCases.Middle78.pla
   · intro yes
     cases yes
   · rw [Budget.extra, Budget.adjust]
-    rw [Research6969.JointRouted.seedWeight_eq, Research6969.JointRouted.ordWeight_eq 133605 _ (by norm_num)]; decide +kernel
+    rw [Research6969.JointRouted.seedWeight_eq, Research6969.JointRouted.ordWeight_eq 133628 _ (by norm_num)]; decide +kernel
 
 def data : Case 2 21 21 :=
   ⟨Lower6960.Prefix6969MainCases.Middle78.plan, Lower6960.Prefix6969MainCases.Middle78.price, Lower6960.Prefix6969MainCases.Middle78.valid, Lower6960.Prefix6969MainCases.Middle78.priced, Lower6960.Prefix6969MainCases.Middle78.sources,
@@ -171,7 +172,7 @@ theorem valid : plan.Valid := by
   · decide +kernel
   · exact ZGen.Hist.history_step_of_fast plan (by decide +kernel)
 
-theorem sources : plan.Sources 2390 (Band.middle).last Prefix6969MiddleHelper.helperBank 128536 2 22 257073 := by
+theorem sources : plan.Sources 2412 (Band.middle).last Prefix6969MiddleHelper.helperBank 128513 2 22 257027 := by
   refine ⟨?_, rank154 5118, ?_, by decide, by decide, by decide, by decide, by decide, by decide,
     by decide, by decide, by decide, by decide, by decide, by decide, by decide, by decide, ⟨_, cover2764⟩⟩
   · intro i; fin_cases i
@@ -195,49 +196,14 @@ theorem sources : plan.Sources 2390 (Band.middle).last Prefix6969MiddleHelper.he
     · exact free170_1
   · unfold HelperSource.WidthGuard; decide +kernel
 
-def price : Pricing := ⟨55/100, 90/100, [251793370, 327444610, 327504831, 327445160, 326869614, 326782045, 327432412, 161646755, 161882086, 162184729, 162174565, 72248836, 72565310, 69300326, 86436716, 100000000, 100000000, 223505641], [1438500, 1051064, 1050756, 1051061, 1054009, 1054457, 1051126, 2375814, 2371897, 2366860, 2367029, 5553405, 5528226, 5794235, 4604766, 3958949, 3958949, 1667839],
-  ![118641264355620, 1619314823024, 201155076900, 5910119700], 137246569496566586⟩
+def price : Pricing := ⟨55/100, 90/100, [251793370, 327444610, 327504831, 327445160, 326869614, 326782045, 327432412, 161646755, 161882086, 162184729, 162174565, 72248836, 72565310, 69300326, 86436716, 100000000, 100000000, 223505641], [1438828, 1051303, 1050995, 1051301, 1054249, 1054697, 1051366, 2376355, 2372437, 2367399, 2367568, 5554671, 5529485, 5795555, 4605815, 3959851, 3959851, 1668219],
+  ![118641264355620, 1619314823024, 201155076900, 5910119700], 137251415884350388⟩
 
 theorem priced : price.Valid plan Band.middle := by
   refine ⟨by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, ?_, ?_, ?_⟩
   · have hAB : Lower6960.Prefix6969Main.RatesAB price plan := by decide +kernel
-    intro i; refine ⟨(hAB i).1, (hAB i).2, ?_⟩; fin_cases i
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 15 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 15 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 16 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 13 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 5 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
+    intro i
+    exact ⟨(hAB i).1, (hAB i).2, Pricing.height_from_table Band.middle price plan [4,4,4,4,4,4,4,7,7,7,7,15,15,16,13,11,11,5] (by decide +kernel) i⟩
   · intro k; fin_cases k <;> decide +kernel
   · decide +kernel
 
@@ -251,161 +217,43 @@ end Z6969Source1762
 section Z6969Source1763
 set_option autoImplicit true
 namespace Research6969.PhysicalCatalogue
+open Research6969.PhysicalWindow.Compact
 open PhysicalWindow
 set_option maxRecDepth 30000
 set_option maxHeartbeats 0
 
-def src2096 : Request := ⟨⟨⟨6900,9628,2077,89672⟩,9849424459857920,234966243278304⟩,65,2,1,257073,22⟩
-private theorem pass2096_2390 : (Triangular src2096) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2096_2391 : (Triangular src2096) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2096_2393 : (Triangular src2096) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2096_2398 : (Triangular src2096) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2096_2411 : (Triangular src2096) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2096_2445 : (Triangular src2096) 2445 2532 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2096_2533 : (Triangular src2096) 2533 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2096 : Cover (Triangular src2096) 2534 2390 [2390,2392,2397,2410,2444,2532,2534] := by
-  exact ⟨by decide, by decide, pass2096_2390, by decide, by decide, pass2096_2391, by decide, by decide, pass2096_2393, by decide, by decide, pass2096_2398, by decide, by decide, pass2096_2411, by decide, by decide, pass2096_2445, by decide, by decide, pass2096_2533, rfl⟩
-def src2097 : Request := ⟨⟨⟨8300,11582,2548,89022⟩,17399709518790656,499541547131788⟩,65,2,1,257073,22⟩
-private theorem pass2097_2390 : (Triangular src2097) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2097_2391 : (Triangular src2097) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2097_2393 : (Triangular src2097) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2097_2398 : (Triangular src2097) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2097_2411 : (Triangular src2097) 2411 2443 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2097_2444 : (Triangular src2097) 2444 2528 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2097_2529 : (Triangular src2097) 2529 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2097 : Cover (Triangular src2097) 2534 2390 [2390,2392,2397,2410,2443,2528,2534] := by
-  exact ⟨by decide, by decide, pass2097_2390, by decide, by decide, pass2097_2391, by decide, by decide, pass2097_2393, by decide, by decide, pass2097_2398, by decide, by decide, pass2097_2411, by decide, by decide, pass2097_2444, by decide, by decide, pass2097_2529, rfl⟩
-def src2098 : Request := ⟨⟨⟨10000,13955,3010,102261⟩,29974681586237440,1036603432174989⟩,65,2,1,257073,22⟩
-private theorem pass2098_2390 : (Triangular src2098) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2098_2391 : (Triangular src2098) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2098_2393 : (Triangular src2098) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2098_2398 : (Triangular src2098) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2098_2411 : (Triangular src2098) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2098_2445 : (Triangular src2098) 2445 2532 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2098_2533 : (Triangular src2098) 2533 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2098 : Cover (Triangular src2098) 2534 2390 [2390,2392,2397,2410,2444,2532,2534] := by
-  exact ⟨by decide, by decide, pass2098_2390, by decide, by decide, pass2098_2391, by decide, by decide, pass2098_2393, by decide, by decide, pass2098_2398, by decide, by decide, pass2098_2411, by decide, by decide, pass2098_2445, by decide, by decide, pass2098_2533, rfl⟩
-def src2099 : Request := ⟨⟨⟨1200,1674,368,11191⟩,52718727069696,218807905514⟩,0,2,1,257073,23⟩
-private theorem pass2099_2390 : (Triangular src2099) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2099_2391 : (Triangular src2099) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2099_2393 : (Triangular src2099) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2099_2399 : (Triangular src2099) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2099_2415 : (Triangular src2099) 2415 2457 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2099_2458 : (Triangular src2099) 2458 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2099 : Cover (Triangular src2099) 2534 2390 [2390,2392,2398,2414,2457,2534] := by
-  exact ⟨by decide, by decide, pass2099_2390, by decide, by decide, pass2099_2391, by decide, by decide, pass2099_2393, by decide, by decide, pass2099_2399, by decide, by decide, pass2099_2415, by decide, by decide, pass2099_2458, rfl⟩
-def src2100 : Request := ⟨⟨⟨1450,2023,445,13012⟩,92998964346880,466511127281⟩,1,2,1,257073,23⟩
-private theorem pass2100_2390 : (Triangular src2100) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2100_2391 : (Triangular src2100) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2100_2393 : (Triangular src2100) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2100_2399 : (Triangular src2100) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2100_2415 : (Triangular src2100) 2415 2456 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2100_2457 : (Triangular src2100) 2457 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2100 : Cover (Triangular src2100) 2534 2390 [2390,2392,2398,2414,2456,2534] := by
-  exact ⟨by decide, by decide, pass2100_2390, by decide, by decide, pass2100_2391, by decide, by decide, pass2100_2393, by decide, by decide, pass2100_2399, by decide, by decide, pass2100_2415, by decide, by decide, pass2100_2457, rfl⟩
-def src2101 : Request := ⟨⟨⟨1750,2442,527,16276⟩,161065121873920,975196209190⟩,3,2,1,257073,23⟩
-private theorem pass2101_2390 : (Triangular src2101) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2101_2391 : (Triangular src2101) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2101_2393 : (Triangular src2101) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2101_2399 : (Triangular src2101) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2101_2415 : (Triangular src2101) 2415 2456 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2101_2457 : (Triangular src2101) 2457 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2101 : Cover (Triangular src2101) 2534 2390 [2390,2392,2398,2414,2456,2534] := by
-  exact ⟨by decide, by decide, pass2101_2390, by decide, by decide, pass2101_2391, by decide, by decide, pass2101_2393, by decide, by decide, pass2101_2399, by decide, by decide, pass2101_2415, by decide, by decide, pass2101_2457, rfl⟩
-def src2102 : Request := ⟨⟨⟨1750,2442,527,16759⟩,161065121873920,975196209190⟩,4,2,1,257073,23⟩
-private theorem pass2102_2390 : (Triangular src2102) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2102_2391 : (Triangular src2102) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2102_2393 : (Triangular src2102) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2102_2399 : (Triangular src2102) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2102_2415 : (Triangular src2102) 2415 2456 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2102_2457 : (Triangular src2102) 2457 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2102 : Cover (Triangular src2102) 2534 2390 [2390,2392,2398,2414,2456,2534] := by
-  exact ⟨by decide, by decide, pass2102_2390, by decide, by decide, pass2102_2391, by decide, by decide, pass2102_2393, by decide, by decide, pass2102_2399, by decide, by decide, pass2102_2415, by decide, by decide, pass2102_2457, rfl⟩
-def src2103 : Request := ⟨⟨⟨2100,2930,632,19729⟩,278060332482560,2019119590628⟩,6,2,1,257073,23⟩
-private theorem pass2103_2390 : (Triangular src2103) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2103_2391 : (Triangular src2103) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2103_2393 : (Triangular src2103) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2103_2398 : (Triangular src2103) 2398 2411 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2103_2412 : (Triangular src2103) 2412 2448 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2103_2449 : (Triangular src2103) 2449 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2103 : Cover (Triangular src2103) 2534 2390 [2390,2392,2397,2411,2448,2534] := by
-  exact ⟨by decide, by decide, pass2103_2390, by decide, by decide, pass2103_2391, by decide, by decide, pass2103_2393, by decide, by decide, pass2103_2398, by decide, by decide, pass2103_2412, by decide, by decide, pass2103_2449, rfl⟩
-def src2104 : Request := ⟨⟨⟨2100,2930,645,19778⟩,282396798484480,2051392203643⟩,8,2,1,257073,23⟩
-private theorem pass2104_2390 : (Triangular src2104) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2104_2391 : (Triangular src2104) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2104_2393 : (Triangular src2104) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2104_2398 : (Triangular src2104) 2398 2411 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2104_2412 : (Triangular src2104) 2412 2447 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2104_2448 : (Triangular src2104) 2448 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2104 : Cover (Triangular src2104) 2534 2390 [2390,2392,2397,2411,2447,2534] := by
-  exact ⟨by decide, by decide, pass2104_2390, by decide, by decide, pass2104_2391, by decide, by decide, pass2104_2393, by decide, by decide, pass2104_2398, by decide, by decide, pass2104_2412, by decide, by decide, pass2104_2448, rfl⟩
-def src2105 : Request := ⟨⟨⟨2600,3628,798,24892⟩,535425056505856,4816500515660⟩,13,2,1,257073,23⟩
-private theorem pass2105_2390 : (Triangular src2105) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2105_2391 : (Triangular src2105) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2105_2393 : (Triangular src2105) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2105_2398 : (Triangular src2105) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2105_2411 : (Triangular src2105) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2105_2445 : (Triangular src2105) 2445 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2105 : Cover (Triangular src2105) 2534 2390 [2390,2392,2397,2410,2444,2534] := by
-  exact ⟨by decide, by decide, pass2105_2390, by decide, by decide, pass2105_2391, by decide, by decide, pass2105_2393, by decide, by decide, pass2105_2398, by decide, by decide, pass2105_2411, by decide, by decide, pass2105_2445, rfl⟩
-def src2106 : Request := ⟨⟨⟨4800,6698,1474,45628⟩,3367547627110400,55918169002031⟩,32,2,1,257073,23⟩
-private theorem pass2106_2390 : (Triangular src2106) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2106_2391 : (Triangular src2106) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2106_2393 : (Triangular src2106) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2106_2398 : (Triangular src2106) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2106_2411 : (Triangular src2106) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2106_2445 : (Triangular src2106) 2445 2532 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2106_2533 : (Triangular src2106) 2533 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2106 : Cover (Triangular src2106) 2534 2390 [2390,2392,2397,2410,2444,2532,2534] := by
-  exact ⟨by decide, by decide, pass2106_2390, by decide, by decide, pass2106_2391, by decide, by decide, pass2106_2393, by decide, by decide, pass2106_2398, by decide, by decide, pass2106_2411, by decide, by decide, pass2106_2445, by decide, by decide, pass2106_2533, rfl⟩
-def src2107 : Request := ⟨⟨⟨6900,9628,2077,79188⟩,9849424459857920,234966243278304⟩,65,2,1,257073,23⟩
-private theorem pass2107_2390 : (Triangular src2107) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2107_2391 : (Triangular src2107) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2107_2393 : (Triangular src2107) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2107_2398 : (Triangular src2107) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2107_2411 : (Triangular src2107) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2107_2445 : (Triangular src2107) 2445 2532 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2107_2533 : (Triangular src2107) 2533 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2107 : Cover (Triangular src2107) 2534 2390 [2390,2392,2397,2410,2444,2532,2534] := by
-  exact ⟨by decide, by decide, pass2107_2390, by decide, by decide, pass2107_2391, by decide, by decide, pass2107_2393, by decide, by decide, pass2107_2398, by decide, by decide, pass2107_2411, by decide, by decide, pass2107_2445, by decide, by decide, pass2107_2533, rfl⟩
-def src2108 : Request := ⟨⟨⟨10000,13955,3070,89198⟩,30428373265940480,1052683166434338⟩,65,2,1,257073,23⟩
-private theorem pass2108_2390 : (Triangular src2108) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2108_2391 : (Triangular src2108) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2108_2393 : (Triangular src2108) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2108_2398 : (Triangular src2108) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2108_2411 : (Triangular src2108) 2411 2443 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2108_2444 : (Triangular src2108) 2444 2528 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2108_2529 : (Triangular src2108) 2529 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2108 : Cover (Triangular src2108) 2534 2390 [2390,2392,2397,2410,2443,2528,2534] := by
-  exact ⟨by decide, by decide, pass2108_2390, by decide, by decide, pass2108_2391, by decide, by decide, pass2108_2393, by decide, by decide, pass2108_2398, by decide, by decide, pass2108_2411, by decide, by decide, pass2108_2444, by decide, by decide, pass2108_2529, rfl⟩
-def src2109 : Request := ⟨⟨⟨8300,11581,2498,99780⟩,17139238515245056,491743896877039⟩,85,2,1,257073,23⟩
-private theorem pass2109_2390 : (Triangular src2109) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2109_2391 : (Triangular src2109) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2109_2393 : (Triangular src2109) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2109_2398 : (Triangular src2109) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2109_2411 : (Triangular src2109) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2109_2445 : (Triangular src2109) 2445 2532 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2109_2533 : (Triangular src2109) 2533 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2109 : Cover (Triangular src2109) 2534 2390 [2390,2392,2397,2410,2444,2532,2534] := by
-  exact ⟨by decide, by decide, pass2109_2390, by decide, by decide, pass2109_2391, by decide, by decide, pass2109_2393, by decide, by decide, pass2109_2398, by decide, by decide, pass2109_2411, by decide, by decide, pass2109_2445, by decide, by decide, pass2109_2533, rfl⟩
-def src2110 : Request := ⟨⟨⟨1200,1674,368,10273⟩,52718727069696,218807905514⟩,0,2,1,257073,24⟩
-private theorem pass2110_2390 : (Triangular src2110) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2110_2391 : (Triangular src2110) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2110_2393 : (Triangular src2110) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2110_2399 : (Triangular src2110) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2110_2415 : (Triangular src2110) 2415 2457 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2110_2458 : (Triangular src2110) 2458 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2110 : Cover (Triangular src2110) 2534 2390 [2390,2392,2398,2414,2457,2534] := by
-  exact ⟨by decide, by decide, pass2110_2390, by decide, by decide, pass2110_2391, by decide, by decide, pass2110_2393, by decide, by decide, pass2110_2399, by decide, by decide, pass2110_2415, by decide, by decide, pass2110_2458, rfl⟩
-def src2111 : Request := ⟨⟨⟨1450,2023,445,12011⟩,92998964346880,466511127281⟩,1,2,1,257073,24⟩
-private theorem pass2111_2390 : (Triangular src2111) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2111_2391 : (Triangular src2111) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2111_2393 : (Triangular src2111) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2111_2399 : (Triangular src2111) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2111_2415 : (Triangular src2111) 2415 2457 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2111_2458 : (Triangular src2111) 2458 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2111 : Cover (Triangular src2111) 2534 2390 [2390,2392,2398,2414,2457,2534] := by
-  exact ⟨by decide, by decide, pass2111_2390, by decide, by decide, pass2111_2391, by decide, by decide, pass2111_2393, by decide, by decide, pass2111_2399, by decide, by decide, pass2111_2415, by decide, by decide, pass2111_2458, rfl⟩
+def src2096 : Request := ⟨⟨⟨6900,9628,2077,89672⟩,9849424459857920,234966243278304⟩,65,2,1,257027,22⟩
+theorem cover2096 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2096) 2557 2412 [2413, 2418, 2431, 2465, 2553, 2557] := triangleCover (by decide +kernel)
+def src2097 : Request := ⟨⟨⟨8300,11582,2548,89022⟩,17399709518790656,499541547131788⟩,65,2,1,257027,22⟩
+theorem cover2097 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2097) 2557 2412 [2413, 2418, 2431, 2464, 2549, 2557] := triangleCover (by decide +kernel)
+def src2098 : Request := ⟨⟨⟨10000,13955,3010,102261⟩,29974681586237440,1036603432174989⟩,65,2,1,257027,22⟩
+theorem cover2098 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2098) 2557 2412 [2413, 2418, 2431, 2465, 2553, 2557] := triangleCover (by decide +kernel)
+def src2099 : Request := ⟨⟨⟨1200,1674,368,11191⟩,52718727069696,218807905514⟩,0,2,1,257027,23⟩
+theorem cover2099 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2099) 2557 2412 [2414, 2422, 2444, 2503, 2557] := triangleCover (by decide +kernel)
+def src2100 : Request := ⟨⟨⟨1450,2023,445,13012⟩,92998964346880,466511127281⟩,1,2,1,257027,23⟩
+theorem cover2100 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2100) 2557 2412 [2414, 2422, 2443, 2499, 2557] := triangleCover (by decide +kernel)
+def src2101 : Request := ⟨⟨⟨1750,2442,527,16276⟩,161065121873920,975196209190⟩,3,2,1,257027,23⟩
+theorem cover2101 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2101) 2557 2412 [2414, 2422, 2443, 2499, 2557] := triangleCover (by decide +kernel)
+def src2102 : Request := ⟨⟨⟨1750,2442,527,16759⟩,161065121873920,975196209190⟩,4,2,1,257027,23⟩
+theorem cover2102 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2102) 2557 2412 [2414, 2422, 2443, 2499, 2557] := triangleCover (by decide +kernel)
+def src2103 : Request := ⟨⟨⟨2100,2930,632,19729⟩,278060332482560,2019119590628⟩,6,2,1,257027,23⟩
+theorem cover2103 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2103) 2557 2412 [2413, 2419, 2435, 2477, 2557] := triangleCover (by decide +kernel)
+def src2104 : Request := ⟨⟨⟨2100,2930,645,19778⟩,282396798484480,2051392203643⟩,8,2,1,257027,23⟩
+theorem cover2104 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2104) 2557 2412 [2413, 2419, 2434, 2474, 2557] := triangleCover (by decide +kernel)
+def src2105 : Request := ⟨⟨⟨2600,3628,798,24892⟩,535425056505856,4816500515660⟩,13,2,1,257027,23⟩
+theorem cover2105 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2105) 2557 2412 [2413, 2418, 2432, 2468, 2557] := triangleCover (by decide +kernel)
+def src2106 : Request := ⟨⟨⟨4800,6698,1474,45628⟩,3367547627110400,55918169002031⟩,32,2,1,257027,23⟩
+theorem cover2106 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2106) 2557 2412 [2413, 2418, 2431, 2465, 2553, 2557] := triangleCover (by decide +kernel)
+def src2107 : Request := ⟨⟨⟨6900,9628,2077,79188⟩,9849424459857920,234966243278304⟩,65,2,1,257027,23⟩
+theorem cover2107 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2107) 2557 2412 [2413, 2418, 2431, 2465, 2553, 2557] := triangleCover (by decide +kernel)
+def src2108 : Request := ⟨⟨⟨10000,13955,3070,89198⟩,30428373265940480,1052683166434338⟩,65,2,1,257027,23⟩
+theorem cover2108 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2108) 2557 2412 [2413, 2418, 2431, 2464, 2549, 2557] := triangleCover (by decide +kernel)
+def src2109 : Request := ⟨⟨⟨8300,11581,2498,99780⟩,17139238515245056,491743896877039⟩,85,2,1,257027,23⟩
+theorem cover2109 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2109) 2557 2412 [2413, 2418, 2431, 2465, 2553, 2557] := triangleCover (by decide +kernel)
+def src2110 : Request := ⟨⟨⟨1200,1674,368,10273⟩,52718727069696,218807905514⟩,0,2,1,257027,24⟩
+theorem cover2110 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2110) 2557 2412 [2414, 2422, 2444, 2503, 2557] := triangleCover (by decide +kernel)
+def src2111 : Request := ⟨⟨⟨1450,2023,445,12011⟩,92998964346880,466511127281⟩,1,2,1,257027,24⟩
+theorem cover2111 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2111) 2557 2412 [2414, 2422, 2443, 2500, 2557] := triangleCover (by decide +kernel)
 end Research6969.PhysicalCatalogue
 end Z6969Source1763
 
@@ -435,10 +283,10 @@ def plan : Plan where
   initial_small := by intro k; fin_cases k <;> decide +kernel
   degree := 2
   slopeFloor := 1
-  physicalFloor := 257073
+  physicalFloor := 257027
   seedFloor := 22
 
-theorem sources : plan.Sources 2390 (Band.middle).last := by
+theorem sources : plan.Sources 2412 (Band.middle).last := by
   refine ⟨by decide, by decide, by decide, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro i; fin_cases i
     · exact rank227 12912
@@ -469,7 +317,7 @@ theorem sources : plan.Sources 2390 (Band.middle).last := by
     · exact ⟨_, cover2096⟩
     · exact ⟨_, cover2097⟩
 
-def price : EarlyPrice := ⟨2, 22, 10, 80/100, 80/100, ![876760248750, 133693157453, 25806987500, 1173066230], 2198913037824927⟩
+def price : EarlyPrice := ⟨2, 22, 10, 80/100, 80/100, ![876760248750, 133693157453, 25806987500, 1173066230], 2199383627306362⟩
 theorem priced : price.Valid plan Band.middle := by
   refine ⟨by decide, by decide, by decide, by decide, rfl, rfl,
     by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, ?_⟩
@@ -497,7 +345,7 @@ theorem budget_checked : budget.Valid Lower6960.Prefix6969MainCases.Middle79.pla
   · intro yes
     cases yes
   · rw [Budget.extra, Budget.adjust]
-    rw [Research6969.JointRouted.seedWeight_eq, Research6969.JointRouted.ordWeight_eq 133605 _ (by norm_num)]; decide +kernel
+    rw [Research6969.JointRouted.seedWeight_eq, Research6969.JointRouted.ordWeight_eq 133628 _ (by norm_num)]; decide +kernel
 
 def data : Case 2 22 22 :=
   ⟨Lower6960.Prefix6969MainCases.Middle79.plan, Lower6960.Prefix6969MainCases.Middle79.price, Lower6960.Prefix6969MainCases.Middle79.valid, Lower6960.Prefix6969MainCases.Middle79.priced, Lower6960.Prefix6969MainCases.Middle79.sources,
@@ -556,7 +404,7 @@ theorem valid : plan.Valid := by
   · decide +kernel
   · exact ZGen.Hist.history_step_of_fast plan (by decide +kernel)
 
-theorem sources : plan.Sources 2390 (Band.middle).last Prefix6969MiddleHelper.helperBank 128536 2 23 257073 := by
+theorem sources : plan.Sources 2412 (Band.middle).last Prefix6969MiddleHelper.helperBank 128513 2 23 257027 := by
   refine ⟨?_, rank154 5050, ?_, by decide, by decide, by decide, by decide, by decide, by decide,
     by decide, by decide, by decide, by decide, by decide, by decide, by decide, by decide, ⟨_, cover2765⟩⟩
   · intro i; fin_cases i
@@ -580,49 +428,14 @@ theorem sources : plan.Sources 2390 (Band.middle).last Prefix6969MiddleHelper.he
     · exact free170_1
   · unfold HelperSource.WidthGuard; decide +kernel
 
-def price : Pricing := ⟨55/100, 90/100, [251731286, 325412055, 324808844, 325036910, 326236397, 325089316, 325641040, 150704297, 150720313, 150661781, 150508697, 69211429, 65774562, 68468368, 96210179, 96202967, 100000000, 221597970], [1438818, 1061473, 1064563, 1063395, 1057252, 1063126, 1060301, 2557944, 2557678, 2558652, 2561200, 5802300, 6114096, 5869711, 4119073, 4119377, 3958949, 1683541],
-  ![117628634435400, 1621384967100, 199438173000, 5987105220], 136241677389061886⟩
+def price : Pricing := ⟨55/100, 90/100, [251731286, 325412055, 324808844, 325036910, 326236397, 325089316, 325641040, 150704297, 150720313, 150661781, 150508697, 69211429, 65774562, 68468368, 96210179, 96202967, 100000000, 221597970], [1439146, 1061715, 1064805, 1063637, 1057492, 1063368, 1060542, 2558527, 2558260, 2559235, 2561783, 5803622, 6115489, 5871048, 4120011, 4120316, 3959851, 1683924],
+  ![117628634435400, 1621384967100, 199438173000, 5987105220], 136246520786061119⟩
 
 theorem priced : price.Valid plan Band.middle := by
   refine ⟨by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, ?_, ?_, ?_⟩
   · have hAB : Lower6960.Prefix6969Main.RatesAB price plan := by decide +kernel
-    intro i; refine ⟨(hAB i).1, (hAB i).2, ?_⟩; fin_cases i
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 16 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 16 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 16 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 5 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
+    intro i
+    exact ⟨(hAB i).1, (hAB i).2, Pricing.height_from_table Band.middle price plan [4,4,4,4,4,4,4,7,7,7,7,16,16,16,11,11,11,5] (by decide +kernel) i⟩
   · intro k; fin_cases k <;> decide +kernel
   · decide +kernel
 
@@ -658,10 +471,10 @@ def plan : Plan where
   initial_small := by intro k; fin_cases k <;> decide +kernel
   degree := 2
   slopeFloor := 1
-  physicalFloor := 257073
+  physicalFloor := 257027
   seedFloor := 23
 
-theorem sources : plan.Sources 2390 (Band.middle).last := by
+theorem sources : plan.Sources 2412 (Band.middle).last := by
   refine ⟨by decide, by decide, by decide, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro i; fin_cases i
     · exact rank228 11191
@@ -692,7 +505,7 @@ theorem sources : plan.Sources 2390 (Band.middle).last := by
     · exact ⟨_, cover2107⟩
     · exact ⟨_, cover2109⟩
 
-def price : EarlyPrice := ⟨2, 23, 10, 80/100, 70/100, ![894374537700, 132329828679, 27517837550, 1196449610], 2064653836245746⟩
+def price : EarlyPrice := ⟨2, 23, 10, 80/100, 70/100, ![894374537700, 132329828679, 27517837550, 1196449610], 2065094709632649⟩
 theorem priced : price.Valid plan Band.middle := by
   refine ⟨by decide, by decide, by decide, by decide, rfl, rfl,
     by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, ?_⟩
@@ -720,7 +533,7 @@ theorem budget_checked : budget.Valid Lower6960.Prefix6969MainCases.Middle80.pla
   · intro yes
     cases yes
   · rw [Budget.extra, Budget.adjust]
-    rw [Research6969.JointRouted.seedWeight_eq, Research6969.JointRouted.ordWeight_eq 133605 _ (by norm_num)]; decide +kernel
+    rw [Research6969.JointRouted.seedWeight_eq, Research6969.JointRouted.ordWeight_eq 133628 _ (by norm_num)]; decide +kernel
 
 def data : Case 2 23 23 :=
   ⟨Lower6960.Prefix6969MainCases.Middle80.plan, Lower6960.Prefix6969MainCases.Middle80.price, Lower6960.Prefix6969MainCases.Middle80.valid, Lower6960.Prefix6969MainCases.Middle80.priced, Lower6960.Prefix6969MainCases.Middle80.sources,
@@ -779,7 +592,7 @@ theorem valid : plan.Valid := by
   · decide +kernel
   · exact ZGen.Hist.history_step_of_fast plan (by decide +kernel)
 
-theorem sources : plan.Sources 2390 (Band.middle).last Prefix6969MiddleHelper.helperBank 128536 2 24 257073 := by
+theorem sources : plan.Sources 2412 (Band.middle).last Prefix6969MiddleHelper.helperBank 128513 2 24 257027 := by
   refine ⟨?_, rank154 4983, ?_, by decide, by decide, by decide, by decide, by decide, by decide,
     by decide, by decide, by decide, by decide, by decide, by decide, by decide, by decide, ⟨_, cover2766⟩⟩
   · intro i; fin_cases i
@@ -803,49 +616,14 @@ theorem sources : plan.Sources 2390 (Band.middle).last Prefix6969MiddleHelper.he
     · exact free170_1
   · unfold HelperSource.WidthGuard; decide +kernel
 
-def price : Pricing := ⟨55/100, 90/100, [249983462, 323014400, 322282344, 323365757, 324432770, 323091553, 322588613, 147799495, 147888956, 147953756, 147937766, 68587763, 68284463, 67937951, 95794473, 95721273, 100000000, 221318217], [1449908, 1073753, 1077502, 1071953, 1066489, 1073357, 1075933, 2606293, 2604804, 2603725, 2603991, 5858880, 5886395, 5917831, 4136637, 4139729, 3958949, 1685843],
-  ![117480135947940, 1621688205888, 199186395300, 6036187620], 135065511802238731⟩
+def price : Pricing := ⟨55/100, 90/100, [249983462, 323014400, 322282344, 323365757, 324432770, 323091553, 322588613, 147799495, 147888956, 147953756, 147937766, 68587763, 68284463, 67937951, 95794473, 95721273, 100000000, 221318217], [1450238, 1073997, 1077747, 1072197, 1066732, 1073602, 1076178, 2606886, 2605397, 2604318, 2604584, 5860214, 5887736, 5919179, 4137579, 4140672, 3959851, 1686227],
+  ![117480135947940, 1621688205888, 199186395300, 6036187620], 135070357819697772⟩
 
 theorem priced : price.Valid plan Band.middle := by
   refine ⟨by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, ?_, ?_, ?_⟩
   · have hAB : Lower6960.Prefix6969Main.RatesAB price plan := by decide +kernel
-    intro i; refine ⟨(hAB i).1, (hAB i).2, ?_⟩; fin_cases i
-    · exact Pricing.height_from_critical Band.middle _ 5 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 4 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 16 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 16 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 16 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.middle _ 5 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
+    intro i
+    exact ⟨(hAB i).1, (hAB i).2, Pricing.height_from_table Band.middle price plan [5,4,4,4,4,4,4,7,7,7,7,16,16,16,11,11,11,5] (by decide +kernel) i⟩
   · intro k; fin_cases k <;> decide +kernel
   · decide +kernel
 
@@ -859,159 +637,43 @@ end Z6969Source1769
 section Z6969Source1770
 set_option autoImplicit true
 namespace Research6969.PhysicalCatalogue
+open Research6969.PhysicalWindow.Compact
 open PhysicalWindow
 set_option maxRecDepth 30000
 set_option maxHeartbeats 0
 
-def src2112 : Request := ⟨⟨⟨1450,2023,445,12372⟩,92998964346880,466511127281⟩,2,2,1,257073,24⟩
-private theorem pass2112_2390 : (Triangular src2112) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2112_2391 : (Triangular src2112) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2112_2393 : (Triangular src2112) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2112_2399 : (Triangular src2112) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2112_2415 : (Triangular src2112) 2415 2456 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2112_2457 : (Triangular src2112) 2457 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2112 : Cover (Triangular src2112) 2534 2390 [2390,2392,2398,2414,2456,2534] := by
-  exact ⟨by decide, by decide, pass2112_2390, by decide, by decide, pass2112_2391, by decide, by decide, pass2112_2393, by decide, by decide, pass2112_2399, by decide, by decide, pass2112_2415, by decide, by decide, pass2112_2457, rfl⟩
-def src2113 : Request := ⟨⟨⟨1750,2442,537,14771⟩,163381988556800,989573241440⟩,4,2,1,257073,24⟩
-private theorem pass2113_2390 : (Triangular src2113) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2113_2391 : (Triangular src2113) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2113_2393 : (Triangular src2113) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2113_2398 : (Triangular src2113) 2398 2411 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2113_2412 : (Triangular src2113) 2412 2448 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2113_2449 : (Triangular src2113) 2449 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2113 : Cover (Triangular src2113) 2534 2390 [2390,2392,2397,2411,2448,2534] := by
-  exact ⟨by decide, by decide, pass2113_2390, by decide, by decide, pass2113_2391, by decide, by decide, pass2113_2393, by decide, by decide, pass2113_2398, by decide, by decide, pass2113_2412, by decide, by decide, pass2113_2449, rfl⟩
-def src2114 : Request := ⟨⟨⟨2100,2930,645,18126⟩,282396798484480,2051392203643⟩,8,2,1,257073,24⟩
-private theorem pass2114_2390 : (Triangular src2114) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2114_2391 : (Triangular src2114) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2114_2393 : (Triangular src2114) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2114_2398 : (Triangular src2114) 2398 2411 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2114_2412 : (Triangular src2114) 2412 2448 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2114_2449 : (Triangular src2114) 2449 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2114 : Cover (Triangular src2114) 2534 2390 [2390,2392,2397,2411,2448,2534] := by
-  exact ⟨by decide, by decide, pass2114_2390, by decide, by decide, pass2114_2391, by decide, by decide, pass2114_2393, by decide, by decide, pass2114_2398, by decide, by decide, pass2114_2412, by decide, by decide, pass2114_2449, rfl⟩
-def src2115 : Request := ⟨⟨⟨2600,3628,798,22764⟩,535425056505856,4816500515660⟩,13,2,1,257073,24⟩
-private theorem pass2115_2390 : (Triangular src2115) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2115_2391 : (Triangular src2115) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2115_2393 : (Triangular src2115) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2115_2398 : (Triangular src2115) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2115_2411 : (Triangular src2115) 2411 2445 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2115_2446 : (Triangular src2115) 2446 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2115 : Cover (Triangular src2115) 2534 2390 [2390,2392,2397,2410,2445,2534] := by
-  exact ⟨by decide, by decide, pass2115_2390, by decide, by decide, pass2115_2391, by decide, by decide, pass2115_2393, by decide, by decide, pass2115_2398, by decide, by decide, pass2115_2411, by decide, by decide, pass2115_2446, rfl⟩
-def src2116 : Request := ⟨⟨⟨4800,6698,1474,41770⟩,3367547627110400,55918169002031⟩,32,2,1,257073,24⟩
-private theorem pass2116_2390 : (Triangular src2116) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2116_2391 : (Triangular src2116) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2116_2393 : (Triangular src2116) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2116_2398 : (Triangular src2116) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2116_2411 : (Triangular src2116) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2116_2445 : (Triangular src2116) 2445 2532 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2116_2533 : (Triangular src2116) 2533 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2116 : Cover (Triangular src2116) 2534 2390 [2390,2392,2397,2410,2444,2532,2534] := by
-  exact ⟨by decide, by decide, pass2116_2390, by decide, by decide, pass2116_2391, by decide, by decide, pass2116_2393, by decide, by decide, pass2116_2398, by decide, by decide, pass2116_2411, by decide, by decide, pass2116_2445, by decide, by decide, pass2116_2533, rfl⟩
-def src2117 : Request := ⟨⟨⟨6900,9628,2077,70939⟩,9849424459857920,234966243278304⟩,65,2,1,257073,24⟩
-private theorem pass2117_2390 : (Triangular src2117) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2117_2391 : (Triangular src2117) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2117_2393 : (Triangular src2117) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2117_2398 : (Triangular src2117) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2117_2411 : (Triangular src2117) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2117_2445 : (Triangular src2117) 2445 2532 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2117_2533 : (Triangular src2117) 2533 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2117 : Cover (Triangular src2117) 2534 2390 [2390,2392,2397,2410,2444,2532,2534] := by
-  exact ⟨by decide, by decide, pass2117_2390, by decide, by decide, pass2117_2391, by decide, by decide, pass2117_2393, by decide, by decide, pass2117_2398, by decide, by decide, pass2117_2411, by decide, by decide, pass2117_2445, by decide, by decide, pass2117_2533, rfl⟩
-def src2118 : Request := ⟨⟨⟨8300,11582,2548,73210⟩,17399709518790656,499541547131788⟩,65,2,1,257073,24⟩
-private theorem pass2118_2390 : (Triangular src2118) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2118_2391 : (Triangular src2118) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2118_2393 : (Triangular src2118) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2118_2398 : (Triangular src2118) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2118_2411 : (Triangular src2118) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2118_2445 : (Triangular src2118) 2445 2531 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2118_2532 : (Triangular src2118) 2532 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2118 : Cover (Triangular src2118) 2534 2390 [2390,2392,2397,2410,2444,2531,2534] := by
-  exact ⟨by decide, by decide, pass2118_2390, by decide, by decide, pass2118_2391, by decide, by decide, pass2118_2393, by decide, by decide, pass2118_2398, by decide, by decide, pass2118_2411, by decide, by decide, pass2118_2445, by decide, by decide, pass2118_2532, rfl⟩
-def src2119 : Request := ⟨⟨⟨8300,11581,2498,88701⟩,17139238515245056,491743896877039⟩,85,2,1,257073,24⟩
-private theorem pass2119_2390 : (Triangular src2119) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2119_2391 : (Triangular src2119) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2119_2393 : (Triangular src2119) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2119_2398 : (Triangular src2119) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2119_2411 : (Triangular src2119) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2119_2445 : (Triangular src2119) 2445 2532 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2119_2533 : (Triangular src2119) 2533 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2119 : Cover (Triangular src2119) 2534 2390 [2390,2392,2397,2410,2444,2532,2534] := by
-  exact ⟨by decide, by decide, pass2119_2390, by decide, by decide, pass2119_2391, by decide, by decide, pass2119_2393, by decide, by decide, pass2119_2398, by decide, by decide, pass2119_2411, by decide, by decide, pass2119_2445, by decide, by decide, pass2119_2533, rfl⟩
-def src2120 : Request := ⟨⟨⟨1000,1395,307,8526⟩,30557599170560,105715278267⟩,0,2,1,257073,25⟩
-private theorem pass2120_2390 : (Triangular src2120) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2120_2391 : (Triangular src2120) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2120_2393 : (Triangular src2120) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2120_2399 : (Triangular src2120) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2120_2415 : (Triangular src2120) 2415 2458 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2120_2459 : (Triangular src2120) 2459 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2120 : Cover (Triangular src2120) 2534 2390 [2390,2392,2398,2414,2458,2534] := by
-  exact ⟨by decide, by decide, pass2120_2390, by decide, by decide, pass2120_2391, by decide, by decide, pass2120_2393, by decide, by decide, pass2120_2399, by decide, by decide, pass2120_2415, by decide, by decide, pass2120_2459, rfl⟩
-def src2121 : Request := ⟨⟨⟨1200,1674,368,9876⟩,52718727069696,218807905514⟩,1,2,1,257073,25⟩
-private theorem pass2121_2390 : (Triangular src2121) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2121_2391 : (Triangular src2121) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2121_2393 : (Triangular src2121) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2121_2399 : (Triangular src2121) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2121_2415 : (Triangular src2121) 2415 2457 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2121_2458 : (Triangular src2121) 2458 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2121 : Cover (Triangular src2121) 2534 2390 [2390,2392,2398,2414,2457,2534] := by
-  exact ⟨by decide, by decide, pass2121_2390, by decide, by decide, pass2121_2391, by decide, by decide, pass2121_2393, by decide, by decide, pass2121_2399, by decide, by decide, pass2121_2415, by decide, by decide, pass2121_2458, rfl⟩
-def src2122 : Request := ⟨⟨⟨1450,2023,445,11510⟩,92998964346880,466511127281⟩,2,2,1,257073,25⟩
-private theorem pass2122_2390 : (Triangular src2122) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2122_2391 : (Triangular src2122) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2122_2393 : (Triangular src2122) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2122_2399 : (Triangular src2122) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2122_2415 : (Triangular src2122) 2415 2457 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2122_2458 : (Triangular src2122) 2458 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2122 : Cover (Triangular src2122) 2534 2390 [2390,2392,2398,2414,2457,2534] := by
-  exact ⟨by decide, by decide, pass2122_2390, by decide, by decide, pass2122_2391, by decide, by decide, pass2122_2393, by decide, by decide, pass2122_2399, by decide, by decide, pass2122_2415, by decide, by decide, pass2122_2458, rfl⟩
-def src2123 : Request := ⟨⟨⟨1450,2023,445,11827⟩,92998964346880,466511127281⟩,3,2,1,257073,25⟩
-private theorem pass2123_2390 : (Triangular src2123) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2123_2391 : (Triangular src2123) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2123_2393 : (Triangular src2123) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2123_2399 : (Triangular src2123) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2123_2415 : (Triangular src2123) 2415 2457 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2123_2458 : (Triangular src2123) 2458 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2123 : Cover (Triangular src2123) 2534 2390 [2390,2392,2398,2414,2457,2534] := by
-  exact ⟨by decide, by decide, pass2123_2390, by decide, by decide, pass2123_2391, by decide, by decide, pass2123_2393, by decide, by decide, pass2123_2399, by decide, by decide, pass2123_2415, by decide, by decide, pass2123_2458, rfl⟩
-def src2124 : Request := ⟨⟨⟨1450,2023,445,12176⟩,92998964346880,466511127281⟩,4,2,1,257073,25⟩
-private theorem pass2124_2390 : (Triangular src2124) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2124_2391 : (Triangular src2124) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2124_2393 : (Triangular src2124) 2393 2398 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2124_2399 : (Triangular src2124) 2399 2414 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2124_2415 : (Triangular src2124) 2415 2457 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2124_2458 : (Triangular src2124) 2458 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2124 : Cover (Triangular src2124) 2534 2390 [2390,2392,2398,2414,2457,2534] := by
-  exact ⟨by decide, by decide, pass2124_2390, by decide, by decide, pass2124_2391, by decide, by decide, pass2124_2393, by decide, by decide, pass2124_2399, by decide, by decide, pass2124_2415, by decide, by decide, pass2124_2458, rfl⟩
-def src2125 : Request := ⟨⟨⟨1750,2442,537,14397⟩,163381988556800,989573241440⟩,6,2,1,257073,25⟩
-private theorem pass2125_2390 : (Triangular src2125) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2125_2391 : (Triangular src2125) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2125_2393 : (Triangular src2125) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2125_2398 : (Triangular src2125) 2398 2411 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2125_2412 : (Triangular src2125) 2412 2448 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2125_2449 : (Triangular src2125) 2449 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2125 : Cover (Triangular src2125) 2534 2390 [2390,2392,2397,2411,2448,2534] := by
-  exact ⟨by decide, by decide, pass2125_2390, by decide, by decide, pass2125_2391, by decide, by decide, pass2125_2393, by decide, by decide, pass2125_2398, by decide, by decide, pass2125_2412, by decide, by decide, pass2125_2449, rfl⟩
-def src2126 : Request := ⟨⟨⟨2100,2930,645,17502⟩,282396798484480,2051392203643⟩,10,2,1,257073,25⟩
-private theorem pass2126_2390 : (Triangular src2126) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2126_2391 : (Triangular src2126) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2126_2393 : (Triangular src2126) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2126_2398 : (Triangular src2126) 2398 2411 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2126_2412 : (Triangular src2126) 2412 2448 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2126_2449 : (Triangular src2126) 2449 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2126 : Cover (Triangular src2126) 2534 2390 [2390,2392,2397,2411,2448,2534] := by
-  exact ⟨by decide, by decide, pass2126_2390, by decide, by decide, pass2126_2391, by decide, by decide, pass2126_2393, by decide, by decide, pass2126_2398, by decide, by decide, pass2126_2412, by decide, by decide, pass2126_2449, rfl⟩
-def src2127 : Request := ⟨⟨⟨3200,4465,982,26529⟩,997767489781760,11043969901736⟩,20,2,1,257073,25⟩
-private theorem pass2127_2390 : (Triangular src2127) 2390 2390 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2127_2391 : (Triangular src2127) 2391 2392 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2127_2393 : (Triangular src2127) 2393 2397 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2127_2398 : (Triangular src2127) 2398 2410 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2127_2411 : (Triangular src2127) 2411 2444 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2127_2445 : (Triangular src2127) 2445 2533 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass2127_2534 : (Triangular src2127) 2534 2534 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover2127 : Cover (Triangular src2127) 2534 2390 [2390,2392,2397,2410,2444,2533,2534] := by
-  exact ⟨by decide, by decide, pass2127_2390, by decide, by decide, pass2127_2391, by decide, by decide, pass2127_2393, by decide, by decide, pass2127_2398, by decide, by decide, pass2127_2411, by decide, by decide, pass2127_2445, by decide, by decide, pass2127_2534, rfl⟩
+def src2112 : Request := ⟨⟨⟨1450,2023,445,12372⟩,92998964346880,466511127281⟩,2,2,1,257027,24⟩
+theorem cover2112 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2112) 2557 2412 [2414, 2422, 2443, 2500, 2557] := triangleCover (by decide +kernel)
+def src2113 : Request := ⟨⟨⟨1750,2442,537,14771⟩,163381988556800,989573241440⟩,4,2,1,257027,24⟩
+theorem cover2113 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2113) 2557 2412 [2414, 2422, 2443, 2499, 2557] := triangleCover (by decide +kernel)
+def src2114 : Request := ⟨⟨⟨2100,2930,645,18126⟩,282396798484480,2051392203643⟩,8,2,1,257027,24⟩
+theorem cover2114 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2114) 2557 2412 [2413, 2419, 2434, 2474, 2557] := triangleCover (by decide +kernel)
+def src2115 : Request := ⟨⟨⟨2600,3628,798,22764⟩,535425056505856,4816500515660⟩,13,2,1,257027,24⟩
+theorem cover2115 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2115) 2557 2412 [2413, 2418, 2432, 2468, 2557] := triangleCover (by decide +kernel)
+def src2116 : Request := ⟨⟨⟨4800,6698,1474,41770⟩,3367547627110400,55918169002031⟩,32,2,1,257027,24⟩
+theorem cover2116 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2116) 2557 2412 [2413, 2418, 2431, 2465, 2553, 2557] := triangleCover (by decide +kernel)
+def src2117 : Request := ⟨⟨⟨6900,9628,2077,70939⟩,9849424459857920,234966243278304⟩,65,2,1,257027,24⟩
+theorem cover2117 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2117) 2557 2412 [2413, 2418, 2431, 2465, 2553, 2557] := triangleCover (by decide +kernel)
+def src2118 : Request := ⟨⟨⟨8300,11582,2548,73210⟩,17399709518790656,499541547131788⟩,65,2,1,257027,24⟩
+theorem cover2118 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2118) 2557 2412 [2413, 2418, 2431, 2464, 2549, 2557] := triangleCover (by decide +kernel)
+def src2119 : Request := ⟨⟨⟨8300,11581,2498,88701⟩,17139238515245056,491743896877039⟩,85,2,1,257027,24⟩
+theorem cover2119 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2119) 2557 2412 [2413, 2418, 2431, 2465, 2553, 2557] := triangleCover (by decide +kernel)
+def src2120 : Request := ⟨⟨⟨1000,1395,307,8526⟩,30557599170560,105715278267⟩,0,2,1,257027,25⟩
+theorem cover2120 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2120) 2557 2412 [2414, 2423, 2447, 2513, 2557] := triangleCover (by decide +kernel)
+def src2121 : Request := ⟨⟨⟨1200,1674,368,9876⟩,52718727069696,218807905514⟩,1,2,1,257027,25⟩
+theorem cover2121 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2121) 2557 2412 [2414, 2422, 2444, 2503, 2557] := triangleCover (by decide +kernel)
+def src2122 : Request := ⟨⟨⟨1450,2023,445,11510⟩,92998964346880,466511127281⟩,2,2,1,257027,25⟩
+theorem cover2122 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2122) 2557 2412 [2414, 2422, 2443, 2500, 2557] := triangleCover (by decide +kernel)
+def src2123 : Request := ⟨⟨⟨1450,2023,445,11827⟩,92998964346880,466511127281⟩,3,2,1,257027,25⟩
+theorem cover2123 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2123) 2557 2412 [2414, 2422, 2443, 2500, 2557] := triangleCover (by decide +kernel)
+def src2124 : Request := ⟨⟨⟨1450,2023,445,12176⟩,92998964346880,466511127281⟩,4,2,1,257027,25⟩
+theorem cover2124 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2124) 2557 2412 [2414, 2422, 2443, 2500, 2557] := triangleCover (by decide +kernel)
+def src2125 : Request := ⟨⟨⟨1750,2442,537,14397⟩,163381988556800,989573241440⟩,6,2,1,257027,25⟩
+theorem cover2125 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2125) 2557 2412 [2414, 2422, 2443, 2499, 2557] := triangleCover (by decide +kernel)
+def src2126 : Request := ⟨⟨⟨2100,2930,645,17502⟩,282396798484480,2051392203643⟩,10,2,1,257027,25⟩
+theorem cover2126 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2126) 2557 2412 [2413, 2419, 2434, 2474, 2557] := triangleCover (by decide +kernel)
+def src2127 : Request := ⟨⟨⟨3200,4465,982,26529⟩,997767489781760,11043969901736⟩,20,2,1,257027,25⟩
+theorem cover2127 : PhysicalWindow.Cover (PhysicalWindow.Triangular src2127) 2557 2412 [2413, 2418, 2431, 2465, 2554, 2557] := triangleCover (by decide +kernel)
 end Research6969.PhysicalCatalogue
 end Z6969Source1770
 
@@ -1041,10 +703,10 @@ def plan : Plan where
   initial_small := by intro k; fin_cases k <;> decide +kernel
   degree := 2
   slopeFloor := 1
-  physicalFloor := 257073
+  physicalFloor := 257027
   seedFloor := 24
 
-theorem sources : plan.Sources 2390 (Band.middle).last := by
+theorem sources : plan.Sources 2412 (Band.middle).last := by
   refine ⟨by decide, by decide, by decide, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro i; fin_cases i
     · exact rank228 10273
@@ -1075,7 +737,7 @@ theorem sources : plan.Sources 2390 (Band.middle).last := by
     · exact ⟨_, cover2119⟩
     · exact ⟨_, cover2117⟩
 
-def price : EarlyPrice := ⟨2, 24, 10, 75/100, 70/100, ![829636507881, 119523762846, 23831905188, 993014204], 1878810578754273⟩
+def price : EarlyPrice := ⟨2, 24, 10, 75/100, 70/100, ![829636507881, 119523762846, 23831905188, 993014204], 1879209206882272⟩
 theorem priced : price.Valid plan Band.middle := by
   refine ⟨by decide, by decide, by decide, by decide, rfl, rfl,
     by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, ?_⟩

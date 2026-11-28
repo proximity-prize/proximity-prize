@@ -67,7 +67,7 @@ def termG (sl : ℕ → ℕ) (B J reserve lo hi a b wt c w k : ℕ) : ℕ :=
 
 def boundG (sl : ℕ → ℕ) (m B J reserve lo hi a b wt limit : ℕ) : ℕ :=
   let w := Nat.sub 131071 hi
-  let c := Nat.sub (Nat.mul m 179740) (Nat.mul (Nat.mul 2 lo) reserve)
+  let c := Nat.sub (Nat.mul m 179730) (Nat.mul (Nat.mul 2 lo) reserve)
   Nat.rec (motive := fun _ => ℕ) 0 (fun k acc => Nat.add acc (termG sl B J reserve lo hi a b wt c w k)) limit
 
 def limF (J U seed : ℕ) : ℕ := cond (Nat.beq seed 0) J (mn J (Nat.div U seed))
@@ -131,7 +131,7 @@ def TF (m B J U rows pole reserve jet slope weight seed lo hi : ℕ) : Bool :=
     (Nat.add (Nat.add (Nat.mul (triF U) rows) (Nat.mul (Nat.mul hi (Nat.mul 2 (Nat.add U 1))) pole))
       (boundG (slotT U seed) m B J reserve lo hi jet slope weight (limF J U seed)))
     (Nat.mul (triF U)
-      (volF (Nat.sub (Nat.mul m 179740) (Nat.mul (Nat.mul 2 hi) reserve)) B J (Nat.sub 131071 lo)))
+      (volF (Nat.sub (Nat.mul m 179730) (Nat.mul (Nat.mul 2 hi) reserve)) B J (Nat.sub 131071 lo)))
 
 /-- Rectangle certificate; `v` is the width. -/
 def RF (m B J U v rows pole reserve jet slope weight seed lo hi : ℕ) : Bool :=
@@ -140,7 +140,7 @@ def RF (m B J U v rows pole reserve jet slope weight seed lo hi : ℕ) : Bool :=
         (Nat.mul (Nat.mul hi (Nat.add (Nat.add (Nat.sub U v) v) 2)) pole))
       (boundG (slotR U v seed) m B J reserve lo hi jet slope weight (limF J v seed)))
     (Nat.mul (Nat.mul (Nat.add (Nat.sub U v) 1) (Nat.add v 1))
-      (volF (Nat.sub (Nat.mul m 179740) (Nat.mul (Nat.mul 2 hi) reserve)) B J (Nat.sub 131071 lo)))
+      (volF (Nat.sub (Nat.mul m 179730) (Nat.mul (Nat.mul 2 hi) reserve)) B J (Nat.sub 131071 lo)))
 
 /-! CUT3: branch-free evaluator.  `mn x y = x - (x - y)` and `ble`-flags written as `1 - (a - b)`
 avoid `cond` unfolding in the kernel; the slot test and the activity flags are removed by capping the loop
@@ -222,10 +222,10 @@ def TFB (m B J U rows pole reserve jet slope weight seed lo hi : ℕ) : Bool :=
   Nat.blt
     (Nat.add (Nat.add (Nat.mul (triF U) rows) (Nat.mul (Nat.mul hi (Nat.mul 2 (Nat.add U 1))) pole))
       (lp (termB U seed B J lo hi jet slope weight
-          (Nat.sub (Nat.mul m 179740) (Nat.mul (Nat.mul 2 lo) reserve)) (Nat.sub 131071 hi))
+          (Nat.sub (Nat.mul m 179730) (Nat.mul (Nat.mul 2 lo) reserve)) (Nat.sub 131071 hi))
         (capL (limF J U seed) B J jet slope)))
     (Nat.mul (triF U)
-      (volA (Nat.sub (Nat.mul m 179740) (Nat.mul (Nat.mul 2 hi) reserve)) B J (Nat.sub 131071 lo)))
+      (volA (Nat.sub (Nat.mul m 179730) (Nat.mul (Nat.mul 2 hi) reserve)) B J (Nat.sub 131071 lo)))
 
 theorem capL_le (limit B J a b : ℕ) : capL limit B J a b ≤ limit := by
   unfold capL; rw [mn_eq, mn_eq]
@@ -304,7 +304,7 @@ theorem TFB_eq (m B J U rows pole reserve jet slope weight seed lo hi : ℕ) :
     TFB m B J U rows pole reserve jet slope weight seed lo hi =
       TF m B J U rows pole reserve jet slope weight seed lo hi := by
   have key : lp (termB U seed B J lo hi jet slope weight
-          (Nat.sub (Nat.mul m 179740) (Nat.mul (Nat.mul 2 lo) reserve)) (Nat.sub 131071 hi))
+          (Nat.sub (Nat.mul m 179730) (Nat.mul (Nat.mul 2 lo) reserve)) (Nat.sub 131071 hi))
         (capL (limF J U seed) B J jet slope) =
       boundG (slotT U seed) m B J reserve lo hi jet slope weight (limF J U seed) := by
     unfold boundG

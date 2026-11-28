@@ -79,7 +79,7 @@ noncomputable section
 open i4 PolynomialDifferential Finset
 open scoped Polynomial
 def c1 :Prop :=
- aWw small 84≤232369∧Moments small 12850 610160 205216
+ aWw legacySmall 84≤232369∧Moments legacySmall 12850 610160 205216
 def c2 :Prop :=
   aWw bo8 6252≤0x62703852f02 ∧
     Moments bo8 0x12e20e912 0x1098bf757c00 0x5e143ee4d6c

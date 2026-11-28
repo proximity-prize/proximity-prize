@@ -206,12 +206,6 @@ def forcedPower (w : ℤ) (W j : ℕ) : ℕ :=
 def TerminalDivisibility (w : ℤ) (rows : Banks) (f : Equation) : Prop :=
   ∀ W < (band w).multiplicity * agreement, ∀ P ∈ rows (terminalShape w) W, P ≠ 0 →
     f ^ forcedPower w W P.natDegree ∣ P.leadingCoeff
-def seedGain (w : ℤ) : ℕ :=
-  let b := band w
-  let U := b.subbankSeeds
-  let v := b.seedBound + 1
-  shapeSum (terminalShape w) fun q j => ∑ r ∈ Finset.range (U / v + 1),
-    (slots U (r * v) - slots U ((r + 1) * v)) * (rawWidth w q j - 2 * w.toNat * (j + r))
 def curveFactor (d : ℕ) : ℕ := t / (agreement - d) + 1
 structure RetainedCover {u del} (M : AnchorModel u del) {Γ} (F : AnchoredFamily M Γ)
     {rows : Banks} (pairs : ∀ i : Fin 2, BufferedPair M.overhead rows i) where
@@ -251,55 +245,6 @@ open K1_14 (FX Jet Equation shapeSum slots triangle SeedBound)
 open K1_14_4 (gradeWidth seedDegree seedDegree_le_iff seedDegree_pow )
 open K1_14_4 (shapeSum_swap gradeWidth_card position_sum)
 open K1_14_4 (gradeMap mem_filtered finrank_le_grades)
-private def gradeCapacity (w : ℤ) (W j : ℕ) : ℕ :=
-  let b := band w
-  gradeWidth (131071 - w.toNat) b.jetBound W j *
-    slots b.subbankSeeds (forcedPower w W j * (b.seedBound + 1))
-private def cutoffCapacity (w : ℤ) (W : ℕ) : ℕ :=
-  ∑ j ∈ range ((band w).vBound + 1), gradeCapacity w W j
-private theorem cutoffCapacity_eq (w : ℤ) (W : ℕ) (hk : 0 < 131071 - w.toNat) :
-    cutoffCapacity w W =
-      shapeSum (terminalShape w) (fun q j =>
-        if q * (131071 - w.toNat) ≤ W + j then
-          slots (band w).subbankSeeds (forcedPower w W j * ((band w).seedBound + 1))
-        else 0) := by
-  rw [← shapeSum_swap]
-  unfold cutoffCapacity
-  apply sum_congr rfl
-  intro j _
-  rw [gradeCapacity, gradeWidth_card _ _ _ _ hk, sum_mul]
-  apply sum_congr rfl
-  intro q _
-  split_ifs <;> simp
-theorem sum_cutoffCapacity_add_seedGain (w : ℤ) (hlo : 2481 ≤ w) (hhi : w ≤ 32766) :
-    (∑ W ∈ range ((band w).multiplicity * agreement), cutoffCapacity w W) + seedGain w =
-      rawVolume w := by
-  let b := band w
-  let k := 131071 - w.toNat
-  let top := b.multiplicity * agreement
-  have hk : 0 < k := by dsimp [k]; omega
-  have hs : 0 < 2 * w.toNat := by omega
-  have hswap (F : ℕ → ℕ → ℕ → ℕ) :
-      (∑ W ∈ range top, shapeSum (terminalShape w) (F W)) =
-        shapeSum (terminalShape w) (fun q j => ∑ W ∈ range top, F W q j) := by
-    unfold shapeSum
-    rw [sum_comm]
-    apply sum_congr rfl
-    intro q _
-    rw [sum_comm]
-  change (∑ W ∈ range top, cutoffCapacity w W) + seedGain w = rawVolume w
-  simp_rw [cutoffCapacity_eq w _ hk]
-  rw [hswap]
-  simp only [seedGain, rawVolume, shapeSum, ← sum_add_distrib, mul_sum]
-  apply sum_congr rfl
-  intro q _
-  apply sum_congr rfl
-  intro j hj
-  have hjq : j ≤ q := (Nat.le_of_lt_succ (mem_range.mp hj)).trans (min_le_left _ _)
-  have hjk : j ≤ q * k := hjq.trans (by
-    simpa using Nat.mul_le_mul_left q (show 1 ≤ k by omega))
-  exact position_sum top (2 * w.toNat) (q * k) j b.subbankSeeds (b.seedBound + 1)
-    hjk hs (by omega)
 end
 end P0_10
 end
@@ -1287,38 +1232,6 @@ private theorem surface_capacity {A w} {T : Finset (Polynomial K)} (hT : (T : Se
   have hq : (gap A : ℚ)*T.card ≤ (errors A : ℚ)*(⌊cost⌋₊ : ℚ) + gap A := by exact_mod_cast hn
   exact hq.trans (add_le_add (mul_le_mul_of_nonneg_left (Nat.floor_le hcost)
     (Nat.cast_nonneg (errors A))) le_rfl)
-theorem family_capacity {A w r budget} {T : Finset (Polynomial K)} (hT : (T : Set (Polynomial K)) ⊆ close A w)
-    (hA : AgreementOK A) (hr : r = 1 ∨ r = 2) (F : Family r) (hg : ImageDegrees F budget)
-    (hcover : ∀ f ∈ T, ∃ i, coeffPoint f ∈ (F.chart i).imageSet) :
-    (gap A : ℚ)*T.card ≤ (errors A : ℚ)*(r*budget : ℕ) + (gap A : ℚ)*F.count := by
-  classical
-  let part (i : Fin F.count) := T.filter fun f => coeffPoint f ∈ (F.chart i).imageSet
-  have hc : T.card ≤ ∑ i, (part i).card := by
-    apply (card_le_card (t := univ.biUnion part) ?_).trans card_biUnion_le
-    intro f hf
-    obtain ⟨i, hi⟩ := hcover f hf
-    exact mem_biUnion.mpr ⟨i, mem_univ _, mem_filter.mpr ⟨hf, hi⟩⟩
-  have hone (i : Fin F.count) : (gap A : ℚ)*(part i).card ≤
-      (errors A : ℚ)*r*affineDegree (F.chart i).ideal + gap A := by
-    have hsub : (part i : Set (Polynomial K)) ⊆ close A w := fun _ hf => hT (mem_filter.mp hf).1
-    have hp : ∀ f ∈ part i, coeffPoint f ∈ zeroLocus Geo (F.chart i).ideal :=
-      fun _ hf => zeroLocus_vanishingIdeal_le _ (mem_filter.mp hf).2
-    rcases hr with h | h
-    · have hh := (curve_capacity hsub hA (hg.prime i) ((hg.dimension i).trans h) hp).1
-      simpa only [h, Nat.cast_one, mul_one] using hh
-    · have hh := surface_capacity hsub hA (hg.prime i) ((hg.dimension i).trans h) hp
-      simpa only [h, Nat.cast_ofNat, mul_assoc] using hh
-  have hq : (T.card : ℚ) ≤ ∑ i, ((part i).card : ℚ) := by exact_mod_cast hc
-  calc
-    _ ≤ (gap A : ℚ) * ∑ i, ((part i).card : ℚ) := mul_le_mul_of_nonneg_left hq (Nat.cast_nonneg _)
-    _ = ∑ i, (gap A : ℚ) * (part i).card := mul_sum ..
-    _ ≤ _ := sum_le_sum fun i _ => hone i
-    _ = (errors A : ℚ)*r * (∑ i, affineDegree (F.chart i).ideal) + (gap A : ℚ)*F.count := by
-      rw [sum_add_distrib, ← mul_sum, sum_const, nsmul_eq_mul, card_univ, Fintype.card_fin, mul_comm (F.count : ℚ)]
-    _ ≤ _ := by
-      rw [Nat.cast_mul, ← mul_assoc]
-      exact add_le_add (mul_le_mul_of_nonneg_left hg.total
-        (mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _))) le_rfl
 end
 end CJ0
 end
@@ -1952,15 +1865,6 @@ theorem initialSep_eval (G : Equation) (f : (Polynomial K)) :
     rw [initialSep, initialJetSeparant, initial, lifted, lifted, map_separant]
     rfl
   rw [he, initial_eval]
-theorem readJet_eq {L : ℕ} (P : (Polynomial Geo)) (hp : P.degree < L) (j : ℕ) :
-    (∑ i : Fin L, (i.val.choose j : Geo) * center^(i.val-j) * P.coeff i.val) =
-      (hasseDeriv j P).eval center := by
-  rw [hasseDeriv_apply, ← Polynomial.sum_fin
-    (fun i c => monomial (i - j) ((i.choose j : Geo) * c)) (by simp) hp, eval_finsetSum]
-  apply Finset.sum_congr rfl
-  intro i _
-  rw [eval_monomial]
-  ring
 end
 end CJ0_3
 end
@@ -1971,88 +1875,9 @@ open CJ0 PolynomialDifferential MvPolynomial
 open scoped BigOperators
 set_option maxHeartbeats 600000
 set_option maxRecDepth 4000
-private theorem weighted_map_eq {σ R S : Type*} [CommSemiring R] [CommSemiring S]
-    (φ : R →+* S) (hφ : Function.Injective φ) (w : σ → ℕ) (P : MvPolynomial σ R) :
-    (MvPolynomial.map φ P).weightedTotalDegree w = P.weightedTotalDegree w := by
-  unfold weightedTotalDegree
-  rw [support_map_of_injective P hφ]
-theorem initial_weight (w : Fin 3 → ℕ) (G : Equation) :
-    (initial G).weightedTotalDegree w = G.weightedTotalDegree (fun j => j.elim 0 w) := by
-  rw [initial_eq_map, weighted_map_eq _ centerMap_injective, weightedTotalDegree_optionEquivRight]
-theorem lifted_weight (w : Option (Fin 3) → ℕ) (G : Equation) :
-    (lifted G).weightedTotalDegree w = G.weightedTotalDegree w :=
-  weighted_map_eq embed embed.injective w G
-theorem lifted_total (G : Equation) : jetTotalDegree (lifted G) = jetTotalDegree G :=
-  lifted_weight jetDegreeWeight G
-theorem lifted_top (G : Equation) :
-    jetDegree (lifted G) (Fin.last 2) = jetDegree G (Fin.last 2) := by
-  simpa only [jetDegree, weightedTotalDegree_piSingle] using
-    lifted_weight (Pi.single (some (Fin.last 2)) 1) G
-theorem orderTwo_of_dvd {s : Source} {G Q : Equation} (hQ : OrderTwo s Q) (h : G ∣ Q) :
-    OrderTwo s G := by
-  refine ⟨ne_zero_of_dvd_ne_zero hQ.1 h,
-    (weightedTotalDegree_le_of_dvd jetDegreeWeight h hQ.1).trans hQ.2.1,
-    (weightedTotalDegree_le_of_dvd CJ0.indexWeight h hQ.1).trans hQ.2.2.1, ?_⟩
-  have htop := weightedTotalDegree_le_of_dvd (Pi.single (some (Fin.last 2)) 1) h hQ.1
-  rw [weightedTotalDegree_piSingle, weightedTotalDegree_piSingle] at htop
-  exact htop.trans hQ.2.2.2
-theorem totalWeight_eq : (fun j : Option (Fin 3) => j.elim 0 (1 : Fin 3 → ℕ)) =
-    jetDegreeWeight := by
-  funext j
-  cases j <;> rfl
-private theorem topWeight_eq : (fun j : Option (Fin 3) =>
-    j.elim 0 (Pi.single (Fin.last 2) 1)) = Pi.single (some (Fin.last 2)) (1 : ℕ) := by
-  funext j
-  cases j <;> simp [Pi.single_apply]
-theorem factor_weights {s : Source} {Q : Equation} (hQ : OrderTwo s Q) (F : FactorFamily Q) :
-    (∑ i, (F.equation i).totalDegree) ≤ s.B ∧
-    (∑ i, (F.equation i).weightedTotalDegree Fin.val) ≤ s.J ∧
-    (∑ i, (F.equation i).degreeOf (Fin.last 2)) ≤ s.C := by
-  have hn := initial_ne_zero hQ.1
-  have h (w : Fin 3 → ℕ) :
-      (∑ i, (F.equation i).weightedTotalDegree w) ≤ (initial Q).weightedTotalDegree w :=
-    sum_weightedTotalDegree_le_of_prod_dvd w Finset.univ F.equation hn F.product_dvd
-  have ht := h (1 : Fin 3 → ℕ)
-  have hi := h Fin.val
-  have hc := h (Pi.single (Fin.last 2) 1)
-  rw [initial_weight, totalWeight_eq] at ht
-  rw [initial_weight] at hi
-  rw [initial_weight, topWeight_eq, weightedTotalDegree_piSingle] at hc
-  simp only [weightedTotalDegree_one] at ht
-  simp only [weightedTotalDegree_piSingle] at hc
-  exact ⟨ht.trans hQ.2.1, hi.trans hQ.2.2.1, hc.trans hQ.2.2.2⟩
-theorem factor_count {Q : Equation} (F : FactorFamily Q) :
-    F.count ≤ ∑ i, (F.equation i).totalDegree := by
-  classical
-  have h (i : Fin F.count) : 1 ≤ (F.equation i).totalDegree := by
-    by_contra! hh
-    have hdeg : (F.equation i).totalDegree = 0 := by omega
-    have he := totalDegree_eq_zero_iff_eq_C.mp hdeg
-    have hz : (F.equation i).coeff 0 ≠ 0 := fun hz =>
-      (F.irreducible i).ne_zero (he.trans (by rw [hz, map_zero]))
-    exact (F.irreducible i).not_isUnit (he.symm ▸ (isUnit_iff_ne_zero.mpr hz).map MvPolynomial.C)
-  calc
-    F.count = ∑ _ : Fin F.count, (1 : ℕ) := by simp
-    _ ≤ _ := Finset.sum_le_sum fun i _ => h i
-theorem degreeOf_top_of_index {P : InitialRing 2} {d : ℕ}
-    (hP : P.weightedTotalDegree Fin.val ≤ d) : P.degreeOf (Fin.last 2) ≤ d / 2 := by
-  classical
-  apply degreeOf_le_iff.mpr
-  intro m hm
-  have hweight : 2 * m (Fin.last 2) ≤ Finsupp.weight Fin.val m := by
-    rw [Finsupp.weight_apply, Finsupp.sum_fintype _ _ (by simp)]
-    have hsum : m (Fin.last 2) • (Fin.last 2).val ≤ ∑ i, m i • Fin.val i :=
-      Finset.single_le_sum (fun i _ => Nat.zero_le (m i • Fin.val i))
-        (Finset.mem_univ (Fin.last 2))
-    simpa only [Fin.val_last, smul_eq_mul, Nat.mul_comm 2] using hsum
-  have h := hweight.trans ((le_weightedTotalDegree Fin.val hm).trans hP)
-  omega
 theorem indexWeight_eq : Astra7.jetWeight 0 1 3 = CJ0.indexWeight := by
   funext i
   cases i <;> simp [Astra7.jetWeight, CJ0.indexWeight]
-theorem coeffWeight_eq : Astra7.coeffWeight 0 1 (2 + 1) = Fin.val := by
-  funext i
-  simp [Astra7.coeffWeight]
 end
 end CJ0_3
 end
@@ -2180,101 +2005,8 @@ set_option maxRecDepth 4000
 private def coeffWeight {L : ℕ} (i : Fin L) : ℕ := i.val - 1
 private def jetWeight (L : ℕ) : Option (Fin L) → ℕ :=
   fun i => i.elim 0 coeffWeight
-private theorem jetWeight_initial :
-    jetWeight 3 = Pi.single (some (Fin.last 2)) 1 := by
-  funext i
-  cases i with
-  | none => simp [jetWeight]
-  | some j => fin_cases j <;> decide
 section Field
 variable {F : Type*} [Field F]
-private theorem universalJet_offset (L j : ℕ) :
-    SupportWeightOffset (Finsupp.weight (jetWeight L))
-      (Finsupp.weight (Astra7.displacementWeight 1 L)) (j - 1)
-      (universalTaylorJet (F := F) L j) := by
-  classical
-  apply SupportWeightOffset.sum
-  intro i hi
-  apply SupportWeightOffset.monomial
-  have hj := (Finset.mem_filter.mp hi).2
-  simp only [map_add, Finsupp.weight_single, smul_eq_mul, jetWeight,
-    Astra7.displacementWeight, coeffWeight, Option.elim_some, Option.elim_none,
-    mul_zero, zero_add, one_mul, add_zero, mul_one]
-  omega
-private theorem residual_coeff_weight (L h : ℕ) (x : F) (Q : DifferentialPolynomial F 2)
-    {c : ℕ} (hQ : Q.degreeOf (some (Fin.last 2)) ≤ c)
-    {m : Fin L →₀ ℕ}
-    (hm : m ∈ ((optionEquivLeft F (Fin L) (universalTaylorResidual L x Q)).coeff h).support) :
-    Finsupp.weight coeffWeight m ≤ h + c := by
-  have hres : SupportWeightOffset (Finsupp.weight (jetWeight L))
-      (Finsupp.weight (Astra7.displacementWeight 1 L))
-      (Q.weightedTotalDegree (jetWeight 3)) (universalTaylorResidual L x Q) := by
-    apply supportWeightOffset_aeval
-    intro i
-    cases i with
-    | none =>
-      apply SupportWeightOffset.add
-      · exact SupportWeightOffset.C x
-      · apply SupportWeightOffset.monomial
-        simp [jetWeight, Astra7.displacementWeight, Finsupp.weight_single]
-    | some j => exact universalJet_offset L j.val
-  have hw := hres (m.optionElim h) ((mem_support_coeff_optionEquivLeft F).mp hm)
-  change Finsupp.weight (fun i : Option (Fin L) => i.elim 0 coeffWeight) (m.optionElim h) ≤
-    Finsupp.weight (fun i : Option (Fin L) => i.elim 1 (fun _ => 0)) (m.optionElim h) +
-      Q.weightedTotalDegree (jetWeight 3) at hw
-  rw [Finsupp.weight_elim_one_zero, Finsupp.optionElim_apply_none,
-    Finsupp.weight_optionElim, zero_mul, zero_add, jetWeight_initial,
-    weightedTotalDegree_piSingle] at hw
-  exact hw.trans (Nat.add_le_add_left hQ h)
-private theorem initial_coord_bound (l : ℕ) (hl : l < 3) :
-    (MvPolynomial.X (⟨l, hl⟩ : Fin 3) : MvPolynomial (Fin 3) F).degreeOf (Fin.last 2) ≤ l - 1 := by
-  rw [degreeOf_X]
-  split
-  · rename_i he
-    have he' := congrArg Fin.val he
-    change 2 = l at he'
-    omega
-  · exact Nat.zero_le _
-private theorem rationalTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c : ℕ}
-    (hc : 0 < c) (hQ : Q.degreeOf (some (Fin.last 2)) ≤ c) (l : ℕ) :
-    (rationalTaylorNumerator x Q l).degreeOf (Fin.last 2) ≤
-      (2 * (l - 2) - 1) * (c - 1) + (l - 1) := by
-  have hsep := (degreeOf_initialJetSeparant_le x Q).trans (Nat.sub_le_sub_right hQ 1)
-  induction l using Nat.strong_induction_on with
-  | ind l ih =>
-    rw [rationalTaylorNumerator]
-    split_ifs with hl
-    · exact (initial_coord_bound (F := F) l hl).trans (Nat.le_add_left _ _)
-    · let R := (optionEquivLeft F (Fin l) (universalTaylorResidual l x Q)).coeff (l - 2)
-      have hden : ∀ m ∈ R.support,
-          Finsupp.weight (fun i : Fin l => 2 * (i.val - 2) - 1) m ≤ 2 * (l - 2) - 2 :=
-        fun m hm => denominator_weight_le_of_mem_universalTaylorResidual_coeff
-          (r := 2) (K := l) (h := l - 2) (by omega) x Q m hm
-      have hw : ∀ m ∈ R.support, Finsupp.weight coeffWeight m ≤ (l - 2) + c :=
-        fun _ hm => residual_coeff_weight l (l - 2) x Q hQ hm
-      have hd := degreeOf_clearedSubstitution (Fin.last 2) (initialJetSeparant x Q)
-        (fun i : Fin l => rationalTaylorNumerator x Q i.val)
-        (fun i => 2 * (i.val - 2) - 1) coeffWeight (2 * (l - 2) - 2) (c - 1)
-        ((l - 2) + c) R hsep (fun i => ih i.val i.isLt) hden hw
-      have hstep : 2 * (l - 2) - 1 = (2 * (l - 2) - 2) + 1 := by omega
-      have hbudget : (l - 2) + c = (c - 1) + (l - 1) := by omega
-      refine (degreeOf_mul_le _ _ _).trans ?_
-      simp only [degreeOf_neg, degreeOf_C, zero_add]
-      apply hd.trans
-      rw [hstep, Nat.add_mul, one_mul, hbudget, Nat.add_assoc]
-theorem commonTaylor_top (x : F) (Q : DifferentialPolynomial F 2) {c L τ : ℕ}
-    (hc : 0 < c) (hQ : Q.degreeOf (some (Fin.last 2)) ≤ c) (hτ : TaylorExponentSufficient 2 L τ)
-    (l : Fin L) :
-    (commonTaylorNumerator x Q τ l.val).degreeOf (Fin.last 2) ≤ τ * (c - 1) + (l.val - 1) := by
-  have hsep := (degreeOf_initialJetSeparant_le x Q).trans (Nat.sub_le_sub_right hQ 1)
-  let d := 2 * (l.val - 2) - 1
-  have he : τ - d + d = τ := Nat.sub_add_cancel (hτ l)
-  unfold commonTaylorNumerator
-  apply (degreeOf_mul_le _ _ _).trans
-  apply (Nat.add_le_add (rationalTaylor_top x Q hc hQ l.val)
-    ((degreeOf_pow_le _ _ _).trans (Nat.mul_le_mul_left (τ - d) hsep))).trans
-  change d * (c - 1) + (l.val - 1) + (τ - d) * (c - 1) ≤ _
-  rw [Nat.add_right_comm, ← Nat.add_mul, Nat.add_comm d (τ - d), he]
 end Field
 end
 end CJ0_3_2
@@ -2422,46 +2154,6 @@ theorem imageIdeal_eq_ker (T : Chart r) [(sourceIdeal T).IsPrime]
     rw [← openEval_chartMap hy, hq, map_zero]
 private def jetForm (j : ℕ) : CoeffRing :=
   ∑ i : Fin k, C ((i.val.choose j : Geo) * center^(i.val-j)) * MvPolynomial.X i
-private theorem eval_jetForm (y : Fin k → Geo) (j : ℕ) :
-    eval y (jetForm j) = readJet y j := by
-  simp [jetForm, readJet]
-private theorem chartMap_recover (T : Chart r) (hT : ChartOK T) [(sourceIdeal T).IsPrime]
-    (hD : T.denominator ∉ sourceIdeal T) :
-    (chartMap T).comp (aeval fun j : Fin (r+1) => jetForm j.val) = localize T := by
-  apply MvPolynomial.algHom_ext
-  intro j
-  change chartMap T (aeval (fun j : Fin (r+1) => jetForm j.val) (MvPolynomial.X j)) =
-    localize T (MvPolynomial.X j)
-  rw [aeval_X, ← sub_eq_zero]
-  apply eq_zero_of_openEval hD
-  intro y hy
-  rw [map_sub, openEval_chartMap, openEval_localize, eval_jetForm, eval_X, hT.recover y hy j, sub_self]
-theorem image_geometry (T : Chart r) (hT : ChartOK T) :
-    T.ideal.IsPrime ∧ (affineHilbertPolynomial T.ideal).natDegree = r := by
-  have hprime : (sourceIdeal T).IsPrime :=
-    Ideal.span_singleton_prime hT.irreducible.ne_zero |>.mpr hT.irreducible.prime
-  let := hprime
-  have hD : T.denominator ∉ sourceIdeal T :=
-    fun h => hT.nonvanishing (Ideal.mem_span_singleton.mp h)
-  have hne : Ideal.Quotient.mk (sourceIdeal T) T.denominator ≠ 0 :=
-    mt Ideal.Quotient.eq_zero_iff_mem.mp hD
-  let : IsDomain (ChartOpen T) := Localization.Away.isDomain hne
-  have hreg := (IsRegular.of_ne_zero hne).1
-  have hsource : (affineHilbertPolynomial (sourceIdeal T)).natDegree = r := by
-    have h := natDegree_affineHilbertPolynomial_span_singleton_add_one
-      hT.irreducible.ne_zero hprime.ne_top
-    rw [Nat.card_fin] at h
-    exact Nat.add_right_cancel h
-  rw [imageIdeal_eq_ker T hD]
-  refine ⟨RingHom.ker_isPrime _, Eq.trans (le_antisymm ?_ ?_) hsource⟩
-  · let E := awayPresentationEquiv (sourceIdeal T) T.denominator
-    exact (natDegree_affineHilbertPolynomial_le_of_injective
-      (E.symm.toAlgHom.comp (Ideal.kerLiftAlg (chartMap T)))
-      (E.symm.injective.comp (Ideal.kerLiftAlg_injective (chartMap T)))).trans
-      (natDegree_affineHilbertPolynomial_awayPresentationIdeal_le (sourceIdeal T) T.denominator)
-  · exact natDegree_affineHilbertPolynomial_le_of_away_range (sourceIdeal T) T.denominator hreg
-      (chartMap T)
-      (fun q => ⟨_, DFunLike.congr_fun (chartMap_recover T hT hD) q⟩) le_rfl
 end
 end
 end CJ0_4

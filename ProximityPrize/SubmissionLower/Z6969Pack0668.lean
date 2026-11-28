@@ -14,25 +14,25 @@ open PowerSheets PowerExclusion PhysicalWindow
 set_option maxRecDepth 20000
 set_option maxHeartbeats 0
 
-private theorem point20_2293: Positive (entry 23 3 6 2049 386045) 2293 2389 := by decide +kernel
-theorem power20: Cover (Positive (entry 23 3 6 2049 386045)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point20_2293, rfl⟩
+private theorem shiftPower20_2314 : Positive (entry 23 3 6 2049 385979) 2314 2411 := by decide +kernel
+theorem power20 : Cover (Positive (entry 23 3 6 2049 385979)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower20_2314, rfl⟩
 
-private theorem point21_2293: Positive (entry 23 4 5 1025 514727) 2293 2389 := by decide +kernel
-theorem power21: Cover (Positive (entry 23 4 5 1025 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point21_2293, rfl⟩
+private theorem shiftPower21_2314 : Positive (entry 23 4 5 1025 514639) 2314 2411 := by decide +kernel
+theorem power21 : Cover (Positive (entry 23 4 5 1025 514639)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower21_2314, rfl⟩
 
-private theorem point22_2293: Positive (entry 23 4 5 2049 514727) 2293 2389 := by decide +kernel
-theorem power22: Cover (Positive (entry 23 4 5 2049 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point22_2293, rfl⟩
+private theorem shiftPower22_2314 : Positive (entry 23 4 5 2049 514639) 2314 2411 := by decide +kernel
+theorem power22 : Cover (Positive (entry 23 4 5 2049 514639)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower22_2314, rfl⟩
 
-private theorem point23_2293: Positive (entry 23 4 5 4097 514727) 2293 2389 := by decide +kernel
-theorem power23: Cover (Positive (entry 23 4 5 4097 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point23_2293, rfl⟩
+private theorem shiftPower23_2314 : Positive (entry 23 4 5 4097 514639) 2314 2411 := by decide +kernel
+theorem power23 : Cover (Positive (entry 23 4 5 4097 514639)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower23_2314, rfl⟩
 
-private theorem point24_2293: Positive (entry 23 4 5 8193 514727) 2293 2389 := by decide +kernel
-theorem power24: Cover (Positive (entry 23 4 5 8193 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point24_2293, rfl⟩
+private theorem shiftPower24_2314 : Positive (entry 23 4 5 8193 514639) 2314 2411 := by decide +kernel
+theorem power24 : Cover (Positive (entry 23 4 5 8193 514639)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower24_2314, rfl⟩
 
 end Research6969.PowerReceipts
 end Z6969Source1080
@@ -45,25 +45,25 @@ open PowerSheets PowerExclusion PhysicalWindow
 set_option maxRecDepth 20000
 set_option maxHeartbeats 0
 
-private theorem point25_2293: Positive (entry 23 4 5 32769 514727) 2293 2389 := by decide +kernel
-theorem power25: Cover (Positive (entry 23 4 5 32769 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point25_2293, rfl⟩
+private theorem shiftPower25_2314 : Positive (entry 23 4 5 32769 514639) 2314 2411 := by decide +kernel
+theorem power25 : Cover (Positive (entry 23 4 5 32769 514639)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower25_2314, rfl⟩
 
-private theorem point26_2293: Positive (entry 23 5 4 1025 643409) 2293 2389 := by decide +kernel
-theorem power26: Cover (Positive (entry 23 5 4 1025 643409)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point26_2293, rfl⟩
+private theorem shiftPower26_2314 : Positive (entry 23 5 4 1025 643299) 2314 2411 := by decide +kernel
+theorem power26 : Cover (Positive (entry 23 5 4 1025 643299)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower26_2314, rfl⟩
 
-private theorem point27_2293: Positive (entry 23 5 4 2049 643409) 2293 2389 := by decide +kernel
-theorem power27: Cover (Positive (entry 23 5 4 2049 643409)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point27_2293, rfl⟩
+private theorem shiftPower27_2314 : Positive (entry 23 5 4 2049 643299) 2314 2411 := by decide +kernel
+theorem power27 : Cover (Positive (entry 23 5 4 2049 643299)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower27_2314, rfl⟩
 
-private theorem point28_2293: Positive (entry 23 5 4 4097 643409) 2293 2389 := by decide +kernel
-theorem power28: Cover (Positive (entry 23 5 4 4097 643409)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point28_2293, rfl⟩
+private theorem shiftPower28_2314 : Positive (entry 23 5 4 4097 643299) 2314 2411 := by decide +kernel
+theorem power28 : Cover (Positive (entry 23 5 4 4097 643299)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower28_2314, rfl⟩
 
-private theorem point29_2293: Positive (entry 23 5 4 8193 643409) 2293 2389 := by decide +kernel
-theorem power29: Cover (Positive (entry 23 5 4 8193 643409)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point29_2293, rfl⟩
+private theorem shiftPower29_2314 : Positive (entry 23 5 4 8193 643299) 2314 2411 := by decide +kernel
+theorem power29 : Cover (Positive (entry 23 5 4 8193 643299)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower29_2314, rfl⟩
 
 end Research6969.PowerReceipts
 end Z6969Source1081
@@ -76,25 +76,25 @@ open PowerSheets PowerExclusion PhysicalWindow
 set_option maxRecDepth 20000
 set_option maxHeartbeats 0
 
-private theorem point30_2293: Positive (entry 23 5 4 32769 643409) 2293 2389 := by decide +kernel
-theorem power30: Cover (Positive (entry 23 5 4 32769 643409)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point30_2293, rfl⟩
+private theorem shiftPower30_2314 : Positive (entry 23 5 4 32769 643299) 2314 2411 := by decide +kernel
+theorem power30 : Cover (Positive (entry 23 5 4 32769 643299)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower30_2314, rfl⟩
 
-private theorem point31_2293: Positive (entry 23 6 3 1025 772091) 2293 2389 := by decide +kernel
-theorem power31: Cover (Positive (entry 23 6 3 1025 772091)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point31_2293, rfl⟩
+private theorem shiftPower31_2314 : Positive (entry 23 6 3 1025 771959) 2314 2411 := by decide +kernel
+theorem power31 : Cover (Positive (entry 23 6 3 1025 771959)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower31_2314, rfl⟩
 
-private theorem point32_2293: Positive (entry 23 6 3 2049 772091) 2293 2389 := by decide +kernel
-theorem power32: Cover (Positive (entry 23 6 3 2049 772091)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point32_2293, rfl⟩
+private theorem shiftPower32_2314 : Positive (entry 23 6 3 2049 771959) 2314 2411 := by decide +kernel
+theorem power32 : Cover (Positive (entry 23 6 3 2049 771959)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower32_2314, rfl⟩
 
-private theorem point33_2293: Positive (entry 23 6 3 4097 772091) 2293 2389 := by decide +kernel
-theorem power33: Cover (Positive (entry 23 6 3 4097 772091)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point33_2293, rfl⟩
+private theorem shiftPower33_2314 : Positive (entry 23 6 3 4097 771959) 2314 2411 := by decide +kernel
+theorem power33 : Cover (Positive (entry 23 6 3 4097 771959)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower33_2314, rfl⟩
 
-private theorem point34_2293: Positive (entry 23 6 3 8193 772091) 2293 2389 := by decide +kernel
-theorem power34: Cover (Positive (entry 23 6 3 8193 772091)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point34_2293, rfl⟩
+private theorem shiftPower34_2314 : Positive (entry 23 6 3 8193 771959) 2314 2411 := by decide +kernel
+theorem power34 : Cover (Positive (entry 23 6 3 8193 771959)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower34_2314, rfl⟩
 
 end Research6969.PowerReceipts
 end Z6969Source1082
@@ -107,25 +107,25 @@ open PowerSheets PowerExclusion PhysicalWindow
 set_option maxRecDepth 20000
 set_option maxHeartbeats 0
 
-private theorem point35_2293: Positive (entry 23 6 3 32769 772091) 2293 2389 := by decide +kernel
-theorem power35: Cover (Positive (entry 23 6 3 32769 772091)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point35_2293, rfl⟩
+private theorem shiftPower35_2314 : Positive (entry 23 6 3 32769 771959) 2314 2411 := by decide +kernel
+theorem power35 : Cover (Positive (entry 23 6 3 32769 771959)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower35_2314, rfl⟩
 
-private theorem point36_2293: Positive (entry 25 3 6 513 386045) 2293 2389 := by decide +kernel
-theorem power36: Cover (Positive (entry 25 3 6 513 386045)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point36_2293, rfl⟩
+private theorem shiftPower36_2314 : Positive (entry 25 3 6 513 385979) 2314 2411 := by decide +kernel
+theorem power36 : Cover (Positive (entry 25 3 6 513 385979)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower36_2314, rfl⟩
 
-private theorem point37_2293: Positive (entry 25 4 5 513 514727) 2293 2389 := by decide +kernel
-theorem power37: Cover (Positive (entry 25 4 5 513 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point37_2293, rfl⟩
+private theorem shiftPower37_2314 : Positive (entry 25 4 5 513 514639) 2314 2411 := by decide +kernel
+theorem power37 : Cover (Positive (entry 25 4 5 513 514639)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower37_2314, rfl⟩
 
-private theorem point38_2293: Positive (entry 25 4 5 1025 514727) 2293 2389 := by decide +kernel
-theorem power38: Cover (Positive (entry 25 4 5 1025 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point38_2293, rfl⟩
+private theorem shiftPower38_2314 : Positive (entry 25 4 5 1025 514639) 2314 2411 := by decide +kernel
+theorem power38 : Cover (Positive (entry 25 4 5 1025 514639)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower38_2314, rfl⟩
 
-private theorem point39_2293: Positive (entry 25 5 4 513 643409) 2293 2389 := by decide +kernel
-theorem power39: Cover (Positive (entry 25 5 4 513 643409)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point39_2293, rfl⟩
+private theorem shiftPower39_2314 : Positive (entry 25 5 4 513 643299) 2314 2411 := by decide +kernel
+theorem power39 : Cover (Positive (entry 25 5 4 513 643299)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower39_2314, rfl⟩
 
 end Research6969.PowerReceipts
 end Z6969Source1083
@@ -139,21 +139,14 @@ set_option maxRecDepth 10000
 def test117 : MeasuredBound.Test := ⟨src117,.triangle,fit117,⟨_,cover117⟩⟩
 def test70 : MeasuredBound.Test := ⟨src70,.triangle,fit70,⟨_,cover70⟩⟩
 def test71 : MeasuredBound.Test := ⟨src71,.triangle,fit71,⟨_,cover71⟩⟩
-def test110 : MeasuredBound.Test := ⟨src110,.triangle,fit110,⟨_,cover110⟩⟩
 def test111 : MeasuredBound.Test := ⟨src111,.triangle,fit111,⟨_,cover111⟩⟩
-def test112 : MeasuredBound.Test := ⟨src112,.triangle,fit112,⟨_,cover112⟩⟩
 def test113 : MeasuredBound.Test := ⟨src113,.triangle,fit113,⟨_,cover113⟩⟩
-def test72 : MeasuredBound.Test := ⟨src72,.triangle,fit72,⟨_,cover72⟩⟩
 def test73 : MeasuredBound.Test := ⟨src73,.triangle,fit73,⟨_,cover73⟩⟩
 def test74 : MeasuredBound.Test := ⟨src74,.triangle,fit74,⟨_,cover74⟩⟩
-def test75 : MeasuredBound.Test := ⟨src75,.triangle,fit75,⟨_,cover75⟩⟩
-def test76 : MeasuredBound.Test := ⟨src76,.triangle,fit76,⟨_,cover76⟩⟩
 def test77 : MeasuredBound.Test := ⟨src77,.triangle,fit77,⟨_,cover77⟩⟩
 def test78 : MeasuredBound.Test := ⟨src78,.triangle,fit78,⟨_,cover78⟩⟩
 def test79 : MeasuredBound.Test := ⟨src79,.triangle,fit79,⟨_,cover79⟩⟩
-def test122 : MeasuredBound.Test := ⟨src122,.triangle,fit122,⟨_,cover122⟩⟩
 def test123 : MeasuredBound.Test := ⟨src123,.triangle,fit123,⟨_,cover123⟩⟩
-def test80 : MeasuredBound.Test := ⟨src80,.triangle,fit80,⟨_,cover80⟩⟩
 def test81 : MeasuredBound.Test := ⟨src81,.triangle,fit81,⟨_,cover81⟩⟩
 def test106 : MeasuredBound.Test := ⟨src106,.triangle,fit106,⟨_,cover106⟩⟩
 def test107 : MeasuredBound.Test := ⟨src107,.triangle,fit107,⟨_,cover107⟩⟩
@@ -173,32 +166,20 @@ set_option autoImplicit true
 namespace Research6969.MeasuredChoices
 open TerminalFits PhysicalCatalogue
 set_option maxRecDepth 10000
-def test940 : MeasuredBound.Test := ⟨src940,.triangle,fit940,⟨_,cover940⟩⟩
 def test952 : MeasuredBound.Test := ⟨src952,.triangle,fit952,⟨_,cover952⟩⟩
-def test953 : MeasuredBound.Test := ⟨src953,.triangle,fit953,⟨_,cover953⟩⟩
 def test966 : MeasuredBound.Test := ⟨src966,.triangle,fit966,⟨_,cover966⟩⟩
-def test967 : MeasuredBound.Test := ⟨src967,.triangle,fit967,⟨_,cover967⟩⟩
 def test977 : MeasuredBound.Test := ⟨src977,.triangle,fit977,⟨_,cover977⟩⟩
-def test978 : MeasuredBound.Test := ⟨src978,.triangle,fit978,⟨_,cover978⟩⟩
 def test990 : MeasuredBound.Test := ⟨src990,.triangle,fit990,⟨_,cover990⟩⟩
-def test991 : MeasuredBound.Test := ⟨src991,.triangle,fit991,⟨_,cover991⟩⟩
-def test1004 : MeasuredBound.Test := ⟨src1004,.triangle,fit1004,⟨_,cover1004⟩⟩
 def test1005 : MeasuredBound.Test := ⟨src1005,.triangle,fit1005,⟨_,cover1005⟩⟩
-def test1028 : MeasuredBound.Test := ⟨src1028,.triangle,fit1028,⟨_,cover1028⟩⟩
 def test1029 : MeasuredBound.Test := ⟨src1029,.triangle,fit1029,⟨_,cover1029⟩⟩
-def test1041 : MeasuredBound.Test := ⟨src1041,.triangle,fit1041,⟨_,cover1041⟩⟩
 def test1042 : MeasuredBound.Test := ⟨src1042,.triangle,fit1042,⟨_,cover1042⟩⟩
-def test1054 : MeasuredBound.Test := ⟨src1054,.triangle,fit1054,⟨_,cover1054⟩⟩
 def test1055 : MeasuredBound.Test := ⟨src1055,.triangle,fit1055,⟨_,cover1055⟩⟩
-def test1067 : MeasuredBound.Test := ⟨src1067,.triangle,fit1067,⟨_,cover1067⟩⟩
 def test1068 : MeasuredBound.Test := ⟨src1068,.triangle,fit1068,⟨_,cover1068⟩⟩
 def test1079 : MeasuredBound.Test := ⟨src1079,.triangle,fit1079,⟨_,cover1079⟩⟩
 def test1080 : MeasuredBound.Test := ⟨src1080,.triangle,fit1080,⟨_,cover1080⟩⟩
 def test1092 : MeasuredBound.Test := ⟨src1092,.triangle,fit1092,⟨_,cover1092⟩⟩
 def test1093 : MeasuredBound.Test := ⟨src1093,.triangle,fit1093,⟨_,cover1093⟩⟩
-def test1104 : MeasuredBound.Test := ⟨src1104,.triangle,fit1104,⟨_,cover1104⟩⟩
 def test1105 : MeasuredBound.Test := ⟨src1105,.triangle,fit1105,⟨_,cover1105⟩⟩
-def test1119 : MeasuredBound.Test := ⟨src1119,.triangle,fit1119,⟨_,cover1119⟩⟩
 def test1120 : MeasuredBound.Test := ⟨src1120,.triangle,fit1120,⟨_,cover1120⟩⟩
 def test1132 : MeasuredBound.Test := ⟨src1132,.triangle,fit1132,⟨_,cover1132⟩⟩
 end Research6969.MeasuredChoices
@@ -363,9 +344,9 @@ private theorem leaf2_0:Done (0:Fin 18) ⟨23,24,9,2,0,some 3⟩:=entire WholeRo
 private theorem tail2_0 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 2 0:=join (leaf2_0) (tail2_4 needed)
 private theorem leaf3_4097:Done (0:Fin 18) ⟨23,24,9,3,4097,none⟩:=entire WholeRows.cell50 WholeRows.checked50
 private theorem tail3_4097 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 3 4097:=leaf3_4097
-private theorem leaf3_2049:Done (0:Fin 18) ⟨23,24,9,3,2049,some 4096⟩:=power _ 386045 (by decide) PowerReceipts.power20 (by decide) (by decide) (by decide)
+private theorem leaf3_2049:Done (0:Fin 18) ⟨23,24,9,3,2049,some 4096⟩:=power _ 385979 (by decide) PowerReceipts.power20 (by decide) (by decide) (by decide)
 private theorem tail3_2049 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 3 2049:=join (leaf3_2049) (tail3_4097 needed)
-private theorem leaf3_1025:Done (0:Fin 18) ⟨23,24,9,3,1025,some 2048⟩:=power _ 386045 (by decide) PowerReceipts.power19 (by decide) (by decide) (by decide)
+private theorem leaf3_1025:Done (0:Fin 18) ⟨23,24,9,3,1025,some 2048⟩:=power _ 385979 (by decide) PowerReceipts.power19 (by decide) (by decide) (by decide)
 private theorem tail3_1025 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 3 1025:=join (leaf3_1025) (tail3_2049 needed)
 private theorem leaf3_513 (needed:HighPendingSeed1.Required):Done (0:Fin 18) ⟨23,24,9,3,513,some 1024⟩:=needed ⟨37,by decide⟩
 private theorem tail3_513 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 3 513:=join (leaf3_513 needed) (tail3_1025 needed)
@@ -403,15 +384,15 @@ private theorem leaf3_2:Done (0:Fin 18) ⟨23,24,9,3,2,some 3⟩:=entire WholeRo
 private theorem tail3_2 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 3 2:=join (leaf3_2) (tail3_4 needed)
 private theorem leaf3_0:Done (0:Fin 18) ⟨23,24,9,3,0,some 1⟩:=entire WholeRows.cell43 WholeRows.checked43
 private theorem tail3_0 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 3 0:=join (leaf3_0) (tail3_2 needed)
-private theorem leaf4_32769:Done (0:Fin 18) ⟨23,24,9,4,32769,none⟩:=power _ 514727 (by decide) PowerReceipts.power25 (by decide) (by decide) (by decide)
+private theorem leaf4_32769:Done (0:Fin 18) ⟨23,24,9,4,32769,none⟩:=power _ 514639 (by decide) PowerReceipts.power25 (by decide) (by decide) (by decide)
 private theorem tail4_32769 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 4 32769:=leaf4_32769
-private theorem leaf4_8193:Done (0:Fin 18) ⟨23,24,9,4,8193,some 32768⟩:=power _ 514727 (by decide) PowerReceipts.power24 (by decide) (by decide) (by decide)
+private theorem leaf4_8193:Done (0:Fin 18) ⟨23,24,9,4,8193,some 32768⟩:=power _ 514639 (by decide) PowerReceipts.power24 (by decide) (by decide) (by decide)
 private theorem tail4_8193 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 4 8193:=join (leaf4_8193) (tail4_32769 needed)
-private theorem leaf4_4097:Done (0:Fin 18) ⟨23,24,9,4,4097,some 8192⟩:=power _ 514727 (by decide) PowerReceipts.power23 (by decide) (by decide) (by decide)
+private theorem leaf4_4097:Done (0:Fin 18) ⟨23,24,9,4,4097,some 8192⟩:=power _ 514639 (by decide) PowerReceipts.power23 (by decide) (by decide) (by decide)
 private theorem tail4_4097 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 4 4097:=join (leaf4_4097) (tail4_8193 needed)
-private theorem leaf4_2049:Done (0:Fin 18) ⟨23,24,9,4,2049,some 4096⟩:=power _ 514727 (by decide) PowerReceipts.power22 (by decide) (by decide) (by decide)
+private theorem leaf4_2049:Done (0:Fin 18) ⟨23,24,9,4,2049,some 4096⟩:=power _ 514639 (by decide) PowerReceipts.power22 (by decide) (by decide) (by decide)
 private theorem tail4_2049 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 4 2049:=join (leaf4_2049) (tail4_4097 needed)
-private theorem leaf4_1025:Done (0:Fin 18) ⟨23,24,9,4,1025,some 2048⟩:=power _ 514727 (by decide) PowerReceipts.power21 (by decide) (by decide) (by decide)
+private theorem leaf4_1025:Done (0:Fin 18) ⟨23,24,9,4,1025,some 2048⟩:=power _ 514639 (by decide) PowerReceipts.power21 (by decide) (by decide) (by decide)
 private theorem tail4_1025 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 4 1025:=join (leaf4_1025) (tail4_2049 needed)
 private theorem leaf4_513 (needed:HighPendingSeed1.Required):Done (0:Fin 18) ⟨23,24,9,4,513,some 1024⟩:=needed ⟨38,by decide⟩
 private theorem tail4_513 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 4 513:=join (leaf4_513 needed) (tail4_1025 needed)
@@ -425,15 +406,15 @@ private theorem leaf4_2:Done (0:Fin 18) ⟨23,24,9,4,2,some 8⟩:=entire WholeRo
 private theorem tail4_2 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 4 2:=join (leaf4_2) (tail4_9 needed)
 private theorem leaf4_0:Done (0:Fin 18) ⟨23,24,9,4,0,some 1⟩:=entire WholeRows.cell51 WholeRows.checked51
 private theorem tail4_0 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 4 0:=join (leaf4_0) (tail4_2 needed)
-private theorem leaf5_32769:Done (0:Fin 18) ⟨23,24,9,5,32769,none⟩:=power _ 643409 (by decide) PowerReceipts.power30 (by decide) (by decide) (by decide)
+private theorem leaf5_32769:Done (0:Fin 18) ⟨23,24,9,5,32769,none⟩:=power _ 643299 (by decide) PowerReceipts.power30 (by decide) (by decide) (by decide)
 private theorem tail5_32769 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 5 32769:=leaf5_32769
-private theorem leaf5_8193:Done (0:Fin 18) ⟨23,24,9,5,8193,some 32768⟩:=power _ 643409 (by decide) PowerReceipts.power29 (by decide) (by decide) (by decide)
+private theorem leaf5_8193:Done (0:Fin 18) ⟨23,24,9,5,8193,some 32768⟩:=power _ 643299 (by decide) PowerReceipts.power29 (by decide) (by decide) (by decide)
 private theorem tail5_8193 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 5 8193:=join (leaf5_8193) (tail5_32769 needed)
-private theorem leaf5_4097:Done (0:Fin 18) ⟨23,24,9,5,4097,some 8192⟩:=power _ 643409 (by decide) PowerReceipts.power28 (by decide) (by decide) (by decide)
+private theorem leaf5_4097:Done (0:Fin 18) ⟨23,24,9,5,4097,some 8192⟩:=power _ 643299 (by decide) PowerReceipts.power28 (by decide) (by decide) (by decide)
 private theorem tail5_4097 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 5 4097:=join (leaf5_4097) (tail5_8193 needed)
-private theorem leaf5_2049:Done (0:Fin 18) ⟨23,24,9,5,2049,some 4096⟩:=power _ 643409 (by decide) PowerReceipts.power27 (by decide) (by decide) (by decide)
+private theorem leaf5_2049:Done (0:Fin 18) ⟨23,24,9,5,2049,some 4096⟩:=power _ 643299 (by decide) PowerReceipts.power27 (by decide) (by decide) (by decide)
 private theorem tail5_2049 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 5 2049:=join (leaf5_2049) (tail5_4097 needed)
-private theorem leaf5_1025:Done (0:Fin 18) ⟨23,24,9,5,1025,some 2048⟩:=power _ 643409 (by decide) PowerReceipts.power26 (by decide) (by decide) (by decide)
+private theorem leaf5_1025:Done (0:Fin 18) ⟨23,24,9,5,1025,some 2048⟩:=power _ 643299 (by decide) PowerReceipts.power26 (by decide) (by decide) (by decide)
 private theorem tail5_1025 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 5 1025:=join (leaf5_1025) (tail5_2049 needed)
 private theorem leaf5_513 (needed:HighPendingSeed1.Required):Done (0:Fin 18) ⟨23,24,9,5,513,some 1024⟩:=needed ⟨39,by decide⟩
 private theorem tail5_513 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 5 513:=join (leaf5_513 needed) (tail5_1025 needed)
@@ -443,15 +424,15 @@ private theorem leaf5_2:Done (0:Fin 18) ⟨23,24,9,5,2,some 96⟩:=entire WholeR
 private theorem tail5_2 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 5 2:=join (leaf5_2) (tail5_97 needed)
 private theorem leaf5_0:Done (0:Fin 18) ⟨23,24,9,5,0,some 1⟩:=entire WholeRows.cell56 WholeRows.checked56
 private theorem tail5_0 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 5 0:=join (leaf5_0) (tail5_2 needed)
-private theorem leaf6_32769:Done (0:Fin 18) ⟨23,24,9,6,32769,none⟩:=power _ 772091 (by decide) PowerReceipts.power35 (by decide) (by decide) (by decide)
+private theorem leaf6_32769:Done (0:Fin 18) ⟨23,24,9,6,32769,none⟩:=power _ 771959 (by decide) PowerReceipts.power35 (by decide) (by decide) (by decide)
 private theorem tail6_32769 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 6 32769:=leaf6_32769
-private theorem leaf6_8193:Done (0:Fin 18) ⟨23,24,9,6,8193,some 32768⟩:=power _ 772091 (by decide) PowerReceipts.power34 (by decide) (by decide) (by decide)
+private theorem leaf6_8193:Done (0:Fin 18) ⟨23,24,9,6,8193,some 32768⟩:=power _ 771959 (by decide) PowerReceipts.power34 (by decide) (by decide) (by decide)
 private theorem tail6_8193 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 6 8193:=join (leaf6_8193) (tail6_32769 needed)
-private theorem leaf6_4097:Done (0:Fin 18) ⟨23,24,9,6,4097,some 8192⟩:=power _ 772091 (by decide) PowerReceipts.power33 (by decide) (by decide) (by decide)
+private theorem leaf6_4097:Done (0:Fin 18) ⟨23,24,9,6,4097,some 8192⟩:=power _ 771959 (by decide) PowerReceipts.power33 (by decide) (by decide) (by decide)
 private theorem tail6_4097 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 6 4097:=join (leaf6_4097) (tail6_8193 needed)
-private theorem leaf6_2049:Done (0:Fin 18) ⟨23,24,9,6,2049,some 4096⟩:=power _ 772091 (by decide) PowerReceipts.power32 (by decide) (by decide) (by decide)
+private theorem leaf6_2049:Done (0:Fin 18) ⟨23,24,9,6,2049,some 4096⟩:=power _ 771959 (by decide) PowerReceipts.power32 (by decide) (by decide) (by decide)
 private theorem tail6_2049 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 6 2049:=join (leaf6_2049) (tail6_4097 needed)
-private theorem leaf6_1025:Done (0:Fin 18) ⟨23,24,9,6,1025,some 2048⟩:=power _ 772091 (by decide) PowerReceipts.power31 (by decide) (by decide) (by decide)
+private theorem leaf6_1025:Done (0:Fin 18) ⟨23,24,9,6,1025,some 2048⟩:=power _ 771959 (by decide) PowerReceipts.power31 (by decide) (by decide) (by decide)
 private theorem tail6_1025 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 6 1025:=join (leaf6_1025) (tail6_2049 needed)
 private theorem leaf6_513 (needed:HighPendingSeed1.Required):Done (0:Fin 18) ⟨23,24,9,6,513,some 1024⟩:=needed ⟨40,by decide⟩
 private theorem tail6_513 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 23 24 9 6 513:=join (leaf6_513 needed) (tail6_1025 needed)
@@ -481,25 +462,19 @@ open PowerSheets PowerExclusion PhysicalWindow
 set_option maxRecDepth 20000
 set_option maxHeartbeats 0
 
-private theorem point40_2293: Positive (entry 25 5 4 1025 643409) 2293 2389 := by decide +kernel
-theorem power40: Cover (Positive (entry 25 5 4 1025 643409)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point40_2293, rfl⟩
+private theorem shiftPower40_2314 : Positive (entry 25 5 4 1025 643299) 2314 2411 := by decide +kernel
+theorem power40 : Cover (Positive (entry 25 5 4 1025 643299)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower40_2314, rfl⟩
 
-private theorem point41_2293: Positive (entry 25 5 4 2049 643409) 2293 2389 := by decide +kernel
-theorem power41: Cover (Positive (entry 25 5 4 2049 643409)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point41_2293, rfl⟩
+private theorem shiftPower41_2314 : Positive (entry 25 5 4 2049 643299) 2314 2411 := by decide +kernel
+theorem power41 : Cover (Positive (entry 25 5 4 2049 643299)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower41_2314, rfl⟩
 
-private theorem point42_2293: Positive (entry 28 4 5 257 514727) 2293 2389 := by decide +kernel
-theorem power42: Cover (Positive (entry 28 4 5 257 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point42_2293, rfl⟩
 
-private theorem point43_2293: Positive (entry 28 4 5 513 514727) 2293 2389 := by decide +kernel
-theorem power43: Cover (Positive (entry 28 4 5 513 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point43_2293, rfl⟩
+private theorem shiftPower43_2314 : Positive (entry 28 4 5 513 514639) 2314 2411 := by decide +kernel
+theorem power43 : Cover (Positive (entry 28 4 5 513 514639)) 2411 2314 [2411] :=
+  ⟨by decide, by decide, shiftPower43_2314, rfl⟩
 
-private theorem point44_2293: Positive (entry 33 4 5 97 514727) 2293 2389 := by decide +kernel
-theorem power44: Cover (Positive (entry 33 4 5 97 514727)) 2389 2293 [2389] :=
-  ⟨by decide, by decide, point44_2293, rfl⟩
 
 end Research6969.PowerReceipts
 end Z6969Source1088
@@ -511,31 +486,17 @@ namespace Research6969.MeasuredChoices
 open TerminalFits PhysicalCatalogue
 set_option maxRecDepth 10000
 def test163 : MeasuredBound.Test := ⟨src163,.triangle,fit163,⟨_,cover163⟩⟩
-def test189 : MeasuredBound.Test := ⟨src189,.triangle,fit189,⟨_,cover189⟩⟩
-def test190 : MeasuredBound.Test := ⟨src190,.triangle,fit190,⟨_,cover190⟩⟩
-def test60 : MeasuredBound.Test := ⟨src60,.triangle,fit60,⟨_,cover60⟩⟩
 def test61 : MeasuredBound.Test := ⟨src61,.triangle,fit61,⟨_,cover61⟩⟩
 def test191 : MeasuredBound.Test := ⟨src191,.triangle,fit191,⟨_,cover191⟩⟩
-def test192 : MeasuredBound.Test := ⟨src192,.triangle,fit192,⟨_,cover192⟩⟩
 def test62 : MeasuredBound.Test := ⟨src62,.triangle,fit62,⟨_,cover62⟩⟩
 def test63 : MeasuredBound.Test := ⟨src63,.triangle,fit63,⟨_,cover63⟩⟩
 def test104 : MeasuredBound.Test := ⟨src104,.triangle,fit104,⟨_,cover104⟩⟩
-def test105 : MeasuredBound.Test := ⟨src105,.triangle,fit105,⟨_,cover105⟩⟩
-def test108 : MeasuredBound.Test := ⟨src108,.triangle,fit108,⟨_,cover108⟩⟩
-def test109 : MeasuredBound.Test := ⟨src109,.triangle,fit109,⟨_,cover109⟩⟩
 def test114 : MeasuredBound.Test := ⟨src114,.triangle,fit114,⟨_,cover114⟩⟩
-def test115 : MeasuredBound.Test := ⟨src115,.triangle,fit115,⟨_,cover115⟩⟩
 def test118 : MeasuredBound.Test := ⟨src118,.triangle,fit118,⟨_,cover118⟩⟩
-def test119 : MeasuredBound.Test := ⟨src119,.triangle,fit119,⟨_,cover119⟩⟩
 def test120 : MeasuredBound.Test := ⟨src120,.triangle,fit120,⟨_,cover120⟩⟩
-def test121 : MeasuredBound.Test := ⟨src121,.triangle,fit121,⟨_,cover121⟩⟩
 def test126 : MeasuredBound.Test := ⟨src126,.triangle,fit126,⟨_,cover126⟩⟩
-def test127 : MeasuredBound.Test := ⟨src127,.triangle,fit127,⟨_,cover127⟩⟩
 def test64 : MeasuredBound.Test := ⟨src64,.triangle,fit64,⟨_,cover64⟩⟩
-def test65 : MeasuredBound.Test := ⟨src65,.triangle,fit65,⟨_,cover65⟩⟩
 def test66 : MeasuredBound.Test := ⟨src66,.triangle,fit66,⟨_,cover66⟩⟩
-def test67 : MeasuredBound.Test := ⟨src67,.triangle,fit67,⟨_,cover67⟩⟩
-def test68 : MeasuredBound.Test := ⟨src68,.triangle,fit68,⟨_,cover68⟩⟩
 def test69 : MeasuredBound.Test := ⟨src69,.triangle,fit69,⟨_,cover69⟩⟩
 def test116 : MeasuredBound.Test := ⟨src116,.triangle,fit116,⟨_,cover116⟩⟩
 end Research6969.MeasuredChoices
@@ -698,7 +659,7 @@ private theorem leaf2_0:Done (0:Fin 18) ⟨25,27,9,2,0,some 3⟩:=entire WholeRo
 private theorem tail2_0 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 2 0:=join (leaf2_0) (tail2_4 needed)
 private theorem leaf3_1025:Done (0:Fin 18) ⟨25,27,9,3,1025,none⟩:=entire WholeRows.cell79 WholeRows.checked79
 private theorem tail3_1025 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 3 1025:=leaf3_1025
-private theorem leaf3_513:Done (0:Fin 18) ⟨25,27,9,3,513,some 1024⟩:=power _ 386045 (by decide) PowerReceipts.power36 (by decide) (by decide) (by decide)
+private theorem leaf3_513:Done (0:Fin 18) ⟨25,27,9,3,513,some 1024⟩:=power _ 385979 (by decide) PowerReceipts.power36 (by decide) (by decide) (by decide)
 private theorem tail3_513 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 3 513:=join (leaf3_513) (tail3_1025 needed)
 private theorem leaf3_257:Done (0:Fin 18) ⟨25,27,9,3,257,some 512⟩:=entire WholeRows.cell78 WholeRows.checked78
 private theorem tail3_257 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 3 257:=join (leaf3_257) (tail3_513 needed)
@@ -742,9 +703,9 @@ private theorem leaf3_0:Done (0:Fin 18) ⟨25,27,9,3,0,some 1⟩:=entire WholeRo
 private theorem tail3_0 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 3 0:=join (leaf3_0) (tail3_2 needed)
 private theorem leaf4_2049:Done (0:Fin 18) ⟨25,27,9,4,2049,none⟩:=entire WholeRows.cell88 WholeRows.checked88
 private theorem tail4_2049 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 4 2049:=leaf4_2049
-private theorem leaf4_1025:Done (0:Fin 18) ⟨25,27,9,4,1025,some 2048⟩:=power _ 514727 (by decide) PowerReceipts.power38 (by decide) (by decide) (by decide)
+private theorem leaf4_1025:Done (0:Fin 18) ⟨25,27,9,4,1025,some 2048⟩:=power _ 514639 (by decide) PowerReceipts.power38 (by decide) (by decide) (by decide)
 private theorem tail4_1025 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 4 1025:=join (leaf4_1025) (tail4_2049 needed)
-private theorem leaf4_513:Done (0:Fin 18) ⟨25,27,9,4,513,some 1024⟩:=power _ 514727 (by decide) PowerReceipts.power37 (by decide) (by decide) (by decide)
+private theorem leaf4_513:Done (0:Fin 18) ⟨25,27,9,4,513,some 1024⟩:=power _ 514639 (by decide) PowerReceipts.power37 (by decide) (by decide) (by decide)
 private theorem tail4_513 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 4 513:=join (leaf4_513) (tail4_1025 needed)
 private theorem leaf4_257:Done (0:Fin 18) ⟨25,27,9,4,257,some 512⟩:=entire WholeRows.cell87 WholeRows.checked87
 private theorem tail4_257 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 4 257:=join (leaf4_257) (tail4_513 needed)
@@ -764,11 +725,11 @@ private theorem leaf4_0:Done (0:Fin 18) ⟨25,27,9,4,0,some 1⟩:=entire WholeRo
 private theorem tail4_0 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 4 0:=join (leaf4_0) (tail4_2 needed)
 private theorem leaf5_4097:Done (0:Fin 18) ⟨25,27,9,5,4097,none⟩:=entire WholeRows.cell93 WholeRows.checked93
 private theorem tail5_4097 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 5 4097:=leaf5_4097
-private theorem leaf5_2049:Done (0:Fin 18) ⟨25,27,9,5,2049,some 4096⟩:=power _ 643409 (by decide) PowerReceipts.power41 (by decide) (by decide) (by decide)
+private theorem leaf5_2049:Done (0:Fin 18) ⟨25,27,9,5,2049,some 4096⟩:=power _ 643299 (by decide) PowerReceipts.power41 (by decide) (by decide) (by decide)
 private theorem tail5_2049 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 5 2049:=join (leaf5_2049) (tail5_4097 needed)
-private theorem leaf5_1025:Done (0:Fin 18) ⟨25,27,9,5,1025,some 2048⟩:=power _ 643409 (by decide) PowerReceipts.power40 (by decide) (by decide) (by decide)
+private theorem leaf5_1025:Done (0:Fin 18) ⟨25,27,9,5,1025,some 2048⟩:=power _ 643299 (by decide) PowerReceipts.power40 (by decide) (by decide) (by decide)
 private theorem tail5_1025 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 5 1025:=join (leaf5_1025) (tail5_2049 needed)
-private theorem leaf5_513:Done (0:Fin 18) ⟨25,27,9,5,513,some 1024⟩:=power _ 643409 (by decide) PowerReceipts.power39 (by decide) (by decide) (by decide)
+private theorem leaf5_513:Done (0:Fin 18) ⟨25,27,9,5,513,some 1024⟩:=power _ 643299 (by decide) PowerReceipts.power39 (by decide) (by decide) (by decide)
 private theorem tail5_513 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 5 513:=join (leaf5_513) (tail5_1025 needed)
 private theorem leaf5_257:Done (0:Fin 18) ⟨25,27,9,5,257,some 512⟩:=entire WholeRows.cell92 WholeRows.checked92
 private theorem tail5_257 (needed:HighPendingSeed1.Required):Tail (0:Fin 18) 25 27 9 5 257:=join (leaf5_257) (tail5_513 needed)

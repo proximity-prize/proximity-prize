@@ -1,7 +1,7 @@
 import ProximityPrize.SubmissionLower.DdZZ0RELd
 set_option Elab.async false
 set_option synthInstance.maxHeartbeats 400000
-open _root_ renaming Finset.range→aU,Finset.range_mono→mD,Finset.sum_congr→lz,MvPolynomial.X→c9,Nat.mul_le_mul_left→nI,Nat.sub_add_cancel→n5,Nat.sub_le_sub_right→nX,P5_8.Moments→lI,P5_8.small→cy,Submodule→nq,min_le_left→lV,min_le_right→lJ
+open _root_ renaming Finset.range→aU,Finset.range_mono→mD,Finset.sum_congr→lz,MvPolynomial.X→c9,Nat.mul_le_mul_left→nI,Nat.sub_add_cancel→n5,Nat.sub_le_sub_right→nX,P5_8.Moments→lI,P5_8.legacySmall→cy,Submodule→nq,min_le_left→lV,min_le_right→lJ
 section
 set_option autoImplicit true
 namespace P5_8
@@ -11,17 +11,6 @@ open scoped BigOperators
 private theorem lower_q (j:Jet) :Jet.q ⟨j.c,j.b,j.a-1⟩≤j.q:= by
  change j.a - 1+j.b+j.c≤j.a+j.b+j.c
  omega
-theorem small_shape :Rz small:= by
- have hm:=b8U (B:=83) (J:=25) (C:=11) (by decide) (by decide)
- refine ⟨by decide,by decide,by decide,by decide,by decide,
-  fun j hj=>(hm j).mp (mem_filter.mp hj).1,?_⟩
- intro j hj _
- obtain ⟨hbox,htail⟩:=mem_filter.mp hj
- obtain ⟨hq,hv,hc⟩:=(hm j).mp hbox
- apply mem_filter.mpr
- refine ⟨(hm _).mpr ⟨(lower_q j).trans hq,hv,hc⟩,?_⟩
- have hmono:=Nat.div_le_div_right (nX (lower_q j) 76) (c:=2)
- exact htail.trans (Nat.sub_le_sub_left hmono 25)
 private theorem fullBox_shape (m B J C:ℕ) (hm:0< m) (hc:0<C)
   (hJC:2*C≤J) (hBJ:J≤B) (hp:max N (B*(B-1))<p) :
   Rz ⟨m,B,J,C,aH1 B J C⟩:= by
@@ -30,6 +19,8 @@ private theorem fullBox_shape (m B J C:ℕ) (hm:0< m) (hc:0<C)
  intro j hj _
  obtain ⟨hq,hv,ht⟩:=(hmem j).mp hj
  exact (hmem _).mpr ⟨(lower_q j).trans hq,hv,ht⟩
+theorem small_shape : Rz small :=
+ fullBox_shape 62 84 26 11 (by decide) (by decide) (by decide) (by decide) (by decide)
 theorem donor_shape :Rz bo8 :=
  fullBox_shape 4600 6251 1959 979 (by decide) (by decide) (by decide) (by decide) (by decide)
 end
@@ -121,7 +112,7 @@ open scoped BigOperators
 private def bbW (c:ℕ) :=aU (25 - 2*c+1)
 private def E0 (c b:ℕ) :=min 83 (127 - 2*(b+c))+1-(b+c)
 private theorem support_eq :
-  P5_8.small.E=(aU 12).sigma fun c=>(bbW c).sigma fun b=>aU (E0 c b) := by
+  P5_8.legacySmall.E=(aU 12).sigma fun c=>(bbW c).sigma fun b=>aU (E0 c b) := by
  apply Finset.ext
  intro j
  rcases j with ⟨c,b,a⟩
@@ -135,16 +126,16 @@ private def po (c:ℕ) := ∑ b∈bbW c,E0 c b
 private def awL (c:ℕ) := ∑ b∈bbW c,
  (E0 c b*(E0 c b - 1)/2+E0 c b*(b+c))
 private def aoi (c:ℕ) := ∑ b∈bbW c,E0 c b*(b+2*c)
-private theorem bVY:P5_8.small.E.card = ∑ c∈aU 12,po c:= by
+private theorem bVY:P5_8.legacySmall.E.card = ∑ c∈aU 12,po c:= by
  simp only [support_eq,card_sigma,card_range,po]
-private theorem dAo: (∑ j∈P5_8.small.E,j.q) = ∑ c∈aU 12,awL c:= by
+private theorem dAo: (∑ j∈P5_8.legacySmall.E,j.q) = ∑ c∈aU 12,awL c:= by
  simp only [support_eq,sum_sigma,awL,Jet.q,Jet.a,Jet.b,Jet.c]
  apply lz rfl
  intro c _
  apply lz rfl
  intro b _
  simp only [Nat.add_assoc,sum_add_distrib,sum_range_id,sum_const,card_range,smul_eq_mul,Nat.mul_add]
-private theorem a1U: (∑ j∈P5_8.small.E,j.v) = ∑ c∈aU 12,aoi c:= by
+private theorem a1U: (∑ j∈P5_8.legacySmall.E,j.v) = ∑ c∈aU 12,aoi c:= by
  simp only [support_eq,sum_sigma,aoi,Jet.v,Jet.b,Jet.c,sum_const,card_range,smul_eq_mul]
 private def Acc (c t s v :ℕ) :Prop :=
  (∑ i∈aU c,po i)=t ∧

@@ -57,7 +57,6 @@ theorem lineFraction_separable [Algebra.IsSeparable ChartField E] (j b : Bool) :
   intro r
   change algebraMap ChartField E (e (e.symm r))=algebraMap ChartField E r
   rw [e.apply_symm_apply]
-abbrev axisPlaneFractionEquiv (b : Bool) := linePlaneFractionEquiv true b
 @[instance_reducible] def axisFractionAlgebra (b : Bool) : Algebra (FractionRing (Plane L)) E :=
   lineFractionAlgebra true b
 theorem axisPlaneTower (b : Bool) :

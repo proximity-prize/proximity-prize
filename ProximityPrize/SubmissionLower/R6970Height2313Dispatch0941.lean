@@ -1,0 +1,658 @@
+import ProximityPrize.SubmissionLower.R6970Height2313CompactRoute
+import ProximityPrize.SubmissionLower.Bundle6970_53598f0b9e125421
+import ProximityPrize.SubmissionLower.Bundle6970_53598f0b9e125421
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0666
+import ProximityPrize.SubmissionLower.Bundle6970_21ce7a33a4091533
+import ProximityPrize.SubmissionLower.Bundle6970_238dfbafc3801848
+import ProximityPrize.SubmissionLower.Bundle6970_238dfbafc3801848
+import ProximityPrize.SubmissionLower.Bundle6970_21ce7a33a4091533
+import ProximityPrize.SubmissionLower.Bundle6970_9db7b57c598c53d9
+import ProximityPrize.SubmissionLower.R6970Height2313Dispatch0940
+import ProximityPrize.SubmissionLower.R6970Height2313ExplicitCore
+import ProximityPrize.SubmissionLower.Bundle6970_7a5e29fe006b0d6e
+import ProximityPrize.SubmissionLower.Bundle6970_7a5e29fe006b0d6e
+import ProximityPrize.SubmissionLower.R6970Height2313SmallGrade
+
+set_option Elab.async false
+
+section Z6969Source2651
+set_option autoImplicit true
+namespace Research6970.Height2313.Research6969.HardFit1At210
+open _root_.Research6970.Height2313.Research6969
+set_option maxRecDepth 18000
+set_option maxHeartbeats 1200000
+private theorem leaf0:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,2,some 3⟩,0,none,128659,none⟩:=(PairReceipts.route940 10)
+theorem case210: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,2,some 3⟩:=PairRoute.start _ leaf0
+private theorem leaf1:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,4,some 8⟩,0,none,128659,none⟩:=(PairReceipts.route940 9)
+theorem case211: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,4,some 8⟩:=PairRoute.start _ leaf1
+private theorem leaf2:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,9,some 12⟩,0,none,128659,none⟩:=(PairReceipts.route940 8)
+theorem case212: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,9,some 12⟩:=PairRoute.start _ leaf2
+private theorem leaf3:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,13,some 16⟩,0,none,128659,none⟩:=(PairReceipts.route940 7)
+theorem case213: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,13,some 16⟩:=PairRoute.start _ leaf3
+private theorem leaf4:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,17,some 20⟩,0,none,128659,none⟩:=(PairReceipts.route940 6)
+theorem case214: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,17,some 20⟩:=PairRoute.start _ leaf4
+private theorem leaf5:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,21,some 24⟩,0,none,128659,none⟩:=(PairReceipts.route940 5)
+theorem case215: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,21,some 24⟩:=PairRoute.start _ leaf5
+private theorem leaf6:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,25,some 28⟩,0,none,128659,none⟩:=(PairReceipts.route940 4)
+theorem case216: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,25,some 28⟩:=PairRoute.start _ leaf6
+private theorem leaf7:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,29,some 32⟩,0,none,128659,none⟩:=(PairReceipts.route940 3)
+theorem case217: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,29,some 32⟩:=PairRoute.start _ leaf7
+private theorem leaf8:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,33,some 40⟩,0,none,128659,none⟩:=(PairReceipts.route940 2)
+theorem case218: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,33,some 40⟩:=PairRoute.start _ leaf8
+private theorem leaf9:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,41,some 48⟩,0,none,128659,none⟩:=(PairReceipts.route940 1)
+theorem case219: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,41,some 48⟩:=PairRoute.start _ leaf9
+end Research6970.Height2313.Research6969.HardFit1At210
+end Z6969Source2651
+
+section Z6969Source2653
+set_option autoImplicit true
+namespace Research6970.Height2313.Research6969.HardFit1At220
+open _root_.Research6970.Height2313.Research6969
+set_option maxRecDepth 18000
+set_option maxHeartbeats 1200000
+private theorem leaf0:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,1,49,some 64⟩,0,none,128659,none⟩:=(PairReceipts.route940 0)
+theorem case220: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,1,49,some 64⟩:=PairRoute.start _ leaf0
+private theorem leaf1:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,0,some 0⟩,0,none,257319,none⟩:=(PairReceipts.route953 12)
+theorem case221: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,0,some 0⟩:=PairRoute.start _ leaf1
+private theorem leaf2:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,1,some 1⟩,0,none,257319,none⟩:=(PairReceipts.route953 11)
+theorem case222: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,1,some 1⟩:=PairRoute.start _ leaf2
+private theorem leaf3:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,2,some 3⟩,0,none,257319,none⟩:=(PairReceipts.route953 10)
+theorem case223: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,2,some 3⟩:=PairRoute.start _ leaf3
+private theorem leaf4:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,4,some 8⟩,0,none,257319,none⟩:=(PairReceipts.route953 9)
+theorem case224: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,4,some 8⟩:=PairRoute.start _ leaf4
+private theorem leaf5:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,9,some 12⟩,0,none,257319,none⟩:=(PairReceipts.route953 8)
+theorem case225: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,9,some 12⟩:=PairRoute.start _ leaf5
+private theorem leaf6:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,13,some 16⟩,0,none,257319,none⟩:=(PairReceipts.route953 7)
+theorem case226: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,13,some 16⟩:=PairRoute.start _ leaf6
+private theorem leaf7:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,17,some 20⟩,0,none,257319,none⟩:=(PairReceipts.route953 6)
+theorem case227: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,17,some 20⟩:=PairRoute.start _ leaf7
+private theorem leaf8:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,21,some 24⟩,0,none,257319,none⟩:=(PairReceipts.route953 5)
+theorem case228: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,21,some 24⟩:=PairRoute.start _ leaf8
+private theorem leaf9:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,25,some 28⟩,0,none,257319,some 302619⟩:=(PairReceipts.route953 4)
+private theorem leaf10:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,25,some 28⟩,0,none,302619,none⟩:=(PairReceipts.route960 0)
+private theorem weight11:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,25,some 28⟩,0,none,257319,none⟩:=PairRoute.weight 302619 leaf9 leaf10
+theorem case229: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,25,some 28⟩:=PairRoute.start _ weight11
+end Research6970.Height2313.Research6969.HardFit1At220
+end Z6969Source2653
+
+section Z6969Source2654
+set_option autoImplicit true
+namespace Research6970.Height2313.Research6969.HardFit1At230
+open _root_.Research6970.Height2313.Research6969
+set_option maxRecDepth 18000
+set_option maxHeartbeats 1200000
+private theorem leaf0:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,29,some 32⟩,0,none,257319,none⟩:=PaidRows.p958
+theorem case230: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,29,some 32⟩:=PairRoute.start _ leaf0
+private theorem leaf1:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,33,some 36⟩,0,none,257319,none⟩:=(PairReceipts.route953 3)
+theorem case231: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,33,some 36⟩:=PairRoute.start _ leaf1
+private theorem leaf2:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,37,some 40⟩,0,none,257319,none⟩:=(PairReceipts.route953 2)
+theorem case232: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,37,some 40⟩:=PairRoute.start _ leaf2
+private theorem leaf3:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,41,some 48⟩,0,none,257319,some 291368⟩:=(PairReceipts.route953 1)
+private theorem leaf4:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,41,some 48⟩,0,none,291368,none⟩:=PaidRows.p955
+private theorem weight5:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,41,some 48⟩,0,none,257319,none⟩:=PairRoute.weight 291368 leaf3 leaf4
+theorem case233: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,41,some 48⟩:=PairRoute.start _ weight5
+private theorem leaf6:PairRoute.Done (0:Fin 18) ⟨⟨64,721,12,2,49,some 52⟩,0,none,257319,none⟩:=(PairReceipts.route953 0)
+theorem case234: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (0:Fin 18) ⟨64,721,12,2,49,some 52⟩:=PairRoute.start _ leaf6
+end Research6970.Height2313.Research6969.HardFit1At230
+end Z6969Source2654
+
+section Z6969Source2655
+set_option autoImplicit true
+namespace Research6970.Height2313.Research6969.HardComplete1
+open _root_.Research6970.Height2313.Research6969
+open _root_.Research6970.Height2313.Research6969.NormalRoute
+set_option maxRecDepth 16000
+set_option maxHeartbeats 1500000
+private theorem covered0_7 (j:Fin HighPendingSeed1.regions.size) (l:0≤j.val) (h:j.val<7):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At000.case0
+  · exact HardFit1At000.case1
+  · exact HardFit1At000.case2
+  · exact HardFit1At000.case3
+  · exact HardFit1At000.case4
+  · exact HardFit1At000.case5
+  · exact HardFit1At000.case6
+private theorem covered7_14 (j:Fin HighPendingSeed1.regions.size) (l:7≤j.val) (h:j.val<14):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At000.case7
+  · exact HardFit1At000.case8
+  · exact HardFit1At000.case9
+  · exact HardFit1At010.case10
+  · exact HardFit1At010.case11
+  · exact HardFit1At010.case12
+  · exact HardFit1At010.case13
+private theorem covered0_14 (j:Fin HighPendingSeed1.regions.size) (l:0≤j.val) (h:j.val<14):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<7
+  · exact covered0_7 j l low
+  · exact covered7_14 j (by omega) h
+private theorem covered14_21 (j:Fin HighPendingSeed1.regions.size) (l:14≤j.val) (h:j.val<21):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At010.case14
+  · exact HardFit1At010.case15
+  · exact HardFit1At010.case16
+  · exact HardFit1At010.case17
+  · exact HardFit1At010.case18
+  · exact HardFit1At010.case19
+  · exact HardFit1At020.case20
+private theorem covered21_29 (j:Fin HighPendingSeed1.regions.size) (l:21≤j.val) (h:j.val<29):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At020.case21
+  · exact HardFit1At020.case22
+  · exact HardFit1At020.case23
+  · exact HardFit1At020.case24
+  · exact HardFit1At020.case25
+  · exact HardFit1At020.case26
+  · exact HardFit1At020.case27
+  · exact HardFit1At020.case28
+private theorem covered14_29 (j:Fin HighPendingSeed1.regions.size) (l:14≤j.val) (h:j.val<29):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<21
+  · exact covered14_21 j l low
+  · exact covered21_29 j (by omega) h
+private theorem covered0_29 (j:Fin HighPendingSeed1.regions.size) (l:0≤j.val) (h:j.val<29):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<14
+  · exact covered0_14 j l low
+  · exact covered14_29 j (by omega) h
+private theorem covered29_36 (j:Fin HighPendingSeed1.regions.size) (l:29≤j.val) (h:j.val<36):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At020.case29
+  · exact HardFit1At030.case30
+  · exact HardFit1At030.case31
+  · exact HardFit1At030.case32
+  · exact HardFit1At030.case33
+  · exact HardFit1At030.case34
+  · exact HardFit1At030.case35
+private theorem covered36_43 (j:Fin HighPendingSeed1.regions.size) (l:36≤j.val) (h:j.val<43):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At030.case36
+  · exact HardFit1At030.case37
+  · exact HardFit1At030.case38
+  · exact HardFit1At030.case39
+  · exact HardFit1At040.case40
+  · exact HardFit1At040.case41
+  · exact HardFit1At040.case42
+private theorem covered29_43 (j:Fin HighPendingSeed1.regions.size) (l:29≤j.val) (h:j.val<43):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<36
+  · exact covered29_36 j l low
+  · exact covered36_43 j (by omega) h
+private theorem covered43_50 (j:Fin HighPendingSeed1.regions.size) (l:43≤j.val) (h:j.val<50):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At040.case43
+  · exact HardFit1At040.case44
+  · exact HardFit1At040.case45
+  · exact HardFit1At040.case46
+  · exact HardFit1At040.case47
+  · exact HardFit1At040.case48
+  · exact HardFit1At040.case49
+private theorem covered50_58 (j:Fin HighPendingSeed1.regions.size) (l:50≤j.val) (h:j.val<58):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At050.case50
+  · exact HardFit1At050.case51
+  · exact HardFit1At050.case52
+  · exact HardFit1At050.case53
+  · exact HardFit1At050.case54
+  · exact HardFit1At050.case55
+  · exact HardFit1At050.case56
+  · exact HardFit1At050.case57
+private theorem covered43_58 (j:Fin HighPendingSeed1.regions.size) (l:43≤j.val) (h:j.val<58):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<50
+  · exact covered43_50 j l low
+  · exact covered50_58 j (by omega) h
+private theorem covered29_58 (j:Fin HighPendingSeed1.regions.size) (l:29≤j.val) (h:j.val<58):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<43
+  · exact covered29_43 j l low
+  · exact covered43_58 j (by omega) h
+private theorem covered0_58 (j:Fin HighPendingSeed1.regions.size) (l:0≤j.val) (h:j.val<58):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<29
+  · exact covered0_29 j l low
+  · exact covered29_58 j (by omega) h
+private theorem covered58_65 (j:Fin HighPendingSeed1.regions.size) (l:58≤j.val) (h:j.val<65):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At050.case58
+  · exact HardFit1At050.case59
+  · exact HardFit1At060.case60
+  · exact HardFit1At060.case61
+  · exact HardFit1At060.case62
+  · exact HardFit1At060.case63
+  · exact HardFit1At060.case64
+private theorem covered65_72 (j:Fin HighPendingSeed1.regions.size) (l:65≤j.val) (h:j.val<72):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At060.case65
+  · exact HardFit1At060.case66
+  · exact HardFit1At060.case67
+  · exact HardFit1At060.case68
+  · exact HardFit1At060.case69
+  · exact HardFit1At070.case70
+  · exact HardFit1At070.case71
+private theorem covered58_72 (j:Fin HighPendingSeed1.regions.size) (l:58≤j.val) (h:j.val<72):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<65
+  · exact covered58_65 j l low
+  · exact covered65_72 j (by omega) h
+private theorem covered72_79 (j:Fin HighPendingSeed1.regions.size) (l:72≤j.val) (h:j.val<79):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At070.case72
+  · exact HardFit1At070.case73
+  · exact HardFit1At070.case74
+  · exact HardFit1At070.case75
+  · exact HardFit1At070.case76
+  · exact HardFit1At070.case77
+  · exact HardFit1At070.case78
+private theorem covered79_87 (j:Fin HighPendingSeed1.regions.size) (l:79≤j.val) (h:j.val<87):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At070.case79
+  · exact HardFit1At080.case80
+  · exact HardFit1At080.case81
+  · exact HardFit1At080.case82
+  · exact HardFit1At080.case83
+  · exact HardFit1At080.case84
+  · exact HardFit1At080.case85
+  · exact HardFit1At080.case86
+private theorem covered72_87 (j:Fin HighPendingSeed1.regions.size) (l:72≤j.val) (h:j.val<87):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<79
+  · exact covered72_79 j l low
+  · exact covered79_87 j (by omega) h
+private theorem covered58_87 (j:Fin HighPendingSeed1.regions.size) (l:58≤j.val) (h:j.val<87):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<72
+  · exact covered58_72 j l low
+  · exact covered72_87 j (by omega) h
+private theorem covered87_94 (j:Fin HighPendingSeed1.regions.size) (l:87≤j.val) (h:j.val<94):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At080.case87
+  · exact HardFit1At080.case88
+  · exact HardFit1At080.case89
+  · exact HardFit1At090.case90
+  · exact HardFit1At090.case91
+  · exact HardFit1At090.case92
+  · exact HardFit1At090.case93
+private theorem covered94_102 (j:Fin HighPendingSeed1.regions.size) (l:94≤j.val) (h:j.val<102):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At090.case94
+  · exact HardFit1At090.case95
+  · exact HardFit1At090.case96
+  · exact HardFit1At090.case97
+  · exact HardFit1At090.case98
+  · exact HardFit1At090.case99
+  · exact HardFit1At100.case100
+  · exact HardFit1At100.case101
+private theorem covered87_102 (j:Fin HighPendingSeed1.regions.size) (l:87≤j.val) (h:j.val<102):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<94
+  · exact covered87_94 j l low
+  · exact covered94_102 j (by omega) h
+private theorem covered102_109 (j:Fin HighPendingSeed1.regions.size) (l:102≤j.val) (h:j.val<109):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At100.case102
+  · exact HardFit1At100.case103
+  · exact HardFit1At100.case104
+  · exact HardFit1At100.case105
+  · exact HardFit1At100.case106
+  · exact HardFit1At100.case107
+  · exact HardFit1At100.case108
+private theorem covered109_117 (j:Fin HighPendingSeed1.regions.size) (l:109≤j.val) (h:j.val<117):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At100.case109
+  · exact HardFit1At110.case110
+  · exact HardFit1At110.case111
+  · exact HardFit1At110.case112
+  · exact HardFit1At110.case113
+  · exact HardFit1At110.case114
+  · exact HardFit1At110.case115
+  · exact HardFit1At110.case116
+private theorem covered102_117 (j:Fin HighPendingSeed1.regions.size) (l:102≤j.val) (h:j.val<117):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<109
+  · exact covered102_109 j l low
+  · exact covered109_117 j (by omega) h
+private theorem covered87_117 (j:Fin HighPendingSeed1.regions.size) (l:87≤j.val) (h:j.val<117):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<102
+  · exact covered87_102 j l low
+  · exact covered102_117 j (by omega) h
+private theorem covered58_117 (j:Fin HighPendingSeed1.regions.size) (l:58≤j.val) (h:j.val<117):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<87
+  · exact covered58_87 j l low
+  · exact covered87_117 j (by omega) h
+private theorem covered0_117 (j:Fin HighPendingSeed1.regions.size) (l:0≤j.val) (h:j.val<117):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<58
+  · exact covered0_58 j l low
+  · exact covered58_117 j (by omega) h
+private theorem covered117_124 (j:Fin HighPendingSeed1.regions.size) (l:117≤j.val) (h:j.val<124):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At110.case117
+  · exact HardFit1At110.case118
+  · exact HardFit1At110.case119
+  · exact HardFit1At120.case120
+  · exact HardFit1At120.case121
+  · exact HardFit1At120.case122
+  · exact HardFit1At120.case123
+private theorem covered124_131 (j:Fin HighPendingSeed1.regions.size) (l:124≤j.val) (h:j.val<131):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At120.case124
+  · exact HardFit1At120.case125
+  · exact HardFit1At120.case126
+  · exact HardFit1At120.case127
+  · exact HardFit1At120.case128
+  · exact HardFit1At120.case129
+  · exact HardFit1At130.case130
+private theorem covered117_131 (j:Fin HighPendingSeed1.regions.size) (l:117≤j.val) (h:j.val<131):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<124
+  · exact covered117_124 j l low
+  · exact covered124_131 j (by omega) h
+private theorem covered131_138 (j:Fin HighPendingSeed1.regions.size) (l:131≤j.val) (h:j.val<138):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At130.case131
+  · exact HardFit1At130.case132
+  · exact HardFit1At130.case133
+  · exact HardFit1At130.case134
+  · exact HardFit1At130.case135
+  · exact HardFit1At130.case136
+  · exact HardFit1At130.case137
+private theorem covered138_146 (j:Fin HighPendingSeed1.regions.size) (l:138≤j.val) (h:j.val<146):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At130.case138
+  · exact HardFit1At130.case139
+  · exact HardFit1At140.case140
+  · exact HardFit1At140.case141
+  · exact HardFit1At140.case142
+  · exact HardFit1At140.case143
+  · exact HardFit1At140.case144
+  · exact HardFit1At140.case145
+private theorem covered131_146 (j:Fin HighPendingSeed1.regions.size) (l:131≤j.val) (h:j.val<146):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<138
+  · exact covered131_138 j l low
+  · exact covered138_146 j (by omega) h
+private theorem covered117_146 (j:Fin HighPendingSeed1.regions.size) (l:117≤j.val) (h:j.val<146):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<131
+  · exact covered117_131 j l low
+  · exact covered131_146 j (by omega) h
+private theorem covered146_153 (j:Fin HighPendingSeed1.regions.size) (l:146≤j.val) (h:j.val<153):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At140.case146
+  · exact HardFit1At140.case147
+  · exact HardFit1At140.case148
+  · exact HardFit1At140.case149
+  · exact HardFit1At150.case150
+  · exact HardFit1At150.case151
+  · exact HardFit1At150.case152
+private theorem covered153_161 (j:Fin HighPendingSeed1.regions.size) (l:153≤j.val) (h:j.val<161):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At150.case153
+  · exact HardFit1At150.case154
+  · exact HardFit1At150.case155
+  · exact HardFit1At150.case156
+  · exact HardFit1At150.case157
+  · exact HardFit1At150.case158
+  · exact HardFit1At150.case159
+  · exact HardFit1At160.case160
+private theorem covered146_161 (j:Fin HighPendingSeed1.regions.size) (l:146≤j.val) (h:j.val<161):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<153
+  · exact covered146_153 j l low
+  · exact covered153_161 j (by omega) h
+private theorem covered161_168 (j:Fin HighPendingSeed1.regions.size) (l:161≤j.val) (h:j.val<168):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At160.case161
+  · exact HardFit1At160.case162
+  · exact HardFit1At160.case163
+  · exact HardFit1At160.case164
+  · exact HardFit1At160.case165
+  · exact HardFit1At160.case166
+  · exact HardFit1At160.case167
+private theorem covered168_176 (j:Fin HighPendingSeed1.regions.size) (l:168≤j.val) (h:j.val<176):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At160.case168
+  · exact HardFit1At160.case169
+  · exact HardFit1At170.case170
+  · exact HardFit1At170.case171
+  · exact HardFit1At170.case172
+  · exact HardFit1At170.case173
+  · exact HardFit1At170.case174
+  · exact HardFit1At170.case175
+private theorem covered161_176 (j:Fin HighPendingSeed1.regions.size) (l:161≤j.val) (h:j.val<176):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<168
+  · exact covered161_168 j l low
+  · exact covered168_176 j (by omega) h
+private theorem covered146_176 (j:Fin HighPendingSeed1.regions.size) (l:146≤j.val) (h:j.val<176):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<161
+  · exact covered146_161 j l low
+  · exact covered161_176 j (by omega) h
+private theorem covered117_176 (j:Fin HighPendingSeed1.regions.size) (l:117≤j.val) (h:j.val<176):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<146
+  · exact covered117_146 j l low
+  · exact covered146_176 j (by omega) h
+private theorem covered176_183 (j:Fin HighPendingSeed1.regions.size) (l:176≤j.val) (h:j.val<183):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At170.case176
+  · exact HardFit1At170.case177
+  · exact HardFit1At170.case178
+  · exact HardFit1At170.case179
+  · exact HardFit1At180.case180
+  · exact HardFit1At180.case181
+  · exact HardFit1At180.case182
+private theorem covered183_190 (j:Fin HighPendingSeed1.regions.size) (l:183≤j.val) (h:j.val<190):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At180.case183
+  · exact HardFit1At180.case184
+  · exact HardFit1At180.case185
+  · exact HardFit1At180.case186
+  · exact HardFit1At180.case187
+  · exact HardFit1At180.case188
+  · exact HardFit1At180.case189
+private theorem covered176_190 (j:Fin HighPendingSeed1.regions.size) (l:176≤j.val) (h:j.val<190):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<183
+  · exact covered176_183 j l low
+  · exact covered183_190 j (by omega) h
+private theorem covered190_197 (j:Fin HighPendingSeed1.regions.size) (l:190≤j.val) (h:j.val<197):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At190.case190
+  · exact HardFit1At190.case191
+  · exact HardFit1At190.case192
+  · exact HardFit1At190.case193
+  · exact HardFit1At190.case194
+  · exact HardFit1At190.case195
+  · exact HardFit1At190.case196
+private theorem covered197_205 (j:Fin HighPendingSeed1.regions.size) (l:197≤j.val) (h:j.val<205):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At190.case197
+  · exact HardFit1At190.case198
+  · exact HardFit1At190.case199
+  · exact HardFit1At200.case200
+  · exact HardFit1At200.case201
+  · exact HardFit1At200.case202
+  · exact HardFit1At200.case203
+  · exact HardFit1At200.case204
+private theorem covered190_205 (j:Fin HighPendingSeed1.regions.size) (l:190≤j.val) (h:j.val<205):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<197
+  · exact covered190_197 j l low
+  · exact covered197_205 j (by omega) h
+private theorem covered176_205 (j:Fin HighPendingSeed1.regions.size) (l:176≤j.val) (h:j.val<205):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<190
+  · exact covered176_190 j l low
+  · exact covered190_205 j (by omega) h
+private theorem covered205_212 (j:Fin HighPendingSeed1.regions.size) (l:205≤j.val) (h:j.val<212):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At200.case205
+  · exact HardFit1At200.case206
+  · exact HardFit1At200.case207
+  · exact HardFit1At200.case208
+  · exact HardFit1At200.case209
+  · exact HardFit1At210.case210
+  · exact HardFit1At210.case211
+private theorem covered212_220 (j:Fin HighPendingSeed1.regions.size) (l:212≤j.val) (h:j.val<220):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At210.case212
+  · exact HardFit1At210.case213
+  · exact HardFit1At210.case214
+  · exact HardFit1At210.case215
+  · exact HardFit1At210.case216
+  · exact HardFit1At210.case217
+  · exact HardFit1At210.case218
+  · exact HardFit1At210.case219
+private theorem covered205_220 (j:Fin HighPendingSeed1.regions.size) (l:205≤j.val) (h:j.val<220):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<212
+  · exact covered205_212 j l low
+  · exact covered212_220 j (by omega) h
+private theorem covered220_227 (j:Fin HighPendingSeed1.regions.size) (l:220≤j.val) (h:j.val<227):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At220.case220
+  · exact HardFit1At220.case221
+  · exact HardFit1At220.case222
+  · exact HardFit1At220.case223
+  · exact HardFit1At220.case224
+  · exact HardFit1At220.case225
+  · exact HardFit1At220.case226
+private theorem covered227_235 (j:Fin HighPendingSeed1.regions.size) (l:227≤j.val) (h:j.val<235):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  rcases j with ⟨k,kFit⟩
+  change _≤k at l
+  change k<_ at h
+  interval_cases k
+  · exact HardFit1At220.case227
+  · exact HardFit1At220.case228
+  · exact HardFit1At220.case229
+  · exact HardFit1At230.case230
+  · exact HardFit1At230.case231
+  · exact HardFit1At230.case232
+  · exact HardFit1At230.case233
+  · exact HardFit1At230.case234
+private theorem covered220_235 (j:Fin HighPendingSeed1.regions.size) (l:220≤j.val) (h:j.val<235):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<227
+  · exact covered220_227 j l low
+  · exact covered227_235 j (by omega) h
+private theorem covered205_235 (j:Fin HighPendingSeed1.regions.size) (l:205≤j.val) (h:j.val<235):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<220
+  · exact covered205_220 j l low
+  · exact covered220_235 j (by omega) h
+private theorem covered176_235 (j:Fin HighPendingSeed1.regions.size) (l:176≤j.val) (h:j.val<235):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<205
+  · exact covered176_205 j l low
+  · exact covered205_235 j (by omega) h
+private theorem covered117_235 (j:Fin HighPendingSeed1.regions.size) (l:117≤j.val) (h:j.val<235):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<176
+  · exact covered117_176 j l low
+  · exact covered176_235 j (by omega) h
+private theorem covered0_235 (j:Fin HighPendingSeed1.regions.size) (l:0≤j.val) (h:j.val<235):Done (0:Fin 18) (HighPendingSeed1.atIndex j):=by
+  by_cases low:j.val<117
+  · exact covered0_117 j l low
+  · exact covered117_235 j (by omega) h
+theorem required:_root_.Research6970.Height2313.Research6969.HighPendingSeed1.Required:=fun j=>covered0_235 j (Nat.zero_le _) j.isLt
+end Research6970.Height2313.Research6969.HardComplete1
+end Z6969Source2655
+
+section Z6969Source2659
+set_option autoImplicit true
+namespace Research6970.Height2313.Research6969.HardFit2At000
+open _root_.Research6970.Height2313.Research6969
+set_option maxRecDepth 18000
+set_option maxHeartbeats 1200000
+private theorem leaf0:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,4,some 8⟩,0,none,257319,none⟩:=(PairReceipts.route1118 6)
+theorem case0: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,4,some 8⟩:=PairRoute.start _ leaf0
+private theorem leaf1:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,9,some 12⟩,0,none,257319,none⟩:=(PairReceipts.route1118 5)
+theorem case1: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,9,some 12⟩:=PairRoute.start _ leaf1
+private theorem leaf2:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,13,some 16⟩,0,none,257319,none⟩:=(PairReceipts.route1118 4)
+theorem case2: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,13,some 16⟩:=PairRoute.start _ leaf2
+private theorem leaf3:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,17,some 20⟩,0,none,257319,none⟩:=(PairReceipts.route1118 3)
+theorem case3: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,17,some 20⟩:=PairRoute.start _ leaf3
+private theorem leaf4:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,21,some 24⟩,0,none,257319,none⟩:=(PairReceipts.route1118 2)
+theorem case4: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,21,some 24⟩:=PairRoute.start _ leaf4
+private theorem leaf5:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,25,some 28⟩,0,none,257319,some 302619⟩:=(PairReceipts.route1118 1)
+private theorem leaf6:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,25,some 28⟩,0,none,302619,none⟩:=PaidRows.p1120
+private theorem weight7:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,25,some 28⟩,0,none,257319,none⟩:=PairRoute.weight 302619 leaf5 leaf6
+theorem case5: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,25,some 28⟩:=PairRoute.start _ weight7
+private theorem leaf8:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,2,29,some 32⟩,0,none,257319,none⟩:=(PairReceipts.route1118 0)
+theorem case6: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,2,29,some 32⟩:=PairRoute.start _ leaf8
+private theorem leaf9:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,3,4,some 8⟩,0,none,385979,none⟩:=(PairReceipts.route1126 20)
+theorem case7: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,3,4,some 8⟩:=PairRoute.start _ leaf9
+private theorem leaf10:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,3,9,some 12⟩,0,none,385979,none⟩:=(PairReceipts.route1126 19)
+theorem case8: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,3,9,some 12⟩:=PairRoute.start _ leaf10
+private theorem leaf11:PairRoute.Done (1:Fin 18) ⟨⟨23,24,9,3,13,some 13⟩,0,none,385979,none⟩:=(PairReceipts.route1126 18)
+theorem case9: _root_.Research6970.Height2313.Research6969.NormalRoute.Done (1:Fin 18) ⟨23,24,9,3,13,some 13⟩:=PairRoute.start _ leaf11
+end Research6970.Height2313.Research6969.HardFit2At000
+end Z6969Source2659

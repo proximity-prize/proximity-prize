@@ -1,0 +1,19 @@
+import ProximityPrize.SubmissionLower.Bundle6970_1f09574f108d5381
+import ProximityPrize.SubmissionLower.Bundle6970_1f09574f108d5381
+import ProximityPrize.SubmissionLower.Bundle6970_1f09574f108d5381
+import ProximityPrize.SubmissionLower.Bundle6970_1f09574f108d5381
+import ProximityPrize.SubmissionLower.Bundle6970_1f09574f108d5381
+import ProximityPrize.SubmissionLower.Bundle6970_1f09574f108d5381
+import ProximityPrize.SubmissionLower.Bundle6970_1f09574f108d5381
+import ProximityPrize.SubmissionLower.Bundle6970_1f09574f108d5381
+import ProximityPrize.SubmissionLower.R6970Height2313OrdinaryPlans08
+
+set_option Elab.async false
+
+namespace Research6970.Height2313
+
+open _root_.Lower6960 _root_.Research6969
+
+
+
+end Research6970.Height2313

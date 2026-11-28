@@ -633,17 +633,6 @@ section
 namespace K1_13_1_1_3
 open K1_13 K1_13_1_1 MvPolynomial
 noncomputable section
-private def sliceColumn (d b cutoff c f : ℕ) : Form := by
-  classical
-  refine AddMonoidAlgebra.ofCoeff (Finsupp.onFinset
-    (Finsupp.finite_of_degree_le (σ := Fin 4) d).toFinset
-    (fun e => if e.degree = d ∧ e 1 = b ∧ e.weight targetOrder < cutoff then
-      pascalRowScale e * ((e 2).choose c : Geom) * ((e 3).choose f : Geom) else 0) ?_)
-  intro e h
-  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
-  by_cases he : e.degree = d
-  · exact he.le
-  · simp [he] at h
 end
 end K1_13_1_1_3
 end

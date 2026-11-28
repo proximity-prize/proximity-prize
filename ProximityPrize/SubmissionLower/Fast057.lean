@@ -43,8 +43,6 @@ def curveIdeal (q : Surface) : Ideal SectionJet :=
 abbrev Curve (q : Surface) := SectionJet ⧸ curveIdeal q
 def toCurve (q : Surface) : SectionJet →ₐ[SectionField] Curve q :=
   Ideal.Quotient.mkₐ SectionField (curveIdeal q)
-def seedCoordinate (q : Surface) (i : Fin 2) : Curve q :=
-  toCurve q (K1_14_3_2_4.seedVar i)
 def ordinate (q : Surface) : Curve q :=
   toCurve q K1_14_3_2_4.ordinateVar
 def derivative (q : Surface) : Curve q :=
@@ -107,9 +105,6 @@ def lineIdeal (q : Surface) : Ideal LineJet :=
   q.asIdeal.map lineMap ⊔ Ideal.span
     {seedVar 0 + scalar (lineParam 0) * seedVar 1 - scalar (lineParam 1)}
 abbrev LineCurve (q : Surface) := LineJet ⧸ lineIdeal q
-def lineSeed (q : Surface) : LineCurve q := Ideal.Quotient.mk _ (seedVar 1)
-def lineOrdinate (q : Surface) : LineCurve q := Ideal.Quotient.mk _ yVar
-def lineDerivative (q : Surface) : LineCurve q := Ideal.Quotient.mk _ vVar
 def rationalMap {k F : Type} [Field k] [Field F] (f : k →+* F) :
     RatFunc k →+* RatFunc F :=
   RatFunc.mapRingHom (Polynomial.mapRingHom f)
@@ -124,10 +119,6 @@ structure RationalLineModel (K E k F : Type) [Field K] [Field E] [Field k] [Fiel
   seed : space t = algebraMap (RatFunc F) (RatFunc (RatFunc F)) (algebraMap F (RatFunc F) t')
   ordinate : space y = algebraMap (RatFunc F) (RatFunc (RatFunc F)) (algebraMap F (RatFunc F) y')
   derivative : space v = algebraMap (RatFunc F) (RatFunc (RatFunc F)) (algebraMap F (RatFunc F) v')
-abbrev LineModel (q : Surface) [IsDomain (Curve q)] [IsDomain (LineCurve q)] :=
-  RationalLineModel SectionField (FractionRing (Curve q)) LineField (FractionRing (LineCurve q))
-    (toFunction (seedCoordinate q 1)) (toFunction (ordinate q)) (toFunction (derivative q))
-    (toFunction (lineSeed q)) (toFunction (lineOrdinate q)) (toFunction (lineDerivative q))
 section Slope
 variable (k A : Type) [Field k] [CommRing A] [Algebra k A]
 abbrev SlopeRing :=
@@ -169,8 +160,6 @@ variable {k l F : Type} [Field k] [Field l] [Field F]
 @[simp] theorem rationalMap_variable (f : k →+* l) :
     rationalMap f RatFunc.X = RatFunc.X := by
   simp [← RatFunc.algebraMap_X]
-def rationalEquiv (i : k ≃+* l) : RatFunc k ≃+* RatFunc l :=
-  IsFractionRing.ringEquivOfRingEquiv (Polynomial.mapEquiv i)
 end RatFuncMap
 section Degree
 variable {k l F G : Type} [Field k] [Field l] [Field F] [Field G]

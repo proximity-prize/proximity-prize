@@ -11,19 +11,7 @@ open Final50Price (remaining symbolCount)
 open P0_9_8 (symbol_count)
 open scoped BigOperators
 
-private theorem extra_term_le (r y : Shape) (L i : ℕ) : layerTerm r y L i ≤ fastLayer r y L i := by
-  unfold layerTerm fastLayer remaining
-  split
-  · exact min_le_left _ _
-  · rw [← symbol_count]
-    exact min_le_right _ _
 
-theorem layerSum_le_available_n {r y : Shape} {L : ℕ} (n : ℕ)
-    (hr : r = zeroShape ∨ 0 < r.j) (hj : 0 < r.j + y.j) :
-    (∑ k ∈ Finset.range n, layerTerm r y L k) ≤ availableMass r y L := by
-  let N := max n (L + 1650 / (r.j + y.j))
-  rw [← availableMass_eq_sum hr hj (N := N) (le_max_right _ _)]
-  exact K1_13_8.sum_range_mono (le_max_left _ _) fun k _ => extra_term_le r y L k
 
 end Final50PriceLayer
 

@@ -22,33 +22,6 @@ local instance finiteLineAlgebra : Algebra (Polynomial k) E :=
 variable [Algebra A (Polynomial k)] [Algebra A F] [Algebra A E] [Algebra (Polynomial k) F] [Algebra F E]
   [IsScalarTower A (Polynomial k) F] [IsScalarTower A (Polynomial k) E] [IsScalarTower A F E] [IsScalarTower (Polynomial k) F E]
   [IsFractionRing A F] [IsFractionRing (Polynomial k) F] [FiniteDimensional F E] [Algebra.IsSeparable F E]
-theorem localized_line_discriminant_degree (S : Submonoid A) [IsLocalization S (Polynomial k)]
-    (δ : A) (nz : δ≠0) (principal : normalizationDiscriminant (A:=A) (E:=E) F=Ideal.span {δ})
-    (bf : Basis (Fin (finrank F E)) (Polynomial k) (chartOrder (k:=k) (E:=E) false))
-    (bi : Basis (Fin (finrank F E)) (Polynomial k) (chartOrder (k:=k) (E:=E) true)) :
-    ∃ d : ℤ,(normalizedTransition bf bi).det.degree=(d:WithBot ℤ) ∧
-      ((algebraMap A (Polynomial k) δ).natDegree:ℤ)≤-2*d := by
-  let j := algebraMap A (Polynomial k)
-  let b : Basis (Fin (finrank F E)) (Polynomial k) (integralClosure (Polynomial k) E) := bf
-  let G := (Algebra.traceMatrix (Polynomial k) bf).det
-  have h : (Ideal.span {j δ} : Ideal (Polynomial k))=Ideal.span {G} := by
-    have localEq := normalizationDiscriminant_map (R:=(Polynomial k)) (A:=A) (F:=F) (E:=E) S
-    rw [principal,Ideal.map_span,Set.image_singleton,normalizationDiscriminant_basis F b] at localEq
-    exact localEq
-  have associated : Associated (j δ) G := Ideal.span_singleton_eq_span_singleton.mp h
-  have inj : Function.Injective j := by
-    intro x y eq
-    apply IsFractionRing.injective A F
-    rw [IsScalarTower.algebraMap_apply A (Polynomial k) F,IsScalarTower.algebraMap_apply A (Polynomial k) F]
-    exact congrArg (algebraMap (Polynomial k) F) eq
-  have nonzero : G≠0 := by
-    intro z
-    have div : (j δ)∣0 := z ▸ associated.dvd
-    have div' : 0∣j δ := z ▸ associated.dvd'
-    exact (map_ne_zero_iff _ inj).mpr nz (zero_dvd_iff.mp div')
-  obtain ⟨d,dd,cap⟩ := normalized_line_discriminant_degree bf bi nonzero
-  exact ⟨d,dd,(congrArg (fun n : ℕ=>(n:ℤ)) (natDegree_eq_of_degree_eq
-    (degree_eq_degree_of_associated associated))).trans_le cap⟩
 end
 end Lower6960.CollisionTame
 
@@ -166,61 +139,6 @@ variable {E : Type} [Field E] [Algebra (PlaneRing k) E] [Algebra (PlaneField k) 
   [FiniteDimensional (PlaneField k) E] [Algebra.IsSeparable (PlaneField k) E]
 scoped instance genericLaurentAlgebra : Algebra (Laurent (GenericCoefficients k)) E :=
   ((algebraMap (PlaneField k) E).comp (genericLaurent k)).toAlgebra
-omit [Algebra (PlaneRing k) E] [IsScalarTower (PlaneRing k) (PlaneField k) E] in
-theorem genericLine_basis (s : Bool) :
-    Nonempty (Basis (Fin (finrank (PlaneField k) E)) (GenericLine k)
-      (chartOrder (k:=GenericCoefficients k) (E:=E) s)) := by
-  let A := GenericLine k
-  let F := PlaneField k
-  let j := (genericLaurent k).comp (chartEmbedding s).toRingHom
-  let : Algebra A F := j.toAlgebra
-  let : IsFractionRing A F := by
-    cases s with
-    | false =>
-      exact ((congrArg (fun f : A→+*F=>@IsFractionRing A _ F _ f.toAlgebra) (genericLaurent_finite k)).symm ▸
-        genericFinite_fraction k)
-    | true => exact ((congrArg (fun f : A→+*F=>@IsFractionRing A _ F _ f.toAlgebra) (genericLaurent_inverse k)).symm ▸
-        genericInverse_fractions k)
-  let : Algebra A E := ((algebraMap F E).comp j).toAlgebra
-  let : IsScalarTower A F E := IsScalarTower.of_algebraMap_eq (R:=A) (S:=F) (A:=E) fun _=>rfl
-  let C := integralClosure A E
-  have inj : Function.Injective (algebraMap A E) := (algebraMap F E).injective.comp (IsFractionRing.injective A F)
-  let : Module.IsTorsionFree A E := Module.IsTorsionFree.of_smul_eq_zero fun a x eq=>by
-    rw [Algebra.smul_def,mul_eq_zero] at eq
-    exact eq.imp (fun h=>inj (h.trans (map_zero _).symm)) id
-  let : Module.Finite A C := IsIntegralClosure.finite A F E C
-  let : Module.Free A C := IsIntegralClosure.module_free A F E C
-  have rank : finrank A C=finrank F E := IsIntegralClosure.rank A F E C
-  exact ⟨Module.finBasisOfFinrankEq A C rank⟩
-theorem plane_generic_outer_degree (δ : PlaneRing k) (nz : δ≠0)
-    (generator : normalizationDiscriminant (A:=PlaneRing k) (E:=E) (PlaneField k)=Ideal.span {δ}) :
-    ∃ (bf : Basis (Fin (finrank (PlaneField k) E)) (GenericLine k)
-        (chartOrder (k:=GenericCoefficients k) (E:=E) false))
-      (bi : Basis (Fin (finrank (PlaneField k) E)) (GenericLine k)
-        (chartOrder (k:=GenericCoefficients k) (E:=E) true)) (d : ℤ),
-      (normalizedTransition bf bi).det.degree=(d:WithBot ℤ) ∧ (δ.natDegree:ℤ)≤-2*d := by
-  let A := PlaneRing k
-  let R := GenericLine k
-  let F := PlaneField k
-  let j := (genericLaurent k).comp (chartEmbedding false).toRingHom
-  let : Algebra R F := j.toAlgebra
-  let : IsFractionRing R F := by
-    exact ((congrArg (fun f : R→+*F=>@IsFractionRing R _ F _ f.toAlgebra) (genericLaurent_finite k)).symm ▸
-      genericFinite_fraction k)
-  let : IsScalarTower A R F := IsScalarTower.of_algebraMap_eq (R:=A) (S:=R) (A:=F) fun r=>by
-    change algebraMap A F r=j (algebraMap A R r)
-    rw [show j=genericFinite k from genericLaurent_finite k,genericFinite_on_plane]
-  let : Algebra R E := ((algebraMap F E).comp j).toAlgebra
-  let : IsScalarTower R F E := IsScalarTower.of_algebraMap_eq (R:=R) (S:=F) (A:=E) fun _=>rfl
-  let : IsScalarTower A R E := IsScalarTower.of_algebraMap_eq (R:=A) (S:=R) (A:=E) fun r=>by
-    rw [IsScalarTower.algebraMap_apply A F E,IsScalarTower.algebraMap_apply A R F,
-      ←IsScalarTower.algebraMap_apply R F E]
-  obtain ⟨bf⟩ := genericLine_basis (E:=E) k false
-  obtain ⟨bi⟩ := genericLine_basis (E:=E) k true
-  obtain ⟨d,dd,cap⟩ := localized_line_discriminant_degree (F:=F) (E:=E) (coeffDenominators k) δ nz generator bf bi
-  change ((δ.map (algebraMap (Polynomial k) (GenericCoefficients k))).natDegree:ℤ)≤-2*d at cap
-  rw [natDegree_map_eq_of_injective (IsFractionRing.injective _ _)] at cap
-  exact ⟨bf,bi,d,dd,cap⟩
 end
 end Lower6960.CollisionTame
 

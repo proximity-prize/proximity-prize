@@ -796,20 +796,12 @@ def PoleTest {F : Type} [Field F] (s : Shape) (H : (Polynomial F))
     JetPolys (SeedFrac F)) ∣ forward H lift P
 abbrev Grade (s : Shape) := Fin (s.B + 1)
 abbrev GradeSlot (s : Shape) (q : ℕ) := Fin (min q s.J + 1)
-abbrev LocalJet (s : Shape) := Fin (s.B + s.J)
 abbrev LocalRow (s : Shape) (q : ℕ) := Fin (s.B + s.J - q) × GradeSlot s q
-abbrev ZeroRows (F : Type) (s : Shape) (q : ℕ) :=
-  LocalRow s q → GradeSlot s q → LocalJet s → F
 def zeroGrade {F : Type} [Field F] (s : Shape) (q : ℕ)
     (f : GradeSlot s q → (Polynomial F)) (k : GradeSlot s q) : (Polynomial F) :=
   ∑ j, if k.val ≤ j.val then
     f j * Polynomial.C (R := F) (j.val.choose k.val : F) *
       (Polynomial.X (R := F)) ^ (q - j.val + k.val) else 0
-def ZeroRowsValid {F : Type} [Field F] (s : Shape) (q : ℕ)
-    (rows : ZeroRows F s q) : Prop :=
-  ∀ f : GradeSlot s q → (Polynomial (SeedFrac F)),
-    (∀ k, (Polynomial.X (R := SeedFrac F)) ^ (s.B + s.J) ∣ zeroGrade s q f k) ↔
-      ∀ r, ∑ j, ∑ a, algebraMap F (SeedFrac F) (rows r j a) * (f j).coeff a.val = 0
 def residue {F : Type} [Field F] (side : Fin 2) (a b c : F) : SeedFrac F :=
   let z := algebraMap (Seed F) (SeedFrac F) (MvPolynomial.X side)
   algebraMap F (SeedFrac F) a * z /

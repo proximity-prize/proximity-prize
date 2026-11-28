@@ -6868,8 +6868,6 @@ def sectionEval (s : Slice) : SectionJet →ₐ[SectionField] Plane where
       (eval₂RingHom (MvPolynomial.eval₂Hom MvPolynomial.C (seedValues s)) (ordinateValue s))
       (derivativeValue s) (C (C (MvPolynomial.C k))) = MvPolynomial.C k
     simp
-def univariate : (Polynomial SectionField) →ₐ[SectionField] Plane :=
-  Polynomial.aeval (MvPolynomial.X 0)
 end
 end K1_14_3_2_4
 end

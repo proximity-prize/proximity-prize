@@ -9,9 +9,6 @@ section
 namespace acY.Compact
 set_option maxHeartbeats 2000000
 open xE
-private def ahf (s :Nat) (f :Nat→Nat) :Nat→Nat
- | 0=>0
- | n+1=>Nat.add (ahf s f n) (f (Nat.add s n))
 end acY.Compact
 end
 section

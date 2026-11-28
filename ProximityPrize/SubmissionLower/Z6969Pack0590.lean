@@ -27,9 +27,9 @@ open Lower6960.HelperSource
 open P1_7_4 (Mass)
 
 abbrev count : ℕ := 21
-abbrev firstHeight : ℕ := 2390
-abbrev lastHeight : ℕ := 2534
-abbrev agreement : ℕ := 179740
+abbrev firstHeight : ℕ := 2412
+abbrev lastHeight : ℕ := 2557
+abbrev agreement : ℕ := 179730
 
 def reserve (i : Fin count) : ℕ := ![0, 1, 2, 3, 5, 8, 10, 8, 10, 20, 14, 21, 21, 36, 41, 41, 65, 76, 76, 76, 76] i
 def bank (i : Fin count) : P1_7.Bank :=
@@ -97,9 +97,9 @@ def suppliedHistory : List Mass :=
    ![459151/1369, 12482743/2738, 3717935/96, 349292736/2209]]
 
 def suppliedDegreeRates : List ℕ := [287567366, 388126102, 388260904, 388304270, 386845787, 389010179, 388311592, 388691591, 162716559, 163566869, 163638726, 163457698, 81970807, 80817237, 79023214, 82363343, 87671467, 115428840, 148643765, 100000000, 227860168]
-def suppliedHeightRates : List ℕ := [1255289, 883733, 883363, 883244, 887245, 881307, 883224, 882181, 2358008, 2343855, 2342659, 2345672, 4870238, 4938811, 5058841, 4846904, 4537676, 3394973, 2592240, 3958949, 1631998]
+def suppliedHeightRates : List ℕ := [1255575, 883934, 883564, 883445, 887447, 881508, 883425, 882382, 2358545, 2344389, 2343193, 2346206, 4871348, 4939936, 5059993, 4848009, 4538710, 3395746, 2592831, 3959851, 1632370]
 def retainedCredit (i : Fin 4) : ℕ := ![120952734377760, 1614589970072, 205074151200, 5399834440] i
-abbrev prefixCap : ℕ := 166090809652888085
+abbrev prefixCap : ℕ := 166093892126631894
 
 end Lower6960.Prefix6969MiddleRefit
 end Z6969Source0680
@@ -205,11 +205,11 @@ structure Rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
 
 theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2390≤M.overhead.toNat) (hi : M.overhead.toNat≤2534)
+    (lo : 2412≤M.overhead.toNat) (hi : M.overhead.toNat≤2557)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     Nonempty (Rows F Crt) := by
-  have hiAll : M.overhead.toNat ≤ 33735 := hi.trans (by decide)
+  have hiAll : M.overhead.toNat ≤ 33755 := hi.trans (by decide)
   choose P inside nz using free_rows Crt (word M) lo hi
   obtain ⟨out⟩ := PrefixRows.prepare P freeShape copies _ _ nz
     (fun i => evaluated_shape Crt (word M) (inside i))
@@ -229,8 +229,8 @@ theorem rows {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     · exact contact_at_mark F Crt noPole residues (inside i) (cutoff_fit lo hi i) γ mem
     · intro H hm
       have wh := Prefix6969MiddleHelper.helper_width lo hiAll
-      have width : helperCutoff M.overhead.toNat+2*M.overhead.toNat*10 < helperBank.shape.m*179740 :=
-        FreeSource.buffered_fit helperBank 179740 _ 10 wh
+      have width : helperCutoff M.overhead.toNat+2*M.overhead.toNat*10 < helperBank.shape.m*179730 :=
+        FreeSource.buffered_fit helperBank 179730 _ 10 wh
       exact contact_at_mark F Crt noPole residues hm width γ mem
   · intro i
     exact Classical.choice (K1_14_2_2_1.proof _ _ (out.free_ne i) (out.free_caps i))
@@ -603,17 +603,17 @@ open HighCore82258_3 (envelope_caps)
 open Lower6960.Far6969RescueGeometry (proper_cut)
 open scoped Classical BigOperators
 
-def terminalCutoff : ℕ := terminalShape.m*179740-1
+def terminalCutoff : ℕ := terminalShape.m*179730-1
 def TerminalFits (s : Shape) : Prop :=
   0<s.m ∧ s.B≤terminalShape.B ∧ s.J≤terminalShape.J ∧ s.U≤terminalShape.U
 def TerminalPass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (J : Ideal Ambient) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179740-1),toJet P∈J
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179730-1),toJet P∈J
 
 /-- A parent that fails any terminal bank provides a proper row inside
 the single envelope used by the geometric cut bill. -/
 theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L)
     {J : Ideal Ambient} (failed : ¬ TerminalPass Crt w J) :
-    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179740-1) ∧
+    ∃ (s : Shape) (P : Jet), 0<s.m ∧ P∈evaluated Crt w s (s.m*179730-1) ∧
       RowCaps P terminalShape ∧ toJet P∉J := by
   classical
   unfold TerminalPass at failed
@@ -625,7 +625,7 @@ theorem terminal_failure {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L
   exact ⟨b.trans sb,v.trans sj,u.trans su⟩
 
 def SurfacePass {h : ℕ} {D : PoleData h} (Crt : CRTLift D) (w : I→L) (q : Surface) : Prop :=
-  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179740-1),P∈q.asIdeal
+  ∀ s, TerminalFits s → ∀ P∈evaluated Crt w s (s.m*179730-1),P∈q.asIdeal
 
 theorem SurfacePass.original {h : ℕ} {D : PoleData h} {Crt : CRTLift D} {w : I→L}
     {q : Surface} (pass : SurfacePass Crt w q) :
@@ -745,7 +745,7 @@ theorem Initial.marked_cutter {u deleted} {M : Model u deleted} {Γ} {F : Family
     apply zero_of_contact (r:=0)
     exact contact_at_mark R.family Crt noPole
       (fun δ hd=>residues δ (mem_filter.mp hd).1) inside
-      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179740)) (by decide : 0<1)) γ hγ
+      (by simpa only [Nat.mul_zero,Nat.add_zero] using Nat.sub_lt (Nat.mul_pos sm (by decide : 0<179730)) (by decide : 0<1)) γ hγ
 
 theorem Initial.cutCover {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R)
@@ -941,7 +941,7 @@ theorem Initial.content_count {u deleted} {M : Model u deleted} {Γ} {F : Family
     |>.trans (Nat.mul_le_mul_left _ ini.content_cap)
 
 theorem Rows.fixed_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt) (hi : M.overhead.toNat≤2534) :
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt) (hi : M.overhead.toNat≤2557) :
     R.fixedMarks.card≤fixedLimit := by
   calc
     _ ≤ ∑ i : Fin 21, (R.fixedMarksOf (R.fixedFree i).equation ∪ R.fixedMarksOf (R.fixedMoving i).equation).card :=
@@ -1078,8 +1078,8 @@ open scoped Classical BigOperators
 abbrev degreeRates := suppliedDegreeRates
 abbrev heightRates := suppliedHeightRates
 
-def lambda : ℚ := ((262144 : ℚ) / 179740) * endpointDegree
-def mu : ℚ := ((262144 - endpointDegree : ℕ) : ℚ) / (179740 - endpointDegree : ℕ)
+def lambda : ℚ := ((262144 : ℚ) / 179730) * endpointDegree
+def mu : ℚ := ((262144 - endpointDegree : ℕ) : ℚ) / (179730 - endpointDegree : ℕ)
 def tau : ℚ := 1 / 2
 
 def degreeRate (i : ℕ) : ℕ := degreeRates.getD i 0
@@ -1196,7 +1196,7 @@ def Initial.rankMarks {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) : Finset K :=
   R.marks.filter (fun γ=>∃ J∈ini.rankExit,OnMark R.family J γ)
 theorem Initial.rank_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
-    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) (hi : M.overhead.toNat≤2534) :
+    {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} (ini : Initial R) (hi : M.overhead.toNat≤2557) :
     (ini.rankMarks.card : ℚ)≤dotQ rankWeight (massQ ini.rankExit)+rankRound := by
   let S := ini.rankExit
   let B := max 2 (mass S 2)
@@ -1247,7 +1247,7 @@ private theorem card_round {a : ℕ} {q : ℚ} (bound : (a : ℚ)≤q) : a≤q.c
   exact_mod_cast bound.trans (Rat.le_ceil.trans ceil_cast)
 theorem CutBooks.curve_bin_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hiM : M.overhead.toNat≤2534) {i : ℕ} (hi : i<21) :
+    (C : CutBooks ini) (hiM : M.overhead.toNat≤2557) {i : ℕ} (hi : i<21) :
     ((curveMarks R.family (C.cover i)).card : ℚ)≤
       dotQ (lossWeight i) (massQ (ini.lost i))+((C.cover i).cost 0 : ℚ) := by
   have global : ((C.cover i).cost 0 : ℚ)≤seedLimit :=
@@ -1286,7 +1286,7 @@ theorem retainedCharge_cast_le (S : Finset (Ideal Ambient)) :
 
 theorem CutBooks.loss_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hi : M.overhead.toNat≤2534) : C.lossMarks.card + retainedCharge ini.final ≤ lossLimit.ceil.toNat := by
+    (C : CutBooks ini) (hi : M.overhead.toNat≤2557) : C.lossMarks.card + retainedCharge ini.final ≤ lossLimit.ceil.toNat := by
   apply card_round
   have cum : (C.lossMarks.card : ℚ) ≤ (ini.rankMarks.card : ℚ) +
       ∑ i∈range 21,((curveMarks R.family (C.cover i)).card : ℚ) := by
@@ -1319,7 +1319,7 @@ def CutBooks.paid {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
   (C.lossMarks ∪ C.pointMarks) ∪ (ini.seedMarks ∪ ini.ordinateMarks) ∪ (R.fixedMarks ∪ ini.contentMarks)
 theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} {R : Rows F Crt} {ini : Initial R}
-    (C : CutBooks ini) (hi : M.overhead.toNat≤2534) : C.paid.card + retainedCharge ini.final ≤ mainFee := by
+    (C : CutBooks ini) (hi : M.overhead.toNat≤2557) : C.paid.card + retainedCharge ini.final ≤ mainFee := by
   have combined := card_union_le
     ((C.lossMarks ∪ C.pointMarks) ∪ (ini.seedMarks ∪ ini.ordinateMarks)) (R.fixedMarks ∪ ini.contentMarks)
   have left := card_union_le (C.lossMarks ∪ C.pointMarks) (ini.seedMarks ∪ ini.ordinateMarks)
@@ -1336,7 +1336,7 @@ theorem CutBooks.paid_count {u deleted} {M : Model u deleted} {Γ} {F : Family M
   omega
 theorem Rows.main_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D} (R : Rows F Crt)
-    (hi : M.overhead.toNat≤2534) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
+    (hi : M.overhead.toNat≤2557) (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈Γ,MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ (ini : Initial R) (C : CutBooks ini) (S : Finset Surface),
       C.paid.card + retainedCharge ini.final ≤ prefixCap ∧
@@ -1369,7 +1369,7 @@ theorem Rows.main_prefix {u deleted} {M : Model u deleted} {Γ} {F : Family M Γ
 /-- Construct the actual wide prefix from the model's CRT data and the verified banks. -/
 theorem main_prefix {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2390 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2534)
+    (lo : 2412 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2557)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ (R : Rows F Crt) (ini : Initial R) (C : CutBooks ini) (S : Finset Surface),
@@ -1409,7 +1409,7 @@ open Research6966
 baseline of every nontrivial exception at the middle endpoint. -/
 theorem split {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2390 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2534)
+    (lo : 2412 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2557)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ)) :
     ∃ R : Prefix6969MiddleRefit.Rows F Crt, R.out.exception = 1 ∨
@@ -1420,20 +1420,20 @@ theorem split {u deleted} {M : Model u deleted} {Γ} (F : Family M Γ)
         1 ≤ jetDegree R.out.exception ∧ jetDegree R.out.exception ≤ 7 ∧
         1 ≤ seedDegree R.out.exception ∧ seedDegree R.out.exception ≤ 61 ∧
         (2 ≤ jetDegree R.out.exception → seedDegree R.out.exception ≤ 56) ∧
-        jetDegree R.out.exception * 128537 - 1 ≤ RawPhysicalDegree.weight
+        jetDegree R.out.exception * 128514 - 1 ≤ RawPhysicalDegree.weight
           (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw := by
   obtain ⟨R⟩ := Prefix6969MiddleRefit.rows F Crt lo hi noPole residues
   refine ⟨R, ?_⟩
   rcases R.out.kind with unit | common
   · exact Or.inl unit
-  have hiAll : M.overhead.toNat ≤ 33735 := hi.trans (by decide)
+  have hiAll : M.overhead.toNat ≤ 33755 := hi.trans (by decide)
   obtain ⟨line, jd, jmax, sd, smax, nonlinear⟩ :=
     Prefix6969MiddleHelper.helper_common_caps Crt (word M) lo hiAll
       common.1 common.2.2.1 common.2.1 common.2.2.2
   obtain ⟨phys⟩ := HelperPhysicalModel.exists_model Crt common.1 common.2.1
   have hraw : 0 < 131071-M.overhead.toNat := by omega
   have lower := HelperWeightCap.weight_lower phys common.1.ne_zero _ hraw
-  have endpoint : 128537 ≤ 131071-M.overhead.toNat := by omega
+  have endpoint : 128514 ≤ 131071-M.overhead.toNat := by omega
   have m := Nat.mul_le_mul_left (jetDegree R.out.exception) endpoint
   rw [Nat.mul_comm (jetDegree R.out.exception) (131071-M.overhead.toNat)] at m
   rw [line] at lower
@@ -1480,7 +1480,7 @@ structure Packet {u del} {M : Model u del} {Γ} (F : Family M Γ)
   projected : Equation
   project : JointProjection.Product parents projected
   geo : ∀ q∈parents,Parent q
-  terminal : ∀ q∈parents,TerminalBanks.Pass Crt (word M) 179740 Research6969.SpreadCatalogue.shape q
+  terminal : ∀ q∈parents,TerminalBanks.Pass Crt (word M) 179730 Research6969.SpreadCatalogue.shape q
   degree_cap : projected.natDegree ≤ grade
   seed_cap : K1_14_4.seedDegree projected ≤ width
   bill : paid.card+ordCredit*projected.natDegree+seedCredit*K1_14_4.seedDegree projected≤fee
@@ -1502,8 +1502,8 @@ def Budget.extra {mp rp} (b : Budget mp rp) : ℕ :=
   if b.marked then
     (JointLedger.coefficient b.rDegree-rp.credit 1)*b.rWidth+2*b.rDegree^2
   else
-    (JointRouted.seedWeight 133605 rp.seed^2-rp.credit 0)*b.rDegree+
-    (2*JointRouted.seedWeight 133605 rp.seed*JointRouted.ordWeight 133605 (rp.degree-1)-rp.credit 1)*b.rWidth
+    (JointRouted.seedWeight 133628 rp.seed^2-rp.credit 0)*b.rDegree+
+    (2*JointRouted.seedWeight 133628 rp.seed*JointRouted.ordWeight 133628 (rp.degree-1)-rp.credit 1)*b.rWidth
 
 def Budget.adjust {mp rp} (b : Budget mp rp) : ℕ :=
   (ordCredit-mp.retainedCredit 0)*b.mDegree+(seedCredit-mp.retainedCredit 1)*b.mWidth
@@ -1524,11 +1524,11 @@ theorem settle {u del} {M : Model u del} {Γ} (F : Family M Γ)
     {main : Prefix6969Main.Plan} {mp : Pricing}
     (mainValid : main.Valid) (mainPrice : mp.Valid main Band.middle)
     {extra a low floor : ℕ}
-    (mainSource : main.Sources 2390 2534 Prefix6969MiddleHelper.helperBank extra a low floor)
+    (mainSource : main.Sources 2412 2557 Prefix6969MiddleHelper.helperBank extra a low floor)
     {rescue : Prefix6969Rescue.Plan} {rp : EarlyPrice}
-    (rescueSource : rescue.Sources 2390 2534) (rescuePrice : rp.Valid rescue Band.middle)
+    (rescueSource : rescue.Sources 2412 2557) (rescuePrice : rp.Valid rescue Band.middle)
     (b : Budget mp rp) (checks : b.Valid main rescue)
-    (lo : 2390 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2534)
+    (lo : 2412 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2557)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (phys : HelperPhysicalModel.Model Crt G) (prime : Prime G)
@@ -1561,7 +1561,7 @@ theorem settle {u del} {M : Model u del} {Γ} (F : Family M Γ)
   have exit : T.card ≤ Prefix6969Rescue.Invoice.charge B rp.credit+b.extra := by
     cases hm : b.marked
     · have cc : RowCaps G (graphShape rp.degree rp.seed) := rescuePrice.graph_shape ▸ caps
-      have ph : 131071+M.overhead≤(133605:ℤ) := by omega
+      have ph : 131071+M.overhead≤(133628:ℤ) := by omega
       simpa only [Budget.extra,hm,Bool.false_eq_true,ite_false,Prefix6969Rescue.Invoice.charge,add_assoc] using
         Prefix6969Early.graph_exit F tr prime slope nonlinear rescuePrice.seed_pos cc ph
           (by decide) (by decide) (by decide) rgeo B.final ra rorigin ton
@@ -1620,10 +1620,10 @@ open Research6969 Research6966
 open scoped Classical BigOperators Differential
 
 abbrev affineFee : ℕ :=
-  p*61+(3*(133605*61)^2*(262144-133605)^3)/(179740-133605)^3
+  p*61+(3*(133628*61)^2*(262144-133628)^3)/(179730-133628)^3
 
 private theorem affine_roots {u deleted} {M : Model u deleted} {Γ T : Finset K}
-    (F : Family M Γ) (sub : T⊆Γ) (hi : M.overhead.toNat≤2534)
+    (F : Family M Γ) (sub : T⊆Γ) (hi : M.overhead.toNat≤2557)
     {G : Jet} (prime : Prime G) (slope : G.natDegree=1) (affine : jetDegree G=1)
     (width : seedDegree G≤61) (roots : ∀γ∈T,jetAt G (M.label γ) (F.scalar γ)=0) :
     T.card≤affineFee := by
@@ -1643,14 +1643,14 @@ private theorem affine_roots {u deleted} {M : Model u deleted} {Γ T : Finset K}
     rw [←Finsupp.degree_eq_weight_one]
     exact (MvPolynomial.le_totalDegree hm).trans ((K1_14_2_2_2_1.seedDegree_le G 61).mp width j i)
   exact NativeAffineTariff.price_floor F sub N gp (deg.trans affine) 61 (by decide) cap
-    (by decide) 133605 (by omega) (by decide) (by decide) (by decide) (by decide) own
+    (by decide) 133628 (by omega) (by decide) (by decide) (by decide) (by decide) own
 
 /-- The refitted actual main packet transfers when the outer exception is
 a unit or its affine zero marks have been paid. -/
 theorem ordinary {u del} {M : Model u del} {Γ} {F : Family M Γ}
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D}
     (R : Prefix6969MiddleRefit.Rows F Crt)
-    (hi : M.overhead.toNat≤2534)
+    (hi : M.overhead.toNat≤2557)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ))
     (mode : R.out.exception=1 ∨ Prime R.out.exception ∧ R.out.exception.natDegree=1 ∧
@@ -1736,15 +1736,15 @@ structure Case (a l u : ℕ) where
   mp : Prefix6969Main.Pricing
   valid : main.Valid
   mainPrice : mp.Valid main Band.middle
-  mainSource : main.Sources 2390 2534 Prefix6969MiddleHelper.helperBank 128536 a l (a*128537-1)
+  mainSource : main.Sources 2412 2557 Prefix6969MiddleHelper.helperBank 128513 a l (a*128514-1)
   rescue : Prefix6969Rescue.Plan
   rp : Prefix6969Rescue.EarlyPrice
-  rescueSource : rescue.Sources 2390 2534
+  rescueSource : rescue.Sources 2412 2557
   rescuePrice : rp.Valid rescue Band.middle
   rdegree : rescue.degree=a
   rshape : rescue.primeShape=graphShape a u
   rseed : rescue.seedFloor=l
-  rfloor : rescue.physicalFloor=a*128537-1
+  rfloor : rescue.physicalFloor=a*128514-1
   budget : Budget mp rp
   checks : budget.Valid main rescue
 
@@ -1757,7 +1757,7 @@ theorem prime_of_irred {G : Jet} (irr : Irreducible G) : Prime G := by
 theorem Case.run {a l u : ℕ} (c : Case a l u)
     {u₀ del} {M : Model u₀ del} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2390 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2534)
+    (lo : 2412 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2557)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (phys : HelperPhysicalModel.Model Crt G)
@@ -1765,7 +1765,7 @@ theorem Case.run {a l u : ℕ} (c : Case a l u)
       (Prefix6969MiddleHelper.helperCutoff M.overhead.toNat)) G)
     (slope : G.natDegree=1) (degree : jetDegree G=a) (nonlinear : 2≤a)
     (seed : l≤seedDegree G) (upper : seedDegree G≤u)
-    (floor : a*128537-1≤RawPhysicalDegree.weight
+    (floor : a*128514-1≤RawPhysicalDegree.weight
       (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) :
     Nonempty (Packet F Crt) := by
   have caps : RowCaps G c.rescue.primeShape := by
@@ -1808,10 +1808,10 @@ structure NearCase (a l u w : ℕ) where
   mp : Prefix6969Main.Pricing
   valid : main.Valid
   mainPrice : mp.Valid main Band.near
-  mainSource : main.Sources 2293 2389 Prefix6969Helper.helperBank 128681 a l w
+  mainSource : main.Sources 2314 2411 Prefix6969Helper.helperBank 128659 a l w
   rescue : Prefix6969Rescue.Plan
   rp : Prefix6969Rescue.EarlyPrice
-  rescueSource : rescue.Sources 2293 2389
+  rescueSource : rescue.Sources 2314 2411
   rescuePrice : rp.Valid rescue Band.near
   rdegree : rescue.degree=a
   rshape : rescue.primeShape=graphShape a u
@@ -1826,7 +1826,7 @@ def NearCase.fee {a l u w} (c : NearCase a l u w) : ℕ :=
 theorem NearCase.run {a l u w : ℕ} (c : NearCase a l u w)
     {u₀ del} {M : Model u₀ del} {Γ} (F : Family M Γ)
     {D : PoleData M.overhead.toNat} (Crt : CRTLift D)
-    (lo : 2293 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2389)
+    (lo : 2314 ≤ M.overhead.toNat) (hi : M.overhead.toNat ≤ 2411)
     (noPole : ∀ j i, (D.block j).eval (nodeL i) ≠ 0)
     (residues : ∀ γ∈Γ, MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (phys : HelperPhysicalModel.Model Crt G)
@@ -1871,32 +1871,32 @@ open K1_14_1 (PoleData CRTLift MarkResidues poleProduct nodeL)
 open Far6969RescueGeometry (Model Family)
 open Research6966
 
-abbrev lowFee : ℕ := 20000000000000000
+abbrev lowFee : ℕ := 21000000000000000
 abbrev seed (i : Fin 56) : ℕ := i.val+1
 def threshold (i : Fin 56) : ℕ :=
-  ![308419,308410,308395,308374,308347,308315,308276,308232,
-    308182,308125,308063,307995,307921,307841,307755,307664,
+  ![308387,308378,308364,308344,308319,308288,308251,308209,
+    308161,308107,308048,307983,307912,307836,307754,307664,
     307566,307462,307353,307237,307116,306989,306855,306716,
     306571,306420,306263,306100,305932,305757,305576,305390,
     305197,304999,304795,304585,304368,304146,303918,303684,
     303445,303199,302947,302690,302426,302157,301881,301600,
     301313,301020,300721,300416,300105,299788,299466,299137] i
-private def votes (i : Fin 56) : ℕ := 179740-(threshold i-1-128681)
+private def votes (i : Fin 56) : ℕ := 179730-(threshold i-1-128659)
 private def bad (i : Fin 56) : ℕ := 3*(seed i+p*seed i)
 private def upper (i : Fin 56) : ℕ :=
-  ((262144-179740)*((2*133460-1)*seed i)+179740)^2/(179740-133460)^2
+  ((262144-179730)*((2*133482-1)*seed i)+179730)^2/(179730-133482)^2
 
 private theorem receipt (i : Fin 56) :
     0<votes i ∧ bad i≤lowFee ∧ 262144*upper i≤(lowFee-bad i)*votes i := by
   fin_cases i <;> decide +kernel
 
-private theorem per_node {d : ℕ} (hd : d≤133460) (i : Fin 56) :
-    ((262144-179740)*((2*d-1)*seed i)+(179740-d))^2/(179740-d)^2≤upper i := by
-  have power:(2*d-1)*seed i≤(2*133460-1)*seed i:=Nat.mul_le_mul_right _ (by omega)
-  have top:(262144-179740)*((2*d-1)*seed i)+(179740-d)≤
-      (262144-179740)*((2*133460-1)*seed i)+179740 :=
+private theorem per_node {d : ℕ} (hd : d≤133482) (i : Fin 56) :
+    ((262144-179730)*((2*d-1)*seed i)+(179730-d))^2/(179730-d)^2≤upper i := by
+  have power:(2*d-1)*seed i≤(2*133482-1)*seed i:=Nat.mul_le_mul_right _ (by omega)
+  have top:(262144-179730)*((2*d-1)*seed i)+(179730-d)≤
+      (262144-179730)*((2*133482-1)*seed i)+179730 :=
     Nat.add_le_add (Nat.mul_le_mul_left _ power) (Nat.sub_le ..)
-  have bottom:(179740-133460)^2≤(179740-d)^2:=Nat.pow_le_pow_left (by omega) 2
+  have bottom:(179730-133482)^2≤(179730-d)^2:=Nat.pow_le_pow_left (by omega) 2
   exact (Nat.div_le_div_right (Nat.pow_le_pow_left top 2)).trans
     (Nat.div_le_div_left bottom (by decide))
 
@@ -1905,7 +1905,7 @@ weight interval directly on the production word family. -/
 theorem low_quadratic_count {u del} {M : Model u del} {Γ T : Finset K}
     (F : Family M Γ) (sub : T⊆Γ)
     {D : PoleData M.overhead.toNat} {Crt : CRTLift D}
-    (lo : 2293≤M.overhead.toNat) (hi : M.overhead.toNat≤2389)
+    (lo : 2314≤M.overhead.toNat) (hi : M.overhead.toNat≤2411)
     (noPole : ∀ j i,(D.block j).eval (nodeL i)≠0)
     (residues : ∀ γ∈T,MarkResidues D (M.label γ) (F.scalar γ))
     {G : Jet} (phys : HelperPhysicalModel.Model Crt G) (prime : Prime G)
@@ -1918,10 +1918,10 @@ theorem low_quadratic_count {u del} {M : Model u del} {Γ T : Finset K}
   let h := M.overhead.toNat
   let d : ℕ := 131071+h
   let W := RawPhysicalDegree.weight (131071-h) (131071-h-1) phys.raw
-  let v := 179740-(W-(131071-h-1))
+  let v := 179730-(W-(131071-h-1))
   have hp : 0<h := by omega
   have hs : h≤131070 := by omega
-  have hd : d≤133460 := by dsimp [d,h]; omega
+  have hd : d≤133482 := by dsimp [d,h]; omega
   have sw : seed i≤56 := by have := i.isLt; dsimp [seed]; omega
   have nodes (j : I) : (poleProduct D).eval (algebraMap K L (K1.node j))≠0 := by
     rw [poleProduct,eval_mul]
@@ -1932,13 +1932,13 @@ theorem low_quadratic_count {u del} {M : Model u del} {Γ T : Finset K}
     height le_rfl (hd.trans_lt (by decide)) (hd.trans_lt (by decide)) nodes residues root
   rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)] at cnt
   change T.card*v≤bad i*v+262144*
-    (((262144-179740)*((2*d-1)*seed i)+(179740-d))^2/(179740-d)^2) at cnt
+    (((262144-179730)*((2*d-1)*seed i)+(179730-d))^2/(179730-d)^2) at cnt
   have vv : votes i≤v := by
     unfold votes v W
     dsimp [h]
     omega
   obtain ⟨pos,feeFit,paid⟩ := receipt i
-  have bill : 262144*(((262144-179740)*((2*d-1)*seed i)+(179740-d))^2/(179740-d)^2)
+  have bill : 262144*(((262144-179730)*((2*d-1)*seed i)+(179730-d))^2/(179730-d)^2)
       ≤(lowFee-bad i)*v :=
     (Nat.mul_le_mul_left _ (per_node hd i)).trans
       (paid.trans (Nat.mul_le_mul_left _ vv))
@@ -1960,14 +1960,13 @@ open PhysicalWindow
 set_option maxRecDepth 30000
 set_option maxHeartbeats 0
 
-def src900000 : Request := ⟨⟨⟨556,772,170,8941⟩,5255817068544,9968090926⟩,10,3,2,386044,2⟩
-private theorem pass900000_2293 : (Triangular src900000) 2293 2293 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass900000_2294 : (Triangular src900000) 2294 2296 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass900000_2297 : (Triangular src900000) 2297 2305 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass900000_2306 : (Triangular src900000) 2306 2334 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-private theorem pass900000_2335 : (Triangular src900000) 2335 2389 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
-theorem cover900000 : Cover (Triangular src900000) 2389 2293 [2293,2296,2305,2334,2389] := by
-  exact ⟨by decide, by decide, pass900000_2293, by decide, by decide, pass900000_2294, by decide, by decide, pass900000_2297, by decide, by decide, pass900000_2306, by decide, by decide, pass900000_2335, rfl⟩
+def src900000 : Request := ⟨⟨⟨556,772,170,8941⟩,5255817068544,9968090926⟩,10,3,2,385978,2⟩
+private theorem shift900000_2314 : (PhysicalWindow.Triangular src900000) 2314 2318 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
+private theorem shift900000_2319 : (PhysicalWindow.Triangular src900000) 2319 2334 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
+private theorem shift900000_2335 : (PhysicalWindow.Triangular src900000) 2335 2385 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
+private theorem shift900000_2386 : (PhysicalWindow.Triangular src900000) 2386 2411 := Research6969.PhysicalWindow.triangular_of_fast _ _ _ (by decide +kernel)
+theorem cover900000 : PhysicalWindow.Cover (PhysicalWindow.Triangular src900000) 2411 2314 [2318, 2334, 2385, 2411] := by
+  exact ⟨by decide, by decide, shift900000_2314, by decide, by decide, shift900000_2319, by decide, by decide, shift900000_2335, by decide, by decide, shift900000_2386, rfl⟩
 end Research6969.PhysicalCatalogue
 end Z6969Source0689
 
@@ -2080,6 +2079,30 @@ theorem height_from_critical (b : Band) (a k h : ℕ)
   simpa only [unit_eq] using cmp
 
 
+def CriticalHeight (b : Band) (a k h : ℕ) : Prop :=
+  0 < k ∧ k ≤ 80 ∧
+    (k = 1 ∨ 0 ≤ linear b a - quadratic b a * (2*(k:ℚ)-1)) ∧
+    (k = 80 ∨ linear b a - quadratic b a * (2*(k:ℚ)+1) ≤ 0) ∧
+    max 0 (1-(a:ℚ)*k/((p+1:ℕ):ℚ)) * b.curveUnit k ≤ h
+
+instance (b : Band) (a k h : ℕ) : Decidable (CriticalHeight b a k h) := by
+  unfold CriticalHeight
+  infer_instance
+
+def CriticalTable (b : Band) (x : Pricing) (s : Plan) (ks : List ℕ) : Prop :=
+  ∀ i : Fin s.count, CriticalHeight b (x.degreeRate i) (ks.getD i 0) (x.heightRate i)
+
+instance (b : Band) (x : Pricing) (s : Plan) (ks : List ℕ) :
+    Decidable (CriticalTable b x s ks) := by
+  unfold CriticalTable
+  infer_instance
+
+theorem height_from_table (b : Band) (x : Pricing) (s : Plan) (ks : List ℕ)
+    (h : CriticalTable b x s ks) (i : Fin s.count) :
+    heightBound b (x.degreeRate i) ≤ (x.heightRate i : ℚ) := by
+  obtain ⟨lo, hi, left, right, top⟩ := h i
+  exact height_from_critical _ _ _ _ lo hi left right top
+
 end
 end Lower6960.Prefix6969Main.Pricing
 end Z6969Source0690
@@ -2136,7 +2159,7 @@ theorem valid : plan.Valid := by
   · decide +kernel
   · exact ZGen.Hist.history_step_of_fast plan (by decide +kernel)
 
-theorem sources : plan.Sources 2293 (Band.near).last Prefix6969Helper.helperBank 128681 2 1 257363 := by
+theorem sources : plan.Sources 2314 (Band.near).last Prefix6969Helper.helperBank 128659 2 1 257319 := by
   refine ⟨?_, rank154 8941, ?_, by decide, by decide, by decide, by decide, by decide, by decide,
     by decide, by decide, by decide, by decide, by decide, by decide, by decide, by decide, ⟨_, cover900000⟩⟩
   · intro i; fin_cases i
@@ -2163,55 +2186,14 @@ theorem sources : plan.Sources 2293 (Band.near).last Prefix6969Helper.helperBank
     · exact free169_0
   · unfold HelperSource.WidthGuard; decide +kernel
 
-def price : Pricing := ⟨50/100, 60/100, [369682277, 369214345, 369708050, 369420357, 367979526, 369140742, 369184540, 369213117, 161390450, 162265921, 162320967, 162127482, 70659054, 79794220, 77671543, 103172481, 113643319, 113407496, 131941167, 179312344, 239402518], [933321, 934603, 933250, 934038, 937987, 934805, 934685, 934606, 2377497, 2362941, 2362026, 2365243, 5673730, 5000102, 5146701, 3820757, 3451544, 3459730, 2946628, 2119973, 1535328],
-  ![127079644604760, 1601180678072, 215462266200, 4117078700], 208688751935110891⟩
+def price : Pricing := ⟨50/100, 60/100, [369682277, 369214345, 369708050, 369420357, 367979526, 369140742, 369184540, 369213117, 161390450, 162265921, 162320967, 162127482, 70659054, 79794220, 77671543, 103172481, 113643319, 113407496, 131941167, 179312344, 239402518], [933526, 934809, 933456, 934244, 938194, 935011, 934891, 934813, 2378021, 2363462, 2362547, 2365764, 5674981, 5001205, 5147836, 3821599, 3452305, 3460493, 2947278, 2120440, 1535667],
+  ![127079644604760, 1601180678072, 215462266200, 4117078700], 208711235514694319⟩
 
 theorem priced : price.Valid plan Band.near := by
   refine ⟨by decide +kernel, by decide +kernel, by decide +kernel, by decide +kernel, ?_, ?_, ?_⟩
   · have hAB : Lower6960.Prefix6969Main.RatesAB price plan := by decide +kernel
-    intro i; refine ⟨(hAB i).1, (hAB i).2, ?_⟩; fin_cases i
-    · exact Pricing.height_from_critical Band.near _ 3 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 3 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 3 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 3 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 3 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 3 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 3 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 3 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 7 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 15 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 14 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 14 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 11 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 10 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 10 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 8 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 6 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
-    · exact Pricing.height_from_critical Band.near _ 5 _
-        (by decide) (by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)
+    intro i
+    exact ⟨(hAB i).1, (hAB i).2, Pricing.height_from_table Band.near price plan [3,3,3,3,3,3,3,3,7,7,7,7,15,14,14,11,10,10,8,6,5] (by decide +kernel) i⟩
   · intro k; fin_cases k <;> decide +kernel
   · decide +kernel
 

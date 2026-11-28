@@ -102,30 +102,6 @@ theorem monic_coordinates {p : (Polynomial A)} (hp : p.Monic) (γ : E) (root : a
       Matrix.adjugate_mul,Matrix.smul_mulVec,Matrix.one_mulVec,RingHom.map_det]
     rfl
   exact congrFun all i
-theorem monic_order_eq_normalization {p : (Polynomial A)} (hp : p.Monic) (γ : E) (root : aeval γ p=0)
-    (b : Basis (Fin p.natDegree) F E) (pow : ∀ i,b i=γ^(i:ℕ))
-    (unit : IsUnit (monicDisc hp)) : Algebra.adjoin A {γ}=integralClosure A E := by
-  let B := Algebra.adjoin A ({γ}:Set E)
-  have gi : IsIntegral A γ := ⟨p,hp,root⟩
-  apply le_antisymm
-  · exact Algebra.adjoin_le (fun y hy=>(Set.mem_singleton_iff.mp hy).symm ▸ gi)
-  · intro x hx
-    choose c hc using monic_coordinates hp γ root b pow (⟨x,hx⟩:integralClosure A E)
-    obtain ⟨d,hd⟩ := unit
-    have dx : algebraMap A F (monicDisc hp) • x=∑ i,algebraMap A F (c i) • b i := by
-      rw [←b.sum_repr x,Finset.smul_sum]
-      apply Finset.sum_congr rfl
-      intro i _
-      rw [smul_smul,←hc i]
-    have isin : monicDisc hp • x∈B := by
-      rw [←IsScalarTower.algebraMap_smul F,dx]
-      apply B.sum_mem
-      intro i _
-      rw [IsScalarTower.algebraMap_smul F,pow]
-      exact B.smul_mem (B.pow_mem (Algebra.subset_adjoin (Set.mem_singleton γ)) _) _
-    have cancel : (↑d⁻¹:A) • (monicDisc hp • x)=x := by
-      rw [smul_smul,←hd,Units.inv_mul,one_smul]
-    exact cancel ▸ B.smul_mem isin _
 end Coordinates
 end
 end Lower6960.CollisionMarked

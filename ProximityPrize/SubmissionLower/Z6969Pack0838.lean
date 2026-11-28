@@ -1,3 +1,5 @@
+import ProximityPrize.SubmissionLower.Z6970H2307PriceDefs
+import ProximityPrize.SubmissionLower.Z6970H2307AllocWeight
 import ProximityPrize.SubmissionLower.Z6969Pack0837
 import ProximityPrize.SubmissionLower.Z6969Pack0836
 import ProximityPrize.SubmissionLower.KoalaRetainedCut
@@ -131,8 +133,6 @@ open K1_13 (Row Geom Shape shape InBox OrderAt atJet extend embed indexDegree)
 open Low6969Prices (primaryBox primaryCutoff TrueWeightLE ActiveFits physicalDegree)
 open P0_9_3_2 (translateTop topHasse topHasse_zero topHasse_coeff source_support sum_add_top total_add_top apply_add_top erase_top_add topHasse_order exact_hasse_not_dvd)
 open scoped Polynomial BigOperators
-def residualBox (h : Shape) (l : ℕ) : Shape :=
-  ⟨primaryBox.b-l*h.b, primaryBox.j-l*h.j, primaryBox.t-l*h.t⟩
 private theorem wdegree_pow (w : Fin 4 → ℕ) {H : Row 4} (hn : H ≠ 0) (k : ℕ) :
     (H^k).weightedTotalDegree w = k*H.weightedTotalDegree w := by
   induction k with
@@ -749,12 +749,6 @@ open Low6969GeometryCut (chargedPrice assemble_charge continued_bound)
 open Low6969ActiveCycle (mixed)
 open scoped Polynomial BigOperators
 
-/-- The accepted physical charge with an arbitrary mixed surface budget. -/
-def cutPrice (x : Shape) (l scale surface : ℕ) := chargedPrice x l scale surface
-
-def fourSurface (p q : Shape) :=
-  mixed32 p q (chart (taylorLength+1) p) (chart (taylorLength+2) p)
-
 variable {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} {f Q : Row 4} {l : ℕ}
 
 theorem smaller_tilted (hm : Messages w Γ s) (input : CutInput Γ s f Q l)
@@ -819,26 +813,6 @@ open Low6969Prices (primaryBox primaryCutoff TrueWeightLE ActiveFits SmallFactor
   tiltedFits tiltedSurface physicalPrice ProperCut)
 open scoped Polynomial BigOperators
 
-def chamberHull (x : Shape) : Shape := ⟨max x.b x.j,x.j,min x.t (x.j/3)⟩
-
-theorem hull_includes {Q : Row 4} {x : Shape} (hb : InBox (shape Q) x) :
-    InBox (shape Q) (chamberHull x) := by
-  have h := (K1_13_7_1.shape_chamber Q).2
-  change 3*(shape Q).t ≤ (shape Q).j at h
-  exact ⟨hb.1.trans (le_max_left _ _),hb.2.1, le_min hb.2.2 (by have := hb.2.1; omega)⟩
-
-theorem hull_valid (x : Shape) : Low48BentLattice.Chamber (chamberHull x,0) := by
-  refine ⟨le_max_right _ _,?_,Nat.zero_le _⟩
-  change 3*min x.t (x.j/3) ≤ x.j
-  have := min_le_right x.t (x.j/3)
-  omega
-
-def contractedPrice (x h : Shape) (l active : ℕ) : ℕ :=
-  let q := chamberHull (residualBox h l)
-  let old := physicalPrice x l active
-  let four := if 0 < q.t then min old (cutPrice x l 32 (fourSurface x.chamber q)) else old
-  if tiltedFits x then min four (cutPrice x l (60*32) (tiltedSurface x.chamber q)) else four
-
 /-- Physical count for the actual extremal bank witness and the selected (off-retained) marks. -/
 theorem price_of_witness_floor {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)} {P H f : Row 4}
     {k a l active : ℕ} (hm : Messages w Γ s) (hsmall : SmallFactor f)
@@ -847,7 +821,7 @@ theorem price_of_witness_floor {w : I → K} {Γ : Finset K} {s : K → (Polynom
     (hoff : ∀ γ∈Γ, atJet H (extend (s γ)) ≠ 0)
     (hP : P ≠ 0) (hH : H ≠ 0) (hc : IsRelPrime f H) (hpos : 0 < l) (hl : l ≤ k-a)
     (hbox : InBox (shape P) primaryBox) (hweight : TrueWeightLE P primaryCutoff)
-    (htaper : ActiveFits P 5164) (hord : ∀ γ∈Γ, OrderAt P (extend (s γ)) k)
+    (htaper : ActiveFits P 5192) (hord : ∀ γ∈Γ, OrderAt P (extend (s γ)) k)
     (divH : H^k ∣ P) (divF : f^a ∣ P) (exactF : ¬ f^(a+1) ∣ P) :
     ∀ h : Shape, InBox h (shape H) → Γ.card ≤ contractedPrice (shape f) h l active := by
   intro h hfloor
@@ -886,7 +860,7 @@ theorem price_of_witness {w : I → K} {Γ : Finset K} {s : K → (Polynomial K)
     (hoff : ∀ γ∈Γ, atJet H (extend (s γ)) ≠ 0)
     (hP : P ≠ 0) (hH : H ≠ 0) (hc : IsRelPrime f H) (hpos : 0 < l) (hl : l ≤ k-a)
     (hbox : InBox (shape P) primaryBox) (hweight : TrueWeightLE P primaryCutoff)
-    (htaper : ActiveFits P 5164) (hord : ∀ γ∈Γ, OrderAt P (extend (s γ)) k)
+    (htaper : ActiveFits P 5192) (hord : ∀ γ∈Γ, OrderAt P (extend (s γ)) k)
     (divH : H^k ∣ P) (divF : f^a ∣ P) (exactF : ¬ f^(a+1) ∣ P) :
     Γ.card ≤ contractedPrice (shape f) (shape H) l active :=
   price_of_witness_floor hm hsmall hactive hchar hon hoff hP hH hc hpos hl hbox hweight
@@ -905,53 +879,5 @@ set_option autoImplicit true
 set_option Elab.async false
 
 /-! Low-side copy of `KoalaAllocationWeight` for the 69.61 box (142, 58, 15): full charge from index 56, denominator 374. -/
-namespace Low6969AllocWeight
-open K1_13 (Shape)
-open scoped BigOperators
 
-def fullCharge (j t : ℕ) : Prop := 56 ≤ j ∨ 15 ≤ t
-
-instance (j t : ℕ) : Decidable (fullCharge j t) := by unfold fullCharge; infer_instance
-
-def weight (b j t : ℕ) : ℕ := if fullCharge j t then 374 else min (b+4*j) 374
-
-theorem mono {b j t B J T : ℕ} (hb : b ≤ B) (hj : j ≤ J) (ht : t ≤ T) :
-    weight b j t ≤ weight B J T := by
-  by_cases h : fullCharge j t
-  · have h' : fullCharge J T := h.imp (fun k => k.trans hj) (fun k => k.trans ht)
-    simp [weight, h, h']
-  · by_cases h' : fullCharge J T
-    · simpa [weight, h, h'] using (min_le_right (b+4*j) 374)
-    · simpa [weight, h, h'] using
-        (min_le_min (Nat.add_le_add hb (Nat.mul_le_mul_left 4 hj)) (le_refl 374))
-
-theorem sum_le {top n : ℕ} (htop : top ≤ 15) (a : Fin n → Shape) (hfits : LowProfile6969.Fits top a)
-    (s : Finset (Fin n)) : (∑ i ∈ s, weight (a i).b (a i).j (a i).t) ≤ 374 := by
-  classical
-  have part (f : Fin n → ℕ) : ∑ i ∈ s, f i ≤ ∑ i, f i :=
-    Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _) (fun _ _ _ => Nat.zero_le _)
-  by_cases hall : ∃ i ∈ s, fullCharge (a i).j (a i).t
-  · obtain ⟨i, hi, hc⟩ := hall
-    have only (j : Fin n) (hji : j ≠ i) : False := by
-      have pair (f : Fin n → ℕ) : f i+f j ≤ ∑ k, f k := by
-        rw [← Finset.sum_pair (Ne.symm hji)]
-        exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _) (fun _ _ _ => Nat.zero_le _)
-      obtain ⟨ht,hj,_⟩ := hfits.1 j
-      have hJ := (pair fun k => (a k).j).trans hfits.2.2.1
-      have hT := (pair fun k => (a k).t).trans hfits.2.2.2
-      rcases hc with h | h <;> omega
-    have he : s = {i} := Finset.eq_singleton_iff_unique_mem.mpr ⟨hi, fun j _ => by
-      by_contra hne
-      exact only j hne⟩
-    rw [he, Finset.sum_singleton]
-    simp [weight, hc]
-  · have hw : ∀ i ∈ s, weight (a i).b (a i).j (a i).t ≤ (a i).b+4*(a i).j := by
-      intro i hi
-      simp [weight, show ¬ fullCharge (a i).j (a i).t from fun h => hall ⟨i,hi,h⟩]
-    refine (Finset.sum_le_sum hw).trans ?_
-    rw [Finset.sum_add_distrib, ← Finset.mul_sum]
-    exact Nat.add_le_add ((part _).trans hfits.2.1)
-      (Nat.mul_le_mul_left 4 ((part _).trans hfits.2.2.1))
-
-end Low6969AllocWeight
 end Z6969Source2295

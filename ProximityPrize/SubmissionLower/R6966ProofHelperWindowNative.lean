@@ -18,14 +18,6 @@ set_option maxHeartbeats 900000
 set_option maxRecDepth 5000
 set_option backward.isDefEq.respectTransparency false
 
-theorem shape_inside {b : Witness} (checked : Verified b) (E : Shape)
-    (byTotal : 5585 ≤ E.B) (bySlope : 1200 ≤ E.J) (bySeed : seedCap ≤ E.U) :
-    TerminalBanks.inside b.shape E := by
-  refine ⟨checked.caps.2.2.2.1, checked.caps.1.trans byTotal, checked.caps.2.1.trans bySlope, ?_⟩
-  change (if b.rect then seedCap else b.v) ≤ E.U
-  split
-  · exact bySeed
-  · exact checked.caps.2.2.1.trans bySeed
 
 private theorem top_pos {b : Witness} (checked : Verified b) {h : ℕ}
     (lo : firstHeight ≤ h) (hi : h ≤ lastHeight) : 0 < b.top h := by

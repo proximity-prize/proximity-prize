@@ -237,8 +237,8 @@ set_option maxHeartbeats 1100000
 
 /-- Regular marked words counted with separate positive bounds on the
 two seed coordinates, for an arbitrary genuine retained equation. -/
-theorem regular {u₀ del} {M:P1.ModelAt 33735 u₀ del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ) (sub:T⊆Γ)
-    {r g d:ℕ} (U V:Fin 2→ℕ) (rp:0<r) (up:∀i,0<U i) (dp:0<d) (gap:d<179740) (tame:d<p)
+theorem regular {u₀ del} {M:P1.ModelAt 33755 u₀ del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ) (sub:T⊆Γ)
+    {r g d:ℕ} (U V:Fin 2→ℕ) (rp:0<r) (up:∀i,0<U i) (dp:0<d) (gap:d<179730) (tame:d<p)
     (A B H:Eqn (Fin 2) FX) (ay:A.natDegree≤r) (byDeg:B.natDegree≤r+1)
     (az:∀j i,(A.coeff i).degreeOf j≤U j) (bz:∀j i,(B.coeff i).degreeOf j≤U j)
     (hn:H≠0) (hy:H.natDegree≤g) (hz:∀j i,(H.coeff i).degreeOf j≤V j)
@@ -246,7 +246,7 @@ theorem regular {u₀ del} {M:P1.ModelAt 33735 u₀ del} {Γ T:Finset K} (F:P1.F
     (laws:∀z∈T,let ev:=evaluate (label (M.label z)) (atX (F.scalar z))
       (ev A*atX (F.scalar z).derivative=ev B) ∧ ev A≠0 ∧ ev H=0) :
     (T.card:ℚ)≤((2*RectangularDegree.mixed (sides g V) (sides r U):ℕ):ℚ)*
-      MarkedAdaptive.price (Fintype.card I) d 179740^2 := by
+      MarkedAdaptive.price (Fintype.card I) d 179730^2 := by
   classical
   let encode (z:K):RectangularSurface.Coord r U:=monomialPoint (BoxEmbedding.exps (sides r U))
     (point (label (M.label z)) (atX (F.scalar z)))
@@ -259,7 +259,7 @@ theorem regular {u₀ del} {M:P1.ModelAt 33735 u₀ del} {Γ T:Finset K} (F:P1.F
   let back (x:RectangularSurface.Coord r U):K:=if h:x∈S then Classical.choose (mem_image.mp h) else 0
   have belongs (x) (hx:x∈S):back x∈T ∧ encode (back x)=x:=by
     dsimp [back];rw [dite_eq_left hx];exact Classical.choose_spec (mem_image.mp hx)
-  have fit:179740≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
+  have fit:179730≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
   have count:=RectangularSurface.count U V rp up dp gap fit tame A B H ay byDeg
     (fun j=>(OdeSurfaceBridge.axis_cap ..).mpr (az j)) (fun j=>(OdeSurfaceBridge.axis_cap ..).mpr (bz j))
     hn hy (fun j=>(OdeSurfaceBridge.axis_cap ..).mpr (hz j)) S (fun x=>F.scalar (back x))
@@ -336,11 +336,11 @@ set_option maxRecDepth 12000
 set_option maxHeartbeats 1800000
 
 theorem ceil_sides (d u r:ℕ):
-    MarkedAdaptive.price (Fintype.card I) d 179740*u≤(seedWeight d u:ℚ) ∧
-    MarkedAdaptive.price (Fintype.card I) d 179740*r≤(ordWeight d r:ℚ):=by
-  let R:=MarkedAdaptive.price (Fintype.card I) d 179740
+    MarkedAdaptive.price (Fintype.card I) d 179730*u≤(seedWeight d u:ℚ) ∧
+    MarkedAdaptive.price (Fintype.card I) d 179730*r≤(ordWeight d r:ℚ):=by
+  let R:=MarkedAdaptive.price (Fintype.card I) d 179730
   have x:=Nat.le_ceil (R*u)
-  let ext:ℚ:=((Fintype.card I-d:ℕ):ℚ)/(179740-d:ℕ)
+  let ext:ℚ:=((Fintype.card I-d:ℕ):ℚ)/(179730-d:ℕ)
   have t:=Nat.le_ceil (R*r+ext)
   have en:0≤ext:=by dsimp [ext];positivity
   constructor
@@ -348,9 +348,9 @@ theorem ceil_sides (d u r:ℕ):
   · change R*r≤((⌈R*r+ext⌉₊+4:ℕ):ℚ);push_cast;linarith
 
 private theorem round_area {t d r u s g v x:ℕ}
-    (cost:(t:ℚ)≤((2*(g*u*s+v*r*s+x*r*u):ℕ):ℚ)*MarkedAdaptive.price (Fintype.card I) d 179740^2):
+    (cost:(t:ℚ)≤((2*(g*u*s+v*r*s+x*r*u):ℕ):ℚ)*MarkedAdaptive.price (Fintype.card I) d 179730^2):
     t≤2*g*seedWeight d u*seedWeight d s+2*ordWeight d r*(v*seedWeight d s+x*seedWeight d u):=by
-  let R:=MarkedAdaptive.price (Fintype.card I) d 179740
+  let R:=MarkedAdaptive.price (Fintype.card I) d 179730
   have rn:0≤R:=by dsimp [R,MarkedAdaptive.price];positivity
   have ⟨ub,rb⟩:=ceil_sides d u r
   have sb:=(ceil_sides d s r).1
@@ -369,12 +369,12 @@ private theorem round_area {t d r u s g v x:ℕ}
     linarith only [cost,x1,x2,x3]
   exact_mod_cast upper
 
-theorem price {u₀ del} {M:P1.ModelAt 33735 u₀ del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem price {u₀ del} {M:P1.ModelAt 33755 u₀ del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (nonlinear:2≤G.graphDegree)
     {d u s:ℕ} (char:(2*G.graphDegree-1)*u<p)
     (total:∀j i,((N.poly.coeff j).coeff i).totalDegree≤u)
     (one:∀j i,((N.poly.coeff j).coeff i).degreeOf 1≤s)
-    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p)
+    (phys:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p)
     {H:Equation} (hn:H≠0) (laws:∀z∈T,WordRates.law F N z) (surf:∀z∈T,WordRates.ev F z H=0):
     T.card≤(2*G.graphDegree-1)*((p+1)*u)+2*H.natDegree*seedWeight d u*seedWeight d s+
       2*ordWeight d (G.graphDegree-1)*(K1_14_4.seedDegree H*seedWeight d s+KoalaRect.axisDegree H 1*seedWeight d u):=by
@@ -387,7 +387,7 @@ theorem price {u₀ del} {M:P1.ModelAt 33735 u₀ del} {Γ T:Finset K} (F:P1.Fam
   let V:=K1_14_4.seedDegree H
   let X₁:=KoalaRect.axisDegree H 1
   obtain ⟨S,part,good,fail⟩:=WordRates.good F N gp total char laws
-  have fit:179740≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
+  have fit:179730≤Fintype.card I:=by rw [show Fintype.card I=262144 from Fintype.card_fin (2^18)];decide
   have deg z (hz:z∈S):(F.scalar z).natDegree≤d:=by
     rcases (F.mark z (sub (part hz))).scalar_degree with zero|h
     · simp [zero]
@@ -428,7 +428,7 @@ theorem price {u₀ del} {M:P1.ModelAt 33735 u₀ del} {Γ T:Finset K} (F:P1.Fam
         have kk:k=1:=by fin_cases k <;>simp_all
         rw [kk]
         exact Nat.eq_zero_of_le_zero (((KoalaRect.axisDegree_le_iff H 1 X₁).mp le_rfl i).trans zero)
-      have nn:0≤MarkedAdaptive.price (Fintype.card I) d 179740:=by unfold MarkedAdaptive.price;positivity
+      have nn:0≤MarkedAdaptive.price (Fintype.card I) d 179730:=by unfold MarkedAdaptive.price;positivity
       exact RectNative.one_axis_price (OneSeed.supportedOn 0 H) nn c notzero _ _ (ceil_sides d u r).1 (ceil_sides d u r).2 ref
     let U:Fin 2→ℕ:=![u,s]
     let W:Fin 2→ℕ:=![V,X₁]
@@ -506,8 +506,8 @@ def Rate.pay (t:Rate) (f:Equation):ℕ:=
   t.cash+t.y*f.natDegree+t.seed*K1_14_4.seedDegree f+t.axis*KoalaRect.axisDegree f 1
 
 /-- The native root tariff and both of its possible seed-width bounds. -/
-theorem marked {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
-    (sub:T⊆Γ) (hi:M.overhead.toNat≤2534) {f:Equation} (prim:f.IsPrimitive)
+theorem marked {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
+    (sub:T⊆Γ) (hi:M.overhead.toNat≤2557) {f:Equation} (prim:f.IsPrimitive)
     (sep:(f.map (algebraMap K1_14.Seeds SeedField)).Separable) {k cap:ℕ} (small:k<64) (grade:f.natDegree≤k)
     (mass:K1_14_4.seedDegree f≤cap) (safe:(2*k-1)*cap<p) (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
     (d a v side:ℕ):
@@ -523,10 +523,10 @@ theorem marked {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt
   · have cost:=h.2.trans (Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul coef mass) (Nat.mul_le_mul_right _ density)) tail)
     simpa [rates,Rate.pay,Nat.add_comm,Nat.add_left_comm,Nat.add_assoc] using cost
 
-theorem nonlinear {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ) (sub:T⊆Γ)
+theorem nonlinear {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ) (sub:T⊆Γ)
     {G:Pade.Row SeedField} (N:Native G) (gp:G.primitive) (large:2≤G.graphDegree) {d v s:ℕ} (char:(2*G.graphDegree-1)*v<p)
     (top:∀j i,((N.poly.coeff j).coeff i).totalDegree≤v) (narrow:∀j i,((N.poly.coeff j).coeff i).degreeOf 1≤s)
-    (ph:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179740) (tame:d<p) {f:Equation} (fn:f≠0)
+    (ph:131071+M.overhead≤(d:ℤ)) (dp:0<d) (gap:d<179730) (tame:d<p) {f:Equation} (fn:f≠0)
     (laws:∀z∈T,WordRates.law F N z) (roots:∀ z∈T,WordRates.ev F z f=0) (k cap:ℕ):
     T.card≤(rates .surface d G.graphDegree v s k cap).pay f ∧
     T.card≤(rates .separate d G.graphDegree v s k cap).pay f ∧
@@ -571,7 +571,7 @@ variable {u del} {M:Model u del} {Γ} {F:Family M Γ} {D:PoleData M.overhead.toN
 variable {m r:Book} (P:Pair F Crt H m r) {G:Pade.Row SeedField} (B:Native G)
 variable {f onEq offEq:Equation} (C:PairedComparison.Base P B f onEq offEq)
 
-theorem shared_invoice (extra:ℕ) {off low hi seedMax axisMax:ℕ} (high:M.overhead.toNat≤2534) (three:3≤P.mainGrade)
+theorem shared_invoice (extra:ℕ) {off low hi seedMax axisMax:ℕ} (high:M.overhead.toNat≤2557) (three:3≤P.mainGrade)
     (small:off<64) (safe:(2*off-1)*m.seedMass<p) (offCap:C.main.offEq.natDegree≤off)
     (lowG:low≤C.main.onEq.natDegree) (highG:C.main.onEq.natDegree≤hi)
     (maxSeed:K1_14_4.seedDegree C.main.onEq≤seedMax) (maxAxis:KoalaRect.axisDegree C.main.onEq 1≤axisMax)
@@ -602,7 +602,7 @@ theorem shared_invoice (extra:ℕ) {off low hi seedMax axisMax:ℕ} (high:M.over
       r.seedCredit*(K1_14_4.seedDegree C.rescueFull:ℤ)+rcost:=by exact_mod_cast rescue
   linarith only [step,funds,total,rp]
 
-theorem invoice {off low hi seedMax axisMax:ℕ} (high:M.overhead.toNat≤2534) (three:3≤P.mainGrade)
+theorem invoice {off low hi seedMax axisMax:ℕ} (high:M.overhead.toNat≤2557) (three:3≤P.mainGrade)
     (small:off<64) (safe:(2*off-1)*m.seedMass<p) (offCap:C.main.offEq.natDegree≤off)
     (lowG:low≤C.main.onEq.natDegree) (highG:C.main.onEq.natDegree≤hi)
     (maxSeed:K1_14_4.seedDegree C.main.onEq≤seedMax) (maxAxis:KoalaRect.axisDegree C.main.onEq 1≤axisMax)
@@ -768,7 +768,7 @@ def NodeGuard (how:Mode) (act cutoff:ℕ):Prop:=match how with | .node _=>act<cu
 theorem selected {u:Option ℕ} (yes:u.isSome=true):u=some (u.getD 0):=by
   cases u <;> simp_all
 
-theorem degree_bound {h:ℤ} (bound:h.toNat≤2389):131071+h≤(133460:ℤ):=by omega
+theorem degree_bound {h:ℤ} (bound:h.toNat≤2411):131071+h≤(133482:ℤ):=by omega
 
 end
 end Research6969.OnTariff
@@ -798,7 +798,7 @@ structure Decision where
   same:Same
   cutoff:ℕ
 
-abbrev d:ℕ:=133460
+abbrev d:ℕ:=133482
 def sx (i:Fin 18):=FastHeight.side d (seed i)
 def sy:=FastHeight.ordinate d 1
 def modeNode:Mode→Bool | .node _=>true | _=>false
@@ -820,7 +820,7 @@ def rescueCharge (b:Row) (i:Fin 18) (p:Decision):ℕ:=
 
 def distinctOK (b:Row) (i:Fin 18) (p:Decision):Prop:=
   savedMainGrade i<b.loPrimary ∨
-  (OnTariff.Legal p.main b.graph b.seedHi b.axisHi (b.gm i) (mainBook i).seedMass 2389 p.cutoff ∧
+  (OnTariff.Legal p.main b.graph b.seedHi b.axisHi (b.gm i) (mainBook i).seedMass 2411 p.cutoff ∧
     (match p.rescue with | .whole=>True | .intersection=>modeNode p.main=true ∨ b.seedHi.isSome=true) ∧
     ((mainBook i).fee:ℤ)+(rescueBook i).fee+primaryCharge b i p+rescueCharge b i p≤CertifiedCell.target)
 
@@ -835,7 +835,7 @@ def sameOK (b:Row) (i:Fin 18) (p:Decision):Prop:=
   | .marked=>(b.gr i)<64 ∧ (2*b.gr i-1)*b.vr i<K1.p ∧
       pay (ThreeLedger.tail (b.gr i)) 0 (JointLedger.coefficient (b.gr i))≤CertifiedCell.target
   | .surface=>pay 0 ((sx i)^2:ℕ) (2*sx i*sy:ℕ)≤CertifiedCell.target
-  | .node fee=>b.graph=2 ∧ b.seedHi.isSome=true ∧ 3*b.seedHi.getD 0<K1.p ∧ NodeBudget.Valid 2389 (b.seedHi.getD 0) p.cutoff fee ∧
+  | .node fee=>b.graph=2 ∧ b.seedHi.isSome=true ∧ 3*b.seedHi.getD 0<K1.p ∧ NodeBudget.Valid 2411 (b.seedHi.getD 0) p.cutoff fee ∧
       pay fee 0 0≤CertifiedCell.target
 
 def valid (b:Row) (i:Fin 18) (p:Decision):Prop:=
@@ -921,7 +921,19 @@ theorem grade {i e top c a sl su l u w wh} (mid:ℕ)
   · exact left s ⟨⟨gl,lower,ct,d,low,up⟩,h.al,h.ah,h.wl,h.wh⟩
   · exact right s ⟨⟨by change mid+1≤_;omega,gh,ct,d,low,up⟩,h.al,h.ah,h.wl,h.wh⟩
 
-theorem start {i} (r:Region) (all:Done i ⟨r,0,none,r.graph*(131071-2389)-1,none⟩):NormalRoute.Done i r:=by
+theorem splitSeed {i e top c a lo hi l u w wh} (cut:ℕ)
+    (left:Done i ⟨⟨e,top,c,a,lo,some cut⟩,l,u,w,wh⟩)
+    (right:Done i ⟨⟨e,top,c,a,cut+1,some hi⟩,l,u,w,wh⟩) :
+    Done i ⟨⟨e,top,c,a,lo,some hi⟩,l,u,w,wh⟩:=by
+  intro s h
+  obtain ⟨gl,gh,ct,d,low,up⟩:=h.root
+  by_cases lower:K1_14_2_2_2_1.seedDegree s.native.poly≤cut
+  · exact left s ⟨⟨gl,gh,ct,d,low,fun v eq=>by
+      have same:cut=v:=Option.some.inj eq
+      simpa [←same] using lower⟩,h.al,h.ah,h.wl,h.wh⟩
+  · exact right s ⟨⟨gl,gh,ct,d,by change cut+1≤_;omega,up⟩,h.al,h.ah,h.wl,h.wh⟩
+
+theorem start {i} (r:Region) (all:Done i ⟨r,0,none,r.graph*(131071-2411)-1,none⟩):NormalRoute.Done i r:=by
   intro s h
   have degree:=h.2.2.2.1
   exact all s ⟨h,Nat.zero_le _,by simp,degree ▸ NormalGeometry.base s,by simp⟩
@@ -949,23 +961,23 @@ open scoped Classical Differential
 set_option maxHeartbeats 1800000
 set_option maxRecDepth 11000
 
-theorem marked_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem marked_marks {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {D:PoleData M.overhead.toNat} (Crt:CRTLift D) {G:Pade.Row SeedField} (N:Native G)
     (gp:G.primitive) (phys:HelperPhysicalModel.Model Crt N.poly)
     {parents:Finset Surface} (owners:NativeAffineRows.Owned F T parents N)
     {f:Equation} (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable)
     (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
-    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .marked G.graphDegree width axis grade v 2389 cap)
+    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .marked G.graphDegree width axis grade v 2411 cap)
     (limit:f.natDegree≤grade) (seed:K1_14_4.seedDegree f≤v)
     (trueWidth:∀u,width=some u→K1_14_2_2_2_1.seedDegree N.poly≤u)
     (trueAxis:∀u,axis=some u→PadeNativeQuotient.axis N.poly 1≤u)
-    (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     (nodeGuard:NodeGuard .marked (RawPhysicalDegree.weight (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) cap)
     (nodes:∀i:I,(poleProduct D).eval (algebraMap K L (K1.node i))≠0)
     (res:∀z∈T,MarkResidues D (M.label z) (F.scalar z)):
-    T.card≤(PriceMethod.rates .marked 133460 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
+    T.card≤(PriceMethod.rates .marked 133482 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
   exact (PriceMethod.marked F sub (hi.trans (by decide)) prim sep legal.1 limit seed legal.2 roots
-    133460 G.graphDegree (width.getD 0) (axis.getD 0)).1
+    133482 G.graphDegree (width.getD 0) (axis.getD 0)).1
 
 end
 end Research6969.OnTariff
@@ -995,23 +1007,23 @@ open scoped Classical Differential
 set_option maxHeartbeats 1800000
 set_option maxRecDepth 11000
 
-theorem markedAxis_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem markedAxis_marks {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {D:PoleData M.overhead.toNat} (Crt:CRTLift D) {G:Pade.Row SeedField} (N:Native G)
     (gp:G.primitive) (phys:HelperPhysicalModel.Model Crt N.poly)
     {parents:Finset Surface} (owners:NativeAffineRows.Owned F T parents N)
     {f:Equation} (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable)
     (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
-    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .markedAxis G.graphDegree width axis grade v 2389 cap)
+    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .markedAxis G.graphDegree width axis grade v 2411 cap)
     (limit:f.natDegree≤grade) (seed:K1_14_4.seedDegree f≤v)
     (trueWidth:∀u,width=some u→K1_14_2_2_2_1.seedDegree N.poly≤u)
     (trueAxis:∀u,axis=some u→PadeNativeQuotient.axis N.poly 1≤u)
-    (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     (nodeGuard:NodeGuard .markedAxis (RawPhysicalDegree.weight (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) cap)
     (nodes:∀i:I,(poleProduct D).eval (algebraMap K L (K1.node i))≠0)
     (res:∀z∈T,MarkResidues D (M.label z) (F.scalar z)):
-    T.card≤(PriceMethod.rates .markedAxis 133460 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
+    T.card≤(PriceMethod.rates .markedAxis 133482 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
   exact (PriceMethod.marked F sub (hi.trans (by decide)) prim sep legal.1 limit seed legal.2 roots
-    133460 G.graphDegree (width.getD 0) (axis.getD 0)).2
+    133482 G.graphDegree (width.getD 0) (axis.getD 0)).2
 
 end
 end Research6969.OnTariff
@@ -1043,21 +1055,21 @@ private theorem affine_pay (d a w x g u:ℕ) (f:Equation):
   simp only [PriceMethod.rates,PriceMethod.Rate.pay,Nat.zero_mul,Nat.add_zero]
 
 set_option maxHeartbeats 100000
-theorem affine_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem affine_marks {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {D:PoleData M.overhead.toNat} (Crt:CRTLift D) {G:Pade.Row SeedField} (N:Native G)
     (gp:G.primitive) (phys:HelperPhysicalModel.Model Crt N.poly)
     {parents:Finset Surface} (owners:NativeAffineRows.Owned F T parents N)
     {f:Equation} (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable)
     (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
-    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .affine G.graphDegree width axis grade v 2389 cap)
+    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .affine G.graphDegree width axis grade v 2411 cap)
     (limit:f.natDegree≤grade) (seed:K1_14_4.seedDegree f≤v)
     (trueWidth:∀u,width=some u→K1_14_2_2_2_1.seedDegree N.poly≤u)
     (trueAxis:∀u,axis=some u→PadeNativeQuotient.axis N.poly 1≤u)
-    (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     (nodeGuard:NodeGuard .affine (RawPhysicalDegree.weight (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) cap)
     (nodes:∀i:I,(poleProduct D).eval (algebraMap K L (K1.node i))≠0)
     (res:∀z∈T,MarkResidues D (M.label z) (F.scalar z)):
-    T.card≤(PriceMethod.rates .affine 133460 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
+    T.card≤(PriceMethod.rates .affine 133482 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
   rw [affine_pay]
   obtain ⟨linear,present,small⟩:=legal
   have member:T⊆UnionTariffs.group F N parents:=by
@@ -1066,9 +1078,9 @@ theorem affine_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.Fa
     exact Finset.mem_filter.mpr ⟨sub hz,q,Finset.mem_filter.mpr ⟨hq,contains⟩,vanishes⟩
   have widthCap:K1_14_2_2_2_1.seedDegree N.poly≤max 1 (width.getD 0):=
     (trueWidth _ (selected present)).trans (le_max_right ..)
-  exact (Finset.card_le_card member).trans (UnionTariffs.affine (d:=133460) (w:=max 1 (width.getD 0))
+  exact (Finset.card_le_card member).trans (UnionTariffs.affine (d:=133482) (w:=max 1 (width.getD 0))
     F N parents gp linear (Nat.zero_lt_one.trans_le (le_max_left ..)) small widthCap (degree_bound hi)
-    (by decide:0<133460) (by decide:133460<179740) (by decide:133460<K1.p))
+    (by decide:0<133482) (by decide:133482<179730) (by decide:133482<K1.p))
 
 end
 end Research6969.OnTariff
@@ -1093,28 +1105,28 @@ open scoped Classical Differential
 set_option maxHeartbeats 1800000
 set_option maxRecDepth 11000
 
-theorem surface_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem surface_marks {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {D:PoleData M.overhead.toNat} (Crt:CRTLift D) {G:Pade.Row SeedField} (N:Native G)
     (gp:G.primitive) (phys:HelperPhysicalModel.Model Crt N.poly)
     {parents:Finset Surface} (owners:NativeAffineRows.Owned F T parents N)
     {f:Equation} (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable)
     (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
-    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .surface G.graphDegree width axis grade v 2389 cap)
+    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .surface G.graphDegree width axis grade v 2411 cap)
     (limit:f.natDegree≤grade) (seed:K1_14_4.seedDegree f≤v)
     (trueWidth:∀u,width=some u→K1_14_2_2_2_1.seedDegree N.poly≤u)
     (trueAxis:∀u,axis=some u→PadeNativeQuotient.axis N.poly 1≤u)
-    (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     (nodeGuard:NodeGuard .surface (RawPhysicalDegree.weight (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) cap)
     (nodes:∀i:I,(poleProduct D).eval (algebraMap K L (K1.node i))≠0)
     (res:∀z∈T,MarkResidues D (M.label z) (F.scalar z)):
-    T.card≤(PriceMethod.rates .surface 133460 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
+    T.card≤(PriceMethod.rates .surface 133482 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
   classical
-  let d:=133460
+  let d:=133482
   have ph:131071+M.overhead≤(d:ℤ):=degree_bound hi
   have dp:0<d:=by decide
-  have gap:d<179740:=by decide
+  have gap:d<179730:=by decide
   have tame:d<p:=by decide
-  have age:0<M.overhead.toNat:=(by decide:0<2293).trans_le lo
+  have age:0<M.overhead.toNat:=(by decide:0<2314).trans_le lo
   have bounds (yes:width.isSome=true):∀j k,((N.poly.coeff j).coeff k).totalDegree≤width.getD 0:=
     (K1_14_2_2_2_1.seedDegree_le N.poly (width.getD 0)).mp (trueWidth _ (selected yes))
   have laws z (hz:z∈T):WordRates.law F N z:=by
@@ -1151,28 +1163,28 @@ open scoped Classical Differential
 set_option maxHeartbeats 1800000
 set_option maxRecDepth 11000
 
-theorem ambient_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem ambient_marks {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {D:PoleData M.overhead.toNat} (Crt:CRTLift D) {G:Pade.Row SeedField} (N:Native G)
     (gp:G.primitive) (phys:HelperPhysicalModel.Model Crt N.poly)
     {parents:Finset Surface} (owners:NativeAffineRows.Owned F T parents N)
     {f:Equation} (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable)
     (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
-    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .ambient G.graphDegree width axis grade v 2389 cap)
+    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .ambient G.graphDegree width axis grade v 2411 cap)
     (limit:f.natDegree≤grade) (seed:K1_14_4.seedDegree f≤v)
     (trueWidth:∀u,width=some u→K1_14_2_2_2_1.seedDegree N.poly≤u)
     (trueAxis:∀u,axis=some u→PadeNativeQuotient.axis N.poly 1≤u)
-    (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     (nodeGuard:NodeGuard .ambient (RawPhysicalDegree.weight (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) cap)
     (nodes:∀i:I,(poleProduct D).eval (algebraMap K L (K1.node i))≠0)
     (res:∀z∈T,MarkResidues D (M.label z) (F.scalar z)):
-    T.card≤(PriceMethod.rates .ambient 133460 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
+    T.card≤(PriceMethod.rates .ambient 133482 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
   classical
-  let d:=133460
+  let d:=133482
   have ph:131071+M.overhead≤(d:ℤ):=degree_bound hi
   have dp:0<d:=by decide
-  have gap:d<179740:=by decide
+  have gap:d<179730:=by decide
   have tame:d<p:=by decide
-  have age:0<M.overhead.toNat:=(by decide:0<2293).trans_le lo
+  have age:0<M.overhead.toNat:=(by decide:0<2314).trans_le lo
   have bounds (yes:width.isSome=true):∀j k,((N.poly.coeff j).coeff k).totalDegree≤width.getD 0:=
     (K1_14_2_2_2_1.seedDegree_le N.poly (width.getD 0)).mp (trueWidth _ (selected yes))
   have laws z (hz:z∈T):WordRates.law F N z:=by
@@ -1205,28 +1217,28 @@ open scoped Classical Differential
 set_option maxHeartbeats 1800000
 set_option maxRecDepth 11000
 
-theorem separate_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem separate_marks {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {D:PoleData M.overhead.toNat} (Crt:CRTLift D) {G:Pade.Row SeedField} (N:Native G)
     (gp:G.primitive) (phys:HelperPhysicalModel.Model Crt N.poly)
     {parents:Finset Surface} (owners:NativeAffineRows.Owned F T parents N)
     {f:Equation} (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable)
     (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
-    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .separate G.graphDegree width axis grade v 2389 cap)
+    (grade v cap:ℕ) (width axis:Option ℕ)  (legal:Legal .separate G.graphDegree width axis grade v 2411 cap)
     (limit:f.natDegree≤grade) (seed:K1_14_4.seedDegree f≤v)
     (trueWidth:∀u,width=some u→K1_14_2_2_2_1.seedDegree N.poly≤u)
     (trueAxis:∀u,axis=some u→PadeNativeQuotient.axis N.poly 1≤u)
-    (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     (nodeGuard:NodeGuard .separate (RawPhysicalDegree.weight (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) cap)
     (nodes:∀i:I,(poleProduct D).eval (algebraMap K L (K1.node i))≠0)
     (res:∀z∈T,MarkResidues D (M.label z) (F.scalar z)):
-    T.card≤(PriceMethod.rates .separate 133460 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
+    T.card≤(PriceMethod.rates .separate 133482 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
   classical
-  let d:=133460
+  let d:=133482
   have ph:131071+M.overhead≤(d:ℤ):=degree_bound hi
   have dp:0<d:=by decide
-  have gap:d<179740:=by decide
+  have gap:d<179730:=by decide
   have tame:d<p:=by decide
-  have age:0<M.overhead.toNat:=(by decide:0<2293).trans_le lo
+  have age:0<M.overhead.toNat:=(by decide:0<2314).trans_le lo
   have bounds (yes:width.isSome=true):∀j k,((N.poly.coeff j).coeff k).totalDegree≤width.getD 0:=
     (K1_14_2_2_2_1.seedDegree_le N.poly (width.getD 0)).mp (trueWidth _ (selected yes))
   have laws z (hz:z∈T):WordRates.law F N z:=by
@@ -1263,28 +1275,28 @@ open scoped Classical Differential
 set_option maxHeartbeats 1800000
 set_option maxRecDepth 11000
 
-theorem node_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem node_marks {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {D:PoleData M.overhead.toNat} (Crt:CRTLift D) {G:Pade.Row SeedField} (N:Native G)
     (gp:G.primitive) (phys:HelperPhysicalModel.Model Crt N.poly)
     {parents:Finset Surface} (owners:NativeAffineRows.Owned F T parents N)
     {f:Equation} (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable)
     (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
-    (grade v cap:ℕ) (width axis:Option ℕ) (fee:ℕ) (legal:Legal (.node fee) G.graphDegree width axis grade v 2389 cap)
+    (grade v cap:ℕ) (width axis:Option ℕ) (fee:ℕ) (legal:Legal (.node fee) G.graphDegree width axis grade v 2411 cap)
     (limit:f.natDegree≤grade) (seed:K1_14_4.seedDegree f≤v)
     (trueWidth:∀u,width=some u→K1_14_2_2_2_1.seedDegree N.poly≤u)
     (trueAxis:∀u,axis=some u→PadeNativeQuotient.axis N.poly 1≤u)
-    (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     (nodeGuard:NodeGuard (.node fee) (RawPhysicalDegree.weight (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) cap)
     (nodes:∀i:I,(poleProduct D).eval (algebraMap K L (K1.node i))≠0)
     (res:∀z∈T,MarkResidues D (M.label z) (F.scalar z)):
-    T.card≤(PriceMethod.rates (.node fee) 133460 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
+    T.card≤(PriceMethod.rates (.node fee) 133482 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
   classical
-  let d:=133460
+  let d:=133482
   have ph:131071+M.overhead≤(d:ℤ):=degree_bound hi
   have dp:0<d:=by decide
-  have gap:d<179740:=by decide
+  have gap:d<179730:=by decide
   have tame:d<p:=by decide
-  have age:0<M.overhead.toNat:=(by decide:0<2293).trans_le lo
+  have age:0<M.overhead.toNat:=(by decide:0<2314).trans_le lo
   have bounds (yes:width.isSome=true):∀j k,((N.poly.coeff j).coeff k).totalDegree≤width.getD 0:=
     (K1_14_2_2_2_1.seedDegree_le N.poly (width.getD 0)).mp (trueWidth _ (selected yes))
   obtain ⟨q,yes,char,ok⟩:=legal
@@ -1316,21 +1328,21 @@ open scoped Classical Differential
 set_option maxHeartbeats 1800000
 set_option maxRecDepth 11000
 
-theorem on_marks {u del} {M:P1.ModelAt 33735 u del} {Γ T:Finset K} (F:P1.FamilyAt 179740 M Γ)
+theorem on_marks {u del} {M:P1.ModelAt 33755 u del} {Γ T:Finset K} (F:P1.FamilyAt 179730 M Γ)
     (sub:T⊆Γ) {D:PoleData M.overhead.toNat} (Crt:CRTLift D) {G:Pade.Row SeedField} (N:Native G)
     (gp:G.primitive) (phys:HelperPhysicalModel.Model Crt N.poly)
     {parents:Finset Surface} (owners:NativeAffineRows.Owned F T parents N)
     {f:Equation} (prim:f.IsPrimitive) (sep:(f.map (algebraMap Seeds SeedField)).Separable)
     (roots:∀z∈T,(f.map (graphEval (M.label z))).eval (atX (F.scalar z))=0)
-    (grade v cap:ℕ) (width axis:Option ℕ) (how:Mode) (legal:Legal how G.graphDegree width axis grade v 2389 cap)
+    (grade v cap:ℕ) (width axis:Option ℕ) (how:Mode) (legal:Legal how G.graphDegree width axis grade v 2411 cap)
     (limit:f.natDegree≤grade) (seed:K1_14_4.seedDegree f≤v)
     (trueWidth:∀u,width=some u→K1_14_2_2_2_1.seedDegree N.poly≤u)
     (trueAxis:∀u,axis=some u→PadeNativeQuotient.axis N.poly 1≤u)
-    (lo:2293≤M.overhead.toNat) (hi:M.overhead.toNat≤2389)
+    (lo:2314≤M.overhead.toNat) (hi:M.overhead.toNat≤2411)
     (nodeGuard:NodeGuard how (RawPhysicalDegree.weight (131071-M.overhead.toNat) (131071-M.overhead.toNat-1) phys.raw) cap)
     (nodes:∀i:I,(poleProduct D).eval (algebraMap K L (K1.node i))≠0)
     (res:∀z∈T,MarkResidues D (M.label z) (F.scalar z)):
-    T.card≤(PriceMethod.rates how 133460 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
+    T.card≤(PriceMethod.rates how 133482 G.graphDegree (width.getD 0) (axis.getD 0) grade v).pay f:=by
   cases how with
   | marked=>exact marked_marks F sub Crt N gp phys owners prim sep roots grade v cap width axis legal limit seed trueWidth trueAxis lo hi nodeGuard nodes res
   | markedAxis=>exact markedAxis_marks F sub Crt N gp phys owners prim sep roots grade v cap width axis legal limit seed trueWidth trueAxis lo hi nodeGuard nodes res
@@ -1419,7 +1431,7 @@ theorem whole {i} (s : State i) (b : Row) (z : Geometry s) (p₀ : Decision)
     (PhysicalHelperTariff.primitive s.prime s.slope) rfl degree.ge pos (NormalGeometry.helper_cap s)
     (OnTariff.degree_bound s.higher) (by decide) (by decide) (by decide)
     (s.higher.trans (by decide)) cap small safe
-  rw [degree,FastHeight.side_eq,FastHeight.ordinate_eq 133460 _ (by decide)] at result
+  rw [degree,FastHeight.side_eq,FastHeight.ordinate_eq 133482 _ (by decide)] at result
   rw [wholeCharge mode]
   exact result
 
@@ -1441,7 +1453,7 @@ theorem outside {i} (s : State i) (b : Row) (h : PairCell.Facts s b) (z : Geomet
     (PhysicalHelperTariff.primitive s.prime s.slope) rfl degree.ge pos (NormalGeometry.helper_cap s)
     (OnTariff.degree_bound s.higher) (by decide) (by decide) (by decide)
     (s.higher.trans (by decide)) offRes (le.trans_lt small) sR
-  rw [degree,FastHeight.side_eq,FastHeight.ordinate_eq 133460 _ (by decide)] at result
+  rw [degree,FastHeight.side_eq,FastHeight.ordinate_eq 133482 _ (by decide)] at result
   exact result
 
 
@@ -1536,7 +1548,7 @@ theorem graph_rescue {i} (s : State i) (b : Row) (h : PairCell.Facts s b) (z : G
     (PhysicalHelperTariff.primitive s.prime s.slope) s.gp rfl degree.ge positive pos
     (NormalGeometry.helper_cap s) bound different (OnTariff.degree_bound s.higher)
     (by decide) (by decide) (by decide)
-  rw [degree,h.degree,FastHeight.side_eq,FastHeight.ordinate_eq 133460 _ (by decide)] at inter
+  rw [degree,h.degree,FastHeight.side_eq,FastHeight.ordinate_eq 133482 _ (by decide)] at inter
   have cross : z.pairData.rescue.onLabels.card≤PairPrices.crossCharge b i := by
     rw [PairPrices.crossCharge,PairCell.Row.cross,PairPrices.sx,PairPrices.sy]
     exact inter
@@ -1581,7 +1593,7 @@ private theorem node_mode (m : PriceMethod.Mode) (h : PairPrices.modeNode m = tr
 
 theorem pays {i} (s : State i) (b : Row) (h : PairCell.Facts s b) (z : Geometry s) (p₀ : Decision)
     (node : PairPrices.modeNode p₀.main = true)
-    (legal : OnTariff.Legal p₀.main b.graph b.seedHi b.axisHi (b.gm i) (mainBook i).seedMass 2389 p₀.cutoff)
+    (legal : OnTariff.Legal p₀.main b.graph b.seedHi b.axisHi (b.gm i) (mainBook i).seedMass 2411 p₀.cutoff)
     (nodeGuard : OnTariff.NodeGuard p₀.main (NormalGeometry.weight s) p₀.cutoff) :
     z.pairData.main.onLabels.card+z.pairData.rescue.onLabels.card≤
       (PairPrices.primaryRate b i p₀).pay z.pairData.main.onEq := by
@@ -1598,7 +1610,7 @@ theorem pays {i} (s : State i) (b : Row) (h : PairCell.Facts s b) (z : Geometry 
     rcases mem_union.mp hy with m|r
     · obtain ⟨q,hq,atQ⟩:=C.main.onMarks y m;exact atQ s.native.poly (mem_filter.mp hq).2
     · obtain ⟨q,hq,atQ⟩:=C.rescue.onMarks y r;exact atQ s.native.poly (mem_filter.mp hq).2
-  have count:=NodeBudget.family s.F sub rfl ((by decide:0<2293).trans_le s.lower) s.higher (by decide)
+  have count:=NodeBudget.family s.F sub rfl ((by decide:0<2314).trans_le s.lower) s.higher (by decide)
     s.physical (OrdinaryCell.native_prime s.native s.gp) (NativeGraphMarks.slope_degree s.native s.gp)
     ((HelperWeightCap.native_degree s.native s.gp).trans (h.degree.trans q)) char
     ((K1_14_2_2_2_1.seedDegree_le ..).mp (h.seedHigh _ (OnTariff.selected yes)))

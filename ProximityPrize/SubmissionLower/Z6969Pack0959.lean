@@ -1,3 +1,5 @@
+import ProximityPrize.SubmissionLower.Z6970StockReceiptIndex
+import ProximityPrize.SubmissionLower.Z6970StockPairRoutes
 import ProximityPrize.SubmissionLower.Z6969Pack0671
 import ProximityPrize.SubmissionLower.Z6969Pack0934
 import ProximityPrize.SubmissionLower.Z6969Pack0954
@@ -14,1740 +16,1041 @@ set_option autoImplicit true
 namespace Research6969.HardFit3At140
 set_option maxRecDepth 18000
 set_option maxHeartbeats 1200000
-private theorem leaf0:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6426 PairReceipts.choice6426 PairReceipts.check6426 (none) (by decide)
-private theorem leaf1:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6427 PairReceipts.choice6427 PairReceipts.check6427 (none) (by decide)
-private theorem leaf2:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6428 PairReceipts.choice6428 PairReceipts.check6428 (none) (by decide)
-private theorem leaf3:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6429 PairReceipts.choice6429 PairReceipts.check6429 (none) (by decide)
-private theorem leaf4:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6430 PairReceipts.choice6430 PairReceipts.check6430 (none) (by decide)
-private theorem leaf5:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6431 PairReceipts.choice6431 PairReceipts.check6431 (none) (by decide)
-private theorem leaf6:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6432 PairReceipts.choice6432 PairReceipts.check6432 (none) (by decide)
-private theorem leaf7:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6433 PairReceipts.choice6433 PairReceipts.check6433 (none) (by decide)
-private theorem leaf8:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6434 PairReceipts.choice6434 PairReceipts.check6434 (none) (by decide)
-private theorem leaf9:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6435 PairReceipts.choice6435 PairReceipts.check6435 (none) (by decide)
-private theorem leaf10:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.three PairReceipts.cell6436 PairReceipts.check6436 (by decide) (none)
-private theorem leaf11:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6437 PairReceipts.check6437 (by decide) (none)
-private theorem leaf12:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6438 PairReceipts.check6438 (by decide) (none)
-private theorem leaf13:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6439 PairReceipts.check6439 (by decide) (none)
-private theorem leaf14:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6440 PairReceipts.check6440 (by decide) (none)
-private theorem leaf15:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6441 PairReceipts.check6441 (by decide) (none)
-private theorem axis16:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf14 leaf15
-private theorem axis17:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf13 axis16
-private theorem axis18:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf12 axis17
-private theorem axis19:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf11 axis18
-private theorem axis20:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf10 axis19
-private theorem axis21:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf9 axis20
-private theorem axis22:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf8 axis21
-private theorem axis23:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf7 axis22
-private theorem axis24:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf6 axis23
-private theorem axis25:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf5 axis24
-private theorem axis26:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf4 axis25
-private theorem axis27:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf3 axis26
-private theorem axis28:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf2 axis27
-private theorem axis29:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf1 axis28
-private theorem axis30:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf0 axis29
-private theorem allAxes31:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis30
-private theorem leaf32:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6442 PairReceipts.choice6442 PairReceipts.check6442 (none) (by decide)
-private theorem leaf33:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6443 PairReceipts.choice6443 PairReceipts.check6443 (none) (by decide)
-private theorem leaf34:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6444 PairReceipts.choice6444 PairReceipts.check6444 (none) (by decide)
-private theorem leaf35:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6445 PairReceipts.choice6445 PairReceipts.check6445 (none) (by decide)
-private theorem leaf36:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6446 PairReceipts.choice6446 PairReceipts.check6446 (none) (by decide)
-private theorem leaf37:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6447 PairReceipts.choice6447 PairReceipts.check6447 (none) (by decide)
-private theorem leaf38:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6448 PairReceipts.choice6448 PairReceipts.check6448 (none) (by decide)
-private theorem leaf39:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6449 PairReceipts.choice6449 PairReceipts.check6449 (none) (by decide)
-private theorem leaf40:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6450 PairReceipts.choice6450 PairReceipts.check6450 (none) (by decide)
-private theorem leaf41:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6451 PairReceipts.choice6451 PairReceipts.check6451 (none) (by decide)
-private theorem leaf42:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6452 PairReceipts.choice6452 PairReceipts.check6452 (none) (by decide)
-private theorem leaf43:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6453 PairReceipts.check6453 (by decide) (none)
-private theorem leaf44:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6454 PairReceipts.check6454 (by decide) (none)
-private theorem leaf45:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6455 PairReceipts.check6455 (by decide) (none)
-private theorem leaf46:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6456 PairReceipts.check6456 (by decide) (none)
-private theorem leaf47:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6457 PairReceipts.check6457 (by decide) (none)
-private theorem axis48:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf46 leaf47
-private theorem axis49:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf45 axis48
-private theorem axis50:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf44 axis49
-private theorem axis51:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf43 axis50
-private theorem axis52:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf42 axis51
-private theorem axis53:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf41 axis52
-private theorem axis54:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf40 axis53
-private theorem axis55:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf39 axis54
-private theorem axis56:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf38 axis55
-private theorem axis57:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf37 axis56
-private theorem axis58:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf36 axis57
-private theorem axis59:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf35 axis58
-private theorem axis60:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf34 axis59
-private theorem axis61:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf33 axis60
-private theorem axis62:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf32 axis61
-private theorem allAxes63:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis62
-private theorem leaf64:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6458 PairReceipts.choice6458 PairReceipts.check6458 (none) (by decide)
-private theorem leaf65:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6459 PairReceipts.choice6459 PairReceipts.check6459 (none) (by decide)
-private theorem leaf66:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6460 PairReceipts.choice6460 PairReceipts.check6460 (none) (by decide)
-private theorem leaf67:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6461 PairReceipts.choice6461 PairReceipts.check6461 (none) (by decide)
-private theorem leaf68:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6462 PairReceipts.choice6462 PairReceipts.check6462 (none) (by decide)
-private theorem leaf69:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6463 PairReceipts.choice6463 PairReceipts.check6463 (none) (by decide)
-private theorem leaf70:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6464 PairReceipts.choice6464 PairReceipts.check6464 (none) (by decide)
-private theorem leaf71:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6465 PairReceipts.choice6465 PairReceipts.check6465 (none) (by decide)
-private theorem leaf72:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6466 PairReceipts.choice6466 PairReceipts.check6466 (none) (by decide)
-private theorem leaf73:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6467 PairReceipts.choice6467 PairReceipts.check6467 (none) (by decide)
-private theorem leaf74:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6468 PairReceipts.choice6468 PairReceipts.check6468 (none) (by decide)
-private theorem leaf75:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6469 PairReceipts.check6469 (by decide) (none)
-private theorem leaf76:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6470 PairReceipts.check6470 (by decide) (none)
-private theorem leaf77:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6471 PairReceipts.check6471 (by decide) (none)
-private theorem leaf78:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6472 PairReceipts.check6472 (by decide) (none)
-private theorem leaf79:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6473 PairReceipts.check6473 (by decide) (none)
-private theorem axis80:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf78 leaf79
-private theorem axis81:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf77 axis80
-private theorem axis82:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf76 axis81
-private theorem axis83:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf75 axis82
-private theorem axis84:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf74 axis83
-private theorem axis85:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf73 axis84
-private theorem axis86:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf72 axis85
-private theorem axis87:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf71 axis86
-private theorem axis88:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf70 axis87
-private theorem axis89:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf69 axis88
-private theorem axis90:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf68 axis89
-private theorem axis91:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf67 axis90
-private theorem axis92:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf66 axis91
-private theorem axis93:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf65 axis92
-private theorem axis94:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf64 axis93
-private theorem allAxes95:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis94
-private theorem leaf96:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6474 PairReceipts.choice6474 PairReceipts.check6474 (none) (by decide)
-private theorem leaf97:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6475 PairReceipts.choice6475 PairReceipts.check6475 (none) (by decide)
-private theorem leaf98:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6476 PairReceipts.choice6476 PairReceipts.check6476 (none) (by decide)
-private theorem leaf99:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6477 PairReceipts.choice6477 PairReceipts.check6477 (none) (by decide)
-private theorem leaf100:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6478 PairReceipts.choice6478 PairReceipts.check6478 (none) (by decide)
-private theorem leaf101:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6479 PairReceipts.choice6479 PairReceipts.check6479 (none) (by decide)
-private theorem leaf102:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6480 PairReceipts.choice6480 PairReceipts.check6480 (none) (by decide)
-private theorem leaf103:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6481 PairReceipts.choice6481 PairReceipts.check6481 (none) (by decide)
-private theorem leaf104:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6482 PairReceipts.choice6482 PairReceipts.check6482 (none) (by decide)
-private theorem leaf105:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6483 PairReceipts.choice6483 PairReceipts.check6483 (none) (by decide)
-private theorem leaf106:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6484 PairReceipts.choice6484 PairReceipts.check6484 (none) (by decide)
-private theorem leaf107:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6485 PairReceipts.check6485 (by decide) (none)
-private theorem leaf108:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6486 PairReceipts.check6486 (by decide) (none)
-private theorem leaf109:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6487 PairReceipts.check6487 (by decide) (none)
-private theorem leaf110:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6488 PairReceipts.check6488 (by decide) (none)
-private theorem leaf111:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6489 PairReceipts.check6489 (by decide) (none)
-private theorem axis112:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf110 leaf111
-private theorem axis113:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf109 axis112
-private theorem axis114:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf108 axis113
-private theorem axis115:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf107 axis114
-private theorem axis116:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf106 axis115
-private theorem axis117:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf105 axis116
-private theorem axis118:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf104 axis117
-private theorem axis119:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf103 axis118
-private theorem axis120:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf102 axis119
-private theorem axis121:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf101 axis120
-private theorem axis122:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf100 axis121
-private theorem axis123:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf99 axis122
-private theorem axis124:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf98 axis123
-private theorem axis125:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf97 axis124
-private theorem axis126:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf96 axis125
-private theorem allAxes127:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis126
-private theorem leaf128:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6490 PairReceipts.choice6490 PairReceipts.check6490 (none) (by decide)
-private theorem leaf129:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6491 PairReceipts.choice6491 PairReceipts.check6491 (none) (by decide)
-private theorem leaf130:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6492 PairReceipts.choice6492 PairReceipts.check6492 (none) (by decide)
-private theorem leaf131:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6493 PairReceipts.choice6493 PairReceipts.check6493 (none) (by decide)
-private theorem leaf132:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6494 PairReceipts.choice6494 PairReceipts.check6494 (none) (by decide)
-private theorem leaf133:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6495 PairReceipts.choice6495 PairReceipts.check6495 (none) (by decide)
-private theorem leaf134:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6496 PairReceipts.choice6496 PairReceipts.check6496 (none) (by decide)
-private theorem leaf135:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6497 PairReceipts.choice6497 PairReceipts.check6497 (none) (by decide)
-private theorem leaf136:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6498 PairReceipts.choice6498 PairReceipts.check6498 (none) (by decide)
-private theorem leaf137:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6499 PairReceipts.choice6499 PairReceipts.check6499 (none) (by decide)
-private theorem leaf138:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6500 PairReceipts.choice6500 PairReceipts.check6500 (none) (by decide)
-private theorem leaf139:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6501 PairReceipts.check6501 (by decide) (none)
-private theorem leaf140:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6502 PairReceipts.check6502 (by decide) (none)
-private theorem leaf141:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6503 PairReceipts.check6503 (by decide) (none)
-private theorem leaf142:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6504 PairReceipts.check6504 (by decide) (none)
-private theorem leaf143:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6505 PairReceipts.check6505 (by decide) (none)
-private theorem axis144:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf142 leaf143
-private theorem axis145:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf141 axis144
-private theorem axis146:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf140 axis145
-private theorem axis147:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf139 axis146
-private theorem axis148:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf138 axis147
-private theorem axis149:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf137 axis148
-private theorem axis150:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf136 axis149
-private theorem axis151:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf135 axis150
-private theorem axis152:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf134 axis151
-private theorem axis153:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf133 axis152
-private theorem axis154:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf132 axis153
-private theorem axis155:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf131 axis154
-private theorem axis156:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf130 axis155
-private theorem axis157:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf129 axis156
-private theorem axis158:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf128 axis157
-private theorem allAxes159:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis158
-private theorem leaf160:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6506 PairReceipts.choice6506 PairReceipts.check6506 (none) (by decide)
-private theorem leaf161:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6507 PairReceipts.choice6507 PairReceipts.check6507 (none) (by decide)
-private theorem leaf162:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6508 PairReceipts.choice6508 PairReceipts.check6508 (none) (by decide)
-private theorem leaf163:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6509 PairReceipts.choice6509 PairReceipts.check6509 (none) (by decide)
-private theorem leaf164:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6510 PairReceipts.choice6510 PairReceipts.check6510 (none) (by decide)
-private theorem leaf165:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6511 PairReceipts.choice6511 PairReceipts.check6511 (none) (by decide)
-private theorem leaf166:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6512 PairReceipts.choice6512 PairReceipts.check6512 (none) (by decide)
-private theorem leaf167:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6513 PairReceipts.choice6513 PairReceipts.check6513 (none) (by decide)
-private theorem leaf168:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6514 PairReceipts.choice6514 PairReceipts.check6514 (none) (by decide)
-private theorem leaf169:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6515 PairReceipts.choice6515 PairReceipts.check6515 (none) (by decide)
-private theorem leaf170:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6516 PairReceipts.choice6516 PairReceipts.check6516 (none) (by decide)
-private theorem leaf171:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6517 PairReceipts.check6517 (by decide) (none)
-private theorem leaf172:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6518 PairReceipts.check6518 (by decide) (none)
-private theorem leaf173:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6519 PairReceipts.check6519 (by decide) (none)
-private theorem leaf174:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6520 PairReceipts.check6520 (by decide) (none)
-private theorem leaf175:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6521 PairReceipts.check6521 (by decide) (none)
-private theorem axis176:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf174 leaf175
-private theorem axis177:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf173 axis176
-private theorem axis178:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf172 axis177
-private theorem axis179:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf171 axis178
-private theorem axis180:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf170 axis179
-private theorem axis181:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf169 axis180
-private theorem axis182:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf168 axis181
-private theorem axis183:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf167 axis182
-private theorem axis184:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf166 axis183
-private theorem axis185:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf165 axis184
-private theorem axis186:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf164 axis185
-private theorem axis187:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf163 axis186
-private theorem axis188:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf162 axis187
-private theorem axis189:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf161 axis188
-private theorem axis190:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf160 axis189
-private theorem allAxes191:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis190
-private theorem leaf192:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6522 PairReceipts.choice6522 PairReceipts.check6522 (none) (by decide)
-private theorem leaf193:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6523 PairReceipts.choice6523 PairReceipts.check6523 (none) (by decide)
-private theorem leaf194:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6524 PairReceipts.choice6524 PairReceipts.check6524 (none) (by decide)
-private theorem leaf195:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6525 PairReceipts.choice6525 PairReceipts.check6525 (none) (by decide)
-private theorem leaf196:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6526 PairReceipts.choice6526 PairReceipts.check6526 (none) (by decide)
-private theorem leaf197:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6527 PairReceipts.choice6527 PairReceipts.check6527 (none) (by decide)
-private theorem leaf198:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6528 PairReceipts.choice6528 PairReceipts.check6528 (none) (by decide)
-private theorem leaf199:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6529 PairReceipts.choice6529 PairReceipts.check6529 (none) (by decide)
-private theorem leaf200:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6530 PairReceipts.choice6530 PairReceipts.check6530 (none) (by decide)
-private theorem leaf201:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6531 PairReceipts.choice6531 PairReceipts.check6531 (none) (by decide)
-private theorem leaf202:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6532 PairReceipts.choice6532 PairReceipts.check6532 (none) (by decide)
-private theorem leaf203:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6533 PairReceipts.choice6533 PairReceipts.check6533 (none) (by decide)
-private theorem leaf204:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6534 PairReceipts.check6534 (by decide) (none)
-private theorem leaf205:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6535 PairReceipts.check6535 (by decide) (none)
-private theorem leaf206:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6536 PairReceipts.check6536 (by decide) (none)
-private theorem leaf207:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6537 PairReceipts.check6537 (by decide) (none)
-private theorem axis208:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf206 leaf207
-private theorem axis209:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf205 axis208
-private theorem axis210:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf204 axis209
-private theorem axis211:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf203 axis210
-private theorem axis212:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf202 axis211
-private theorem axis213:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf201 axis212
-private theorem axis214:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf200 axis213
-private theorem axis215:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf199 axis214
-private theorem axis216:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf198 axis215
-private theorem axis217:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf197 axis216
-private theorem axis218:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf196 axis217
-private theorem axis219:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf195 axis218
-private theorem axis220:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf194 axis219
-private theorem axis221:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf193 axis220
-private theorem axis222:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf192 axis221
-private theorem allAxes223:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis222
-private theorem leaf224:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6538 PairReceipts.choice6538 PairReceipts.check6538 (none) (by decide)
-private theorem leaf225:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6539 PairReceipts.choice6539 PairReceipts.check6539 (none) (by decide)
-private theorem leaf226:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6540 PairReceipts.choice6540 PairReceipts.check6540 (none) (by decide)
-private theorem leaf227:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6541 PairReceipts.choice6541 PairReceipts.check6541 (none) (by decide)
-private theorem leaf228:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6542 PairReceipts.choice6542 PairReceipts.check6542 (none) (by decide)
-private theorem leaf229:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6543 PairReceipts.choice6543 PairReceipts.check6543 (none) (by decide)
-private theorem leaf230:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6544 PairReceipts.choice6544 PairReceipts.check6544 (none) (by decide)
-private theorem leaf231:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6545 PairReceipts.choice6545 PairReceipts.check6545 (none) (by decide)
-private theorem leaf232:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6546 PairReceipts.choice6546 PairReceipts.check6546 (none) (by decide)
-private theorem leaf233:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6547 PairReceipts.choice6547 PairReceipts.check6547 (none) (by decide)
-private theorem leaf234:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6548 PairReceipts.choice6548 PairReceipts.check6548 (none) (by decide)
-private theorem leaf235:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6549 PairReceipts.choice6549 PairReceipts.check6549 (none) (by decide)
-private theorem leaf236:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6550 PairReceipts.check6550 (by decide) (none)
-private theorem leaf237:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6551 PairReceipts.check6551 (by decide) (none)
-private theorem leaf238:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6552 PairReceipts.check6552 (by decide) (none)
-private theorem leaf239:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6553 PairReceipts.check6553 (by decide) (none)
-private theorem axis240:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf238 leaf239
-private theorem axis241:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf237 axis240
-private theorem axis242:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf236 axis241
-private theorem axis243:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf235 axis242
-private theorem axis244:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf234 axis243
-private theorem axis245:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf233 axis244
-private theorem axis246:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf232 axis245
-private theorem axis247:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf231 axis246
-private theorem axis248:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf230 axis247
-private theorem axis249:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf229 axis248
-private theorem axis250:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf228 axis249
-private theorem axis251:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf227 axis250
-private theorem axis252:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf226 axis251
-private theorem axis253:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf225 axis252
-private theorem axis254:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf224 axis253
-private theorem allAxes255:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis254
-private theorem leaf256:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6554 PairReceipts.choice6554 PairReceipts.check6554 (none) (by decide)
-private theorem leaf257:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6555 PairReceipts.choice6555 PairReceipts.check6555 (none) (by decide)
-private theorem leaf258:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6556 PairReceipts.choice6556 PairReceipts.check6556 (none) (by decide)
-private theorem leaf259:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6557 PairReceipts.choice6557 PairReceipts.check6557 (none) (by decide)
-private theorem leaf260:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6558 PairReceipts.choice6558 PairReceipts.check6558 (none) (by decide)
-private theorem leaf261:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6559 PairReceipts.choice6559 PairReceipts.check6559 (none) (by decide)
-private theorem leaf262:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6560 PairReceipts.choice6560 PairReceipts.check6560 (none) (by decide)
-private theorem leaf263:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6561 PairReceipts.choice6561 PairReceipts.check6561 (none) (by decide)
-private theorem leaf264:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6562 PairReceipts.choice6562 PairReceipts.check6562 (none) (by decide)
-private theorem leaf265:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6563 PairReceipts.choice6563 PairReceipts.check6563 (none) (by decide)
-private theorem leaf266:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6564 PairReceipts.choice6564 PairReceipts.check6564 (none) (by decide)
-private theorem leaf267:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6565 PairReceipts.choice6565 PairReceipts.check6565 (none) (by decide)
-private theorem leaf268:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6566 PairReceipts.check6566 (by decide) (none)
-private theorem leaf269:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6567 PairReceipts.check6567 (by decide) (none)
-private theorem leaf270:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6568 PairReceipts.check6568 (by decide) (none)
-private theorem leaf271:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6569 PairReceipts.check6569 (by decide) (none)
-private theorem axis272:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf270 leaf271
-private theorem axis273:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf269 axis272
-private theorem axis274:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf268 axis273
-private theorem axis275:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf267 axis274
-private theorem axis276:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf266 axis275
-private theorem axis277:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf265 axis276
-private theorem axis278:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf264 axis277
-private theorem axis279:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf263 axis278
-private theorem axis280:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf262 axis279
-private theorem axis281:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf261 axis280
-private theorem axis282:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf260 axis281
-private theorem axis283:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf259 axis282
-private theorem axis284:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf258 axis283
-private theorem axis285:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf257 axis284
-private theorem axis286:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf256 axis285
-private theorem allAxes287:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis286
-private theorem leaf288:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6570 PairReceipts.choice6570 PairReceipts.check6570 (none) (by decide)
-private theorem leaf289:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6571 PairReceipts.choice6571 PairReceipts.check6571 (none) (by decide)
-private theorem leaf290:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6572 PairReceipts.choice6572 PairReceipts.check6572 (none) (by decide)
-private theorem leaf291:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6573 PairReceipts.choice6573 PairReceipts.check6573 (none) (by decide)
-private theorem leaf292:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6574 PairReceipts.choice6574 PairReceipts.check6574 (none) (by decide)
-private theorem leaf293:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6575 PairReceipts.choice6575 PairReceipts.check6575 (none) (by decide)
-private theorem leaf294:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6576 PairReceipts.choice6576 PairReceipts.check6576 (none) (by decide)
-private theorem leaf295:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6577 PairReceipts.choice6577 PairReceipts.check6577 (none) (by decide)
-private theorem leaf296:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6578 PairReceipts.choice6578 PairReceipts.check6578 (none) (by decide)
-private theorem leaf297:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6579 PairReceipts.choice6579 PairReceipts.check6579 (none) (by decide)
-private theorem leaf298:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6580 PairReceipts.choice6580 PairReceipts.check6580 (none) (by decide)
-private theorem leaf299:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6581 PairReceipts.choice6581 PairReceipts.check6581 (none) (by decide)
-private theorem leaf300:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6582 PairReceipts.check6582 (by decide) (none)
-private theorem leaf301:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6583 PairReceipts.check6583 (by decide) (none)
-private theorem leaf302:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6584 PairReceipts.check6584 (by decide) (none)
-private theorem leaf303:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6585 PairReceipts.check6585 (by decide) (none)
-private theorem axis304:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf302 leaf303
-private theorem axis305:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf301 axis304
-private theorem axis306:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf300 axis305
-private theorem axis307:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf299 axis306
-private theorem axis308:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf298 axis307
-private theorem axis309:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf297 axis308
-private theorem axis310:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf296 axis309
-private theorem axis311:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf295 axis310
-private theorem axis312:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf294 axis311
-private theorem axis313:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf293 axis312
-private theorem axis314:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf292 axis313
-private theorem axis315:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf291 axis314
-private theorem axis316:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf290 axis315
-private theorem axis317:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf289 axis316
-private theorem axis318:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf288 axis317
-private theorem allAxes319:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis318
-private theorem leaf320:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6586 PairReceipts.choice6586 PairReceipts.check6586 (none) (by decide)
-private theorem leaf321:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6587 PairReceipts.choice6587 PairReceipts.check6587 (none) (by decide)
-private theorem leaf322:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6588 PairReceipts.choice6588 PairReceipts.check6588 (none) (by decide)
-private theorem leaf323:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6589 PairReceipts.choice6589 PairReceipts.check6589 (none) (by decide)
-private theorem leaf324:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6590 PairReceipts.choice6590 PairReceipts.check6590 (none) (by decide)
-private theorem leaf325:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6591 PairReceipts.choice6591 PairReceipts.check6591 (none) (by decide)
-private theorem leaf326:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6592 PairReceipts.choice6592 PairReceipts.check6592 (none) (by decide)
-private theorem leaf327:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6593 PairReceipts.choice6593 PairReceipts.check6593 (none) (by decide)
-private theorem leaf328:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6594 PairReceipts.choice6594 PairReceipts.check6594 (none) (by decide)
-private theorem leaf329:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6595 PairReceipts.choice6595 PairReceipts.check6595 (none) (by decide)
-private theorem leaf330:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6596 PairReceipts.choice6596 PairReceipts.check6596 (none) (by decide)
-private theorem leaf331:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6597 PairReceipts.choice6597 PairReceipts.check6597 (none) (by decide)
-private theorem leaf332:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6598 PairReceipts.check6598 (by decide) (none)
-private theorem leaf333:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6599 PairReceipts.check6599 (by decide) (none)
-private theorem leaf334:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6600 PairReceipts.check6600 (by decide) (none)
-private theorem leaf335:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6601 PairReceipts.check6601 (by decide) (none)
-private theorem axis336:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf334 leaf335
-private theorem axis337:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf333 axis336
-private theorem axis338:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf332 axis337
-private theorem axis339:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf331 axis338
-private theorem axis340:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf330 axis339
-private theorem axis341:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf329 axis340
-private theorem axis342:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf328 axis341
-private theorem axis343:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf327 axis342
-private theorem axis344:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf326 axis343
-private theorem axis345:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf325 axis344
-private theorem axis346:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf324 axis345
-private theorem axis347:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf323 axis346
-private theorem axis348:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf322 axis347
-private theorem axis349:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf321 axis348
-private theorem axis350:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf320 axis349
-private theorem allAxes351:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis350
-private theorem leaf352:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6602 PairReceipts.choice6602 PairReceipts.check6602 (none) (by decide)
-private theorem leaf353:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6603 PairReceipts.choice6603 PairReceipts.check6603 (none) (by decide)
-private theorem leaf354:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6604 PairReceipts.choice6604 PairReceipts.check6604 (none) (by decide)
-private theorem leaf355:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6605 PairReceipts.choice6605 PairReceipts.check6605 (none) (by decide)
-private theorem leaf356:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6606 PairReceipts.choice6606 PairReceipts.check6606 (none) (by decide)
-private theorem leaf357:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6607 PairReceipts.choice6607 PairReceipts.check6607 (none) (by decide)
-private theorem leaf358:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6608 PairReceipts.choice6608 PairReceipts.check6608 (none) (by decide)
-private theorem leaf359:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6609 PairReceipts.choice6609 PairReceipts.check6609 (none) (by decide)
-private theorem leaf360:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6610 PairReceipts.choice6610 PairReceipts.check6610 (none) (by decide)
-private theorem leaf361:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6611 PairReceipts.choice6611 PairReceipts.check6611 (none) (by decide)
-private theorem leaf362:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6612 PairReceipts.choice6612 PairReceipts.check6612 (none) (by decide)
-private theorem leaf363:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6613 PairReceipts.choice6613 PairReceipts.check6613 (none) (by decide)
-private theorem leaf364:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6614 PairReceipts.check6614 (by decide) (none)
-private theorem leaf365:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6615 PairReceipts.check6615 (by decide) (none)
-private theorem leaf366:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6616 PairReceipts.check6616 (by decide) (none)
-private theorem leaf367:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6617 PairReceipts.check6617 (by decide) (none)
-private theorem axis368:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf366 leaf367
-private theorem axis369:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf365 axis368
-private theorem axis370:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf364 axis369
-private theorem axis371:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf363 axis370
-private theorem axis372:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf362 axis371
-private theorem axis373:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf361 axis372
-private theorem axis374:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf360 axis373
-private theorem axis375:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf359 axis374
-private theorem axis376:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf358 axis375
-private theorem axis377:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf357 axis376
-private theorem axis378:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf356 axis377
-private theorem axis379:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf355 axis378
-private theorem axis380:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf354 axis379
-private theorem axis381:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf353 axis380
-private theorem axis382:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf352 axis381
-private theorem allAxes383:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis382
-private theorem leaf384:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6618 PairReceipts.choice6618 PairReceipts.check6618 (none) (by decide)
-private theorem leaf385:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6619 PairReceipts.choice6619 PairReceipts.check6619 (none) (by decide)
-private theorem leaf386:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6620 PairReceipts.choice6620 PairReceipts.check6620 (none) (by decide)
-private theorem leaf387:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6621 PairReceipts.choice6621 PairReceipts.check6621 (none) (by decide)
-private theorem leaf388:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6622 PairReceipts.choice6622 PairReceipts.check6622 (none) (by decide)
-private theorem leaf389:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6623 PairReceipts.choice6623 PairReceipts.check6623 (none) (by decide)
-private theorem leaf390:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6624 PairReceipts.choice6624 PairReceipts.check6624 (none) (by decide)
-private theorem leaf391:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6625 PairReceipts.choice6625 PairReceipts.check6625 (none) (by decide)
-private theorem leaf392:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6626 PairReceipts.choice6626 PairReceipts.check6626 (none) (by decide)
-private theorem leaf393:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6627 PairReceipts.choice6627 PairReceipts.check6627 (none) (by decide)
-private theorem leaf394:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6628 PairReceipts.choice6628 PairReceipts.check6628 (none) (by decide)
-private theorem leaf395:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6629 PairReceipts.choice6629 PairReceipts.check6629 (none) (by decide)
-private theorem leaf396:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6630 PairReceipts.check6630 (by decide) (none)
-private theorem leaf397:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6631 PairReceipts.check6631 (by decide) (none)
-private theorem leaf398:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6632 PairReceipts.check6632 (by decide) (none)
-private theorem leaf399:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6633 PairReceipts.check6633 (by decide) (none)
-private theorem axis400:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf398 leaf399
-private theorem axis401:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf397 axis400
-private theorem axis402:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf396 axis401
-private theorem axis403:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf395 axis402
-private theorem axis404:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf394 axis403
-private theorem axis405:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf393 axis404
-private theorem axis406:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf392 axis405
-private theorem axis407:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf391 axis406
-private theorem axis408:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf390 axis407
-private theorem axis409:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf389 axis408
-private theorem axis410:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf388 axis409
-private theorem axis411:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf387 axis410
-private theorem axis412:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf386 axis411
-private theorem axis413:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf385 axis412
-private theorem axis414:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf384 axis413
-private theorem allAxes415:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis414
-private theorem leaf416:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6634 PairReceipts.choice6634 PairReceipts.check6634 (none) (by decide)
-private theorem leaf417:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6635 PairReceipts.choice6635 PairReceipts.check6635 (none) (by decide)
-private theorem leaf418:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6636 PairReceipts.choice6636 PairReceipts.check6636 (none) (by decide)
-private theorem leaf419:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6637 PairReceipts.choice6637 PairReceipts.check6637 (none) (by decide)
-private theorem leaf420:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6638 PairReceipts.choice6638 PairReceipts.check6638 (none) (by decide)
-private theorem leaf421:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6639 PairReceipts.choice6639 PairReceipts.check6639 (none) (by decide)
-private theorem leaf422:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6640 PairReceipts.choice6640 PairReceipts.check6640 (none) (by decide)
-private theorem leaf423:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6641 PairReceipts.choice6641 PairReceipts.check6641 (none) (by decide)
-private theorem leaf424:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6642 PairReceipts.choice6642 PairReceipts.check6642 (none) (by decide)
-private theorem leaf425:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6643 PairReceipts.choice6643 PairReceipts.check6643 (none) (by decide)
-private theorem leaf426:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6644 PairReceipts.choice6644 PairReceipts.check6644 (none) (by decide)
-private theorem leaf427:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6645 PairReceipts.choice6645 PairReceipts.check6645 (none) (by decide)
-private theorem leaf428:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6646 PairReceipts.check6646 (by decide) (none)
-private theorem leaf429:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6647 PairReceipts.check6647 (by decide) (none)
-private theorem leaf430:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6648 PairReceipts.check6648 (by decide) (none)
-private theorem leaf431:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6649 PairReceipts.check6649 (by decide) (none)
-private theorem axis432:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,14,some 15,386045,none⟩:=PairRoute.axis 14 leaf430 leaf431
-private theorem axis433:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,13,some 15,386045,none⟩:=PairRoute.axis 13 leaf429 axis432
-private theorem axis434:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,12,some 15,386045,none⟩:=PairRoute.axis 12 leaf428 axis433
-private theorem axis435:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,11,some 15,386045,none⟩:=PairRoute.axis 11 leaf427 axis434
-private theorem axis436:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,10,some 15,386045,none⟩:=PairRoute.axis 10 leaf426 axis435
-private theorem axis437:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,9,some 15,386045,none⟩:=PairRoute.axis 9 leaf425 axis436
-private theorem axis438:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,8,some 15,386045,none⟩:=PairRoute.axis 8 leaf424 axis437
-private theorem axis439:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,7,some 15,386045,none⟩:=PairRoute.axis 7 leaf423 axis438
-private theorem axis440:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,6,some 15,386045,none⟩:=PairRoute.axis 6 leaf422 axis439
-private theorem axis441:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,5,some 15,386045,none⟩:=PairRoute.axis 5 leaf421 axis440
-private theorem axis442:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,4,some 15,386045,none⟩:=PairRoute.axis 4 leaf420 axis441
-private theorem axis443:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,3,some 15,386045,none⟩:=PairRoute.axis 3 leaf419 axis442
-private theorem axis444:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,2,some 15,386045,none⟩:=PairRoute.axis 2 leaf418 axis443
-private theorem axis445:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,1,some 15,386045,none⟩:=PairRoute.axis 1 leaf417 axis444
-private theorem axis446:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,0,some 15,386045,none⟩:=PairRoute.axis 0 leaf416 axis445
-private theorem allAxes447:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis446
-private theorem grade448:PairRoute.Done (2:Fin 18) ⟨⟨62,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 62 allAxes415 allAxes447
-private theorem grade449:PairRoute.Done (2:Fin 18) ⟨⟨61,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 61 allAxes383 grade448
-private theorem grade450:PairRoute.Done (2:Fin 18) ⟨⟨60,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 60 allAxes351 grade449
-private theorem grade451:PairRoute.Done (2:Fin 18) ⟨⟨59,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 59 allAxes319 grade450
-private theorem grade452:PairRoute.Done (2:Fin 18) ⟨⟨58,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 58 allAxes287 grade451
-private theorem grade453:PairRoute.Done (2:Fin 18) ⟨⟨57,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 57 allAxes255 grade452
-private theorem grade454:PairRoute.Done (2:Fin 18) ⟨⟨56,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 56 allAxes223 grade453
-private theorem grade455:PairRoute.Done (2:Fin 18) ⟨⟨55,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 55 allAxes191 grade454
-private theorem grade456:PairRoute.Done (2:Fin 18) ⟨⟨54,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 54 allAxes159 grade455
-private theorem grade457:PairRoute.Done (2:Fin 18) ⟨⟨53,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 53 allAxes127 grade456
-private theorem grade458:PairRoute.Done (2:Fin 18) ⟨⟨52,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 52 allAxes95 grade457
-private theorem grade459:PairRoute.Done (2:Fin 18) ⟨⟨51,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 51 allAxes63 grade458
-private theorem grade460:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,15,some 15⟩,0,none,386045,none⟩:=PairRoute.grade 50 allAxes31 grade459
+private theorem allAxes31:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6420 1),
+    (PairReceipts.route6420 2),
+    (PairReceipts.route6420 3),
+    (PairReceipts.route6420 4),
+    (PairReceipts.route6420 5),
+    (PairReceipts.route6420 6),
+    (PairReceipts.route6420 7),
+    (PairReceipts.route6420 8),
+    (PairReceipts.route6420 9),
+    (PairReceipts.route6420 10),
+    PairLeaves.three PairReceipts.cell6436 PairReceipts.check6436 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6437 PairReceipts.check6437 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6438 PairReceipts.check6438 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6439 PairReceipts.check6439 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6440 PairReceipts.check6440 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6441 PairReceipts.check6441 (by decide) (none),
+    trivial⟩)
+private theorem allAxes63:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6442 0),
+    (PairReceipts.route6442 1),
+    (PairReceipts.route6442 2),
+    (PairReceipts.route6442 3),
+    (PairReceipts.route6442 4),
+    (PairReceipts.route6442 5),
+    (PairReceipts.route6442 6),
+    (PairReceipts.route6442 7),
+    (PairReceipts.route6442 8),
+    (PairReceipts.route6442 9),
+    (PairReceipts.route6442 10),
+    PairLeaves.three PairReceipts.cell6453 PairReceipts.check6453 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6454 PairReceipts.check6454 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6455 PairReceipts.check6455 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6456 PairReceipts.check6456 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6457 PairReceipts.check6457 (by decide) (none),
+    trivial⟩)
+private theorem allAxes95:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6442 11),
+    (PairReceipts.route6442 12),
+    (PairReceipts.route6460 0),
+    (PairReceipts.route6460 1),
+    (PairReceipts.route6460 2),
+    (PairReceipts.route6460 3),
+    (PairReceipts.route6460 4),
+    (PairReceipts.route6460 5),
+    (PairReceipts.route6460 6),
+    (PairReceipts.route6460 7),
+    (PairReceipts.route6460 8),
+    PairLeaves.three PairReceipts.cell6469 PairReceipts.check6469 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6470 PairReceipts.check6470 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6471 PairReceipts.check6471 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6472 PairReceipts.check6472 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6473 PairReceipts.check6473 (by decide) (none),
+    trivial⟩)
+private theorem allAxes127:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6460 9),
+    (PairReceipts.route6460 10),
+    (PairReceipts.route6460 11),
+    (PairReceipts.route6460 12),
+    (PairReceipts.route6460 13),
+    (PairReceipts.route6460 14),
+    (PairReceipts.route6480 0),
+    (PairReceipts.route6480 1),
+    (PairReceipts.route6480 2),
+    (PairReceipts.route6480 3),
+    (PairReceipts.route6480 4),
+    PairLeaves.three PairReceipts.cell6485 PairReceipts.check6485 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6486 PairReceipts.check6486 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6487 PairReceipts.check6487 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6488 PairReceipts.check6488 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6489 PairReceipts.check6489 (by decide) (none),
+    trivial⟩)
+private theorem allAxes159:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6480 5),
+    (PairReceipts.route6480 6),
+    (PairReceipts.route6480 7),
+    (PairReceipts.route6480 8),
+    (PairReceipts.route6480 9),
+    (PairReceipts.route6480 10),
+    (PairReceipts.route6480 11),
+    (PairReceipts.route6480 12),
+    (PairReceipts.route6480 13),
+    (PairReceipts.route6480 14),
+    (PairReceipts.route6500 0),
+    PairLeaves.three PairReceipts.cell6501 PairReceipts.check6501 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6502 PairReceipts.check6502 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6503 PairReceipts.check6503 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6504 PairReceipts.check6504 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6505 PairReceipts.check6505 (by decide) (none),
+    trivial⟩)
+private theorem allAxes191:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6500 1),
+    (PairReceipts.route6500 2),
+    (PairReceipts.route6500 3),
+    (PairReceipts.route6500 4),
+    (PairReceipts.route6500 5),
+    (PairReceipts.route6500 6),
+    (PairReceipts.route6500 7),
+    (PairReceipts.route6500 8),
+    (PairReceipts.route6500 9),
+    (PairReceipts.route6500 10),
+    (PairReceipts.route6500 11),
+    PairLeaves.three PairReceipts.cell6517 PairReceipts.check6517 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6518 PairReceipts.check6518 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6519 PairReceipts.check6519 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6520 PairReceipts.check6520 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6521 PairReceipts.check6521 (by decide) (none),
+    trivial⟩)
+private theorem allAxes223:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6522 0),
+    (PairReceipts.route6522 1),
+    (PairReceipts.route6522 2),
+    (PairReceipts.route6522 3),
+    (PairReceipts.route6522 4),
+    (PairReceipts.route6522 5),
+    (PairReceipts.route6522 6),
+    (PairReceipts.route6522 7),
+    (PairReceipts.route6522 8),
+    (PairReceipts.route6522 9),
+    (PairReceipts.route6522 10),
+    (PairReceipts.route6522 11),
+    PairLeaves.three PairReceipts.cell6534 PairReceipts.check6534 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6535 PairReceipts.check6535 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6536 PairReceipts.check6536 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6537 PairReceipts.check6537 (by decide) (none),
+    trivial⟩)
+private theorem allAxes255:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6522 12),
+    (PairReceipts.route6522 13),
+    (PairReceipts.route6540 0),
+    (PairReceipts.route6540 1),
+    (PairReceipts.route6540 2),
+    (PairReceipts.route6540 3),
+    (PairReceipts.route6540 4),
+    (PairReceipts.route6540 5),
+    (PairReceipts.route6540 6),
+    (PairReceipts.route6540 7),
+    (PairReceipts.route6540 8),
+    (PairReceipts.route6540 9),
+    PairLeaves.three PairReceipts.cell6550 PairReceipts.check6550 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6551 PairReceipts.check6551 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6552 PairReceipts.check6552 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6553 PairReceipts.check6553 (by decide) (none),
+    trivial⟩)
+private theorem allAxes287:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6540 10),
+    (PairReceipts.route6540 11),
+    (PairReceipts.route6540 12),
+    (PairReceipts.route6540 13),
+    (PairReceipts.route6540 14),
+    (PairReceipts.route6540 15),
+    (PairReceipts.route6560 0),
+    (PairReceipts.route6560 1),
+    (PairReceipts.route6560 2),
+    (PairReceipts.route6560 3),
+    (PairReceipts.route6560 4),
+    (PairReceipts.route6560 5),
+    PairLeaves.three PairReceipts.cell6566 PairReceipts.check6566 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6567 PairReceipts.check6567 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6568 PairReceipts.check6568 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6569 PairReceipts.check6569 (by decide) (none),
+    trivial⟩)
+private theorem allAxes319:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6560 6),
+    (PairReceipts.route6560 7),
+    (PairReceipts.route6560 8),
+    (PairReceipts.route6560 9),
+    (PairReceipts.route6560 10),
+    (PairReceipts.route6560 11),
+    (PairReceipts.route6560 12),
+    (PairReceipts.route6560 13),
+    (PairReceipts.route6560 14),
+    (PairReceipts.route6560 15),
+    (PairReceipts.route6580 0),
+    (PairReceipts.route6580 1),
+    PairLeaves.three PairReceipts.cell6582 PairReceipts.check6582 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6583 PairReceipts.check6583 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6584 PairReceipts.check6584 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6585 PairReceipts.check6585 (by decide) (none),
+    trivial⟩)
+private theorem allAxes351:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6580 2),
+    (PairReceipts.route6580 3),
+    (PairReceipts.route6580 4),
+    (PairReceipts.route6580 5),
+    (PairReceipts.route6580 6),
+    (PairReceipts.route6580 7),
+    (PairReceipts.route6580 8),
+    (PairReceipts.route6580 9),
+    (PairReceipts.route6580 10),
+    (PairReceipts.route6580 11),
+    (PairReceipts.route6580 12),
+    (PairReceipts.route6580 13),
+    PairLeaves.three PairReceipts.cell6598 PairReceipts.check6598 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6599 PairReceipts.check6599 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6600 PairReceipts.check6600 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6601 PairReceipts.check6601 (by decide) (none),
+    trivial⟩)
+private theorem allAxes383:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6602 0),
+    (PairReceipts.route6602 1),
+    (PairReceipts.route6602 2),
+    (PairReceipts.route6602 3),
+    (PairReceipts.route6602 4),
+    (PairReceipts.route6602 5),
+    (PairReceipts.route6602 6),
+    (PairReceipts.route6602 7),
+    (PairReceipts.route6602 8),
+    (PairReceipts.route6602 9),
+    (PairReceipts.route6602 10),
+    (PairReceipts.route6602 11),
+    PairLeaves.three PairReceipts.cell6614 PairReceipts.check6614 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6615 PairReceipts.check6615 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6616 PairReceipts.check6616 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6617 PairReceipts.check6617 (by decide) (none),
+    trivial⟩)
+private theorem allAxes415:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6602 12),
+    (PairReceipts.route6602 13),
+    (PairReceipts.route6620 0),
+    (PairReceipts.route6620 1),
+    (PairReceipts.route6620 2),
+    (PairReceipts.route6620 3),
+    (PairReceipts.route6620 4),
+    (PairReceipts.route6620 5),
+    (PairReceipts.route6620 6),
+    (PairReceipts.route6620 7),
+    (PairReceipts.route6620 8),
+    (PairReceipts.route6620 9),
+    PairLeaves.three PairReceipts.cell6630 PairReceipts.check6630 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6631 PairReceipts.check6631 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6632 PairReceipts.check6632 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6633 PairReceipts.check6633 (by decide) (none),
+    trivial⟩)
+private theorem allAxes447:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,15,some 15⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 15 ⟨
+    (PairReceipts.route6620 10),
+    (PairReceipts.route6620 11),
+    (PairReceipts.route6620 12),
+    (PairReceipts.route6620 13),
+    (PairReceipts.route6620 14),
+    (PairReceipts.route6620 15),
+    (PairReceipts.route6640 0),
+    (PairReceipts.route6640 1),
+    (PairReceipts.route6640 2),
+    (PairReceipts.route6640 3),
+    (PairReceipts.route6640 4),
+    (PairReceipts.route6640 5),
+    PairLeaves.three PairReceipts.cell6646 PairReceipts.check6646 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6647 PairReceipts.check6647 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6648 PairReceipts.check6648 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6649 PairReceipts.check6649 (by decide) (none),
+    trivial⟩)
+private def grade448 := PairRoute.grade 62 allAxes415 allAxes447
+private def grade449 := PairRoute.grade 61 allAxes383 grade448
+private def grade450 := PairRoute.grade 60 allAxes351 grade449
+private def grade451 := PairRoute.grade 59 allAxes319 grade450
+private def grade452 := PairRoute.grade 58 allAxes287 grade451
+private def grade453 := PairRoute.grade 57 allAxes255 grade452
+private def grade454 := PairRoute.grade 56 allAxes223 grade453
+private def grade455 := PairRoute.grade 55 allAxes191 grade454
+private def grade456 := PairRoute.grade 54 allAxes159 grade455
+private def grade457 := PairRoute.grade 53 allAxes127 grade456
+private def grade458 := PairRoute.grade 52 allAxes95 grade457
+private def grade459 := PairRoute.grade 51 allAxes63 grade458
+private def grade460 := PairRoute.grade 50 allAxes31 grade459
 theorem case140: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,15,some 15⟩:=PairRoute.start _ grade460
-private theorem leaf461:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6188 PairReceipts.choice6188 PairReceipts.check6188 (none) (by decide)
-private theorem leaf462:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6189 PairReceipts.choice6189 PairReceipts.check6189 (none) (by decide)
-private theorem leaf463:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6190 PairReceipts.choice6190 PairReceipts.check6190 (none) (by decide)
-private theorem leaf464:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6191 PairReceipts.choice6191 PairReceipts.check6191 (none) (by decide)
-private theorem leaf465:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6192 PairReceipts.choice6192 PairReceipts.check6192 (none) (by decide)
-private theorem leaf466:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6193 PairReceipts.choice6193 PairReceipts.check6193 (none) (by decide)
-private theorem leaf467:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6194 PairReceipts.choice6194 PairReceipts.check6194 (none) (by decide)
-private theorem leaf468:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6195 PairReceipts.choice6195 PairReceipts.check6195 (none) (by decide)
-private theorem leaf469:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6196 PairReceipts.choice6196 PairReceipts.check6196 (none) (by decide)
-private theorem leaf470:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6197 PairReceipts.choice6197 PairReceipts.check6197 (none) (by decide)
-private theorem leaf471:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.three PairReceipts.cell6198 PairReceipts.check6198 (by decide) (none)
-private theorem leaf472:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6199 PairReceipts.check6199 (by decide) (none)
-private theorem leaf473:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6200 PairReceipts.check6200 (by decide) (none)
-private theorem leaf474:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6201 PairReceipts.check6201 (by decide) (none)
-private theorem leaf475:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6202 PairReceipts.check6202 (by decide) (none)
-private theorem leaf476:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6203 PairReceipts.check6203 (by decide) (none)
-private theorem leaf477:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6204 PairReceipts.check6204 (by decide) (none)
-private theorem axis478:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf476 leaf477
-private theorem axis479:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf475 axis478
-private theorem axis480:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf474 axis479
-private theorem axis481:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf473 axis480
-private theorem axis482:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf472 axis481
-private theorem axis483:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf471 axis482
-private theorem axis484:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf470 axis483
-private theorem axis485:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf469 axis484
-private theorem axis486:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf468 axis485
-private theorem axis487:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf467 axis486
-private theorem axis488:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf466 axis487
-private theorem axis489:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf465 axis488
-private theorem axis490:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf464 axis489
-private theorem axis491:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf463 axis490
-private theorem axis492:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf462 axis491
-private theorem axis493:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf461 axis492
-private theorem allAxes494:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis493
-private theorem leaf495:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6205 PairReceipts.choice6205 PairReceipts.check6205 (none) (by decide)
-private theorem leaf496:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6206 PairReceipts.choice6206 PairReceipts.check6206 (none) (by decide)
-private theorem leaf497:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6207 PairReceipts.choice6207 PairReceipts.check6207 (none) (by decide)
-private theorem leaf498:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6208 PairReceipts.choice6208 PairReceipts.check6208 (none) (by decide)
-private theorem leaf499:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6209 PairReceipts.choice6209 PairReceipts.check6209 (none) (by decide)
-private theorem leaf500:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6210 PairReceipts.choice6210 PairReceipts.check6210 (none) (by decide)
-private theorem leaf501:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6211 PairReceipts.choice6211 PairReceipts.check6211 (none) (by decide)
-private theorem leaf502:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6212 PairReceipts.choice6212 PairReceipts.check6212 (none) (by decide)
-private theorem leaf503:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6213 PairReceipts.choice6213 PairReceipts.check6213 (none) (by decide)
-private theorem leaf504:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6214 PairReceipts.choice6214 PairReceipts.check6214 (none) (by decide)
-private theorem leaf505:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6215 PairReceipts.choice6215 PairReceipts.check6215 (none) (by decide)
-private theorem leaf506:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6216 PairReceipts.check6216 (by decide) (none)
-private theorem leaf507:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6217 PairReceipts.check6217 (by decide) (none)
-private theorem leaf508:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6218 PairReceipts.check6218 (by decide) (none)
-private theorem leaf509:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6219 PairReceipts.check6219 (by decide) (none)
-private theorem leaf510:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6220 PairReceipts.check6220 (by decide) (none)
-private theorem leaf511:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6221 PairReceipts.check6221 (by decide) (none)
-private theorem axis512:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf510 leaf511
-private theorem axis513:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf509 axis512
-private theorem axis514:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf508 axis513
-private theorem axis515:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf507 axis514
-private theorem axis516:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf506 axis515
-private theorem axis517:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf505 axis516
-private theorem axis518:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf504 axis517
-private theorem axis519:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf503 axis518
-private theorem axis520:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf502 axis519
-private theorem axis521:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf501 axis520
-private theorem axis522:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf500 axis521
-private theorem axis523:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf499 axis522
-private theorem axis524:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf498 axis523
-private theorem axis525:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf497 axis524
-private theorem axis526:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf496 axis525
-private theorem axis527:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf495 axis526
-private theorem allAxes528:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis527
-private theorem leaf529:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6222 PairReceipts.choice6222 PairReceipts.check6222 (none) (by decide)
-private theorem leaf530:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6223 PairReceipts.choice6223 PairReceipts.check6223 (none) (by decide)
-private theorem leaf531:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6224 PairReceipts.choice6224 PairReceipts.check6224 (none) (by decide)
-private theorem leaf532:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6225 PairReceipts.choice6225 PairReceipts.check6225 (none) (by decide)
-private theorem leaf533:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6226 PairReceipts.choice6226 PairReceipts.check6226 (none) (by decide)
-private theorem leaf534:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6227 PairReceipts.choice6227 PairReceipts.check6227 (none) (by decide)
-private theorem leaf535:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6228 PairReceipts.choice6228 PairReceipts.check6228 (none) (by decide)
-private theorem leaf536:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6229 PairReceipts.choice6229 PairReceipts.check6229 (none) (by decide)
-private theorem leaf537:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6230 PairReceipts.choice6230 PairReceipts.check6230 (none) (by decide)
-private theorem leaf538:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6231 PairReceipts.choice6231 PairReceipts.check6231 (none) (by decide)
-private theorem leaf539:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6232 PairReceipts.choice6232 PairReceipts.check6232 (none) (by decide)
-private theorem leaf540:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6233 PairReceipts.check6233 (by decide) (none)
-private theorem leaf541:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6234 PairReceipts.check6234 (by decide) (none)
-private theorem leaf542:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6235 PairReceipts.check6235 (by decide) (none)
-private theorem leaf543:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6236 PairReceipts.check6236 (by decide) (none)
-private theorem leaf544:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6237 PairReceipts.check6237 (by decide) (none)
-private theorem leaf545:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6238 PairReceipts.check6238 (by decide) (none)
-private theorem axis546:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf544 leaf545
-private theorem axis547:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf543 axis546
-private theorem axis548:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf542 axis547
-private theorem axis549:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf541 axis548
-private theorem axis550:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf540 axis549
-private theorem axis551:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf539 axis550
-private theorem axis552:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf538 axis551
-private theorem axis553:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf537 axis552
-private theorem axis554:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf536 axis553
-private theorem axis555:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf535 axis554
-private theorem axis556:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf534 axis555
-private theorem axis557:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf533 axis556
-private theorem axis558:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf532 axis557
-private theorem axis559:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf531 axis558
-private theorem axis560:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf530 axis559
-private theorem axis561:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf529 axis560
-private theorem allAxes562:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis561
-private theorem leaf563:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6239 PairReceipts.choice6239 PairReceipts.check6239 (none) (by decide)
-private theorem leaf564:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6240 PairReceipts.choice6240 PairReceipts.check6240 (none) (by decide)
-private theorem leaf565:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6241 PairReceipts.choice6241 PairReceipts.check6241 (none) (by decide)
-private theorem leaf566:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6242 PairReceipts.choice6242 PairReceipts.check6242 (none) (by decide)
-private theorem leaf567:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6243 PairReceipts.choice6243 PairReceipts.check6243 (none) (by decide)
-private theorem leaf568:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6244 PairReceipts.choice6244 PairReceipts.check6244 (none) (by decide)
-private theorem leaf569:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6245 PairReceipts.choice6245 PairReceipts.check6245 (none) (by decide)
-private theorem leaf570:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6246 PairReceipts.choice6246 PairReceipts.check6246 (none) (by decide)
-private theorem leaf571:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6247 PairReceipts.choice6247 PairReceipts.check6247 (none) (by decide)
-private theorem leaf572:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6248 PairReceipts.choice6248 PairReceipts.check6248 (none) (by decide)
-private theorem leaf573:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6249 PairReceipts.choice6249 PairReceipts.check6249 (none) (by decide)
-private theorem leaf574:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6250 PairReceipts.check6250 (by decide) (none)
-private theorem leaf575:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6251 PairReceipts.check6251 (by decide) (none)
-private theorem leaf576:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6252 PairReceipts.check6252 (by decide) (none)
-private theorem leaf577:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6253 PairReceipts.check6253 (by decide) (none)
-private theorem leaf578:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6254 PairReceipts.check6254 (by decide) (none)
-private theorem leaf579:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6255 PairReceipts.check6255 (by decide) (none)
-private theorem axis580:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf578 leaf579
-private theorem axis581:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf577 axis580
-private theorem axis582:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf576 axis581
-private theorem axis583:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf575 axis582
-private theorem axis584:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf574 axis583
-private theorem axis585:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf573 axis584
-private theorem axis586:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf572 axis585
-private theorem axis587:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf571 axis586
-private theorem axis588:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf570 axis587
-private theorem axis589:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf569 axis588
-private theorem axis590:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf568 axis589
-private theorem axis591:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf567 axis590
-private theorem axis592:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf566 axis591
-private theorem axis593:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf565 axis592
-private theorem axis594:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf564 axis593
-private theorem axis595:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf563 axis594
-private theorem allAxes596:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis595
-private theorem leaf597:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6256 PairReceipts.choice6256 PairReceipts.check6256 (none) (by decide)
-private theorem leaf598:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6257 PairReceipts.choice6257 PairReceipts.check6257 (none) (by decide)
-private theorem leaf599:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6258 PairReceipts.choice6258 PairReceipts.check6258 (none) (by decide)
-private theorem leaf600:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6259 PairReceipts.choice6259 PairReceipts.check6259 (none) (by decide)
-private theorem leaf601:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6260 PairReceipts.choice6260 PairReceipts.check6260 (none) (by decide)
-private theorem leaf602:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6261 PairReceipts.choice6261 PairReceipts.check6261 (none) (by decide)
-private theorem leaf603:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6262 PairReceipts.choice6262 PairReceipts.check6262 (none) (by decide)
-private theorem leaf604:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6263 PairReceipts.choice6263 PairReceipts.check6263 (none) (by decide)
-private theorem leaf605:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6264 PairReceipts.choice6264 PairReceipts.check6264 (none) (by decide)
-private theorem leaf606:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6265 PairReceipts.choice6265 PairReceipts.check6265 (none) (by decide)
-private theorem leaf607:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6266 PairReceipts.choice6266 PairReceipts.check6266 (none) (by decide)
-private theorem leaf608:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6267 PairReceipts.check6267 (by decide) (none)
-private theorem leaf609:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6268 PairReceipts.check6268 (by decide) (none)
-private theorem leaf610:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6269 PairReceipts.check6269 (by decide) (none)
-private theorem leaf611:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6270 PairReceipts.check6270 (by decide) (none)
-private theorem leaf612:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6271 PairReceipts.check6271 (by decide) (none)
-private theorem leaf613:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6272 PairReceipts.check6272 (by decide) (none)
-private theorem axis614:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf612 leaf613
-private theorem axis615:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf611 axis614
-private theorem axis616:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf610 axis615
-private theorem axis617:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf609 axis616
-private theorem axis618:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf608 axis617
-private theorem axis619:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf607 axis618
-private theorem axis620:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf606 axis619
-private theorem axis621:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf605 axis620
-private theorem axis622:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf604 axis621
-private theorem axis623:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf603 axis622
-private theorem axis624:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf602 axis623
-private theorem axis625:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf601 axis624
-private theorem axis626:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf600 axis625
-private theorem axis627:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf599 axis626
-private theorem axis628:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf598 axis627
-private theorem axis629:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf597 axis628
-private theorem allAxes630:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis629
-private theorem leaf631:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6273 PairReceipts.choice6273 PairReceipts.check6273 (none) (by decide)
-private theorem leaf632:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6274 PairReceipts.choice6274 PairReceipts.check6274 (none) (by decide)
-private theorem leaf633:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6275 PairReceipts.choice6275 PairReceipts.check6275 (none) (by decide)
-private theorem leaf634:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6276 PairReceipts.choice6276 PairReceipts.check6276 (none) (by decide)
-private theorem leaf635:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6277 PairReceipts.choice6277 PairReceipts.check6277 (none) (by decide)
-private theorem leaf636:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6278 PairReceipts.choice6278 PairReceipts.check6278 (none) (by decide)
-private theorem leaf637:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6279 PairReceipts.choice6279 PairReceipts.check6279 (none) (by decide)
-private theorem leaf638:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6280 PairReceipts.choice6280 PairReceipts.check6280 (none) (by decide)
-private theorem leaf639:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6281 PairReceipts.choice6281 PairReceipts.check6281 (none) (by decide)
-private theorem leaf640:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6282 PairReceipts.choice6282 PairReceipts.check6282 (none) (by decide)
-private theorem leaf641:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6283 PairReceipts.choice6283 PairReceipts.check6283 (none) (by decide)
-private theorem leaf642:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6284 PairReceipts.check6284 (by decide) (none)
-private theorem leaf643:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6285 PairReceipts.check6285 (by decide) (none)
-private theorem leaf644:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6286 PairReceipts.check6286 (by decide) (none)
-private theorem leaf645:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6287 PairReceipts.check6287 (by decide) (none)
-private theorem leaf646:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6288 PairReceipts.check6288 (by decide) (none)
-private theorem leaf647:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6289 PairReceipts.check6289 (by decide) (none)
-private theorem axis648:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf646 leaf647
-private theorem axis649:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf645 axis648
-private theorem axis650:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf644 axis649
-private theorem axis651:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf643 axis650
-private theorem axis652:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf642 axis651
-private theorem axis653:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf641 axis652
-private theorem axis654:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf640 axis653
-private theorem axis655:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf639 axis654
-private theorem axis656:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf638 axis655
-private theorem axis657:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf637 axis656
-private theorem axis658:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf636 axis657
-private theorem axis659:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf635 axis658
-private theorem axis660:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf634 axis659
-private theorem axis661:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf633 axis660
-private theorem axis662:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf632 axis661
-private theorem axis663:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf631 axis662
-private theorem allAxes664:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis663
-private theorem leaf665:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6290 PairReceipts.choice6290 PairReceipts.check6290 (none) (by decide)
-private theorem leaf666:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6291 PairReceipts.choice6291 PairReceipts.check6291 (none) (by decide)
-private theorem leaf667:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6292 PairReceipts.choice6292 PairReceipts.check6292 (none) (by decide)
-private theorem leaf668:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6293 PairReceipts.choice6293 PairReceipts.check6293 (none) (by decide)
-private theorem leaf669:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6294 PairReceipts.choice6294 PairReceipts.check6294 (none) (by decide)
-private theorem leaf670:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6295 PairReceipts.choice6295 PairReceipts.check6295 (none) (by decide)
-private theorem leaf671:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6296 PairReceipts.choice6296 PairReceipts.check6296 (none) (by decide)
-private theorem leaf672:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6297 PairReceipts.choice6297 PairReceipts.check6297 (none) (by decide)
-private theorem leaf673:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6298 PairReceipts.choice6298 PairReceipts.check6298 (none) (by decide)
-private theorem leaf674:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6299 PairReceipts.choice6299 PairReceipts.check6299 (none) (by decide)
-private theorem leaf675:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6300 PairReceipts.choice6300 PairReceipts.check6300 (none) (by decide)
-private theorem leaf676:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6301 PairReceipts.choice6301 PairReceipts.check6301 (none) (by decide)
-private theorem leaf677:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6302 PairReceipts.check6302 (by decide) (none)
-private theorem leaf678:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6303 PairReceipts.check6303 (by decide) (none)
-private theorem leaf679:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6304 PairReceipts.check6304 (by decide) (none)
-private theorem leaf680:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6305 PairReceipts.check6305 (by decide) (none)
-private theorem leaf681:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6306 PairReceipts.check6306 (by decide) (none)
-private theorem axis682:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf680 leaf681
-private theorem axis683:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf679 axis682
-private theorem axis684:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf678 axis683
-private theorem axis685:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf677 axis684
-private theorem axis686:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf676 axis685
-private theorem axis687:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf675 axis686
-private theorem axis688:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf674 axis687
-private theorem axis689:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf673 axis688
-private theorem axis690:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf672 axis689
-private theorem axis691:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf671 axis690
-private theorem axis692:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf670 axis691
-private theorem axis693:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf669 axis692
-private theorem axis694:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf668 axis693
-private theorem axis695:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf667 axis694
-private theorem axis696:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf666 axis695
-private theorem axis697:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf665 axis696
-private theorem allAxes698:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis697
-private theorem leaf699:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6307 PairReceipts.choice6307 PairReceipts.check6307 (none) (by decide)
-private theorem leaf700:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6308 PairReceipts.choice6308 PairReceipts.check6308 (none) (by decide)
-private theorem leaf701:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6309 PairReceipts.choice6309 PairReceipts.check6309 (none) (by decide)
-private theorem leaf702:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6310 PairReceipts.choice6310 PairReceipts.check6310 (none) (by decide)
-private theorem leaf703:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6311 PairReceipts.choice6311 PairReceipts.check6311 (none) (by decide)
-private theorem leaf704:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6312 PairReceipts.choice6312 PairReceipts.check6312 (none) (by decide)
-private theorem leaf705:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6313 PairReceipts.choice6313 PairReceipts.check6313 (none) (by decide)
-private theorem leaf706:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6314 PairReceipts.choice6314 PairReceipts.check6314 (none) (by decide)
-private theorem leaf707:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6315 PairReceipts.choice6315 PairReceipts.check6315 (none) (by decide)
-private theorem leaf708:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6316 PairReceipts.choice6316 PairReceipts.check6316 (none) (by decide)
-private theorem leaf709:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6317 PairReceipts.choice6317 PairReceipts.check6317 (none) (by decide)
-private theorem leaf710:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6318 PairReceipts.choice6318 PairReceipts.check6318 (none) (by decide)
-private theorem leaf711:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6319 PairReceipts.check6319 (by decide) (none)
-private theorem leaf712:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6320 PairReceipts.check6320 (by decide) (none)
-private theorem leaf713:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6321 PairReceipts.check6321 (by decide) (none)
-private theorem leaf714:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6322 PairReceipts.check6322 (by decide) (none)
-private theorem leaf715:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6323 PairReceipts.check6323 (by decide) (none)
-private theorem axis716:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf714 leaf715
-private theorem axis717:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf713 axis716
-private theorem axis718:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf712 axis717
-private theorem axis719:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf711 axis718
-private theorem axis720:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf710 axis719
-private theorem axis721:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf709 axis720
-private theorem axis722:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf708 axis721
-private theorem axis723:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf707 axis722
-private theorem axis724:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf706 axis723
-private theorem axis725:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf705 axis724
-private theorem axis726:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf704 axis725
-private theorem axis727:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf703 axis726
-private theorem axis728:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf702 axis727
-private theorem axis729:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf701 axis728
-private theorem axis730:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf700 axis729
-private theorem axis731:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf699 axis730
-private theorem allAxes732:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis731
-private theorem leaf733:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6324 PairReceipts.choice6324 PairReceipts.check6324 (none) (by decide)
-private theorem leaf734:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6325 PairReceipts.choice6325 PairReceipts.check6325 (none) (by decide)
-private theorem leaf735:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6326 PairReceipts.choice6326 PairReceipts.check6326 (none) (by decide)
-private theorem leaf736:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6327 PairReceipts.choice6327 PairReceipts.check6327 (none) (by decide)
-private theorem leaf737:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6328 PairReceipts.choice6328 PairReceipts.check6328 (none) (by decide)
-private theorem leaf738:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6329 PairReceipts.choice6329 PairReceipts.check6329 (none) (by decide)
-private theorem leaf739:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6330 PairReceipts.choice6330 PairReceipts.check6330 (none) (by decide)
-private theorem leaf740:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6331 PairReceipts.choice6331 PairReceipts.check6331 (none) (by decide)
-private theorem leaf741:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6332 PairReceipts.choice6332 PairReceipts.check6332 (none) (by decide)
-private theorem leaf742:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6333 PairReceipts.choice6333 PairReceipts.check6333 (none) (by decide)
-private theorem leaf743:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6334 PairReceipts.choice6334 PairReceipts.check6334 (none) (by decide)
-private theorem leaf744:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6335 PairReceipts.choice6335 PairReceipts.check6335 (none) (by decide)
-private theorem leaf745:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6336 PairReceipts.check6336 (by decide) (none)
-private theorem leaf746:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6337 PairReceipts.check6337 (by decide) (none)
-private theorem leaf747:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6338 PairReceipts.check6338 (by decide) (none)
-private theorem leaf748:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6339 PairReceipts.check6339 (by decide) (none)
-private theorem leaf749:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6340 PairReceipts.check6340 (by decide) (none)
-private theorem axis750:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf748 leaf749
-private theorem axis751:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf747 axis750
-private theorem axis752:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf746 axis751
-private theorem axis753:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf745 axis752
-private theorem axis754:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf744 axis753
-private theorem axis755:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf743 axis754
-private theorem axis756:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf742 axis755
-private theorem axis757:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf741 axis756
-private theorem axis758:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf740 axis757
-private theorem axis759:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf739 axis758
-private theorem axis760:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf738 axis759
-private theorem axis761:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf737 axis760
-private theorem axis762:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf736 axis761
-private theorem axis763:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf735 axis762
-private theorem axis764:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf734 axis763
-private theorem axis765:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf733 axis764
-private theorem allAxes766:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis765
-private theorem leaf767:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6341 PairReceipts.choice6341 PairReceipts.check6341 (none) (by decide)
-private theorem leaf768:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6342 PairReceipts.choice6342 PairReceipts.check6342 (none) (by decide)
-private theorem leaf769:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6343 PairReceipts.choice6343 PairReceipts.check6343 (none) (by decide)
-private theorem leaf770:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6344 PairReceipts.choice6344 PairReceipts.check6344 (none) (by decide)
-private theorem leaf771:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6345 PairReceipts.choice6345 PairReceipts.check6345 (none) (by decide)
-private theorem leaf772:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6346 PairReceipts.choice6346 PairReceipts.check6346 (none) (by decide)
-private theorem leaf773:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6347 PairReceipts.choice6347 PairReceipts.check6347 (none) (by decide)
-private theorem leaf774:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6348 PairReceipts.choice6348 PairReceipts.check6348 (none) (by decide)
-private theorem leaf775:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6349 PairReceipts.choice6349 PairReceipts.check6349 (none) (by decide)
-private theorem leaf776:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6350 PairReceipts.choice6350 PairReceipts.check6350 (none) (by decide)
-private theorem leaf777:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6351 PairReceipts.choice6351 PairReceipts.check6351 (none) (by decide)
-private theorem leaf778:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6352 PairReceipts.choice6352 PairReceipts.check6352 (none) (by decide)
-private theorem leaf779:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6353 PairReceipts.check6353 (by decide) (none)
-private theorem leaf780:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6354 PairReceipts.check6354 (by decide) (none)
-private theorem leaf781:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6355 PairReceipts.check6355 (by decide) (none)
-private theorem leaf782:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6356 PairReceipts.check6356 (by decide) (none)
-private theorem leaf783:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6357 PairReceipts.check6357 (by decide) (none)
-private theorem axis784:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf782 leaf783
-private theorem axis785:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf781 axis784
-private theorem axis786:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf780 axis785
-private theorem axis787:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf779 axis786
-private theorem axis788:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf778 axis787
-private theorem axis789:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf777 axis788
-private theorem axis790:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf776 axis789
-private theorem axis791:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf775 axis790
-private theorem axis792:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf774 axis791
-private theorem axis793:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf773 axis792
-private theorem axis794:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf772 axis793
-private theorem axis795:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf771 axis794
-private theorem axis796:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf770 axis795
-private theorem axis797:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf769 axis796
-private theorem axis798:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf768 axis797
-private theorem axis799:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf767 axis798
-private theorem allAxes800:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis799
-private theorem leaf801:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6358 PairReceipts.choice6358 PairReceipts.check6358 (none) (by decide)
-private theorem leaf802:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6359 PairReceipts.choice6359 PairReceipts.check6359 (none) (by decide)
-private theorem leaf803:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6360 PairReceipts.choice6360 PairReceipts.check6360 (none) (by decide)
-private theorem leaf804:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6361 PairReceipts.choice6361 PairReceipts.check6361 (none) (by decide)
-private theorem leaf805:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6362 PairReceipts.choice6362 PairReceipts.check6362 (none) (by decide)
-private theorem leaf806:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6363 PairReceipts.choice6363 PairReceipts.check6363 (none) (by decide)
-private theorem leaf807:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6364 PairReceipts.choice6364 PairReceipts.check6364 (none) (by decide)
-private theorem leaf808:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6365 PairReceipts.choice6365 PairReceipts.check6365 (none) (by decide)
-private theorem leaf809:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6366 PairReceipts.choice6366 PairReceipts.check6366 (none) (by decide)
-private theorem leaf810:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6367 PairReceipts.choice6367 PairReceipts.check6367 (none) (by decide)
-private theorem leaf811:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6368 PairReceipts.choice6368 PairReceipts.check6368 (none) (by decide)
-private theorem leaf812:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6369 PairReceipts.choice6369 PairReceipts.check6369 (none) (by decide)
-private theorem leaf813:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6370 PairReceipts.check6370 (by decide) (none)
-private theorem leaf814:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6371 PairReceipts.check6371 (by decide) (none)
-private theorem leaf815:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6372 PairReceipts.check6372 (by decide) (none)
-private theorem leaf816:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6373 PairReceipts.check6373 (by decide) (none)
-private theorem leaf817:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6374 PairReceipts.check6374 (by decide) (none)
-private theorem axis818:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf816 leaf817
-private theorem axis819:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf815 axis818
-private theorem axis820:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf814 axis819
-private theorem axis821:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf813 axis820
-private theorem axis822:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf812 axis821
-private theorem axis823:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf811 axis822
-private theorem axis824:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf810 axis823
-private theorem axis825:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf809 axis824
-private theorem axis826:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf808 axis825
-private theorem axis827:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf807 axis826
-private theorem axis828:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf806 axis827
-private theorem axis829:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf805 axis828
-private theorem axis830:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf804 axis829
-private theorem axis831:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf803 axis830
-private theorem axis832:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf802 axis831
-private theorem axis833:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf801 axis832
-private theorem allAxes834:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis833
-private theorem leaf835:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6375 PairReceipts.choice6375 PairReceipts.check6375 (none) (by decide)
-private theorem leaf836:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6376 PairReceipts.choice6376 PairReceipts.check6376 (none) (by decide)
-private theorem leaf837:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6377 PairReceipts.choice6377 PairReceipts.check6377 (none) (by decide)
-private theorem leaf838:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6378 PairReceipts.choice6378 PairReceipts.check6378 (none) (by decide)
-private theorem leaf839:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6379 PairReceipts.choice6379 PairReceipts.check6379 (none) (by decide)
-private theorem leaf840:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6380 PairReceipts.choice6380 PairReceipts.check6380 (none) (by decide)
-private theorem leaf841:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6381 PairReceipts.choice6381 PairReceipts.check6381 (none) (by decide)
-private theorem leaf842:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6382 PairReceipts.choice6382 PairReceipts.check6382 (none) (by decide)
-private theorem leaf843:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6383 PairReceipts.choice6383 PairReceipts.check6383 (none) (by decide)
-private theorem leaf844:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6384 PairReceipts.choice6384 PairReceipts.check6384 (none) (by decide)
-private theorem leaf845:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6385 PairReceipts.choice6385 PairReceipts.check6385 (none) (by decide)
-private theorem leaf846:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6386 PairReceipts.choice6386 PairReceipts.check6386 (none) (by decide)
-private theorem leaf847:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6387 PairReceipts.check6387 (by decide) (none)
-private theorem leaf848:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6388 PairReceipts.check6388 (by decide) (none)
-private theorem leaf849:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6389 PairReceipts.check6389 (by decide) (none)
-private theorem leaf850:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6390 PairReceipts.check6390 (by decide) (none)
-private theorem leaf851:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6391 PairReceipts.check6391 (by decide) (none)
-private theorem axis852:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf850 leaf851
-private theorem axis853:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf849 axis852
-private theorem axis854:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf848 axis853
-private theorem axis855:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf847 axis854
-private theorem axis856:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf846 axis855
-private theorem axis857:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf845 axis856
-private theorem axis858:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf844 axis857
-private theorem axis859:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf843 axis858
-private theorem axis860:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf842 axis859
-private theorem axis861:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf841 axis860
-private theorem axis862:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf840 axis861
-private theorem axis863:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf839 axis862
-private theorem axis864:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf838 axis863
-private theorem axis865:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf837 axis864
-private theorem axis866:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf836 axis865
-private theorem axis867:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf835 axis866
-private theorem allAxes868:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis867
-private theorem leaf869:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6392 PairReceipts.choice6392 PairReceipts.check6392 (none) (by decide)
-private theorem leaf870:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6393 PairReceipts.choice6393 PairReceipts.check6393 (none) (by decide)
-private theorem leaf871:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6394 PairReceipts.choice6394 PairReceipts.check6394 (none) (by decide)
-private theorem leaf872:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6395 PairReceipts.choice6395 PairReceipts.check6395 (none) (by decide)
-private theorem leaf873:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6396 PairReceipts.choice6396 PairReceipts.check6396 (none) (by decide)
-private theorem leaf874:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6397 PairReceipts.choice6397 PairReceipts.check6397 (none) (by decide)
-private theorem leaf875:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6398 PairReceipts.choice6398 PairReceipts.check6398 (none) (by decide)
-private theorem leaf876:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6399 PairReceipts.choice6399 PairReceipts.check6399 (none) (by decide)
-private theorem leaf877:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6400 PairReceipts.choice6400 PairReceipts.check6400 (none) (by decide)
-private theorem leaf878:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6401 PairReceipts.choice6401 PairReceipts.check6401 (none) (by decide)
-private theorem leaf879:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6402 PairReceipts.choice6402 PairReceipts.check6402 (none) (by decide)
-private theorem leaf880:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6403 PairReceipts.choice6403 PairReceipts.check6403 (none) (by decide)
-private theorem leaf881:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6404 PairReceipts.check6404 (by decide) (none)
-private theorem leaf882:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6405 PairReceipts.check6405 (by decide) (none)
-private theorem leaf883:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6406 PairReceipts.check6406 (by decide) (none)
-private theorem leaf884:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6407 PairReceipts.check6407 (by decide) (none)
-private theorem leaf885:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6408 PairReceipts.check6408 (by decide) (none)
-private theorem axis886:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf884 leaf885
-private theorem axis887:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf883 axis886
-private theorem axis888:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf882 axis887
-private theorem axis889:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf881 axis888
-private theorem axis890:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf880 axis889
-private theorem axis891:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf879 axis890
-private theorem axis892:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf878 axis891
-private theorem axis893:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf877 axis892
-private theorem axis894:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf876 axis893
-private theorem axis895:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf875 axis894
-private theorem axis896:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf874 axis895
-private theorem axis897:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf873 axis896
-private theorem axis898:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf872 axis897
-private theorem axis899:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf871 axis898
-private theorem axis900:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf870 axis899
-private theorem axis901:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf869 axis900
-private theorem allAxes902:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis901
-private theorem leaf903:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6409 PairReceipts.choice6409 PairReceipts.check6409 (none) (by decide)
-private theorem leaf904:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6410 PairReceipts.choice6410 PairReceipts.check6410 (none) (by decide)
-private theorem leaf905:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6411 PairReceipts.choice6411 PairReceipts.check6411 (none) (by decide)
-private theorem leaf906:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6412 PairReceipts.choice6412 PairReceipts.check6412 (none) (by decide)
-private theorem leaf907:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6413 PairReceipts.choice6413 PairReceipts.check6413 (none) (by decide)
-private theorem leaf908:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6414 PairReceipts.choice6414 PairReceipts.check6414 (none) (by decide)
-private theorem leaf909:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6415 PairReceipts.choice6415 PairReceipts.check6415 (none) (by decide)
-private theorem leaf910:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6416 PairReceipts.choice6416 PairReceipts.check6416 (none) (by decide)
-private theorem leaf911:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6417 PairReceipts.choice6417 PairReceipts.check6417 (none) (by decide)
-private theorem leaf912:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6418 PairReceipts.choice6418 PairReceipts.check6418 (none) (by decide)
-private theorem leaf913:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6419 PairReceipts.choice6419 PairReceipts.check6419 (none) (by decide)
-private theorem leaf914:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6420 PairReceipts.choice6420 PairReceipts.check6420 (none) (by decide)
-private theorem leaf915:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6421 PairReceipts.check6421 (by decide) (none)
-private theorem leaf916:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6422 PairReceipts.check6422 (by decide) (none)
-private theorem leaf917:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6423 PairReceipts.check6423 (by decide) (none)
-private theorem leaf918:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6424 PairReceipts.check6424 (by decide) (none)
-private theorem leaf919:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6425 PairReceipts.check6425 (by decide) (none)
-private theorem axis920:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,15,some 16,386045,none⟩:=PairRoute.axis 15 leaf918 leaf919
-private theorem axis921:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,14,some 16,386045,none⟩:=PairRoute.axis 14 leaf917 axis920
-private theorem axis922:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,13,some 16,386045,none⟩:=PairRoute.axis 13 leaf916 axis921
-private theorem axis923:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,12,some 16,386045,none⟩:=PairRoute.axis 12 leaf915 axis922
-private theorem axis924:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,11,some 16,386045,none⟩:=PairRoute.axis 11 leaf914 axis923
-private theorem axis925:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,10,some 16,386045,none⟩:=PairRoute.axis 10 leaf913 axis924
-private theorem axis926:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,9,some 16,386045,none⟩:=PairRoute.axis 9 leaf912 axis925
-private theorem axis927:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,8,some 16,386045,none⟩:=PairRoute.axis 8 leaf911 axis926
-private theorem axis928:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,7,some 16,386045,none⟩:=PairRoute.axis 7 leaf910 axis927
-private theorem axis929:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,6,some 16,386045,none⟩:=PairRoute.axis 6 leaf909 axis928
-private theorem axis930:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,5,some 16,386045,none⟩:=PairRoute.axis 5 leaf908 axis929
-private theorem axis931:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,4,some 16,386045,none⟩:=PairRoute.axis 4 leaf907 axis930
-private theorem axis932:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,3,some 16,386045,none⟩:=PairRoute.axis 3 leaf906 axis931
-private theorem axis933:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,2,some 16,386045,none⟩:=PairRoute.axis 2 leaf905 axis932
-private theorem axis934:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,1,some 16,386045,none⟩:=PairRoute.axis 1 leaf904 axis933
-private theorem axis935:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,0,some 16,386045,none⟩:=PairRoute.axis 0 leaf903 axis934
-private theorem allAxes936:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis935
-private theorem grade937:PairRoute.Done (2:Fin 18) ⟨⟨62,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 62 allAxes902 allAxes936
-private theorem grade938:PairRoute.Done (2:Fin 18) ⟨⟨61,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 61 allAxes868 grade937
-private theorem grade939:PairRoute.Done (2:Fin 18) ⟨⟨60,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 60 allAxes834 grade938
-private theorem grade940:PairRoute.Done (2:Fin 18) ⟨⟨59,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 59 allAxes800 grade939
-private theorem grade941:PairRoute.Done (2:Fin 18) ⟨⟨58,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 58 allAxes766 grade940
-private theorem grade942:PairRoute.Done (2:Fin 18) ⟨⟨57,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 57 allAxes732 grade941
-private theorem grade943:PairRoute.Done (2:Fin 18) ⟨⟨56,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 56 allAxes698 grade942
-private theorem grade944:PairRoute.Done (2:Fin 18) ⟨⟨55,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 55 allAxes664 grade943
-private theorem grade945:PairRoute.Done (2:Fin 18) ⟨⟨54,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 54 allAxes630 grade944
-private theorem grade946:PairRoute.Done (2:Fin 18) ⟨⟨53,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 53 allAxes596 grade945
-private theorem grade947:PairRoute.Done (2:Fin 18) ⟨⟨52,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 52 allAxes562 grade946
-private theorem grade948:PairRoute.Done (2:Fin 18) ⟨⟨51,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 51 allAxes528 grade947
-private theorem grade949:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,16,some 16⟩,0,none,386045,none⟩:=PairRoute.grade 50 allAxes494 grade948
+private theorem allAxes494:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6180 2),
+    (PairReceipts.route6180 3),
+    (PairReceipts.route6180 4),
+    (PairReceipts.route6180 5),
+    (PairReceipts.route6180 6),
+    (PairReceipts.route6180 7),
+    (PairReceipts.route6180 8),
+    (PairReceipts.route6180 9),
+    (PairReceipts.route6180 10),
+    (PairReceipts.route6180 11),
+    PairLeaves.three PairReceipts.cell6198 PairReceipts.check6198 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6199 PairReceipts.check6199 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6200 PairReceipts.check6200 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6201 PairReceipts.check6201 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6202 PairReceipts.check6202 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6203 PairReceipts.check6203 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6204 PairReceipts.check6204 (by decide) (none),
+    trivial⟩)
+private theorem allAxes528:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6205 0),
+    (PairReceipts.route6205 1),
+    (PairReceipts.route6205 2),
+    (PairReceipts.route6205 3),
+    (PairReceipts.route6205 4),
+    (PairReceipts.route6205 5),
+    (PairReceipts.route6205 6),
+    (PairReceipts.route6205 7),
+    (PairReceipts.route6205 8),
+    (PairReceipts.route6205 9),
+    (PairReceipts.route6205 10),
+    PairLeaves.three PairReceipts.cell6216 PairReceipts.check6216 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6217 PairReceipts.check6217 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6218 PairReceipts.check6218 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6219 PairReceipts.check6219 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6220 PairReceipts.check6220 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6221 PairReceipts.check6221 (by decide) (none),
+    trivial⟩)
+private theorem allAxes562:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6222 0),
+    (PairReceipts.route6222 1),
+    (PairReceipts.route6222 2),
+    (PairReceipts.route6222 3),
+    (PairReceipts.route6222 4),
+    (PairReceipts.route6222 5),
+    (PairReceipts.route6222 6),
+    (PairReceipts.route6222 7),
+    (PairReceipts.route6222 8),
+    (PairReceipts.route6222 9),
+    (PairReceipts.route6222 10),
+    PairLeaves.three PairReceipts.cell6233 PairReceipts.check6233 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6234 PairReceipts.check6234 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6235 PairReceipts.check6235 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6236 PairReceipts.check6236 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6237 PairReceipts.check6237 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6238 PairReceipts.check6238 (by decide) (none),
+    trivial⟩)
+private theorem allAxes596:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6222 11),
+    (PairReceipts.route6240 0),
+    (PairReceipts.route6240 1),
+    (PairReceipts.route6240 2),
+    (PairReceipts.route6240 3),
+    (PairReceipts.route6240 4),
+    (PairReceipts.route6240 5),
+    (PairReceipts.route6240 6),
+    (PairReceipts.route6240 7),
+    (PairReceipts.route6240 8),
+    (PairReceipts.route6240 9),
+    PairLeaves.three PairReceipts.cell6250 PairReceipts.check6250 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6251 PairReceipts.check6251 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6252 PairReceipts.check6252 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6253 PairReceipts.check6253 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6254 PairReceipts.check6254 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6255 PairReceipts.check6255 (by decide) (none),
+    trivial⟩)
+private theorem allAxes630:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6240 10),
+    (PairReceipts.route6240 11),
+    (PairReceipts.route6240 12),
+    (PairReceipts.route6240 13),
+    (PairReceipts.route6260 0),
+    (PairReceipts.route6260 1),
+    (PairReceipts.route6260 2),
+    (PairReceipts.route6260 3),
+    (PairReceipts.route6260 4),
+    (PairReceipts.route6260 5),
+    (PairReceipts.route6260 6),
+    PairLeaves.three PairReceipts.cell6267 PairReceipts.check6267 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6268 PairReceipts.check6268 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6269 PairReceipts.check6269 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6270 PairReceipts.check6270 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6271 PairReceipts.check6271 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6272 PairReceipts.check6272 (by decide) (none),
+    trivial⟩)
+private theorem allAxes664:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6260 7),
+    (PairReceipts.route6260 8),
+    (PairReceipts.route6260 9),
+    (PairReceipts.route6260 10),
+    (PairReceipts.route6260 11),
+    (PairReceipts.route6260 12),
+    (PairReceipts.route6260 13),
+    (PairReceipts.route6280 0),
+    (PairReceipts.route6280 1),
+    (PairReceipts.route6280 2),
+    (PairReceipts.route6280 3),
+    PairLeaves.three PairReceipts.cell6284 PairReceipts.check6284 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6285 PairReceipts.check6285 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6286 PairReceipts.check6286 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6287 PairReceipts.check6287 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6288 PairReceipts.check6288 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6289 PairReceipts.check6289 (by decide) (none),
+    trivial⟩)
+private theorem allAxes698:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6280 4),
+    (PairReceipts.route6280 5),
+    (PairReceipts.route6280 6),
+    (PairReceipts.route6280 7),
+    (PairReceipts.route6280 8),
+    (PairReceipts.route6280 9),
+    (PairReceipts.route6280 10),
+    (PairReceipts.route6280 11),
+    (PairReceipts.route6280 12),
+    (PairReceipts.route6280 13),
+    (PairReceipts.route6300 0),
+    (PairReceipts.route6300 1),
+    PairLeaves.three PairReceipts.cell6302 PairReceipts.check6302 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6303 PairReceipts.check6303 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6304 PairReceipts.check6304 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6305 PairReceipts.check6305 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6306 PairReceipts.check6306 (by decide) (none),
+    trivial⟩)
+private theorem allAxes732:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6300 2),
+    (PairReceipts.route6300 3),
+    (PairReceipts.route6300 4),
+    (PairReceipts.route6300 5),
+    (PairReceipts.route6300 6),
+    (PairReceipts.route6300 7),
+    (PairReceipts.route6300 8),
+    (PairReceipts.route6300 9),
+    (PairReceipts.route6300 10),
+    (PairReceipts.route6300 11),
+    (PairReceipts.route6300 12),
+    (PairReceipts.route6300 13),
+    PairLeaves.three PairReceipts.cell6319 PairReceipts.check6319 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6320 PairReceipts.check6320 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6321 PairReceipts.check6321 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6322 PairReceipts.check6322 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6323 PairReceipts.check6323 (by decide) (none),
+    trivial⟩)
+private theorem allAxes766:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6324 0),
+    (PairReceipts.route6324 1),
+    (PairReceipts.route6324 2),
+    (PairReceipts.route6324 3),
+    (PairReceipts.route6324 4),
+    (PairReceipts.route6324 5),
+    (PairReceipts.route6324 6),
+    (PairReceipts.route6324 7),
+    (PairReceipts.route6324 8),
+    (PairReceipts.route6324 9),
+    (PairReceipts.route6324 10),
+    (PairReceipts.route6324 11),
+    PairLeaves.three PairReceipts.cell6336 PairReceipts.check6336 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6337 PairReceipts.check6337 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6338 PairReceipts.check6338 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6339 PairReceipts.check6339 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6340 PairReceipts.check6340 (by decide) (none),
+    trivial⟩)
+private theorem allAxes800:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6341 0),
+    (PairReceipts.route6341 1),
+    (PairReceipts.route6341 2),
+    (PairReceipts.route6341 3),
+    (PairReceipts.route6341 4),
+    (PairReceipts.route6341 5),
+    (PairReceipts.route6341 6),
+    (PairReceipts.route6341 7),
+    (PairReceipts.route6341 8),
+    (PairReceipts.route6341 9),
+    (PairReceipts.route6341 10),
+    (PairReceipts.route6341 11),
+    PairLeaves.three PairReceipts.cell6353 PairReceipts.check6353 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6354 PairReceipts.check6354 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6355 PairReceipts.check6355 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6356 PairReceipts.check6356 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6357 PairReceipts.check6357 (by decide) (none),
+    trivial⟩)
+private theorem allAxes834:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6341 12),
+    (PairReceipts.route6341 13),
+    (PairReceipts.route6360 0),
+    (PairReceipts.route6360 1),
+    (PairReceipts.route6360 2),
+    (PairReceipts.route6360 3),
+    (PairReceipts.route6360 4),
+    (PairReceipts.route6360 5),
+    (PairReceipts.route6360 6),
+    (PairReceipts.route6360 7),
+    (PairReceipts.route6360 8),
+    (PairReceipts.route6360 9),
+    PairLeaves.three PairReceipts.cell6370 PairReceipts.check6370 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6371 PairReceipts.check6371 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6372 PairReceipts.check6372 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6373 PairReceipts.check6373 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6374 PairReceipts.check6374 (by decide) (none),
+    trivial⟩)
+private theorem allAxes868:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6360 10),
+    (PairReceipts.route6360 11),
+    (PairReceipts.route6360 12),
+    (PairReceipts.route6360 13),
+    (PairReceipts.route6360 14),
+    (PairReceipts.route6380 0),
+    (PairReceipts.route6380 1),
+    (PairReceipts.route6380 2),
+    (PairReceipts.route6380 3),
+    (PairReceipts.route6380 4),
+    (PairReceipts.route6380 5),
+    (PairReceipts.route6380 6),
+    PairLeaves.three PairReceipts.cell6387 PairReceipts.check6387 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6388 PairReceipts.check6388 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6389 PairReceipts.check6389 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6390 PairReceipts.check6390 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6391 PairReceipts.check6391 (by decide) (none),
+    trivial⟩)
+private theorem allAxes902:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6380 7),
+    (PairReceipts.route6380 8),
+    (PairReceipts.route6380 9),
+    (PairReceipts.route6380 10),
+    (PairReceipts.route6380 11),
+    (PairReceipts.route6380 12),
+    (PairReceipts.route6380 13),
+    (PairReceipts.route6380 14),
+    (PairReceipts.route6400 0),
+    (PairReceipts.route6400 1),
+    (PairReceipts.route6400 2),
+    (PairReceipts.route6400 3),
+    PairLeaves.three PairReceipts.cell6404 PairReceipts.check6404 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6405 PairReceipts.check6405 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6406 PairReceipts.check6406 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6407 PairReceipts.check6407 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6408 PairReceipts.check6408 (by decide) (none),
+    trivial⟩)
+private theorem allAxes936:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,16,some 16⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 16 ⟨
+    (PairReceipts.route6400 4),
+    (PairReceipts.route6400 5),
+    (PairReceipts.route6400 6),
+    (PairReceipts.route6400 7),
+    (PairReceipts.route6400 8),
+    (PairReceipts.route6400 9),
+    (PairReceipts.route6400 10),
+    (PairReceipts.route6400 11),
+    (PairReceipts.route6400 12),
+    (PairReceipts.route6400 13),
+    (PairReceipts.route6400 14),
+    (PairReceipts.route6420 0),
+    PairLeaves.three PairReceipts.cell6421 PairReceipts.check6421 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6422 PairReceipts.check6422 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6423 PairReceipts.check6423 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6424 PairReceipts.check6424 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6425 PairReceipts.check6425 (by decide) (none),
+    trivial⟩)
+private def grade937 := PairRoute.grade 62 allAxes902 allAxes936
+private def grade938 := PairRoute.grade 61 allAxes868 grade937
+private def grade939 := PairRoute.grade 60 allAxes834 grade938
+private def grade940 := PairRoute.grade 59 allAxes800 grade939
+private def grade941 := PairRoute.grade 58 allAxes766 grade940
+private def grade942 := PairRoute.grade 57 allAxes732 grade941
+private def grade943 := PairRoute.grade 56 allAxes698 grade942
+private def grade944 := PairRoute.grade 55 allAxes664 grade943
+private def grade945 := PairRoute.grade 54 allAxes630 grade944
+private def grade946 := PairRoute.grade 53 allAxes596 grade945
+private def grade947 := PairRoute.grade 52 allAxes562 grade946
+private def grade948 := PairRoute.grade 51 allAxes528 grade947
+private def grade949 := PairRoute.grade 50 allAxes494 grade948
 theorem case141: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,16,some 16⟩:=PairRoute.start _ grade949
-private theorem leaf950:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell5936 PairReceipts.choice5936 PairReceipts.check5936 (none) (by decide)
-private theorem leaf951:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell5937 PairReceipts.choice5937 PairReceipts.check5937 (none) (by decide)
-private theorem leaf952:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell5938 PairReceipts.choice5938 PairReceipts.check5938 (none) (by decide)
-private theorem leaf953:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell5939 PairReceipts.choice5939 PairReceipts.check5939 (none) (by decide)
-private theorem leaf954:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell5940 PairReceipts.choice5940 PairReceipts.check5940 (none) (by decide)
-private theorem leaf955:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell5941 PairReceipts.choice5941 PairReceipts.check5941 (none) (by decide)
-private theorem leaf956:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell5942 PairReceipts.choice5942 PairReceipts.check5942 (none) (by decide)
-private theorem leaf957:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell5943 PairReceipts.choice5943 PairReceipts.check5943 (none) (by decide)
-private theorem leaf958:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell5944 PairReceipts.choice5944 PairReceipts.check5944 (none) (by decide)
-private theorem leaf959:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell5945 PairReceipts.choice5945 PairReceipts.check5945 (none) (by decide)
-private theorem leaf960:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.three PairReceipts.cell5946 PairReceipts.check5946 (by decide) (none)
-private theorem leaf961:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell5947 PairReceipts.check5947 (by decide) (none)
-private theorem leaf962:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell5948 PairReceipts.check5948 (by decide) (none)
-private theorem leaf963:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell5949 PairReceipts.check5949 (by decide) (none)
-private theorem leaf964:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell5950 PairReceipts.check5950 (by decide) (none)
-private theorem leaf965:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell5951 PairReceipts.check5951 (by decide) (none)
-private theorem leaf966:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell5952 PairReceipts.check5952 (by decide) (none)
-private theorem leaf967:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell5953 PairReceipts.check5953 (by decide) (none)
-private theorem axis968:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf966 leaf967
-private theorem axis969:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf965 axis968
-private theorem axis970:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf964 axis969
-private theorem axis971:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf963 axis970
-private theorem axis972:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf962 axis971
-private theorem axis973:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf961 axis972
-private theorem axis974:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf960 axis973
-private theorem axis975:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf959 axis974
-private theorem axis976:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf958 axis975
-private theorem axis977:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf957 axis976
-private theorem axis978:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf956 axis977
-private theorem axis979:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf955 axis978
-private theorem axis980:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf954 axis979
-private theorem axis981:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf953 axis980
-private theorem axis982:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf952 axis981
-private theorem axis983:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf951 axis982
-private theorem axis984:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf950 axis983
-private theorem allAxes985:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis984
-private theorem leaf986:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell5954 PairReceipts.choice5954 PairReceipts.check5954 (none) (by decide)
-private theorem leaf987:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell5955 PairReceipts.choice5955 PairReceipts.check5955 (none) (by decide)
-private theorem leaf988:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell5956 PairReceipts.choice5956 PairReceipts.check5956 (none) (by decide)
-private theorem leaf989:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell5957 PairReceipts.choice5957 PairReceipts.check5957 (none) (by decide)
-private theorem leaf990:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell5958 PairReceipts.choice5958 PairReceipts.check5958 (none) (by decide)
-private theorem leaf991:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell5959 PairReceipts.choice5959 PairReceipts.check5959 (none) (by decide)
-private theorem leaf992:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell5960 PairReceipts.choice5960 PairReceipts.check5960 (none) (by decide)
-private theorem leaf993:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell5961 PairReceipts.choice5961 PairReceipts.check5961 (none) (by decide)
-private theorem leaf994:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell5962 PairReceipts.choice5962 PairReceipts.check5962 (none) (by decide)
-private theorem leaf995:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell5963 PairReceipts.choice5963 PairReceipts.check5963 (none) (by decide)
-private theorem leaf996:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell5964 PairReceipts.choice5964 PairReceipts.check5964 (none) (by decide)
-private theorem leaf997:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell5965 PairReceipts.check5965 (by decide) (none)
-private theorem leaf998:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell5966 PairReceipts.check5966 (by decide) (none)
-private theorem leaf999:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell5967 PairReceipts.check5967 (by decide) (none)
-private theorem leaf1000:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell5968 PairReceipts.check5968 (by decide) (none)
-private theorem leaf1001:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell5969 PairReceipts.check5969 (by decide) (none)
-private theorem leaf1002:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell5970 PairReceipts.check5970 (by decide) (none)
-private theorem leaf1003:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell5971 PairReceipts.check5971 (by decide) (none)
-private theorem axis1004:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1002 leaf1003
-private theorem axis1005:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1001 axis1004
-private theorem axis1006:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1000 axis1005
-private theorem axis1007:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf999 axis1006
-private theorem axis1008:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf998 axis1007
-private theorem axis1009:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf997 axis1008
-private theorem axis1010:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf996 axis1009
-private theorem axis1011:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf995 axis1010
-private theorem axis1012:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf994 axis1011
-private theorem axis1013:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf993 axis1012
-private theorem axis1014:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf992 axis1013
-private theorem axis1015:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf991 axis1014
-private theorem axis1016:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf990 axis1015
-private theorem axis1017:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf989 axis1016
-private theorem axis1018:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf988 axis1017
-private theorem axis1019:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf987 axis1018
-private theorem axis1020:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf986 axis1019
-private theorem allAxes1021:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1020
-private theorem leaf1022:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell5972 PairReceipts.choice5972 PairReceipts.check5972 (none) (by decide)
-private theorem leaf1023:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell5973 PairReceipts.choice5973 PairReceipts.check5973 (none) (by decide)
-private theorem leaf1024:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell5974 PairReceipts.choice5974 PairReceipts.check5974 (none) (by decide)
-private theorem leaf1025:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell5975 PairReceipts.choice5975 PairReceipts.check5975 (none) (by decide)
-private theorem leaf1026:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell5976 PairReceipts.choice5976 PairReceipts.check5976 (none) (by decide)
-private theorem leaf1027:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell5977 PairReceipts.choice5977 PairReceipts.check5977 (none) (by decide)
-private theorem leaf1028:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell5978 PairReceipts.choice5978 PairReceipts.check5978 (none) (by decide)
-private theorem leaf1029:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell5979 PairReceipts.choice5979 PairReceipts.check5979 (none) (by decide)
-private theorem leaf1030:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell5980 PairReceipts.choice5980 PairReceipts.check5980 (none) (by decide)
-private theorem leaf1031:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell5981 PairReceipts.choice5981 PairReceipts.check5981 (none) (by decide)
-private theorem leaf1032:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell5982 PairReceipts.choice5982 PairReceipts.check5982 (none) (by decide)
-private theorem leaf1033:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell5983 PairReceipts.check5983 (by decide) (none)
-private theorem leaf1034:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell5984 PairReceipts.check5984 (by decide) (none)
-private theorem leaf1035:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell5985 PairReceipts.check5985 (by decide) (none)
-private theorem leaf1036:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell5986 PairReceipts.check5986 (by decide) (none)
-private theorem leaf1037:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell5987 PairReceipts.check5987 (by decide) (none)
-private theorem leaf1038:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell5988 PairReceipts.check5988 (by decide) (none)
-private theorem leaf1039:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell5989 PairReceipts.check5989 (by decide) (none)
-private theorem axis1040:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1038 leaf1039
-private theorem axis1041:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1037 axis1040
-private theorem axis1042:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1036 axis1041
-private theorem axis1043:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1035 axis1042
-private theorem axis1044:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1034 axis1043
-private theorem axis1045:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1033 axis1044
-private theorem axis1046:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1032 axis1045
-private theorem axis1047:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1031 axis1046
-private theorem axis1048:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1030 axis1047
-private theorem axis1049:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1029 axis1048
-private theorem axis1050:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1028 axis1049
-private theorem axis1051:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1027 axis1050
-private theorem axis1052:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1026 axis1051
-private theorem axis1053:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1025 axis1052
-private theorem axis1054:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1024 axis1053
-private theorem axis1055:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1023 axis1054
-private theorem axis1056:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1022 axis1055
-private theorem allAxes1057:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1056
-private theorem leaf1058:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell5990 PairReceipts.choice5990 PairReceipts.check5990 (none) (by decide)
-private theorem leaf1059:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell5991 PairReceipts.choice5991 PairReceipts.check5991 (none) (by decide)
-private theorem leaf1060:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell5992 PairReceipts.choice5992 PairReceipts.check5992 (none) (by decide)
-private theorem leaf1061:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell5993 PairReceipts.choice5993 PairReceipts.check5993 (none) (by decide)
-private theorem leaf1062:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell5994 PairReceipts.choice5994 PairReceipts.check5994 (none) (by decide)
-private theorem leaf1063:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell5995 PairReceipts.choice5995 PairReceipts.check5995 (none) (by decide)
-private theorem leaf1064:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell5996 PairReceipts.choice5996 PairReceipts.check5996 (none) (by decide)
-private theorem leaf1065:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell5997 PairReceipts.choice5997 PairReceipts.check5997 (none) (by decide)
-private theorem leaf1066:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell5998 PairReceipts.choice5998 PairReceipts.check5998 (none) (by decide)
-private theorem leaf1067:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell5999 PairReceipts.choice5999 PairReceipts.check5999 (none) (by decide)
-private theorem leaf1068:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6000 PairReceipts.choice6000 PairReceipts.check6000 (none) (by decide)
-private theorem leaf1069:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6001 PairReceipts.check6001 (by decide) (none)
-private theorem leaf1070:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6002 PairReceipts.check6002 (by decide) (none)
-private theorem leaf1071:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6003 PairReceipts.check6003 (by decide) (none)
-private theorem leaf1072:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6004 PairReceipts.check6004 (by decide) (none)
-private theorem leaf1073:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6005 PairReceipts.check6005 (by decide) (none)
-private theorem leaf1074:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6006 PairReceipts.check6006 (by decide) (none)
-private theorem leaf1075:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6007 PairReceipts.check6007 (by decide) (none)
-private theorem axis1076:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1074 leaf1075
-private theorem axis1077:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1073 axis1076
-private theorem axis1078:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1072 axis1077
-private theorem axis1079:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1071 axis1078
-private theorem axis1080:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1070 axis1079
-private theorem axis1081:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1069 axis1080
-private theorem axis1082:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1068 axis1081
-private theorem axis1083:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1067 axis1082
-private theorem axis1084:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1066 axis1083
-private theorem axis1085:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1065 axis1084
-private theorem axis1086:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1064 axis1085
-private theorem axis1087:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1063 axis1086
-private theorem axis1088:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1062 axis1087
-private theorem axis1089:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1061 axis1088
-private theorem axis1090:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1060 axis1089
-private theorem axis1091:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1059 axis1090
-private theorem axis1092:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1058 axis1091
-private theorem allAxes1093:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1092
-private theorem leaf1094:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6008 PairReceipts.choice6008 PairReceipts.check6008 (none) (by decide)
-private theorem leaf1095:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6009 PairReceipts.choice6009 PairReceipts.check6009 (none) (by decide)
-private theorem leaf1096:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6010 PairReceipts.choice6010 PairReceipts.check6010 (none) (by decide)
-private theorem leaf1097:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6011 PairReceipts.choice6011 PairReceipts.check6011 (none) (by decide)
-private theorem leaf1098:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6012 PairReceipts.choice6012 PairReceipts.check6012 (none) (by decide)
-private theorem leaf1099:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6013 PairReceipts.choice6013 PairReceipts.check6013 (none) (by decide)
-private theorem leaf1100:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6014 PairReceipts.choice6014 PairReceipts.check6014 (none) (by decide)
-private theorem leaf1101:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6015 PairReceipts.choice6015 PairReceipts.check6015 (none) (by decide)
-private theorem leaf1102:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6016 PairReceipts.choice6016 PairReceipts.check6016 (none) (by decide)
-private theorem leaf1103:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6017 PairReceipts.choice6017 PairReceipts.check6017 (none) (by decide)
-private theorem leaf1104:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6018 PairReceipts.choice6018 PairReceipts.check6018 (none) (by decide)
-private theorem leaf1105:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6019 PairReceipts.check6019 (by decide) (none)
-private theorem leaf1106:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6020 PairReceipts.check6020 (by decide) (none)
-private theorem leaf1107:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6021 PairReceipts.check6021 (by decide) (none)
-private theorem leaf1108:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6022 PairReceipts.check6022 (by decide) (none)
-private theorem leaf1109:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6023 PairReceipts.check6023 (by decide) (none)
-private theorem leaf1110:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6024 PairReceipts.check6024 (by decide) (none)
-private theorem leaf1111:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6025 PairReceipts.check6025 (by decide) (none)
-private theorem axis1112:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1110 leaf1111
-private theorem axis1113:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1109 axis1112
-private theorem axis1114:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1108 axis1113
-private theorem axis1115:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1107 axis1114
-private theorem axis1116:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1106 axis1115
-private theorem axis1117:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1105 axis1116
-private theorem axis1118:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1104 axis1117
-private theorem axis1119:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1103 axis1118
-private theorem axis1120:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1102 axis1119
-private theorem axis1121:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1101 axis1120
-private theorem axis1122:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1100 axis1121
-private theorem axis1123:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1099 axis1122
-private theorem axis1124:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1098 axis1123
-private theorem axis1125:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1097 axis1124
-private theorem axis1126:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1096 axis1125
-private theorem axis1127:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1095 axis1126
-private theorem axis1128:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1094 axis1127
-private theorem allAxes1129:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1128
-private theorem leaf1130:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6026 PairReceipts.choice6026 PairReceipts.check6026 (none) (by decide)
-private theorem leaf1131:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6027 PairReceipts.choice6027 PairReceipts.check6027 (none) (by decide)
-private theorem leaf1132:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6028 PairReceipts.choice6028 PairReceipts.check6028 (none) (by decide)
-private theorem leaf1133:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6029 PairReceipts.choice6029 PairReceipts.check6029 (none) (by decide)
-private theorem leaf1134:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6030 PairReceipts.choice6030 PairReceipts.check6030 (none) (by decide)
-private theorem leaf1135:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6031 PairReceipts.choice6031 PairReceipts.check6031 (none) (by decide)
-private theorem leaf1136:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6032 PairReceipts.choice6032 PairReceipts.check6032 (none) (by decide)
-private theorem leaf1137:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6033 PairReceipts.choice6033 PairReceipts.check6033 (none) (by decide)
-private theorem leaf1138:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6034 PairReceipts.choice6034 PairReceipts.check6034 (none) (by decide)
-private theorem leaf1139:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6035 PairReceipts.choice6035 PairReceipts.check6035 (none) (by decide)
-private theorem leaf1140:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6036 PairReceipts.choice6036 PairReceipts.check6036 (none) (by decide)
-private theorem leaf1141:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.three PairReceipts.cell6037 PairReceipts.check6037 (by decide) (none)
-private theorem leaf1142:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6038 PairReceipts.check6038 (by decide) (none)
-private theorem leaf1143:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6039 PairReceipts.check6039 (by decide) (none)
-private theorem leaf1144:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6040 PairReceipts.check6040 (by decide) (none)
-private theorem leaf1145:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6041 PairReceipts.check6041 (by decide) (none)
-private theorem leaf1146:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6042 PairReceipts.check6042 (by decide) (none)
-private theorem leaf1147:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6043 PairReceipts.check6043 (by decide) (none)
-private theorem axis1148:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1146 leaf1147
-private theorem axis1149:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1145 axis1148
-private theorem axis1150:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1144 axis1149
-private theorem axis1151:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1143 axis1150
-private theorem axis1152:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1142 axis1151
-private theorem axis1153:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1141 axis1152
-private theorem axis1154:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1140 axis1153
-private theorem axis1155:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1139 axis1154
-private theorem axis1156:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1138 axis1155
-private theorem axis1157:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1137 axis1156
-private theorem axis1158:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1136 axis1157
-private theorem axis1159:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1135 axis1158
-private theorem axis1160:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1134 axis1159
-private theorem axis1161:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1133 axis1160
-private theorem axis1162:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1132 axis1161
-private theorem axis1163:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1131 axis1162
-private theorem axis1164:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1130 axis1163
-private theorem allAxes1165:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1164
-private theorem leaf1166:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6044 PairReceipts.choice6044 PairReceipts.check6044 (none) (by decide)
-private theorem leaf1167:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6045 PairReceipts.choice6045 PairReceipts.check6045 (none) (by decide)
-private theorem leaf1168:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6046 PairReceipts.choice6046 PairReceipts.check6046 (none) (by decide)
-private theorem leaf1169:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6047 PairReceipts.choice6047 PairReceipts.check6047 (none) (by decide)
-private theorem leaf1170:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6048 PairReceipts.choice6048 PairReceipts.check6048 (none) (by decide)
-private theorem leaf1171:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6049 PairReceipts.choice6049 PairReceipts.check6049 (none) (by decide)
-private theorem leaf1172:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6050 PairReceipts.choice6050 PairReceipts.check6050 (none) (by decide)
-private theorem leaf1173:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6051 PairReceipts.choice6051 PairReceipts.check6051 (none) (by decide)
-private theorem leaf1174:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6052 PairReceipts.choice6052 PairReceipts.check6052 (none) (by decide)
-private theorem leaf1175:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6053 PairReceipts.choice6053 PairReceipts.check6053 (none) (by decide)
-private theorem leaf1176:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6054 PairReceipts.choice6054 PairReceipts.check6054 (none) (by decide)
-private theorem leaf1177:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6055 PairReceipts.choice6055 PairReceipts.check6055 (none) (by decide)
-private theorem leaf1178:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6056 PairReceipts.check6056 (by decide) (none)
-private theorem leaf1179:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6057 PairReceipts.check6057 (by decide) (none)
-private theorem leaf1180:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6058 PairReceipts.check6058 (by decide) (none)
-private theorem leaf1181:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6059 PairReceipts.check6059 (by decide) (none)
-private theorem leaf1182:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6060 PairReceipts.check6060 (by decide) (none)
-private theorem leaf1183:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6061 PairReceipts.check6061 (by decide) (none)
-private theorem axis1184:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1182 leaf1183
-private theorem axis1185:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1181 axis1184
-private theorem axis1186:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1180 axis1185
-private theorem axis1187:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1179 axis1186
-private theorem axis1188:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1178 axis1187
-private theorem axis1189:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1177 axis1188
-private theorem axis1190:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1176 axis1189
-private theorem axis1191:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1175 axis1190
-private theorem axis1192:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1174 axis1191
-private theorem axis1193:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1173 axis1192
-private theorem axis1194:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1172 axis1193
-private theorem axis1195:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1171 axis1194
-private theorem axis1196:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1170 axis1195
-private theorem axis1197:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1169 axis1196
-private theorem axis1198:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1168 axis1197
-private theorem axis1199:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1167 axis1198
-private theorem axis1200:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1166 axis1199
-private theorem allAxes1201:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1200
-private theorem leaf1202:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6062 PairReceipts.choice6062 PairReceipts.check6062 (none) (by decide)
-private theorem leaf1203:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6063 PairReceipts.choice6063 PairReceipts.check6063 (none) (by decide)
-private theorem leaf1204:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6064 PairReceipts.choice6064 PairReceipts.check6064 (none) (by decide)
-private theorem leaf1205:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6065 PairReceipts.choice6065 PairReceipts.check6065 (none) (by decide)
-private theorem leaf1206:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6066 PairReceipts.choice6066 PairReceipts.check6066 (none) (by decide)
-private theorem leaf1207:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6067 PairReceipts.choice6067 PairReceipts.check6067 (none) (by decide)
-private theorem leaf1208:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6068 PairReceipts.choice6068 PairReceipts.check6068 (none) (by decide)
-private theorem leaf1209:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6069 PairReceipts.choice6069 PairReceipts.check6069 (none) (by decide)
-private theorem leaf1210:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6070 PairReceipts.choice6070 PairReceipts.check6070 (none) (by decide)
-private theorem leaf1211:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6071 PairReceipts.choice6071 PairReceipts.check6071 (none) (by decide)
-private theorem leaf1212:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6072 PairReceipts.choice6072 PairReceipts.check6072 (none) (by decide)
-private theorem leaf1213:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6073 PairReceipts.choice6073 PairReceipts.check6073 (none) (by decide)
-private theorem leaf1214:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6074 PairReceipts.check6074 (by decide) (none)
-private theorem leaf1215:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6075 PairReceipts.check6075 (by decide) (none)
-private theorem leaf1216:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6076 PairReceipts.check6076 (by decide) (none)
-private theorem leaf1217:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6077 PairReceipts.check6077 (by decide) (none)
-private theorem leaf1218:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6078 PairReceipts.check6078 (by decide) (none)
-private theorem leaf1219:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6079 PairReceipts.check6079 (by decide) (none)
-private theorem axis1220:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1218 leaf1219
-private theorem axis1221:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1217 axis1220
-private theorem axis1222:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1216 axis1221
-private theorem axis1223:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1215 axis1222
-private theorem axis1224:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1214 axis1223
-private theorem axis1225:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1213 axis1224
-private theorem axis1226:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1212 axis1225
-private theorem axis1227:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1211 axis1226
-private theorem axis1228:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1210 axis1227
-private theorem axis1229:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1209 axis1228
-private theorem axis1230:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1208 axis1229
-private theorem axis1231:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1207 axis1230
-private theorem axis1232:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1206 axis1231
-private theorem axis1233:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1205 axis1232
-private theorem axis1234:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1204 axis1233
-private theorem axis1235:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1203 axis1234
-private theorem axis1236:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1202 axis1235
-private theorem allAxes1237:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1236
-private theorem leaf1238:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6080 PairReceipts.choice6080 PairReceipts.check6080 (none) (by decide)
-private theorem leaf1239:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6081 PairReceipts.choice6081 PairReceipts.check6081 (none) (by decide)
-private theorem leaf1240:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6082 PairReceipts.choice6082 PairReceipts.check6082 (none) (by decide)
-private theorem leaf1241:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6083 PairReceipts.choice6083 PairReceipts.check6083 (none) (by decide)
-private theorem leaf1242:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6084 PairReceipts.choice6084 PairReceipts.check6084 (none) (by decide)
-private theorem leaf1243:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6085 PairReceipts.choice6085 PairReceipts.check6085 (none) (by decide)
-private theorem leaf1244:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6086 PairReceipts.choice6086 PairReceipts.check6086 (none) (by decide)
-private theorem leaf1245:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6087 PairReceipts.choice6087 PairReceipts.check6087 (none) (by decide)
-private theorem leaf1246:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6088 PairReceipts.choice6088 PairReceipts.check6088 (none) (by decide)
-private theorem leaf1247:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6089 PairReceipts.choice6089 PairReceipts.check6089 (none) (by decide)
-private theorem leaf1248:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6090 PairReceipts.choice6090 PairReceipts.check6090 (none) (by decide)
-private theorem leaf1249:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6091 PairReceipts.choice6091 PairReceipts.check6091 (none) (by decide)
-private theorem leaf1250:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6092 PairReceipts.check6092 (by decide) (none)
-private theorem leaf1251:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6093 PairReceipts.check6093 (by decide) (none)
-private theorem leaf1252:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6094 PairReceipts.check6094 (by decide) (none)
-private theorem leaf1253:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6095 PairReceipts.check6095 (by decide) (none)
-private theorem leaf1254:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6096 PairReceipts.check6096 (by decide) (none)
-private theorem leaf1255:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6097 PairReceipts.check6097 (by decide) (none)
-private theorem axis1256:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1254 leaf1255
-private theorem axis1257:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1253 axis1256
-private theorem axis1258:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1252 axis1257
-private theorem axis1259:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1251 axis1258
-private theorem axis1260:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1250 axis1259
-private theorem axis1261:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1249 axis1260
-private theorem axis1262:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1248 axis1261
-private theorem axis1263:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1247 axis1262
-private theorem axis1264:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1246 axis1263
-private theorem axis1265:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1245 axis1264
-private theorem axis1266:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1244 axis1265
-private theorem axis1267:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1243 axis1266
-private theorem axis1268:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1242 axis1267
-private theorem axis1269:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1241 axis1268
-private theorem axis1270:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1240 axis1269
-private theorem axis1271:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1239 axis1270
-private theorem axis1272:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1238 axis1271
-private theorem allAxes1273:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1272
-private theorem leaf1274:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6098 PairReceipts.choice6098 PairReceipts.check6098 (none) (by decide)
-private theorem leaf1275:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6099 PairReceipts.choice6099 PairReceipts.check6099 (none) (by decide)
-private theorem leaf1276:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6100 PairReceipts.choice6100 PairReceipts.check6100 (none) (by decide)
-private theorem leaf1277:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6101 PairReceipts.choice6101 PairReceipts.check6101 (none) (by decide)
-private theorem leaf1278:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6102 PairReceipts.choice6102 PairReceipts.check6102 (none) (by decide)
-private theorem leaf1279:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6103 PairReceipts.choice6103 PairReceipts.check6103 (none) (by decide)
-private theorem leaf1280:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6104 PairReceipts.choice6104 PairReceipts.check6104 (none) (by decide)
-private theorem leaf1281:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6105 PairReceipts.choice6105 PairReceipts.check6105 (none) (by decide)
-private theorem leaf1282:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6106 PairReceipts.choice6106 PairReceipts.check6106 (none) (by decide)
-private theorem leaf1283:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6107 PairReceipts.choice6107 PairReceipts.check6107 (none) (by decide)
-private theorem leaf1284:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6108 PairReceipts.choice6108 PairReceipts.check6108 (none) (by decide)
-private theorem leaf1285:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6109 PairReceipts.choice6109 PairReceipts.check6109 (none) (by decide)
-private theorem leaf1286:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6110 PairReceipts.check6110 (by decide) (none)
-private theorem leaf1287:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6111 PairReceipts.check6111 (by decide) (none)
-private theorem leaf1288:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6112 PairReceipts.check6112 (by decide) (none)
-private theorem leaf1289:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6113 PairReceipts.check6113 (by decide) (none)
-private theorem leaf1290:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6114 PairReceipts.check6114 (by decide) (none)
-private theorem leaf1291:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6115 PairReceipts.check6115 (by decide) (none)
-private theorem axis1292:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1290 leaf1291
-private theorem axis1293:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1289 axis1292
-private theorem axis1294:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1288 axis1293
-private theorem axis1295:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1287 axis1294
-private theorem axis1296:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1286 axis1295
-private theorem axis1297:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1285 axis1296
-private theorem axis1298:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1284 axis1297
-private theorem axis1299:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1283 axis1298
-private theorem axis1300:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1282 axis1299
-private theorem axis1301:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1281 axis1300
-private theorem axis1302:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1280 axis1301
-private theorem axis1303:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1279 axis1302
-private theorem axis1304:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1278 axis1303
-private theorem axis1305:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1277 axis1304
-private theorem axis1306:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1276 axis1305
-private theorem axis1307:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1275 axis1306
-private theorem axis1308:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1274 axis1307
-private theorem allAxes1309:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1308
-private theorem leaf1310:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6116 PairReceipts.choice6116 PairReceipts.check6116 (none) (by decide)
-private theorem leaf1311:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6117 PairReceipts.choice6117 PairReceipts.check6117 (none) (by decide)
-private theorem leaf1312:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6118 PairReceipts.choice6118 PairReceipts.check6118 (none) (by decide)
-private theorem leaf1313:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6119 PairReceipts.choice6119 PairReceipts.check6119 (none) (by decide)
-private theorem leaf1314:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6120 PairReceipts.choice6120 PairReceipts.check6120 (none) (by decide)
-private theorem leaf1315:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6121 PairReceipts.choice6121 PairReceipts.check6121 (none) (by decide)
-private theorem leaf1316:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6122 PairReceipts.choice6122 PairReceipts.check6122 (none) (by decide)
-private theorem leaf1317:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6123 PairReceipts.choice6123 PairReceipts.check6123 (none) (by decide)
-private theorem leaf1318:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6124 PairReceipts.choice6124 PairReceipts.check6124 (none) (by decide)
-private theorem leaf1319:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6125 PairReceipts.choice6125 PairReceipts.check6125 (none) (by decide)
-private theorem leaf1320:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6126 PairReceipts.choice6126 PairReceipts.check6126 (none) (by decide)
-private theorem leaf1321:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6127 PairReceipts.choice6127 PairReceipts.check6127 (none) (by decide)
-private theorem leaf1322:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6128 PairReceipts.check6128 (by decide) (none)
-private theorem leaf1323:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6129 PairReceipts.check6129 (by decide) (none)
-private theorem leaf1324:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6130 PairReceipts.check6130 (by decide) (none)
-private theorem leaf1325:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6131 PairReceipts.check6131 (by decide) (none)
-private theorem leaf1326:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6132 PairReceipts.check6132 (by decide) (none)
-private theorem leaf1327:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6133 PairReceipts.check6133 (by decide) (none)
-private theorem axis1328:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1326 leaf1327
-private theorem axis1329:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1325 axis1328
-private theorem axis1330:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1324 axis1329
-private theorem axis1331:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1323 axis1330
-private theorem axis1332:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1322 axis1331
-private theorem axis1333:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1321 axis1332
-private theorem axis1334:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1320 axis1333
-private theorem axis1335:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1319 axis1334
-private theorem axis1336:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1318 axis1335
-private theorem axis1337:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1317 axis1336
-private theorem axis1338:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1316 axis1337
-private theorem axis1339:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1315 axis1338
-private theorem axis1340:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1314 axis1339
-private theorem axis1341:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1313 axis1340
-private theorem axis1342:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1312 axis1341
-private theorem axis1343:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1311 axis1342
-private theorem axis1344:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1310 axis1343
-private theorem allAxes1345:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1344
-private theorem leaf1346:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6134 PairReceipts.choice6134 PairReceipts.check6134 (none) (by decide)
-private theorem leaf1347:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6135 PairReceipts.choice6135 PairReceipts.check6135 (none) (by decide)
-private theorem leaf1348:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6136 PairReceipts.choice6136 PairReceipts.check6136 (none) (by decide)
-private theorem leaf1349:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6137 PairReceipts.choice6137 PairReceipts.check6137 (none) (by decide)
-private theorem leaf1350:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6138 PairReceipts.choice6138 PairReceipts.check6138 (none) (by decide)
-private theorem leaf1351:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6139 PairReceipts.choice6139 PairReceipts.check6139 (none) (by decide)
-private theorem leaf1352:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6140 PairReceipts.choice6140 PairReceipts.check6140 (none) (by decide)
-private theorem leaf1353:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6141 PairReceipts.choice6141 PairReceipts.check6141 (none) (by decide)
-private theorem leaf1354:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6142 PairReceipts.choice6142 PairReceipts.check6142 (none) (by decide)
-private theorem leaf1355:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6143 PairReceipts.choice6143 PairReceipts.check6143 (none) (by decide)
-private theorem leaf1356:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6144 PairReceipts.choice6144 PairReceipts.check6144 (none) (by decide)
-private theorem leaf1357:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6145 PairReceipts.choice6145 PairReceipts.check6145 (none) (by decide)
-private theorem leaf1358:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6146 PairReceipts.check6146 (by decide) (none)
-private theorem leaf1359:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6147 PairReceipts.check6147 (by decide) (none)
-private theorem leaf1360:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6148 PairReceipts.check6148 (by decide) (none)
-private theorem leaf1361:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6149 PairReceipts.check6149 (by decide) (none)
-private theorem leaf1362:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6150 PairReceipts.check6150 (by decide) (none)
-private theorem leaf1363:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6151 PairReceipts.check6151 (by decide) (none)
-private theorem axis1364:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1362 leaf1363
-private theorem axis1365:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1361 axis1364
-private theorem axis1366:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1360 axis1365
-private theorem axis1367:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1359 axis1366
-private theorem axis1368:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1358 axis1367
-private theorem axis1369:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1357 axis1368
-private theorem axis1370:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1356 axis1369
-private theorem axis1371:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1355 axis1370
-private theorem axis1372:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1354 axis1371
-private theorem axis1373:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1353 axis1372
-private theorem axis1374:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1352 axis1373
-private theorem axis1375:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1351 axis1374
-private theorem axis1376:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1350 axis1375
-private theorem axis1377:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1349 axis1376
-private theorem axis1378:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1348 axis1377
-private theorem axis1379:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1347 axis1378
-private theorem axis1380:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1346 axis1379
-private theorem allAxes1381:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1380
-private theorem leaf1382:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6152 PairReceipts.choice6152 PairReceipts.check6152 (none) (by decide)
-private theorem leaf1383:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6153 PairReceipts.choice6153 PairReceipts.check6153 (none) (by decide)
-private theorem leaf1384:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6154 PairReceipts.choice6154 PairReceipts.check6154 (none) (by decide)
-private theorem leaf1385:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6155 PairReceipts.choice6155 PairReceipts.check6155 (none) (by decide)
-private theorem leaf1386:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6156 PairReceipts.choice6156 PairReceipts.check6156 (none) (by decide)
-private theorem leaf1387:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6157 PairReceipts.choice6157 PairReceipts.check6157 (none) (by decide)
-private theorem leaf1388:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6158 PairReceipts.choice6158 PairReceipts.check6158 (none) (by decide)
-private theorem leaf1389:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6159 PairReceipts.choice6159 PairReceipts.check6159 (none) (by decide)
-private theorem leaf1390:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6160 PairReceipts.choice6160 PairReceipts.check6160 (none) (by decide)
-private theorem leaf1391:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6161 PairReceipts.choice6161 PairReceipts.check6161 (none) (by decide)
-private theorem leaf1392:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6162 PairReceipts.choice6162 PairReceipts.check6162 (none) (by decide)
-private theorem leaf1393:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6163 PairReceipts.choice6163 PairReceipts.check6163 (none) (by decide)
-private theorem leaf1394:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6164 PairReceipts.check6164 (by decide) (none)
-private theorem leaf1395:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6165 PairReceipts.check6165 (by decide) (none)
-private theorem leaf1396:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6166 PairReceipts.check6166 (by decide) (none)
-private theorem leaf1397:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6167 PairReceipts.check6167 (by decide) (none)
-private theorem leaf1398:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6168 PairReceipts.check6168 (by decide) (none)
-private theorem leaf1399:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6169 PairReceipts.check6169 (by decide) (none)
-private theorem axis1400:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1398 leaf1399
-private theorem axis1401:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1397 axis1400
-private theorem axis1402:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1396 axis1401
-private theorem axis1403:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1395 axis1402
-private theorem axis1404:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1394 axis1403
-private theorem axis1405:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1393 axis1404
-private theorem axis1406:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1392 axis1405
-private theorem axis1407:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1391 axis1406
-private theorem axis1408:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1390 axis1407
-private theorem axis1409:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1389 axis1408
-private theorem axis1410:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1388 axis1409
-private theorem axis1411:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1387 axis1410
-private theorem axis1412:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1386 axis1411
-private theorem axis1413:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1385 axis1412
-private theorem axis1414:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1384 axis1413
-private theorem axis1415:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1383 axis1414
-private theorem axis1416:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1382 axis1415
-private theorem allAxes1417:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1416
-private theorem leaf1418:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell6170 PairReceipts.choice6170 PairReceipts.check6170 (none) (by decide)
-private theorem leaf1419:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell6171 PairReceipts.choice6171 PairReceipts.check6171 (none) (by decide)
-private theorem leaf1420:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell6172 PairReceipts.choice6172 PairReceipts.check6172 (none) (by decide)
-private theorem leaf1421:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell6173 PairReceipts.choice6173 PairReceipts.check6173 (none) (by decide)
-private theorem leaf1422:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell6174 PairReceipts.choice6174 PairReceipts.check6174 (none) (by decide)
-private theorem leaf1423:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell6175 PairReceipts.choice6175 PairReceipts.check6175 (none) (by decide)
-private theorem leaf1424:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell6176 PairReceipts.choice6176 PairReceipts.check6176 (none) (by decide)
-private theorem leaf1425:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell6177 PairReceipts.choice6177 PairReceipts.check6177 (none) (by decide)
-private theorem leaf1426:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell6178 PairReceipts.choice6178 PairReceipts.check6178 (none) (by decide)
-private theorem leaf1427:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell6179 PairReceipts.choice6179 PairReceipts.check6179 (none) (by decide)
-private theorem leaf1428:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell6180 PairReceipts.choice6180 PairReceipts.check6180 (none) (by decide)
-private theorem leaf1429:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell6181 PairReceipts.choice6181 PairReceipts.check6181 (none) (by decide)
-private theorem leaf1430:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,12,some 12,386045,none⟩:=PairLeaves.three PairReceipts.cell6182 PairReceipts.check6182 (by decide) (none)
-private theorem leaf1431:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,13,some 13,386045,none⟩:=PairLeaves.three PairReceipts.cell6183 PairReceipts.check6183 (by decide) (none)
-private theorem leaf1432:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,14,some 14,386045,none⟩:=PairLeaves.three PairReceipts.cell6184 PairReceipts.check6184 (by decide) (none)
-private theorem leaf1433:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,15,some 15,386045,none⟩:=PairLeaves.three PairReceipts.cell6185 PairReceipts.check6185 (by decide) (none)
-private theorem leaf1434:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,16,some 16,386045,none⟩:=PairLeaves.three PairReceipts.cell6186 PairReceipts.check6186 (by decide) (none)
-private theorem leaf1435:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,17,some 17,386045,none⟩:=PairLeaves.three PairReceipts.cell6187 PairReceipts.check6187 (by decide) (none)
-private theorem axis1436:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,16,some 17,386045,none⟩:=PairRoute.axis 16 leaf1434 leaf1435
-private theorem axis1437:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,15,some 17,386045,none⟩:=PairRoute.axis 15 leaf1433 axis1436
-private theorem axis1438:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,14,some 17,386045,none⟩:=PairRoute.axis 14 leaf1432 axis1437
-private theorem axis1439:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,13,some 17,386045,none⟩:=PairRoute.axis 13 leaf1431 axis1438
-private theorem axis1440:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,12,some 17,386045,none⟩:=PairRoute.axis 12 leaf1430 axis1439
-private theorem axis1441:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,11,some 17,386045,none⟩:=PairRoute.axis 11 leaf1429 axis1440
-private theorem axis1442:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,10,some 17,386045,none⟩:=PairRoute.axis 10 leaf1428 axis1441
-private theorem axis1443:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,9,some 17,386045,none⟩:=PairRoute.axis 9 leaf1427 axis1442
-private theorem axis1444:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,8,some 17,386045,none⟩:=PairRoute.axis 8 leaf1426 axis1443
-private theorem axis1445:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,7,some 17,386045,none⟩:=PairRoute.axis 7 leaf1425 axis1444
-private theorem axis1446:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,6,some 17,386045,none⟩:=PairRoute.axis 6 leaf1424 axis1445
-private theorem axis1447:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,5,some 17,386045,none⟩:=PairRoute.axis 5 leaf1423 axis1446
-private theorem axis1448:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,4,some 17,386045,none⟩:=PairRoute.axis 4 leaf1422 axis1447
-private theorem axis1449:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,3,some 17,386045,none⟩:=PairRoute.axis 3 leaf1421 axis1448
-private theorem axis1450:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,2,some 17,386045,none⟩:=PairRoute.axis 2 leaf1420 axis1449
-private theorem axis1451:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,1,some 17,386045,none⟩:=PairRoute.axis 1 leaf1419 axis1450
-private theorem axis1452:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,0,some 17,386045,none⟩:=PairRoute.axis 0 leaf1418 axis1451
-private theorem allAxes1453:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1452
-private theorem grade1454:PairRoute.Done (2:Fin 18) ⟨⟨62,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 62 allAxes1417 allAxes1453
-private theorem grade1455:PairRoute.Done (2:Fin 18) ⟨⟨61,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 61 allAxes1381 grade1454
-private theorem grade1456:PairRoute.Done (2:Fin 18) ⟨⟨60,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 60 allAxes1345 grade1455
-private theorem grade1457:PairRoute.Done (2:Fin 18) ⟨⟨59,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 59 allAxes1309 grade1456
-private theorem grade1458:PairRoute.Done (2:Fin 18) ⟨⟨58,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 58 allAxes1273 grade1457
-private theorem grade1459:PairRoute.Done (2:Fin 18) ⟨⟨57,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 57 allAxes1237 grade1458
-private theorem grade1460:PairRoute.Done (2:Fin 18) ⟨⟨56,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 56 allAxes1201 grade1459
-private theorem grade1461:PairRoute.Done (2:Fin 18) ⟨⟨55,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 55 allAxes1165 grade1460
-private theorem grade1462:PairRoute.Done (2:Fin 18) ⟨⟨54,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 54 allAxes1129 grade1461
-private theorem grade1463:PairRoute.Done (2:Fin 18) ⟨⟨53,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 53 allAxes1093 grade1462
-private theorem grade1464:PairRoute.Done (2:Fin 18) ⟨⟨52,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 52 allAxes1057 grade1463
-private theorem grade1465:PairRoute.Done (2:Fin 18) ⟨⟨51,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 51 allAxes1021 grade1464
-private theorem grade1466:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,17,some 17⟩,0,none,386045,none⟩:=PairRoute.grade 50 allAxes985 grade1465
+private theorem allAxes985:PairRoute.Done (2:Fin 18) ⟨⟨50,50,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route5936 0),
+    (PairReceipts.route5936 1),
+    (PairReceipts.route5936 2),
+    (PairReceipts.route5936 3),
+    (PairReceipts.route5940 0),
+    (PairReceipts.route5940 1),
+    (PairReceipts.route5940 2),
+    (PairReceipts.route5940 3),
+    (PairReceipts.route5940 4),
+    (PairReceipts.route5940 5),
+    PairLeaves.three PairReceipts.cell5946 PairReceipts.check5946 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5947 PairReceipts.check5947 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5948 PairReceipts.check5948 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5949 PairReceipts.check5949 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5950 PairReceipts.check5950 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5951 PairReceipts.check5951 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5952 PairReceipts.check5952 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5953 PairReceipts.check5953 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1021:PairRoute.Done (2:Fin 18) ⟨⟨51,51,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route5940 6),
+    (PairReceipts.route5940 7),
+    (PairReceipts.route5940 8),
+    (PairReceipts.route5940 9),
+    (PairReceipts.route5940 10),
+    (PairReceipts.route5940 11),
+    (PairReceipts.route5960 0),
+    (PairReceipts.route5960 1),
+    (PairReceipts.route5960 2),
+    (PairReceipts.route5960 3),
+    (PairReceipts.route5960 4),
+    PairLeaves.three PairReceipts.cell5965 PairReceipts.check5965 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5966 PairReceipts.check5966 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5967 PairReceipts.check5967 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5968 PairReceipts.check5968 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5969 PairReceipts.check5969 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5970 PairReceipts.check5970 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5971 PairReceipts.check5971 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1057:PairRoute.Done (2:Fin 18) ⟨⟨52,52,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route5960 5),
+    (PairReceipts.route5960 6),
+    (PairReceipts.route5960 7),
+    (PairReceipts.route5960 8),
+    (PairReceipts.route5960 9),
+    (PairReceipts.route5960 10),
+    (PairReceipts.route5960 11),
+    (PairReceipts.route5960 12),
+    (PairReceipts.route5980 0),
+    (PairReceipts.route5980 1),
+    (PairReceipts.route5980 2),
+    PairLeaves.three PairReceipts.cell5983 PairReceipts.check5983 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5984 PairReceipts.check5984 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5985 PairReceipts.check5985 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5986 PairReceipts.check5986 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5987 PairReceipts.check5987 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5988 PairReceipts.check5988 (by decide) (none),
+    PairLeaves.three PairReceipts.cell5989 PairReceipts.check5989 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1093:PairRoute.Done (2:Fin 18) ⟨⟨53,53,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route5980 3),
+    (PairReceipts.route5980 4),
+    (PairReceipts.route5980 5),
+    (PairReceipts.route5980 6),
+    (PairReceipts.route5980 7),
+    (PairReceipts.route5980 8),
+    (PairReceipts.route5980 9),
+    (PairReceipts.route5980 10),
+    (PairReceipts.route5980 11),
+    (PairReceipts.route5980 12),
+    (PairReceipts.route6000 0),
+    PairLeaves.three PairReceipts.cell6001 PairReceipts.check6001 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6002 PairReceipts.check6002 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6003 PairReceipts.check6003 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6004 PairReceipts.check6004 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6005 PairReceipts.check6005 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6006 PairReceipts.check6006 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6007 PairReceipts.check6007 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1129:PairRoute.Done (2:Fin 18) ⟨⟨54,54,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6000 1),
+    (PairReceipts.route6000 2),
+    (PairReceipts.route6000 3),
+    (PairReceipts.route6000 4),
+    (PairReceipts.route6000 5),
+    (PairReceipts.route6000 6),
+    (PairReceipts.route6000 7),
+    (PairReceipts.route6000 8),
+    (PairReceipts.route6000 9),
+    (PairReceipts.route6000 10),
+    (PairReceipts.route6000 11),
+    PairLeaves.three PairReceipts.cell6019 PairReceipts.check6019 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6020 PairReceipts.check6020 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6021 PairReceipts.check6021 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6022 PairReceipts.check6022 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6023 PairReceipts.check6023 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6024 PairReceipts.check6024 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6025 PairReceipts.check6025 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1165:PairRoute.Done (2:Fin 18) ⟨⟨55,55,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6026 0),
+    (PairReceipts.route6026 1),
+    (PairReceipts.route6026 2),
+    (PairReceipts.route6026 3),
+    (PairReceipts.route6026 4),
+    (PairReceipts.route6026 5),
+    (PairReceipts.route6026 6),
+    (PairReceipts.route6026 7),
+    (PairReceipts.route6026 8),
+    (PairReceipts.route6026 9),
+    (PairReceipts.route6026 10),
+    PairLeaves.three PairReceipts.cell6037 PairReceipts.check6037 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6038 PairReceipts.check6038 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6039 PairReceipts.check6039 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6040 PairReceipts.check6040 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6041 PairReceipts.check6041 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6042 PairReceipts.check6042 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6043 PairReceipts.check6043 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1201:PairRoute.Done (2:Fin 18) ⟨⟨56,56,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6044 0),
+    (PairReceipts.route6044 1),
+    (PairReceipts.route6044 2),
+    (PairReceipts.route6044 3),
+    (PairReceipts.route6044 4),
+    (PairReceipts.route6044 5),
+    (PairReceipts.route6044 6),
+    (PairReceipts.route6044 7),
+    (PairReceipts.route6044 8),
+    (PairReceipts.route6044 9),
+    (PairReceipts.route6044 10),
+    (PairReceipts.route6044 11),
+    PairLeaves.three PairReceipts.cell6056 PairReceipts.check6056 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6057 PairReceipts.check6057 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6058 PairReceipts.check6058 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6059 PairReceipts.check6059 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6060 PairReceipts.check6060 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6061 PairReceipts.check6061 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1237:PairRoute.Done (2:Fin 18) ⟨⟨57,57,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6062 0),
+    (PairReceipts.route6062 1),
+    (PairReceipts.route6062 2),
+    (PairReceipts.route6062 3),
+    (PairReceipts.route6062 4),
+    (PairReceipts.route6062 5),
+    (PairReceipts.route6062 6),
+    (PairReceipts.route6062 7),
+    (PairReceipts.route6062 8),
+    (PairReceipts.route6062 9),
+    (PairReceipts.route6062 10),
+    (PairReceipts.route6062 11),
+    PairLeaves.three PairReceipts.cell6074 PairReceipts.check6074 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6075 PairReceipts.check6075 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6076 PairReceipts.check6076 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6077 PairReceipts.check6077 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6078 PairReceipts.check6078 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6079 PairReceipts.check6079 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1273:PairRoute.Done (2:Fin 18) ⟨⟨58,58,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6080 0),
+    (PairReceipts.route6080 1),
+    (PairReceipts.route6080 2),
+    (PairReceipts.route6080 3),
+    (PairReceipts.route6080 4),
+    (PairReceipts.route6080 5),
+    (PairReceipts.route6080 6),
+    (PairReceipts.route6080 7),
+    (PairReceipts.route6080 8),
+    (PairReceipts.route6080 9),
+    (PairReceipts.route6080 10),
+    (PairReceipts.route6080 11),
+    PairLeaves.three PairReceipts.cell6092 PairReceipts.check6092 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6093 PairReceipts.check6093 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6094 PairReceipts.check6094 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6095 PairReceipts.check6095 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6096 PairReceipts.check6096 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6097 PairReceipts.check6097 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1309:PairRoute.Done (2:Fin 18) ⟨⟨59,59,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6080 12),
+    (PairReceipts.route6080 13),
+    (PairReceipts.route6100 0),
+    (PairReceipts.route6100 1),
+    (PairReceipts.route6100 2),
+    (PairReceipts.route6100 3),
+    (PairReceipts.route6100 4),
+    (PairReceipts.route6100 5),
+    (PairReceipts.route6100 6),
+    (PairReceipts.route6100 7),
+    (PairReceipts.route6100 8),
+    (PairReceipts.route6100 9),
+    PairLeaves.three PairReceipts.cell6110 PairReceipts.check6110 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6111 PairReceipts.check6111 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6112 PairReceipts.check6112 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6113 PairReceipts.check6113 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6114 PairReceipts.check6114 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6115 PairReceipts.check6115 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1345:PairRoute.Done (2:Fin 18) ⟨⟨60,60,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6100 10),
+    (PairReceipts.route6100 11),
+    (PairReceipts.route6100 12),
+    (PairReceipts.route6100 13),
+    (PairReceipts.route6120 0),
+    (PairReceipts.route6120 1),
+    (PairReceipts.route6120 2),
+    (PairReceipts.route6120 3),
+    (PairReceipts.route6120 4),
+    (PairReceipts.route6120 5),
+    (PairReceipts.route6120 6),
+    (PairReceipts.route6120 7),
+    PairLeaves.three PairReceipts.cell6128 PairReceipts.check6128 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6129 PairReceipts.check6129 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6130 PairReceipts.check6130 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6131 PairReceipts.check6131 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6132 PairReceipts.check6132 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6133 PairReceipts.check6133 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1381:PairRoute.Done (2:Fin 18) ⟨⟨61,61,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6120 8),
+    (PairReceipts.route6120 9),
+    (PairReceipts.route6120 10),
+    (PairReceipts.route6120 11),
+    (PairReceipts.route6120 12),
+    (PairReceipts.route6120 13),
+    (PairReceipts.route6140 0),
+    (PairReceipts.route6140 1),
+    (PairReceipts.route6140 2),
+    (PairReceipts.route6140 3),
+    (PairReceipts.route6140 4),
+    (PairReceipts.route6140 5),
+    PairLeaves.three PairReceipts.cell6146 PairReceipts.check6146 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6147 PairReceipts.check6147 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6148 PairReceipts.check6148 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6149 PairReceipts.check6149 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6150 PairReceipts.check6150 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6151 PairReceipts.check6151 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1417:PairRoute.Done (2:Fin 18) ⟨⟨62,62,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6140 6),
+    (PairReceipts.route6140 7),
+    (PairReceipts.route6140 8),
+    (PairReceipts.route6140 9),
+    (PairReceipts.route6140 10),
+    (PairReceipts.route6140 11),
+    (PairReceipts.route6140 12),
+    (PairReceipts.route6140 13),
+    (PairReceipts.route6160 0),
+    (PairReceipts.route6160 1),
+    (PairReceipts.route6160 2),
+    (PairReceipts.route6160 3),
+    PairLeaves.three PairReceipts.cell6164 PairReceipts.check6164 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6165 PairReceipts.check6165 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6166 PairReceipts.check6166 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6167 PairReceipts.check6167 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6168 PairReceipts.check6168 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6169 PairReceipts.check6169 (by decide) (none),
+    trivial⟩)
+private theorem allAxes1453:PairRoute.Done (2:Fin 18) ⟨⟨63,63,10,3,17,some 17⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 17 ⟨
+    (PairReceipts.route6160 4),
+    (PairReceipts.route6160 5),
+    (PairReceipts.route6160 6),
+    (PairReceipts.route6160 7),
+    (PairReceipts.route6160 8),
+    (PairReceipts.route6160 9),
+    (PairReceipts.route6160 10),
+    (PairReceipts.route6160 11),
+    (PairReceipts.route6160 12),
+    (PairReceipts.route6160 13),
+    (PairReceipts.route6180 0),
+    (PairReceipts.route6180 1),
+    PairLeaves.three PairReceipts.cell6182 PairReceipts.check6182 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6183 PairReceipts.check6183 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6184 PairReceipts.check6184 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6185 PairReceipts.check6185 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6186 PairReceipts.check6186 (by decide) (none),
+    PairLeaves.three PairReceipts.cell6187 PairReceipts.check6187 (by decide) (none),
+    trivial⟩)
+private def grade1454 := PairRoute.grade 62 allAxes1417 allAxes1453
+private def grade1455 := PairRoute.grade 61 allAxes1381 grade1454
+private def grade1456 := PairRoute.grade 60 allAxes1345 grade1455
+private def grade1457 := PairRoute.grade 59 allAxes1309 grade1456
+private def grade1458 := PairRoute.grade 58 allAxes1273 grade1457
+private def grade1459 := PairRoute.grade 57 allAxes1237 grade1458
+private def grade1460 := PairRoute.grade 56 allAxes1201 grade1459
+private def grade1461 := PairRoute.grade 55 allAxes1165 grade1460
+private def grade1462 := PairRoute.grade 54 allAxes1129 grade1461
+private def grade1463 := PairRoute.grade 53 allAxes1093 grade1462
+private def grade1464 := PairRoute.grade 52 allAxes1057 grade1463
+private def grade1465 := PairRoute.grade 51 allAxes1021 grade1464
+private def grade1466 := PairRoute.grade 50 allAxes985 grade1465
 theorem case142: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,17,some 17⟩:=PairRoute.start _ grade1466
-private theorem leaf1467:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell3367 PairReceipts.choice3367 PairReceipts.check3367 (none) (by decide)
-private theorem leaf1468:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell3368 PairReceipts.choice3368 PairReceipts.check3368 (none) (by decide)
-private theorem leaf1469:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell3369 PairReceipts.choice3369 PairReceipts.check3369 (none) (by decide)
-private theorem leaf1470:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell3370 PairReceipts.choice3370 PairReceipts.check3370 (none) (by decide)
-private theorem leaf1471:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell3371 PairReceipts.choice3371 PairReceipts.check3371 (none) (by decide)
-private theorem leaf1472:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell3372 PairReceipts.choice3372 PairReceipts.check3372 (none) (by decide)
-private theorem leaf1473:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell3373 PairReceipts.choice3373 PairReceipts.check3373 (none) (by decide)
-private theorem leaf1474:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell3374 PairReceipts.choice3374 PairReceipts.check3374 (none) (by decide)
-private theorem leaf1475:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell3375 PairReceipts.choice3375 PairReceipts.check3375 (none) (by decide)
-private theorem leaf1476:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell3376 PairReceipts.choice3376 PairReceipts.check3376 (none) (by decide)
-private theorem leaf1477:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell3377 PairReceipts.choice3377 PairReceipts.check3377 (none) (by decide)
-private theorem leaf1478:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell3378 PairReceipts.choice3378 PairReceipts.check3378 (none) (by decide)
-private theorem leaf1479:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,12,some 12,386045,none⟩:=PairLeaves.paired PairReceipts.cell3379 PairReceipts.choice3379 PairReceipts.check3379 (none) (by decide)
-private theorem leaf1480:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,13,some 13,386045,none⟩:=PairLeaves.paired PairReceipts.cell3380 PairReceipts.choice3380 PairReceipts.check3380 (none) (by decide)
-private theorem leaf1481:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,14,some 14,386045,none⟩:=PairLeaves.paired PairReceipts.cell3381 PairReceipts.choice3381 PairReceipts.check3381 (none) (by decide)
-private theorem leaf1482:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,15,some 15,386045,none⟩:=PairLeaves.paired PairReceipts.cell3382 PairReceipts.choice3382 PairReceipts.check3382 (none) (by decide)
-private theorem leaf1483:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,16,some 16,386045,none⟩:=PairLeaves.paired PairReceipts.cell3383 PairReceipts.choice3383 PairReceipts.check3383 (none) (by decide)
-private theorem leaf1484:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,17,some 17,386045,none⟩:=PairLeaves.paired PairReceipts.cell3384 PairReceipts.choice3384 PairReceipts.check3384 (none) (by decide)
-private theorem leaf1485:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,18,some 18,386045,none⟩:=PairLeaves.paired PairReceipts.cell3385 PairReceipts.choice3385 PairReceipts.check3385 (none) (by decide)
-private theorem axis1486:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,17,some 18,386045,none⟩:=PairRoute.axis 17 leaf1484 leaf1485
-private theorem axis1487:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,16,some 18,386045,none⟩:=PairRoute.axis 16 leaf1483 axis1486
-private theorem axis1488:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,15,some 18,386045,none⟩:=PairRoute.axis 15 leaf1482 axis1487
-private theorem axis1489:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,14,some 18,386045,none⟩:=PairRoute.axis 14 leaf1481 axis1488
-private theorem axis1490:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,13,some 18,386045,none⟩:=PairRoute.axis 13 leaf1480 axis1489
-private theorem axis1491:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,12,some 18,386045,none⟩:=PairRoute.axis 12 leaf1479 axis1490
-private theorem axis1492:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,11,some 18,386045,none⟩:=PairRoute.axis 11 leaf1478 axis1491
-private theorem axis1493:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,10,some 18,386045,none⟩:=PairRoute.axis 10 leaf1477 axis1492
-private theorem axis1494:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,9,some 18,386045,none⟩:=PairRoute.axis 9 leaf1476 axis1493
-private theorem axis1495:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,8,some 18,386045,none⟩:=PairRoute.axis 8 leaf1475 axis1494
-private theorem axis1496:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,7,some 18,386045,none⟩:=PairRoute.axis 7 leaf1474 axis1495
-private theorem axis1497:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,6,some 18,386045,none⟩:=PairRoute.axis 6 leaf1473 axis1496
-private theorem axis1498:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,5,some 18,386045,none⟩:=PairRoute.axis 5 leaf1472 axis1497
-private theorem axis1499:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,4,some 18,386045,none⟩:=PairRoute.axis 4 leaf1471 axis1498
-private theorem axis1500:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,3,some 18,386045,none⟩:=PairRoute.axis 3 leaf1470 axis1499
-private theorem axis1501:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,2,some 18,386045,none⟩:=PairRoute.axis 2 leaf1469 axis1500
-private theorem axis1502:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,1,some 18,386045,none⟩:=PairRoute.axis 1 leaf1468 axis1501
-private theorem axis1503:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,0,some 18,386045,none⟩:=PairRoute.axis 0 leaf1467 axis1502
-private theorem allAxes1504:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1503
+private theorem allAxes1504:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,18,some 18⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 18 ⟨
+    (PairReceipts.route3360 7),
+    (PairReceipts.route3360 8),
+    (PairReceipts.route3360 9),
+    (PairReceipts.route3360 10),
+    (PairReceipts.route3360 11),
+    (PairReceipts.route3360 12),
+    (PairReceipts.route3360 13),
+    (PairReceipts.route3360 14),
+    (PairReceipts.route3360 15),
+    (PairReceipts.route3360 16),
+    (PairReceipts.route3360 17),
+    (PairReceipts.route3360 18),
+    (PairReceipts.route3360 19),
+    (PairReceipts.route3380 0),
+    (PairReceipts.route3380 1),
+    (PairReceipts.route3380 2),
+    (PairReceipts.route3380 3),
+    (PairReceipts.route3380 4),
+    (PairReceipts.route3380 5),
+    trivial⟩)
 theorem case143: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,18,some 18⟩:=PairRoute.start _ allAxes1504
-private theorem leaf1505:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell3347 PairReceipts.choice3347 PairReceipts.check3347 (none) (by decide)
-private theorem leaf1506:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell3348 PairReceipts.choice3348 PairReceipts.check3348 (none) (by decide)
-private theorem leaf1507:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell3349 PairReceipts.choice3349 PairReceipts.check3349 (none) (by decide)
-private theorem leaf1508:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell3350 PairReceipts.choice3350 PairReceipts.check3350 (none) (by decide)
-private theorem leaf1509:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell3351 PairReceipts.choice3351 PairReceipts.check3351 (none) (by decide)
-private theorem leaf1510:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell3352 PairReceipts.choice3352 PairReceipts.check3352 (none) (by decide)
-private theorem leaf1511:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell3353 PairReceipts.choice3353 PairReceipts.check3353 (none) (by decide)
-private theorem leaf1512:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell3354 PairReceipts.choice3354 PairReceipts.check3354 (none) (by decide)
-private theorem leaf1513:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell3355 PairReceipts.choice3355 PairReceipts.check3355 (none) (by decide)
-private theorem leaf1514:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell3356 PairReceipts.choice3356 PairReceipts.check3356 (none) (by decide)
-private theorem leaf1515:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell3357 PairReceipts.choice3357 PairReceipts.check3357 (none) (by decide)
-private theorem leaf1516:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell3358 PairReceipts.choice3358 PairReceipts.check3358 (none) (by decide)
-private theorem leaf1517:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,12,some 12,386045,none⟩:=PairLeaves.paired PairReceipts.cell3359 PairReceipts.choice3359 PairReceipts.check3359 (none) (by decide)
-private theorem leaf1518:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,13,some 13,386045,none⟩:=PairLeaves.paired PairReceipts.cell3360 PairReceipts.choice3360 PairReceipts.check3360 (none) (by decide)
-private theorem leaf1519:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,14,some 14,386045,none⟩:=PairLeaves.paired PairReceipts.cell3361 PairReceipts.choice3361 PairReceipts.check3361 (none) (by decide)
-private theorem leaf1520:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,15,some 15,386045,none⟩:=PairLeaves.paired PairReceipts.cell3362 PairReceipts.choice3362 PairReceipts.check3362 (none) (by decide)
-private theorem leaf1521:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,16,some 16,386045,none⟩:=PairLeaves.paired PairReceipts.cell3363 PairReceipts.choice3363 PairReceipts.check3363 (none) (by decide)
-private theorem leaf1522:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,17,some 17,386045,none⟩:=PairLeaves.paired PairReceipts.cell3364 PairReceipts.choice3364 PairReceipts.check3364 (none) (by decide)
-private theorem leaf1523:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,18,some 18,386045,none⟩:=PairLeaves.paired PairReceipts.cell3365 PairReceipts.choice3365 PairReceipts.check3365 (none) (by decide)
-private theorem leaf1524:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,19,some 19,386045,none⟩:=PairLeaves.paired PairReceipts.cell3366 PairReceipts.choice3366 PairReceipts.check3366 (none) (by decide)
-private theorem axis1525:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,18,some 19,386045,none⟩:=PairRoute.axis 18 leaf1523 leaf1524
-private theorem axis1526:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,17,some 19,386045,none⟩:=PairRoute.axis 17 leaf1522 axis1525
-private theorem axis1527:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,16,some 19,386045,none⟩:=PairRoute.axis 16 leaf1521 axis1526
-private theorem axis1528:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,15,some 19,386045,none⟩:=PairRoute.axis 15 leaf1520 axis1527
-private theorem axis1529:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,14,some 19,386045,none⟩:=PairRoute.axis 14 leaf1519 axis1528
-private theorem axis1530:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,13,some 19,386045,none⟩:=PairRoute.axis 13 leaf1518 axis1529
-private theorem axis1531:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,12,some 19,386045,none⟩:=PairRoute.axis 12 leaf1517 axis1530
-private theorem axis1532:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,11,some 19,386045,none⟩:=PairRoute.axis 11 leaf1516 axis1531
-private theorem axis1533:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,10,some 19,386045,none⟩:=PairRoute.axis 10 leaf1515 axis1532
-private theorem axis1534:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,9,some 19,386045,none⟩:=PairRoute.axis 9 leaf1514 axis1533
-private theorem axis1535:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,8,some 19,386045,none⟩:=PairRoute.axis 8 leaf1513 axis1534
-private theorem axis1536:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,7,some 19,386045,none⟩:=PairRoute.axis 7 leaf1512 axis1535
-private theorem axis1537:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,6,some 19,386045,none⟩:=PairRoute.axis 6 leaf1511 axis1536
-private theorem axis1538:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,5,some 19,386045,none⟩:=PairRoute.axis 5 leaf1510 axis1537
-private theorem axis1539:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,4,some 19,386045,none⟩:=PairRoute.axis 4 leaf1509 axis1538
-private theorem axis1540:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,3,some 19,386045,none⟩:=PairRoute.axis 3 leaf1508 axis1539
-private theorem axis1541:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,2,some 19,386045,none⟩:=PairRoute.axis 2 leaf1507 axis1540
-private theorem axis1542:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,1,some 19,386045,none⟩:=PairRoute.axis 1 leaf1506 axis1541
-private theorem axis1543:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,0,some 19,386045,none⟩:=PairRoute.axis 0 leaf1505 axis1542
-private theorem allAxes1544:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1543
+private theorem allAxes1544:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,19,some 19⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 19 ⟨
+    (PairReceipts.route3340 7),
+    (PairReceipts.route3340 8),
+    (PairReceipts.route3340 9),
+    (PairReceipts.route3340 10),
+    (PairReceipts.route3340 11),
+    (PairReceipts.route3340 12),
+    (PairReceipts.route3340 13),
+    (PairReceipts.route3340 14),
+    (PairReceipts.route3340 15),
+    (PairReceipts.route3340 16),
+    (PairReceipts.route3340 17),
+    (PairReceipts.route3340 18),
+    (PairReceipts.route3340 19),
+    (PairReceipts.route3360 0),
+    (PairReceipts.route3360 1),
+    (PairReceipts.route3360 2),
+    (PairReceipts.route3360 3),
+    (PairReceipts.route3360 4),
+    (PairReceipts.route3360 5),
+    (PairReceipts.route3360 6),
+    trivial⟩)
 theorem case144: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,19,some 19⟩:=PairRoute.start _ allAxes1544
-private theorem leaf1545:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell3326 PairReceipts.choice3326 PairReceipts.check3326 (none) (by decide)
-private theorem leaf1546:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell3327 PairReceipts.choice3327 PairReceipts.check3327 (none) (by decide)
-private theorem leaf1547:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell3328 PairReceipts.choice3328 PairReceipts.check3328 (none) (by decide)
-private theorem leaf1548:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell3329 PairReceipts.choice3329 PairReceipts.check3329 (none) (by decide)
-private theorem leaf1549:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell3330 PairReceipts.choice3330 PairReceipts.check3330 (none) (by decide)
-private theorem leaf1550:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell3331 PairReceipts.choice3331 PairReceipts.check3331 (none) (by decide)
-private theorem leaf1551:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell3332 PairReceipts.choice3332 PairReceipts.check3332 (none) (by decide)
-private theorem leaf1552:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell3333 PairReceipts.choice3333 PairReceipts.check3333 (none) (by decide)
-private theorem leaf1553:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell3334 PairReceipts.choice3334 PairReceipts.check3334 (none) (by decide)
-private theorem leaf1554:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell3335 PairReceipts.choice3335 PairReceipts.check3335 (none) (by decide)
-private theorem leaf1555:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell3336 PairReceipts.choice3336 PairReceipts.check3336 (none) (by decide)
-private theorem leaf1556:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell3337 PairReceipts.choice3337 PairReceipts.check3337 (none) (by decide)
-private theorem leaf1557:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,12,some 12,386045,none⟩:=PairLeaves.paired PairReceipts.cell3338 PairReceipts.choice3338 PairReceipts.check3338 (none) (by decide)
-private theorem leaf1558:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,13,some 13,386045,none⟩:=PairLeaves.paired PairReceipts.cell3339 PairReceipts.choice3339 PairReceipts.check3339 (none) (by decide)
-private theorem leaf1559:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,14,some 14,386045,none⟩:=PairLeaves.paired PairReceipts.cell3340 PairReceipts.choice3340 PairReceipts.check3340 (none) (by decide)
-private theorem leaf1560:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,15,some 15,386045,none⟩:=PairLeaves.paired PairReceipts.cell3341 PairReceipts.choice3341 PairReceipts.check3341 (none) (by decide)
-private theorem leaf1561:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,16,some 16,386045,none⟩:=PairLeaves.paired PairReceipts.cell3342 PairReceipts.choice3342 PairReceipts.check3342 (none) (by decide)
-private theorem leaf1562:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,17,some 17,386045,none⟩:=PairLeaves.paired PairReceipts.cell3343 PairReceipts.choice3343 PairReceipts.check3343 (none) (by decide)
-private theorem leaf1563:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,18,some 18,386045,none⟩:=PairLeaves.paired PairReceipts.cell3344 PairReceipts.choice3344 PairReceipts.check3344 (none) (by decide)
-private theorem leaf1564:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,19,some 19,386045,none⟩:=PairLeaves.paired PairReceipts.cell3345 PairReceipts.choice3345 PairReceipts.check3345 (none) (by decide)
-private theorem leaf1565:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,20,some 20,386045,none⟩:=PairLeaves.paired PairReceipts.cell3346 PairReceipts.choice3346 PairReceipts.check3346 (none) (by decide)
-private theorem axis1566:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,19,some 20,386045,none⟩:=PairRoute.axis 19 leaf1564 leaf1565
-private theorem axis1567:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,18,some 20,386045,none⟩:=PairRoute.axis 18 leaf1563 axis1566
-private theorem axis1568:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,17,some 20,386045,none⟩:=PairRoute.axis 17 leaf1562 axis1567
-private theorem axis1569:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,16,some 20,386045,none⟩:=PairRoute.axis 16 leaf1561 axis1568
-private theorem axis1570:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,15,some 20,386045,none⟩:=PairRoute.axis 15 leaf1560 axis1569
-private theorem axis1571:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,14,some 20,386045,none⟩:=PairRoute.axis 14 leaf1559 axis1570
-private theorem axis1572:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,13,some 20,386045,none⟩:=PairRoute.axis 13 leaf1558 axis1571
-private theorem axis1573:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,12,some 20,386045,none⟩:=PairRoute.axis 12 leaf1557 axis1572
-private theorem axis1574:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,11,some 20,386045,none⟩:=PairRoute.axis 11 leaf1556 axis1573
-private theorem axis1575:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,10,some 20,386045,none⟩:=PairRoute.axis 10 leaf1555 axis1574
-private theorem axis1576:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,9,some 20,386045,none⟩:=PairRoute.axis 9 leaf1554 axis1575
-private theorem axis1577:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,8,some 20,386045,none⟩:=PairRoute.axis 8 leaf1553 axis1576
-private theorem axis1578:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,7,some 20,386045,none⟩:=PairRoute.axis 7 leaf1552 axis1577
-private theorem axis1579:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,6,some 20,386045,none⟩:=PairRoute.axis 6 leaf1551 axis1578
-private theorem axis1580:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,5,some 20,386045,none⟩:=PairRoute.axis 5 leaf1550 axis1579
-private theorem axis1581:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,4,some 20,386045,none⟩:=PairRoute.axis 4 leaf1549 axis1580
-private theorem axis1582:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,3,some 20,386045,none⟩:=PairRoute.axis 3 leaf1548 axis1581
-private theorem axis1583:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,2,some 20,386045,none⟩:=PairRoute.axis 2 leaf1547 axis1582
-private theorem axis1584:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,1,some 20,386045,none⟩:=PairRoute.axis 1 leaf1546 axis1583
-private theorem axis1585:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,0,some 20,386045,none⟩:=PairRoute.axis 0 leaf1545 axis1584
-private theorem allAxes1586:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1585
+private theorem allAxes1586:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,20,some 20⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 20 ⟨
+    (PairReceipts.route3320 6),
+    (PairReceipts.route3320 7),
+    (PairReceipts.route3320 8),
+    (PairReceipts.route3320 9),
+    (PairReceipts.route3320 10),
+    (PairReceipts.route3320 11),
+    (PairReceipts.route3320 12),
+    (PairReceipts.route3320 13),
+    (PairReceipts.route3320 14),
+    (PairReceipts.route3320 15),
+    (PairReceipts.route3320 16),
+    (PairReceipts.route3320 17),
+    (PairReceipts.route3320 18),
+    (PairReceipts.route3320 19),
+    (PairReceipts.route3340 0),
+    (PairReceipts.route3340 1),
+    (PairReceipts.route3340 2),
+    (PairReceipts.route3340 3),
+    (PairReceipts.route3340 4),
+    (PairReceipts.route3340 5),
+    (PairReceipts.route3340 6),
+    trivial⟩)
 theorem case145: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,20,some 20⟩:=PairRoute.start _ allAxes1586
-private theorem leaf1587:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell3304 PairReceipts.choice3304 PairReceipts.check3304 (none) (by decide)
-private theorem leaf1588:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell3305 PairReceipts.choice3305 PairReceipts.check3305 (none) (by decide)
-private theorem leaf1589:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell3306 PairReceipts.choice3306 PairReceipts.check3306 (none) (by decide)
-private theorem leaf1590:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell3307 PairReceipts.choice3307 PairReceipts.check3307 (none) (by decide)
-private theorem leaf1591:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell3308 PairReceipts.choice3308 PairReceipts.check3308 (none) (by decide)
-private theorem leaf1592:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell3309 PairReceipts.choice3309 PairReceipts.check3309 (none) (by decide)
-private theorem leaf1593:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell3310 PairReceipts.choice3310 PairReceipts.check3310 (none) (by decide)
-private theorem leaf1594:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell3311 PairReceipts.choice3311 PairReceipts.check3311 (none) (by decide)
-private theorem leaf1595:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell3312 PairReceipts.choice3312 PairReceipts.check3312 (none) (by decide)
-private theorem leaf1596:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell3313 PairReceipts.choice3313 PairReceipts.check3313 (none) (by decide)
-private theorem leaf1597:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell3314 PairReceipts.choice3314 PairReceipts.check3314 (none) (by decide)
-private theorem leaf1598:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell3315 PairReceipts.choice3315 PairReceipts.check3315 (none) (by decide)
-private theorem leaf1599:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,12,some 12,386045,none⟩:=PairLeaves.paired PairReceipts.cell3316 PairReceipts.choice3316 PairReceipts.check3316 (none) (by decide)
-private theorem leaf1600:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,13,some 13,386045,none⟩:=PairLeaves.paired PairReceipts.cell3317 PairReceipts.choice3317 PairReceipts.check3317 (none) (by decide)
-private theorem leaf1601:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,14,some 14,386045,none⟩:=PairLeaves.paired PairReceipts.cell3318 PairReceipts.choice3318 PairReceipts.check3318 (none) (by decide)
-private theorem leaf1602:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,15,some 15,386045,none⟩:=PairLeaves.paired PairReceipts.cell3319 PairReceipts.choice3319 PairReceipts.check3319 (none) (by decide)
-private theorem leaf1603:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,16,some 16,386045,none⟩:=PairLeaves.paired PairReceipts.cell3320 PairReceipts.choice3320 PairReceipts.check3320 (none) (by decide)
-private theorem leaf1604:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,17,some 17,386045,none⟩:=PairLeaves.paired PairReceipts.cell3321 PairReceipts.choice3321 PairReceipts.check3321 (none) (by decide)
-private theorem leaf1605:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,18,some 18,386045,none⟩:=PairLeaves.paired PairReceipts.cell3322 PairReceipts.choice3322 PairReceipts.check3322 (none) (by decide)
-private theorem leaf1606:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,19,some 19,386045,none⟩:=PairLeaves.paired PairReceipts.cell3323 PairReceipts.choice3323 PairReceipts.check3323 (none) (by decide)
-private theorem leaf1607:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,20,some 20,386045,none⟩:=PairLeaves.paired PairReceipts.cell3324 PairReceipts.choice3324 PairReceipts.check3324 (none) (by decide)
-private theorem leaf1608:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,21,some 21,386045,none⟩:=PairLeaves.paired PairReceipts.cell3325 PairReceipts.choice3325 PairReceipts.check3325 (none) (by decide)
-private theorem axis1609:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,20,some 21,386045,none⟩:=PairRoute.axis 20 leaf1607 leaf1608
-private theorem axis1610:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,19,some 21,386045,none⟩:=PairRoute.axis 19 leaf1606 axis1609
-private theorem axis1611:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,18,some 21,386045,none⟩:=PairRoute.axis 18 leaf1605 axis1610
-private theorem axis1612:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,17,some 21,386045,none⟩:=PairRoute.axis 17 leaf1604 axis1611
-private theorem axis1613:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,16,some 21,386045,none⟩:=PairRoute.axis 16 leaf1603 axis1612
-private theorem axis1614:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,15,some 21,386045,none⟩:=PairRoute.axis 15 leaf1602 axis1613
-private theorem axis1615:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,14,some 21,386045,none⟩:=PairRoute.axis 14 leaf1601 axis1614
-private theorem axis1616:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,13,some 21,386045,none⟩:=PairRoute.axis 13 leaf1600 axis1615
-private theorem axis1617:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,12,some 21,386045,none⟩:=PairRoute.axis 12 leaf1599 axis1616
-private theorem axis1618:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,11,some 21,386045,none⟩:=PairRoute.axis 11 leaf1598 axis1617
-private theorem axis1619:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,10,some 21,386045,none⟩:=PairRoute.axis 10 leaf1597 axis1618
-private theorem axis1620:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,9,some 21,386045,none⟩:=PairRoute.axis 9 leaf1596 axis1619
-private theorem axis1621:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,8,some 21,386045,none⟩:=PairRoute.axis 8 leaf1595 axis1620
-private theorem axis1622:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,7,some 21,386045,none⟩:=PairRoute.axis 7 leaf1594 axis1621
-private theorem axis1623:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,6,some 21,386045,none⟩:=PairRoute.axis 6 leaf1593 axis1622
-private theorem axis1624:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,5,some 21,386045,none⟩:=PairRoute.axis 5 leaf1592 axis1623
-private theorem axis1625:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,4,some 21,386045,none⟩:=PairRoute.axis 4 leaf1591 axis1624
-private theorem axis1626:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,3,some 21,386045,none⟩:=PairRoute.axis 3 leaf1590 axis1625
-private theorem axis1627:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,2,some 21,386045,none⟩:=PairRoute.axis 2 leaf1589 axis1626
-private theorem axis1628:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,1,some 21,386045,none⟩:=PairRoute.axis 1 leaf1588 axis1627
-private theorem axis1629:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,0,some 21,386045,none⟩:=PairRoute.axis 0 leaf1587 axis1628
-private theorem allAxes1630:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1629
+private theorem allAxes1630:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,21,some 21⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 21 ⟨
+    (PairReceipts.route3300 4),
+    (PairReceipts.route3300 5),
+    (PairReceipts.route3300 6),
+    (PairReceipts.route3300 7),
+    (PairReceipts.route3300 8),
+    (PairReceipts.route3300 9),
+    (PairReceipts.route3300 10),
+    (PairReceipts.route3300 11),
+    (PairReceipts.route3300 12),
+    (PairReceipts.route3300 13),
+    (PairReceipts.route3300 14),
+    (PairReceipts.route3300 15),
+    (PairReceipts.route3300 16),
+    (PairReceipts.route3300 17),
+    (PairReceipts.route3300 18),
+    (PairReceipts.route3300 19),
+    (PairReceipts.route3320 0),
+    (PairReceipts.route3320 1),
+    (PairReceipts.route3320 2),
+    (PairReceipts.route3320 3),
+    (PairReceipts.route3320 4),
+    (PairReceipts.route3320 5),
+    trivial⟩)
 theorem case146: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,21,some 21⟩:=PairRoute.start _ allAxes1630
-private theorem leaf1631:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell3281 PairReceipts.choice3281 PairReceipts.check3281 (none) (by decide)
-private theorem leaf1632:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell3282 PairReceipts.choice3282 PairReceipts.check3282 (none) (by decide)
-private theorem leaf1633:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell3283 PairReceipts.choice3283 PairReceipts.check3283 (none) (by decide)
-private theorem leaf1634:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell3284 PairReceipts.choice3284 PairReceipts.check3284 (none) (by decide)
-private theorem leaf1635:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell3285 PairReceipts.choice3285 PairReceipts.check3285 (none) (by decide)
-private theorem leaf1636:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell3286 PairReceipts.choice3286 PairReceipts.check3286 (none) (by decide)
-private theorem leaf1637:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell3287 PairReceipts.choice3287 PairReceipts.check3287 (none) (by decide)
-private theorem leaf1638:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell3288 PairReceipts.choice3288 PairReceipts.check3288 (none) (by decide)
-private theorem leaf1639:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell3289 PairReceipts.choice3289 PairReceipts.check3289 (none) (by decide)
-private theorem leaf1640:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell3290 PairReceipts.choice3290 PairReceipts.check3290 (none) (by decide)
-private theorem leaf1641:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell3291 PairReceipts.choice3291 PairReceipts.check3291 (none) (by decide)
-private theorem leaf1642:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell3292 PairReceipts.choice3292 PairReceipts.check3292 (none) (by decide)
-private theorem leaf1643:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,12,some 12,386045,none⟩:=PairLeaves.paired PairReceipts.cell3293 PairReceipts.choice3293 PairReceipts.check3293 (none) (by decide)
-private theorem leaf1644:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,13,some 13,386045,none⟩:=PairLeaves.paired PairReceipts.cell3294 PairReceipts.choice3294 PairReceipts.check3294 (none) (by decide)
-private theorem leaf1645:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,14,some 14,386045,none⟩:=PairLeaves.paired PairReceipts.cell3295 PairReceipts.choice3295 PairReceipts.check3295 (none) (by decide)
-private theorem leaf1646:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,15,some 15,386045,none⟩:=PairLeaves.paired PairReceipts.cell3296 PairReceipts.choice3296 PairReceipts.check3296 (none) (by decide)
-private theorem leaf1647:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,16,some 16,386045,none⟩:=PairLeaves.paired PairReceipts.cell3297 PairReceipts.choice3297 PairReceipts.check3297 (none) (by decide)
-private theorem leaf1648:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,17,some 17,386045,none⟩:=PairLeaves.paired PairReceipts.cell3298 PairReceipts.choice3298 PairReceipts.check3298 (none) (by decide)
-private theorem leaf1649:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,18,some 18,386045,none⟩:=PairLeaves.paired PairReceipts.cell3299 PairReceipts.choice3299 PairReceipts.check3299 (none) (by decide)
-private theorem leaf1650:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,19,some 19,386045,none⟩:=PairLeaves.paired PairReceipts.cell3300 PairReceipts.choice3300 PairReceipts.check3300 (none) (by decide)
-private theorem leaf1651:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,20,some 20,386045,none⟩:=PairLeaves.paired PairReceipts.cell3301 PairReceipts.choice3301 PairReceipts.check3301 (none) (by decide)
-private theorem leaf1652:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,21,some 21,386045,none⟩:=PairLeaves.paired PairReceipts.cell3302 PairReceipts.choice3302 PairReceipts.check3302 (none) (by decide)
-private theorem leaf1653:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,22,some 22,386045,none⟩:=PairLeaves.paired PairReceipts.cell3303 PairReceipts.choice3303 PairReceipts.check3303 (none) (by decide)
-private theorem axis1654:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,21,some 22,386045,none⟩:=PairRoute.axis 21 leaf1652 leaf1653
-private theorem axis1655:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,20,some 22,386045,none⟩:=PairRoute.axis 20 leaf1651 axis1654
-private theorem axis1656:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,19,some 22,386045,none⟩:=PairRoute.axis 19 leaf1650 axis1655
-private theorem axis1657:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,18,some 22,386045,none⟩:=PairRoute.axis 18 leaf1649 axis1656
-private theorem axis1658:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,17,some 22,386045,none⟩:=PairRoute.axis 17 leaf1648 axis1657
-private theorem axis1659:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,16,some 22,386045,none⟩:=PairRoute.axis 16 leaf1647 axis1658
-private theorem axis1660:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,15,some 22,386045,none⟩:=PairRoute.axis 15 leaf1646 axis1659
-private theorem axis1661:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,14,some 22,386045,none⟩:=PairRoute.axis 14 leaf1645 axis1660
-private theorem axis1662:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,13,some 22,386045,none⟩:=PairRoute.axis 13 leaf1644 axis1661
-private theorem axis1663:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,12,some 22,386045,none⟩:=PairRoute.axis 12 leaf1643 axis1662
-private theorem axis1664:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,11,some 22,386045,none⟩:=PairRoute.axis 11 leaf1642 axis1663
-private theorem axis1665:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,10,some 22,386045,none⟩:=PairRoute.axis 10 leaf1641 axis1664
-private theorem axis1666:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,9,some 22,386045,none⟩:=PairRoute.axis 9 leaf1640 axis1665
-private theorem axis1667:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,8,some 22,386045,none⟩:=PairRoute.axis 8 leaf1639 axis1666
-private theorem axis1668:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,7,some 22,386045,none⟩:=PairRoute.axis 7 leaf1638 axis1667
-private theorem axis1669:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,6,some 22,386045,none⟩:=PairRoute.axis 6 leaf1637 axis1668
-private theorem axis1670:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,5,some 22,386045,none⟩:=PairRoute.axis 5 leaf1636 axis1669
-private theorem axis1671:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,4,some 22,386045,none⟩:=PairRoute.axis 4 leaf1635 axis1670
-private theorem axis1672:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,3,some 22,386045,none⟩:=PairRoute.axis 3 leaf1634 axis1671
-private theorem axis1673:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,2,some 22,386045,none⟩:=PairRoute.axis 2 leaf1633 axis1672
-private theorem axis1674:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,1,some 22,386045,none⟩:=PairRoute.axis 1 leaf1632 axis1673
-private theorem axis1675:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,0,some 22,386045,none⟩:=PairRoute.axis 0 leaf1631 axis1674
-private theorem allAxes1676:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1675
+private theorem allAxes1676:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,22,some 22⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 22 ⟨
+    (PairReceipts.route3280 1),
+    (PairReceipts.route3280 2),
+    (PairReceipts.route3280 3),
+    (PairReceipts.route3280 4),
+    (PairReceipts.route3280 5),
+    (PairReceipts.route3280 6),
+    (PairReceipts.route3280 7),
+    (PairReceipts.route3280 8),
+    (PairReceipts.route3280 9),
+    (PairReceipts.route3280 10),
+    (PairReceipts.route3280 11),
+    (PairReceipts.route3280 12),
+    (PairReceipts.route3280 13),
+    (PairReceipts.route3280 14),
+    (PairReceipts.route3280 15),
+    (PairReceipts.route3280 16),
+    (PairReceipts.route3280 17),
+    (PairReceipts.route3280 18),
+    (PairReceipts.route3280 19),
+    (PairReceipts.route3300 0),
+    (PairReceipts.route3300 1),
+    (PairReceipts.route3300 2),
+    (PairReceipts.route3300 3),
+    trivial⟩)
 theorem case147: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,22,some 22⟩:=PairRoute.start _ allAxes1676
-private theorem leaf1677:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,0,some 0,386045,none⟩:=PairLeaves.paired PairReceipts.cell3257 PairReceipts.choice3257 PairReceipts.check3257 (none) (by decide)
-private theorem leaf1678:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,1,some 1,386045,none⟩:=PairLeaves.paired PairReceipts.cell3258 PairReceipts.choice3258 PairReceipts.check3258 (none) (by decide)
-private theorem leaf1679:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,2,some 2,386045,none⟩:=PairLeaves.paired PairReceipts.cell3259 PairReceipts.choice3259 PairReceipts.check3259 (none) (by decide)
-private theorem leaf1680:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,3,some 3,386045,none⟩:=PairLeaves.paired PairReceipts.cell3260 PairReceipts.choice3260 PairReceipts.check3260 (none) (by decide)
-private theorem leaf1681:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,4,some 4,386045,none⟩:=PairLeaves.paired PairReceipts.cell3261 PairReceipts.choice3261 PairReceipts.check3261 (none) (by decide)
-private theorem leaf1682:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,5,some 5,386045,none⟩:=PairLeaves.paired PairReceipts.cell3262 PairReceipts.choice3262 PairReceipts.check3262 (none) (by decide)
-private theorem leaf1683:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,6,some 6,386045,none⟩:=PairLeaves.paired PairReceipts.cell3263 PairReceipts.choice3263 PairReceipts.check3263 (none) (by decide)
-private theorem leaf1684:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,7,some 7,386045,none⟩:=PairLeaves.paired PairReceipts.cell3264 PairReceipts.choice3264 PairReceipts.check3264 (none) (by decide)
-private theorem leaf1685:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,8,some 8,386045,none⟩:=PairLeaves.paired PairReceipts.cell3265 PairReceipts.choice3265 PairReceipts.check3265 (none) (by decide)
-private theorem leaf1686:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,9,some 9,386045,none⟩:=PairLeaves.paired PairReceipts.cell3266 PairReceipts.choice3266 PairReceipts.check3266 (none) (by decide)
-private theorem leaf1687:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,10,some 10,386045,none⟩:=PairLeaves.paired PairReceipts.cell3267 PairReceipts.choice3267 PairReceipts.check3267 (none) (by decide)
-private theorem leaf1688:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,11,some 11,386045,none⟩:=PairLeaves.paired PairReceipts.cell3268 PairReceipts.choice3268 PairReceipts.check3268 (none) (by decide)
-private theorem leaf1689:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,12,some 12,386045,none⟩:=PairLeaves.paired PairReceipts.cell3269 PairReceipts.choice3269 PairReceipts.check3269 (none) (by decide)
-private theorem leaf1690:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,13,some 13,386045,none⟩:=PairLeaves.paired PairReceipts.cell3270 PairReceipts.choice3270 PairReceipts.check3270 (none) (by decide)
-private theorem leaf1691:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,14,some 14,386045,none⟩:=PairLeaves.paired PairReceipts.cell3271 PairReceipts.choice3271 PairReceipts.check3271 (none) (by decide)
-private theorem leaf1692:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,15,some 15,386045,none⟩:=PairLeaves.paired PairReceipts.cell3272 PairReceipts.choice3272 PairReceipts.check3272 (none) (by decide)
-private theorem leaf1693:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,16,some 16,386045,none⟩:=PairLeaves.paired PairReceipts.cell3273 PairReceipts.choice3273 PairReceipts.check3273 (none) (by decide)
-private theorem leaf1694:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,17,some 17,386045,none⟩:=PairLeaves.paired PairReceipts.cell3274 PairReceipts.choice3274 PairReceipts.check3274 (none) (by decide)
-private theorem leaf1695:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,18,some 18,386045,none⟩:=PairLeaves.paired PairReceipts.cell3275 PairReceipts.choice3275 PairReceipts.check3275 (none) (by decide)
-private theorem leaf1696:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,19,some 19,386045,none⟩:=PairLeaves.paired PairReceipts.cell3276 PairReceipts.choice3276 PairReceipts.check3276 (none) (by decide)
-private theorem leaf1697:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,20,some 20,386045,none⟩:=PairLeaves.paired PairReceipts.cell3277 PairReceipts.choice3277 PairReceipts.check3277 (none) (by decide)
-private theorem leaf1698:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,21,some 21,386045,none⟩:=PairLeaves.paired PairReceipts.cell3278 PairReceipts.choice3278 PairReceipts.check3278 (none) (by decide)
-private theorem leaf1699:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,22,some 22,386045,none⟩:=PairLeaves.paired PairReceipts.cell3279 PairReceipts.choice3279 PairReceipts.check3279 (none) (by decide)
-private theorem leaf1700:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,23,some 23,386045,none⟩:=PairLeaves.paired PairReceipts.cell3280 PairReceipts.choice3280 PairReceipts.check3280 (none) (by decide)
-private theorem axis1701:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,22,some 23,386045,none⟩:=PairRoute.axis 22 leaf1699 leaf1700
-private theorem axis1702:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,21,some 23,386045,none⟩:=PairRoute.axis 21 leaf1698 axis1701
-private theorem axis1703:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,20,some 23,386045,none⟩:=PairRoute.axis 20 leaf1697 axis1702
-private theorem axis1704:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,19,some 23,386045,none⟩:=PairRoute.axis 19 leaf1696 axis1703
-private theorem axis1705:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,18,some 23,386045,none⟩:=PairRoute.axis 18 leaf1695 axis1704
-private theorem axis1706:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,17,some 23,386045,none⟩:=PairRoute.axis 17 leaf1694 axis1705
-private theorem axis1707:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,16,some 23,386045,none⟩:=PairRoute.axis 16 leaf1693 axis1706
-private theorem axis1708:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,15,some 23,386045,none⟩:=PairRoute.axis 15 leaf1692 axis1707
-private theorem axis1709:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,14,some 23,386045,none⟩:=PairRoute.axis 14 leaf1691 axis1708
-private theorem axis1710:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,13,some 23,386045,none⟩:=PairRoute.axis 13 leaf1690 axis1709
-private theorem axis1711:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,12,some 23,386045,none⟩:=PairRoute.axis 12 leaf1689 axis1710
-private theorem axis1712:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,11,some 23,386045,none⟩:=PairRoute.axis 11 leaf1688 axis1711
-private theorem axis1713:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,10,some 23,386045,none⟩:=PairRoute.axis 10 leaf1687 axis1712
-private theorem axis1714:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,9,some 23,386045,none⟩:=PairRoute.axis 9 leaf1686 axis1713
-private theorem axis1715:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,8,some 23,386045,none⟩:=PairRoute.axis 8 leaf1685 axis1714
-private theorem axis1716:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,7,some 23,386045,none⟩:=PairRoute.axis 7 leaf1684 axis1715
-private theorem axis1717:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,6,some 23,386045,none⟩:=PairRoute.axis 6 leaf1683 axis1716
-private theorem axis1718:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,5,some 23,386045,none⟩:=PairRoute.axis 5 leaf1682 axis1717
-private theorem axis1719:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,4,some 23,386045,none⟩:=PairRoute.axis 4 leaf1681 axis1718
-private theorem axis1720:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,3,some 23,386045,none⟩:=PairRoute.axis 3 leaf1680 axis1719
-private theorem axis1721:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,2,some 23,386045,none⟩:=PairRoute.axis 2 leaf1679 axis1720
-private theorem axis1722:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,1,some 23,386045,none⟩:=PairRoute.axis 1 leaf1678 axis1721
-private theorem axis1723:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,0,some 23,386045,none⟩:=PairRoute.axis 0 leaf1677 axis1722
-private theorem allAxes1724:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,0,none,386045,none⟩:=PairRoute.axes_of_total axis1723
+private theorem allAxes1724:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,23,some 23⟩,0,none,385979,none⟩:=
+  PairRoute.axes_of_total (PairRoute.axesOfRun 0 23 ⟨
+    (PairReceipts.route3240 17),
+    (PairReceipts.route3240 18),
+    (PairReceipts.route3240 19),
+    (PairReceipts.route3260 0),
+    (PairReceipts.route3260 1),
+    (PairReceipts.route3260 2),
+    (PairReceipts.route3260 3),
+    (PairReceipts.route3260 4),
+    (PairReceipts.route3260 5),
+    (PairReceipts.route3260 6),
+    (PairReceipts.route3260 7),
+    (PairReceipts.route3260 8),
+    (PairReceipts.route3260 9),
+    (PairReceipts.route3260 10),
+    (PairReceipts.route3260 11),
+    (PairReceipts.route3260 12),
+    (PairReceipts.route3260 13),
+    (PairReceipts.route3260 14),
+    (PairReceipts.route3260 15),
+    (PairReceipts.route3260 16),
+    (PairReceipts.route3260 17),
+    (PairReceipts.route3260 18),
+    (PairReceipts.route3260 19),
+    (PairReceipts.route3280 0),
+    trivial⟩)
 theorem case148: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,23,some 23⟩:=PairRoute.start _ allAxes1724
-private theorem leaf1725:PairRoute.Done (2:Fin 18) ⟨⟨50,63,10,3,24,some 24⟩,0,none,386045,none⟩:=PairLeaves.paired PairReceipts.cell3256 PairReceipts.choice3256 PairReceipts.check3256 (none) (by decide)
+private def leaf1725 := (PairReceipts.route3240 16)
 theorem case149: NormalRoute.Done (2:Fin 18) ⟨50,63,10,3,24,some 24⟩:=PairRoute.start _ leaf1725
 end Research6969.HardFit3At140
